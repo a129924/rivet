@@ -6,6 +6,8 @@
 - Swift language mode 6，Swift Package tools version 6.0
 - Node.js 24.19.0 LTS
 - Bun 1.4.0（PR Reader WebView 的 package manager 與 test runner）
+- pre-commit 4.6.2（Git hook runner）
+- SwiftLint 0.65.1（Swift lint）
 
 ## Apple 工具鏈初始化
 
@@ -29,6 +31,32 @@ swift --version
 ```sh
 nvm use
 ```
+
+## 日常品質檢查
+
+全域工具：Bun、pre-commit 與 SwiftLint。Swift formatter 使用 Xcode toolchain 內建的 `swift format`，不另外安裝 formatter。
+
+PR Reader WebView 的 TypeScript 與 Biome 是 local dev dependencies；安裝與執行都使用 Bun：
+
+```sh
+cd surfaces/pr-reader-webview
+bun install --frozen-lockfile
+bun run format
+bun run format:check
+bun run lint
+bun run typecheck
+bun run check
+```
+
+Swift CLI 檢查：
+
+```sh
+scripts/check-swift-format.sh
+swiftlint lint --strict
+swift test
+```
+
+`.pre-commit-config.yaml` 會執行 whitespace、Swift format、SwiftLint 與 renderer `bun run check`；coverage 不放入 pre-commit。
 
 ## Coverage
 

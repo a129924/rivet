@@ -8,7 +8,16 @@
     "node": ">=24.19.0 <25"
   },
   "scripts": {
+    "format": "biome format --write --no-errors-on-unmatched .",
+    "format:check": "biome format --no-errors-on-unmatched .",
+    "lint": "biome lint --no-errors-on-unmatched .",
+    "typecheck": "../../scripts/check-renderer-types.sh",
+    "check": "bun run format:check && bun run lint && bun run typecheck",
     "test": "bun test",
     "test:coverage": "bun test --coverage"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.6",
+    "typescript": "~6.0.0"
   }
 }

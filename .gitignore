@@ -1,3 +1,4 @@
 .build/
 .DS_Store
 surfaces/pr-reader-webview/coverage/
+surfaces/pr-reader-webview/node_modules/

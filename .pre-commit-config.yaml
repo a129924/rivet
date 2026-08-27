@@ -4,3 +4,20 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
+  - repo: local
+    hooks:
+      - id: swift-format
+        name: swift format lint
+        entry: scripts/check-swift-format.sh
+        language: system
+        pass_filenames: false
+      - id: swiftlint
+        name: swiftlint lint
+        entry: scripts/check-swiftlint.sh
+        language: system
+        pass_filenames: false
+      - id: renderer-check
+        name: renderer check
+        entry: bash -c 'cd surfaces/pr-reader-webview && bun run check'
+        language: system
+        pass_filenames: false
