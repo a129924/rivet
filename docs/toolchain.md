@@ -5,6 +5,7 @@
 - Xcode 26.6（內建 Apple Swift 6.3）
 - Swift language mode 6，Swift Package tools version 6.0
 - Node.js 24.19.0 LTS
+- Bun 1.4.0（PR Reader WebView 的 package manager 與 test runner）
 
 ## Apple 工具鏈初始化
 
@@ -21,7 +22,7 @@ swift --version
 
 ## Node 基線
 
-專案根目錄的 `.node-version` 固定 Node 24.19.0，供未來的文件工具與前端 surface 使用。此 baseline repository 目前沒有 Node package、依賴鎖檔或可執行的 renderer。
+專案根目錄的 `.node-version` 固定 Node 24.19.0，作為相容性後備。PR Reader WebView 使用 Bun，位於 `surfaces/pr-reader-webview`。
 
 使用 NVM 的相容性工作流程時，可執行：
 
@@ -29,4 +30,12 @@ swift --version
 nvm use
 ```
 
-Node 版本在開始第一個需要它的 bounded context 或 surface 前再鎖定 package manager 與依賴。
+## Coverage
+
+Coverage 使用內建工具，不加入第三方 coverage package。
+
+- Swift：`scripts/check-swift-coverage.sh` 執行 SwiftPM coverage，並要求至少 90% line coverage。
+- TypeScript：`cd surfaces/pr-reader-webview && bun run test:coverage`，輸出 text 與 `coverage/lcov.info`，並要求 line、function、statement coverage 都至少 90%。
+- 全部執行：`scripts/coverage.sh`。
+
+Swift coverage 只能在完整 Xcode 選取後執行；coverage 不放入 pre-commit。
