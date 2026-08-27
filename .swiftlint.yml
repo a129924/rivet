@@ -1,0 +1,18 @@
+excluded:
+  - .build
+
+line_length:
+  warning: 140
+  error: 180
+
+file_length:
+  warning: 800
+  error: 1200
+
+function_body_length:
+  warning: 80
+  error: 120
+
+type_body_length:
+  warning: 400
+  error: 600
