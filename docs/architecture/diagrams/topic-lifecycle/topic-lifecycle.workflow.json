@@ -35,6 +35,7 @@
     { "from": "execute", "to": "validate", "role": "main", "route": "bottom-channel", "fromSide": "bottom", "toSide": "bottom" },
     { "from": "validate", "to": "handoff", "role": "main", "variant": "emphasis" },
     { "from": "execute", "to": "scope-change", "role": "error", "variant": "security", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+    { "from": "validate", "to": "scope-change", "role": "error", "variant": "security", "route": "bottom-channel", "fromSide": "bottom", "toSide": "bottom" },
     { "from": "scope-change", "to": "analysis", "label": "回到分析", "role": "return", "variant": "dashed", "route": "return-left", "fromSide": "left", "toSide": "left" }
   ],
   "cards": []
