@@ -12,20 +12,20 @@
   "phases": [
     { "id": "understand", "label": "理解", "fromCol": 0, "toCol": 1 },
     { "id": "lock", "label": "鎖定契約", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
-    { "id": "complete", "label": "驗證、回寫與 review", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+    { "id": "complete", "label": "驗證、回寫與審查", "fromCol": 4, "toCol": 5, "variant": "dashed" }
   ],
   "groups": [
-    { "id": "analysis-artifacts", "label": "同 slug 的 analysis 工件", "lane": "main", "fromCol": 1, "toCol": 1, "variant": "default" },
+    { "id": "analysis-artifacts", "label": "同 slug 的分析工件", "lane": "main", "fromCol": 1, "toCol": 1, "variant": "default" },
     { "id": "bounded-change", "label": "受限變更", "lane": "main", "fromCol": 2, "toCol": 4, "variant": "emphasis" }
   ],
   "mainPath": ["topic", "analysis", "topic-plan", "execute", "validate", "handoff"],
   "nodes": [
-    { "id": "topic", "lane": "main", "col": 0, "width": 52, "type": "frontend", "label": "Topic", "sublabel": "明確目標" },
-    { "id": "analysis", "lane": "main", "col": 1, "width": 52, "type": "database", "label": "Analysis", "sublabel": "Req + Spec" },
-    { "id": "topic-plan", "lane": "main", "col": 2, "width": 52, "type": "security", "label": "Plan", "sublabel": "scope + 驗收" },
+    { "id": "topic", "lane": "main", "col": 0, "width": 52, "type": "frontend", "label": "主題", "sublabel": "明確目標" },
+    { "id": "analysis", "lane": "main", "col": 1, "width": 52, "type": "database", "label": "分析", "sublabel": "需求＋規格" },
+    { "id": "topic-plan", "lane": "main", "col": 2, "width": 52, "type": "security", "label": "計畫", "sublabel": "範圍＋驗收" },
     { "id": "execute", "lane": "main", "col": 3, "width": 52, "type": "backend", "label": "實作", "sublabel": "有界變更" },
-    { "id": "validate", "lane": "main", "col": 4, "width": 52, "type": "security", "label": "驗證", "sublabel": "品質 gate" },
-    { "id": "handoff", "lane": "main", "col": 5, "width": 52, "type": "external", "label": "Review", "sublabel": "Docs + PR" },
+    { "id": "validate", "lane": "main", "col": 4, "width": 52, "type": "security", "label": "驗證", "sublabel": "品質關卡" },
+    { "id": "handoff", "lane": "main", "col": 5, "width": 52, "type": "external", "label": "審查", "sublabel": "文件＋PR" },
     { "id": "scope-change", "lane": "exception", "col": 3, "type": "security", "label": "範圍改變", "sublabel": "停止即興擴張" }
   ],
   "edges": [
@@ -35,7 +35,7 @@
     { "from": "execute", "to": "validate", "role": "main", "route": "bottom-channel", "fromSide": "bottom", "toSide": "bottom" },
     { "from": "validate", "to": "handoff", "role": "main", "variant": "emphasis" },
     { "from": "execute", "to": "scope-change", "role": "error", "variant": "security", "route": "drop", "fromSide": "bottom", "toSide": "top" },
-    { "from": "scope-change", "to": "analysis", "label": "回到 analysis", "role": "return", "variant": "dashed", "route": "return-left", "fromSide": "left", "toSide": "left" }
+    { "from": "scope-change", "to": "analysis", "label": "回到分析", "role": "return", "variant": "dashed", "route": "return-left", "fromSide": "left", "toSide": "left" }
   ],
   "cards": []
 }
