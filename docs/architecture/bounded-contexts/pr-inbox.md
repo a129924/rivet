@@ -12,7 +12,7 @@
 
 ## 核心概念與互動
 
-- 核心集合是「open 且明確要求目前使用者 review」的 PR；依更新時間排序。
+- 核心集合是「open 且明確要求目前使用者 review」的 PR；具體排序策略留待正式產品 topic 分析後定義。
 - 空佇列是成功結果，不是 failure。
 - PR Inbox 透過自己擁有的 Port 取得資料；它不直接依賴 PR Reader。
 - 對 Presentation 提供穩定的 Inbox Facade；Presentation Session 可在重新整理後保留目前選取狀態。
