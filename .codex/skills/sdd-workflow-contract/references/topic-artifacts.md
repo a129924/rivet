@@ -9,10 +9,13 @@
 | `analysis/<topic>/requirements.md` | 產品意圖、範圍、成功條件與尚未鎖定的研究依據。 |
 | `analysis/<topic>/technical-spec.md` | 已確認的執行設計、限制與 locked decisions。 |
 | `plan/<topic>/<topic>.plan.md` | 本次受限執行契約、檔案影響範圍與驗收。 |
+| `plan/<topic>/<topic>.step.md` | 執行狀態帳本：目前 phase、步驟、owner role、完成條件、驗證證據、blocker、verdict 與 human-check。 |
+
+`.step.md` 是正式必備 artifact，不是選擇性附加檔，也不是 approval 的替代品。每個 step 必須具備 ID、status、owner role、完成條件與驗證證據；帳本必須包含 Blockers、Human Check 與最後更新資訊。checkbox、step status 或 tracker 檢查結果絕不等同 `approved`。
 
 `analysis/` 不取代 execution contract；`plan/` 不取代長期文件。仍成立的架構結論依 repository 規範回寫 `docs/`。
 
-不得將 release、VERSION、step、summary 或 correction artifacts 設為必要條件。
+不得將 release、VERSION、summary 或 correction artifacts 設為必要條件。
 
 ## 角色與階段
 
@@ -37,6 +40,7 @@ Plan-Creator 與 Plan-Reviewer 必須是獨立角色；Reviewer 不得審查自�
   "topic": "<topic>",
   "phase": "<phase>",
   "artifacts": [{"path": "<path>", "status": "present|missing|changed"}],
+  "current_step": {"id": "<step id>", "status": "<explicit status>"},
   "locked_decisions": ["<confirmed decision>"],
   "upstream_verdict": "approved|needs-rework|blocked|human-check|null",
   "blockers": ["<unresolved blocker>"],
@@ -45,4 +49,4 @@ Plan-Creator 與 Plan-Reviewer 必須是獨立角色；Reviewer 不得審查自�
 }
 ```
 
-`locked_decisions` 不得含未驗證推論；沒有上游 verdict 時使用 `null`。
+`artifacts` 必須列出四份正式 artifacts。`locked_decisions` 不得含未驗證推論；沒有上游 verdict 時使用 `null`。`current_step` 只記錄帳本中明示的值，不得由 Dispatcher 推導或修改。

@@ -12,7 +12,7 @@
 
 ## Non-Goal
 
-不加入 Python、Swift、TypeScript 實作細節、release、VERSION、step、summary 或 correction workflow；不變更 application code；不自動 commit、push 或操作 tag。
+不加入 Python、Swift、TypeScript 實作細節、軟體 release、VERSION、summary 或 correction workflow；不變更 application code；不自動 commit、push 或操作 tag。
 
 ## Agent-skills Adoption Baseline
 
@@ -25,19 +25,19 @@
 | `plan-reviewer` | 建立符合 Rivet 獨立審查 contract 的本地 skill。 |
 | `git-commit-convention` | 建立 staged diff 語意檢查、message 建議與 human-confirmed commit 規範 skill。 |
 | `git-branch-naming` | 建立 branch 名稱規範 skill；只產生建議，不執行 Git。 |
-| `worktree-manager` | 建立 worktree 狀態檢查與受限 lifecycle 指引 skill。 |
+| `worktree-manager` | 建立完整、可操作且安全的 worktree lifecycle skill；以繁體中文在地化上游 safety contract 與三份 references。 |
 
-Git 範圍只涵蓋 branch、worktree 與 human-confirmed commit 規範；不涵蓋 release、post-merge、自動 commit 或 push。Observer/Dispatcher 只能讀取 Git 狀態與路由，不得自行執行 Git 操作。
+Git 範圍只涵蓋 branch、worktree 與 human-confirmed commit 規範；不涵蓋軟體 release、post-merge、自動 commit 或 push。Observer/Dispatcher 只能讀取 Git 狀態與路由，不得自行執行 Git 操作。
 
 ## In-Scope
 
-- 建立正式 topic 的三份同-slug planning artifacts。
-- 建立 `sdd-workflow-contract`、`context-package-builder`、`subagent-dispatch-policy`、`handoff-routing-policy`、`plan-creator`、`plan-reviewer`、`git-branch-naming`、`worktree-manager`、`git-commit-convention`。
+- 建立或更新正式 topic 的四份同-slug planning artifacts。
+- 建立或更新 `sdd-workflow-contract`、`context-package-builder`、`subagent-dispatch-policy`、`handoff-routing-policy`、`plan-creator`、`plan-reviewer`、`git-branch-naming`、`worktree-manager`、`git-commit-convention`，並新增 `plan-step-tracker`。
 - 執行 skill validator 與獨立 skill review。
 
 ## Out-Of-Scope
 
-- Application code、release 設定與 remote Git 操作。
+- Application code、軟體 release 設定與 remote Git 操作。
 - `agents/openai.yaml`、scripts、額外 workflow contract 文件。
 - 自動建立、移動或推送 Git tag，以及自動 commit、push、開 PR。
 
@@ -52,6 +52,7 @@ Git 範圍只涵蓋 branch、worktree 與 human-confirmed commit 規範；不涵
 - `analysis/agent-skill-implementation/requirements.md`
 - `analysis/agent-skill-implementation/technical-spec.md`
 - `plan/agent-skill-implementation/agent-skill-implementation.plan.md`
+- `plan/agent-skill-implementation/agent-skill-implementation.step.md`
 - `.codex/skills/sdd-workflow-contract/SKILL.md`
 - `.codex/skills/sdd-workflow-contract/references/topic-artifacts.md`
 - `.codex/skills/sdd-workflow-contract/references/routing-and-verdicts.md`
@@ -60,13 +61,18 @@ Git 範圍只涵蓋 branch、worktree 與 human-confirmed commit 規範；不涵
 - `.codex/skills/handoff-routing-policy/SKILL.md`
 - `.codex/skills/plan-creator/SKILL.md`
 - `.codex/skills/plan-reviewer/SKILL.md`
+- `.codex/skills/plan-step-tracker/SKILL.md`
 - `.codex/skills/git-branch-naming/SKILL.md`
 - `.codex/skills/worktree-manager/SKILL.md`
+- `.codex/skills/worktree-manager/reference.md`
+- `.codex/skills/worktree-manager/examples.md`
+- `.codex/skills/worktree-manager/checklist.md`
 - `.codex/skills/git-commit-convention/SKILL.md`
 
 ## Modify
 
-無既有檔案修改。
+- `AGENTS.md`：將正式 topic artifacts 由三份更新為四份，新增 `plan/<topic>/<topic>.step.md`。
+- 九個既有本地 skills：更新 artifact contract、handoff、routing 與 planning review 邊界；`worktree-manager` 擴充為完整 lifecycle skill 與三份 references，其餘 Git skills 維持既有限制。
 
 ## Deleted
 
@@ -74,24 +80,31 @@ Git 範圍只涵蓋 branch、worktree 與 human-confirmed commit 規範；不涵
 
 ## Implementation Changes
 
-1. Plan-Creator 建立本 topic 的 requirements、technical spec 與本計畫；Plan-Reviewer 獨立確認其一致性與鎖定決策後才交給 Implementer。
-2. Implementer 建立九個 skills；每個 skill 只含必要的 `SKILL.md`，只有 `sdd-workflow-contract` 建立兩份共用 references。
-3. `sdd-workflow-contract` 固定角色、phase、三份 topic artifacts、最小 handoff、四種 verdict 與 human boundary；禁止任意重開 locked scope、architecture、path 或 contract decision。
-4. Dispatcher skills 限定既定角色、單一派遣與明示 verdict routing。Observer/Dispatcher 不得實作、改檔、審查、計算 gate、Git 操作、commit、push、開 PR 或跨越 human boundary。
-5. Planning skills 分離建立與獨立審查責任。`plan-creator` 對缺少 artifacts 或未鎖定決策回傳 `blocked`；`plan-reviewer` 不代寫且最終只輸出既定 JSON。
-6. Git skills 僅提供 branch naming、worktree lifecycle 與 staged-diff commit 建議。所有 Git 狀態變更只能由獲授權的非-Dispatcher 角色在 human confirmation 後執行。
-7. Tester 逐一執行 `skill-creator` 的 `quick_validate.py`；Reviewer 以獨立 handoff 審查新增 skills，並只輸出既定 JSON。
+1. Plan-Creator 建立或更新本 topic 的 requirements、technical spec、topic plan 與初始 step ledger；Plan-Reviewer 獨立確認四份 artifacts 的一致性與鎖定決策後才交給 Implementer。
+2. Implementer 更新九個既有 skills 並新增 `plan-step-tracker`，共十個 skills；每個 skill 只含必要的 `SKILL.md`，只有 `sdd-workflow-contract` 建立兩份共用 references。
+3. `sdd-workflow-contract` 固定角色、phase、四份 topic artifacts、最小 handoff、四種 verdict 與 human boundary；`.step.md` 是執行狀態帳本，記錄 step、owner role、完成條件、驗證證據、blocker、verdict 與 human-check。禁止任意重開 locked scope、architecture、path 或 contract decision。
+4. Dispatcher skills 限定既定角色、單一派遣與明示 step 狀態／verdict routing。Observer/Dispatcher 不得實作、改檔、勾選或修改 `.step.md`、審查、把 checkbox 當 approval、計算 gate、Git 操作、commit、push、開 PR 或跨越 human boundary。
+5. Planning skills 分離建立與獨立審查責任。`plan-creator` 對缺少任一 artifact 或未鎖定決策回傳 `blocked`；`plan-reviewer` 不代寫，檢查四份 artifact、step 可追溯性與 human boundary，且最終只輸出既定 JSON。
+6. `plan-step-tracker` 僅檢查 `.step.md` 是否具備 Topic／phase、每個 step 的 ID、status、owner role、完成條件與驗證證據，以及 Blockers、Human Check、最後更新資訊；不得自行完成 step、產生 verdict、取代 Tester／Reviewer 或讓 Dispatcher 自動放行。
+7. `worktree-manager` 以完整在地化骨架處理 `create`、`get-worktree`、`release worktree`、`remove worktree`：frontmatter、managed path、branch collision human reuse-or-rename、固定 inspect output、release evidence、unmanaged inspect-only、`prune-candidate` no-auto-prune、remove human destructive approval 與所有安全 stop states。主 skill 連結 `reference.md`、`examples.md`、`checklist.md`，並包含 validation、failure handling、red flags、common rationalizations、boundaries 與 planning／governance coordination warning。
+8. Rivet 僅在角色層限制 worktree lifecycle：Observer/Dispatcher 只能讀取 `get-worktree` 結果與 routing，不得執行 Git 或 worktree mutation；已獲授權的非-Dispatcher 角色可在 lifecycle contract 和 human boundary 內執行 create、release 或 remove。Git skills 不納入軟體 release management、post-merge、自動 commit、push 或 tag lifecycle。
+9. Tester 逐一執行 `skill-creator` 的 `quick_validate.py`；Reviewer 以獨立 handoff 審查十個 skills、四份 artifact contract、Dispatcher 與 Git 邊界，並只輸出既定 JSON。
 
 ## TestCase
 
 - 既有 `v0.1.0-architecture-baseline` 可作為實作前回溯點；缺少新的 topic tag 不得阻擋實作、驗證、commit、push 或 draft PR 建立。
-- 全部九個 skills 通過 `skill-creator` 的 `quick_validate.py`，沒有 frontmatter、命名或 scaffold placeholder 問題。
-- handoff context 含最小欄位且不夾帶未驗證推論；Dispatcher 每次只派遣一個允許角色，並對四個標準 verdict 正確前進、回修或停止。
-- `plan-creator` 在缺正式 artifact 或 scope／BC／path／locked decision 不明時回傳 `blocked`，不猜測補齊；`plan-reviewer` 對 workflow 或 contract drift 回傳 `needs-rework`，且只輸出指定 JSON。
+- 全部十個 skills 通過 `skill-creator` 的 `quick_validate.py`，沒有 frontmatter、命名或 scaffold placeholder 問題。
+- handoff context 含四份 artifact paths、目前 step/status 與其他最小欄位，且不夾帶未驗證推論；Dispatcher 每次只派遣一個允許角色，並對四個標準 verdict 正確前進、回修或停止。
+- `plan-step-tracker` 對缺少 owner role、驗證證據、blocker 或 human-check 的 `.step.md` 回報不完整，但不產生 verdict 或 approval。
+- `plan-creator` 在缺正式 artifact 或 scope／BC／path／locked decision 不明時回傳 `blocked`，不猜測補齊；`plan-reviewer` 對四份 artifact 不一致、workflow／contract drift 或將 checkbox 視為 approval 回傳 `needs-rework`，且只輸出指定 JSON。
 - branch naming 不執行 Git；worktree skill 對 Dispatcher 僅允許唯讀狀態檢查；commit convention 不執行 commit 或 push，且要求 human confirmation。
-- 獨立 Reviewer 確認新增 skills 沒有未授權 artifacts、Python workflow 假設、Git 自動化或 Dispatcher 越界。
+- `worktree-manager` 的 frontmatter 含 inputs、outputs、use_when、do_not_use_when、risk profile，且 `SKILL.md` 對三份 references 的連結均存在。
+- `get-worktree` 對每個工作目錄提供固定七欄；stale registration 只回傳 `prune-candidate`，不得 auto-prune；branch collision 必須要求 human reuse-or-rename。
+- `release worktree` 與 `remove worktree` 維持語意分離；remove 在 dirty、untracked、unpushed、detached、locked、unmanaged 或不明狀態時停止，並要求當前明確 human destructive approval。
+- 獨立 Reviewer 確認新增 skills 沒有未授權 artifacts、Python workflow 假設、Git 自動化、Dispatcher 修改 `.step.md`、自行計算 gate 或跨越 human boundary。
 
 ## Assumptions
 
-- 每個 skill 僅建立必要的 `SKILL.md`；共用 SDD contract 才使用兩份 references。
+- `sdd-workflow-contract` 維護兩份共用 references：`topic-artifacts.md` 與 `routing-and-verdicts.md`；`worktree-manager` 另維護 `reference.md`、`examples.md` 與 `checklist.md`。
+- 其餘 skills 僅建立必要的 `SKILL.md`。
 - `sdd-workflow-contract` 是 SDD 共用規則唯一真相；其他 planning、routing 與 Git skills 僅引用適用 contract，不複製不相容流程。

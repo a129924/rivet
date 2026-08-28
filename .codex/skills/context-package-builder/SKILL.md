@@ -9,7 +9,7 @@ description: 為既定 subAgent 建立最小、可追溯的 SDD handoff context�
 
 ## 交接內容
 
-輸出唯一一個 JSON，包含 `topic`、`phase`、`artifacts`、`locked_decisions`、`upstream_verdict`、`blockers`、`assigned_role`、`next_objective`。欄位與值域遵循共用 contract。
+輸出唯一一個 JSON，包含 `topic`、`phase`、`artifacts`、`current_step`、`locked_decisions`、`upstream_verdict`、`blockers`、`assigned_role`、`next_objective`。`artifacts` 必須列出四份正式 artifacts，`current_step` 必須含 `.step.md` 中明示的 ID 與 status。欄位與值域遵循共用 contract。
 
 只包含已驗證的 repository 狀態與上游結果；不可將猜測、要求或尚未決定的方案標為 locked decision。`next_objective` 必須限縮為受派角色可完成的單一工作。
 
@@ -17,4 +17,4 @@ description: 為既定 subAgent 建立最小、可追溯的 SDD handoff context�
 
 - 不派遣、不實作、不改檔、不審查、不計算 gate，也不執行 Git。
 - artifacts、scope、BC、path 或 locked decision 不明時，將原因列入 `blockers`，並使 `upstream_verdict` 為 `blocked`。
-- 不增列 release、VERSION、step、summary 或 correction artifacts。
+- `.step.md` 的 checkbox 或 status 不得標為 approval；不增列 release、VERSION、summary 或 correction artifacts。

@@ -5,7 +5,7 @@ description: 依 staged diff 檢查 topic 的語意邊界並建議 commit messag
 
 # Git Commit 慣例
 
-使用此 skill 前，先確認變更屬於單一已鎖定 topic，且只讀取 staged diff 與必要 repository 規範。檢查是否混入無關變更、是否需要拆分語意邊界，以及 message 是否準確描述變更。
+使用此 skill 前，先確認變更屬於單一已鎖定 topic，且只讀取 staged diff、四份正式 topic artifacts 與必要 repository 規範。檢查是否混入無關變更、是否需要拆分語意邊界，以及 message 是否準確描述變更。`.step.md` 只能佐證 topic 歸屬，不得作為 approval 或 commit 的自動放行依據。
 
 建議格式為：
 

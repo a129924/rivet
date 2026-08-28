@@ -11,4 +11,4 @@ description: 為受限 topic 提供可讀、可追溯的 Git branch 名稱建議
 
 若 topic、工作類型或既有命名慣例不明，回報 `blocked`，不自行假設。
 
-此 skill 僅提供建議；不建立、切換、刪除或推送 branch，不執行 worktree、commit、tag、release、post-merge 或其他 Git 操作。
+四份正式 topic artifacts 可用於確認已鎖定的 topic slug，但不改變本 skill 的 Git 邊界。此 skill 僅提供建議；不建立、切換、刪除或推送 branch，不執行 worktree、commit、tag、release、post-merge 或其他 Git 操作。
