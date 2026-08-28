@@ -1,6 +1,6 @@
 # worktree-manager Checklist
 
-此檢查表用於重複執行 safety checks；勾選結果只是 evidence，不能作為 Dispatcher approval 或自動 gate。
+此檢查表用於重複執行 safety checks；勾選結果只是 inspection evidence，不能自行授權任何 mutation。
 
 ## Pre-create
 
@@ -27,10 +27,10 @@
 
 - [ ] 操作明確是 `remove worktree`。
 - [ ] 當前 request 或重述確認中有明確 human destructive approval。
-- [ ] selector 唯一，且最新 inspection 為 clean、無 untracked、無 unpushed。
-- [ ] 沒有 detached、locked、unmanaged 或 unknown state。
+- [ ] selector 唯一，且目標為 managed worktree，最新 inspection 為 clean、無 untracked、無 unpushed。
+- [ ] 沒有 detached、locked 或 unknown state。
 - [ ] 沒有把較早的 release 當作隱含 remove 同意。
-- [ ] 若原是 unmanaged path，已重述 ownership 不可假設並完成完整 remove gate。
+- [ ] unmanaged path 未進入 remove；仍維持 inspect-only，並交還 human 處理。
 
 ## Unmanaged 與不明狀態
 

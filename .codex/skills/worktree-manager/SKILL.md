@@ -35,7 +35,7 @@ metadata:
 
 ## 角色邊界
 
-- Observer/Dispatcher 僅能讀取 `get-worktree` 的結果並據此 routing；不得執行任何 Git 或 worktree mutation，也不得以 status、checkbox 或 tracker 當作 gate 或 approval。
+- Observer/Dispatcher 僅能讀取 `get-worktree` 的結果並據此 routing；不得執行任何 Git 或 worktree mutation。
 - 已獲授權的非-Dispatcher 角色可依本 lifecycle contract 執行 `create`、`release worktree` 或 `remove worktree`。
 - 不得將上述 Dispatcher 限制擴大為其他已獲授權角色也不能管理 worktree。
 
@@ -80,7 +80,7 @@ create_result:
 - 這是破壞性操作；必須在當前 request 或重述確認中取得明確 human destructive approval。
 - 執行前重新檢查：target 唯一、clean、無 untracked、無 unpushed、非 detached、未 locked、branch 狀態可確認。
 - dirty、untracked、unpushed、detached、locked、unmanaged 或 unknown 的任何一項都停止並回傳 `needs-human-decision`；不得 force removal。
-- 先前的 release 絕不構成 remove 的隱含同意。unmanaged path 即使有意圖，也要先重述 ownership 不可假設，並通過完整 remove gate。
+- 先前的 release 絕不構成 remove 的隱含同意。unmanaged path 一律維持 inspect-only；本 skill 不對它執行 remove。
 
 ## Validation
 
@@ -124,7 +124,7 @@ Git command、selector 或 state 無法驗證時，明示限制且不捏造狀�
 
 - 不執行 feature implementation、merge、push、branch deletion、PR 管理、軟體 release、post-merge、auto commit、tag lifecycle 或 auto-prune。
 - 不在 repository root 內建立 managed worktree。
-- 不把 release worktree 轉譯成 remove worktree，也不把 status／checkbox／tracker 結果轉譯為 approval。
+- 不把 release worktree 轉譯成 remove worktree。
 - 不假設 unmanaged worktree 可 release、remove、改名、刪除或已完成。
 - 不在 branch collision 時略過 reuse-or-rename human decision。
 

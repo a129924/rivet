@@ -58,7 +58,7 @@ release 不可執行或暗示 delete。
 
 需求：清理一個不符合 managed path policy 的 worktree。
 
-正確處理：分類為 unmanaged，僅做 inspection，輸出固定七欄，並指出 ownership 不可假設。後續即使 human 要求 destructive cleanup，也要重述 unmanaged status 並完整通過 remove gate。
+正確處理：分類為 unmanaged，僅做 inspection，輸出固定七欄，並指出 ownership 不可假設。即使 human 要求 destructive cleanup，本 skill 仍停在 inspect-only，將後續處理交給人類另行決定。
 
 ```yaml
 path: "<unmanaged-path>"

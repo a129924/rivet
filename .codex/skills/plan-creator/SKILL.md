@@ -17,7 +17,7 @@ description: 建立或修正正式 topic 的四份 SDD planning artifacts 與初
 
 ## 阻擋條件
 
-任一正式 artifact 缺少時，或 scope、BC、path、locked decision、必要上游資訊不明時，停止並回傳：
+任一正式 artifact 缺少時，建立它或修正它；缺少 artifact 本身不是阻擋條件。只有 scope、BC、path、locked decision 或建立所需的產品意圖不明或互相衝突時，才停止並回傳：
 
 ```json
 {"verdict":"blocked","blocking_issues":[{"issue":"<不明或衝突事項>","artifact":"<相關 artifact 或 context>","required_fix":"<需要的人類確認或上游資訊>"}],"notes":[]}

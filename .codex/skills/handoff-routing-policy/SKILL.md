@@ -14,7 +14,7 @@ description: 依既定 SDD verdict 將 handoff 路由為前進、回修或停止
 - `blocked`：停止並交還 human。
 - `human-check`：停止並等待 human 的決策或確認。
 
-若 verdict、受審 artifact、責任角色或 required fix 不足以安全路由，視為 `blocked`。
+若 verdict、受審產出、責任角色或 required fix 不足以安全路由，停止路由並回報缺少的資訊；這是 routing-incomplete 狀態，不是 `blocked` verdict。向原產出角色或 human 取得明示資訊後才可重試。
 
 可把 `.step.md` 中已明示的 step status 作為 handoff 脈絡；不得把 checkbox、step status 或 `plan-step-tracker` 的完整性檢查當作 approval、verdict 或自動放行依據。
 

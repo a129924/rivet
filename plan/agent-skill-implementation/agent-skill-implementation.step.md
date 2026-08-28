@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `agent-skill-implementation`
-- Current phase: Plan-Creator、Plan-Reviewer、Implementer 與 Tester 已完成；awaiting independent Reviewer verdict.
+- Current phase: responsibility-boundary remediation 的 Plan-Creator 已完成；awaiting independent Plan-Reviewer verdict.
 
 ## Steps
 
@@ -17,18 +17,23 @@
 | IM-02 | completed | Implementer | 依 PR-02 `approved` 將既有 `worktree-manager` 在地化為完整 lifecycle skill，並建立 `reference.md`、`examples.md`、`checklist.md`。 | 上游 Implementer completion handoff：IM-02 已完成；未改 application code、Git tag、commit、push 或 PR。 |
 | TE-01 | completed | Tester | 對十個 skills 逐一執行 `quick_validate.py`。 | 獨立 Tester evidence：十個 `quick_validate.py` 執行結果皆為 exit 0；此驗證結果不等同 Reviewer `approved`。 |
 | RV-01 | pending | Reviewer | 獨立審查十個 skills、四份 artifact contract、Dispatcher 與 Git 邊界。 | 尚無；最終只輸出既定 verdict JSON。 |
+| PC-03 | completed | Plan-Creator | 將完整 audit 已識別的最小責任邊界更新至四份 artifacts。 | 四份 artifacts 已明定：Plan-Creator 可建立缺少 artifacts、Plan-Reviewer 才要求四份齊全；context／routing 不產生或改寫 verdict；step tracker 只檢查結構與欄位；Git skills 不讀 SDD artifacts 或 routing；SDD core 是 artifact／roles／verdict 唯一真相。 |
+| PR-03 | pending | Plan-Reviewer | 獨立審查 PC-03 的四份 artifact 一致性與 locked responsibility boundaries。 | 尚無；不得以 PC-03 status 視為 approval。 |
+| IM-03 | pending | Implementer | 僅在 PR-03 明示 `approved` 後，依已鎖定責任邊界修正十個 skills。 | 尚無；不得由 Dispatcher 或 step status 放行。 |
+| TE-02 | pending | Tester | 僅在 IM-03 完成後，重新驗證十個 skills。 | 尚無；validator 結果不等同 Reviewer verdict。 |
+| RV-02 | pending | Reviewer | 獨立審查十個 skills 的責任分離、Dispatcher 邊界與 Git 邊界。 | 尚無；最終只輸出既定 verdict JSON。 |
 | GI-01 | pending | Implementer | 在 Reviewer `approved` 後依 topic 建立一個 commit、push 既有 branch，並更新既有 draft PR。 | 尚無；不得建立新 branch、worktree、PR 或 tag。 |
 | HC-01 | pending | Human | 審查既有 draft PR。 | 尚無；human-check 不由 Dispatcher 自動放行。 |
 
 ## Blockers
 
-- RV-01 尚未產生獨立 Reviewer verdict；在該 verdict 明示為 `approved` 前，GI-01 與 HC-01 不得前進。其他既有 steps 不因本次 planning 更新而重開。
+- PR-03 尚未產生獨立 Plan-Reviewer verdict；在該 verdict 明示為 `approved` 前，IM-03、TE-02、RV-02、GI-01 與 HC-01 不得前進。RV-01 由本次 remediation 的 RV-02 取代，不得作為後續放行依據。其他既有 steps 不因本次 planning 更新而重開。
 
 ## Latest Upstream Verdict
 
 - Previous verdict: `approved`（PR-01，四 artifact 與十 skill baseline）。
 - Latest explicit upstream verdict: `approved`（PR-02，由獨立 Plan-Reviewer 對 worktree-manager contract update 輸出）。
-- Current required verdict: `pending`（RV-01，由獨立 Reviewer 審查十個 skills、四份 artifact contract、Dispatcher 與 Git 邊界）。
+- Current required verdict: `pending`（PR-03，由獨立 Plan-Reviewer 審查 responsibility-boundary remediation）。
 - 此欄位僅記錄獨立上游角色明示輸出的 verdict；不得由 step status、checkbox 或 tracker 結果推導或填入。
 
 ## Human Check
@@ -38,5 +43,5 @@
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 依已完成的獨立 PR-02 `approved`、IM-02 completion handoff 與獨立 Tester 十個 validator exit 0 evidence 更新 ledger 追溯性。
-- Update status: awaiting independent Reviewer verdict; step status、checkbox 與 validator 結果均不得取代該 verdict。
+- Update reason: 依完整 audit 將最小責任邊界寫入 planning contract，並建立 PC-03、PR-03、IM-03、TE-02、RV-02 gate。
+- Update status: awaiting independent Plan-Reviewer verdict; step status、checkbox 與 validator 結果均不得取代該 verdict。

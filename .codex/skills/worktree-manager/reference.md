@@ -7,7 +7,7 @@
 - `create`：在 canonical managed path 建立 worktree 與預期 branch lineage。
 - `get-worktree`：檢查 state 並輸出結構化 recommendation。
 - `release worktree`：非破壞性地離開 active working set。
-- `remove worktree`：取得明確 human destructive approval 後，移除 worktree directory 與 Git registration。
+- `remove worktree`：對 managed worktree，在取得明確 human destructive approval 且通過完整 safety checks 後，移除 worktree directory 與 Git registration。
 
 `release worktree` 與 `remove worktree` 是不同操作，不得合併或互相推論。
 
@@ -17,7 +17,7 @@ selector 必須可唯一解析，優先順序如下：
 
 1. 明確 path
 2. 明確 branch name
-3. 可唯一對應的 worktree name／topic slug
+3. 可唯一對應的 worktree name
 
 多個候選、無候選或無法驗證時，不作 mutation。受管理狀態只由 path policy 決定：
 
@@ -25,7 +25,7 @@ selector 必須可唯一解析，優先順序如下：
 
 - path 必須位於 repository root 外。
 - 預設 `<prefix>` 是 `agent`；human 可明確覆寫。
-- plan 或 metadata 只可提供 context，不能覆寫此 path classification。
+- 其他文件只可提供 context，不能覆寫此 path classification。
 - 不符合 path policy 就是 unmanaged，預設只可 inspect。
 
 ## `get-worktree` 結果 contract
@@ -80,6 +80,6 @@ release_evidence:
 - 非預期 repository：`BLOCKED`。
 - create branch collision：停在 human `reuse-or-rename`。
 - dirty、untracked、unpushed、detached、locked、unknown：`needs-human-decision`。
-- 共享 planning 或 governance files：先提出 planner／observer coordination warning。
+- 共享 planning 或 governance files：先提出 coordination warning，要求相關 owner 協調。
 - stale registration：`prune-candidate`，不可 auto-prune。
 - Observer/Dispatcher：只讀 `get-worktree` 結果與 routing；不執行 Git 或 worktree mutation。

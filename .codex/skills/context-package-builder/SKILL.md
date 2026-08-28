@@ -16,5 +16,5 @@ description: 為既定 subAgent 建立最小、可追溯的 SDD handoff context�
 ## 邊界
 
 - 不派遣、不實作、不改檔、不審查、不計算 gate，也不執行 Git。
-- artifacts、scope、BC、path 或 locked decision 不明時，將原因列入 `blockers`，並使 `upstream_verdict` 為 `blocked`。
+- artifacts、scope、BC、path 或 locked decision 不明時，只將原因列入 `blockers`。保留上游原有的明示 verdict；沒有上游 verdict 時維持 `null`，不得改成或推導為 `blocked`。
 - `.step.md` 的 checkbox 或 status 不得標為 approval；不增列 release、VERSION、summary 或 correction artifacts。

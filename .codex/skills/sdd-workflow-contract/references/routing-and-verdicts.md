@@ -18,7 +18,7 @@ Dispatcher 只依上游角色已明示的 verdict 路由，不自行產生、計
 遇到任一情況即停止並交還 human：
 
 - scope、Bounded Context、path 或 locked decision 不明或互相衝突。
-- handoff 缺少四份 artifacts、目前 step/status 或判斷下一步所需的已驗證資訊。
+- handoff 缺少目前 phase 所需的已驗證資訊。規劃編寫 phase 可明示四份 artifacts 中尚待 Plan-Creator 建立者；Plan-Reviewer 與後續 phase 則須具備各自的 artifact readiness。
 - 上游結果為 `blocked` 或 `human-check`。
 - 所需 Git 狀態變更、外部協調或其他未授權動作。
 

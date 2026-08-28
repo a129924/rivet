@@ -11,35 +11,35 @@
 | `plan/<topic>/<topic>.plan.md` | 本次受限的執行契約、寫入範圍與驗收 |
 | `plan/<topic>/<topic>.step.md` | 執行狀態帳本：目前 phase、步驟、owner role、完成條件、驗證證據、blocker、verdict 與 human-check |
 
-`analysis/` 保存研究與設計依據；`plan/` 保存本次執行契約與其執行狀態。`.step.md` 是正式必備 artifact，不是選擇性附加檔；每個 step 必須可追溯至 owner role、完成條件與驗證證據，並有 Blockers、Human Check 與最後更新資訊。step checkbox 或 status 絕不等同 approval。長期成立的架構結論仍依 repository 規範回寫 `docs/`。skills 不得將 release、VERSION、summary 或 correction artifacts 變成必備條件。
+`analysis/` 保存研究與設計依據；`plan/` 保存本次執行契約與其執行狀態。`.step.md` 是正式必備 artifact，不是選擇性附加檔；每個 step 必須可追溯至 owner role、完成條件與驗證證據，並有 Blockers、Human Check 與最後更新資訊。step checkbox 或 status 絕不等同 approval。Plan-Creator 可建立或修正缺少的正式 artifacts；進入 Plan-Reviewer 時四份 artifacts 必須齊全。長期成立的架構結論仍依 repository 規範回寫 `docs/`。skills 不得將 release、VERSION、summary 或 correction artifacts 變成必備條件。
 
 ## Skill Set
 
 | Skill | Bounded responsibility |
 | --- | --- |
-| `sdd-workflow-contract` | 共用 roles、phase、artifacts、handoff、verdict 與 human boundary；其下僅有 topic artifacts 與 routing/verdicts references。 |
-| `context-package-builder` | 建立可追溯的最小 handoff context。 |
-| `subagent-dispatch-policy` | 限制 Observer/Dispatcher 的角色選擇、單一派遣與停止條件。 |
-| `handoff-routing-policy` | 將既定 verdict 路由為前進、回修或停止。 |
+| `sdd-workflow-contract` | artifact contract、roles、標準 verdict 與 human boundary 的唯一真相；其下僅有 topic artifacts 與 routing/verdicts references。 |
+| `context-package-builder` | 建立可追溯的最小 handoff context，只保留上游明示 verdict，不產生、重寫或推導 verdict。 |
+| `subagent-dispatch-policy` | 限制 Observer/Dispatcher 的角色選擇、單一派遣與停止條件；只可讀取既有明示狀態與 verdict。 |
+| `handoff-routing-policy` | 將既定明示 verdict 路由為前進、回修或停止；不產生、重寫或推導 verdict。 |
 | `plan-creator` | 只建立或修正四份 planning artifacts，並產生初始 `.step.md`。 |
 | `plan-reviewer` | 只獨立審查四份 planning artifacts，絕不代寫。 |
-| `plan-step-tracker` | 只檢查 `.step.md` 的結構、必要欄位與狀態完整性；不完成步驟、不產生 verdict、不取代 Tester 或 Reviewer。 |
-| `git-branch-naming` | 提供 branch 名稱建議，不執行 Git。 |
-| `worktree-manager` | 提供具完整 lifecycle contract 的 managed／unmanaged worktree 操作指引；以三份 references 保存可操作細節。 |
-| `git-commit-convention` | 依 staged diff 提出語意邊界與 commit message，等待 human confirmation。 |
+| `plan-step-tracker` | 只檢查 `.step.md` 的結構、必要欄位與狀態完整性；不判斷內容真實性、不完成步驟、不產生 verdict、不取代 Tester 或 Reviewer。 |
+| `git-branch-naming` | 只提供 branch 名稱建議，不讀 SDD artifacts 或 routing，不執行 Git。 |
+| `worktree-manager` | 只提供具完整 lifecycle contract 的 managed／unmanaged worktree 操作指引，不讀 SDD artifacts 或 routing；以三份 references 保存可操作細節。 |
+| `git-commit-convention` | 只依 staged diff 與適用 commit conventions 提出語意邊界與 commit message，等待 human confirmation；不讀 SDD artifacts 或 routing。 |
 
 ## Workflow Contract
 
 - Roles 限定為 Planner、Plan-Creator、Plan-Reviewer、Implementer、Tester、Reviewer、Explorer、Observer/Dispatcher。
 - Observer/Dispatcher 只可檢查 task、branch、worktree、PR、topic 與 `.step.md` 狀態，派遣單一適當角色，彙整結果並依明示 step 狀態及 verdict 路由；不得直接實作、改檔、勾選或修改 step、審查、計算 gate、commit、push、開 PR 或跨越 human boundary。
-- 最小 handoff 包含：topic slug、目前 phase、四份 artifact paths 與狀態、目前 step/status、locked decisions、上游 verdict、未解 blockers、受派角色與下一步目標。不得將未驗證推論標示為鎖定決策。
+- 最小 handoff 包含：topic slug、目前 phase、四份 artifact paths 與狀態、目前 step/status、locked decisions、上游明示 verdict、未解 blockers、受派角色與下一步目標。不得將未驗證推論標示為鎖定決策，亦不得由 context builder 產生、重寫或推導 verdict。
 - 標準 verdict 僅為 `approved`、`needs-rework`、`blocked`、`human-check`。`approved` 可前進；`needs-rework` 僅回到相符的產出角色；`blocked` 與 `human-check` 均停止自動前進並交還人類。
-- Dispatcher 可參考明示的 step 狀態與 verdict 作 routing，但不得把 checkbox、status 或 tracker 結果當成 approval 或 gate 結論。
-- Plan-Creator 與 Plan-Reviewer 必須獨立；reviewer 不得修正或代寫 plan。任何 scope、architecture、path 或 contract 的 locked decision 不得由 skill 任意重開。
+- Dispatcher 可參考明示的 step 狀態與 verdict 作 routing，但不得把 checkbox、status 或 tracker 結果當成 approval 或 gate 結論；routing policy 只能依既有明示 verdict 路由，不能產生或改寫 verdict。
+- Plan-Creator 與 Plan-Reviewer 必須獨立；Plan-Creator 建立或修正四份 artifacts，不因其初始缺失而阻擋自己。Plan-Reviewer 開始審查時四份 artifacts 必須齊全，reviewer 不得修正或代寫 plan。任何 scope、architecture、path 或 contract 的 locked decision 不得由 skill 任意重開。
 
 ## Git Boundary
 
-Git workflow 僅包含 branch naming、worktree lifecycle 與 human-confirmed commit。Observer/Dispatcher 對 Git 僅有唯讀狀態判斷權；所有改變 Git 狀態的行為只能由獲授權的非-Dispatcher 角色在 human boundary 後執行。軟體 release、post-merge、tag 自動化、auto commit、push 與遠端操作不屬於此 skill set。
+Git workflow 僅包含 branch naming、worktree lifecycle 與 human-confirmed commit。三個 Git skills 不讀取 SDD artifacts、step ledger 或 routing 狀態：branch naming 只建議名稱，worktree manager 只依其 lifecycle contract 檢查或執行 worktree 操作，commit convention 只依 staged diff 與適用 commit conventions 建議語意與 message。Observer/Dispatcher 對 Git 僅有唯讀狀態判斷權；所有改變 Git 狀態的行為只能由獲授權的非-Dispatcher 角色在 human boundary 後執行。軟體 release、post-merge、tag 自動化、auto commit、push 與遠端操作不屬於此 skill set。
 
 ### Worktree Lifecycle Contract
 

@@ -19,15 +19,15 @@
 
 ## 角色與階段
 
-| Phase | 產出或檢查角色 | 下一步 |
-| --- | --- | --- |
-| 規劃準備 | Planner、Explorer | 交 Plan-Creator。 |
-| 規劃編寫 | Plan-Creator | 交獨立 Plan-Reviewer。 |
-| 規劃審查 | Plan-Reviewer | 依 verdict 前進、回修或停止。 |
-| 實作 | Implementer | 交 Tester。 |
-| 驗證 | Tester | 交獨立 Reviewer。 |
-| 成果審查 | Reviewer | 依 verdict 前進、回修或停止。 |
-| 人類邊界 | Human | 等待明確人類決策。 |
+| Phase | 產出或檢查角色 | Artifact readiness | 下一步 |
+| --- | --- | --- | --- |
+| 規劃準備 | Planner、Explorer | 正式 artifacts 可尚未建立；必須有足以交給 Plan-Creator 的工作意圖與已知限制。 | 交 Plan-Creator。 |
+| 規劃編寫 | Plan-Creator | 可建立或修正任何缺少的正式 artifact。 | 交獨立 Plan-Reviewer。 |
+| 規劃審查 | Plan-Reviewer | 四份 artifacts 都必須存在且可讀取。 | 依明示 verdict 前進、回修或停止。 |
+| 實作 | Implementer | 需要 Plan-Reviewer 明示 `approved` 與受限執行契約。 | 交 Tester。 |
+| 驗證 | Tester | 需要 Implementer 的明示完成交接與待驗證範圍。 | 交獨立 Reviewer。 |
+| 成果審查 | Reviewer | 需要 Tester 的明示驗證結果與受審產出。 | 依明示 verdict 前進、回修或停止。 |
+| 人類邊界 | Human | 需要人類決策或確認時停止。 | 等待明確人類決策。 |
 
 Plan-Creator 與 Plan-Reviewer 必須是獨立角色；Reviewer 不得審查自己的產出。Implementer、Tester 與 Reviewer 也須維持獨立審查關係。
 

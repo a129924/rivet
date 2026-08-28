@@ -1,19 +1,19 @@
 ---
 name: git-commit-convention
-description: 依 staged diff 檢查 topic 的語意邊界並建議 commit message；只支援 human-confirmed commit。
+description: 依 staged diff 檢查單一 commit 的語意邊界並建議 commit message；只支援 human-confirmed commit。
 ---
 
 # Git Commit 慣例
 
-使用此 skill 前，先確認變更屬於單一已鎖定 topic，且只讀取 staged diff、四份正式 topic artifacts 與必要 repository 規範。檢查是否混入無關變更、是否需要拆分語意邊界，以及 message 是否準確描述變更。`.step.md` 只能佐證 topic 歸屬，不得作為 approval 或 commit 的自動放行依據。
+只讀取 staged diff 與適用的 repository commit 慣例。檢查變更能否構成單一語意 commit、是否混入無關變更、是否需要拆分，以及 message 是否準確描述變更。本 skill 不讀取 SDD artifacts、step ledger、verdict 或 routing 狀態。
 
 建議格式為：
 
 ```text
-<type>(<topic>): <繁體中文摘要>
+<type>(<scope>): <繁體中文摘要>
 ```
 
-`type` 應反映變更性質，例如 `feat`、`fix`、`docs`、`chore` 或 `refactor`。若 staged diff 不完整、跨 topic、包含不明變更或需要拆分，回報 `needs-rework` 或 `human-check`，不得自行處理。
+`type` 應反映變更性質，例如 `feat`、`fix`、`docs`、`chore` 或 `refactor`。若 staged diff 不完整、混入不明變更或需要拆分，說明原因並要求 human 決定如何調整 staged diff；不得自行處理。
 
 ## Human boundary
 
