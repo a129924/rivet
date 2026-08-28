@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Rivet — 儲存庫知識地圖</title>
+<script>
+  // Dark is the style's default — the OS preference deliberately does not
+  // override it, since these diagrams are authored and reviewed as dark. A
+  // viewer who flips the switch is remembered, and applying that here (rather
+  // than after the viewer script loads) avoids a flash of the wrong chrome.
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('ac-theme'); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root, html[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0E1217;
+    --chrome: rgba(18, 23, 30, 0.82);
+    --chrome-border: #242C38;
+    --ink: #E7EAEE;
+    --ink-mut: #9AA4B2;
+    --ink-dim: #6E7A88;
+    --accent: #7DD3FC;
+    --hover: rgba(125,211,252,0.10);
+    --press: rgba(125,211,252,0.18);
+    --kbd-bg: rgba(255,255,255,0.03);
+    --bar-shadow: 0 8px 28px rgba(0,0,0,0.45);
+    --hint-faded: 0.28;
+  }
+  html[data-theme="light"] {
+    color-scheme: light;
+    --bg: #F4F5F7;
+    --chrome: rgba(255, 255, 255, 0.86);
+    --chrome-border: #D7DCE4;
+    --ink: #0F172A;
+    --ink-mut: #475569;
+    --ink-dim: #6B7280;
+    --accent: #0284C7;
+    --hover: rgba(2,132,199,0.10);
+    --press: rgba(2,132,199,0.18);
+    --kbd-bg: rgba(15,23,42,0.06);
+    --bar-shadow: 0 8px 24px rgba(15,23,42,0.12);
+    /* Dimming light-on-light washes out far faster than dark-on-dark, so the
+       resting hint needs more of itself left to stay readable. */
+    --hint-faded: 0.75;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: var(--bg); color: var(--ink);
+    font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    -webkit-font-smoothing: antialiased;
+  }
+  #stage { position: fixed; inset: 0; }
+  #c { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+  #c.panning { cursor: grabbing; }
+  #c.pointing { cursor: pointer; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: normal; border: 0;
+  }
+
+  /* ---- floating chrome ---- */
+  .bar {
+    position: fixed; z-index: 10;
+    display: flex; align-items: center; gap: 2px;
+    padding: 5px;
+    background: var(--chrome);
+    border: 1px solid var(--chrome-border);
+    border-radius: 11px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--bar-shadow);
+  }
+  #toolbar { bottom: 18px; left: 50%; transform: translateX(-50%); }
+  button {
+    appearance: none; border: 0; background: transparent;
+    color: var(--ink-mut);
+    font: inherit; font-size: 11px; font-weight: 500;
+    height: 28px; min-width: 28px; padding: 0 9px;
+    border-radius: 7px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 120ms ease, color 120ms ease;
+  }
+  button:hover { background: var(--hover); color: var(--ink); }
+  button:active { background: var(--press); }
+  button svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .sep { width: 1px; height: 17px; background: var(--chrome-border); margin: 0 4px; flex: none; }
+  #zoomLabel {
+    font-size: 10.5px; color: var(--ink-dim); min-width: 46px;
+    text-align: center; font-variant-numeric: tabular-nums; user-select: none;
+  }
+
+  /* ---- title plate ---- */
+  #plate {
+    position: fixed; top: 16px; left: 18px; z-index: 10;
+    pointer-events: none; user-select: none;
+  }
+  #plate .k { font-size: 9.5px; letter-spacing: 2.2px; color: var(--accent); opacity: 0.75; font-weight: 700; }
+  #plate .n { font-size: 12px; color: var(--ink-dim); margin-top: 5px; }
+  #plate .n b { color: var(--ink-mut); font-weight: 500; }
+  #plate { transition: opacity 220ms ease; }
+  #plate.hidden { opacity: 0; }
+
+  /* ---- hint ---- */
+  #hint {
+    position: fixed; top: 18px; right: 18px; z-index: 10;
+    font-size: 10.5px; color: var(--ink-dim); text-align: right;
+    line-height: 1.75; pointer-events: none; user-select: none;
+    transition: opacity 400ms ease;
+  }
+  #hint kbd {
+    font: inherit; font-size: 10px; color: var(--ink-mut);
+    border: 1px solid var(--chrome-border); border-radius: 4px;
+    padding: 1px 4px; background: var(--kbd-bg);
+  }
+  #hint.faded { opacity: var(--hint-faded); }
+
+  /* ---- focus readout ---- */
+  #readout {
+    position: fixed; bottom: 18px; left: 18px; z-index: 10;
+    max-width: 320px; padding: 10px 13px;
+    background: var(--chrome); border: 1px solid var(--chrome-border);
+    border-radius: 11px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    opacity: 0; transform: translateY(6px); pointer-events: none;
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+  #readout.on { opacity: 1; transform: translateY(0); }
+  #readout .p {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+    font-size: 9px; font-weight: 700; letter-spacing: 1.8px;
+    text-transform: uppercase; color: var(--plane, #94A3B8);
+  }
+  #readout .p i { width: 7px; height: 7px; border-radius: 2px; background: currentColor; flex: none; }
+  #readout .t { font-size: 12px; font-weight: 600; color: var(--ink); }
+  #readout .d { font-size: 10.5px; color: var(--ink-dim); margin-top: 5px; line-height: 1.6; }
+  #readout .d em { font-style: normal; color: var(--ink-mut); }
+
+  @media (max-width: 720px) {
+    #hint { display: none; }
+    #plate .n { display: none; }
+    #readout { max-width: calc(100vw - 36px); bottom: 60px; }
+    #toolbar { bottom: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage"><canvas id="c" role="img" tabindex="0" aria-label="Rivet 儲存庫知識地圖" aria-describedby="diagram-description"></canvas></div>
+
+<main id="diagram-description" class="sr-only">
+  <h1>Rivet 儲存庫知識地圖</h1>
+  <p>Rivet 的公開讀者與協作代理從同一組文件真相開始：分析、計畫與文件各自承擔不同責任，完成後的持久結論會回寫文件，才開始下一個有界的 BC 切片。</p>
+
+  <section>
+    <h2>閱讀入口與設計原則</h2>
+    <ul>
+      <li>公開讀者從 README.md 了解產品、架構與設計決策。</li>
+      <li>協作代理先讀 AGENTS.md，依規範定位文件並處理正式主題。</li>
+      <li>README.md 指向架構索引；AGENTS.md 指向設計原則；設計原則約束架構索引。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>長期架構真相</h2>
+    <ul>
+      <li>產品規範保存目標、範圍與成功標準。</li>
+      <li>架構索引保存跨 BC 不變量，並連結 BC 文件與互動式圖。</li>
+      <li>BC 文件為每個 Bounded Context 保存唯一的責任、Port 與失敗契約。</li>
+      <li>互動式圖呈現責任邊界與工作流程。</li>
+      <li>文件回寫保存完成後仍成立的結論，避免長期真相只停留在單次主題計畫。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>正式主題路徑</h2>
+    <ol>
+      <li>需求釐清界定目標、範圍、非目標與成功標準。</li>
+      <li>技術規格記錄選項、取捨與證據。</li>
+      <li>主題計畫將鎖定決策轉為有 artifact path、步驟與驗收的執行契約。</li>
+      <li>主題驗證執行驗收、圖形驗證與人類審查；通過後回寫文件。</li>
+      <li>若驗證發現範圍改變，流程會進入範圍回退，再回到需求釐清重新分析，而不是即興擴張。</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>工具鏈與下一個切片</h2>
+    <ul>
+      <li>工具鏈基線保存 Swift、Node、Bun、formatter、lint 與檢查 scripts 的版本基線。</li>
+      <li>完成正式主題後，工具鏈基線支援下一個 BC 切片。</li>
+      <li>下一個 BC 切片會開始新的正式主題，並再次從需求釐清進入同一個流程。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>視覺語意</h2>
+    <ul>
+      <li>虛線框代表 Rivet 擁有並可演進的知識契約。</li>
+      <li>實線框代表公開讀者與協作代理等閱讀表面。</li>
+      <li>顏色區分閱讀者與協作代理、入口與設計原則、長期架構真相、正式主題工件，以及工具鏈與未來實作五個責任平面。</li>
+    </ul>
+  </section>
+</main>
+
+<div id="plate">
+  <div class="k">RIVET — 儲存庫知識地圖</div>
+  <div class="n"><b>分析</b> → <b>計畫</b> → <b>文件</b> → <b>一個 BC 切片</b></div>
+</div>
+
+<div id="hint">
+  <div><kbd>drag / two-finger scroll</kbd> pan &nbsp;·&nbsp; <kbd>pinch</kbd> zoom</div>
+  <div><kbd>click</kbd> isolate &nbsp;·&nbsp; <kbd>0</kbd> fit &nbsp;·&nbsp; <kbd>t</kbd> theme &nbsp;·&nbsp; <kbd>esc</kbd> clear</div>
+</div>
+
+<div id="readout">
+  <div class="p"><i></i><span></span></div>
+  <div class="t"></div>
+  <div class="d"></div>
+</div>
+
+<div class="bar" id="toolbar">
+  <button id="bOut" title="Zoom out (−)" aria-label="Zoom out">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M8 11h6"/></svg>
+  </button>
+  <div id="zoomLabel">100%</div>
+  <button id="bIn" title="Zoom in (+)" aria-label="Zoom in">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M8 11h6M11 8v6"/></svg>
+  </button>
+  <div class="sep"></div>
+  <button id="bFit" title="Fit to screen (0)">Fit</button>
+  <button id="bOne" title="Actual size (1)">1:1</button>
+  <div class="sep"></div>
+  <button id="bTheme" title="Light theme (t)" aria-label="Toggle light and dark theme"></button>
+  <button id="bPng" title="Download PNG @2×">
+    <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+  </button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ==========================================================================
+  // FIXED VISUAL LANGUAGE — palette and text styles shared by every diagram
+  // produced with this template. Scene data below references C.* freely.
+  // ==========================================================================
+
+  const C = {
+    bg:        '#0E1217',
+    boxFill:   '#161B23',
+    boxStroke: '#2A3240',
+    bandFill:  'rgba(255,255,255,0.02)',
+    line:      '#8B93A1',
+    sky:       '#7DD3FC',
+    rose:      '#FB7185',
+    orange:    '#F6821F',
+    slate:     '#94A3B8',
+    ink:       '#E7EAEE',
+    mut:       '#9AA4B2',
+    dim:       '#6E7A88',
+    plane:     '#5B6673',
+    arrowLbl:  '#98A2B0'
+  };
+
+  // ---- theme ---------------------------------------------------------------
+  // Scenes bake `C.*` (and the odd literal hex) into their data at load time,
+  // so the light theme is a paint-time remap rather than a second palette:
+  // every colour the renderer is about to use goes through `col()` first.
+  const LIGHT = {
+    '#0e1217': '#F4F5F7',                                // bg
+    '#161b23': '#FFFFFF',                                // boxFill
+    '#2a3240': '#D3D8E0',                                // boxStroke
+    'rgba(255,255,255,0.02)': 'rgba(15,23,42,0.028)',    // bandFill
+    '#8b93a1': '#737C8B',                                // line
+    '#7dd3fc': '#0284C7',                                // sky
+    '#fb7185': '#E11D48',                                // rose
+    '#f6821f': '#C2560A',                                // orange
+    '#94a3b8': '#64748B',                                // slate
+    '#e7eaee': '#0F172A',                                // ink
+    '#9aa4b2': '#475569',                                // mut
+    '#6e7a88': '#6B7280',                                // dim
+    '#5b6673': '#7B8593',                                // plane labels
+    '#98a2b0': '#5C6674',                                // arrow labels
+    // the rest of the recommended plane hues
+    '#a78bfa': '#7C3AED', '#22d3ee': '#0891B2',
+    '#4ade80': '#16A34A', '#fbbf24': '#B45309',
+    // greys the scene recipe writes as literals
+    '#3a4250': '#C8CDD6',                                // neutral band stroke
+    '#4a5462': '#7B8593'                                 // strapline separator
+  };
+  // Mapping a light value again returns it unchanged, so col() is idempotent.
+  for (const v of Object.values(LIGHT)) LIGHT[v.toLowerCase()] = v;
+
+  let theme = 'dark';
+
+  function col(c) {
+    if (theme === 'dark' || !c) return c;
+    const k = String(c).toLowerCase();
+    return k in LIGHT ? LIGHT[k] : (LIGHT[k] = darken(c));
+  }
+
+  // Fallback for scene hues outside the recommended list: pull anything too
+  // pale for a light background down to a readable lightness, leave the rest
+  // (and any non-hex value) alone.
+  function darken(c) {
+    const m = /^#([0-9a-f]{6})$/i.exec(c);
+    if (!m) return c;
+    const n = parseInt(m[1], 16);
+    const r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    if (lum <= 0.5) return c;
+    const f = 0.42 / lum;
+    const h = (v) => Math.round(Math.min(255, v * f)).toString(16).padStart(2, '0');
+    return '#' + h(r) + h(g) + h(b);
+  }
+
+  // Text styles, mirroring the <style> block in the SVG.
+  const S = {
+    title:  { size: 28,   weight: 700, fill: C.ink },
+    sub:    { size: 14,   weight: 400, fill: C.mut },
+    tag:    { size: 13,   weight: 400, fill: C.dim },
+    hdr:    { size: 11,   weight: 700, ls: 2.5 },
+    tagr:   { size: 10,   weight: 400, ls: 2 },
+    plane:  { size: 9.5,  weight: 700, ls: 2, fill: C.plane },
+    bl:     { size: 13.5, weight: 600, fill: C.ink },
+    bs:     { size: 11,   weight: 400, fill: C.mut },
+    bn:     { size: 10.5, weight: 400, fill: C.dim, italic: true },
+    al:     { size: 10.5, weight: 400, fill: C.arrowLbl },
+    legend: { size: 11,   weight: 400, fill: C.mut }
+  };
+
+  function planeColor(id) { return (PLANES[id] || { c: C.slate }).c; }
+
+  // ======================== SCENE START (generated) =========================
+const W = 1480, H = 1800;
+
+// 此圖描述 repository 的知識責任，而非產品程式碼。虛線表示 Rivet
+// 擁有並可演進的文件契約；實線表示閱讀者或 agent 這類使用表面。
+const PLANES = {
+  actors: { c: '#94A3B8', label: '閱讀者與協作代理' },
+  governance: { c: '#7DD3FC', label: '入口與設計原則' },
+  truth: { c: '#A78BFA', label: '長期架構真相' },
+  topic: { c: '#4ADE80', label: '正式主題工件' },
+  baseline: { c: '#FBBF24', label: '工具鏈與未來實作' }
+};
+
+const BANDS = [
+  { id: 'band-actors', plane: 'actors', x: 160, y: 200, w: 1260, h: 150, alpha: 0.5,
+    hdr: { x: 184, y: 230, t: '閱讀者與協作代理' },
+    tagr: { x: 1396, y: 230, t: '從同一組真相開始', alpha: 0.6 } },
+  { id: 'band-governance', plane: 'governance', x: 160, y: 430, w: 1260, h: 180, alpha: 0.5, dash: true,
+    hdr: { x: 184, y: 460, t: '入口與設計原則' },
+    tagr: { x: 1396, y: 460, t: '先讀，再改變', alpha: 0.6 } },
+  { id: 'band-truth', plane: 'truth', x: 160, y: 690, w: 1260, h: 270, alpha: 0.52, dash: true,
+    hdr: { x: 184, y: 720, t: '文件 — 長期成立的設計真相' },
+    tagr: { x: 1396, y: 720, t: '每個 BC 一份主文件', alpha: 0.6 } },
+  { id: 'band-topic', plane: 'topic', x: 160, y: 1040, w: 1260, h: 300, alpha: 0.52, dash: true,
+    hdr: { x: 184, y: 1070, t: '分析 + 計畫 — 正式主題契約' },
+    tagr: { x: 1396, y: 1070, t: '同 slug · 有界變更', alpha: 0.6 } },
+  { id: 'band-baseline', plane: 'baseline', x: 160, y: 1420, w: 1260, h: 230, alpha: 0.5, dash: true,
+    hdr: { x: 184, y: 1450, t: '工具鏈基線與未來實作區域' },
+    tagr: { x: 1396, y: 1450, t: '一次一個 BC', alpha: 0.6 } }
+];
+
+const BOXES = [
+  { id: 'reader', plane: 'actors', band: 'band-actors', x: 220, y: 258, w: 500, h: 68, r: 10,
+    name: '公開讀者', about: '從 README、架構文件與圖理解 Rivet 的產品與邊界。',
+    texts: [['bl', 244, 286, '公開讀者'], ['bs', 244, 308, '理解產品 · 架構 · 設計決策']] },
+  { id: 'agent', plane: 'actors', band: 'band-actors', x: 860, y: 258, w: 500, h: 68, r: 10,
+    name: '協作代理', about: '先讀入口與相關契約，再以有界主題提出或實作改變。',
+    texts: [['bl', 884, 286, '協作代理'], ['bs', 884, 308, '先讀文件 · 再處理主題']] },
+
+  { id: 'readme', plane: 'governance', band: 'band-governance', x: 200, y: 490, w: 340, h: 88, r: 10, dash: true,
+    name: 'README.md', about: 'Repository 的首讀入口，說明 Rivet 的定位與文件導覽。',
+    texts: [['bl', 224, 518, 'README.md'], ['bs', 224, 540, '首讀入口 · 文件導覽'], ['bn', 224, 562, '從此開始定位任務']] },
+  { id: 'agents', plane: 'governance', band: 'band-governance', x: 570, y: 490, w: 340, h: 88, r: 10, dash: true,
+    name: 'AGENTS.md', about: '將讀取順序、主題工件與圖形 skill 路由交給協作代理。',
+    texts: [['bl', 594, 518, 'AGENTS.md'], ['bs', 594, 540, '讀取順序 · skill 路由'], ['bn', 594, 562, '不取代設計文件']] },
+  { id: 'principles', plane: 'governance', band: 'band-governance', x: 940, y: 490, w: 340, h: 88, r: 10, dash: true,
+    name: '設計原則', about: '保存產品取捨、架構取捨與正式主題的工作方法。',
+    texts: [['bl', 964, 518, '設計原則'], ['bs', 964, 540, '產品取捨 · 工作方法'], ['bn', 964, 562, '避免過早實作']] },
+
+  { id: 'product', plane: 'truth', band: 'band-truth', x: 200, y: 755, w: 270, h: 88, r: 10, dash: true,
+    name: '產品規範', about: '定義個人 GitHub PR 工作台的目標、成功標準與範圍。',
+    texts: [['bl', 224, 783, '產品規範'], ['bs', 224, 805, '目標 · 範圍 · 成功標準'], ['bn', 224, 827, '產品真相']] },
+  { id: 'architecture', plane: 'truth', band: 'band-truth', x: 500, y: 755, w: 270, h: 88, r: 10, dash: true,
+    name: '架構索引', about: '保存跨 BC 不變量，並連結 BC 文件與圖。',
+    texts: [['bl', 524, 783, '架構索引'], ['bs', 524, 805, '不變量 · 文件索引'], ['bn', 524, 827, '跨 BC 真相']] },
+  { id: 'bc-docs', plane: 'truth', band: 'band-truth', x: 800, y: 755, w: 270, h: 88, r: 10, dash: true,
+    name: 'BC 文件', about: '每個 Bounded Context 的唯一主文件，記錄責任與失敗契約。',
+    texts: [['bl', 824, 783, 'BC 文件'], ['bs', 824, 805, '責任 · Port · 失敗契約'], ['bn', 824, 827, '一個 BC 一份文件']] },
+  { id: 'diagrams', plane: 'truth', band: 'band-truth', x: 1100, y: 755, w: 270, h: 88, r: 10, dash: true,
+    name: '互動式圖', about: '以可互動圖呈現全景責任邊界與正式工作流程。',
+    texts: [['bl', 1124, 783, '互動式圖'], ['bs', 1124, 805, '全景圖 · 工作流程'], ['bn', 1124, 827, '不是裝飾']] },
+  { id: 'docs-writeback', plane: 'truth', band: 'band-truth', x: 440, y: 865, w: 600, h: 68, r: 10, dash: true,
+    name: '文件回寫', about: '完成後仍成立的決策回寫文件，使公開真相不只留在主題計畫。',
+    texts: [['bl', 464, 893, '文件回寫'], ['bs', 464, 915, '完成後仍成立的結論回寫文件與圖']] },
+
+  { id: 'requirements', plane: 'topic', band: 'band-topic', x: 200, y: 1110, w: 270, h: 88, r: 10, dash: true,
+    name: '需求釐清', about: '界定本次主題的目標、範圍、非目標與成功標準。',
+    texts: [['bl', 224, 1138, '需求釐清'], ['bs', 224, 1160, '目標 · 範圍 · 非目標'], ['bn', 224, 1182, '研究入口']] },
+  { id: 'technical-spec', plane: 'topic', band: 'band-topic', x: 500, y: 1110, w: 270, h: 88, r: 10, dash: true,
+    name: '技術規格', about: '記錄選項比較、技術判斷與需要鎖定的設計決策。',
+    texts: [['bl', 524, 1138, '技術規格'], ['bs', 524, 1160, '選項 · 取捨 · 證據'], ['bn', 524, 1182, '鎖定前研究']] },
+  { id: 'topic-plan', plane: 'topic', band: 'band-topic', x: 800, y: 1110, w: 270, h: 88, r: 10, dash: true,
+    name: '主題計畫', about: '將鎖定決策變成有 artifact path、步驟與驗收的執行契約。',
+    texts: [['bl', 824, 1138, '主題計畫'], ['bs', 824, 1160, '步驟 · 驗收 · 邊界'], ['bn', 824, 1182, '可執行契約']] },
+  { id: 'scope-return', plane: 'topic', band: 'band-topic', x: 1100, y: 1110, w: 270, h: 88, r: 10, dash: true,
+    name: '範圍回退', about: '若實作需要改變鎖定範圍，回到分析與計畫，而不是即興擴張。',
+    texts: [['bl', 1124, 1138, '範圍回退'], ['bs', 1124, 1160, '範圍改變 → 再分析'], ['bn', 1124, 1182, '拒絕即興擴張']] },
+  { id: 'topic-validation', plane: 'topic', band: 'band-topic', x: 440, y: 1220, w: 600, h: 68, r: 10, dash: true,
+    name: '主題驗證', about: '以驗收、圖形驗證與人類審查確認本次改變符合契約。',
+    texts: [['bl', 464, 1248, '主題驗證'], ['bs', 464, 1270, '驗收 · 圖形驗證 · staged 審查 · 人類關卡']] },
+
+  { id: 'toolchain', plane: 'baseline', band: 'band-baseline', x: 200, y: 1490, w: 520, h: 88, r: 10, dash: true,
+    name: '工具鏈基線', about: '保存 Swift、Node、Bun、formatter、lint 與檢查 scripts 的版本基線。',
+    texts: [['bl', 224, 1518, '工具鏈基線'], ['bs', 224, 1540, 'Swift · Node · Bun · scripts'], ['bn', 224, 1562, '可重現的品質基礎']] },
+  { id: 'future-bc', plane: 'baseline', band: 'band-baseline', x: 860, y: 1490, w: 520, h: 88, r: 10, dash: true,
+    name: '下一個 BC 切片', about: '僅在正式 topic 完成分析與計畫後，才建立受限的產品實作。',
+    texts: [['bl', 884, 1518, '下一個 BC 切片'], ['bs', 884, 1540, '一次一個 · 有界實作'], ['bn', 884, 1562, '尚未建立程式碼']] }
+];
+
+const EDGES = [
+  { from: 'reader', to: 'readme', pts: [[470,330],[470,484]], label: { s: 'al', x: 484, y: 412, t: '閱讀入口' } },
+  { from: 'agent', to: 'agents', pts: [[1110,330],[1110,400],[740,400],[740,484]], label: { s: 'al', x: 925, y: 392, t: '依規範路由', anchor: 'center' } },
+  { from: 'readme', to: 'architecture', pts: [[370,582],[370,660],[635,660],[635,749]], label: { s: 'al', x: 502, y: 652, t: '找到架構入口', anchor: 'center' } },
+  { from: 'agents', to: 'principles', pts: [[740,582],[740,640],[1110,640],[1110,484]], label: { s: 'al', x: 925, y: 632, t: '先讀原則', anchor: 'center' } },
+  { from: 'principles', to: 'architecture', pts: [[1110,582],[1110,680],[635,680],[635,749]], label: { s: 'al', x: 872, y: 672, t: '約束設計', anchor: 'center' } },
+  { from: 'architecture', to: 'bc-docs', pts: [[774,799],[794,799]], label: { s: 'al', x: 784, y: 787, t: '索引', anchor: 'center' } },
+  { from: 'architecture', to: 'diagrams', pts: [[635,847],[635,900],[1235,900],[1235,847]], label: { s: 'al', x: 935, y: 892, t: '連結互動式圖', anchor: 'center' } },
+  { from: 'requirements', to: 'technical-spec', pts: [[474,1154],[494,1154]], label: { s: 'al', x: 484, y: 1142, t: '研究', anchor: 'center' } },
+  { from: 'technical-spec', to: 'topic-plan', pts: [[774,1154],[794,1154]], label: { s: 'al', x: 784, y: 1142, t: '鎖定', anchor: 'center' } },
+  { from: 'topic-plan', to: 'topic-validation', pts: [[935,1202],[935,1214]], label: { s: 'al', x: 949, y: 1208, t: '執行', anchor: 'center' } },
+  { from: 'topic-validation', to: 'scope-return', pts: [[1044,1254],[1070,1254],[1070,1154],[1094,1154]], label: { s: 'al', x: 1084, y: 1204, t: '範圍改變', rot: -90, anchor: 'center' } },
+  { from: 'topic-validation', to: 'docs-writeback', pts: [[740,1216],[740,939]], label: { s: 'al', x: 754, y: 1080, t: '回寫長期真相', rot: -90, anchor: 'center' } },
+  { from: 'scope-return', to: 'requirements', pts: [[1096,1154],[116,1154],[116,1110],[194,1110]], label: { s: 'al', x: 100, y: 1132, t: '範圍改變', anchor: 'center' } },
+  { from: 'docs-writeback', to: 'toolchain', pts: [[440,899],[116,899],[116,1534],[194,1534]], label: { s: 'al', x: 100, y: 1216, t: '依基線驗證', rot: -90, anchor: 'center' } },
+  { from: 'toolchain', to: 'future-bc', pts: [[724,1534],[854,1534]], label: { s: 'al', x: 789, y: 1522, t: '支援下一個切片', anchor: 'center' } },
+  { from: 'future-bc', to: 'requirements', pts: [[1234,1534],[1436,1534],[1436,1110],[1376,1110]], label: { s: 'al', x: 1452, y: 1322, t: '新的正式 topic', rot: -90, anchor: 'center' } }
+];
+
+const TEXTS = [
+  { s: 'title', x: 160, y: 86, t: 'Rivet — 儲存庫知識地圖' },
+  { s: 'sub', x: 160, y: 118, t: '從研究到計畫、回寫文件，再開始一個有界的 Bounded Context 切片' },
+  { s: 'tag', x: 160, y: 146, runs: [
+    { t: '分析', fill: C.green }, { t: ' → ', fill: '#4A5462' },
+    { t: '計畫', fill: C.green }, { t: ' → ', fill: '#4A5462' },
+    { t: '文件', fill: C.violet }, { t: ' → ', fill: '#4A5462' },
+    { t: '一個 BC 切片', fill: C.amber }
+  ] },
+  { s: 'legend', x: 1082, y: 86, t: '虛線 — Rivet 擁有的知識契約' },
+  { s: 'legend', x: 1082, y: 110, t: '實線 — 人與協作代理的閱讀表面' },
+  { s: 'legend', x: 1143, y: 134, t: '顏色 — 所屬責任平面' },
+  { s: 'bn', x: 160, y: 1710, t: '不變量：分析不取代文件；計畫不取代 BC 文件；完成後仍成立的結論必須回寫。' },
+  { s: 'bn', x: 160, y: 1730, t: '本圖描述知識與治理結構，不表示 app、context 或產品程式碼已存在。' },
+  { s: 'bn', x: 160, y: 1750, t: '每個正式主題都以同一 slug 對應分析與計畫，並由 AGENTS.md 導引協作代理。' }
+];
+
+const SWATCHES = [
+  { x: 1046, y: 75, w: 26, h: 13, stroke: '#8B93A1', alpha: 0.8, dash: true },
+  { x: 1046, y: 99, w: 26, h: 13, stroke: C.boxStroke, alpha: 1, fill: C.boxFill }
+];
+
+const CHIPS = ['actors', 'governance', 'truth', 'topic', 'baseline']
+  .map((id, i) => ({ x: 1046 + i * 13, y: 123, w: 9, h: 13, fill: planeColor(id) }));
+
+  // ========================= SCENE END ======================================
+
+  // Index for fast lookup.
+  const BOX_BY_ID = new Map(BOXES.map(b => [b.id, b]));
+
+  // ==========================================================================
+  // VIEW STATE
+  // ==========================================================================
+
+  const canvas = document.getElementById('c');
+  // `ctx` is reassigned (not just mutated) during PNG export so the whole
+  // render path can be reused against an offscreen surface — hence `let`.
+  let ctx = canvas.getContext('2d');
+  const readout = document.getElementById('readout');
+  const zoomLabel = document.getElementById('zoomLabel');
+  const hint = document.getElementById('hint');
+  const plate = document.getElementById('plate');
+
+  const view = { k: 1, x: 0, y: 0 };   // world → screen: p * k + (x, y)
+  let vw = 0, vh = 0, dpr = 1;
+  let hovered = null;                  // box id under the cursor
+  let focused = null;                  // box id locked by a click
+  let raf = 0;
+
+  const MIN_K = 0.12, MAX_K = 4;
+
+  function schedule() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; draw(); });
+  }
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    vw = canvas.clientWidth;
+    vh = canvas.clientHeight;
+    canvas.width = Math.round(vw * dpr);
+    canvas.height = Math.round(vh * dpr);
+    schedule();
+  }
+
+  function fitScale(pad) {
+    return Math.min((vw - pad * 2) / W, (vh - pad * 2) / H);
+  }
+
+  function fit(animate) {
+    const pad = vw < 720 ? 20 : 48;
+    const k = clamp(fitScale(pad), MIN_K, MAX_K);
+    goTo(k, (vw - W * k) / 2, (vh - H * k) / 2, animate);
+  }
+
+  function actualSize() {
+    zoomAt(1, vw / 2, vh / 2, true);
+  }
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+  // Animated transitions for button-driven moves; instant for wheel/pinch/drag.
+  let anim = null;
+  function goTo(k, x, y, animate) {
+    if (!animate) { view.k = k; view.x = x; view.y = y; anim = null; schedule(); return; }
+    anim = { from: { ...view }, to: { k, x, y }, t0: performance.now(), dur: 280 };
+    step();
+  }
+  function step() {
+    if (!anim) return;
+    const p = Math.min(1, (performance.now() - anim.t0) / anim.dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    view.k = anim.from.k + (anim.to.k - anim.from.k) * e;
+    view.x = anim.from.x + (anim.to.x - anim.from.x) * e;
+    view.y = anim.from.y + (anim.to.y - anim.from.y) * e;
+    draw();
+    if (p < 1) requestAnimationFrame(step); else anim = null;
+  }
+
+  function zoomAt(k1, sx, sy, animate) {
+    k1 = clamp(k1, MIN_K, MAX_K);
+    const wx = (sx - view.x) / view.k;
+    const wy = (sy - view.y) / view.k;
+    goTo(k1, sx - wx * k1, sy - wy * k1, animate);
+  }
+
+  // Reported relative to the diagram's native 1480×1940 size, so the 1:1
+  // button and the readout agree.
+  function syncZoom() {
+    zoomLabel.textContent = Math.round(view.k * 100) + '%';
+    // The plate repeats the diagram's own title, so hide it whenever that
+    // title is actually on screen.
+    const titleOnScreen = worldVisible(160, 60, 620, 100);
+    plate.classList.toggle('hidden', titleOnScreen);
+    writeHash();
+  }
+
+  function worldVisible(x, y, w, h) {
+    const x0 = x * view.k + view.x, y0 = y * view.k + view.y;
+    return x0 > -8 && y0 > -8 && x0 + w * view.k < vw + 8 && y0 + h * view.k < vh + 8;
+  }
+
+  // ---- shareable view state: #k,x,y --------------------------------------
+  let hashTimer = 0;
+  function writeHash() {
+    clearTimeout(hashTimer);
+    hashTimer = setTimeout(() => {
+      const h = '#' + [view.k.toFixed(3), Math.round(view.x), Math.round(view.y)].join(',');
+      history.replaceState(null, '', h);
+    }, 220);
+  }
+
+  function readHash() {
+    const m = /^#([\d.]+),(-?\d+),(-?\d+)$/.exec(location.hash);
+    if (!m) return false;
+    const k = clamp(parseFloat(m[1]), MIN_K, MAX_K);
+    if (!isFinite(k)) return false;
+    view.k = k; view.x = +m[2]; view.y = +m[3];
+    return true;
+  }
+
+  // ==========================================================================
+  // DRAWING PRIMITIVES
+  // ==========================================================================
+
+  function font(st) {
+    const italic = st.italic ? 'italic ' : '';
+    return italic + st.weight + ' ' + st.size + "px 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace";
+  }
+
+  function setText(st) {
+    ctx.font = font(st);
+    ctx.textBaseline = 'alphabetic';
+    if ('letterSpacing' in ctx) ctx.letterSpacing = (st.ls || 0) + 'px';
+    ctx.fillStyle = col(st.fill || C.mut);
+  }
+
+  function measure(st, t) {
+    ctx.font = font(st);
+    if ('letterSpacing' in ctx) ctx.letterSpacing = (st.ls || 0) + 'px';
+    return ctx.measureText(t).width;
+  }
+
+  // Draws one text item; supports right/center anchoring and rotation, both of
+  // which the source SVG uses for margin labels.
+  function text(item, styleOverride) {
+    // Precedence: base style < the item's own fill < caller override.
+    const st = Object.assign({}, S[item.s], item.fill ? { fill: item.fill } : null, styleOverride);
+
+    ctx.save();
+    if (item.alpha != null) ctx.globalAlpha *= item.alpha;
+
+    if (item.rot) {
+      ctx.translate(item.x, item.y);
+      ctx.rotate(item.rot * Math.PI / 180);
+      ctx.translate(-item.x, -item.y);
+    }
+
+    if (item.runs) {
+      // Multi-colour single line (the header strapline with per-run colours).
+      let x = item.x;
+      for (const r of item.runs) {
+        setText(Object.assign({}, st, { fill: r.fill }));
+        ctx.fillText(r.t, x, item.y);
+        x += measure(st, r.t);
+      }
+    } else {
+      setText(st);
+      let x = item.x;
+      if (item.anchor === 'center') x -= measure(st, item.t) / 2;
+      else if (item.anchor === 'right') x -= measure(st, item.t);
+      ctx.fillText(item.t, x, item.y);
+    }
+
+    ctx.restore();
+  }
+
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x, y, w, h, r);
+    else {
+      const rr = Math.min(r, w / 2, h / 2);
+      ctx.moveTo(x + rr, y);
+      ctx.arcTo(x + w, y,     x + w, y + h, rr);
+      ctx.arcTo(x + w, y + h, x,     y + h, rr);
+      ctx.arcTo(x,     y + h, x,     y,     rr);
+      ctx.arcTo(x,     y,     x + w, y,     rr);
+      ctx.closePath();
+    }
+  }
+
+  // Polyline with softened elbows — the one deliberate departure from the SVG,
+  // which uses hard 90° corners. Reads better when the view is zoomed in.
+  function polyline(pts, radius) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length - 1; i++) {
+      const [px, py] = pts[i - 1], [cx, cy] = pts[i], [nx, ny] = pts[i + 1];
+      const d1 = Math.hypot(cx - px, cy - py);
+      const d2 = Math.hypot(nx - cx, ny - cy);
+      const r = Math.min(radius, d1 / 2, d2 / 2);
+      ctx.lineTo(cx + (px - cx) / d1 * r, cy + (py - cy) / d1 * r);
+      ctx.quadraticCurveTo(cx, cy, cx + (nx - cx) / d2 * r, cy + (ny - cy) / d2 * r);
+    }
+    const last = pts[pts.length - 1];
+    ctx.lineTo(last[0], last[1]);
+    ctx.stroke();
+  }
+
+  // Matches the SVG marker: 7.5 marker units at stroke-width 1.4 ≈ 10.5 world px.
+  function arrowhead(from, to, color) {
+    const a = Math.atan2(to[1] - from[1], to[0] - from[0]);
+    const L = 9.5, Wd = 4.2;
+    ctx.save();
+    ctx.translate(to[0], to[1]);
+    ctx.rotate(a);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-L, -Wd);
+    ctx.lineTo(-L,  Wd);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ==========================================================================
+  // FOCUS MODEL — what stays lit when a box is hovered or clicked
+  // ==========================================================================
+
+  function activeId() { return focused || hovered; }
+
+  function relatedSet(id) {
+    if (!id) return null;
+    const box = BOX_BY_ID.get(id);
+    const set = new Set([id]);
+    if (box) set.add(box.band);           // edges that terminate on the band
+    for (const e of EDGES) {
+      if (e.from === id || e.to === id) { set.add(e.from); set.add(e.to); }
+      else if (box && (e.from === box.band || e.to === box.band)) { set.add(e.from); set.add(e.to); }
+    }
+    return set;
+  }
+
+  // An edge is lit when it terminates on the active box, or on the band that
+  // box sits in — several arrows in the source SVG target a band, not a box.
+  function edgeLit(e) {
+    const id = activeId();
+    if (!id) return false;
+    const band = (BOX_BY_ID.get(id) || {}).band;
+    return e.from === id || e.to === id || e.from === band || e.to === band;
+  }
+
+  // ==========================================================================
+  // RENDER
+  // ==========================================================================
+
+  function draw() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, vw, vh);
+    ctx.fillStyle = col(C.bg);
+    ctx.fillRect(0, 0, vw, vh);
+
+    drawGrid();
+
+    ctx.save();
+    ctx.translate(view.x, view.y);
+    ctx.scale(view.k, view.k);
+    renderScene(activeId());
+    ctx.restore();
+
+    syncZoom();
+  }
+
+  // Dot grid in screen space — a canvas affordance that makes panning legible.
+  function drawGrid() {
+    const spacing = 32 * view.k;
+    if (spacing < 7) return;
+    const alpha = clamp((spacing - 7) / 18, 0, 1);
+    ctx.save();
+    ctx.fillStyle = theme === 'dark'
+      ? 'rgba(148,163,184,' + (0.13 * alpha).toFixed(4) + ')'
+      : 'rgba(15,23,42,' + (0.10 * alpha).toFixed(4) + ')';
+    const ox = view.x % spacing, oy = view.y % spacing;
+    const r = view.k > 1.4 ? 1.15 : 1;
+    for (let x = ox; x < vw + spacing; x += spacing) {
+      for (let y = oy; y < vh + spacing; y += spacing) {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+  }
+
+  function renderScene(active) {
+    const set = relatedSet(active);
+    const DIM = 0.16;
+
+    // ---- bands
+    for (const b of BANDS) {
+      const lit = !set || set.has(b.id) ||
+                  BOXES.some(x => x.band === b.id && set.has(x.id));
+      const base = lit ? 1 : DIM;
+      const hue = b.stroke || planeColor(b.plane);
+      ctx.save();
+      ctx.globalAlpha = base;
+
+      roundRect(b.x, b.y, b.w, b.h, 14);
+      ctx.fillStyle = col(C.bandFill);
+      ctx.fill();
+
+      ctx.globalAlpha = base * (b.alpha != null ? b.alpha : 1);
+      ctx.strokeStyle = col(hue);
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash(b.dash ? [6, 5] : []);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = base;
+
+      if (b.hdr) text({ s: 'hdr', x: b.hdr.x, y: b.hdr.y, t: b.hdr.t, fill: b.hdr.fill || hue });
+      if (b.tagr) text({ s: 'tagr', x: b.tagr.x, y: b.tagr.y, t: b.tagr.t, fill: b.tagr.fill || hue, anchor: 'right', alpha: b.tagr.alpha });
+      ctx.restore();
+    }
+
+    // ---- free text & legend swatches
+    ctx.save();
+    ctx.globalAlpha = set ? 0.4 : 1;
+    for (const t of TEXTS) text(t);
+    for (const s of SWATCHES) {
+      ctx.save();
+      roundRect(s.x, s.y, s.w, s.h, 3);
+      if (s.fill) { ctx.fillStyle = col(s.fill); ctx.fill(); }
+      ctx.globalAlpha *= s.alpha;
+      ctx.strokeStyle = col(s.stroke);
+      ctx.lineWidth = 1.25;
+      ctx.setLineDash(s.dash ? [6, 5] : []);
+      ctx.stroke();
+      ctx.restore();
+    }
+    for (const ch of CHIPS) {
+      ctx.save();
+      ctx.globalAlpha *= 0.85;
+      roundRect(ch.x, ch.y, ch.w, ch.h, 2.5);
+      ctx.fillStyle = col(ch.fill);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+
+    // ---- edges (under the boxes, as in the SVG). Their labels are deferred
+    // to a pass after the boxes: several sit over a box edge, and the SVG
+    // paints them on top.
+    const deferredLabels = [];
+    for (const e of EDGES) {
+      const lit = !set || edgeLit(e);
+      // A lit edge takes the hue of whichever plane the focused box lives in.
+      const color = lit && set ? planeColor((BOX_BY_ID.get(active) || {}).plane) : C.line;
+      ctx.save();
+      ctx.globalAlpha = set ? (lit ? 1 : DIM * 0.7) : 1;
+      ctx.strokeStyle = col(color);
+      ctx.lineWidth = lit && set ? 1.9 : 1.4;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      polyline(e.pts, 9);
+      const n = e.pts.length;
+      arrowhead(e.pts[n - 2], e.pts[n - 1], col(color));
+      ctx.restore();
+      if (e.label) {
+        deferredLabels.push({ label: e.label,
+                              a: set ? (lit ? 1 : DIM * 0.7) : 1,
+                              override: lit && set ? { fill: color } : null });
+      }
+    }
+
+    // ---- boxes
+    for (const b of BOXES) {
+      const isActive = b.id === active;
+      const lit = !set || set.has(b.id);
+      const base = lit ? 1 : DIM;
+      const hue = planeColor(b.plane);
+      ctx.save();
+      ctx.globalAlpha = base;
+
+      if (isActive) {
+        ctx.shadowColor = col(hue);
+        ctx.shadowBlur = 24;
+      }
+      roundRect(b.x, b.y, b.w, b.h, b.r);
+      ctx.fillStyle = col(C.boxFill);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // A whisper of the plane hue in the fill, so a column reads as a family
+      // even before you look at the borders.
+      ctx.globalAlpha = base * (isActive ? 0.13 : 0.05);
+      ctx.fillStyle = col(hue);
+      ctx.fill();
+
+      // Solid (infra) boxes get the neutral border first, then a hue wash;
+      // dashed (owned) boxes are drawn straight in the plane hue.
+      ctx.lineWidth = isActive ? 1.9 : 1.25;
+      if (!b.dash && !isActive) {
+        ctx.globalAlpha = base;
+        ctx.strokeStyle = col(C.boxStroke);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = base * (isActive ? 1 : b.dash ? 0.6 : 0.42);
+      ctx.strokeStyle = col(hue);
+      ctx.setLineDash(b.dash && !isActive ? [6, 5] : []);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = base;
+
+      for (const [s, x, y, t] of b.texts) text({ s, x, y, t });
+      ctx.restore();
+    }
+
+    // ---- edge labels, on top of everything
+    for (const d of deferredLabels) {
+      ctx.save();
+      ctx.globalAlpha = d.a;
+      text(Object.assign({}, d.label), d.override);
+      ctx.restore();
+    }
+  }
+
+  // ==========================================================================
+  // HIT TESTING & INPUT
+  // ==========================================================================
+
+  function toWorld(sx, sy) {
+    return [(sx - view.x) / view.k, (sy - view.y) / view.k];
+  }
+
+  function hitTest(sx, sy) {
+    const [x, y] = toWorld(sx, sy);
+    // Reverse order so the topmost box wins, matching paint order.
+    for (let i = BOXES.length - 1; i >= 0; i--) {
+      const b = BOXES[i];
+      if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) return b.id;
+    }
+    return null;
+  }
+
+  function showReadout(id) {
+    const b = BOX_BY_ID.get(id);
+    if (!b) { readout.classList.remove('on'); return; }
+    const plane = PLANES[b.plane] || { c: C.slate, label: b.plane };
+    readout.style.setProperty('--plane', col(plane.c));
+    readout.style.borderColor = col(plane.c) + '55';
+    readout.querySelector('.p span').textContent = plane.label;
+    readout.querySelector('.t').textContent = b.name;
+    readout.querySelector('.d').innerHTML = '<em>' + escapeHtml(b.about) + '</em>';
+    readout.classList.add('on');
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // ---- pointer
+  let dragging = false, moved = false, lastX = 0, lastY = 0, downX = 0, downY = 0;
+  const pointers = new Map();
+  let pinchDist = 0, pinchK = 1;
+
+  canvas.addEventListener('pointerdown', (e) => {
+    canvas.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, [e.clientX, e.clientY]);
+    if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      pinchDist = Math.hypot(a[0] - b[0], a[1] - b[1]);
+      pinchK = view.k;
+      dragging = false;
+      return;
+    }
+    dragging = true; moved = false;
+    lastX = downX = e.clientX;
+    lastY = downY = e.clientY;
+    canvas.classList.add('panning');
+    hint.classList.add('faded');
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (pointers.has(e.pointerId)) pointers.set(e.pointerId, [e.clientX, e.clientY]);
+
+    if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      const d = Math.hypot(a[0] - b[0], a[1] - b[1]);
+      if (pinchDist > 0) {
+        const r = canvas.getBoundingClientRect();
+        zoomAt(pinchK * (d / pinchDist), (a[0] + b[0]) / 2 - r.left, (a[1] + b[1]) / 2 - r.top, false);
+      }
+      return;
+    }
+
+    if (dragging) {
+      const dx = e.clientX - lastX, dy = e.clientY - lastY;
+      if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 4) moved = true;
+      view.x += dx; view.y += dy;
+      lastX = e.clientX; lastY = e.clientY;
+      anim = null;
+      schedule();
+      return;
+    }
+
+    const r = canvas.getBoundingClientRect();
+    const id = hitTest(e.clientX - r.left, e.clientY - r.top);
+    canvas.classList.toggle('pointing', !!id);
+    if (id !== hovered) {
+      hovered = id;
+      if (!focused) showReadout(id);
+      schedule();
+    }
+  });
+
+  function endPointer(e) {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) { pinchDist = 0; }
+    if (!dragging) return;
+    dragging = false;
+    canvas.classList.remove('panning');
+    if (!moved) {
+      const r = canvas.getBoundingClientRect();
+      const id = hitTest(e.clientX - r.left, e.clientY - r.top);
+      focused = (id && id === focused) ? null : id;
+      showReadout(focused || hovered);
+      schedule();
+    }
+  }
+  canvas.addEventListener('pointerup', endPointer);
+  canvas.addEventListener('pointercancel', endPointer);
+
+  canvas.addEventListener('pointerleave', () => {
+    if (hovered && !focused) { hovered = null; readout.classList.remove('on'); schedule(); }
+    else hovered = null;
+  });
+
+  let gestureK = 1, gestureActive = false;
+
+  // macOS trackpad pinch is exposed by Chromium as a pixel-mode wheel event
+  // with ctrlKey=true. Ordinary two-finger scrolling has no modifier and must
+  // pan the canvas instead of changing scale. Line/page-mode Ctrl/Meta wheel is
+  // left to the browser so its own page zoom remains available.
+  canvas.addEventListener('wheel', (e) => {
+    if (gestureActive) {
+      e.preventDefault();
+      return;
+    }
+    const trackpadPinch = e.ctrlKey && e.deltaMode === 0;
+    if (trackpadPinch) {
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      const sx = e.clientX - r.left, sy = e.clientY - r.top;
+      anim = null;
+      zoomAt(view.k * Math.exp(-e.deltaY * 0.01), sx, sy, false);
+    } else if (e.ctrlKey || e.metaKey) {
+      return;
+    } else {
+      e.preventDefault();
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? Math.max(vw, vh) : 1;
+      const rawX = e.deltaX * unit, rawY = e.deltaY * unit;
+      const shiftWheel = e.shiftKey && Math.abs(rawX) < 1;
+      view.x -= shiftWheel ? rawY : rawX;
+      view.y -= shiftWheel ? 0 : rawY;
+      anim = null;
+      schedule();
+    }
+    hint.classList.add('faded');
+  }, { passive: false });
+
+  // Safari exposes trackpad pinch through GestureEvent rather than the
+  // Chromium ctrl+wheel convention. Keep the initial scale stable for the
+  // gesture and zoom around its on-canvas centre.
+  canvas.addEventListener('gesturestart', (e) => {
+    e.preventDefault();
+    gestureActive = true;
+    gestureK = view.k;
+    anim = null;
+    hint.classList.add('faded');
+  }, { passive: false });
+  canvas.addEventListener('gesturechange', (e) => {
+    e.preventDefault();
+    const r = canvas.getBoundingClientRect();
+    const sx = typeof e.clientX === 'number' ? e.clientX - r.left : vw / 2;
+    const sy = typeof e.clientY === 'number' ? e.clientY - r.top : vh / 2;
+    zoomAt(gestureK * e.scale, sx, sy, false);
+  }, { passive: false });
+  canvas.addEventListener('gestureend', (e) => {
+    e.preventDefault();
+    gestureActive = false;
+  }, { passive: false });
+
+  canvas.addEventListener('dblclick', (e) => {
+    const r = canvas.getBoundingClientRect();
+    zoomAt(view.k * 1.7, e.clientX - r.left, e.clientY - r.top, true);
+  });
+
+  // ---- keyboard
+  window.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey) return;
+    const pan = e.shiftKey ? 220 : 70;
+    switch (e.key) {
+      case '0': fit(true); break;
+      case '1': actualSize(); break;
+      case 't': case 'T': toggleTheme(); break;
+      case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
+      case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
+      case 'Escape':
+        focused = null; readout.classList.remove('on'); schedule(); break;
+      case 'ArrowLeft':  view.x += pan; schedule(); break;
+      case 'ArrowRight': view.x -= pan; schedule(); break;
+      case 'ArrowUp':    view.y += pan; schedule(); break;
+      case 'ArrowDown':  view.y -= pan; schedule(); break;
+      default: return;
+    }
+    e.preventDefault();
+    hint.classList.add('faded');
+  });
+
+  // ---- toolbar
+  document.getElementById('bIn').onclick  = () => zoomAt(view.k * 1.3, vw / 2, vh / 2, true);
+  document.getElementById('bOut').onclick = () => zoomAt(view.k / 1.3, vw / 2, vh / 2, true);
+  document.getElementById('bFit').onclick = () => fit(true);
+  document.getElementById('bOne').onclick = () => actualSize();
+  const pngButton = document.getElementById('bPng');
+  pngButton.onclick = exportPng;
+
+  // ---- theme switcher -----------------------------------------------------
+  const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/>' +
+    '<path d="M12 2.6v2.3M12 19.1v2.3M4.5 4.5l1.6 1.6M17.9 17.9l1.6 1.6' +
+    'M2.6 12h2.3M19.1 12h2.3M4.5 19.5l1.6-1.6M17.9 6.1l1.6-1.6"/></svg>';
+  const MOON = '<svg viewBox="0 0 24 24">' +
+    '<path d="M20.5 14.6A8.6 8.6 0 019.4 3.5a8.7 8.7 0 1011.1 11.1z"/></svg>';
+
+  const themeButton = document.getElementById('bTheme');
+
+  function setTheme(t, remember) {
+    theme = t;
+    document.documentElement.setAttribute('data-theme', t);
+    themeButton.innerHTML = t === 'dark' ? SUN : MOON;
+    themeButton.title = (t === 'dark' ? 'Light' : 'Dark') + ' theme (t)';
+    if (remember) { try { localStorage.setItem('ac-theme', t); } catch (e) {} }
+    schedule();
+  }
+  function toggleTheme() { setTheme(theme === 'dark' ? 'light' : 'dark', true); }
+  themeButton.onclick = toggleTheme;
+
+  // The <head> script already resolved this; adopt it rather than re-deciding.
+  setTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
+
+  // Review hosts (artifact.cafe among them) embed the artifact in an iframe
+  // sandboxed without `allow-downloads`, which makes an <a download> click a
+  // silent no-op. Detect the frame and open the PNG in a new tab instead —
+  // `allow-popups-to-escape-sandbox` lets that through, and the viewer saves
+  // it from there. Opened standalone, the one-click download is unchanged.
+  let embedded = false;
+  try {
+    embedded = window.self !== window.top;
+  } catch (e) {
+    embedded = true;   // cross-origin parent — same sandbox story
+  }
+  if (embedded) pngButton.title = 'Open PNG @2× in a new tab';
+
+  // Renders the full diagram at 2× into an offscreen canvas, ignoring the
+  // current pan/zoom and any focus state.
+  function exportPng() {
+    const scale = 2;
+    const off = document.createElement('canvas');
+    off.width = W * scale;
+    off.height = H * scale;
+
+    const live = ctx;
+    ctx = off.getContext('2d');
+    try {
+      ctx.fillStyle = col(C.bg);
+      ctx.fillRect(0, 0, off.width, off.height);
+      ctx.scale(scale, scale);
+      renderScene(null);
+    } finally {
+      ctx = live;
+    }
+
+    off.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      // The new tab keeps reading from the blob URL after this handler ends,
+      // so hold it longer than the download path needs.
+      let ttl = 4000;
+      if (!embedded || !window.open(url, '_blank')) {
+        // Standalone, or the popup was blocked too: the anchor is still the
+        // best shot, and it costs nothing when it fails.
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'rivet-repository-knowledge-map@2x.png';
+        a.click();
+      } else {
+        ttl = 60000;
+      }
+      setTimeout(() => URL.revokeObjectURL(url), ttl);
+    }, 'image/png');
+  }
+
+  // ==========================================================================
+  // BOOT
+  // ==========================================================================
+
+  window.addEventListener('resize', resize);
+  resize();
+  if (!readHash()) fit(false);
+  schedule();
+
+  // Canvas text is rasterised at draw time, so the first paint would use the
+  // fallback stack. Redraw once the webfont actually lands.
+  if (document.fonts) {
+    const faces = ["400 11px 'JetBrains Mono'", "600 13.5px 'JetBrains Mono'",
+                   "700 28px 'JetBrains Mono'", "italic 400 10.5px 'JetBrains Mono'"];
+    Promise.all(faces.map(f => document.fonts.load(f).catch(() => {})))
+      .then(() => schedule());
+    if (document.fonts.ready) document.fonts.ready.then(() => schedule());
+  }
+
+  setTimeout(() => hint.classList.add('faded'), 6000);
+})();
+</script>
+</body>
+</html>

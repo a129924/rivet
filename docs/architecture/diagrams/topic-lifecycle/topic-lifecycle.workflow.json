@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Rivet 正式 Topic 工作流程",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    { "id": "main", "label": "正式 Topic" },
+    { "id": "exception", "label": "範圍變更", "variant": "exception" }
+  ],
+  "phases": [
+    { "id": "understand", "label": "理解", "fromCol": 0, "toCol": 1 },
+    { "id": "lock", "label": "鎖定契約", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "complete", "label": "驗證、回寫與審查", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "analysis-artifacts", "label": "同 slug 的分析工件", "lane": "main", "fromCol": 1, "toCol": 1, "variant": "default" },
+    { "id": "bounded-change", "label": "受限變更", "lane": "main", "fromCol": 2, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["topic", "analysis", "topic-plan", "execute", "validate", "handoff"],
+  "nodes": [
+    { "id": "topic", "lane": "main", "col": 0, "width": 52, "type": "frontend", "label": "主題", "sublabel": "明確目標" },
+    { "id": "analysis", "lane": "main", "col": 1, "width": 52, "type": "database", "label": "分析", "sublabel": "需求＋規格" },
+    { "id": "topic-plan", "lane": "main", "col": 2, "width": 52, "type": "security", "label": "計畫", "sublabel": "範圍＋驗收" },
+    { "id": "execute", "lane": "main", "col": 3, "width": 52, "type": "backend", "label": "實作", "sublabel": "有界變更" },
+    { "id": "validate", "lane": "main", "col": 4, "width": 52, "type": "security", "label": "驗證", "sublabel": "品質關卡" },
+    { "id": "handoff", "lane": "main", "col": 5, "width": 52, "type": "external", "label": "審查", "sublabel": "文件＋PR" },
+    { "id": "scope-change", "lane": "exception", "col": 3, "type": "security", "label": "範圍改變", "sublabel": "停止即興擴張" }
+  ],
+  "edges": [
+    { "from": "topic", "to": "analysis", "role": "main" },
+    { "from": "analysis", "to": "topic-plan", "role": "main", "variant": "emphasis" },
+    { "from": "topic-plan", "to": "execute", "role": "main" },
+    { "from": "execute", "to": "validate", "role": "main", "route": "bottom-channel", "fromSide": "bottom", "toSide": "bottom" },
+    { "from": "validate", "to": "handoff", "role": "main", "variant": "emphasis" },
+    { "from": "execute", "to": "scope-change", "role": "error", "variant": "security", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+    { "from": "validate", "to": "scope-change", "role": "error", "variant": "security", "route": "bottom-channel", "fromSide": "bottom", "toSide": "bottom" },
+    { "from": "scope-change", "to": "analysis", "label": "回到分析", "role": "return", "variant": "dashed", "route": "return-left", "fromSide": "left", "toSide": "left" }
+  ],
+  "cards": []
+}
