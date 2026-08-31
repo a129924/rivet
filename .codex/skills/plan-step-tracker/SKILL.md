@@ -1,23 +1,21 @@
 ---
 name: plan-step-tracker
-description: 檢查正式 topic `.step.md` 的結構、必要欄位與狀態完整性；不完成步驟、不產生 verdict 或放行流程。
+description: 依呼叫端提供的 ledger schema 檢查結構與必要欄位；不完成工作、不驗證證據或產生核准。
 ---
 
 # Step Ledger 檢查器
 
-只檢查同 slug `plan/<topic>/<topic>.step.md` 是否符合 `$sdd-workflow-contract` 的 topic artifact contract。這是 execution ledger 的結構檢查，不是 planning review、測試或 approval。
+檢查呼叫端提供的 ledger 是否符合其 schema 與必要欄位。ledger 的路徑、名稱、欄位與狀態值皆由呼叫端提供；本 skill 不假設特定工作流程。
 
-## 檢查項目
+## 檢查方式
 
-- 文件包含 Topic 與目前 phase。
-- 每個 step 都有 ID、status、owner role、完成條件與驗證證據。
-- 文件包含 Blockers、Human Check 與最後更新資訊。
-- 每個必要欄位都有可讀取的值；缺少欄位或驗證證據時，回報該 artifact 不完整。
+- 檢查指定的頂層欄位、每筆 entry 的必要欄位與呼叫端定義的狀態格式。
+- 回報缺少、空白、無法解析或不符合 schema 的欄位，並指出 entry 或位置。
+- 除非呼叫端指定其他格式，輸出 `complete` 或 `incomplete`，以及缺失欄位清單；這是結構結果，不是品質結論。
 
 ## 邊界
 
-- 不修改、勾選、完成或新增 step；不自行補齊缺漏欄位。
-- 不判斷 status 是否由 evidence 支持，亦不判斷 evidence 的真實性、充分性或完成條件是否已達成。
-- 不產生、推導或變更 verdict；不將 checkbox、status 或完整性檢查視為 approval。
-- 不取代 Tester、Plan-Reviewer 或 Reviewer，且不讓 Observer/Dispatcher 自動放行。
-- 不實作、不審查其他 artifacts、不執行 Git、commit、push、tag 或外部動作。
+- 不修改、勾選、完成或新增 entry；不自行補齊缺漏欄位。
+- 不判斷證據真實性、充分性、工作完成與否或任何品質結論。
+- 不將結構完整性轉成工作完成、流程放行或下一步派遣的結論。
+- 不實作、不審查其他文件、不執行 Git 或外部動作。

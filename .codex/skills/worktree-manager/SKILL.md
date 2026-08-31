@@ -17,7 +17,7 @@ metadata:
     - create_result
     - get_worktree_result
     - release_evidence
-    - routing_result
+    - lifecycle_recommendation
   use_when:
     - "需要安全建立、查詢、釋放或移除本 repository 的 worktree"
     - "需要在 lifecycle 決策前取得結構化 worktree 狀態"
@@ -31,27 +31,21 @@ metadata:
 
 # Worktree Lifecycle 管理
 
-管理 Git worktree 的完整 lifecycle，避免把檢查、釋放與破壞性移除混為一談。此 skill 不授權額外 Git 動作；每次 mutation 都必須在相應的 human boundary 與角色權限內執行。
-
-## 角色邊界
-
-- Observer/Dispatcher 僅能讀取 `get-worktree` 的結果並據此 routing；不得執行任何 Git 或 worktree mutation。
-- 已獲授權的非-Dispatcher 角色可依本 lifecycle contract 執行 `create`、`release worktree` 或 `remove worktree`。
-- 不得將上述 Dispatcher 限制擴大為其他已獲授權角色也不能管理 worktree。
+管理 Git worktree 的完整 lifecycle，避免把檢查、釋放與破壞性移除混為一談。此 skill 不授權額外 Git 動作；每次 mutation 都必須取得與該操作直接相關的授權。
 
 ## 操作路由
 
 1. 先確認目前位置屬於目標 Git repository；無法確認時回傳 `BLOCKED`，不作 mutation。
 2. 將需求精確辨識為 `create`、`get-worktree`、`release worktree` 或 `remove worktree`。若「清理」等用語無法判定是 release 或 remove，停下要求 human 明確選擇。
 3. 以 path policy 判斷 managed／unmanaged，並解析 selector。selector 無法唯一對應時，僅檢查或請求釐清。
-4. 若多個 worktree 可能共同修改 planning、governance 或其他共享檔案，先提出 coordination warning；不可假設它們互不影響。
+4. 若多個 worktree 可能共同修改共享檔案，先提出 coordination warning；不可假設它們互不影響。
 
 ### `create`
 
 - managed path 必須是 repository root 外的 `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`；預設 prefix 為 `agent`，只有 human 可以指定覆寫。
 - 目標 path 已存在但不是預期 worktree 時，停止交 human 決定。
 - branch 同名時，必須取得明確的 human `reuse` 或 `rename` 決策；不得默默重用既有 lineage。
-- path、branch 與角色權限都明確後，已獲授權的非-Dispatcher 才可建立 branch 和 worktree。
+- path、branch 與直接相關授權都明確後，才可建立 branch 和 worktree。
 - 回傳：
 
 ```yaml
@@ -109,7 +103,7 @@ Git command、selector 或 state 無法驗證時，明示限制且不捏造狀�
 - branch collision 未有 human reuse-or-rename 決策。
 - 目標 path 不在 managed family，卻假定由此 skill 擁有。
 - Git 註冊仍存在但 path 缺失。
-- 多個 active worktrees 可能編輯相同 planning 或 governance files。
+- 多個 active worktrees 可能編輯相同共享檔案。
 
 ## Common rationalizations
 

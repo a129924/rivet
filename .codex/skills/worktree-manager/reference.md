@@ -42,7 +42,7 @@ reason: "<推薦理由>"
 next safe action: "<具體且非破壞性的下一步>"
 ```
 
-`status` 不可取代 `reason`。若 Git 仍註冊 worktree 而其 path 已不存在，唯一適用的 recommendation 是 `prune-candidate`；這是交給 human 的 routing，不是 prune 命令或自動清理授權。
+`status` 不可取代 `reason`。若 Git 仍註冊 worktree 而其 path 已不存在，唯一適用的 recommendation 是 `prune-candidate`；這只是交給 human 的處置建議，不是 prune 命令或自動清理授權。
 
 ## 推薦矩陣
 
@@ -75,11 +75,10 @@ release_evidence:
 
 最小 release gate：`worktree_clean: true`、`untracked_files: false`，且 `branch_status: merged` 或 `pr_status: merged`；除非 human 明示 abandoned 或不需 merge。release 預設 `destructive_action_allowed: false`。
 
-## Safety routing
+## Safety handling
 
 - 非預期 repository：`BLOCKED`。
 - create branch collision：停在 human `reuse-or-rename`。
 - dirty、untracked、unpushed、detached、locked、unknown：`needs-human-decision`。
-- 共享 planning 或 governance files：先提出 coordination warning，要求相關 owner 協調。
+- 共享檔案：先提出 coordination warning，要求相關協作者確認寫入順序與 ownership。
 - stale registration：`prune-candidate`，不可 auto-prune。
-- Observer/Dispatcher：只讀 `get-worktree` 結果與 routing；不執行 Git 或 worktree mutation。

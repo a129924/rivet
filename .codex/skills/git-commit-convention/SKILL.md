@@ -5,7 +5,7 @@ description: 依 staged diff 檢查單一 commit 的語意邊界並建議 commit
 
 # Git Commit 慣例
 
-只讀取 staged diff 與適用的 repository commit 慣例。檢查變更能否構成單一語意 commit、是否混入無關變更、是否需要拆分，以及 message 是否準確描述變更。本 skill 不讀取 SDD artifacts、step ledger、verdict 或 routing 狀態。
+只讀取 staged diff 與適用的 repository commit 慣例。檢查變更能否構成單一語意 commit、是否混入無關變更、是否需要拆分，以及 message 是否準確描述變更。
 
 建議格式為：
 

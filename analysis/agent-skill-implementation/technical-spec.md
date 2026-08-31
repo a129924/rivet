@@ -1,62 +1,74 @@
 # Agent Skill Implementation — Technical Spec
 
-## Artifact Contract
+## Design Rule
 
-正式 topic 必須以同一 slug 建立且只承認下列 planning artifacts：
+個別 Agent Skill 是可組合的工具，不是 workflow controller。每個 skill 只接收完成自身工作所需的資料，並只產出其宣告的結果。是否採用 SDD、何時派遣 skill、如何串接結果，屬於 caller 或 Observer/Dispatcher 的工作；它不是一般 skill 的隱含前提。
 
-| Artifact | Responsibility |
-| --- | --- |
-| `analysis/<topic>/requirements.md` | 產品意圖、範圍與成功條件 |
-| `analysis/<topic>/technical-spec.md` | 已確認的執行設計與限制 |
-| `plan/<topic>/<topic>.plan.md` | 本次受限的執行契約、寫入範圍與驗收 |
-| `plan/<topic>/<topic>.step.md` | 執行狀態帳本：目前 phase、步驟、owner role、完成條件、驗證證據、blocker、verdict 與 human-check |
+唯一例外是 `sdd-workflow-contract`：它保留既有 SDD artifacts、phase、role、verdict 與 human-boundary contract，且不應被非 SDD skills 強制載入或複製。
 
-`analysis/` 保存研究與設計依據；`plan/` 保存本次執行契約與其執行狀態。`.step.md` 是正式必備 artifact，不是選擇性附加檔；每個 step 必須可追溯至 owner role、完成條件與驗證證據，並有 Blockers、Human Check 與最後更新資訊。step checkbox 或 status 絕不等同 approval。Plan-Creator 可建立或修正缺少的正式 artifacts；進入 Plan-Reviewer 時四份 artifacts 必須齊全。長期成立的架構結論仍依 repository 規範回寫 `docs/`。skills 不得將 release、VERSION、summary 或 correction artifacts 變成必備條件。
+## Universal Handoff Contract
 
-## Skill Set
-
-| Skill | Bounded responsibility |
-| --- | --- |
-| `sdd-workflow-contract` | artifact contract、roles、標準 verdict 與 human boundary 的唯一真相；其下僅有 topic artifacts 與 routing/verdicts references。 |
-| `context-package-builder` | 建立可追溯的最小 handoff context，只保留上游明示 verdict，不產生、重寫或推導 verdict。 |
-| `subagent-dispatch-policy` | 限制 Observer/Dispatcher 的角色選擇、單一派遣與停止條件；只可讀取既有明示狀態與 verdict。 |
-| `handoff-routing-policy` | 將既定明示 verdict 路由為前進、回修或停止；不產生、重寫或推導 verdict。 |
-| `plan-creator` | 只建立或修正四份 planning artifacts，並產生初始 `.step.md`。 |
-| `plan-reviewer` | 只獨立審查四份 planning artifacts，絕不代寫。 |
-| `plan-step-tracker` | 只檢查 `.step.md` 的結構、必要欄位與狀態完整性；不判斷內容真實性、不完成步驟、不產生 verdict、不取代 Tester 或 Reviewer。 |
-| `git-branch-naming` | 只提供 branch 名稱建議，不讀 SDD artifacts 或 routing，不執行 Git。 |
-| `worktree-manager` | 只提供具完整 lifecycle contract 的 managed／unmanaged worktree 操作指引，不讀 SDD artifacts 或 routing；以三份 references 保存可操作細節。 |
-| `git-commit-convention` | 只依 staged diff 與適用 commit conventions 提出語意邊界與 commit message，等待 human confirmation；不讀 SDD artifacts 或 routing。 |
-
-## Workflow Contract
-
-- Roles 限定為 Planner、Plan-Creator、Plan-Reviewer、Implementer、Tester、Reviewer、Explorer、Observer/Dispatcher。
-- Observer/Dispatcher 只可檢查 task、branch、worktree、PR、topic 與 `.step.md` 狀態，派遣單一適當角色，彙整結果並依明示 step 狀態及 verdict 路由；不得直接實作、改檔、勾選或修改 step、審查、計算 gate、commit、push、開 PR 或跨越 human boundary。
-- 最小 handoff 包含：topic slug、目前 phase、四份 artifact paths 與狀態、目前 step/status、locked decisions、上游明示 verdict、未解 blockers、受派角色與下一步目標。不得將未驗證推論標示為鎖定決策，亦不得由 context builder 產生、重寫或推導 verdict。
-- 標準 verdict 僅為 `approved`、`needs-rework`、`blocked`、`human-check`。`approved` 可前進；`needs-rework` 僅回到相符的產出角色；`blocked` 與 `human-check` 均停止自動前進並交還人類。
-- Dispatcher 可參考明示的 step 狀態與 verdict 作 routing，但不得把 checkbox、status 或 tracker 結果當成 approval 或 gate 結論；routing policy 只能依既有明示 verdict 路由，不能產生或改寫 verdict。
-- Plan-Creator 與 Plan-Reviewer 必須獨立；Plan-Creator 建立或修正四份 artifacts，不因其初始缺失而阻擋自己。Plan-Reviewer 開始審查時四份 artifacts 必須齊全，reviewer 不得修正或代寫 plan。任何 scope、architecture、path 或 contract 的 locked decision 不得由 skill 任意重開。
-
-## Git Boundary
-
-Git workflow 僅包含 branch naming、worktree lifecycle 與 human-confirmed commit。三個 Git skills 不讀取 SDD artifacts、step ledger 或 routing 狀態：branch naming 只建議名稱，worktree manager 只依其 lifecycle contract 檢查或執行 worktree 操作，commit convention 只依 staged diff 與適用 commit conventions 建議語意與 message。Observer/Dispatcher 對 Git 僅有唯讀狀態判斷權；所有改變 Git 狀態的行為只能由獲授權的非-Dispatcher 角色在 human boundary 後執行。軟體 release、post-merge、tag 自動化、auto commit、push 與遠端操作不屬於此 skill set。
-
-### Worktree Lifecycle Contract
-
-- `worktree-manager` 的 frontmatter 必須定義 `inputs`、`outputs`、`use_when`、`do_not_use_when` 與 `risk_profile`；其 lifecycle 僅為 `create`、`get-worktree`、`release worktree`、`remove worktree`。
-- managed path 固定為 repository root 外的 `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`；branch collision 必須停在 human 的 reuse-or-rename 決策。shared planning 或 governance files 可能跨 worktree 變更時，必須提出 coordination warning。
-- `release worktree` 是非破壞性的 active-working-set offboarding，不得隱含刪除；`remove worktree` 必須有當前明確的 human destructive approval，並在 dirty、untracked、unpushed、detached、locked、unmanaged 或不明狀態時停止。unmanaged worktree 預設 inspect-only，不得自行 release、remove、delete、prune、rename 或假設完成。
-- `get-worktree` 對每個 worktree 固定回傳 `path`、`branch`、`status`、`dirty state`、`recommendation`、`reason`、`next safe action`。missing-path-but-registered 僅路由為 `prune-candidate`，不得 auto-prune；status、checkbox 或 tracker 結果均不等同 approval。
-- 主 skill 必須連結 `reference.md`、`examples.md`、`checklist.md`，涵蓋固定術語／release evidence、正反 lifecycle 情境及可重複執行的 safety checks。Rivet 的唯一差異是角色限制：Observer/Dispatcher 只能讀取 `get-worktree` 結果並 routing；已獲授權的非-Dispatcher 角色可依 lifecycle contract 執行 create、release 或 remove。
-
-## Review Output
-
-`plan-reviewer` 與本 topic 的獨立 skill review 在完成檢查時只輸出下列 JSON；`blocking_issues` 每項包含 `issue`、`artifact` 與 `required_fix`：
+非 SDD skills 的 caller 只交付本次操作必要內容：
 
 ```json
 {
-  "verdict": "approved|needs-rework|blocked|human-check",
-  "blocking_issues": [],
-  "notes": []
+  "task": "明確工作",
+  "inputs": {},
+  "expected_output": "預期格式或結果",
+  "constraints": [],
+  "stop_conditions": [],
+  "authorization": "直接相關的操作授權"
 }
 ```
+
+- 欄位只在該 skill 實際需要時提供；skill 不得要求或補造未提供的 workflow、SDD、role、artifact、phase、verdict 或 approval 資訊。
+- skill 在輸入不足、直接授權不足或自身停止條件成立時，只回報其局部限制；不得推導 workflow verdict、approval、gate 或下一個角色。
+- result 的後續 routing 是 caller 或 Dispatcher 的責任。`handoff-routing-policy` 可依 caller 提供的明示 result 和 routing map 路由，但不解讀其業務或 workflow 意義。
+
+## Remediation Batches
+
+### Batch A — Context、Dispatch 與 Routing
+
+| Skill | 最小責任與輸入 | 最小修正 |
+| --- | --- | --- |
+| `context-package-builder` | 將 caller 已提供的 task、必要 inputs、expected output、constraints、stop conditions、authorization 整理成可交接 package。 | 移除 SDD artifacts、phase、roles 與 verdict 必填欄位；不發明或轉寫結果。 |
+| `subagent-dispatch-policy` | 依明確任務、候選 specialist 與直接限制，選擇單一適當 specialist 或停止。 | 移除 SDD role taxonomy、artifact readiness、phase 與 Git lifecycle 判斷。 |
+| `handoff-routing-policy` | 依 caller 提供的明示 result 與 routing map 提出下一個目的地或停止。 | 移除固定 SDD verdict、step、phase、roles 與 artifact 要求；不產生 result。 |
+
+### Batch B — Planning 與 Ledger
+
+| Skill | 最小責任與輸入 | 最小修正 |
+| --- | --- | --- |
+| `plan-creator` | 依 caller 提供 planning contract、輸出位置與已鎖定決策建立或修正 planning documents。 | 移除固定四 artifact、SDD role、verdict 與 Git boundary 假設；輸入不足時只說明缺少的 contract。 |
+| `plan-reviewer` | 依 caller 提供 contract、documents、criteria 與要求格式進行獨立審查。 | 移除固定 SDD JSON、phase、role 與 topic artifact 假設；不代寫、不判 workflow。 |
+| `plan-step-tracker` | 依 caller 提供 ledger schema 檢查欄位與狀態完整性。 | 移除 topic、phase、SDD role／verdict 假設；不驗證 evidence 真實性、不完成 step、不批准或路由。 |
+
+### Batch C — Git 與 Worktree
+
+| Skill | 最小責任與輸入 | 最小修正 |
+| --- | --- | --- |
+| `git-branch-naming` | 使用 caller 提供的命名輸入產生 branch-name 建議。 | 移除 SDD 否定語與任何 topic／routing 參照。 |
+| `git-commit-convention` | 檢查 staged diff 與適用 commit convention，建議單一語意邊界與 message，等待 human confirmation。 | 移除 SDD、topic artifact、`.step.md`、approval gate 與 Dispatcher 參照。 |
+| `worktree-manager` | 依自身 lifecycle contract 管理 create、get-worktree、release worktree、remove worktree。 | 將 Dispatcher／routing／planning-governance 特化改為一般 caller authorization；保留 shared files coordination warning，但不讀取 workflow 狀態。 |
+
+`worktree-manager` 必須維持既有的 managed path policy、branch collision 的 human reuse-or-rename decision、release/remove 分離、remove 的 destructive approval 與 dirty/untracked/unpushed/detached/locked/unmanaged/unknown stop states、固定 get-worktree result 與 `prune-candidate` no-auto-prune。
+
+### Batch D — Tooling Bootstrap Assumptions
+
+| Skill | 最小責任與輸入 | 最小修正 |
+| --- | --- | --- |
+| `build-run-debug` | 使用 caller 指定或 repository 既有入口 build、run 或 diagnose。 | 不再強制 `git init` 或 bootstrap；僅在 caller 要求建立入口時進行。 |
+| `swiftui-patterns` | 依既有結構與 caller UI task 建立或調整 macOS SwiftUI patterns。 | 將 `git init`、run bootstrap、固定檔案樹改為 caller 明確要求時才採用。 |
+| `telemetry` | 依觀察目標、程式區域與驗證方式加入或檢查 telemetry。 | 使用既有 launch method；只有缺少所需入口時才建議轉介。 |
+| `window-management` | 依目標 window／scene 行為調整管理方式。 | 接受任何可用 launch method；必要時才建議 `build-run-debug`。 |
+
+## No-Change Skills
+
+下列 skills 已符合最小責任界線，保持不修改：`appkit-interop`、`liquid-glass`、`packaging-notarization`、`sdd-workflow-contract`、`signing-entitlements`、`swiftpm-macos`、`test-triage`、`view-refactor`。
+
+## Acceptance and Stop Conditions
+
+- 檢查每個修正 skill 的 `SKILL.md` 與直接 references，確認無不必要 SDD／topic／step／phase／verdict／跨角色與 routing 假設。
+- 所有 21 個 skill 都執行 `quick_validate.py`；任何驗證失敗先回到修改該 skill 的 Implementer，不以 tracker 或 status 放行。
+- 獨立 Reviewer 以本 spec 的最小責任表審查，特別確認 Dispatcher 不被嵌入一般 skills、Git/worktree skills 不被 SDD 綁定，且安全規則未跨 skill 重複。
+- 任何 caller 必需輸入、直接授權或 destructive approval 缺失時，對應 skill 停在其自身 boundary；不得延伸為全域 workflow gate。

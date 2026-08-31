@@ -9,7 +9,7 @@
 - [ ] path 符合 `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>` 且位於 repository root 外。
 - [ ] 已知 branch 名稱；collision 時 human 已明確選擇 reuse 或 rename。
 - [ ] target path 不是不相關目錄或衝突 worktree。
-- [ ] 已提出共享 planning／governance files 的 coordination warning（適用時）。
+- [ ] 已提出共享檔案的 coordination warning（適用時）。
 - [ ] 輸出將包含 path、branch 與 next_step。
 
 ## Pre-release

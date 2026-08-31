@@ -3,45 +3,39 @@
 ## Topic and Current Phase
 
 - Topic: `agent-skill-implementation`
-- Current phase: responsibility-boundary remediation 的 Plan-Creator 已完成；awaiting independent Plan-Reviewer verdict.
+- Current phase: planning contract updated; awaiting independent Plan-Reviewer review of the complete 21-skill decoupling scope.
 
 ## Steps
 
 | ID | Status | Owner role | Completion condition | Validation evidence |
 | --- | --- | --- | --- | --- |
-| PC-01 | completed | Plan-Creator | 四份正式 topic artifacts 已依 locked decision 更新。 | requirements、technical spec、topic plan 與本 ledger 已建立；先前 Plan-Reviewer verdict 為 `approved`。 |
-| PR-01 | completed | Plan-Reviewer | 獨立審查四份 artifacts 並只輸出既定 verdict JSON。 | 上游明示 verdict：`approved`；不得以 step status 視為 approval。 |
-| IM-01 | completed | Implementer | 更新九個既有 skills 並新增 `plan-step-tracker`，使十個 skills 符合四份 artifact contract。 | 已更新 `AGENTS.md`、九個既有 skill 與新增 `plan-step-tracker`；後續 worktree-manager contract 升級另列 IM-02。 |
-| PC-02 | completed | Plan-Creator | 四份 artifacts 已補入完整 worktree-manager 在地化骨架與安全 contract，不重開既有 locked decisions。 | requirements、technical spec、topic plan 與本 ledger 已更新；明定三份 worktree references、lifecycle、stop states 與 Rivet 角色差異。 |
-| PR-02 | completed | Plan-Reviewer | 獨立審查四份 artifacts 與新增的 worktree-manager contract。 | 上游 Plan-Reviewer 明示 verdict：`approved`（PR-02）；此 verdict 允許進入 IM-02，但不代表最終 skill review 已通過。 |
-| IM-02 | completed | Implementer | 依 PR-02 `approved` 將既有 `worktree-manager` 在地化為完整 lifecycle skill，並建立 `reference.md`、`examples.md`、`checklist.md`。 | 上游 Implementer completion handoff：IM-02 已完成；未改 application code、Git tag、commit、push 或 PR。 |
-| TE-01 | completed | Tester | 對十個 skills 逐一執行 `quick_validate.py`。 | 獨立 Tester evidence：十個 `quick_validate.py` 執行結果皆為 exit 0；此驗證結果不等同 Reviewer `approved`。 |
-| RV-01 | pending | Reviewer | 獨立審查十個 skills、四份 artifact contract、Dispatcher 與 Git 邊界。 | 尚無；最終只輸出既定 verdict JSON。 |
-| PC-03 | completed | Plan-Creator | 將完整 audit 已識別的最小責任邊界更新至四份 artifacts。 | 四份 artifacts 已明定：Plan-Creator 可建立缺少 artifacts、Plan-Reviewer 才要求四份齊全；context／routing 不產生或改寫 verdict；step tracker 只檢查結構與欄位；Git skills 不讀 SDD artifacts 或 routing；SDD core 是 artifact／roles／verdict 唯一真相。 |
-| PR-03 | pending | Plan-Reviewer | 獨立審查 PC-03 的四份 artifact 一致性與 locked responsibility boundaries。 | 尚無；不得以 PC-03 status 視為 approval。 |
-| IM-03 | pending | Implementer | 僅在 PR-03 明示 `approved` 後，依已鎖定責任邊界修正十個 skills。 | 尚無；不得由 Dispatcher 或 step status 放行。 |
-| TE-02 | pending | Tester | 僅在 IM-03 完成後，重新驗證十個 skills。 | 尚無；validator 結果不等同 Reviewer verdict。 |
-| RV-02 | pending | Reviewer | 獨立審查十個 skills 的責任分離、Dispatcher 邊界與 Git 邊界。 | 尚無；最終只輸出既定 verdict JSON。 |
-| GI-01 | pending | Implementer | 在 Reviewer `approved` 後依 topic 建立一個 commit、push 既有 branch，並更新既有 draft PR。 | 尚無；不得建立新 branch、worktree、PR 或 tag。 |
-| HC-01 | pending | Human | 審查既有 draft PR。 | 尚無；human-check 不由 Dispatcher 自動放行。 |
+| PC-01 | completed | Plan-Creator | 原始四份 topic artifacts 建立並鎖定十-skill baseline。 | 已存在四份 artifacts 與歷史 Plan-Reviewer approval；僅為歷史證據。 |
+| PR-01 | completed | Plan-Reviewer | 審查原始四 artifact baseline。 | 歷史明示 verdict：`approved`。 |
+| IM-01 | completed | Implementer | 建立初始本地 skills 與 step ledger。 | 歷史 implementation handoff；僅為 topic 沿革。 |
+| PC-02 | completed | Plan-Creator | 補入 worktree-manager lifecycle contract。 | 歷史 planning update。 |
+| PR-02 | completed | Plan-Reviewer | 審查 worktree-manager contract。 | 歷史明示 verdict：`approved`。 |
+| IM-02 | completed | Implementer | 完成 worktree-manager lifecycle skill 與 references。 | 歷史 implementation handoff。 |
+| TE-01 | completed | Tester | 驗證十-skill baseline。 | 歷史 validator exit 0；不代表目前 revision approval。 |
+| PC-03 | completed | Plan-Creator | 記錄先前責任邊界 remediation。 | 歷史 planning update；後續完整 audit 以 PC-04 為準。 |
+| PC-04 | completed | Plan-Creator | 四份 artifacts 已明定 21-skill 完整 audit、最小 handoff contract、13-skill remediation batches、八個 no-change skills、驗收與停止條件。 | requirements、technical spec、topic plan 與本 ledger 本輪已同步更新。 |
+| PR-04 | pending | Plan-Reviewer | 獨立審查 PC-04 四份 artifacts 是否符合「僅 sdd-workflow-contract 理解 SDD」及 locked scope。 | 尚無；此 status 不等同 approval。 |
+| IM-04 | pending | Implementer | 僅在 PR-04 明示 `approved` 後，依 Batch A–D 修正 13 個 skills，保留八個 no-change skills。 | 尚無；不得由 Dispatcher 或 ledger status 放行。 |
+| TE-03 | pending | Tester | 僅在 IM-04 完成後，對全部 21 個 skills 執行 validator 並記錄結果。 | 尚無；validator 結果不等同 Reviewer approval。 |
+| RV-03 | pending | Reviewer | 獨立審查 21 個 skills 的最小責任、SDD isolation、Dispatcher boundary、Git/worktree boundary 與 safety regressions。 | 尚無；只接受獨立 Reviewer 明示 result。 |
+| GI-02 | pending | Implementer | 僅在 RV-03 明示 `approved` 與人類 commit／push 授權後，依 topic commit、push 既有 branch，更新既有 draft PR。 | 尚無；不得建立新 branch、worktree、PR 或 tag。 |
+| HC-02 | pending | Human | 在既有 draft PR 審查本輪 revision。 | 尚無；不得由任何 agent 或 ledger 取代。 |
 
 ## Blockers
 
-- PR-03 尚未產生獨立 Plan-Reviewer verdict；在該 verdict 明示為 `approved` 前，IM-03、TE-02、RV-02、GI-01 與 HC-01 不得前進。RV-01 由本次 remediation 的 RV-02 取代，不得作為後續放行依據。其他既有 steps 不因本次 planning 更新而重開。
-
-## Latest Upstream Verdict
-
-- Previous verdict: `approved`（PR-01，四 artifact 與十 skill baseline）。
-- Latest explicit upstream verdict: `approved`（PR-02，由獨立 Plan-Reviewer 對 worktree-manager contract update 輸出）。
-- Current required verdict: `pending`（PR-03，由獨立 Plan-Reviewer 審查 responsibility-boundary remediation）。
-- 此欄位僅記錄獨立上游角色明示輸出的 verdict；不得由 step status、checkbox 或 tracker 結果推導或填入。
+- PR-04 尚未產生獨立 Plan-Reviewer 明示 result。該 result 為 `approved` 前，IM-04、TE-03、RV-03、GI-02 與 HC-02 不得前進。
+- 歷史 PR-01／PR-02、既有 step status、checkbox、tracker 結果與 validator evidence 不得作為 PC-04 revision 的 approval。
 
 ## Human Check
 
-- Draft PR 更新後交給 human review；不得由 Dispatcher、step checkbox、step status 或 tracker 結果取代。
+- Commit、push 與既有 draft PR 更新各需直接人類授權；human review 是 HC-02 的獨立邊界。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 依完整 audit 將最小責任邊界寫入 planning contract，並建立 PC-03、PR-03、IM-03、TE-02、RV-02 gate。
-- Update status: awaiting independent Plan-Reviewer verdict; step status、checkbox 與 validator 結果均不得取代該 verdict。
+- Update reason: 完整 21-skill decoupling audit 已被鎖定為本輪 scope；個別 skill 不再假設 SDD workflow。
+- Update status: awaiting independent Plan-Reviewer result; ledger 僅記錄狀態與 evidence，不產生 approval、verdict 或 routing。

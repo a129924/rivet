@@ -1,20 +1,33 @@
 ---
 name: context-package-builder
-description: 為既定 subAgent 建立最小、可追溯的 SDD handoff context；用於派遣前的交接整理。
+description: 將呼叫端已提供的工作資訊整理為最小、可追溯的交接內容；用於派遣或交棒前。
 ---
 
 # 交接內容建立器
 
-使用此 skill 建立下一個既定角色所需的最小交接內容。先讀取 `$sdd-workflow-contract` 的 `references/topic-artifacts.md`。
+將呼叫端已提供且與下一位執行者直接相關的資訊整理為最小交接內容。不要探索或補齊未提供的 workflow 脈絡。
 
-## 交接內容
+## 輸出
 
-輸出唯一一個 JSON，包含 `topic`、`phase`、`artifacts`、`current_step`、`locked_decisions`、`upstream_verdict`、`blockers`、`assigned_role`、`next_objective`。`artifacts` 必須列出四份正式 artifacts，`current_step` 必須含 `.step.md` 中明示的 ID 與 status。欄位與值域遵循共用 contract。
+除非呼叫端指定其他格式，輸出唯一一個 JSON：
 
-只包含已驗證的 repository 狀態與上游結果；不可將猜測、要求或尚未決定的方案標為 locked decision。`next_objective` 必須限縮為受派角色可完成的單一工作。
+```json
+{
+  "task": "明確工作",
+  "inputs": {},
+  "expected_output": "預期格式或結果",
+  "constraints": [],
+  "stop_conditions": [],
+  "authorization": "直接相關的操作授權"
+}
+```
+
+- 保留已提供的事實、限制與授權；沒有值時使用 `null` 或空集合，不猜測補值。
+- 只交接下一項工作所需的輸入。可省略與該工作無關的歷史、文件或其他執行者規則。
+- `expected_output` 必須可判斷；若呼叫端未指定，明確標示缺少輸出要求。
 
 ## 邊界
 
-- 不派遣、不實作、不改檔、不審查、不計算 gate，也不執行 Git。
-- artifacts、scope、BC、path 或 locked decision 不明時，只將原因列入 `blockers`。保留上游原有的明示 verdict；沒有上游 verdict 時維持 `null`，不得改成或推導為 `blocked`。
-- `.step.md` 的 checkbox 或 status 不得標為 approval；不增列 release、VERSION、summary 或 correction artifacts。
+- 不派遣、不實作、不改檔、不審查，也不執行外部動作。
+- 不推導工作狀態、品質結論、核准或下一步；只整理已明示的內容。
+- 必要輸入、停止條件或授權不明時，列為缺少資訊，交還呼叫端釐清。

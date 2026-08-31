@@ -2,37 +2,35 @@
 
 ## Goal
 
-在本 repository 建立一組最小、可維護、語言無關的本地 agent skills，使正式 topic 能以固定 artifacts、獨立規劃審查、可追溯 handoff 與受限 Git 工作方式運作。
+使 repository 內 21 個本地 Agent Skills 都能以完成自身工作所需的最小輸入、輸出與安全邊界獨立運作。SDD 是可選 workflow：僅 `sdd-workflow-contract` 可以定義或理解 SDD artifacts、phase、roles、verdict 與 human boundary。
 
 ## In Scope
 
-- 建立下列本地 skills：`sdd-workflow-contract`、`context-package-builder`、`subagent-dispatch-policy`、`handoff-routing-policy`、`plan-creator`、`plan-reviewer`、`plan-step-tracker`、`git-branch-naming`、`worktree-manager`、`git-commit-convention`。
-- 將正式 topic 的唯一 artifacts 固定為同 slug 的 `requirements.md`、`technical-spec.md`、`.plan.md` 與 `.step.md`，並將 artifact contract、roles 與標準 verdict 的唯一真相收斂至 `sdd-workflow-contract`。
-- 將 `.step.md` 定義為執行狀態帳本，記錄步驟、owner role、完成條件、驗證證據、blocker、verdict 與 human-check；它不是 approval 的替代品。
-- 定義 Planner、Plan-Creator、Plan-Reviewer、Implementer、Tester、Reviewer、Explorer、Observer/Dispatcher 的責任邊界、handoff 與標準 verdict。
-- 提供 branch 命名、完整且可操作的 worktree lifecycle，以及 human-confirmed commit 的 Git workflow 指引；這三個 Git skills 只處理各自的 Git 責任，不讀取 SDD artifacts 或 routing 狀態。
-- 將 `worktree-manager` 在地化為完整 lifecycle skill：結構化 frontmatter、`create`／`get-worktree`／`release worktree`／`remove worktree`、managed path、branch collision 的 human reuse-or-rename 決策、release/remove 分離，以及三份操作 references。
-- 驗證全部 skills，並由獨立 Reviewer 審查其 workflow contract。
+- 完整審視並最小化 `.codex/skills/` 內 21 個本地 skills 的責任、輸入、輸出與停止條件。
+- 將 SDD、topic artifacts、`.step.md`、phase、verdict、其他角色職責與 workflow gate 從非 SDD skills 移除；保留在 `sdd-workflow-contract`。
+- 將 handoff 收斂為 caller 提供的明確任務、必要輸入、預期輸出、直接限制／停止條件與直接授權；不得傳遞整個 workflow 或無關 artifacts。
+- 修正 13 個有耦合或不必要 bootstrap 假設的 skills：`build-run-debug`、`context-package-builder`、`git-branch-naming`、`git-commit-convention`、`handoff-routing-policy`、`plan-creator`、`plan-reviewer`、`plan-step-tracker`、`subagent-dispatch-policy`、`swiftui-patterns`、`telemetry`、`window-management`、`worktree-manager`。
+- 保持八個無需修改的 skills：`appkit-interop`、`liquid-glass`、`packaging-notarization`、`sdd-workflow-contract`、`signing-entitlements`、`swiftpm-macos`、`test-triage`、`view-refactor`。
+- 驗證全部 21 個 skills，並由獨立 Reviewer 審查責任分離、Dispatcher 邊界與 Git／worktree 邊界。
 
 ## Out Of Scope
 
-- Application code、Bounded Context 實作、release 設定或產品功能。
-- Python、Swift、TypeScript 的實作、TDD、測試框架或型別規範。
-- 軟體 release、post-merge、自動 commit、push 與遠端 Git 操作。
-- `agents/openai.yaml`、scripts、模板或額外的 workflow contract 文件。
+- Application code、Bounded Context 實作、產品功能、release、post-merge、VERSION、summary、correction artifacts 或 tag lifecycle。
+- Python、Swift、TypeScript 實作、TDD、測試框架或型別規範。
+- 自動 commit、push、開 PR，或任何未獲直接授權的 Git／worktree mutation。
+- 將 SDD workflow 變成所有 skill 的先決條件，或以防呆為由重複其他 skill 的責任。
 
 ## Success Criteria
 
-- 十個 skills 可清楚區分規劃、實作、驗證、審查與 routing 責任，且不要求未授權 artifacts。
-- Observer/Dispatcher 僅可讀取狀態與 `.step.md`、派遣、彙整與依明示 step 狀態及 verdict 路由；不實作、改檔、勾選 step、審查、計算 gate 或執行 Git 操作。
-- Plan-Creator 必須建立或修正缺少的正式 artifacts；只有進入 Plan-Reviewer 時，四份 artifacts 缺少、scope／BC／path／locked decision 不明才停止並回報 `blocked`，不得自行推論。
-- `plan-reviewer` 的最終輸出可被 Dispatcher 直接路由，且只使用既定 JSON 格式。
-- `context-package-builder` 與 `handoff-routing-policy` 只能傳遞、讀取與路由既有的明示 verdict，不得自行產生、重寫或推導 verdict。
-- `plan-step-tracker` 能發現缺少 owner role、驗證證據、blocker 或 human-check 的 `.step.md`，但只檢查結構與欄位完整性，不判斷內容真實性、不產生 verdict 或放行流程。
-- `worktree-manager` 對 managed 與 unmanaged worktree 維持不同安全路徑：`get-worktree` 回傳固定欄位與 `prune-candidate` routing 而不 auto-prune；`remove worktree` 只在明確 human destructive approval 與所有安全檢查通過後才可由獲授權的非-Dispatcher 角色執行。
-- `worktree-manager` 保留完整 validation、failure handling、red flags、common rationalizations、boundaries 與 planning／governance coordination warning；Observer/Dispatcher 僅可讀取 `get-worktree` 結果與 routing。
-- 所有新增 skills 通過 skill validator，獨立審查沒有未處理 blocker。
+- 除 `sdd-workflow-contract` 外，任何 skill 在沒有 SDD repository、topic artifact、`.step.md`、phase 或 verdict 的情況下仍可依 caller 輸入完成自身工作。
+- 非 SDD skill 不自行產生、改寫、推導 verdict／approval，不把 checkbox、status 或 tracker 結果視為 approval，也不判斷其他角色的 gate 或 workflow 狀態。
+- `context-package-builder` 只整理 caller 已提供的 context；`handoff-routing-policy` 只路由 caller 已明示的 result；`subagent-dispatch-policy` 只選擇單一適當 specialist。
+- `plan-creator` 與 `plan-reviewer` 只依 caller 明確提供的 planning contract、documents、criteria 與 output format 工作，不假設固定 SDD artifacts 或 workflow。
+- `plan-step-tracker` 僅檢查 caller 提供 ledger 的 schema／必要欄位／狀態完整性，不判斷證據真實性、不產生 approval 或 verdict、不取代 Tester／Reviewer。
+- Git skills 不讀取 SDD artifacts 或 routing：`git-branch-naming` 只根據 caller 命名輸入建議名稱；`git-commit-convention` 只檢查 staged diff、適用 commit 規範並等待 human confirmation；`worktree-manager` 只處理自身 lifecycle、安全檢查與 destructive approval。
+- `worktree-manager` 保持 create、get-worktree、release worktree、remove worktree 的完整 safety contract；release 不隱含刪除，remove 保留明確 human destructive approval 與既有 stop states，unmanaged worktree 預設 inspect-only，stale registration 僅標示 `prune-candidate`。
+- 全部 21 個 skills 通過 validator，獨立審查沒有未解 blocker。
 
 ## Recovery Baseline
 
-既有 `v0.1.0-architecture-baseline` 足以作為本 topic 的實作前回溯點。tag 僅可在 draft PR 建立並交給 human review 後，作為非阻擋的 cleanup；Observer/Dispatcher 不得建立、移動或推送 tag。
+既有 `v0.1.0-architecture-baseline` 是本 topic 的實作前回溯點。不得建立、移動或推送 tag 作為本次工作的一部分。

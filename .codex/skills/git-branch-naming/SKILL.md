@@ -11,4 +11,4 @@ description: 依工作類型與識別名稱提供可讀、可追溯的 Git branc
 
 若工作識別名稱、工作類型或既有命名慣例不明，說明缺少的輸入，不自行假設或產生名稱。
 
-此 skill 只處理呼叫端提供的命名輸入，不讀取 SDD artifacts、step ledger、verdict 或 routing 狀態。僅提供建議；不建立、切換、刪除或推送 branch，不執行 worktree、commit、tag、release、post-merge 或其他 Git 操作。
+此 skill 只處理呼叫端提供的命名輸入。僅提供建議；不建立、切換、刪除或推送 branch，不執行 worktree、commit、tag、release、post-merge 或其他 Git 操作。

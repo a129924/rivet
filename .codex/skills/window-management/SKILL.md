@@ -32,8 +32,8 @@ deployment targets, expect to use more AppKit bridging or availability guards.
    resize expectations, and whether the window should appear at launch.
 5. Set default placement for newly opened windows and ideal placement for zoom
    behavior when content and display size matter.
-6. Build and launch the app with `build-run-debug` to verify the result in
-   a real foreground `.app` bundle.
+6. Build and launch the app with the project's existing or caller-specified method, and
+   真實 foreground `.app` bundle 中驗證結果。
 7. If SwiftUI scene/window modifiers are not enough, switch to `appkit-interop`
    for a narrow `NSWindow` bridge rather than spreading AppKit through the view
    tree.
@@ -167,4 +167,4 @@ For concrete window modifier examples, read `references/api-snippets.md`.
   Liquid Glass, or system material adoption.
 - Use `appkit-interop` if a custom window behavior truly requires `NSWindow`,
   `NSPanel`, or responder-chain control.
-- Use `build-run-debug` to launch and verify the resulting windows.
+- Use the project's existing or caller-specified launch method to verify the resulting windows.

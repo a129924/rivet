@@ -6,7 +6,7 @@
 
 需求：為 `agent-skill-implementation` 建立工作目錄。
 
-正確處理：確認 repository、使用 managed path、確認 branch 不 collision，並在有授權的非-Dispatcher 角色下才建立。
+正確處理：確認 repository、使用 managed path、確認 branch 不 collision，並取得 create 所需的直接授權後才建立。
 
 ```yaml
 create_result:
@@ -14,7 +14,7 @@ create_result:
   branch: "feat/andrew/agent-skill-implementation"
   next_step: "進入此 worktree 後繼續已授權工作"
 notes:
-  - "若其他 worktree 也會更新 planning 或 governance files，先協調 owner。"
+  - "若其他 worktree 也會更新共享檔案，先協調寫入順序與 ownership。"
 ```
 
 ## 2. Create 時 branch collision
@@ -80,7 +80,7 @@ next safe action: "請 human 確認 ownership 並在最新 safety checks 後決�
 
 需求：human 在當前 request 明確授權 destructive remove。
 
-正確處理：先再次取得唯一 selector 與最新 state；只要有 dirty、untracked、unpushed、detached、locked、unmanaged 或 unknown 任一狀態，就回傳 `needs-human-decision`。全部 safety gate 通過且執行者是獲授權非-Dispatcher 時，才可執行 remove。
+正確處理：先再次取得唯一 selector 與最新 state；只要有 dirty、untracked、unpushed、detached、locked、unmanaged 或 unknown 任一狀態，就回傳 `needs-human-decision`。全部 safety gate 通過且已有當前明確 destructive approval 時，才可執行 remove。
 
 先前的 release request 不是 delete 同意。
 
