@@ -7,6 +7,7 @@
   - `analysis/<topic>/requirements.md`
   - `analysis/<topic>/technical-spec.md`
   - `plan/<topic>/<topic>.plan.md`
+  - `plan/<topic>/<topic>.step.md`
 - `analysis/` 保存尚未鎖定的研究依據；`plan/` 是本次受限的執行契約；完成後仍成立的結論必須回寫 `docs/`。
 - 系統或 BC 的責任邊界使用 `architecture-canvas`；workflow、sequence、dataflow、lifecycle 使用 `archify`。圖的作者內容使用繁體中文，並必須通過各 skill 的驗證；不得自行發布 artifact.cafe。
 - `docs/architecture/bounded-contexts/` 是 BC 長期設計真相；一個 Bounded Context 對應一份文件。不得把暫時推論或未授權實作細節寫成既定架構。

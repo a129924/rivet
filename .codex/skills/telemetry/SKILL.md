@@ -55,9 +55,8 @@ Use feature-specific categories like `Windowing`, `Commands`, `MenuBar`, `Sideba
    - Log action boundaries and key state transitions.
    - Prefer one high-signal line per user action over noisy value dumps.
 
-3. Build and run the app.
-   - Use `build-run-debug` for the build/run loop.
-   - If `script/build_and_run.sh` exists, prefer `./script/build_and_run.sh --telemetry` for live telemetry checks or `./script/build_and_run.sh --logs` for broader process logs.
+3. Build and run the app with the project's existing or caller-specified method.
+   - 若已有可用的本地 run script，可用其 telemetry 或 logs 選項；不要因 telemetry 需求建立新的啟動入口。
    - Exercise the UI or command path that should emit telemetry.
 
 4. Read runtime logs and verify the event fired.
@@ -83,4 +82,4 @@ Use feature-specific categories like `Windowing`, `Commands`, `MenuBar`, `Sideba
 - Do not use `print` as the primary app telemetry mechanism for macOS app code.
 - Do not leave a dense trail of permanent debug logs around every state mutation.
 - Do not claim an event is wired correctly until you have a concrete verification path through Console, `log stream`, or captured process output.
-- If the debugging task is mostly about crash/backtrace analysis rather than action telemetry, switch to `build-run-debug`.
+- If the debugging task is mostly about crash/backtrace analysis rather than action telemetry, use an appropriate crash-analysis workflow.

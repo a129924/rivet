@@ -15,9 +15,10 @@ When a project does not already have an established macOS run entrypoint:
 ## `script/build_and_run.sh`
 
 Use one project-specific script with a tiny mode switch and a default no-flag
-path that just kills, builds, and launches. Keep raw executable launch only for
-true command-line tools. For SwiftPM AppKit/SwiftUI GUI apps, stage a
-project-local `.app` bundle and launch that bundle with `/usr/bin/open -n`.
+path that stops a verified target process, builds, and launches. Keep raw
+executable launch only for true command-line tools. For SwiftPM AppKit/SwiftUI
+GUI apps, stage a project-local `.app` bundle and launch that bundle with
+`/usr/bin/open` (without `-n`).
 
 ### SwiftPM CLI executable
 
@@ -29,8 +30,28 @@ set -euo pipefail
 
 MODE="${1:-run}"
 APP_NAME="MyTool"
+APP_PROCESS_NAME="$APP_NAME" # 必須能唯一識別此工具的 process
 
-pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+stop_running_process() {
+  local matched_pids pid_count target_pid
+  matched_pids="$(pgrep -x "$APP_PROCESS_NAME" || true)"
+  [[ -z "$matched_pids" ]] && return 0
+  pid_count="$(printf '%s\n' "$matched_pids" | awk 'NF { count++ } END { print count + 0 }')"
+  if [[ "$pid_count" -ne 1 ]]; then
+    echo "multiple processes matched '$APP_PROCESS_NAME'; nothing was stopped. A human must provide a unique selector before retrying." >&2
+    return 2
+  fi
+  target_pid="$matched_pids"
+  kill "$target_pid"
+  for _ in {1..25}; do
+    kill -0 "$target_pid" 2>/dev/null || return 0
+    sleep 0.2
+  done
+  echo "target process did not stop: $target_pid" >&2
+  return 1
+}
+
+stop_running_process
 
 swift build
 APP_BINARY="$(swift build --show-bin-path)/$APP_NAME"
@@ -73,6 +94,7 @@ set -euo pipefail
 
 MODE="${1:-run}"
 APP_NAME="MyApp"
+APP_PROCESS_NAME="$APP_NAME" # 必須能唯一識別此 app 的 process
 BUNDLE_ID="com.example.MyApp"
 MIN_SYSTEM_VERSION="14.0"
 
@@ -84,7 +106,26 @@ APP_MACOS="$APP_CONTENTS/MacOS"
 APP_BINARY="$APP_MACOS/$APP_NAME"
 INFO_PLIST="$APP_CONTENTS/Info.plist"
 
-pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+stop_running_app() {
+  local matched_pids pid_count target_pid
+  matched_pids="$(pgrep -x "$APP_PROCESS_NAME" || true)"
+  [[ -z "$matched_pids" ]] && return 0
+  pid_count="$(printf '%s\n' "$matched_pids" | awk 'NF { count++ } END { print count + 0 }')"
+  if [[ "$pid_count" -ne 1 ]]; then
+    echo "multiple processes matched '$APP_PROCESS_NAME'; nothing was stopped. A human must provide a unique selector before retrying." >&2
+    return 2
+  fi
+  target_pid="$matched_pids"
+  kill "$target_pid"
+  for _ in {1..25}; do
+    kill -0 "$target_pid" 2>/dev/null || return 0
+    sleep 0.2
+  done
+  echo "target app process did not stop: $target_pid" >&2
+  return 1
+}
+
+stop_running_app
 
 swift build
 BUILD_BINARY="$(swift build --show-bin-path)/$APP_NAME"
@@ -116,7 +157,7 @@ cat >"$INFO_PLIST" <<PLIST
 PLIST
 
 open_app() {
-  /usr/bin/open -n "$APP_BUNDLE"
+  /usr/bin/open "$APP_BUNDLE"
 }
 
 case "$MODE" in
@@ -151,6 +192,8 @@ activation, and missing bundle identifier warnings. If the `.app` bundle opens
 but the main window still does not come forward, the app entrypoint may need
 `NSApp.setActivationPolicy(.regular)` and
 `NSApp.activate(ignoringOtherApps: true)`.
+
+`APP_PROCESS_NAME` 是本 bootstrap 唯一可用的 target selector。零個匹配時繼續；僅一個 PID 匹配時才可 stop。多個 PID 匹配時不得 stop、不得採用替代 stop method、不得以 `open -n` 繞過；停止並要求人類提供可使 `APP_PROCESS_NAME` 唯一匹配的 selector 後再重試。
 
 Adapt the build step for Xcode projects by replacing `swift build` with
 `xcodebuild -project ...` or `xcodebuild -workspace ...`, then launch the built

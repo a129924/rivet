@@ -20,3 +20,5 @@
 - 每個正式 topic 先鎖定範圍與驗收，再開始實作；scope 改變時先回到 analysis 與 plan。
 - 架構圖不是裝飾：全景與責任邊界使用 `architecture-canvas`，流程與狀態變化使用 `archify`。
 - 文件、圖與程式碼若不一致，優先修正能代表長期真相的文件與圖，再進行實作調整。
+- 對上游來源作本地 skill overlay 時，必須清楚記錄 pin 與本地差異；同步上游時重新評估 overlay，不得將本地規則誤稱為 upstream 原文。
+- 僅 `sdd-workflow-contract` 定義或理解 SDD；其他 skill 必須以完成自身工作所需的最小輸入、輸出與安全邊界獨立運作，不假設 topic artifacts、phase、verdict 或其他角色職責存在。
