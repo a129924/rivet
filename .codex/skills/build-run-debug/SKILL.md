@@ -37,7 +37,7 @@ simulator-specific workflows onto pure macOS tasks.
    - Split SwiftPM launch handling by product type:
      - use raw executable launch only for true command-line tools,
      - use an existing `.app` bundle or request the documented launch method for AppKit/SwiftUI GUI apps.
-   - Determine the app/process name to kill before relaunching.
+   - 在 relaunch 前驗證可唯一識別的目標 app bundle、process name 或 caller 指定 stop method；若無法辨識，停止而不宣稱已重新啟動。
 
 3. Choose an existing build or launch entrypoint.
    - Prefer the project's documented command or a checked-in local script when it directly matches the task.
@@ -75,13 +75,14 @@ simulator-specific workflows onto pure macOS tasks.
   - `xcodebuild build -workspace <workspace> -scheme <scheme>`
   - `xcodebuild build -project <project> -scheme <scheme>`
   - `swift build`
-  - `/usr/bin/open -n <existing-app-bundle>`
+  - `/usr/bin/open <existing-app-bundle>`
 
 ## Guardrails
 
 - Prefer the narrowest command that proves or disproves the current theory.
 - Do not create or change repository, run-script, bundle-staging, or environment configuration as an incidental part of debugging.
 - Do not launch a SwiftUI/AppKit SwiftPM GUI app as a raw executable unless the user explicitly wants to diagnose that failure mode: it can produce no Dock icon, no foreground activation, and missing bundle identifier warnings. Keep raw executable launch only for true command-line tools.
+- 對 GUI app 的 relaunch，先停止已確認為目標的 process 並確認已結束，再以既有 app bundle 或 caller 指定 launch method 啟動；不要以 `open -n` 併行建立新 instance，也不要對不明 process 執行 stop。
 - Do not claim UI state you cannot inspect directly.
 - Do not describe mobile or simulator workflows as if they apply to macOS.
 - If build output is huge, summarize the first real blocker and point to follow-up commands.

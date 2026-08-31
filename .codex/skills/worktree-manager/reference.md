@@ -28,7 +28,7 @@ selector 必須可唯一解析，優先順序如下：
 - 其他文件只可提供 context，不能覆寫此 path classification。
 - 不符合 path policy 就是 unmanaged，預設只可 inspect。
 
-建立前還必須檢查 branch occupancy。已存在但未 attach 的 branch，必須由 human 明確選擇 `reuse` 或 `rename`；已 attach 到其他 worktree 的 branch 則回傳 `existing_result`，並要求 human 選擇先處理 release 或改用新 branch。release 後仍要重新檢查 occupancy；已 attach branch 不可 force reuse，也不可加入第二個 worktree。
+建立前還必須檢查 branch occupancy。已存在但未 attach 的 branch，必須由 human 明確選擇 `reuse` 或 `rename`；已 attach 到其他 worktree 的 branch 則回傳 `existing_result`，並要求 human 選擇使用既有 worktree 或改用新 branch。`release worktree` 是非破壞性 offboarding，不會 detach branch 或改變 Git 的 occupancy；它不能使已 attach branch 可被重用。已 attach branch 不可 force reuse，也不可加入第二個 worktree。
 
 ## `get-worktree` 結果 contract
 
@@ -80,10 +80,12 @@ release_evidence:
 
 完成中的最小 release gate 是 `worktree_clean: true`、`untracked_files: false`，且 `branch_status: merged` 或 `pr_status: merged`；除非 human 明示 abandoned 或不需 merge。暫停中的最小 release gate 是 `worktree_clean: true`、`untracked_files: false`、`lineage_preserved: true`、`active_mutation: none`、`release_authorization: explicit` 與 `user_intent: release`。兩條路徑的 release 預設 `destructive_action_allowed: false`，且都不刪除 worktree 或 branch。
 
+release 也不移除 Git worktree registration 或 detach branch。因此 release 後該 branch 仍 attach，不能作為 create branch collision 的前置處理。
+
 ## Safety handling
 
 - 非預期 repository：`BLOCKED`。
-- create branch 已 attach：回傳 existing worktree，停在 human `release-or-rename`；不可 force reuse。未 attach 的既有 branch 才停在 human `reuse-or-rename`。
+- create branch 已 attach：回傳 existing worktree，停在 human `use-existing-or-new-branch`；不可 force reuse。未 attach 的既有 branch 才停在 human `reuse-or-rename`。
 - dirty、untracked、unpushed、detached、locked、unknown：`needs-human-decision`。
 - 共享檔案：先提出 coordination warning，要求相關協作者確認寫入順序與 ownership。
 - stale registration：`prune-candidate`，不可 auto-prune。

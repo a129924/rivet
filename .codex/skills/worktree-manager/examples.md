@@ -21,7 +21,7 @@ notes:
 
 觀察：想使用的 branch 已 attach 到另一個 worktree。
 
-正確處理：回傳 `existing_result`，要求 human 選擇先處理該 worktree 的 release 或 `rename` 為新 branch；release 後仍須重新檢查 occupancy。不得 force reuse、不得在未決定時把已 attach branch 加入第二個 worktree。若 branch 存在但未 attach，才可由 human 選擇 `reuse` 或 `rename`。
+正確處理：回傳 `existing_result`，要求 human 選擇使用既有 worktree 或 `rename` 為新 branch。`release worktree` 不會 detach branch 或釋放 occupancy，不能用來讓同一 branch 加入第二個 worktree。不得 force reuse、不得在未決定時把已 attach branch 加入第二個 worktree。若 branch 存在但未 attach，才可由 human 選擇 `reuse` 或 `rename`。
 
 ## 3. Managed worktree 可 release
 
@@ -44,7 +44,7 @@ reason: "lineage 已完成，且沒有本地未保存狀態。"
 next safe action: "標記為 released；若日後需要刪除，另行提出 remove worktree 與明確破壞性同意。"
 ```
 
-release 不可執行或暗示 delete。
+release 不可執行或暗示 delete、detach branch 或釋放 branch occupancy。
 
 ## 4. Dirty 或 untracked worktree
 

@@ -7,7 +7,7 @@
 - [ ] 目前位置已驗證為目標 Git repository 或其 child。
 - [ ] 操作明確是 `create`。
 - [ ] path 符合 `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>` 且位於 repository root 外。
-- [ ] 已檢查 branch occupancy；若 branch 已 attach 到其他 worktree，已回傳 existing worktree 並取得 human `release` 或 `rename` 決策，且不會 force reuse。
+- [ ] 已檢查 branch occupancy；若 branch 已 attach 到其他 worktree，已回傳 existing worktree 並取得 human 使用既有 worktree 或指定新 branch 的決策，且不會 force reuse。
 - [ ] 若 branch 已存在但未 attach，human 已明確選擇 reuse 或 rename。
 - [ ] target path 不是不相關目錄或衝突 worktree。
 - [ ] 已提出共享檔案的 coordination warning（適用時）。
@@ -24,6 +24,7 @@
 - [ ] 若 `task_status: paused`，`lineage_preserved: true`、`active_mutation: none`，且有本次 release 的直接 human 授權。
 - [ ] `user_intent: release`，且 `destructive_action_allowed: false`。
 - [ ] 結果明說 release 不代表 deletion。
+- [ ] 結果明說 release 不會 detach branch 或釋放 branch occupancy。
 
 ## Pre-remove
 
