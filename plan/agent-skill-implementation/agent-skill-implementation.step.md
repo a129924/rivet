@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `agent-skill-implementation`
-- Current phase: planning contract updated; awaiting independent Plan-Reviewer review of the complete 21-skill decoupling scope.
+- Current phase: existing ready-for-review PR 的 comment review 與 bounded remediation；等待目前 PR comments 的獨立盤點。
 
 ## Steps
 
@@ -18,24 +18,32 @@
 | TE-01 | completed | Tester | 驗證十-skill baseline。 | 歷史 validator exit 0；不代表目前 revision approval。 |
 | PC-03 | completed | Plan-Creator | 記錄先前責任邊界 remediation。 | 歷史 planning update；後續完整 audit 以 PC-04 為準。 |
 | PC-04 | completed | Plan-Creator | 四份 artifacts 已明定 21-skill 完整 audit、最小 handoff contract、13-skill remediation batches、八個 no-change skills、驗收與停止條件。 | requirements、technical spec、topic plan 與本 ledger 本輪已同步更新。 |
-| PR-04 | pending | Plan-Reviewer | 獨立審查 PC-04 四份 artifacts 是否符合「僅 sdd-workflow-contract 理解 SDD」及 locked scope。 | 尚無；此 status 不等同 approval。 |
-| IM-04 | pending | Implementer | 僅在 PR-04 明示 `approved` 後，依 Batch A–D 修正 13 個 skills，保留八個 no-change skills。 | 尚無；不得由 Dispatcher 或 ledger status 放行。 |
-| TE-03 | pending | Tester | 僅在 IM-04 完成後，對全部 21 個 skills 執行 validator 並記錄結果。 | 尚無；validator 結果不等同 Reviewer approval。 |
-| RV-03 | pending | Reviewer | 獨立審查 21 個 skills 的最小責任、SDD isolation、Dispatcher boundary、Git/worktree boundary 與 safety regressions。 | 尚無；只接受獨立 Reviewer 明示 result。 |
-| GI-02 | pending | Implementer | 僅在 RV-03 明示 `approved` 與人類 commit／push 授權後，依 topic commit、push 既有 branch，更新既有 draft PR。 | 尚無；不得建立新 branch、worktree、PR 或 tag。 |
+| PR-04 | completed | Plan-Reviewer | 獨立審查 PC-04 四份 artifacts 是否符合「僅 sdd-workflow-contract 理解 SDD」及 locked scope。 | 獨立 Plan-Reviewer 的明示 gate result：`approved`；此 evidence 不由 ledger status 或 checkbox 推導。 |
+| IM-04 | completed | Implementer | 依 Batch A–D 修正 13 個 skills，保留八個 no-change skills。 | Git commit `a24e739`（`refactor(skills): make local skills workflow-independent`）的變更內容。 |
+| TE-03 | completed | Tester | 對全部 21 個 skills 執行 validator 並記錄結果。 | Tester 執行紀錄：21 個 `quick_validate.py` validator 均 exit 0；此結果不等同 Reviewer approval。 |
+| RV-03 | completed | Reviewer | 獨立審查 21 個 skills 的最小責任、SDD isolation、Dispatcher boundary、Git/worktree boundary 與 safety regressions。 | 獨立 Reviewer 的明示 result：`approved`；此 evidence 不由 validator 或 ledger status 推導。 |
+| GI-02 | completed | Implementer | 依 topic commit、push 既有 branch，並更新既有 PR。 | commit `a24e739` 已推送至 `origin/feat/andrew/agent-skill-implementation`；既有 PR #2 已更新。 |
+| PRC-01 | pending | Reviewer | 盤點既有 PR 的所有未解 review comments，逐一標示為可修正、需 human 決策或無需程式修正，並輸出最小修正範圍。 | 尚無；需以 PR comment URL／thread ID 與分類結果佐證，不得由 PR 狀態推導。 |
+| PRC-02 | pending | Implementer | 僅修正 PRC-01 已明確列為可修正的 comments；不得擴張至無關 cleanup。 | 尚無；需記錄對應 thread ID、變更檔案與 diff／檢查結果。 |
+| PRC-03 | pending | Tester | 對 PRC-02 的修正執行與 comment 範圍相稱的驗證。 | 尚無；需記錄實際指令與結果。驗證結果不等同 approval。 |
+| PRC-04 | pending | Reviewer | 獨立審查 PRC-02 修正是否回應已列明 comments，且無 scope 或 safety regression。 | 尚無；只接受獨立 Reviewer 的明示 result；不得由 tracker 或 Tester 結果推導。 |
+| PRC-05 | pending | Implementer | 在直接 human commit／push 授權與 PRC-04 明示可整合結果後，建立單一語意 commit 並 push 既有 branch。 | 尚無；需記錄 commit SHA、remote push 結果與既有 PR #2 更新結果；不得建立 branch、worktree、PR 或 tag。 |
+| PRC-06 | pending | Implementer | 僅在已推送對應修正後，依直接 human 授權 resolve 已由 PRC-02 回應的 PR review threads。 | 尚無；需記錄已 resolve 的 thread ID／URL。不得 resolve 未修正、需 human 決策或不明的 thread。 |
 | HC-02 | pending | Human | 在既有 draft PR 審查本輪 revision。 | 尚無；不得由任何 agent 或 ledger 取代。 |
 
 ## Blockers
 
-- PR-04 尚未產生獨立 Plan-Reviewer 明示 result。該 result 為 `approved` 前，IM-04、TE-03、RV-03、GI-02 與 HC-02 不得前進。
-- 歷史 PR-01／PR-02、既有 step status、checkbox、tracker 結果與 validator evidence 不得作為 PC-04 revision 的 approval。
+- PRC-01 尚未完成前，不得推定任何 PR comment 的處置、修正範圍或 thread resolution。
+- 任何需 human 決策的 comment 必須停在 PRC-01，不得交由 Implementer 猜測或以無關 cleanup 取代。
+- PRC-04 的獨立明示結果與直接 human commit／push 授權均缺失前，PRC-05 不得前進；PRC-06 只可處理已實際修正且已推送的 thread。
+- 既有 step status、checkbox、tracker 結果與 validator evidence 不得作為 PR comment review、approval、commit、push 或 thread resolution 的依據。
 
 ## Human Check
 
-- Commit、push 與既有 draft PR 更新各需直接人類授權；human review 是 HC-02 的獨立邊界。
+- Commit、push 與 review-thread resolution 各需直接人類授權；human review 是 HC-02 的獨立邊界。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 完整 21-skill decoupling audit 已被鎖定為本輪 scope；個別 skill 不再假設 SDD workflow。
-- Update status: awaiting independent Plan-Reviewer result; ledger 僅記錄狀態與 evidence，不產生 approval、verdict 或 routing。
+- Update reason: 補登已完成的 21-skill decoupling gates 之明示 evidence，並建立既有 PR comment review／fix 的可追溯步驟。
+- Update status: awaiting PRC-01 comment inventory; ledger 僅記錄狀態與 evidence，不產生 approval、verdict 或 routing。

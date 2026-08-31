@@ -19,9 +19,9 @@ notes:
 
 ## 2. Create 時 branch collision
 
-觀察：想使用的 branch 已存在。
+觀察：想使用的 branch 已 attach 到另一個 worktree。
 
-正確處理：停止建立，要求 human 指定 `reuse` 既有 lineage 或 `rename` 為新 branch。不得在未決定時自動 attach 到既有 branch。
+正確處理：回傳 `existing_result`，要求 human 選擇先處理該 worktree 的 release 或 `rename` 為新 branch；release 後仍須重新檢查 occupancy。不得 force reuse、不得在未決定時把已 attach branch 加入第二個 worktree。若 branch 存在但未 attach，才可由 human 選擇 `reuse` 或 `rename`。
 
 ## 3. Managed worktree 可 release
 

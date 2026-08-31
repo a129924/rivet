@@ -9,7 +9,7 @@ description: 定義正式 topic 的 SDD artifacts、角色、handoff、verdict �
 
 ## 不可變規則
 
-- roles 僅限 Planner、Plan-Creator、Plan-Reviewer、Implementer、Tester、Reviewer、Explorer、Observer/Dispatcher。
+- 下列 roles 僅指 agent roles：Planner、Plan-Creator、Plan-Reviewer、Implementer、Tester、Reviewer、Explorer、Observer/Dispatcher。Human 不是 agent role，但可以是 Human Check 的 owner 或 workflow actor。
 - 已鎖定的 scope、architecture、path 或 contract decision 不得任意重開；資訊不明時回報 `blocked`，不得猜測。
 - Observer/Dispatcher 只可讀取 task、branch、worktree、PR、topic 與 `.step.md` 狀態，派遣單一適當角色，彙整結果，並依已明示的 step 狀態與 verdict 路由。
 - Observer/Dispatcher 不得實作、改檔、勾選或修改 `.step.md`、審查、計算 gate，或將 checkbox、step status、tracker 結果視為 approval；也不得執行 Git、commit、push、建立 tag、開 PR 或跨越 human boundary。

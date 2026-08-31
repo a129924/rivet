@@ -11,7 +11,8 @@ metadata:
     - "操作：create、get-worktree、release worktree 或 remove worktree"
     - "目標 repository context 與 worktree selector（適用時）"
     - "create 所需的 branch 或 worktree name"
-    - "branch collision 的 human reuse-or-rename 決策（適用時）"
+    - "branch collision 的 human reuse-or-rename 決策，或已 attach branch 的 release-or-rename 決策（適用時）"
+    - "暫停中 release 所需的當前直接 human 授權（適用時）"
     - "remove 所需的當前明確 human destructive approval"
   outputs:
     - create_result
@@ -44,7 +45,8 @@ metadata:
 
 - managed path 必須是 repository root 外的 `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`；預設 prefix 為 `agent`，只有 human 可以指定覆寫。
 - 目標 path 已存在但不是預期 worktree 時，停止交 human 決定。
-- branch 同名時，必須取得明確的 human `reuse` 或 `rename` 決策；不得默默重用既有 lineage。
+- 建立前必須檢查 branch occupancy。若同名 branch 已 attach 到其他 worktree，回傳 `existing_result`，要求 human 選擇先處理該 worktree 的 release 或改用新 branch；release 後仍須重新檢查 occupancy。不得 force reuse、不得把已 attach branch 加入第二個 worktree。
+- 若同名 branch 存在但未 attach 到任何 worktree，才可取得明確 human `reuse` 或 `rename` 決策；不得默默重用既有 lineage。
 - path、branch 與直接相關授權都明確後，才可建立 branch 和 worktree。
 - 回傳：
 
@@ -53,6 +55,16 @@ create_result:
   path: "../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>"
   branch: "<branch-name>"
   next_step: "進入此 worktree 後繼續已授權工作"
+```
+
+若 branch 已 attach，則不建立並回傳：
+
+```yaml
+existing_result:
+  status: existing
+  path: "<attached worktree path>"
+  branch: "<branch-name>"
+  next_safe_action: "請 human 選擇先處理 release，或指定新 branch；其後重新檢查 branch occupancy"
 ```
 
 ### `get-worktree`
@@ -66,7 +78,8 @@ create_result:
 
 - release 是把已完成或暫停的 managed worktree 移出 active working set 的非破壞性 offboarding；絕不等同刪除。
 - 先完成 [release evidence schema](reference.md#release-evidence-schema)，並預設 `destructive_action_allowed: false`。
-- 只有 clean、無 untracked，且 lineage 已 merged 或 human 明示 abandoned／不需 merge 時，才可建議 release。
+- 完成中的 release 必須是 clean、無 untracked，且 lineage 已 merged 或 human 明示 abandoned／不需 merge。
+- 暫停中的 release 也可進入安全 gate：必須是 clean、無 untracked、lineage 已保存、沒有進行中的 mutation，並取得本次 release 的直接 human 授權。此路徑只做非破壞性 offboarding，不刪除 worktree 或 branch。
 - 缺證據、unmanaged 或任何不安全狀態時，停在 `needs-human-decision`。
 
 ### `remove worktree`
@@ -100,7 +113,7 @@ Git command、selector 或 state 無法驗證時，明示限制且不捏造狀�
 ## Red flags
 
 - 「cleanup」未指明 release 或 remove。
-- branch collision 未有 human reuse-or-rename 決策。
+- branch occupancy 未檢查，或已 attach branch 未取得 human release-or-rename 決策。
 - 目標 path 不在 managed family，卻假定由此 skill 擁有。
 - Git 註冊仍存在但 path 缺失。
 - 多個 active worktrees 可能編輯相同共享檔案。
@@ -120,7 +133,7 @@ Git command、selector 或 state 無法驗證時，明示限制且不捏造狀�
 - 不在 repository root 內建立 managed worktree。
 - 不把 release worktree 轉譯成 remove worktree。
 - 不假設 unmanaged worktree 可 release、remove、改名、刪除或已完成。
-- 不在 branch collision 時略過 reuse-or-rename human decision。
+- 不在 branch collision 時略過 human 決策；已 attach branch 一律不可 force reuse。
 
 ## Local references
 

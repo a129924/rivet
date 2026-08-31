@@ -12,6 +12,7 @@ description: 依呼叫端提供的 planning contract 與檢查準則，獨立審
 - 檢查指定文件是否符合 contract、彼此一致，且範圍、限制、已鎖定決策與驗收條件可追溯。
 - 只報告可由指定準則支持的 findings；每項 finding 要標示相關文件與需要的修正。
 - 完全遵守呼叫端指定的輸出格式。未指定時，回報 findings 與無法判斷的缺少資訊。
+- 呼叫端的 contract 若明示要求審查 result 或 verdict，可依該 contract 回傳；它僅表達本次審查結果，不負責路由、派遣或判定其他 workflow 狀態。
 
 ## 邊界
 

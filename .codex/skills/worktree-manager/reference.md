@@ -28,6 +28,8 @@ selector 必須可唯一解析，優先順序如下：
 - 其他文件只可提供 context，不能覆寫此 path classification。
 - 不符合 path policy 就是 unmanaged，預設只可 inspect。
 
+建立前還必須檢查 branch occupancy。已存在但未 attach 的 branch，必須由 human 明確選擇 `reuse` 或 `rename`；已 attach 到其他 worktree 的 branch 則回傳 `existing_result`，並要求 human 選擇先處理 release 或改用新 branch。release 後仍要重新檢查 occupancy；已 attach branch 不可 force reuse，也不可加入第二個 worktree。
+
 ## `get-worktree` 結果 contract
 
 每個被回報的 worktree 都輸出以下固定欄位：
@@ -67,18 +69,21 @@ release_evidence:
   branch_status: merged | unmerged | no_branch | unknown
   pr_status: merged | closed | open | none | unknown
   push_status: pushed | unpushed | no_remote | unknown
+  lineage_preserved: true | false | unknown
+  active_mutation: none | in_progress | unknown
+  release_authorization: explicit | absent | unknown
   user_intent: release | remove | keep | unknown
   destructive_action_allowed: true | false
   evidence_notes:
     - "<short note>"
 ```
 
-最小 release gate：`worktree_clean: true`、`untracked_files: false`，且 `branch_status: merged` 或 `pr_status: merged`；除非 human 明示 abandoned 或不需 merge。release 預設 `destructive_action_allowed: false`。
+完成中的最小 release gate 是 `worktree_clean: true`、`untracked_files: false`，且 `branch_status: merged` 或 `pr_status: merged`；除非 human 明示 abandoned 或不需 merge。暫停中的最小 release gate 是 `worktree_clean: true`、`untracked_files: false`、`lineage_preserved: true`、`active_mutation: none`、`release_authorization: explicit` 與 `user_intent: release`。兩條路徑的 release 預設 `destructive_action_allowed: false`，且都不刪除 worktree 或 branch。
 
 ## Safety handling
 
 - 非預期 repository：`BLOCKED`。
-- create branch collision：停在 human `reuse-or-rename`。
+- create branch 已 attach：回傳 existing worktree，停在 human `release-or-rename`；不可 force reuse。未 attach 的既有 branch 才停在 human `reuse-or-rename`。
 - dirty、untracked、unpushed、detached、locked、unknown：`needs-human-decision`。
 - 共享檔案：先提出 coordination warning，要求相關協作者確認寫入順序與 ownership。
 - stale registration：`prune-candidate`，不可 auto-prune。
