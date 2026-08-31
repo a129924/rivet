@@ -10,9 +10,9 @@
 
 ## In-Scope
 
-- 更新既有四份 topic artifacts，記錄本次責任解耦 contract、PR fixes、兩項 rework constraints 與 gates。
-- 依 technical spec Batch A–D 修正 13 個 skills，並保留八個 no-change skills。
-- 依 Batch E 更新 `docs/design-principles.md` 的長期原則（含 SDD responsibility boundary）與 `.codex/skills/BUILD_MACOS_APPS_UPSTREAM.md` 的 local-overlay metadata；不改 upstream pin 或同步 vendored plugin。
+- 更新既有四份 topic artifacts，記錄本次責任解耦 contract、PR fixes、兩項 rework constraints 與 gates；本輪 PR fixes 僅限 abandoned release evidence、stale `prune-candidate`、completed worktree 對 unpushed commits／current HEAD 的 release 拒絕、bootstrap reference 的 Written／Modify 列舉，以及主 `SKILL.md` 的條件式 reference 連結。
+- 依 technical spec Batch A–D 修正 13 個 skills；Batch D 同步更新 `build-run-debug/references/run-button-bootstrap.md` 的 PID selector safety contract，並保留八個 no-change skills。
+- 依 Batch E 僅更新 `docs/design-principles.md` 的長期原則（含 SDD responsibility boundary）與 `.codex/skills/BUILD_MACOS_APPS_UPSTREAM.md` 的 local-overlay metadata；不改 upstream pin 或同步 vendored plugin。
 - 驗證全部 21 個 skills，進行獨立 review，通過後才依 topic commit、push 既有 branch 並更新既有 draft PR。
 
 ## Out-Of-Scope
@@ -30,14 +30,14 @@
 ## Written
 
 - 本 topic 的四份既有 planning artifacts。
-- Batch A–D 列出的 13 個 skill `SKILL.md`，以及只有在 `worktree-manager` 需同步更新的直接 references。
+- Batch A–D 列出的 13 個 skill `SKILL.md`（包括 `.codex/skills/build-run-debug/SKILL.md`）、`worktree-manager` 的直接 references，以及 `.codex/skills/build-run-debug/references/run-button-bootstrap.md`。
 - `docs/design-principles.md`。
 - `.codex/skills/BUILD_MACOS_APPS_UPSTREAM.md`。
 
 ## Modify
 
 - `build-run-debug`、`context-package-builder`、`git-branch-naming`、`git-commit-convention`、`handoff-routing-policy`、`plan-creator`、`plan-reviewer`、`plan-step-tracker`、`subagent-dispatch-policy`、`swiftui-patterns`、`telemetry`、`window-management`、`worktree-manager`。
-- `docs/design-principles.md`、`.codex/skills/BUILD_MACOS_APPS_UPSTREAM.md`。
+- `.codex/skills/build-run-debug/SKILL.md`、`.codex/skills/build-run-debug/references/run-button-bootstrap.md`、`docs/design-principles.md`、`.codex/skills/BUILD_MACOS_APPS_UPSTREAM.md`。
 
 ## Deleted
 
@@ -50,7 +50,7 @@
 3. 依 Batch C 將 Git／worktree skills 收斂到自身 Git responsibilities。`worktree-manager` 保持完整 lifecycle safety contract，但從角色／routing／planning 特化改為 caller authorization 與一般 shared-file coordination warning。
 4. 依 Batch D 移除一般 Swift tooling skills 的強制 Git bootstrap 或唯一 run-path 假設，改用 caller 指定或既有 project entrypoint。
 5. 不修改八個 no-change skills；不修改 `sdd-workflow-contract`，其既有 SDD contract 繼續只由該 skill 承擔。
-6. 套用已界定 PR fixes 與兩項 rework constraints：修正已 attach branch 的 occupancy 語意、保護 macOS app relaunch、提供無 owner 的 branch-name fallback，並將 upstream/local overlay 與 SDD responsibility boundary 回寫為長期 design principle。非破壞性 release 不得被當作 branch 的 detach 或 reuse 前置動作；bootstrap 的 PID selector 零個匹配時繼續且不執行 `kill`，唯一匹配時才可停止該 PID，多重匹配時不執行 `kill`、停止並要求 human 提供明確唯一 selector 後重評。
+6. 套用本輪五個已界定 PR fixes：abandoned worktree 的 release 需保存 lineage、無 active mutation 與本次直接 release 授權；stale Git registration 僅為 `prune-candidate` 且不得 auto-prune；completed worktree 有 unpushed commits 或為 current HEAD 所在 worktree 時拒絕 release；將 `.codex/skills/build-run-debug/references/run-button-bootstrap.md` 明確列入 Written／Modify；主 `.codex/skills/build-run-debug/SKILL.md` 只在 caller 要求 run-button bootstrap 時連結該 reference。既有 attach-branch occupancy 與 PID selector safety contract 保持不變且不作為本輪 PR fix。並將 upstream/local overlay 與 SDD responsibility boundary 回寫為長期 design principle。
 
 ## TestCase
 
@@ -59,8 +59,9 @@
 - `plan-creator`／`plan-reviewer` 只按 caller contract 工作；`plan-step-tracker` 只檢查 caller ledger schema，絕不將 checker 結果變成 approval。
 - `git-branch-naming` 只建議名稱；`git-commit-convention` 只處理 staged diff、適用 commit convention 與 human confirmation；`worktree-manager` 仍正確停止於 destructive risk，且不自動 prune 或 delete。
 - `build-run-debug`、`swiftui-patterns`、`telemetry`、`window-management` 不再強制 Git bootstrap 或特定 launch path。
-- 已 attach branch 的 create 結果不建議以 release 釋放 occupancy；它保留既有 worktree 或要求新的 branch。`git-branch-naming` 在 owner 慣例缺失時回傳僅由 caller inputs 構成的 fallback。
-- `build-run-debug` 的 relaunch 只在目標 process 與 launch method 可辨識時宣稱執行；否則回報局部輸入不足。PID selector 的零、唯一與多重匹配均有明確行為：零個匹配時繼續且不執行 `kill`，僅唯一匹配可 stop，多重匹配時不執行 `kill`、停止並要求 human 提供明確唯一 selector 後重評。`docs/design-principles.md` 同時明確表達本地 overlay 與 SDD responsibility boundary，upstream metadata 不改 upstream pin。
+- `worktree-manager` 對 abandoned worktree 採用已鎖定的 release evidence；stale registration 僅回傳 `prune-candidate`；completed worktree 存在 unpushed commits 或為 current HEAD 所在 worktree 時拒絕 release。release 不等同 delete、detach 或 branch occupancy 變更。
+- `.codex/skills/build-run-debug/SKILL.md` 與 `references/run-button-bootstrap.md` 均列於 Written／Modify；主 skill 只在 caller 要求 run-button bootstrap 時連結該 reference。既有 attach-branch occupancy 與 PID selector safety contract 僅做不回歸確認，不作為本輪 fix。
+- `docs/design-principles.md` 同時明確表達本地 overlay 與 SDD responsibility boundary，upstream metadata 不改 upstream pin。
 - 21 個 skills 均通過 `skill-creator` 的 `quick_validate.py`；獨立 Reviewer 對責任分離、Dispatcher boundary 和 Git/worktree boundary 給出 `approved` 才可進入 Git integration。
 
 ## Stop Conditions

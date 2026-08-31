@@ -51,13 +51,13 @@
 | `git-commit-convention` | 檢查 staged diff 與適用 commit convention，建議單一語意邊界與 message，等待 human confirmation。 | 移除 SDD、topic artifact、`.step.md`、approval gate 與 Dispatcher 參照。 |
 | `worktree-manager` | 依自身 lifecycle contract 管理 create、get-worktree、release worktree、remove worktree。 | 將 Dispatcher／routing／planning-governance 特化改為一般 caller authorization；保留 shared files coordination warning，但不讀取 workflow 狀態。已 attach branch 保持 occupancy，create 僅回傳既有 worktree 或要求人類指定新 branch；非破壞性 release 不得被描述為可釋放 branch occupancy。 |
 
-`worktree-manager` 必須維持既有的 managed path policy、branch collision 的 human reuse-or-rename decision、release/remove 分離、remove 的 destructive approval 與 dirty/untracked/unpushed/detached/locked/unmanaged/unknown stop states、固定 get-worktree result 與 `prune-candidate` no-auto-prune。
+`worktree-manager` 必須維持既有的 managed path policy、branch collision 的 human reuse-or-rename decision、release/remove 分離、remove 的 destructive approval 與 dirty/untracked/unpushed/detached/locked/unmanaged/unknown stop states、固定 get-worktree result 與 `prune-candidate` no-auto-prune。完成中的 release 僅在 clean、無 untracked、無 unpushed commits、不是 current HEAD 所在 worktree，且 lineage 已 merged 或 human 明示不需 merge 時可建議；abandoned／paused 的非破壞性 release 另需 lineage 已保存、無 active mutation 與本次直接 release 授權。
 
 ### Batch D — Tooling Bootstrap Assumptions
 
 | Skill | 最小責任與輸入 | 最小修正 |
 | --- | --- | --- |
-| `build-run-debug` | 使用 caller 指定或 repository 既有入口 build、run 或 diagnose。 | 不再強制 `git init` 或 bootstrap；僅在 caller 要求建立入口時進行。relaunch 前解析目標 app/process，並以可辨識的既有 bundle 或 caller 指定 launch method 啟動，無法確認時停止而不宣稱已重啟。bootstrap 的 PID selector：零個匹配時繼續且不執行 `kill`；唯一匹配時才可停止該 PID；多個匹配時不執行 `kill`、停止並要求 human 提供明確唯一 selector 後重評。 |
+| `build-run-debug` | 使用 caller 指定或 repository 既有入口 build、run 或 diagnose。 | 不再強制 `git init` 或 bootstrap；僅在 caller 要求建立入口時進行。relaunch 前解析目標 app/process，並以可辨識的既有 bundle 或 caller 指定 launch method 啟動，無法確認時停止而不宣稱已重啟。主 `SKILL.md` 僅在 caller 要求 run-button bootstrap 時，條件式連結 [run-button bootstrap reference](../../.codex/skills/build-run-debug/references/run-button-bootstrap.md)；該 reference 維持既有 PID selector 零／唯一／多重匹配 safety contract。 |
 | `swiftui-patterns` | 依既有結構與 caller UI task 建立或調整 macOS SwiftUI patterns。 | 將 `git init`、run bootstrap、固定檔案樹改為 caller 明確要求時才採用。 |
 | `telemetry` | 依觀察目標、程式區域與驗證方式加入或檢查 telemetry。 | 使用既有 launch method；只有缺少所需入口時才建議轉介。 |
 | `window-management` | 依目標 window／scene 行為調整管理方式。 | 接受任何可用 launch method；必要時才建議 `build-run-debug`。 |
@@ -81,4 +81,4 @@ Batch E 僅處理這兩個指定文件；它不改變其他 skill 的責任，�
 - 所有 21 個 skill 都執行 `quick_validate.py`；任何驗證失敗先回到修改該 skill 的 Implementer，不以 tracker 或 status 放行。
 - 獨立 Reviewer 以本 spec 的最小責任表審查，特別確認 Dispatcher 不被嵌入一般 skills、Git/worktree skills 不被 SDD 綁定，且安全規則未跨 skill 重複。
 - 任何 caller 必需輸入、直接授權或 destructive approval 缺失時，對應 skill 停在其自身 boundary；不得延伸為全域 workflow gate。
-- 對本輪 PR fixes 與 rework constraints 執行相稱驗證：branch occupancy 的 create/reuse 行為、branch-name 無 owner fallback、build relaunch 的 target／launch-method guard、PID selector 的零／唯一／多重匹配分支、metadata 與兩項 design principle 的一致性，以及受影響 skills 的 validator。PID selector 零個匹配時繼續且不執行 `kill`，唯一匹配時才可停止該 PID，多重匹配時必須不執行 `kill`、停止並要求 human 提供明確唯一 selector 後重評。獨立 Reviewer 應確認 release/remove 分離、未引入 upstream 同步假象，且沒有以文件回寫擴張 workflow scope。
+- 對本輪五個 PR fixes 執行相稱驗證：abandoned worktree 的 release evidence、stale registration 的 `prune-candidate` no-auto-prune、completed worktree 對 unpushed commits 與 current HEAD 的 release 拒絕、bootstrap reference 已明確列於 Written／Modify，以及主 `SKILL.md` 僅在 run-button bootstrap 情境連結該 reference。既有已 attach branch occupancy 與 PID selector 零／唯一／多重匹配 safety contract 保持不變，但不作為本輪 PR fix 重開。獨立 Plan-Reviewer 應確認 release/remove 分離、未引入 upstream 同步假象，且沒有以文件回寫擴張 workflow scope。

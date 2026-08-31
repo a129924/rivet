@@ -12,7 +12,7 @@ metadata:
     - "目標 repository context 與 worktree selector（適用時）"
     - "create 所需的 branch 或 worktree name"
     - "branch collision 的 human reuse-or-rename 決策，或已 attach branch 的使用既有 worktree 或改用新 branch 決策（適用時）"
-    - "暫停中 release 所需的當前直接 human 授權（適用時）"
+    - "暫停或已放棄 release 所需的當前直接 human 授權（適用時）"
     - "remove 所需的當前明確 human destructive approval"
   outputs:
     - create_result
@@ -45,7 +45,7 @@ metadata:
 
 - managed path 必須是 repository root 外的 `../<repo-name>.worktrees/<prefix>-YYYYMMDD-<worktree-name>`；預設 prefix 為 `agent`，只有 human 可以指定覆寫。
 - 目標 path 已存在但不是預期 worktree 時，停止交 human 決定。
-- 建立前必須檢查 branch occupancy。若同名 branch 已 attach 到其他 worktree，回傳 `existing_result`，要求 human 選擇使用既有 worktree 或指定新 branch。`release worktree` 不會 detach branch 或改變 Git 的 occupancy，因此不是此 collision 的解法。不得 force reuse、不得把已 attach branch 加入第二個 worktree。
+- 建立前必須檢查 branch occupancy。若同名 branch 已 attach 到存在的其他 worktree，回傳 `existing_result`，要求 human 選擇使用既有 worktree 或指定新 branch。若 Git registration 顯示已 attach、但該 path 缺失，這是 stale registration：只回傳 `prune-candidate` 與 human 後續處置建議；不得把它當成可使用的 existing worktree、不得 auto-prune，也不得繼續 create。`release worktree` 不會 detach branch 或改變 Git 的 occupancy，因此不是此 collision 的解法。不得 force reuse、不得把已 attach branch 加入第二個 worktree。
 - 若同名 branch 存在但未 attach 到任何 worktree，才可取得明確 human `reuse` 或 `rename` 決策；不得默默重用既有 lineage。
 - path、branch 與直接相關授權都明確後，才可建立 branch 和 worktree。
 - 回傳：
@@ -79,8 +79,8 @@ existing_result:
 - release 是把已完成或暫停的 managed worktree 移出 active working set 的非破壞性 offboarding；絕不等同刪除。
 - release 不執行 `git worktree remove`、不 detach branch，也不改變 Git 的 branch occupancy；若要在另一個 worktree 使用該 branch，必須改用既有 worktree 或由 human 指定新 branch。
 - 先完成 [release evidence schema](reference.md#release-evidence-schema)，並預設 `destructive_action_allowed: false`。
-- 完成中的 release 必須是 clean、無 untracked，且 lineage 已 merged 或 human 明示 abandoned／不需 merge。
-- 暫停中的 release 也可進入安全 gate：必須是 clean、無 untracked、lineage 已保存、沒有進行中的 mutation，並取得本次 release 的直接 human 授權。此路徑只做非破壞性 offboarding，不刪除 worktree 或 branch。
+- completed release 必須是 clean、無 untracked、無 unpushed commits、不是 current HEAD 所在 worktree，且 lineage 已 merged 或 human 明示不需 merge。
+- paused 或 abandoned release 也可進入安全 gate：必須是 clean、無 untracked、lineage 已保存、沒有進行中的 mutation，並取得本次 release 的直接 human 授權。此路徑只做非破壞性 offboarding，不刪除 worktree 或 branch。
 - 缺證據、unmanaged 或任何不安全狀態時，停在 `needs-human-decision`。
 
 ### `remove worktree`

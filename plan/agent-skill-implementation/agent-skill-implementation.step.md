@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `agent-skill-implementation`
-- Current phase: 等待 PRC-04 獨立 Reviewer 審查；ledger 僅記錄狀態與 evidence，不產生 approval、verdict 或 routing。
+- Current phase: 等待 PRC-07 獨立 Reviewer 審查；ledger 僅記錄狀態與 evidence，不產生 approval、verdict 或 routing。
 
 ## Steps
 
@@ -29,17 +29,21 @@
 | PR-05 | completed | Plan-Reviewer | 獨立審查 PC-06 四份 artifacts、PR fixes、兩項 rework constraints、Batch E 文件界線與既有 locked scope。 | 獨立 Plan-Reviewer 的明示 result：`approved`；此 evidence 不由 ledger status、checkbox 或其他 step 結果推導。 |
 | PRC-02 | completed | Implementer | 僅在 PR-05 明示可進入實作後，修正已列明 PR fixes 與 PC-06 兩項 rework constraints；不得擴張至無關 cleanup。 | 明示 implementation handoff：已交付列明 PR fixes 與兩項 rework constraints 的受限變更，待 Tester 驗證；此 handoff 不代表 Reviewer approval 或整合授權。 |
 | PRC-03 | completed | Tester | 對 PRC-02 的修正執行相稱驗證，包括受影響 skill validator、文件／metadata 一致性，以及 PID selector 的零／唯一／多重匹配安全分支。 | Tester 的明示 evidence：受影響 skill validator、文件／metadata 一致性與 PID selector 的零／唯一／多重匹配安全分支已驗證；零個匹配時繼續且不執行 `kill`，唯一匹配時才可停止該 PID，多重匹配時不執行 `kill`、停止並要求 human 提供明確唯一 selector 後重評。驗證結果不等同 approval。 |
-| PRC-04 | pending | Reviewer | 獨立審查 PRC-02 修正是否回應已列明 comments 與兩項 rework constraints，且無 scope 或 safety regression。 | 尚無；只接受獨立 Reviewer 的明示 result；不得由 tracker 或 Tester 結果推導。 |
-| PRC-05 | pending | Implementer | 在直接 human commit／push 授權與 PRC-04 明示可整合結果後，建立單一語意 commit 並 push 既有 branch。 | 尚無；需記錄 commit SHA、remote push 結果與既有 PR #2 更新結果；不得建立 branch、worktree、PR 或 tag。 |
-| PRC-06 | pending | Implementer | 僅在已推送對應修正後，依直接 human 授權 resolve 已由 PRC-02 回應的 PR review threads。 | 尚無；需記錄已 resolve 的 thread ID／URL。不得 resolve 未修正、需 human 決策或不明的 thread。 |
+| PRC-04 | completed | Reviewer | 獨立審查 PRC-02 修正是否回應已列明 comments 與兩項 rework constraints，且無 scope 或 safety regression。 | 已收到獨立 Reviewer 明示 `approved`；此 evidence 不由 tracker 或 Tester 結果推導。 |
+| PRC-05 | completed | Implementer | 在直接 human commit／push 授權與 PRC-04 明示可整合結果後，建立單一語意 commit 並 push 既有 branch。 | commit `a1f7028` 已推送至既有 feature branch，PR #2 已更新；未建立 branch、worktree、PR 或 tag。 |
+| PRC-06 | completed | Implementer | 僅在已推送對應修正後，依直接 human 授權 resolve 已由 PRC-02 回應的 PR review threads。 | 已收到明示 handoff：前一輪五個指定 threads 已 resolve；不將此歷史 evidence 延伸為本輪 thread 的 approval 或 resolution。 |
+| PC-07 | completed | Plan-Creator | 同步四份 artifacts，將本輪五個 PR threads 收斂為 abandoned release evidence、stale registration 的 `prune-candidate`、completed worktree 對 unpushed commits／current HEAD 的 release 拒絕、bootstrap reference 的 Written／Modify 列舉，以及主 `SKILL.md` 的條件式 reference 連結。既有 occupancy 與 PID selector safety 僅保留為既定非本輪 contract。 | 本次 Plan-Creator handoff：requirements、technical spec、topic plan 與本 ledger 已同步；只記錄既有 contract 與明示 review 範圍，不代表 Plan-Reviewer approval。 |
+| PRC-07 | pending | Plan-Reviewer | 獨立審查本輪五項 PR fixes 是否符合既有 lifecycle 與 bootstrap reference contract，且無 scope 或 safety regression。 | 尚無；只接受獨立 Plan-Reviewer 的明示 result；不得由 ledger status 或其他 step evidence 推導。 |
+| PRC-08 | pending | Implementer | 在 PRC-07 明示可整合及直接 human commit／push 授權後，建立單一語意 commit、push 既有 branch，並僅 resolve 已實際修正且已推送的本輪 threads。 | 尚無；需記錄 commit SHA、remote push 結果、既有 PR #2 更新結果與已 resolve 的 thread ID／URL；不得建立 branch、worktree、PR 或 tag。 |
 | HC-02 | pending | Human | 在既有 draft PR 審查本輪 revision。 | 尚無；不得由任何 agent 或 ledger 取代。 |
 
 ## Blockers
 
-- PRC-02 僅可處理已列明 PR fixes 與 PC-06 兩項 rework constraints；任何新增 comment、scope expansion 或需 human 決策的事項必須停止並交還 human。
-- PID selector 零個匹配時繼續且不執行 `kill`；唯一匹配時才可停止該 PID；多重匹配時，PRC-02 必須不執行 `kill`、停止並要求 human 提供明確唯一 selector 後重評。不得透過直接 kill、批次 kill 或其他 stop method 自行消除歧義。
-- PRC-04 的獨立明示結果與直接 human commit／push 授權均缺失前，PRC-05 不得前進；PRC-06 只可處理已實際修正且已推送的 thread。
+- 本輪只可處理已列明的五項 PR fixes：abandoned release evidence、stale `prune-candidate`、completed worktree 的 unpushed commits／current HEAD 拒絕、bootstrap reference 的 Written／Modify 列舉，以及主 `SKILL.md` 的條件式 reference 連結。任何新增 comment、scope expansion 或需 human 決策的事項必須停止並交還 human。
+- 已 attach branch occupancy 與 PID selector safety 是既有 locked contract，不是本輪 PR fix；不得藉本輪工作重開或弱化它們。
+- PRC-07 的獨立明示結果與直接 human commit／push 授權均缺失前，PRC-08 不得前進；PRC-08 只可處理已實際修正且已推送的本輪 thread。
 - 既有 step status、checkbox、tracker 結果與 validator evidence 不得作為 PR comment review、approval、commit、push 或 thread resolution 的依據。
+- 本輪五項修正以 PRC-07 的 Plan-Reviewer 明示 result 為唯一 review gate；ledger 僅索引已明示 handoff evidence。
 
 ## Human Check
 
@@ -48,5 +52,5 @@
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 記錄 PR-05 的獨立明示 `approved`、PRC-02 的 implementation handoff 與 PRC-03 的 Tester evidence；Reviewer、commit、push 與 thread resolution 仍待各自的明示結果與授權。
-- Update status: awaiting PRC-04 independent Reviewer result; ledger 僅記錄狀態與 evidence，不產生 approval、verdict 或 routing。
+- Update reason: 將本輪五個 PR threads 同步為 abandoned、stale、completed release、bootstrap Written／Modify 與條件式 reference 連結；既有 occupancy／PID contract 保留但不作為本輪 scope。不推導 Plan-Reviewer、commit、push 或 thread resolution 結果。
+- Update status: awaiting PRC-07 independent Reviewer result; ledger 僅記錄狀態與 evidence，不產生 approval、verdict 或 routing。

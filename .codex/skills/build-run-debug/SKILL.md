@@ -41,6 +41,7 @@ simulator-specific workflows onto pure macOS tasks.
 
 3. Choose an existing build or launch entrypoint.
    - Prefer the project's documented command or a checked-in local script when it directly matches the task.
+   - 僅在 caller 明確要求建立或調整 Run button bootstrap 時，先讀取並依 [Run button bootstrap reference](references/run-button-bootstrap.md) 處理；其他 build、run 或 debug 情境不需要載入該 reference。
    - Otherwise use the narrowest direct `xcodebuild`, `swift build`, executable, bundle, debugger, or log command that tests the reported behavior.
    - Do not initialize a repository, create a run script, stage a new app bundle, or configure an environment action unless the caller explicitly requests that separate setup work.
    - Do not recommend direct SwiftPM executable launch for AppKit/SwiftUI GUI apps unless diagnosing that launch mode; use an available `.app` bundle or request a launch method.

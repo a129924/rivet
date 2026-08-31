@@ -28,7 +28,7 @@ selector 必須可唯一解析，優先順序如下：
 - 其他文件只可提供 context，不能覆寫此 path classification。
 - 不符合 path policy 就是 unmanaged，預設只可 inspect。
 
-建立前還必須檢查 branch occupancy。已存在但未 attach 的 branch，必須由 human 明確選擇 `reuse` 或 `rename`；已 attach 到其他 worktree 的 branch 則回傳 `existing_result`，並要求 human 選擇使用既有 worktree 或改用新 branch。`release worktree` 是非破壞性 offboarding，不會 detach branch 或改變 Git 的 occupancy；它不能使已 attach branch 可被重用。已 attach branch 不可 force reuse，也不可加入第二個 worktree。
+建立前還必須檢查 branch occupancy。已存在但未 attach 的 branch，必須由 human 明確選擇 `reuse` 或 `rename`；已 attach 到存在的其他 worktree 的 branch 則回傳 `existing_result`，並要求 human 選擇使用既有 worktree 或改用新 branch。若 Git registration 顯示 branch 已 attach、但該 path 缺失，該 registration 是 `prune-candidate`：不得把它當成可使用 worktree、不得 auto-prune，也不得在未經 human 處置前繼續 create。`release worktree` 是非破壞性 offboarding，不會 detach branch 或改變 Git 的 occupancy；它不能使已 attach branch 可被重用。已 attach branch 不可 force reuse，也不可加入第二個 worktree。
 
 ## `get-worktree` 結果 contract
 
@@ -51,7 +51,8 @@ next safe action: "<具體且非破壞性的下一步>"
 | 觀察條件 | Recommendation | 理由與限制 |
 | --- | --- | --- |
 | clean、branch 仍在使用、task 未結束 | `keep` | active workspace 仍有用途。 |
-| clean、task 完成、merged 或明示 abandoned | `release` | 可離開 active set，仍不代表可刪除。 |
+| clean、無 untracked、無 unpushed、非 current HEAD worktree，且 lineage 已 merged 或明示不需 merge 的 completed task | `release` | 可離開 active set，仍不代表可刪除。 |
+| clean、無 untracked、lineage 已保存、無 active mutation，且有直接 release 授權的 paused 或 abandoned task | `release` | 可非破壞性離開 active set，仍不代表可刪除。 |
 | clean、已 release／不再需要，且 remove approval 另行通過 | `remove` | 僅提示可進入破壞性路徑。 |
 | dirty、untracked、unpushed、detached、locked 或 unknown | `needs-human-decision` | local state、lineage 或 ownership 仍可能重要。 |
 | unmanaged | `needs-human-decision` | 不可假設 lifecycle ownership。 |
@@ -69,6 +70,7 @@ release_evidence:
   branch_status: merged | unmerged | no_branch | unknown
   pr_status: merged | closed | open | none | unknown
   push_status: pushed | unpushed | no_remote | unknown
+  current_head_worktree: true | false | unknown
   lineage_preserved: true | false | unknown
   active_mutation: none | in_progress | unknown
   release_authorization: explicit | absent | unknown
@@ -78,14 +80,16 @@ release_evidence:
     - "<short note>"
 ```
 
-完成中的最小 release gate 是 `worktree_clean: true`、`untracked_files: false`，且 `branch_status: merged` 或 `pr_status: merged`；除非 human 明示 abandoned 或不需 merge。暫停中的最小 release gate 是 `worktree_clean: true`、`untracked_files: false`、`lineage_preserved: true`、`active_mutation: none`、`release_authorization: explicit` 與 `user_intent: release`。兩條路徑的 release 預設 `destructive_action_allowed: false`，且都不刪除 worktree 或 branch。
+completed 的最小 release gate 是 `worktree_clean: true`、`untracked_files: false`、`push_status: pushed|no_remote`、`current_head_worktree: false`，且 `branch_status: merged` 或 `pr_status: merged`；若未合併，必須有 human 明示不需 merge。`push_status: unpushed` 或 `current_head_worktree: true|unknown` 一律停止並回傳 `needs-human-decision`。
+
+paused 或 abandoned 的最小 release gate 是 `worktree_clean: true`、`untracked_files: false`、`lineage_preserved: true`、`active_mutation: none`、`release_authorization: explicit` 與 `user_intent: release`。這不是 completed 的替代路徑：呼叫者必須如實標示 task status，不得為避開 completed gate 改寫狀態。兩條合法 release 路徑預設 `destructive_action_allowed: false`，且都不刪除 worktree 或 branch。
 
 release 也不移除 Git worktree registration 或 detach branch。因此 release 後該 branch 仍 attach，不能作為 create branch collision 的前置處理。
 
 ## Safety handling
 
 - 非預期 repository：`BLOCKED`。
-- create branch 已 attach：回傳 existing worktree，停在 human `use-existing-or-new-branch`；不可 force reuse。未 attach 的既有 branch 才停在 human `reuse-or-rename`。
+- create branch 已 attach 且 path 存在：回傳 existing worktree，停在 human `use-existing-or-new-branch`；不可 force reuse。若已 attach 的 registration path 缺失，回傳 `prune-candidate` 並停止，不可使用該 worktree、auto-prune 或繼續 create。未 attach 的既有 branch 才停在 human `reuse-or-rename`。
 - dirty、untracked、unpushed、detached、locked、unknown：`needs-human-decision`。
 - 共享檔案：先提出 coordination warning，要求相關協作者確認寫入順序與 ownership。
 - stale registration：`prune-candidate`，不可 auto-prune。

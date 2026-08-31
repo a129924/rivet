@@ -19,9 +19,11 @@ notes:
 
 ## 2. Create 時 branch collision
 
-觀察：想使用的 branch 已 attach 到另一個 worktree。
+觀察：想使用的 branch 已 attach 到另一個存在的 worktree。
 
 正確處理：回傳 `existing_result`，要求 human 選擇使用既有 worktree 或 `rename` 為新 branch。`release worktree` 不會 detach branch 或釋放 occupancy，不能用來讓同一 branch 加入第二個 worktree。不得 force reuse、不得在未決定時把已 attach branch 加入第二個 worktree。若 branch 存在但未 attach，才可由 human 選擇 `reuse` 或 `rename`。
+
+若 `git worktree list` 顯示 branch 已 attach、但其 path 缺失，正確結果改為 `prune-candidate`：不得建議使用缺失 path、不得 auto-prune，也不得繼續 create；交由 human 決定是否另行處置 stale registration。
 
 ## 3. Managed worktree 可 release
 
@@ -35,6 +37,7 @@ release_evidence:
   branch_status: merged
   pr_status: merged
   push_status: pushed
+  current_head_worktree: false
   user_intent: release
   destructive_action_allowed: false
   evidence_notes:
@@ -46,7 +49,15 @@ next safe action: "標記為 released；若日後需要刪除，另行提出 rem
 
 release 不可執行或暗示 delete、detach branch 或釋放 branch occupancy。
 
-## 4. Dirty 或 untracked worktree
+若 completed worktree 有 `push_status: unpushed`，或 `current_head_worktree: true|unknown`，正確結果是 `needs-human-decision`，不得建議 release。
+
+## 4. Paused 或 abandoned worktree 可 release
+
+觀察：managed path、乾淨、無 untracked；工作暫停或已放棄，但其 lineage 已保存，且沒有進行中的 mutation。human 已直接要求本次非破壞性 release。
+
+正確處理：記錄 `task_status: paused` 或 `abandoned`、`lineage_preserved: true`、`active_mutation: none`、`release_authorization: explicit` 與 `user_intent: release`，再建議 `release`。不得把此路徑套用到 completed worktree 以避開 unpushed 或 current-HEAD gate。
+
+## 5. Dirty 或 untracked worktree
 
 需求：release 此 worktree。
 
@@ -54,7 +65,7 @@ release 不可執行或暗示 delete、detach branch 或釋放 branch occupancy�
 
 正確結果：`needs-human-decision`；建議先 review、commit、shelve 或明確放棄剩餘 state。不得因 task 看似結束而 release 或 remove。
 
-## 5. Unmanaged path
+## 6. Unmanaged path
 
 需求：清理一個不符合 managed path policy 的 worktree。
 
@@ -70,13 +81,13 @@ reason: "path 不屬於 managed family，沒有自動管理權。"
 next safe action: "請 human 確認 ownership 並在最新 safety checks 後決定後續動作。"
 ```
 
-## 6. Stale registration
+## 7. Stale registration
 
 觀察：`git worktree list` 仍列出 path，但該 path 不存在。
 
 正確結果：`recommendation: prune-candidate`，並說明需要 human 決定是否用獨立操作處理 stale registration。`get-worktree` 不得 auto-prune。
 
-## 7. 明確 remove
+## 8. 明確 remove
 
 需求：human 在當前 request 明確授權 destructive remove。
 
@@ -84,7 +95,7 @@ next safe action: "請 human 確認 ownership 並在最新 safety checks 後決�
 
 先前的 release request 不是 delete 同意。
 
-## 8. 非 repository 位置
+## 9. 非 repository 位置
 
 需求：在目前位置 create worktree。
 
