@@ -37,6 +37,14 @@ Outside → Adapter ↔ Port → UseCase → Facade → Presentation
 - **Presentation Session**：擁有目前選取的 PR 與切換狀態；它屬於 Presentation，不屬於任何 Bounded Context。
 - PR Inbox 與 PR Reader 不直接依賴彼此；兩者各自透過內部 Port 取得 GitHub Integration 提供的資料。
 
+## PR Reader WebView Diff Pipeline
+
+PR Reader 的 WebView diff rendering 已鎖定為 declaration-only pipeline：Swift 以完整且有序的檔案 snapshot 提供資料，內部依序定義 Validator、Parser、Renderer 與 Output Ports，並由 UseCase 擁有這四個 Port 的協調責任；Facade 是 Presentation 的 render 入口。
+
+`viewed` 的持久化權威仍是 Swift。WebView 只發送包含 PR、snapshot 與 snapshot-local file identity 的單向 viewed notification，不等待 acknowledgement 或修改 snapshot。具體 Adapter、parser、renderer、Output、DOM 與 Swift bridge 均尚未定義。
+
+- [PR Reader WebView Diff Pipeline](diagrams/pr-reader-webview-diff-rendering/index.html)：Swift／WebView 邊界、宣告的 Ports 與 ownership。
+
 ## 文件導覽
 
 - [設計原則](../design-principles.md)：Rivet 的產品取捨與工作方法。

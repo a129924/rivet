@@ -11,6 +11,11 @@ type Expect<Condition extends true> = Condition;
 type _viewedStateChange = Expect<
   Equal<
     ViewedStateChange,
-    { readonly fileId: string; readonly viewed: boolean }
+    {
+      readonly pullRequestId: string;
+      readonly snapshotId: string;
+      readonly fileId: string;
+      readonly viewed: boolean;
+    }
   >
 >;

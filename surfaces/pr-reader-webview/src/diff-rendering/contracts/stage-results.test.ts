@@ -60,7 +60,7 @@ type _output = Expect<
     | { readonly type: "success" }
     | {
         readonly type: "error";
-        readonly kind: "render-error";
+        readonly kind: "output-error";
         readonly message: string;
       }
   >

@@ -6,6 +6,9 @@
 - 本 topic 不實作 validator、parser、renderer、Output、DOM、UI、collapse、syntax highlighting、Swift bridge 或具體 raw diff／RenderPlan schema。
 - `DiffViewModel` 是 Swift 每次提供的完整、有序 snapshot；Swift 是 `viewed` 的唯一持久化權威。
 - WebView 的 collapse 僅可在未來作為本地暫態狀態，不能寫入或改變 snapshot contract。
+- `Output` 是獨立 pipeline stage；其 failure contract 為公開的 `output-error`。
+- `ViewedStateChange` 以 `pullRequestId`、`snapshotId` 與 snapshot-local `fileId` 識別通知所屬資料，Swift 可安全忽略過期 notification。
+- `DiffRenderUseCase` 是 `Validator → Parser → Renderer → Output` 的唯一協調者與 `DiffOutputPort` 唯一 caller；`DiffFacade` 只依賴 UseCase 與 Viewed-state Port。
 
 ## Module Structure
 
@@ -36,8 +39,8 @@ src/diff-rendering/
 
 - 每個 production module 僅含該 layer 的 type／interface declarations；不得提供 concrete Adapter、Validator、Parser、Renderer、Output、DOM 或 Swift bridge 實作。
 - Adapter modules 只定義 Swift snapshot input 與 viewed notification 的邊界介面；核心 contracts、Ports、UseCase 與 Facade 不得依賴 Adapter、Swift 或 WebView。
-- `DiffRenderUseCase` 的 dependency descriptor 只含 Validator、Parser、Renderer、Output 四個 pipeline Ports。
-- `DiffFacade` 的 dependency descriptor 只含 UseCase、Output Port、Viewed-state Port。Output 的 caller 與時機維持 deferred，不得由 declaration-only contract 推導 runtime responsibility。
+- `DiffRenderUseCase` 的 dependency descriptor 只含 Validator、Parser、Renderer、Output 四個 pipeline Ports，並由 UseCase 依序協調全部 stages。
+- `DiffFacade` 的 dependency descriptor 只含 UseCase 與 Viewed-state Port；Facade 不依賴或呼叫 Output Port。
 
 ## Public Contract
 
@@ -56,6 +59,8 @@ export interface DiffViewModel {
 }
 
 export interface ViewedStateChange {
+  readonly pullRequestId: string
+  readonly snapshotId: string
   readonly fileId: string
   readonly viewed: boolean
 }
@@ -64,12 +69,13 @@ export type DiffRenderOutcome =
   | { readonly type: "success" }
   | {
       readonly type: "error"
-      readonly kind: "invalid-input" | "parse-error" | "render-error"
+      readonly kind: "invalid-input" | "parse-error" | "render-error" | "output-error"
       readonly message: string
     }
 ```
 
-- `fileId` 在同一份 snapshot 中唯一，並是 viewed-state notification 的唯一識別子。
+- `fileId` 僅須在同一份 snapshot 中唯一；它不是跨 snapshot 的全域識別子。
+- `ViewedStateChange` 必須帶 `pullRequestId`、`snapshotId`、`fileId` 與 `viewed`，讓 Swift 能辨識 notification 的 PR 與 snapshot，並安全忽略過期事件。
 - `filename` 是目前檔案路徑；`previousFilename` 僅於 `status: "renamed"` 時可提供，並表示先前路徑。
 - `status` 是檔案層級的 added、removed、modified 或 renamed 語意；它不決定 diff 行的新增、刪除或 context。
 - `patch` 可對任何 `status` 缺席，表示內容不可取得；其格式與任何 fallback 不在本 topic 定義。
@@ -122,7 +128,7 @@ export type RenderPlanResult =
 
 export type OutputResult =
   | { readonly type: "success" }
-  | { readonly type: "error"; readonly kind: "render-error"; readonly message: string }
+  | { readonly type: "error"; readonly kind: "output-error"; readonly message: string }
 
 export interface DiffViewModelValidatorPort {
   validate(files: readonly DiffViewModel[]): ValidationResult
@@ -156,13 +162,19 @@ export interface DiffFacade {
 
 - `ValidatedDiffInput`、`ParsedDiffInput` 與 `RenderPlan` 必須維持 opaque；其 schema 在各自後續實作 topic 才能定義。
 - Validator、Parser、Renderer 與 Output 各自只回傳所屬 stage 的 success／failure union；相鄰 stage 只能消費前一 stage 的 success value。
-- `DiffRenderUseCase.execute` 的 contract 保留四個 pipeline Ports 的依賴關係與 `DiffRenderOutcome`；pipeline 的具體協調與 Output caller／時機均 deferred。Facade 的 `present` 不定義 runtime delegation 或 output responsibility。
-- Adapter 實作 Port，UseCase 只依賴四個 pipeline Ports，Facade 是 Presentation 的唯一 render 入口。Facade 僅宣告對 UseCase、Output Port 與 Viewed-state Port 的 dependency descriptor；此處不定義 adapter、use case 或 facade 的建構／組裝方式。
+- `DiffRenderUseCase.execute` 依序協調 Validator、Parser、Renderer 與 Output，並將各 stage failure 映射為對應 `DiffRenderOutcome` kind；UseCase 是 `DiffOutputPort` 的唯一 caller。
+- Adapter 實作 Port，UseCase 只依賴四個 pipeline Ports，Facade 是 Presentation 的唯一 render 入口。Facade 僅宣告對 UseCase 與 Viewed-state Port 的 dependency descriptor；此處不定義 adapter、use case 或 facade 的建構／組裝方式。
 - `requestViewedStateChange` 透過 `ViewedStateChangePort` 發送通知，回傳 `void`，不等待 Swift acknowledgement，且不做 optimistic snapshot 更新。
+
+## Architecture Writeback
+
+- IM-03 必須將已實作的 declaration-only pipeline 與 Swift／WebView 邊界回寫至 `docs/architecture/bounded-contexts/pr-reader.md`，僅記錄本 topic 已鎖定的責任與資料流，不將 deferred concrete behavior 寫成長期事實。
+- IM-03 必須使用 `architecture-canvas` 在 `docs/architecture/diagrams/pr-reader-webview-diff-rendering/` 建立 `scene.js` 與 `index.html`，依 skill 完成 scene validation、artifact build 與視覺檢查。圖中以繁體中文表達 Swift snapshot Adapter、Ports、UseCase、Facade、Presentation 與 viewed notification 方向，不得自行發布 artifact.cafe。
 
 ## Validation
 
 - 以依 module 分檔的 strict TypeScript type-level tests 驗證所有 literal unions、required／optional／readonly 欄位、exact method signatures 與 public barrel export surface。
-- 驗證每個 stage failure 只能使用對應 kind，前後 stage input／output 僅在 success branch 相容，並驗證 UseCase／Facade dependency descriptor keys。
+- 驗證每個 stage failure 只能使用對應 kind，`OutputResult` 只可使用 `output-error`，前後 stage input／output 僅在 success branch 相容，並驗證 UseCase／Facade dependency descriptor keys。
 - 驗證 Facade 只公開 `present` 與 `requestViewedStateChange`，後者回傳 `void`；核心 modules 不得 import Adapter、Swift、WebView 或 Presentation。
+- 驗證 `ViewedStateChange` 的 PR／snapshot identity 與 snapshot-local `fileId` contract，以及 UseCase 是 Output Port 唯一 caller、Facade 不依賴 Output Port。
 - 執行既有 Bun typecheck、test 與 coverage gate；若現況尚無可執行 test，Tester 必須回報明確環境或設定 blocker，不以臆測替代。

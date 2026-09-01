@@ -15,6 +15,10 @@ export type DiffRenderOutcome =
   | { readonly type: "success" }
   | {
       readonly type: "error";
-      readonly kind: "invalid-input" | "parse-error" | "render-error";
+      readonly kind:
+        | "invalid-input"
+        | "parse-error"
+        | "render-error"
+        | "output-error";
       readonly message: string;
     };
