@@ -2,29 +2,31 @@
 
 ## Goal
 
-定義 Swift 向 PR Reader WebView 提供檔案 diff 快照，以及 TypeScript 對該快照進行後續處理所需的穩定介面契約。此 topic 只建立 TypeScript 型別與 interface declarations，為零依賴的後續實作切片提供邊界。
+定義 Swift 向 PR Reader WebView 提供檔案 diff 快照，以及 TypeScript 對該快照進行後續處理所需的穩定介面契約。此 topic 以實體、分層的 TypeScript module tree 建立 declaration-only pipeline，為零依賴的後續實作切片提供邊界。
 
 ## In-Scope
 
 - 定義 `DiffViewModel`、檔案狀態、viewed-state 變更與公開結果型別。
 - 定義 `Validator → Parser → Renderer → Output` 的 stage-specific result unions 與 opaque 中間資料。
-- 定義 `Adapter ↔ Port → UseCase → Facade` 的 Port、UseCase 與 Facade 方法簽名。
+- 建立 contracts、adapters、ports、usecases、facades 與 presentation barrel 的分層 module 結構；每個 module 只宣告自己 layer 的 type／interface。
+- 定義 `Adapter ↔ Port → UseCase → Facade` 的 Port、UseCase、Facade 與 dependency descriptor 方法簽名。
 - 定義 `viewed` 的 ownership、通知時機與 WebView 本地暫態狀態邊界。
-- 對介面進行 strict TypeScript type-level tests 與既有檢查。
+- 對各 module 的 import surface、相鄰 stage output、Facade API 與 layer dependency 進行 strict TypeScript type-level tests 與既有檢查。
 
 ## Out-Of-Scope
 
-- 具體 validator、parser、renderer、RenderPlan schema、DOM、UI、collapse、syntax highlighting 或 raw diff 格式解析。
+- 具體 Adapter、validator、parser、renderer、Output、RenderPlan schema、DOM、UI、collapse、syntax highlighting 或 raw diff 格式解析。
 - Swift bridge、Swift target、GitHub REST／GraphQL mapping、viewed-state 持久化或 acknowledgement。
 - 新增套件、package manifest 或 lockfile 變更。
 - PR Reader Bounded Context、架構文件或其他產品行為的變更。
 
 ## Success Criteria
 
-- Swift 可提供一個完整、有序的 `readonly DiffViewModel[]` snapshot；TS 公開入口與相鄰 stages 的型別相容性可由 typecheck 驗證。
+- Swift 可提供一個完整、有序的 `readonly DiffViewModel[]` snapshot；TS 以 module tree 呈現完整 pipeline，且公開入口與相鄰 stages 的型別相容性可由 typecheck 驗證。
 - Snapshot 可表達檔案路徑、rename、變更類型、可選 patch、增刪計數與 viewed 狀態。
 - `present` 僅回傳既定 success／error outcome；viewed 變更為單向、非同步的通知，不等待 acknowledgement。
-- 介面保持零依賴，且不偷渡任何具體 rendering 或 transport 決策。
+- `index.ts` 僅公開 Presentation 所需的 Facade 與 contracts；opaque stage types、Ports、Adapters、dependency descriptors 與 UseCase 均非 public surface。
+- 介面保持零依賴，核心層不依賴 Swift、WebView 或 Adapter，且不偷渡任何具體 rendering 或 transport 決策。
 
 ## Non-Goals
 
