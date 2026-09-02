@@ -2,7 +2,7 @@
 
 ## Goal
 
-為 future internal concrete diff stage 登錄 `diff2html` `^3.4.56` runtime dependency，不改變 base interface。
+為 future internal concrete diff stage 登錄 manifest range `diff2html: ^3.4.56` runtime dependency，不改變 base interface。
 
 ## Non-Goal
 
@@ -10,11 +10,13 @@
 
 ## In-Scope
 
-- `diff2html` `^3.4.56`、MIT、direct `diff`、`@profoundlogic/hogan` 與 Bun lock resolution。
+- MIT license；manifest range `diff2html: ^3.4.56`；lock resolved `diff2html@3.4.56`。
+- direct `diff@8.0.4`／`@profoundlogic/hogan@3.0.4`、optional `highlight.js@11.11.1`，以及必要 transitive `nopt@1.0.10`／`abbrev@1.1.1` 的 Bun resolution。
 
 ## Out-Of-Scope
 
 - package import、source、tests、scripts、其他 dependencies、BC docs、architecture、toolchain、CI。
+- package selection、version 與 license 的 long-term docs writeback；人類已鎖定本 topic 將其延後，不修改 docs／BC／architecture／toolchain。
 
 ## ReadOnly
 
@@ -30,9 +32,10 @@
 
 ## Modify
 
-- manifest runtime `dependencies` 僅加入 `"diff2html": "^3.4.56"`；Bun lockfile 僅加入必要 resolution。
+- manifest runtime `dependencies` 僅加入 range `"diff2html": "^3.4.56"`；Bun lockfile resolved exact package 與完整 admission tree。
 - package 不得透過此 revision 宣稱 `patch?: string` 可直接被解析，library model 不得進入 public contracts。
 
 ## TestCase
 
-- 檢查 exact version、license／direct dependencies、最小 manifest／lockfile diff、frozen install 與既有 Bun checks。
+- 檢查 manifest range `^3.4.56`、lock resolved `diff2html@3.4.56`、MIT 與 complete admission tree；不得將 manifest range 稱為 exact pin。
+- 檢查 `bun install --frozen-lockfile`、最小 manifest／lockfile diff 與既有 Bun checks。
