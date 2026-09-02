@@ -18,6 +18,7 @@
 - 將 opaque stage inputs 的 phantom brand 限為 module-private `declare const ...: unique symbol`，不匯出品牌 value、不建立 runtime `Symbol`，且維持 opaque types 不可由一般 consumer 建構。
 - 修正同一 canvas fallback 展開後的文件可捲動性、由 `EDGES` 動態產生且含來源至目標方向與標籤的關係語意，以及 build entry 在 `SIGINT`／`SIGTERM` 介入兩個產物交付之間時的可驗證 rollback。
 - 修正 Archify `dataflow`，使只有成功值可進入下一 stage；各 stage failure 必須終止於該 stage／Facade outcome，而非指向下游 stage。
+- 修正 Archify `dataflow` 的 Output 成功路徑，並擴充既有 dataflow contract verifier：精確驗證 `Output → Facade { type: "success" }` success edge，以及 Validator／Parser／Renderer／Output 各自通往 `invalid-input`／`parse-error`／`render-error`／`output-error` Facade outcome 的四條 failure terminal edges；五個 outcome terminal nodes 全無 downstream edge，且單一 build entry 必須執行該 verifier。
 
 ## Out-Of-Scope
 
@@ -44,6 +45,7 @@
 - fallback 展開時，其內容仍可由鍵盤與 screen reader 捲動／閱讀；不得以 page `overflow: hidden` 或等效限制使正常文件流中的 controls／relationship content 不可到達。每一項動態關係須以 `來源 → 目標：標籤` 呈現，且三者皆衍生自 `EDGES`。
 - single build entry 在成功時維持兩產物的一致交付，在 `SIGINT`／`SIGTERM` 於第一個 publish 後、第二個 publish 前介入時，必須以既有 backup／journal 恢復兩個 committed outputs；不得宣稱雙檔 atomic rename。受控中斷驗證必須證明舊兩檔 hash 均保留且無 temporary／backup residue。
 - Archify `dataflow` 的 success edge 才可連至下一 stage；`invalid-input`、`parse-error`、`render-error` 與 `output-error` 必須止於產生它的 stage 所映射的 Facade outcome，不得繪製至下游 stage。
+- Archify `dataflow` 的 verifier 必須精確驗證 Output success edge 為 `Output → Facade { type: "success" }` outcome；四類既定 failure edge 各自只到對應 Facade failure outcome，五個 outcome terminal nodes 均無 downstream edge。single build entry 必須在 publish 前執行 verifier，任何一項不符均不得交付 generated artifact。
 - opaque stage inputs 的 module-private phantom brands 不可由 barrel 或 module value surface 匯出，也不得產生 runtime `Symbol`；type-level tests 證明一般 consumer 不能以結構物件建構它們。
 
 ## Non-Goals

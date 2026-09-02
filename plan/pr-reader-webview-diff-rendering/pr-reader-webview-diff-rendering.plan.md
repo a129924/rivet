@@ -2,7 +2,7 @@
 
 ## Goal
 
-在 PR Reader WebView surface 將集中式 diff contract 替換為實體、分層的零依賴 declaration-only pipeline，並固定以 `DiffSnapshot` 為 input 的 `Adapter ↔ Port → UseCase → Facade` 與 `Validator → Parser → Renderer → Output` 未來實作邊界；PC-08 對同一份 diff canvas／Archify dataflow 做既定契約的最小回修：可捲動的 keyboard／screen-reader fallback、可中斷回復的雙產物交付、具方向的 edge 語意，以及 success-only stage progression。
+在 PR Reader WebView surface 將集中式 diff contract 替換為實體、分層的零依賴 declaration-only pipeline，並固定以 `DiffSnapshot` 為 input 的 `Adapter ↔ Port → UseCase → Facade` 與 `Validator → Parser → Renderer → Output` 未來實作邊界；PC-09 對同一份 Archify dataflow 做既定 outcome 的最小回修：擴充 dataflow contract verifier，精確驗證 `Output → Facade { type: "success" }`、Validator／Parser／Renderer／Output 各自通往既定 failure Facade outcome 的四條 edges 與五個無 downstream edge 的 outcome terminals，並由單一 build entry 在 publish 前執行。
 
 ## Non-Goal
 
@@ -46,6 +46,7 @@
 14. 回修 fallback：展開 `details`／fallback 後不得讓 document／page `overflow: hidden` 或等效規則封鎖正常文件流的捲動；原生 controls 與 relationships 必須仍可由鍵盤及 screen reader 進入與閱讀。關係項目仍只由 `EDGES` 動態建立，但每項必須包含來源 node、`→`、目標 node 與 edge label。
 15. 回修 single build entry 的中斷交易：在任何 first publish 前建立兩個 committed outputs 的 backup／journal；`SIGINT`／`SIGTERM` 若發生在第一個 atomic rename 後、第二個前，必須 rollback 兩個 outputs、清理 temporary 與 backup／journal 並非零結束。不得宣稱雙檔 rename 為原子；新增可受控注入該交錯點的測試。
 16. 回修 Archify `dataflow`：只有 success edge 前往下一 stage；每個既定 failure kind 必須終止於產生 stage 對應的 Facade outcome，並不得有任何 failure edge 指向下游 stage。
+17. 回修 Archify `dataflow` 與既有 dataflow contract verifier：它必須精確接受 `Output → Facade { type: "success" }` outcome edge、四條既定 failure terminal edges 與五個無 downstream edge 的 outcome terminals，並拒絕任一遺漏、錯向、替代 target 或 terminal downstream edge。單一 build entry 必須在 Archify validate／deliver 與 publish 前執行 verifier；此只補齊既定 outcome 的視覺終點與可驗證性，不得更動 TypeScript declarations、公開 contract、stage ownership 或既定四類 failure path。
 
 ## Test Cases
 
@@ -63,6 +64,7 @@
 - 展開 fallback 後，正常文件流與其中 controls／relationships 仍可 keyboard／screen-reader 捲動與閱讀，不得有 page `overflow: hidden` 或等效可達性阻斷。每個 relationship 由 `EDGES` 動態衍生，明確含「來源 → 目標」與 label。
 - 受控 `SIGINT` 與 `SIGTERM` 注入 first publish 與 second publish 之間時，兩個 committed outputs 均回復為原 hash，並且 temporary／backup／journal 無 residue、命令非零；success run 仍 byte-identical，且不虛稱雙檔 atomic。
 - Archify `dataflow` 僅以 success edge 串接下游 stage；`invalid-input`、`parse-error`、`render-error`、`output-error` 的 failure path 只到該 stage 對應 Facade outcome，沒有 failure-to-downstream edge。
+- dataflow contract verifier 精確驗證 `Output → Facade { type: "success" }`、四條既定 failure terminal edges 與五個無 downstream edge 的 outcome terminals，拒絕遺漏、錯向、替代 target 或任一 terminal downstream edge；單一 build entry 在 Archify validate／deliver 與 publish 前執行 verifier。
 - opaque stage input 的 brands 是 non-exported `declare const ...: unique symbol`，無 runtime `Symbol` 或 value export；ordinary structural object 不可指派為 opaque input，而既有相鄰 stage 型別相容性不變。
 - 既有 Bun typecheck、tests 與 coverage gate 通過；若命令或環境不存在，明確分類為 blocker。
 
@@ -73,3 +75,4 @@
 - Tester 或 Reviewer 發現 contract、scope 或 workflow drift 時，只由獨立 Implementer 進行最小相符修正並重新驗證。
 - Reviewer 明示 `approved` 後，Code-Implementer 才可依 human 已授權的本 topic Git 流程 commit、push 更新既有 PR #4，回覆並 resolve 本輪已修正 threads；GitHub handoff 完成後停止於 human review。
 - PC-08、PR-08、IM-08、TE-08、RV-08 與 GH-08 必須依序完成；PR-08 未 approved 前不得實作。若 fallback 在展開時無法維持可捲動／可到達、`EDGES` 無法在沒有第二份資料的前提下提供來源→目標→標籤、build entry 無法在 `SIGINT`／`SIGTERM` 於兩次 publish 間把兩 outputs 回復為同一組舊內容並清理 residue，或 Archify failure path 必須改變既定 failure contract 才能正確表達，即停止並回報 blocker。任何新架構資料、contract 或 scope violation 都必須交還 human；GH-08 完成後停止於 HC-07，runtime browser／screen-reader 驗證與 Archify 英文 chrome／`lang="en"` 的可讀性維持 human check。
+- PC-09 的 PR recheck 未明示 `approved` 前不得實作；若 dataflow contract verifier 無法同時精確驗證 `Output → Facade { type: "success" }`、四條既定 failure terminal edges、五個 outcome terminal nodes 無 downstream edge，或無法由單一 build entry 在 publish 前執行，即停止並回報 blocker。GH-09 完成後停止於 HC-08。

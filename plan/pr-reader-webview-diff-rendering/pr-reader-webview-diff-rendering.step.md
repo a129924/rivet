@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-rendering`
-- Current phase: RV-08 final recheck pending（初次 RV-08 `needs-rework` 的 stale ledger 與 verifier actual-injection marker finding 已完成 bounded rework，等待獨立 Reviewer 最終複審）
+- Current phase: GH-09 pending（RV-09 final recheck 已 `approved`；等待已授權的 Code-Implementer GitHub handoff）
 - Ledger rule: 此帳本只索引 handoff evidence 與目前狀態；checkbox、status 或 tracker 結果不構成 approval。只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Steps
@@ -60,21 +60,28 @@
 | PR-08 | approved | Plan-Reviewer | 獨立檢查 PC-08 是否保留已鎖定 pipeline／failure contract／zero-deps／canvas boundary，並正確要求 fallback 可到達性、edge direction、interrupted two-output recovery、dataflow success-only edges、測試與 human boundary。 | Independent Plan-Reviewer recheck 明示 verdict：`approved`；確認 PR-08 的最小 human-check gate 校正未造成既定 contract、scope 或 gate drift。 |
 | IM-08 | completed | Implementer | 僅在 PR-08 明示 `approved` 後，最小回修四個 finding：a11y scrollability、relationship direction text、interrupt rollback、failure-edge graph；並完成 RV-08 所指 verifier actual-injection marker 的 bounded rework。 | Implementer 已完成四項既定回修與 verifier marker rework；未實作 TypeScript pipeline、未改 global template、架構 contract 或新增依賴。等待獨立 Tester evidence 與 RV-08 final recheck。 |
 | TE-08 | approved | Tester | 驗證既有 Bun gates、canvas／Archify validation、fallback static assertions、success-only dataflow edges，及 first／second publish 間受控 `SIGINT`／`SIGTERM` rollback 的 hash／cleanup evidence；另驗證 generated artifact 的 actual-injection marker 與 negative false-green scenario。 | Independent Tester 明示 verdict：`PASS`；既有 Bun gates、canvas／Archify validation、fallback／dataflow static assertions，以及受控 `SIGINT`／`SIGTERM` rollback 的 hash／cleanup evidence 均通過。actual-injection marker 正向情境通過，且刻意保留 source marker 而移除 generated artifact injection 的 negative false-green scenario 如預期失敗。browser／VoiceOver 實測不由此 gate 宣稱完成。 |
-| RV-08 | pending | Reviewer | 對 IM-08 marker rework 與 TE-08 exact-scenario evidence 進行獨立 final recheck，連同既定 contract／scope／workflow 分類 approved、needs-rework、blocked 或 human-check。 | 歷史 verdict：Independent Reviewer 初次明示 `needs-rework`；finding 為：(1) 本 ledger 未反映 PR-08 approval、IM-08 completion 與 TE-08 PASS，造成 workflow state stale；(2) verifier 對 actual injection 的 marker 驗證不足。PC-08 ledger correction、IM-08 bounded marker rework 與 TE-08 independent `PASS` 已完成；尚待獨立 final recheck，故不得視為 RV-08 approved。 |
+| RV-08 | approved | Reviewer | 對 IM-08 marker rework 與 TE-08 exact-scenario evidence 進行獨立 final recheck，連同既定 contract／scope／workflow 分類 approved、needs-rework、blocked 或 human-check。 | 歷史 verdict：Independent Reviewer 初次明示 `needs-rework`；finding 為：(1) 本 ledger 未反映 PR-08 approval、IM-08 completion 與 TE-08 PASS，造成 workflow state stale；(2) verifier 對 actual injection 的 marker 驗證不足。PC-08 ledger correction、IM-08 bounded marker rework 與 TE-08 independent `PASS` 後，獨立 final recheck 明示 verdict：`approved`；初次 finding 保留為歷史 evidence，不再構成現行 blocker。 |
 | GH-08 | pending | Implementer | 僅在 RV-08 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve 精確四個 threads：`enhance-accessibility.js:35`、`build-diagram.sh:221`、`enhance-accessibility.js:121`、`diff-render-flow.dataflow.json:111`。 | 尚無；不得在 RV-08 approval 前 GitHub handoff 或 resolve threads。 |
 | HC-07 | pending | Human | 審閱 PR #4 的 IM-08 回修、驗證／review evidence 與四個 resolved threads；實際 browser、VoiceOver／screen-reader 與 Archify English chrome 的可讀性在此確認。 | GH-08 完成後停止於此 human boundary。 |
+| PC-09 | completed | Plan-Creator | 依 PR-09 finding 最小修正同 topic 四份 artifacts：既有 dataflow verifier 必須精確驗證 `Output → Facade { type: "success" }`、四條既定 failure terminal edges 與五個無 downstream edge 的 outcome terminals，且 single build entry 在 publish 前執行 verifier。 | 四份 artifacts 已更新；此為既定公開 outcome 的視覺表達與可驗證性，不改變 TypeScript／contract、stage ownership 或 failure kinds，且不是 Plan-Reviewer approval。 |
+| PR-09 | approved | Plan-Reviewer | 獨立審查 PC-09 是否只補齊 Output success 的 Facade terminal outcome，保留 success-only stage progression、failure terminal outcomes、零依賴、declaration-only scope 與既定 ownership。 | 初次審查為 `needs-rework`：原 contract 未要求 verifier 精確驗證 Output success edge、四條 failure terminal edges、五個 terminal 無 downstream edge，亦未要求 build entry 執行 verifier。PC-09 最小修正後，Independent Plan-Reviewer final recheck verdict：`approved`。 |
+| IM-09 | completed | Implementer | 僅在 PR-09 recheck 明示 `approved` 後，最小修正 Archify `dataflow` specification／generated artifact、dataflow contract verifier 與 build entry，使其驗證 Output success 指向 Facade `{ type: "success" }` terminal outcome、四類既定 failure terminal outcomes 與五個 terminal 無 downstream edge。 | Implementer 已完成既定的 dataflow／generated artifact、verifier 與 build-entry bounded 修正；未修改 TypeScript、公開 contract、stage ownership、failure kinds、其他圖、global template 或套件。 |
+| TE-09 | approved | Tester | 驗證 dataflow contract verifier 與 build entry：精確接受 `Output → Facade { type: "success" }`、四條既定 failure terminal edges 與五個無 downstream edge 的 outcome terminals，並拒絕遺漏、錯向、替代 target 或 terminal downstream edge。 | Independent Tester 明示 verdict：`PASS`；dataflow verifier 與 build-entry 的既定正向／負向 outcome-terminal evidence 已通過。驗證成功不取代 Reviewer approval。 |
+| RV-09 | approved | Reviewer | 獨立審查 IM-09、TE-09 evidence 與既定 contract／scope／workflow，分類 approved、needs-rework、blocked 或 human-check。 | 歷史 verdict：Independent Reviewer 初次明示 `needs-rework`；唯一 finding 為 step ledger 尚未記錄 PR-09 final approval、IM-09 completion 與 TE-09 `PASS` evidence，造成 workflow evidence 不完整。ledger correction 後，Independent Reviewer final recheck verdict：`approved`；初次 finding 保留為歷史 evidence，不再構成現行 blocker。 |
+| GH-09 | pending | Code-Implementer | 僅在 RV-09 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve 精確單一 thread `PRRT_kwDOUFu0Cc6eacAI`。 | 尚無；不得在 RV-09 approval 前 GitHub handoff 或 resolve thread。 |
+| HC-08 | pending | Human | 審閱 PR #4 的 IM-09 outcome-terminal 回修、驗證／review evidence 與 resolved thread。 | GH-09 完成後停止於此 human boundary。 |
 
 ## Blockers
 
-- 無需 human 決策的未解析 blocker；初次 RV-08 的 `needs-rework` finding 已完成 ledger 與 bounded marker rework。現行下一關為獨立 RV-08 final recheck。
-- PC-08、PR-08、IM-08 與 TE-08 已完成其各自 evidence gate；RV-08 final recheck 未 approval 前，GH-08 與 HC-07 保持 pending。PC-08 不得以本輪回修重開既定 contract。
+- 無需 human 決策的未解析 blocker。RV-08 與 RV-09 的初次 `needs-rework` 及後續 final `approved` 均為已完成歷史 evidence，不構成現行 phase 或 blocker。
+- 現行待決關卡為 GH-09：PR-09 已 final `approved`、IM-09 已完成、TE-09 已 `PASS`、RV-09 已 final `approved`；僅可依已授權 GitHub handoff 更新 PR #4、回覆並 resolve 精確單一 thread，完成後才停止於 HC-08。
 
 ## Human Check
 
-- GH-08 完成後，停止於 HC-07；除實體 browser／screen-reader fallback 外，Archify 英文 global viewer chrome 與 `lang="en"` 在實際閱讀情境下的 visibility／readability 亦屬 human-check，不得由 agent 或 ledger 假稱已完成或已繁中化。
+- GH-08 完成後，停止於 HC-07；除實體 browser／screen-reader fallback 外，Archify 英文 global viewer chrome 與 `lang="en"` 在實際閱讀情境下的 visibility／readability 亦屬 human-check，不得由 agent 或 ledger 假稱已完成或已繁中化。GH-09 仍 pending；RV-09 final `approved` 已完成，僅在 GH-09 完成後才停止於 HC-08；不得由 agent 或 ledger 取代 human review。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 記錄 RV-08 marker finding 的 IM-08 bounded rework、TE-08 independent `PASS` 的 actual-injection 正向與 negative false-green scenarios，並將目前 gate 前進至 RV-08 final recheck。
-- Update status: RV-08 final recheck pending；GH-08 與 HC-07 均未完成；checkbox、status 或 tracker 結果不構成 approval。
+- Update reason: 記錄 RV-09 final `approved`，並保留其初次 `needs-rework` 的 workflow-evidence finding。
+- Update status: GH-09 pending；不得以本 ledger 取代已授權的 GitHub handoff，HC-08 維持 pending。

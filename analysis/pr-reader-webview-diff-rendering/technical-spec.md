@@ -216,6 +216,12 @@ export interface ViewedStateChangeAdapter extends ViewedStateChangePort {}
 - Archify `dataflow` 的下一 stage 僅消費前一 stage 的 success value：Validator success 才進 Parser、Parser success 才進 Renderer、Renderer success 才進 Output。`invalid-input`、`parse-error`、`render-error` 與 `output-error` 各自終止於產生 stage 所映射的 Facade outcome，絕不可繪製為進入下游 stage。這是對已鎖定 stage-result contract 的圖表回修，不是新 contract。
 - IM-08 僅可在 PR-08 approval 後進行；實體 browser、VoiceOver／screen-reader 與 Archify 英文 chrome 的實際可讀性仍保留 human check，靜態驗證不得取代。
 
+## PC-09 Output Success Terminal Revision
+
+- 本輪僅處理 PR thread `PRRT_kwDOUFu0Cc6eacAI`：Archify `dataflow` 的 Output success edge 必須終止於 Facade `{ type: "success" }` outcome。既有 `verify-dataflow-contract.js` 必須精確驗證此 `Output → Facade { type: "success" }` edge，以及 Validator／Parser／Renderer／Output 各自通往 `invalid-input`／`parse-error`／`render-error`／`output-error` Facade outcome 的四條 failure terminal edges，並驗證五個 outcome terminal nodes 均沒有 downstream edge；這只補齊既定公開 outcome 的視覺表達與其 verifier，不改變 TypeScript declarations、failure kinds、Output ownership、stage coordination、零依賴或 declaration-only scope。
+- `invalid-input`、`parse-error`、`render-error` 與 `output-error` 仍各自終止於產生它們的 stage 所映射 Facade failure outcome，且不指向任何下游 stage。單一 build entry 必須在 Archify validate／deliver 與 publish 前執行 dataflow contract verifier；verifier 失敗時不得交付 generated artifact。Output success 與所有 failure outcome 都是 terminal，沒有 downstream edge。
+- IM-09 僅可在 PR-09 recheck approval 後進行；GH-09 只能在 RV-09 approval 後回覆並 resolve 該精確單一 thread。HC-08 是此回修完成後的 human boundary。
+
 ## Validation
 
 - 以依 module 分檔的 strict TypeScript type-level tests 驗證所有 literal unions、`DiffSnapshot` 的 required／readonly fields、未變更的 `DiffViewModel`、exact method signatures 與 public barrel export surface。
@@ -229,5 +235,6 @@ export interface ViewedStateChangeAdapter extends ViewedStateChangePort {}
 - 對 PC-08 fallback 驗證：展開 fallback 時，document／page 不得以 `overflow: hidden` 或等效樣式封鎖正常文件流內容的 keyboard／screen-reader 捲動；node controls 與 relationship list 必須仍可到達。每個由 `EDGES` 產生的 relationship 項目都必須含來源、`→`、目標與 label，而非僅含 label。
 - 對 PC-08 build transaction 執行受控 `SIGINT` 與 `SIGTERM` 注入：在第一個 committed output atomic rename 後、第二個前中斷，驗證兩個 committed outputs 均還原為 pre-run hashes、temporary／backup／journal 無 residue、命令非零結束；成功路徑仍須兩次 byte-identical 並維持既有 hash／consistency check。
 - 驗證 Archify `dataflow`：每個 stage 到下一 stage 的 edge 僅代表 success value；四類 failure edge／outcome 不得指向任何下游 stage，且只終止為對應 Facade outcome。
+- 驗證 dataflow contract verifier 精確要求 `Output → Facade { type: "success" }` edge，以及四條既定 failure terminal edges；它必須拒絕任一遺漏、錯向、替代 target 或五個 outcome terminal nodes 任一具有 downstream edge 的 specification。驗證 single build entry 在 Archify validate／deliver 與 publish 前執行該 verifier；此為既定公開 outcome 的圖表表達，不變更 TypeScript 或 contract。
 - type-level tests 必須驗證 opaque interfaces 的 brand identifier 不是 exported value、source 不含 runtime `Symbol`、ordinary structural object 不能指派為 opaque input，且既有 internal stage compatibility 仍成立。
 - 執行既有 Bun typecheck、test 與 coverage gate；若現況尚無可執行 test，Tester 必須回報明確環境或設定 blocker，不以臆測替代。

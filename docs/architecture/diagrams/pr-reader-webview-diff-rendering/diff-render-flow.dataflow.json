@@ -4,7 +4,7 @@
   "meta": {
     "title": "PR Reader WebView 差異渲染資料流",
     "quality_profile": "showcase",
-    "viewBox": [1080, 640]
+    "viewBox": [1080, 720]
   },
   "stages": [
     { "label": "Swift 快照" },
@@ -112,6 +112,15 @@
       "tag": "終止",
       "stage": 4,
       "row": 3
+    },
+    {
+      "id": "success-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "{ type: \"success\" }",
+      "tag": "終止",
+      "stage": 4,
+      "row": 4
     }
   ],
   "flows": [
@@ -198,7 +207,17 @@
       "classification": "Facade outcome；終止",
       "variant": "security",
       "route": "straight",
+      "labelDx": -150,
       "labelDy": 53
+    },
+    {
+      "from": "output",
+      "to": "success-outcome",
+      "label": "{ type: \"success\" }",
+      "classification": "success",
+      "variant": "emphasis",
+      "route": "bottom-channel",
+      "labelDy": -24
     }
   ],
   "cards": [

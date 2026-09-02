@@ -20,7 +20,6 @@ try {
   const nodes = new Map(diagram.nodes.map((node) => [node.id, node]));
   const flows = diagram.flows;
   const flowsFrom = (from) => flows.filter((entry) => entry.from === from);
-  const flow = (from, to) => flowsFrom(from).find((entry) => entry.to === to);
 
   const successOnly = [
     ['validator', 'parser'],
@@ -32,24 +31,61 @@ try {
     assert(entries.length === 1 && entries[0].classification === 'success', `${from} 只可在 success 時前往 ${to}`);
   }
 
-  const failures = [
-    ['validator', 'invalid-input', 'invalid-input-outcome'],
-    ['parser', 'parse-error', 'parse-error-outcome'],
-    ['renderer', 'render-error', 'render-error-outcome'],
-    ['output', 'output-error', 'output-error-outcome'],
+  const outcomes = [
+    {
+      from: 'validator',
+      label: 'invalid-input',
+      classification: 'Facade outcome；終止',
+      outcome: 'invalid-input-outcome',
+      sublabel: 'invalid-input',
+    },
+    {
+      from: 'parser',
+      label: 'parse-error',
+      classification: 'Facade outcome；終止',
+      outcome: 'parse-error-outcome',
+      sublabel: 'parse-error',
+    },
+    {
+      from: 'renderer',
+      label: 'render-error',
+      classification: 'Facade outcome；終止',
+      outcome: 'render-error-outcome',
+      sublabel: 'render-error',
+    },
+    {
+      from: 'output',
+      label: 'output-error',
+      classification: 'Facade outcome；終止',
+      outcome: 'output-error-outcome',
+      sublabel: 'output-error',
+    },
+    {
+      from: 'output',
+      label: '{ type: "success" }',
+      classification: 'success',
+      outcome: 'success-outcome',
+      sublabel: '{ type: "success" }',
+    },
   ];
-  for (const [from, kind, outcome] of failures) {
-    const entry = flow(from, outcome);
+  for (const { from, label, classification, outcome, sublabel } of outcomes) {
+    const entries = flowsFrom(from).filter((entry) => entry.to === outcome);
     const node = nodes.get(outcome);
-    assert(entry && entry.label === kind && entry.classification === 'Facade outcome；終止', `${kind} 必須終止於對應 Facade outcome`);
-    assert(node && node.label === 'Facade outcome' && node.sublabel === kind, `${kind} 必須有對應的 terminal Facade outcome node`);
+    assert(entries.length === 1 && entries[0].label === label && entries[0].classification === classification, `${label} 必須終止於對應 Facade outcome`);
+    assert(node && node.label === 'Facade outcome' && node.sublabel === sublabel, `${label} 必須有對應的 terminal Facade outcome node`);
+    assert(flowsFrom(outcome).length === 0, `${label} 的 Facade outcome 必須沒有 downstream edge`);
   }
 
-  for (const [from, kind, outcome] of failures) {
-    const next = successOnly.find(([candidate]) => candidate === from)?.[1];
-    const allowedTargets = new Set(next ? [next, outcome] : [outcome]);
+  const expectedTargets = new Map([
+    ['validator', ['parser', 'invalid-input-outcome']],
+    ['parser', ['renderer', 'parse-error-outcome']],
+    ['renderer', ['output', 'render-error-outcome']],
+    ['output', ['output-error-outcome', 'success-outcome']],
+  ]);
+  for (const [from, targets] of expectedTargets) {
+    const allowedTargets = new Set(targets);
     const entries = flowsFrom(from);
-    assert(entries.length === allowedTargets.size && entries.every((entry) => allowedTargets.has(entry.to)), `${kind} 不得有任何額外或 failure-to-downstream edge`);
+    assert(entries.length === allowedTargets.size && entries.every((entry) => allowedTargets.has(entry.to)), `${from} 不得有任何額外、錯向或 failure-to-downstream edge`);
   }
   process.stdout.write(`dataflow contract 驗證通過：${input}\n`);
 } catch (error) {
