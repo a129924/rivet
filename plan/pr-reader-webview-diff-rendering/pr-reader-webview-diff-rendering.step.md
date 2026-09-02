@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-rendering`
-- Current phase: GH-07 pending（RV-07 final recheck 已獨立核准；等待已授權的 GitHub handoff）
+- Current phase: RV-08 final recheck pending（初次 RV-08 `needs-rework` 的 stale ledger 與 verifier actual-injection marker finding 已完成 bounded rework，等待獨立 Reviewer 最終複審）
 - Ledger rule: 此帳本只索引 handoff evidence 與目前狀態；checkbox、status 或 tracker 結果不構成 approval。只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Steps
@@ -56,18 +56,25 @@
 | RV-07 | approved | Reviewer | 在 PR-07 明示 `approved` 後，獨立 final recheck IM-07、Archify `dataflow` verify／delivery evidence、R5 四個 findings 與既定 contract／scope／workflow。 | 歷史 verdict：`needs-rework`；唯一 finding 為所有 Archify validate／deliver 指令錯誤指向 `<archify-skill>/scripts/archify.mjs`，正確入口為 `<archify-skill>/bin/archify.mjs`。PC-07 最小修正與 PR-07 bin-path／no-drift recheck 後，Independent Reviewer final verdict：`approved`；R5 findings、build transaction、CLI path 與既有 test evidence 均已 recheck，未發現 blocker 或 drift。 |
 | GH-07 | pending | Code-Implementer | 僅在 RV-07 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve 本輪四個 R5 threads。 | 尚無；不得在 RV-07 approval 前 Git handoff 或 resolve threads。 |
 | HC-06 | pending | Human | 審閱 PR #4 的 IM-07 修正、驗證／review evidence 與 resolved R5 threads；實際 browser／screen-reader 行為在此確認。 | GH-07 完成後停止於此 human boundary。 |
+| PC-08 | completed | Plan-Creator | 將同 topic 四份 artifacts 收斂為四個既定契約回修：fallback 展開後可捲動、`EDGES` 的來源→目標＋label 語意、`SIGINT`／`SIGTERM` 雙產物 rollback，以及 Archify success-only stage progression；並依 PR-08 finding 最小修正 Archify English chrome／`lang="en"` human check 的 gate 指向。RV-08 後，補正 workflow ledger，並將 verifier 必須驗證 generated artifact 的 actual injection marker 明確記入既定驗收。 | 初版四份 artifacts 已更新且未改變既定資料模型、ownership 或 failure contract；PR-08 首次 `needs-rework` 後，僅將 requirements:41、technical-spec:226、plan:40／59 的現行 human-check gate 由 HC-06 校正為 HC-07。RV-08 所需的 ledger correction 與 marker 驗收已完成；此 completion 不取代 RV-08 的獨立 final recheck。 |
+| PR-08 | approved | Plan-Reviewer | 獨立檢查 PC-08 是否保留已鎖定 pipeline／failure contract／zero-deps／canvas boundary，並正確要求 fallback 可到達性、edge direction、interrupted two-output recovery、dataflow success-only edges、測試與 human boundary。 | Independent Plan-Reviewer recheck 明示 verdict：`approved`；確認 PR-08 的最小 human-check gate 校正未造成既定 contract、scope 或 gate drift。 |
+| IM-08 | completed | Implementer | 僅在 PR-08 明示 `approved` 後，最小回修四個 finding：a11y scrollability、relationship direction text、interrupt rollback、failure-edge graph；並完成 RV-08 所指 verifier actual-injection marker 的 bounded rework。 | Implementer 已完成四項既定回修與 verifier marker rework；未實作 TypeScript pipeline、未改 global template、架構 contract 或新增依賴。等待獨立 Tester evidence 與 RV-08 final recheck。 |
+| TE-08 | approved | Tester | 驗證既有 Bun gates、canvas／Archify validation、fallback static assertions、success-only dataflow edges，及 first／second publish 間受控 `SIGINT`／`SIGTERM` rollback 的 hash／cleanup evidence；另驗證 generated artifact 的 actual-injection marker 與 negative false-green scenario。 | Independent Tester 明示 verdict：`PASS`；既有 Bun gates、canvas／Archify validation、fallback／dataflow static assertions，以及受控 `SIGINT`／`SIGTERM` rollback 的 hash／cleanup evidence 均通過。actual-injection marker 正向情境通過，且刻意保留 source marker 而移除 generated artifact injection 的 negative false-green scenario 如預期失敗。browser／VoiceOver 實測不由此 gate 宣稱完成。 |
+| RV-08 | pending | Reviewer | 對 IM-08 marker rework 與 TE-08 exact-scenario evidence 進行獨立 final recheck，連同既定 contract／scope／workflow 分類 approved、needs-rework、blocked 或 human-check。 | 歷史 verdict：Independent Reviewer 初次明示 `needs-rework`；finding 為：(1) 本 ledger 未反映 PR-08 approval、IM-08 completion 與 TE-08 PASS，造成 workflow state stale；(2) verifier 對 actual injection 的 marker 驗證不足。PC-08 ledger correction、IM-08 bounded marker rework 與 TE-08 independent `PASS` 已完成；尚待獨立 final recheck，故不得視為 RV-08 approved。 |
+| GH-08 | pending | Implementer | 僅在 RV-08 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve 精確四個 threads：`enhance-accessibility.js:35`、`build-diagram.sh:221`、`enhance-accessibility.js:121`、`diff-render-flow.dataflow.json:111`。 | 尚無；不得在 RV-08 approval 前 GitHub handoff 或 resolve threads。 |
+| HC-07 | pending | Human | 審閱 PR #4 的 IM-08 回修、驗證／review evidence 與四個 resolved threads；實際 browser、VoiceOver／screen-reader 與 Archify English chrome 的可讀性在此確認。 | GH-08 完成後停止於此 human boundary。 |
 
 ## Blockers
 
-- 無需 human 決策的未解析 blocker；RV-07 final recheck 已核准，下一關為 GH-07 GitHub handoff。
-- RV-07 歷史唯一 finding 為 Archify 指令入口誤用 `scripts/archify.mjs`；四份 artifacts 已統一為 `<archify-skill>/bin/archify.mjs`，並經 PR-07 與 RV-07 recheck 核准。GH-07／HC-06 仍 pending，既有 gate 不得跳過 GitHub handoff 或 human boundary。
+- 無需 human 決策的未解析 blocker；初次 RV-08 的 `needs-rework` finding 已完成 ledger 與 bounded marker rework。現行下一關為獨立 RV-08 final recheck。
+- PC-08、PR-08、IM-08 與 TE-08 已完成其各自 evidence gate；RV-08 final recheck 未 approval 前，GH-08 與 HC-07 保持 pending。PC-08 不得以本輪回修重開既定 contract。
 
 ## Human Check
 
-- GH-07 完成後，停止於 HC-06；除實體 browser／screen-reader fallback 外，Archify 英文 global viewer chrome 與 `lang="en"` 在實際閱讀情境下的 visibility／readability 亦屬 human-check，不得由 agent 或 ledger 假稱已完成或已繁中化。
+- GH-08 完成後，停止於 HC-07；除實體 browser／screen-reader fallback 外，Archify 英文 global viewer chrome 與 `lang="en"` 在實際閱讀情境下的 visibility／readability 亦屬 human-check，不得由 agent 或 ledger 假稱已完成或已繁中化。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 記錄 RV-07 對 R5、build transaction、Archify CLI path 與既有 test evidence 的獨立 final recheck approval，並將下一關移交 GH-07。
-- Update status: RV-07 approved；GH-07／HC-06 仍 pending；checkbox、status 或 tracker 結果不構成 approval。
+- Update reason: 記錄 RV-08 marker finding 的 IM-08 bounded rework、TE-08 independent `PASS` 的 actual-injection 正向與 negative false-green scenarios，並將目前 gate 前進至 RV-08 final recheck。
+- Update status: RV-08 final recheck pending；GH-08 與 HC-07 均未完成；checkbox、status 或 tracker 結果不構成 approval。

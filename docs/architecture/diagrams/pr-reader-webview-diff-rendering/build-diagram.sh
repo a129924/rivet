@@ -9,10 +9,28 @@ dataflow_target="$diagram_dir/diff-render-flow.html"
 failure_point="${PR_READER_BUILD_FAIL_AT:-}"
 temporary_paths=()
 preserve_recovery_material=0
+transaction_active=0
+transaction_committed=0
+transaction_recovery_attempted=0
+canvas_original_hash=""
+dataflow_original_hash=""
+canvas_backup=""
+dataflow_backup=""
+transaction_journal=""
+interrupt_point="${PR_READER_BUILD_INTERRUPT_AT:-}"
+interrupt_signal="${PR_READER_BUILD_INTERRUPT_SIGNAL:-TERM}"
 
 cleanup() {
   local status=$?
-  trap - EXIT
+  trap - EXIT INT TERM
+
+  if (( transaction_active && !transaction_committed && !transaction_recovery_attempted )); then
+    transaction_recovery_attempted=1
+    printf '交付交易在完成前結束；開始以 backup/restore 回復。\n' >&2
+    if ! rollback_pair "$canvas_original_hash" "$dataflow_original_hash" "$canvas_backup" "$dataflow_backup"; then
+      status=1
+    fi
+  fi
 
   if (( preserve_recovery_material )); then
     printf '交易回復失敗；保留同資料夾復原材料，請依錯誤訊息人工復原。\n' >&2
@@ -26,6 +44,21 @@ cleanup() {
   exit "$status"
 }
 trap cleanup EXIT
+
+interrupt_exit_code() {
+  case "$1" in
+    INT) printf '130' ;;
+    TERM) printf '143' ;;
+  esac
+}
+
+handle_interrupt() {
+  local signal="$1"
+  printf '收到 %s；交付交易將在退出前回復。\n' "$signal" >&2
+  exit "$(interrupt_exit_code "$signal")"
+}
+trap 'handle_interrupt INT' INT
+trap 'handle_interrupt TERM' TERM
 
 require_file() {
   if [[ ! -f "$1" ]]; then
@@ -63,6 +96,14 @@ fail_at() {
     return 1
   fi
   return 0
+}
+
+interrupt_at() {
+  local expected="$1"
+  if [[ "$interrupt_point" == "$expected" ]]; then
+    printf '受控中斷注入：%s（SIG%s）\n' "$expected" "$interrupt_signal" >&2
+    kill "-$interrupt_signal" "$$"
+  fi
 }
 
 build_canvas_candidate() {
@@ -140,7 +181,9 @@ abort_commit() {
   local dataflow_backup="$5"
 
   printf '交付交易失敗：%s；開始以 backup/restore 回復。\n' "$reason" >&2
+  transaction_recovery_attempted=1
   if rollback_pair "$canvas_original_hash" "$dataflow_original_hash" "$canvas_backup" "$dataflow_backup"; then
+    transaction_active=0
     printf '交付交易已回復；既有輸出保持不變。\n' >&2
   fi
   exit 1
@@ -154,6 +197,22 @@ case "$failure_point" in
     ;;
 esac
 
+case "$interrupt_point" in
+  ""|after-canvas-rename) ;;
+  *)
+    printf '未知的 PR_READER_BUILD_INTERRUPT_AT 值：%s\n' "$interrupt_point" >&2
+    exit 2
+    ;;
+esac
+
+case "$interrupt_signal" in
+  INT|TERM) ;;
+  *)
+    printf '未知的 PR_READER_BUILD_INTERRUPT_SIGNAL 值：%s\n' "$interrupt_signal" >&2
+    exit 2
+    ;;
+esac
+
 require_file "$canvas_skill_dir/scripts/validate.js"
 require_file "$canvas_skill_dir/scripts/build.js"
 require_file "$archify_skill_dir/bin/archify.mjs"
@@ -161,6 +220,7 @@ require_file "$diagram_dir/scene.js"
 require_file "$diagram_dir/enhance-accessibility.js"
 require_file "$diagram_dir/verify-accessibility.js"
 require_file "$diagram_dir/diff-render-flow.dataflow.json"
+require_file "$diagram_dir/verify-dataflow-contract.js"
 require_file "$canvas_target"
 require_file "$dataflow_target"
 
@@ -174,12 +234,14 @@ allocate_temporary_file canvas_repeated_second "canvas-repeated-second"
 allocate_temporary_file dataflow_candidate_second "dataflow-candidate-second"
 allocate_temporary_file canvas_backup "canvas-backup"
 allocate_temporary_file dataflow_backup "dataflow-backup"
+allocate_temporary_file transaction_journal "transaction-journal"
 
 # Both temporary paths live beside their eventual committed target, so every
 # successful mv below is a same-filesystem, single-file atomic rename.
 node "$canvas_skill_dir/scripts/validate.js" "$diagram_dir/scene.js"
 node "$archify_skill_dir/bin/archify.mjs" validate dataflow \
   "$diagram_dir/diff-render-flow.dataflow.json" --quality showcase --json
+node "$diagram_dir/verify-dataflow-contract.js" --input "$diagram_dir/diff-render-flow.dataflow.json"
 
 build_canvas_candidate "$canvas_raw_first" "$canvas_candidate_first" "$canvas_repeated_first"
 build_dataflow_candidate "$dataflow_candidate_first"
@@ -202,6 +264,7 @@ dataflow_repeat_hash="$(sha256 "$dataflow_candidate_second")"
 printf '候選一致性 hash：canvas=%s dataflow=%s\n' "$canvas_new_hash" "$dataflow_new_hash"
 
 if ! fail_at before-commit; then
+  printf '交付交易尚未開始；無需回復。\n' >&2
   exit 1
 fi
 
@@ -211,6 +274,10 @@ cp -p -- "$canvas_target" "$canvas_backup"
 cp -p -- "$dataflow_target" "$dataflow_backup"
 [[ "$(sha256 "$canvas_backup")" == "$canvas_original_hash" ]]
 [[ "$(sha256 "$dataflow_backup")" == "$dataflow_original_hash" ]]
+printf 'canvas=%s\ndataflow=%s\ncanvas_backup=%s\ndataflow_backup=%s\n' \
+  "$canvas_original_hash" "$dataflow_original_hash" "$canvas_backup" "$dataflow_backup" > "$transaction_journal"
+assert_regular_file "$transaction_journal"
+transaction_active=1
 
 # POSIX has no atomic multi-file rename. Keep exact backups until both
 # individual atomic renames and their target hashes are proven, then restore
@@ -221,11 +288,13 @@ fi
 if ! fail_at after-canvas-rename; then
   abort_commit "canvas rename 後的受控失敗" "$canvas_original_hash" "$dataflow_original_hash" "$canvas_backup" "$dataflow_backup"
 fi
+interrupt_at after-canvas-rename
 if ! mv -f -- "$dataflow_candidate_first" "$dataflow_target"; then
   abort_commit "dataflow atomic rename 失敗" "$canvas_original_hash" "$dataflow_original_hash" "$canvas_backup" "$dataflow_backup"
 fi
 if [[ "$(sha256 "$canvas_target")" != "$canvas_new_hash" || "$(sha256 "$dataflow_target")" != "$dataflow_new_hash" ]]; then
   abort_commit "commit 後 hash 驗證失敗" "$canvas_original_hash" "$dataflow_original_hash" "$canvas_backup" "$dataflow_backup"
 fi
+transaction_committed=1
 
 printf '已以兩次單檔 atomic rename 交付一致的 canvas 與 dataflow：%s\n' "$diagram_dir"

@@ -5036,7 +5036,7 @@
         <text x="745" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">04 / 宣告階段</text>
 
         <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="4" x="876" y="46" width="168" height="520" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="960" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">05 / 輸出</text>
+        <text x="960" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">05 / Facade outcome</text>
 
         <!-- Flow paths -->
         <path data-edge-from="swift-snapshot" data-edge-to="facade" data-edge-label="DiffSnapshot" data-edge-key="0" data-composition-points="156,157;259,157" d="M 156 157 L 259 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
@@ -5044,7 +5044,11 @@
         <path data-edge-from="usecase" data-edge-to="validator" data-edge-label="驗證" data-edge-key="2" data-composition-points="586,157;689,157" d="M 586 157 L 689 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <path data-edge-from="validator" data-edge-to="parser" data-edge-label="已驗證輸入" data-edge-key="3" data-composition-points="745,186;701,186;701,242;745,242" d="M 745 186 L 701 186 L 701 242 L 745 242" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="parser" data-edge-to="renderer" data-edge-label="已剖析輸入" data-edge-key="4" data-composition-points="745,300;701,300;701,356;745,356" d="M 745 300 L 701 300 L 701 356 L 745 356" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="renderer" data-edge-to="output" data-edge-label="RenderPlan" data-edge-key="5" data-composition-points="801,385;845,385;845,271;904,271" d="M 801 385 L 845 385 L 845 271 L 904 271" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="renderer" data-edge-to="output" data-edge-label="RenderPlan" data-edge-key="5" data-composition-points="745,414;701,414;701,470;745,470" d="M 745 414 L 701 414 L 701 470 L 745 470" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="validator" data-edge-to="invalid-input-outcome" data-edge-label="invalid-input" data-edge-key="6" data-composition-points="801,157;904,157" d="M 801 157 L 904 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="parser" data-edge-to="parse-error-outcome" data-edge-label="parse-error" data-edge-key="7" data-composition-points="801,271;904,271" d="M 801 271 L 904 271" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="renderer" data-edge-to="render-error-outcome" data-edge-label="render-error" data-edge-key="8" data-composition-points="801,385;904,385" d="M 801 385 L 904 385" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="output" data-edge-to="output-error-outcome" data-edge-label="output-error" data-edge-key="9" data-composition-points="801,499;904,499" d="M 801 499 L 904 499" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
 
         <!-- Nodes -->
         <g id="node-swift-snapshot" data-node-id="swift-snapshot" data-node-label="Swift 快照" tabindex="0" role="button" aria-label="Focus Swift 快照, 完整 DiffSnapshot, 01 / Swift 快照" aria-pressed="false" data-node-kind="external" data-node-sublabel="完整 DiffSnapshot" data-node-tag="權威輸入" data-node-context="01 / Swift 快照">
@@ -5087,52 +5091,112 @@
         <text data-detail="fine" x="530" y="175" class="t-backend" font-size="7" text-anchor="middle">唯一協調者</text>
         </g>
 
-        <g id="node-validator" data-node-id="validator" data-node-label="驗證 Port" tabindex="0" role="button" aria-label="Focus 驗證 Port, invalid-input, 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="invalid-input" data-node-tag="階段失敗" data-node-context="04 / 宣告階段">
-          <title>驗證 Port · invalid-input · 04 / 宣告階段 · 階段失敗</title>
+        <g id="node-validator" data-node-id="validator" data-node-label="驗證 Port" tabindex="0" role="button" aria-label="Focus 驗證 Port, validate(snapshot), 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="validate(snapshot)" data-node-tag="成功才前進" data-node-context="04 / 宣告階段">
+          <title>驗證 Port · validate(snapshot) · 04 / 宣告階段 · 成功才前進</title>
           <rect x="689" y="128" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="689" y="128" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 134) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="745" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">驗證 Port</text>
-          <text data-detail="context" x="745" y="165" class="t-muted" font-size="7" text-anchor="middle">invalid-input</text>
-        <text data-detail="fine" x="745" y="175" class="t-backend" font-size="7" text-anchor="middle">階段失敗</text>
+          <text data-detail="context" x="745" y="165" class="t-muted" font-size="7" text-anchor="middle">validate(snapshot)</text>
+        <text data-detail="fine" x="745" y="175" class="t-backend" font-size="7" text-anchor="middle">成功才前進</text>
         </g>
 
-        <g id="node-parser" data-node-id="parser" data-node-label="剖析 Port" tabindex="0" role="button" aria-label="Focus 剖析 Port, parse-error, 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="parse-error" data-node-tag="階段失敗" data-node-context="04 / 宣告階段">
-          <title>剖析 Port · parse-error · 04 / 宣告階段 · 階段失敗</title>
+        <g id="node-parser" data-node-id="parser" data-node-label="剖析 Port" tabindex="0" role="button" aria-label="Focus 剖析 Port, parse(input), 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="parse(input)" data-node-tag="成功才前進" data-node-context="04 / 宣告階段">
+          <title>剖析 Port · parse(input) · 04 / 宣告階段 · 成功才前進</title>
           <rect x="689" y="242" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="689" y="242" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 248) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="745" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">剖析 Port</text>
-          <text data-detail="context" x="745" y="279" class="t-muted" font-size="7" text-anchor="middle">parse-error</text>
-        <text data-detail="fine" x="745" y="289" class="t-backend" font-size="7" text-anchor="middle">階段失敗</text>
+          <text data-detail="context" x="745" y="279" class="t-muted" font-size="7" text-anchor="middle">parse(input)</text>
+        <text data-detail="fine" x="745" y="289" class="t-backend" font-size="7" text-anchor="middle">成功才前進</text>
         </g>
 
-        <g id="node-renderer" data-node-id="renderer" data-node-label="渲染 Port" tabindex="0" role="button" aria-label="Focus 渲染 Port, render-error, 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="render-error" data-node-tag="階段失敗" data-node-context="04 / 宣告階段">
-          <title>渲染 Port · render-error · 04 / 宣告階段 · 階段失敗</title>
+        <g id="node-renderer" data-node-id="renderer" data-node-label="渲染 Port" tabindex="0" role="button" aria-label="Focus 渲染 Port, createRenderPlan(input), 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="createRenderPlan(input)" data-node-tag="成功才前進" data-node-context="04 / 宣告階段">
+          <title>渲染 Port · createRenderPlan(input) · 04 / 宣告階段 · 成功才前進</title>
           <rect x="689" y="356" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="689" y="356" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 362) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="745" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">渲染 Port</text>
-          <text data-detail="context" x="745" y="393" class="t-muted" font-size="7" text-anchor="middle">render-error</text>
-        <text data-detail="fine" x="745" y="403" class="t-backend" font-size="7" text-anchor="middle">階段失敗</text>
+          <text data-detail="context" x="745" y="393" class="t-muted" font-size="7" text-anchor="middle">createRenderPlan(input)</text>
+        <text data-detail="fine" x="745" y="403" class="t-backend" font-size="7" text-anchor="middle">成功才前進</text>
         </g>
 
-        <g id="node-output" data-node-id="output" data-node-label="輸出 Port" tabindex="0" role="button" aria-label="Focus 輸出 Port, output-error, 05 / 輸出" aria-pressed="false" data-node-kind="backend" data-node-sublabel="output-error" data-node-tag="唯一 caller：UseCase" data-node-context="05 / 輸出">
-          <title>輸出 Port · output-error · 05 / 輸出 · 唯一 caller：UseCase</title>
-          <rect x="904" y="242" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="904" y="242" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(910 248) scale(0.6875)">
+        <g id="node-output" data-node-id="output" data-node-label="輸出 Port" tabindex="0" role="button" aria-label="Focus 輸出 Port, output(plan), 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="output(plan)" data-node-tag="唯一 caller：UseCase" data-node-context="04 / 宣告階段">
+          <title>輸出 Port · output(plan) · 04 / 宣告階段 · 唯一 caller：UseCase</title>
+          <rect x="689" y="470" width="112" height="58" rx="6" class="c-mask"/>
+          <rect x="689" y="470" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 476) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="960" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">輸出 Port</text>
-          <text data-detail="context" x="960" y="279" class="t-muted" font-size="7" text-anchor="middle">output-error</text>
-        <text data-detail="fine" x="960" y="289" class="t-backend" font-size="7" text-anchor="middle">唯一 caller：UseCase</text>
+          <text data-node-label="" data-detail-anchor="" x="745" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">輸出 Port</text>
+          <text data-detail="context" x="745" y="507" class="t-muted" font-size="7" text-anchor="middle">output(plan)</text>
+        <text data-detail="fine" x="745" y="517" class="t-backend" font-size="7" text-anchor="middle">唯一 caller：UseCase</text>
+        </g>
+
+        <g id="node-invalid-input-outcome" data-node-id="invalid-input-outcome" data-node-label="Facade outcome" tabindex="0" role="button" aria-label="Focus Facade outcome, invalid-input, 05 / Facade outcome" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="invalid-input" data-node-tag="終止" data-node-context="05 / Facade outcome">
+          <title>Facade outcome · invalid-input · 05 / Facade outcome · 終止</title>
+          <rect x="904" y="128" width="112" height="58" rx="6" class="c-mask"/>
+          <rect x="904" y="128" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(910 134) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="960" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Facade outcome</text>
+          <text data-detail="context" x="960" y="165" class="t-muted" font-size="7" text-anchor="middle">invalid-input</text>
+        <text data-detail="fine" x="960" y="175" class="t-frontend" font-size="7" text-anchor="middle">終止</text>
+        </g>
+
+        <g id="node-parse-error-outcome" data-node-id="parse-error-outcome" data-node-label="Facade outcome" tabindex="0" role="button" aria-label="Focus Facade outcome, parse-error, 05 / Facade outcome" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="parse-error" data-node-tag="終止" data-node-context="05 / Facade outcome">
+          <title>Facade outcome · parse-error · 05 / Facade outcome · 終止</title>
+          <rect x="904" y="242" width="112" height="58" rx="6" class="c-mask"/>
+          <rect x="904" y="242" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(910 248) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="960" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Facade outcome</text>
+          <text data-detail="context" x="960" y="279" class="t-muted" font-size="7" text-anchor="middle">parse-error</text>
+        <text data-detail="fine" x="960" y="289" class="t-frontend" font-size="7" text-anchor="middle">終止</text>
+        </g>
+
+        <g id="node-render-error-outcome" data-node-id="render-error-outcome" data-node-label="Facade outcome" tabindex="0" role="button" aria-label="Focus Facade outcome, render-error, 05 / Facade outcome" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="render-error" data-node-tag="終止" data-node-context="05 / Facade outcome">
+          <title>Facade outcome · render-error · 05 / Facade outcome · 終止</title>
+          <rect x="904" y="356" width="112" height="58" rx="6" class="c-mask"/>
+          <rect x="904" y="356" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(910 362) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="960" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Facade outcome</text>
+          <text data-detail="context" x="960" y="393" class="t-muted" font-size="7" text-anchor="middle">render-error</text>
+        <text data-detail="fine" x="960" y="403" class="t-frontend" font-size="7" text-anchor="middle">終止</text>
+        </g>
+
+        <g id="node-output-error-outcome" data-node-id="output-error-outcome" data-node-label="Facade outcome" tabindex="0" role="button" aria-label="Focus Facade outcome, output-error, 05 / Facade outcome" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="output-error" data-node-tag="終止" data-node-context="05 / Facade outcome">
+          <title>Facade outcome · output-error · 05 / Facade outcome · 終止</title>
+          <rect x="904" y="470" width="112" height="58" rx="6" class="c-mask"/>
+          <rect x="904" y="470" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(910 476) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="960" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Facade outcome</text>
+          <text data-detail="context" x="960" y="507" class="t-muted" font-size="7" text-anchor="middle">output-error</text>
+        <text data-detail="fine" x="960" y="517" class="t-frontend" font-size="7" text-anchor="middle">終止</text>
         </g>
 
         <!-- Flow labels -->
@@ -5147,24 +5211,44 @@
         <text data-detail="fine" x="422.5" y="158" class="t-dim" font-size="7" text-anchor="middle">公開 render 入口</text>
         </g>
         <g data-detail="context" data-edge-from="usecase" data-edge-to="validator" data-edge-label="驗證" data-edge-key="2">
-          <rect x="510.3" y="197" width="139.4" height="27" rx="4" class="c-mask"/>
+          <rect x="544.6" y="197" width="70.8" height="27" rx="4" class="c-mask"/>
           <text x="580" y="208" class="t-backend" font-size="8" text-anchor="middle">驗證</text>
-        <text data-detail="fine" x="580" y="219" class="t-dim" font-size="7" text-anchor="middle">已驗證輸入或 invalid-input</text>
+        <text data-detail="fine" x="580" y="219" class="t-dim" font-size="7" text-anchor="middle">DiffSnapshot</text>
         </g>
         <g data-detail="context" data-edge-from="validator" data-edge-to="parser" data-edge-label="已驗證輸入" data-edge-key="3">
-          <rect x="655.8" y="193" width="90.4" height="27" rx="4" class="c-mask"/>
+          <rect x="670.5" y="193" width="61" height="27" rx="4" class="c-mask"/>
           <text x="701" y="204" class="t-muted" font-size="8" text-anchor="middle">已驗證輸入</text>
-        <text data-detail="fine" x="701" y="215" class="t-dim" font-size="7" text-anchor="middle">或 invalid-input</text>
+        <text data-detail="fine" x="701" y="215" class="t-dim" font-size="7" text-anchor="middle">success</text>
         </g>
         <g data-detail="context" data-edge-from="parser" data-edge-to="renderer" data-edge-label="已剖析輸入" data-edge-key="4">
-          <rect x="660.7" y="307" width="80.6" height="27" rx="4" class="c-mask"/>
+          <rect x="670.5" y="307" width="61" height="27" rx="4" class="c-mask"/>
           <text x="701" y="318" class="t-muted" font-size="8" text-anchor="middle">已剖析輸入</text>
-        <text data-detail="fine" x="701" y="329" class="t-dim" font-size="7" text-anchor="middle">或 parse-error</text>
+        <text data-detail="fine" x="701" y="329" class="t-dim" font-size="7" text-anchor="middle">success</text>
         </g>
         <g data-detail="context" data-edge-from="renderer" data-edge-to="output" data-edge-label="RenderPlan" data-edge-key="5">
-          <rect x="802.25" y="307" width="85.5" height="27" rx="4" class="c-mask"/>
-          <text x="845" y="318" class="t-muted" font-size="8" text-anchor="middle">RenderPlan</text>
-        <text data-detail="fine" x="845" y="329" class="t-dim" font-size="7" text-anchor="middle">或 render-error</text>
+          <rect x="670.5" y="421" width="61" height="27" rx="4" class="c-mask"/>
+          <text x="701" y="432" class="t-muted" font-size="8" text-anchor="middle">RenderPlan</text>
+        <text data-detail="fine" x="701" y="443" class="t-dim" font-size="7" text-anchor="middle">success</text>
+        </g>
+        <g data-detail="context" data-edge-from="validator" data-edge-to="invalid-input-outcome" data-edge-label="invalid-input" data-edge-key="6">
+          <rect x="797.5" y="189" width="110" height="27" rx="4" class="c-mask"/>
+          <text x="852.5" y="200" class="t-security" font-size="8" text-anchor="middle">invalid-input</text>
+        <text data-detail="fine" x="852.5" y="211" class="t-dim" font-size="7" text-anchor="middle">Facade outcome；終止</text>
+        </g>
+        <g data-detail="context" data-edge-from="parser" data-edge-to="parse-error-outcome" data-edge-label="parse-error" data-edge-key="7">
+          <rect x="797.5" y="303" width="110" height="27" rx="4" class="c-mask"/>
+          <text x="852.5" y="314" class="t-security" font-size="8" text-anchor="middle">parse-error</text>
+        <text data-detail="fine" x="852.5" y="325" class="t-dim" font-size="7" text-anchor="middle">Facade outcome；終止</text>
+        </g>
+        <g data-detail="context" data-edge-from="renderer" data-edge-to="render-error-outcome" data-edge-label="render-error" data-edge-key="8">
+          <rect x="797.5" y="417" width="110" height="27" rx="4" class="c-mask"/>
+          <text x="852.5" y="428" class="t-security" font-size="8" text-anchor="middle">render-error</text>
+        <text data-detail="fine" x="852.5" y="439" class="t-dim" font-size="7" text-anchor="middle">Facade outcome；終止</text>
+        </g>
+        <g data-detail="context" data-edge-from="output" data-edge-to="output-error-outcome" data-edge-label="output-error" data-edge-key="9">
+          <rect x="797.5" y="531" width="110" height="27" rx="4" class="c-mask"/>
+          <text x="852.5" y="542" class="t-security" font-size="8" text-anchor="middle">output-error</text>
+        <text data-detail="fine" x="852.5" y="553" class="t-dim" font-size="7" text-anchor="middle">Facade outcome；終止</text>
         </g>
 
         <!-- Legend -->
@@ -5174,9 +5258,13 @@
             <path d="M 40 601 L 74 601" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
             <text x="83" y="604" class="t-muted" font-size="10" font-weight="500">primary data</text>
           </g>
-          <g data-legend-semantic-kind="default" data-legend-x="165" data-legend-baseline="604" data-legend-width="88">
-            <path d="M 165 601 L 199 601" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-            <text x="208" y="604" class="t-muted" font-size="10" font-weight="500">data flow</text>
+          <g data-legend-semantic-kind="security" data-legend-x="165" data-legend-baseline="604" data-legend-width="103">
+            <path d="M 165 601 L 199 601" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+            <text x="208" y="604" class="t-muted" font-size="10" font-weight="500">policy / PII</text>
+          </g>
+          <g data-legend-semantic-kind="default" data-legend-x="290" data-legend-baseline="604" data-legend-width="88">
+            <path d="M 290 601 L 324 601" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+            <text x="333" y="604" class="t-muted" font-size="10" font-weight="500">data flow</text>
           </g>
         </g>
       </svg>

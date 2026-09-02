@@ -52,8 +52,11 @@
     --hint-faded: 0.75;
   }
   * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0; height: 100%; overflow: hidden;
+  html {
+    min-height: 100%; overflow-x: hidden; overflow-y: auto;
+  }
+  body {
+    margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; overflow-y: auto;
     background: var(--bg); color: var(--ink);
     font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     -webkit-font-smoothing: antialiased;
@@ -910,7 +913,7 @@ const CHIPS = ["swift", "presentation", "core", "pipeline", "boundary"]
       const from = BOX_BY_ID.get(edge.from);
       const to = BOX_BY_ID.get(edge.to);
       const label = edge.label ? `：${edge.label.t}` : '';
-      item.textContent = `${from ? from.name : edge.from} 與 ${to ? to.name : edge.to} 的關係${label}`;
+      item.textContent = `${from ? from.name : edge.from} → ${to ? to.name : edge.to}${label}`;
       relations.appendChild(item);
     });
     content.appendChild(relations);

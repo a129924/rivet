@@ -28,6 +28,20 @@ function enhance(source) {
 
   let html = source;
   html = once(html, '<html lang="en">', '<html lang="zh-Hant">', '文件語言');
+  html = once(html, `  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: var(--bg); color: var(--ink);
+    font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    -webkit-font-smoothing: antialiased;
+  }`, `  html {
+    min-height: 100%; overflow-x: hidden; overflow-y: auto;
+  }
+  body {
+    margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; overflow-y: auto;
+    background: var(--bg); color: var(--ink);
+    font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    -webkit-font-smoothing: antialiased;
+  }`, '頁面可捲動樣式');
   html = once(html, '  #stage { position: fixed; inset: 0; }', `  #stage { position: fixed; inset: 0; }
   #stage:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
   #diagram-fallback {
@@ -118,7 +132,7 @@ function enhance(source) {
       const from = BOX_BY_ID.get(edge.from);
       const to = BOX_BY_ID.get(edge.to);
       const label = edge.label ? \`：\${edge.label.t}\` : '';
-      item.textContent = \`\${from ? from.name : edge.from} 與 \${to ? to.name : edge.to} 的關係\${label}\`;
+      item.textContent = \`\${from ? from.name : edge.from} → \${to ? to.name : edge.to}\${label}\`;
       relations.appendChild(item);
     });
     content.appendChild(relations);

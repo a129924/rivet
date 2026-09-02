@@ -11,7 +11,7 @@
     { "label": "呈現入口" },
     { "label": "核心協調" },
     { "label": "宣告階段" },
-    { "label": "輸出" }
+    { "label": "Facade outcome" }
   ],
   "nodes": [
     {
@@ -45,8 +45,8 @@
       "id": "validator",
       "type": "backend",
       "label": "驗證 Port",
-      "sublabel": "invalid-input",
-      "tag": "階段失敗",
+      "sublabel": "validate(snapshot)",
+      "tag": "成功才前進",
       "stage": 3,
       "row": 0
     },
@@ -54,8 +54,8 @@
       "id": "parser",
       "type": "backend",
       "label": "剖析 Port",
-      "sublabel": "parse-error",
-      "tag": "階段失敗",
+      "sublabel": "parse(input)",
+      "tag": "成功才前進",
       "stage": 3,
       "row": 1
     },
@@ -63,8 +63,8 @@
       "id": "renderer",
       "type": "backend",
       "label": "渲染 Port",
-      "sublabel": "render-error",
-      "tag": "階段失敗",
+      "sublabel": "createRenderPlan(input)",
+      "tag": "成功才前進",
       "stage": 3,
       "row": 2
     },
@@ -72,10 +72,46 @@
       "id": "output",
       "type": "backend",
       "label": "輸出 Port",
-      "sublabel": "output-error",
+      "sublabel": "output(plan)",
       "tag": "唯一 caller：UseCase",
+      "stage": 3,
+      "row": 3
+    },
+    {
+      "id": "invalid-input-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "invalid-input",
+      "tag": "終止",
+      "stage": 4,
+      "row": 0
+    },
+    {
+      "id": "parse-error-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "parse-error",
+      "tag": "終止",
       "stage": 4,
       "row": 1
+    },
+    {
+      "id": "render-error-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "render-error",
+      "tag": "終止",
+      "stage": 4,
+      "row": 2
+    },
+    {
+      "id": "output-error-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "output-error",
+      "tag": "終止",
+      "stage": 4,
+      "row": 3
     }
   ],
   "flows": [
@@ -99,7 +135,7 @@
       "from": "usecase",
       "to": "validator",
       "label": "驗證",
-      "classification": "已驗證輸入或 invalid-input",
+      "classification": "DiffSnapshot",
       "variant": "emphasis",
       "route": "straight",
       "labelAt": [580, 208]
@@ -108,7 +144,7 @@
       "from": "validator",
       "to": "parser",
       "label": "已驗證輸入",
-      "classification": "或 invalid-input",
+      "classification": "success",
       "variant": "default",
       "route": "vertical-channel"
     },
@@ -116,7 +152,7 @@
       "from": "parser",
       "to": "renderer",
       "label": "已剖析輸入",
-      "classification": "或 parse-error",
+      "classification": "success",
       "variant": "default",
       "route": "vertical-channel"
     },
@@ -124,9 +160,45 @@
       "from": "renderer",
       "to": "output",
       "label": "RenderPlan",
-      "classification": "或 render-error",
+      "classification": "success",
       "variant": "default",
       "route": "vertical-channel"
+    },
+    {
+      "from": "validator",
+      "to": "invalid-input-outcome",
+      "label": "invalid-input",
+      "classification": "Facade outcome；終止",
+      "variant": "security",
+      "route": "straight",
+      "labelDy": 53
+    },
+    {
+      "from": "parser",
+      "to": "parse-error-outcome",
+      "label": "parse-error",
+      "classification": "Facade outcome；終止",
+      "variant": "security",
+      "route": "straight",
+      "labelDy": 53
+    },
+    {
+      "from": "renderer",
+      "to": "render-error-outcome",
+      "label": "render-error",
+      "classification": "Facade outcome；終止",
+      "variant": "security",
+      "route": "straight",
+      "labelDy": 53
+    },
+    {
+      "from": "output",
+      "to": "output-error-outcome",
+      "label": "output-error",
+      "classification": "Facade outcome；終止",
+      "variant": "security",
+      "route": "straight",
+      "labelDy": 53
     }
   ],
   "cards": [
