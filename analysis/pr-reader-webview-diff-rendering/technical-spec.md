@@ -8,6 +8,7 @@
 - WebView 的 collapse 僅可在未來作為本地暫態狀態，不能寫入或改變 snapshot contract。
 - `Output` 是獨立 pipeline stage；其 failure contract 為公開的 `output-error`。
 - `ViewedStateChange` 以 `pullRequestId`、`snapshotId` 與 snapshot-local `fileId` 識別通知所屬資料，Swift 可安全忽略過期 notification。
+- `ViewedStateChangePort.notify` 與 `DiffFacade.requestViewedStateChange` 是對一般正式 layer／BC 邊界 `Outcome` 規則的狹義例外：兩者固定回傳 best-effort `void`。這是因為 Swift 是 snapshot 與 `viewed` 的權威、TS 不做 optimistic update，且本 topic 尚無可靠 bridge／transport implementation；此例外不延伸至 render pipeline 或其他 Port。
 - `DiffRenderUseCase` 是 `Validator → Parser → Renderer → Output` 的唯一協調者與 `DiffOutputPort` 唯一 caller；`DiffFacade` 只依賴 UseCase 與 Viewed-state Port。
 
 ## Module Structure
@@ -179,11 +180,13 @@ export interface ViewedStateChangeAdapter extends ViewedStateChangePort {}
 - Validator、Parser、Renderer 與 Output 各自只回傳所屬 stage 的 success／failure union；相鄰 stage 只能消費前一 stage 的 success value。
 - `DiffRenderUseCase.execute` 依序協調 Validator、Parser、Renderer 與 Output，並將各 stage failure 映射為對應 `DiffRenderOutcome` kind；UseCase 是 `DiffOutputPort` 的唯一 caller。UseCase、Validator 與 Facade 均以 `DiffSnapshot` 接收 render input。
 - `ViewedStateChangeAdapter` 直接符合 `ViewedStateChangePort`；`DiffSnapshotAdapter` 只定義 Swift 的 inbound snapshot boundary。UseCase 只依賴四個 pipeline Ports，Facade 是 Presentation 的唯一 render 入口。Facade 僅宣告對 UseCase 與 Viewed-state Port 的 dependency descriptor；此處不定義 adapter、use case 或 facade 的建構／組裝方式。
-- `requestViewedStateChange` 透過 `ViewedStateChangePort` 發送通知，回傳 `void`，不等待 Swift acknowledgement，且不做 optimistic snapshot 更新。
+- `requestViewedStateChange` 透過 `ViewedStateChangePort` 發送通知，回傳 best-effort `void`，不等待 Swift acknowledgement，且不做 optimistic snapshot 更新。`void` 不表示 delivery、enqueue 或 serialization 成功，也不建立 retry、failure mapping 或 transport guarantee；這些行為與任何 bridge contract 均留待獨立實作 topic。此例外不得用來削弱 `execute` 的四個 stage outcome mapping，或擴張為其他 layer／Port 的通用規則。
 
 ## Architecture Writeback
 
-- IM-04 必須只將已確認的 `DiffSnapshot` input envelope（`pullRequestId`、`snapshotId` 與完整有序 files）回寫至 `docs/architecture/bounded-contexts/pr-reader.md`；不得將 deferred concrete behavior 寫成長期事實，且本次 revision 不修改既有 architecture-canvas 圖。
+- IM-05 必須只將已確認的 `DiffSnapshot` input envelope、render 主路徑與 viewed notification 的狹義 `void` exception 回寫至 `docs/architecture/README.md` 與 `docs/architecture/bounded-contexts/pr-reader.md`；不得將 deferred concrete behavior 寫成長期事實。
+- IM-05 必須更新 `docs/architecture/diagrams/pr-reader-webview-diff-rendering/scene.js` 與其 generated `index.html`。scene 的 render 主路徑必須精確表達 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output`；Adapter 僅保留為 Swift／viewed 邊界宣告，不得插入或反向主 render flow。所有圖作者內容採繁體中文，generated index 的 `<html lang>` 必須是 `zh-Hant`。
+- 依 `architecture-canvas` skill 對 scene 執行 validate，使用相同 scene build 產生 index，並保存 validate 與 build 的 command／receipt evidence；不得自行發布 artifact.cafe。
 
 ## Validation
 
@@ -191,4 +194,6 @@ export interface ViewedStateChangeAdapter extends ViewedStateChangePort {}
 - 驗證每個 stage failure 只能使用對應 kind，`OutputResult` 只可使用 `output-error`，前後 stage input／output 僅在 success branch 相容，並驗證 UseCase／Facade dependency descriptor keys。
 - 驗證 `DiffSnapshotAdapter.receiveSnapshot`、UseCase 與 Facade 都只接受 `DiffSnapshot`，且 barrel 公開 `DiffSnapshot`；Facade 只公開 `present` 與 `requestViewedStateChange`，後者回傳 `void`；核心 modules 不得 import Adapter、Swift、WebView 或 Presentation。
 - 驗證 `ViewedStateChangeAdapter` 可指派為 `ViewedStateChangePort` 且不聲明 wrapper 或第二個 notification method；並驗證 `ViewedStateChange` 的 PR／snapshot identity 與 snapshot-local `fileId` contract，以及 UseCase 是 Output Port 唯一 caller、Facade 不依賴 Output Port。
+- 驗證 `ViewedStateChangePort.notify` 與 `DiffFacade.requestViewedStateChange` 精確回傳 `void`，並以文件與圖證明此為僅限 viewed notification 的 best-effort exception；不得新增 notification outcome、bridge、transport 或可靠性主張。
+- 驗證 architecture-canvas scene 與 generated index 的主路徑、繁體中文作者內容與 `lang="zh-Hant"`，並交付 skill validate／build evidence；不發布 artifact.cafe。
 - 執行既有 Bun typecheck、test 與 coverage gate；若現況尚無可執行 test，Tester 必須回報明確環境或設定 blocker，不以臆測替代。

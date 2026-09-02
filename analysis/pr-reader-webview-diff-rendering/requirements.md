@@ -10,14 +10,16 @@
 - 定義 `Validator → Parser → Renderer → Output` 的 stage-specific result unions 與 opaque 中間資料。
 - 建立 contracts、adapters、ports、usecases、facades 與 presentation barrel 的分層 module 結構；每個 module 只宣告自己 layer 的 type／interface。
 - 定義 `Adapter ↔ Port → UseCase → Facade` 的 Port、UseCase、Facade 與 dependency descriptor 方法簽名。
-- 定義 `viewed` 的 ownership、通知時機與 WebView 本地暫態狀態邊界。
+- 定義 `viewed` 的 ownership、通知時機與 WebView 本地暫態狀態邊界，並將其 best-effort `void` notification 明定為對一般 `Outcome` 規則的狹義架構例外。
 - 對各 module 的 import surface、相鄰 stage output、snapshot input、Facade API、Adapter／Port assignability 與 layer dependency 進行 strict TypeScript type-level tests 與既有檢查。
-- 將已確認的 snapshot envelope input 事實回寫至 PR Reader BC 文件；本次 revision 不變更既有 architecture-canvas 圖。
+- 將已確認的 snapshot、render flow 與 viewed notification exception 事實回寫至架構 README 與 PR Reader BC 文件。
+- 更新既有 architecture-canvas scene 與 generated index，使其主路徑反映已鎖定的 `DiffSnapshot` flow，並完成 skill 要求的 validate、build 與 evidence capture。
 
 ## Out-Of-Scope
 
 - 具體 Adapter、validator、parser、renderer、Output、RenderPlan schema、DOM、UI、collapse、syntax highlighting 或 raw diff 格式解析。
 - Swift bridge、Swift target、GitHub REST／GraphQL mapping、viewed-state 持久化或 acknowledgement。
+- viewed notification 的 reliable transport、enqueue／serialization failure outcome、acknowledgement、retry、delivery guarantee 或 bridge implementation。
 - 新增套件、package manifest 或 lockfile 變更。
 - 其他 Bounded Context、產品行為或未來 concrete implementation 的變更。
 
@@ -25,9 +27,10 @@
 
 - Swift 可提供一個帶 `pullRequestId`、`snapshotId` 與完整有序 `readonly DiffViewModel[]` 的 `DiffSnapshot`；TS 以 module tree 呈現完整 pipeline，且公開入口與相鄰 stages 的型別相容性可由 typecheck 驗證。
 - Snapshot 可表達檔案路徑、rename、變更類型、可選 patch、增刪計數與 viewed 狀態。
-- `present` 僅回傳 success、validation、parse、render 或 output 的既定 outcome；viewed 變更帶 `pullRequestId`、`snapshotId`、snapshot-local `fileId` 與 boolean，並為單向、非同步通知，不等待 acknowledgement。
+- `present` 僅回傳 success、validation、parse、render 或 output 的既定 outcome；`requestViewedStateChange`／`notify` 是狹義 best-effort `void` exception，不產生 outcome、acknowledgement、optimistic snapshot 更新或可靠傳輸承諾。
 - `index.ts` 僅公開 Presentation 所需的 Facade 與 contracts（含 `DiffSnapshot`）；opaque stage types、Ports、Adapters、dependency descriptors 與 UseCase 均非 public surface。
 - 介面保持零依賴，核心層不依賴 Swift、WebView 或 Adapter，且不偷渡任何具體 rendering 或 transport 決策。
+- architecture-canvas 以 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output` 呈現 render 主路徑；generated `index.html` 的文件語言為 `zh-Hant`，且有可追溯的 validate／build evidence。
 
 ## Non-Goals
 

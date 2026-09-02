@@ -39,9 +39,9 @@ Outside → Adapter ↔ Port → UseCase → Facade → Presentation
 
 ## PR Reader WebView Diff Pipeline
 
-PR Reader 的 WebView diff rendering 已鎖定為 declaration-only pipeline：Swift 以完整且有序的檔案 snapshot 提供資料，內部依序定義 Validator、Parser、Renderer 與 Output Ports，並由 UseCase 擁有這四個 Port 的協調責任；Facade 是 Presentation 的 render 入口。
+PR Reader 的 WebView diff rendering 已鎖定為 declaration-only pipeline。render 主路徑為 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output`；UseCase 擁有四個 stage Port 的協調責任，也是 Output Port 唯一 caller。Adapter 僅宣告 Swift／WebView 的輸入與通知邊界，不加入或反向轉送 render 主路徑。
 
-`viewed` 的持久化權威仍是 Swift。WebView 只發送包含 PR、snapshot 與 snapshot-local file identity 的單向 viewed notification，不等待 acknowledgement 或修改 snapshot。具體 Adapter、parser、renderer、Output、DOM 與 Swift bridge 均尚未定義。
+公開 render outcome 區分 `invalid-input`、`parse-error`、`render-error` 與 `output-error`。`viewed` 的持久化權威仍是 Swift：WebView 只發送包含 PR、snapshot 與 snapshot-local file identity 的 best-effort `void` 單向 notification，不等待 acknowledgement、不 retry、不承諾可靠傳輸，也不修改 snapshot。具體 Adapter、parser、renderer、Output、DOM 與 Swift bridge 均尚未定義。
 
 - [PR Reader WebView Diff Pipeline](diagrams/pr-reader-webview-diff-rendering/index.html)：Swift／WebView 邊界、宣告的 Ports 與 ownership。
 

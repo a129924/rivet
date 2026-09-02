@@ -35,18 +35,25 @@
 | RV-04 | approved | Reviewer | 獨立審查 IM-04 implementation、contract、PR Reader BC writeback 與驗證 evidence；分類 approved、needs-rework、blocked 或 human-check。 | Independent Reviewer 明示 verdict：`approved`。 |
 | GH-04 | pending | Code-Implementer | 僅在 RV-04 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve 已修正的本輪 PR threads。 | 尚無；不得在 RV-04 approval 前執行 GitHub handoff。 |
 | HC-03 | pending | Human | 審閱 PR #4 的 IM-04 修正、test／review evidence 與 resolved threads。 | 尚無；GH-04 完成後停止於此 human boundary。 |
+| PC-05 | completed | Plan-Creator | 將同 topic 四份 artifacts 修正為 human 已鎖定的 viewed notification best-effort `void` exception、architecture writeback 與 canvas main-flow alignment。 | 四份 artifacts 已更新；僅為 Plan-Creator handoff，不是 Plan-Reviewer approval。 |
+| PR-05 | approved | Plan-Reviewer | 獨立檢查 PC-05 artifacts 是否將 `void` exception 限於 viewed notification、保留既定 snapshot／Output contract，並正確鎖定 architecture writeback、canvas flow、validation evidence、scope 與 gates。 | Independent Plan-Reviewer 明示 verdict：`approved`。 |
+| IM-05 | completed | Implementer | 僅在 PR-05 明示 `approved` 後，最小修正既定 declarations／tests（如需）、架構 README、PR Reader BC 文件與 architecture-canvas scene／generated index。 | Implementer 已完成既定 declarations／tests（如需）、architecture writeback 與 architecture-canvas scene／generated index 修正；未實作 concrete pipeline behavior、DOM、UI、bridge、transport、reliability、套件變更或發布 artifact.cafe。 |
+| TE-05 | approved | Tester | 執行既有 Bun typecheck、受影響 tests、coverage gate 與 architecture-canvas validate／build evidence 驗證。 | Independent Tester 前兩次明示 verdict：`needs-rework`，原因為 canvas 殘留非繁體中文文字與 locale／`lang` 設定；完成最終 locale／`lang` 修正後明示 verdict：`approved`。測試或 canvas 命令成功不取代 Reviewer approval。 |
+| RV-05 | approved | Reviewer | 獨立審查 IM-05 implementation、`void` exception scope、architecture writeback、canvas main flow 與驗證 evidence；分類 approved、needs-rework、blocked 或 human-check。 | Independent Reviewer 明示 verdict：`approved`。 |
+| GH-05 | pending | Implementer | 僅在 RV-05 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve 本輪已修正 PR threads。 | 尚無；Reviewer approval 前不得 GitHub handoff 或 resolve threads。 |
+| HC-04 | pending | Human | 審閱 PR #4 的 IM-05 修正、test／canvas evidence、Reviewer verdict 與 resolved threads。 | 尚無；GH-05 完成後停止於此 human boundary。 |
 
 ## Blockers
 
 - 無已知 blocker。
-- PC-04、PR-04、IM-04、TE-04 與 RV-04 已完成；GH-04 及後續 HC-03 仍 pending。GH-04 已具備 RV-04 approval 前提，仍須由指定 Code-Implementer 執行 Git 與 thread handoff。
+- PC-05、PR-05、IM-05、TE-05 與 RV-05 已完成；本輪可進入 GH-05 Git 與 thread handoff。先前 GH-04／HC-03 紀錄保留作為既有 handoff history。
 
 ## Human Check
 
-- GH-04 完成後，停止於 HC-03；不得由 agent 或 ledger 取代 human review。
+- GH-05 完成後，停止於 HC-04；不得由 agent 或 ledger 取代 human review。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 索引 PC-04 至 RV-04 的既有 handoff evidence，並將 phase 移至 Git 與 thread handoff ready。
-- Update status: 僅索引已提供的 handoff evidence；GH-04 與 HC-03 仍 pending，checkbox、status 或 tracker 結果不構成 approval。
+- Update reason: 記錄 PC-05 至 RV-05 的明示 handoff evidence，包含 Tester 兩次 canvas locale／非繁體中文殘留回修與最終 approval。
+- Update status: RV-05 已明示 `approved`，可進入 GH-05；GH-05 與 HC-04 仍 pending，checkbox、status 或 tracker 結果不構成 approval。
