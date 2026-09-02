@@ -22,6 +22,10 @@
 | IMPL-003 | complete | Implementer | 僅移除 REVIEW-002 指出的 catalog scope 與未鎖定推論。 | 移除 `author:@me`、Swift snapshot-local claim，並同步 artifacts 與 TC-08。 |
 | TEST-003 | complete | Tester | 驗證 Inbox scope、未鎖定 authority claim、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
 | DELIVERY-003 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch。 | 修正 commit 與更新後 PR #7。 |
+| REVIEW-003 | complete | External Reviewer | 檢查 REST pagination metadata 與 Notifications operation inputs。 | 指出三處錯誤的連字號 pagination 名稱，以及 `GET /notifications` 漏列 query／分頁 metadata。 |
+| IMPL-004 | complete | Implementer | 僅修正 REVIEW-003 指出的 catalog metadata，並同步本 topic artifacts。 | REST 正式 query 名稱、Notifications query／上限與 TC-09。 |
+| TEST-004 | complete | Tester | 驗證 TC-09、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-004 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-003 threads。 | 修正 commit、更新後 PR #7 與 resolved thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -40,3 +44,5 @@
 2026-09-02 — 依 external reviewer report 修正 GraphQL review thread schema、REST metadata、status taxonomy、每個 operation 的認證／權限與來源，以及未證實延伸敘述；未修改架構文件或 source code。
 
 2026-09-02 — 依後續 reviewer feedback 移除不屬待 review MVP 集合的 `author:@me` catalog entry，並移除無既有架構依據的 Swift snapshot-local viewed claim；未修改架構文件或 source code。
+
+2026-09-02 — 依 REVIEW-003 修正 REST pagination query 名稱，補齊 `GET /notifications` 的 query、分頁上限與 TC-09；未修改架構文件或 source code。

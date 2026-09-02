@@ -60,3 +60,4 @@
 | TC-06 | Review thread schema 審閱 | `reviewThreads`、nodes 與 `threadId` 一律使用 `PullRequestReviewThread`。 |
 | TC-07 | Viewed boundary 審閱 | catalog 只將 `viewerViewedState` 描述為遠端 API 資料，不宣告本機持久化、同步或 UI authority。 |
 | TC-08 | Inbox scope 審閱 | catalog 不列出 `author:@me`，且只以目前使用者的 direct review request 作為跨 repository Inbox query。 |
+| TC-09 | REST pagination metadata 審閱 | 所有 REST list 文件使用官方 `page`／`per_page` query 名稱；`GET /notifications` 並列出 `all`、`participating`、`since`、`before`、`page`、`per_page` 與 50 筆上限。 |

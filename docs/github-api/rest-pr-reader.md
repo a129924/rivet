@@ -22,7 +22,7 @@
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}/files` |
 | 用途 | 取得檔案清單與變更統計。 |
 | 重要欄位 | filename、status、additions、deletions、changes、sha、previous_filename、patch |
-| 分頁與上限 | page/per-page；此 endpoint 的回應最多 3,000 files。 |
+| 分頁與上限 | `page`／`per_page`；此 endpoint 的回應最多 3,000 files。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List pull requests files](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests-files) |
 

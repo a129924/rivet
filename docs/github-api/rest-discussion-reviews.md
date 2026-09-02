@@ -10,7 +10,7 @@
 | Operation | `GET /repos/{owner}/{repo}/issues/{issue_number}/comments` |
 | 用途 | 取得 PR 的 issue-level comments；PR 同時也是 Issue。 |
 | 重要欄位 | id、body、user、created_at、updated_at、html_url |
-| 分頁 | page/per-page。 |
+| 分頁 | `page`／`per_page`。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Issues` 或 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List issue comments](https://docs.github.com/en/rest/issues/comments#list-issue-comments) |
 

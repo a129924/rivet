@@ -26,7 +26,7 @@
 - endpoint path 使用 GitHub 官方 placeholder，例如 `{owner}`、`{repo}`、`{pull_number}`；GraphQL 使用正式 operation 或 field 名稱。
 - REST 內容區分 Pull requests、Issues comments、Pull request review comments 與 Pull request reviews，避免把三種 comment 混為同一資源。
 - `viewerViewedState` 是 GitHub API 的遠端 PR file 資料；本 catalog 不定義本機持久化、同步或 Rivet UI 的狀態採用規則。
-- PR files 的 REST endpoint 記錄 3,000 files 上限；GraphQL connections 與 REST list endpoints 均記錄 cursor/page 分頁責任。
+- PR files 的 REST endpoint 記錄 3,000 files 上限；GraphQL connections 記錄 cursor 分頁，REST list endpoints 使用官方 query 名稱 `page` 與 `per_page`。Notifications 的 `per_page` 上限為 50。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract
