@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "PR Reader WebView 差異渲染資料流",
+    "quality_profile": "showcase",
+    "viewBox": [1080, 720]
+  },
+  "stages": [
+    { "label": "Swift 快照" },
+    { "label": "呈現入口" },
+    { "label": "核心協調" },
+    { "label": "宣告階段" },
+    { "label": "Facade outcome" }
+  ],
+  "nodes": [
+    {
+      "id": "swift-snapshot",
+      "type": "external",
+      "label": "Swift 快照",
+      "sublabel": "完整 DiffSnapshot",
+      "tag": "權威輸入",
+      "stage": 0,
+      "row": 0
+    },
+    {
+      "id": "facade",
+      "type": "frontend",
+      "label": "DiffFacade",
+      "sublabel": "present(snapshot)",
+      "tag": "呈現入口",
+      "stage": 1,
+      "row": 0
+    },
+    {
+      "id": "usecase",
+      "type": "backend",
+      "label": "DiffRenderUseCase",
+      "sublabel": "execute(snapshot)",
+      "tag": "唯一協調者",
+      "stage": 2,
+      "row": 0
+    },
+    {
+      "id": "validator",
+      "type": "backend",
+      "label": "驗證 Port",
+      "sublabel": "validate(snapshot)",
+      "tag": "成功才前進",
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "parser",
+      "type": "backend",
+      "label": "剖析 Port",
+      "sublabel": "parse(input)",
+      "tag": "成功才前進",
+      "stage": 3,
+      "row": 1
+    },
+    {
+      "id": "renderer",
+      "type": "backend",
+      "label": "渲染 Port",
+      "sublabel": "createRenderPlan(input)",
+      "tag": "成功才前進",
+      "stage": 3,
+      "row": 2
+    },
+    {
+      "id": "output",
+      "type": "backend",
+      "label": "輸出 Port",
+      "sublabel": "output(plan)",
+      "tag": "唯一 caller：UseCase",
+      "stage": 3,
+      "row": 3
+    },
+    {
+      "id": "invalid-input-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "invalid-input",
+      "tag": "終止",
+      "stage": 4,
+      "row": 0
+    },
+    {
+      "id": "parse-error-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "parse-error",
+      "tag": "終止",
+      "stage": 4,
+      "row": 1
+    },
+    {
+      "id": "render-error-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "render-error",
+      "tag": "終止",
+      "stage": 4,
+      "row": 2
+    },
+    {
+      "id": "output-error-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "output-error",
+      "tag": "終止",
+      "stage": 4,
+      "row": 3
+    },
+    {
+      "id": "success-outcome",
+      "type": "frontend",
+      "label": "Facade outcome",
+      "sublabel": "{ type: \"success\" }",
+      "tag": "終止",
+      "stage": 4,
+      "row": 4
+    }
+  ],
+  "flows": [
+    {
+      "from": "swift-snapshot",
+      "to": "facade",
+      "label": "DiffSnapshot",
+      "classification": "完整有序快照",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "facade",
+      "to": "usecase",
+      "label": "present(snapshot)",
+      "classification": "公開 render 入口",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "usecase",
+      "to": "validator",
+      "label": "驗證",
+      "classification": "DiffSnapshot",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [580, 208]
+    },
+    {
+      "from": "validator",
+      "to": "parser",
+      "label": "已驗證輸入",
+      "classification": "success",
+      "variant": "default",
+      "route": "vertical-channel"
+    },
+    {
+      "from": "parser",
+      "to": "renderer",
+      "label": "已剖析輸入",
+      "classification": "success",
+      "variant": "default",
+      "route": "vertical-channel"
+    },
+    {
+      "from": "renderer",
+      "to": "output",
+      "label": "RenderPlan",
+      "classification": "success",
+      "variant": "default",
+      "route": "vertical-channel"
+    },
+    {
+      "from": "validator",
+      "to": "invalid-input-outcome",
+      "label": "invalid-input",
+      "classification": "Facade outcome；終止",
+      "variant": "security",
+      "route": "straight",
+      "labelDy": 53
+    },
+    {
+      "from": "parser",
+      "to": "parse-error-outcome",
+      "label": "parse-error",
+      "classification": "Facade outcome；終止",
+      "variant": "security",
+      "route": "straight",
+      "labelDy": 53
+    },
+    {
+      "from": "renderer",
+      "to": "render-error-outcome",
+      "label": "render-error",
+      "classification": "Facade outcome；終止",
+      "variant": "security",
+      "route": "straight",
+      "labelDy": 53
+    },
+    {
+      "from": "output",
+      "to": "output-error-outcome",
+      "label": "output-error",
+      "classification": "Facade outcome；終止",
+      "variant": "security",
+      "route": "straight",
+      "labelDx": -150,
+      "labelDy": 53
+    },
+    {
+      "from": "output",
+      "to": "success-outcome",
+      "label": "{ type: \"success\" }",
+      "classification": "success",
+      "variant": "emphasis",
+      "route": "bottom-channel",
+      "labelDy": -24
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "既定協調責任",
+      "items": [
+        "DiffRenderUseCase 依序協調四個 stage Port",
+        "每個 stage 只產生所屬的 failure kind",
+        "Output Port 的唯一 caller 是 UseCase"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "邊界保持不變",
+      "items": [
+        "Swift 是完整 DiffSnapshot 的權威來源",
+        "DiffFacade 是 Presentation 的公開 render 入口",
+        "此圖不定義任何 concrete parser、renderer 或 DOM"
+      ]
+    }
+  ]
+}

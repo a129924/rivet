@@ -1,21 +1,27 @@
 # Rivet 架構規範
 
-本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline，不建立程式碼、抽象層或產品功能。
+本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline；除已鎖定的 PR Reader WebView diff declaration-only modules，以及其單一架構圖的 artifact-local viewer 可近用性補強外，不建立產品功能。
 
 ## 架構方向
 
 Rivet 未來採用 monorepo 與輕量 DDD。
 
-正式依賴與資料流方向如下：
+核心的 compile-time dependency 方向如下：
 
 ```text
-Outside → Adapter ↔ Port → UseCase → Facade → Presentation
+Presentation → Facade → UseCase → Port
+```
+
+Adapter 符合 Port，並隔離 Outside；Adapter 不加入核心的 compile-time dependency 方向。PR Reader WebView diff 的 runtime render request 則是：
+
+```text
+Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output
 ```
 
 ## Layer Responsibilities
 
 - **Outside**：GitHub API、OAuth、Keychain、網路、WebView runtime 等外部世界。
-- **Adapter**：外部協定、資料與錯誤的轉換邊界。
+- **Adapter**：符合 Port，隔離外部協定、資料與錯誤的轉換邊界。
 - **Port**：由內部擁有的依賴契約。
 - **UseCase**：應用與業務流程。
 - **Facade**：提供 Presentation 使用的穩定入口。
@@ -37,6 +43,15 @@ Outside → Adapter ↔ Port → UseCase → Facade → Presentation
 - **Presentation Session**：擁有目前選取的 PR 與切換狀態；它屬於 Presentation，不屬於任何 Bounded Context。
 - PR Inbox 與 PR Reader 不直接依賴彼此；兩者各自透過內部 Port 取得 GitHub Integration 提供的資料。
 
+## PR Reader WebView Diff Pipeline
+
+PR Reader 的 WebView diff rendering 已鎖定為 declaration-only pipeline。render 主路徑為 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output`；UseCase 擁有四個 stage Port 的協調責任，也是 Output Port 唯一 caller。Adapter 僅宣告 Swift／WebView 的輸入與通知邊界，不加入或反向轉送 render 主路徑。
+
+公開 render outcome 區分 `invalid-input`、`parse-error`、`render-error` 與 `output-error`。`viewed` 的持久化權威仍是 Swift：WebView 只發送包含 PR、snapshot 與 snapshot-local file identity 的 best-effort `void` 單向 notification，不等待 acknowledgement、不 retry、不承諾可靠傳輸，也不修改 snapshot。具體 Adapter、parser、renderer、Output、DOM 與 Swift bridge 均尚未定義。
+
+- [PR Reader WebView Diff Pipeline](diagrams/pr-reader-webview-diff-rendering/index.html)：Swift／WebView 邊界、編譯期依賴、宣告的 Ports 與 ownership；此 canvas 不表達 runtime render dataflow。其 [重建與失敗回復規則](diagrams/pr-reader-webview-diff-rendering/BUILD.md) 明確區分兩次單檔 atomic rename 與可驗證的 backup/restore policy，不宣稱雙檔原子交付。
+- [PR Reader WebView Diff Dataflow](diagrams/pr-reader-webview-diff-rendering/diff-render-flow.html)：以同一組既定契約表達 runtime render dataflow；不新增 concrete implementation 或資料契約。
+
 ## 文件導覽
 
 - [設計原則](../design-principles.md)：Rivet 的產品取捨與工作方法。
@@ -47,4 +62,4 @@ Outside → Adapter ↔ Port → UseCase → Facade → Presentation
 
 ## 尚未定義的項目
 
-本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義 module、package、target 或實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。
+Rivet 仍是 architecture baseline。除已鎖定的 PR Reader WebView diff pipeline contract 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package、target 或實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。

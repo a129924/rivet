@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+function arg(name) {
+  const index = process.argv.indexOf(`--${name}`);
+  if (index < 0 || index === process.argv.length - 1) throw new Error(`缺少必要參數：--${name}`);
+  return process.argv[index + 1];
+}
+
+function assert(condition, message) {
+  if (!condition) throw new Error(`驗證失敗：${message}`);
+}
+
+try {
+  const input = path.resolve(arg('input'));
+  const html = fs.readFileSync(input, 'utf8');
+  const count = (value) => html.split(value).length - 1;
+
+  assert(count('<!-- PR_READER_A11Y:START -->') === 1 && count('<!-- PR_READER_A11Y:END -->') === 1, '補強標記必須恰好一組');
+  assert(html.includes('<html lang="zh-Hant">'), '文件語言必須是繁體中文');
+  assert(html.includes('id="stage" tabindex="0" role="region"'), 'stage 必須是可聚焦 region');
+  assert(html.includes('aria-describedby="diagram-operations"'), 'stage 必須描述操作方式');
+  assert(html.includes('<canvas id="c" aria-hidden="true">'), 'canvas 必須對輔助技術隱藏');
+  assert(html.includes('html {\n    min-height: 100%; overflow-x: hidden; overflow-y: auto;\n  }') && html.includes('body {\n    margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; overflow-y: auto;'), '頁面必須允許 fallback 在正常文件流捲動');
+  assert(!html.includes('html, body {\n    margin: 0; padding: 0; height: 100%; overflow: hidden;'), '頁面不得以 overflow hidden 阻擋 fallback 捲動');
+  assert(!html.includes('role="application"'), '不得使用 application role');
+  assert(!html.includes("window.addEventListener('keydown'"), '不得使用 window-global keydown');
+  assert(html.includes("stage.addEventListener('keydown'"), 'viewport keys 必須由 stage 處理');
+  assert(html.includes('e.target !== stage'), '不得攔截 interactive children 的鍵盤操作');
+  assert(html.includes("case '[': selectRelativeBox(-1);") && html.includes("case ']': selectRelativeBox(1);"), '必須支援依 BOXES 巡覽');
+  assert(html.includes('role="status" aria-live="polite" aria-atomic="true"'), 'readout 必須是 polite live status');
+  assert(html.includes('BOXES.forEach((box, index) =>') && html.includes('EDGES.forEach(edge =>'), 'fallback 必須由 runtime scene 資料生成');
+  assert(html.includes('item.textContent = `${from ? from.name : edge.from} → ${to ? to.name : edge.to}${label}`;'), '每個 relationship 必須由 EDGES 提供來源、方向、目標與 label');
+  assert(html.includes("button.addEventListener('focus', () => selectBox(box.id, true))") && html.includes("button.addEventListener('click', () => selectBox(box.id, true))"), 'fallback controls 必須共用選取行為');
+  assert(html.includes("document.createElement('details')") && html.includes("document.createElement('summary')"), 'fallback 必須提供可發現的原生 disclosure');
+  assert(html.includes('#diagram-fallback {\n    position: relative;') && html.includes('#diagram-fallback:focus-within') && html.includes('#diagram-fallback button:focus-visible'), 'fallback 必須在正常文件流並提供焦點可見性');
+  assert(!html.includes('id="diagram-fallback" class="sr-only"') && !html.includes('#diagram-fallback { display: none'), 'fallback 不得長期視覺隱藏');
+  assert(!html.includes('Swift 快照 → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output'), 'canvas 不得呈現 runtime render sequence');
+  assert(!html.includes('Validator → Parser → Renderer → Output'), 'canvas 不得將 stage Port 表示為 sequential flow');
+  assert(!html.includes('Zoom out') && !html.includes('Fit to screen') && !html.includes('Toggle light and dark theme'), 'viewer UI 不得保留英文操作文字');
+  process.stdout.write(`可近用性驗證通過：${input}\n`);
+} catch (error) {
+  process.stderr.write(`${error.message}\n`);
+  process.exitCode = 1;
+}
