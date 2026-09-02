@@ -9,7 +9,7 @@
 - 整理等待目前使用者 review 的 PR discovery、PR detail/diff、comments/reviews、file viewed state、review threads、merge、notifications，以及 comment-level last-seen 的可選本機 state。
 - 依 endpoint family 分拆文件，並以總索引連結每項能力。
 - 對每個 operation 記錄用途、輸入、關鍵欄位、分頁或上限、權限注意事項、產品狀態與官方來源。
-- 將能力標記為「MVP 唯讀」、「後續寫入」或「可選本機狀態」。
+- 將能力標記為「MVP 唯讀」、「後續唯讀」、「後續寫入」或「可選本機狀態」。
 
 ## Out-Of-Scope
 
@@ -22,7 +22,7 @@
 
 - 原始 capability 清單的每個項目皆能從 API catalog 索引找到唯一的主文件。
 - 每個紀錄均連向 GitHub 官方文件，且與 2026-09-02 的官方 REST／GraphQL reference 相符。
-- 現行 MVP 唯讀與延後寫入能力不會混淆。
+- 現行 MVP 唯讀、延後唯讀與延後寫入能力不會混淆。
 
 ## Research Findings
 

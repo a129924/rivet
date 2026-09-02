@@ -62,3 +62,4 @@
 | TC-08 | Inbox scope 審閱 | catalog 不列出 `author:@me`，且只以目前使用者的 direct review request 作為跨 repository Inbox query。 |
 | TC-09 | REST pagination metadata 審閱 | 所有 REST list 文件使用官方 `page`／`per_page` query 名稱；`GET /notifications` 並列出 `all`、`participating`、`since`、`before`、`page`、`per_page` 與 50 筆上限。 |
 | TC-10 | REST operation contract 審閱 | Notification operations 列出 classic PAT 與所需 scope；`@me` search 要求有效 token；inline comments 與 review summary 皆有分頁；`REQUEST_CHANGES`／`COMMENT` 均要求 `body`。 |
+| TC-11 | 延後唯讀 taxonomy 審閱 | repository PR list 與 `GET /notifications` 標為「後續唯讀」；`PATCH /notifications/threads/{thread_id}` 維持「後續寫入」，且 Capability Index 分列讀取與寫入能力。 |

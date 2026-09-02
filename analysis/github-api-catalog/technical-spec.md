@@ -6,7 +6,7 @@
 - 長期 API 參考資料位於 `docs/github-api/`；使用一個索引與六份 endpoint family 文件，不為每一條 endpoint 產生獨立檔案。
 - 每個 operation 都必須有：產品狀態、API protocol、operation、必要輸入、主要輸出、分頁或上限、認證／權限注意事項、限制，以及指向該 operation 的官方來源。
 - GitHub API 的 version、auth 實作與內部 mapping 不在本 topic 鎖定；參考文件只記錄官方 operation 的當前能力與限制。
-- Review、merge、notification 寫入一律標為「後續寫入」，即使 GitHub 官方 API 已支援。
+- Review、merge、notification 寫入一律標為「後續寫入」，即使 GitHub 官方 API 已支援；非 MVP 但 catalog 保留的讀取 operation 標為「後續唯讀」。
 - comment-level last-seen 是「可選本機狀態」；文件只描述 ownership 與 identity，不定義持久化技術或 schema。
 
 ## Document Map

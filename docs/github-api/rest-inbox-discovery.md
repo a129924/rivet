@@ -6,7 +6,7 @@
 
 | 項目 | 定義 |
 | --- | --- |
-| 狀態 | MVP 唯讀 |
+| 狀態 | 後續唯讀 |
 | Operation | `GET /repos/{owner}/{repo}/pulls` |
 | 用途 | 取得指定 repository 的 PR；預設只回傳 open PR。 |
 | 重要 query | `state`, `head`, `base`, `sort`, `direction`, `per_page`, `page` |

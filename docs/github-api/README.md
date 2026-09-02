@@ -7,6 +7,7 @@
 ## 產品狀態
 
 - **MVP 唯讀**：符合目前 PR Inbox 與 PR Reader 的產品範圍；本文件只確認 GitHub 官方可提供的資料。
+- **後續唯讀**：GitHub 已有讀取 API，但產品規範明確延後；不能由本 catalog 視為現行 MVP 實作授權。
 - **後續寫入**：GitHub 已有 API，但產品規範明確延後，不能由本 catalog 視為實作授權。
 - **可選本機狀態**：GitHub 沒有等價 viewer state；是否保存、如何保存均留給未來 topic。
 
@@ -14,7 +15,7 @@
 
 | 能力 | 狀態 | 主文件 |
 | --- | --- | --- |
-| 指定 repository 的 open PR 列表 | MVP 唯讀 | [REST Inbox](rest-inbox-discovery.md) |
+| 指定 repository 的 open PR 列表 | 後續唯讀 | [REST Inbox](rest-inbox-discovery.md) |
 | 跨 repository、直接要求我 review 的 PR | MVP 唯讀 | [REST Inbox](rest-inbox-discovery.md) |
 | PR 基本資訊、changed files、unified diff | MVP 唯讀 | [REST PR Reader](rest-pr-reader.md) |
 | PR conversation、inline comments、reviews | MVP 唯讀 | [REST Discussion & Reviews](rest-discussion-reviews.md) |
@@ -22,7 +23,8 @@
 | Review threads、resolved 與 outdated | MVP 唯讀 | [GraphQL PR State](graphql-pr-state.md) |
 | Approve、request changes、resolve/unresolve、merge | 後續寫入 | [REST Discussion & Reviews](rest-discussion-reviews.md)、[GraphQL Write Actions](graphql-write-actions.md) |
 | Mergeable、merge state、review decision | MVP 唯讀 | [GraphQL PR State](graphql-pr-state.md) |
-| GitHub notification thread | 後續寫入 | [REST Notifications & Local State](rest-notifications-local-state.md) |
+| GitHub notification thread 讀取 | 後續唯讀 | [REST Notifications & Local State](rest-notifications-local-state.md) |
+| 將 GitHub notification thread 標為已讀 | 後續寫入 | [REST Notifications & Local State](rest-notifications-local-state.md) |
 | App 內的 comment-level last-seen | 可選本機狀態 | [REST Notifications & Local State](rest-notifications-local-state.md) |
 
 ## 共通規則
