@@ -188,6 +188,16 @@ export interface ViewedStateChangeAdapter extends ViewedStateChangePort {}
 - IM-05 必須更新 `docs/architecture/diagrams/pr-reader-webview-diff-rendering/scene.js` 與其 generated `index.html`。scene 的 render 主路徑必須精確表達 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output`；Adapter 僅保留為 Swift／viewed 邊界宣告，不得插入或反向主 render flow。所有圖作者內容採繁體中文，generated index 的 `<html lang>` 必須是 `zh-Hant`。
 - 依 `architecture-canvas` skill 對 scene 執行 validate，使用相同 scene build 產生 index，並保存 validate 與 build 的 command／receipt evidence；不得自行發布 artifact.cafe。
 
+## PC-06 Documentation and Diagram-local Accessibility Revision
+
+- 本輪只修正 `docs/architecture/README.md` wording 與既有 PR Reader WebView diff architecture-canvas artifact；不改 TypeScript pipeline、Swift bridge、套件、global `architecture-canvas` template 或其他圖。這是既有 topic 的可近用性與文件收斂，不重開 `DiffViewModel`、Swift snapshot authority、viewed best-effort `void`、零依賴或 declaration-only pipeline 決策。
+- README 必須把 baseline 限定為「除已鎖定的 PR Reader WebView diff declaration-only modules 與該圖 artifact-local viewer accessibility 外」，仍不建立產品功能。它必須分開陳述：(1) core 的 compile-time dependency 為 `Presentation → Facade → UseCase → Port`；(2) Adapter 符合 Port 並隔離 Outside；(3) runtime render request 為 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output`。三項皆不得改變既定 Output ownership 或 Adapter 非主路徑的決策。
+- `scene.js` 的 `BOXES`／`EDGES` 是圖資料唯一真相。既有圖的 generated `index.html` 必須透過**該圖資料夾內**的 post-build enhancer／verifier 建立可近用性補強；重跑必須冪等。不得修改 skill 的 global template、將手抄的 node／edge 資料另存為第二份真相，或影響其他 diagrams。
+- viewer UI、hint、toolbar 與 fallback 文字皆使用繁體中文；`<html lang="zh-Hant">`。`#stage` 必須是帶中文 label 的可聚焦 `role="region"`，以 `aria-describedby` 指向操作說明；canvas 必須 `aria-hidden="true"`。不得使用 `role="application"`。
+- viewport keyboard keys 只可在 `#stage` 具有 focus 時處理，且不得註冊 window-global keydown listener。`[` 與 `]` 依 `BOXES` 順序巡覽；選取 node 必須更新既有 readout，且 readout 為 `aria-live` status。鍵盤巡覽、fallback focus 與 fallback click 必須呼叫同一個既有 node-selection 行為，不得導入第二套選取狀態。
+- fallback 必須由 runtime `BOXES`／`EDGES` 動態產生：以語意 section／list 描述 pipeline，為每個 node 提供原生、可 Tab 到達的中文 `button`，並以關係清單呈現 edge。它的目的是讓 screen reader 與純鍵盤使用者取得與圖相等的 node／relationship 資訊，不宣稱 canvas 視覺本身可被讀取。
+- IM-06 只可在 PR-06 approval 後進行；完成時同步 README wording 與這份圖。PR Reader BC 的 pipeline 長期事實沒有改變，故本輪不改寫 BC 文件。
+
 ## Validation
 
 - 以依 module 分檔的 strict TypeScript type-level tests 驗證所有 literal unions、`DiffSnapshot` 的 required／readonly fields、未變更的 `DiffViewModel`、exact method signatures 與 public barrel export surface。
@@ -196,4 +206,5 @@ export interface ViewedStateChangeAdapter extends ViewedStateChangePort {}
 - 驗證 `ViewedStateChangeAdapter` 可指派為 `ViewedStateChangePort` 且不聲明 wrapper 或第二個 notification method；並驗證 `ViewedStateChange` 的 PR／snapshot identity 與 snapshot-local `fileId` contract，以及 UseCase 是 Output Port 唯一 caller、Facade 不依賴 Output Port。
 - 驗證 `ViewedStateChangePort.notify` 與 `DiffFacade.requestViewedStateChange` 精確回傳 `void`，並以文件與圖證明此為僅限 viewed notification 的 best-effort exception；不得新增 notification outcome、bridge、transport 或可靠性主張。
 - 驗證 architecture-canvas scene 與 generated index 的主路徑、繁體中文作者內容與 `lang="zh-Hant"`，並交付 skill validate／build evidence；不發布 artifact.cafe。
+- 對 PC-06 diagram-local enhancer／verifier 驗證：`zh-Hant`、全繁中 UI、`#stage` 的 tabindex／region／description、canvas `aria-hidden`、沒有 `role="application"` 或 window-global keydown、僅 stage-focused 的 viewport key handling、`[`／`]` traversal、live readout、由 `BOXES`／`EDGES` 動態產生的 fallback、原生可 Tab node controls 與中文 relationships。先對 scene validate／temp build，再執行 enhancer／verifier；不得以手動改動生成圖取代該流程。
 - 執行既有 Bun typecheck、test 與 coverage gate；若現況尚無可執行 test，Tester 必須回報明確環境或設定 blocker，不以臆測替代。

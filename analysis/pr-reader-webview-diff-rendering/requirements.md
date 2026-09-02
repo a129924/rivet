@@ -14,6 +14,7 @@
 - 對各 module 的 import surface、相鄰 stage output、snapshot input、Facade API、Adapter／Port assignability 與 layer dependency 進行 strict TypeScript type-level tests 與既有檢查。
 - 將已確認的 snapshot、render flow 與 viewed notification exception 事實回寫至架構 README 與 PR Reader BC 文件。
 - 更新既有 architecture-canvas scene 與 generated index，使其主路徑反映已鎖定的 `DiffSnapshot` flow，並完成 skill 要求的 validate、build 與 evidence capture。
+- 修正文檔架構 README 對 baseline、compile-time dependency、Adapter 邊界與 render request runtime flow 的敘述；並為同一份 PR Reader WebView diff 圖加入僅限該 artifact 的 keyboard／screen-reader fallback。
 
 ## Out-Of-Scope
 
@@ -22,6 +23,7 @@
 - viewed notification 的 reliable transport、enqueue／serialization failure outcome、acknowledgement、retry、delivery guarantee 或 bridge implementation。
 - 新增套件、package manifest 或 lockfile 變更。
 - 其他 Bounded Context、產品行為或未來 concrete implementation 的變更。
+- TypeScript pipeline、Swift bridge、global `architecture-canvas` template、其他 architecture-canvas 圖與任何套件變更。
 
 ## Success Criteria
 
@@ -30,7 +32,9 @@
 - `present` 僅回傳 success、validation、parse、render 或 output 的既定 outcome；`requestViewedStateChange`／`notify` 是狹義 best-effort `void` exception，不產生 outcome、acknowledgement、optimistic snapshot 更新或可靠傳輸承諾。
 - `index.ts` 僅公開 Presentation 所需的 Facade 與 contracts（含 `DiffSnapshot`）；opaque stage types、Ports、Adapters、dependency descriptors 與 UseCase 均非 public surface。
 - 介面保持零依賴，核心層不依賴 Swift、WebView 或 Adapter，且不偷渡任何具體 rendering 或 transport 決策。
-- architecture-canvas 以 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output` 呈現 render 主路徑；generated `index.html` 的文件語言為 `zh-Hant`，且有可追溯的 validate／build evidence。
+- architecture README 明確區分 `Presentation → Facade → UseCase → Port` 的 core compile-time dependency、Adapter 對 Port 的符合與 Outside 隔離，以及 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output` 的 runtime render request；不改變既定 ownership。
+- architecture-canvas 以 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output` 呈現 render 主路徑；generated `index.html` 的文件語言與 viewer UI 皆為繁體中文，且有可追溯的 validate／build evidence。
+- 該圖提供 diagram-local 可近用性 fallback：stage 可聚焦、僅在 stage 聚焦時處理 viewport keyboard keys、`[`／`]` 可巡覽 scene `BOXES`、選取狀態會以 live readout 宣告，並由 `BOXES`／`EDGES` 動態產生可 Tab 到達的語意節點與關係內容；不使用 `role="application"` 或 window-global keyboard listener。
 
 ## Non-Goals
 

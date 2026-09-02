@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-rendering`
-- Current phase: Git and thread handoff ready
+- Current phase: RV-06 needs-rework（僅待補齊本 ledger 的 workflow evidence，之後必須重新獨立審查）
 - Ledger rule: 此帳本只索引 handoff evidence 與目前狀態；checkbox、status 或 tracker 結果不構成 approval。只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Steps
@@ -42,18 +42,25 @@
 | RV-05 | approved | Reviewer | 獨立審查 IM-05 implementation、`void` exception scope、architecture writeback、canvas main flow 與驗證 evidence；分類 approved、needs-rework、blocked 或 human-check。 | Independent Reviewer 明示 verdict：`approved`。 |
 | GH-05 | pending | Implementer | 僅在 RV-05 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve 本輪已修正 PR threads。 | 尚無；Reviewer approval 前不得 GitHub handoff 或 resolve threads。 |
 | HC-04 | pending | Human | 審閱 PR #4 的 IM-05 修正、test／canvas evidence、Reviewer verdict 與 resolved threads。 | 尚無；GH-05 完成後停止於此 human boundary。 |
+| PC-06 | completed | Plan-Creator | 將同 topic 四份 artifacts 收斂為 README dependency／flow wording 與單一 canvas artifact-local keyboard／screen-reader fallback 的既定契約。 | 四份 artifacts 已更新；只記錄已明示 decision 與 gate，並非 Plan-Reviewer approval。 |
+| PR-06 | approved | Plan-Reviewer | 獨立審查 PC-06 artifacts：scope 僅限 README 與單一圖、scene data single source、stage-scoped keyboard／semantic fallback、既定 pipeline／ownership 未漂移，以及 gate 一致性。 | Independent Plan-Reviewer 明示 verdict：`approved`。 |
+| IM-06 | completed | Implementer | 僅在 PR-06 明示 `approved` 後，最小修正 README wording，並對單一 diff canvas 實作 diagram-local、冪等 post-build accessibility enhancer／verifier。 | Implementer 已完成 README 與 diagram-local enhancement／verifier；未修改 TypeScript pipeline、Swift bridge、global template、其他 diagrams 或套件。 |
+| TE-06 | approved | Tester | 執行既有 Bun gates、diff check、canvas validate／temp build、enhancer／verifier，並靜態驗證 locale、ARIA、stage-scoped keyboard、traversal、live status、動態 fallback 與 native semantic controls。 | Independent Tester 明示 verdict：`approved`；canvas validate、temp build byte-identical、enhancer／verifier、既有 Bun gates 與 diff check 均通過。實體 browser／VoiceOver 未在此 gate 宣稱完成。 |
+| RV-06 | needs-rework | Reviewer | 獨立審查 IM-06 的 README 與 diagram-local accessibility scope、資料真相、keyboard／screen-reader fallback、既定 pipeline contract 與驗證 evidence。 | Independent Reviewer 明示 verdict：`needs-rework`；唯一 finding 為本 ledger 尚未記錄 PC-06 至 TE-06 的真實 workflow evidence。完成本次 ledger correction 後，必須重新交由獨立 Reviewer 審查。 |
+| GH-06 | pending | Implementer | 僅在 RV-06 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve R4 的四個已修正 threads。 | 尚無；不得在 RV-06 approval 前進行 GitHub handoff 或 resolve threads。 |
+| HC-05 | pending | Human | 審閱 PR #4 的 IM-06 accessibility／wording 修正、驗證與 review evidence，以及 resolved R4 threads。 | GH-06 完成後停止於此 human boundary。 |
 
 ## Blockers
 
 - 無已知 blocker。
-- PC-05、PR-05、IM-05、TE-05 與 RV-05 已完成；本輪可進入 GH-05 Git 與 thread handoff。先前 GH-04／HC-03 紀錄保留作為既有 handoff history。
+- RV-06 的唯一 needs-rework 為 ledger workflow evidence；本次校正後仍須重新取得獨立 Reviewer verdict。GH-06／HC-05 仍 pending。既有 GH-05／HC-04 記錄保留作為前一輪 handoff history；不得跳過 PC-06 revision chain 直接進行 GitHub handoff。
 
 ## Human Check
 
-- GH-05 完成後，停止於 HC-04；不得由 agent 或 ledger 取代 human review。
+- GH-06 完成後，停止於 HC-05；實體 browser／VoiceOver fallback 驗證屬於此 human-check，不得由 agent 或 ledger 假稱已完成。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 記錄 PC-05 至 RV-05 的明示 handoff evidence，包含 Tester 兩次 canvas locale／非繁體中文殘留回修與最終 approval。
-- Update status: RV-05 已明示 `approved`，可進入 GH-05；GH-05 與 HC-04 仍 pending，checkbox、status 或 tracker 結果不構成 approval。
+- Update reason: 補齊 PC-06、PR-06、IM-06、TE-06 的真實 handoff evidence，並記錄 RV-06 僅因 ledger evidence needs-rework。
+- Update status: RV-06 needs-rework；完成此 ledger correction 後等待重新獨立審查。GH-06／HC-05 仍 pending；checkbox、status 或 tracker 結果不構成 approval。

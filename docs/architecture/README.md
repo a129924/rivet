@@ -1,21 +1,27 @@
 # Rivet 架構規範
 
-本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline，不建立程式碼、抽象層或產品功能。
+本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline；除已鎖定的 PR Reader WebView diff declaration-only modules，以及其單一架構圖的 artifact-local viewer 可近用性補強外，不建立產品功能。
 
 ## 架構方向
 
 Rivet 未來採用 monorepo 與輕量 DDD。
 
-正式依賴與資料流方向如下：
+核心的 compile-time dependency 方向如下：
 
 ```text
-Outside → Adapter ↔ Port → UseCase → Facade → Presentation
+Presentation → Facade → UseCase → Port
+```
+
+Adapter 符合 Port，並隔離 Outside；Adapter 不加入核心的 compile-time dependency 方向。PR Reader WebView diff 的 runtime render request 則是：
+
+```text
+Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output
 ```
 
 ## Layer Responsibilities
 
 - **Outside**：GitHub API、OAuth、Keychain、網路、WebView runtime 等外部世界。
-- **Adapter**：外部協定、資料與錯誤的轉換邊界。
+- **Adapter**：符合 Port，隔離外部協定、資料與錯誤的轉換邊界。
 - **Port**：由內部擁有的依賴契約。
 - **UseCase**：應用與業務流程。
 - **Facade**：提供 Presentation 使用的穩定入口。
