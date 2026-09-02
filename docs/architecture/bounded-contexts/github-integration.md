@@ -4,6 +4,7 @@
 
 GitHub Integration 是 Supporting BC，隔離 GitHub.com 的身分、外部資料、協定與 infrastructure failure，並為 PR Inbox 與 PR Reader 的內部 Port 提供轉換後的資料。
 
+- 暫定 source location：`Sources/BoundedContexts/GitHubIntegration/`；此位置不代表 target、module、dependency 或 contract。
 ## 非責任
 
 - 不定義 PR Inbox 的待審閱規則或 PR Reader 的閱讀模型。
