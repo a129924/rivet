@@ -6,7 +6,7 @@
 
 ## Current Phase
 
-REVIEW-005 independent review。PLAN-010 已取得 Plan-Reviewer 明示 `approved`，TEST-006 已取得 Tester 明示 PASS；第三次 planning-audit amendment 已受限完成，`768f6be` 早於未執行的 REVIEW-004 已如實記錄為 historical workflow deviation。尚待 REVIEW-005 獨立 verdict；不得倒填、rewrite history、force push 或宣稱 prior approval。
+REVIEW-006 independent review。PLAN-012 已由 Plan-Reviewer 明示 `approved`，TEST-007 已由 Tester 明示 PASS；第四次 planning-audit amendment 仍受限於既有授權範圍。尚待 REVIEW-006 獨立 verdict。不得倒填、rewrite history、force push 或宣稱 prior approval。
 
 ## Locked Scope
 
@@ -17,6 +17,7 @@ REVIEW-005 independent review。PLAN-010 已取得 Plan-Reviewer 明示 `approve
 - Human 另授權三份既有 BC 文件各加入一行對應的暫定 source location baseline，並明示不代表 target、module、dependency 或 contract；不得變更 BC responsibility、Map、圖或既有 architecture/path decision。
 - C thread 的 PR Inbox-only 要求與 Human 已鎖定的三 BC decision 衝突，為 non-actionable finding；不得以此調整 architecture 或 source paths。
 - Human 第三次 audit authorization 僅允許四份 topic artifacts 如實記錄 `768f6be` 早於未執行的 REVIEW-004，並建立 REVIEW-005 → DELIVERY-003 → HUMAN-003；不得修改其他路徑、重開三 BC／source path／module／contract，或 backfill、rewrite history、force push。
+- Human 第四次 audit authorization 僅允許四份 topic artifacts 如實記錄 `1b44fd0` 早於未執行的 REVIEW-005，並建立 PLAN-011 → PLAN-012 → TEST-007 → REVIEW-006 → DELIVERY-004 → HUMAN-004；不得修改其他路徑、重開三 BC／source path／module／contract，或 backfill、rewrite history、force push。
 
 ## Ledger
 
@@ -49,24 +50,30 @@ REVIEW-005 independent review。PLAN-010 已取得 Plan-Reviewer 明示 `approve
 | PLAN-009 | complete | — | Plan-Creator | 依第三次 human authorization，僅修訂四份 artifacts，記錄 `768f6be` 的 REVIEW-004 historical deviation 與新 gate。 | 本次 amendment 僅觸及四份 artifacts；不構成 approval。 |
 | PLAN-010 | complete | approved | Plan-Reviewer | 獨立審查 PLAN-009 是否符合第三次 audit amendment 的受限 scope 與歷史記錄。 | Plan-Reviewer 已明示 `approved`。 |
 | TEST-006 | complete | — | Tester | PLAN-010 可前進後，獨立驗證四份 artifacts 的 historical audit、verdict schema 與 gate consistency。 | Tester 明示 PASS；PASS 不構成 verdict。 |
-| REVIEW-005 | pending | — | Reviewer | TEST-006 後，獨立判定第三次 amendment 與 DELIVERY-003 範圍是否有 scope、contract 或 workflow drift。 | 僅明示 `approved` 可進入 DELIVERY-003。 |
-| DELIVERY-003 | pending | — | Implementer | REVIEW-005 明示 `approved` 後，僅以四份 artifacts 建立單一 commit、push 並處理已核可 threads。 | 不得改寫既有 commits 或新增其他 tracked path。 |
-| HUMAN-003 | pending | — | Human | DELIVERY-003 後，PR 交還 human review。 | 尚待 Human review；不得 merge、release 或進入產品 slice。 |
+| REVIEW-005 | historical-deviation-not-run | — | Reviewer | 原定於 TEST-006 後，獨立判定第三次 amendment 與 DELIVERY-003 範圍是否有 scope、contract 或 workflow drift。 | `1b44fd0` 早於此 gate；未執行，不是 approval 或 delivery authorization。 |
+| DELIVERY-003 | historical-superseded | — | Implementer | 原定於 REVIEW-005 `approved` 後，僅以四份 artifacts 建立單一 commit、push 並處理已核可 threads。 | REVIEW-005 未執行；不得將 `1b44fd0` 倒填為此 delivery。 |
+| HUMAN-003 | historical-superseded | — | Human | 原定於 DELIVERY-003 後，PR 交還 human review。 | 由 HUMAN-004 取代；不構成既有 delivery 已獲 human approval。 |
+| PLAN-011 | complete | — | Plan-Creator | 依第四次 human authorization，僅修訂四份 artifacts，記錄 `1b44fd0` 的 REVIEW-005 historical deviation 與新 flow。 | 本次 amendment 僅觸及四份 artifacts；不構成 approval。 |
+| PLAN-012 | complete | approved | Plan-Reviewer | 獨立審查 PLAN-011 是否符合第四次 audit amendment 的受限 scope 與歷史記錄。 | Plan-Reviewer 已明示 `approved`。 |
+| TEST-007 | complete | — | Tester | PLAN-012 明示 `approved` 後，獨立驗證四份 artifacts 的 historical audit、verdict schema 與 gate consistency。 | Tester 明示 PASS；PASS 不構成 verdict。 |
+| REVIEW-006 | pending | — | Reviewer | TEST-007 後，獨立判定第四次 amendment 與 DELIVERY-004 範圍是否有 scope、contract 或 workflow drift。 | 僅明示 `approved` 可進入 DELIVERY-004。 |
+| DELIVERY-004 | pending | — | Implementer | REVIEW-006 明示 `approved` 後，僅以四份 artifacts 建立單一 commit、push 並處理已核可 threads。 | 不得改寫既有 commits 或新增其他 tracked path。 |
+| HUMAN-004 | pending | — | Human | DELIVERY-004 後，PR 交還 human review。 | 尚待 Human review；不得 merge、release 或進入產品 slice。 |
 
 ## Blockers
 
-- Human 已明示授權本次 pre-commit gate scope expansion、三份 BC 文件 remediation，以及三次 planning-audit amendment；這些授權不構成 REVIEW-005 approval，亦不構成 DELIVERY-003 authorization。
+- Human 已明示授權本次 pre-commit gate scope expansion、三份 BC 文件 remediation，以及四次 planning-audit amendment；這些授權不構成 REVIEW-006 approval，亦不構成 DELIVERY-004 authorization。
 - REVIEW-001 的 `needs-rework` 為歷史 evidence；不得將其重寫為 approved 或完成。
 - 若 formatter 修正需修改 `scripts/check-swift-format.sh` 以外的 tracked path，或 dependency install 改變 lockfile／產生可追蹤檔案，立即停止並交回 Dispatcher。
 - 若要求寫入未列入本 topic 的路徑、修改既有檔案、刪除內容、新增 BC 或 Swift contract，立即停止並交回 Dispatcher。
 - 若發現 scope、contract 或 workflow drift，停止前進；由 Dispatcher 派遣相應獨立角色處理。
-- REVIEW-002、REVIEW-003 與 REVIEW-004 均為未執行的 historical deviations；不得標記為 approved 或 pending gate。REVIEW-005 未完成前，不得建立 DELIVERY-003、push 或處理 threads。
-- historical workflow deviations：`94b6506` 早於 REVIEW-001（歷史 verdict `needs-rework`）；`09043bf`、`ed2bbcf` 與 `768f6be` 分別早於未執行的 REVIEW-002、REVIEW-003 與 REVIEW-004。不得倒填、宣稱 prior approval、rewrite history 或 force push；後續僅可在 REVIEW-005 明示 `approved` 後建立 DELIVERY-003。
+- REVIEW-002、REVIEW-003、REVIEW-004 與 REVIEW-005 均為未執行的 historical deviations；不得標記為 approved 或 pending gate。REVIEW-006 未完成前，不得建立 DELIVERY-004、push 或處理 threads。
+- historical workflow deviations：`94b6506` 早於 REVIEW-001（歷史 verdict `needs-rework`）；`09043bf`、`ed2bbcf`、`768f6be` 與 `1b44fd0` 分別早於未執行的 REVIEW-002、REVIEW-003、REVIEW-004 與 REVIEW-005。不得倒填、宣稱 prior approval、rewrite history 或 force push；後續僅可在 REVIEW-006 明示 `approved` 後建立 DELIVERY-004。
 
 ## Human Check
 
-- 第三次 planning-audit amendment 已由 Plan-Creator 受限記錄；尚待 REVIEW-005 的獨立 verdict。
-- 僅 REVIEW-005 明示 `approved` 後，才可建立 DELIVERY-003、push branch 並處理已核可的 PR threads；不得重做、rewrite 或 force push `94b6506`／`09043bf`／`ed2bbcf`／`768f6be`，亦不得 merge、release 或進入產品 slice。
+- PLAN-012 已由 Plan-Reviewer 明示 `approved`，TEST-007 已由 Tester 明示 PASS；尚待 REVIEW-006 的獨立 verdict。
+- 僅 REVIEW-006 明示 `approved` 後，才可建立 DELIVERY-004、push branch 並處理已核可的 PR threads；不得重做、rewrite 或 force push `94b6506`／`09043bf`／`ed2bbcf`／`768f6be`／`1b44fd0`，亦不得 merge、release 或進入產品 slice。
 
 ## Ledger Interpretation
 
@@ -82,3 +89,7 @@ REVIEW-005 independent review。PLAN-010 已取得 Plan-Reviewer 明示 `approve
 2026-09-02 — Plan-Creator：依第三次 Human 明示授權，僅修訂四份 topic artifacts。如實記錄 `768f6be` 早於未執行 REVIEW-004；將 REVIEW-004 標為 `historical-deviation-not-run`，並將未取得 gate authorization 的 DELIVERY-002 與 HUMAN-002 標為 historical-superseded，不將 `768f6be` 倒填為 DELIVERY-002。新增 PLAN-009、PLAN-010、TEST-006、REVIEW-005、DELIVERY-003、HUMAN-003，Current Phase 設為 PLAN-010。未進行 implementation、測試、Git 或 PR/thread actions；本次同步不構成 approval、verdict、routing 或 delivery authorization。
 
 2026-09-02 — Plan-Creator：僅同步既有獨立結果：PLAN-010 為 Plan-Reviewer 明示 `approved`，TEST-006 為 Tester 明示 PASS。Current Phase 更新為 REVIEW-005；REVIEW-005、DELIVERY-003 與 HUMAN-003 維持 pending。未變更 scope、其他 artifacts、Git 或 PR/thread state；Tester PASS 不構成 verdict，且未回填任何 verdict。
+
+2026-09-02 — Plan-Creator：依第四次 Human 明示授權，僅修訂四份 topic artifacts。如實記錄 `1b44fd0` 早於未執行 REVIEW-005；將 REVIEW-005 標為 `historical-deviation-not-run`，並將未取得 gate authorization 的 DELIVERY-003 與 HUMAN-003 標為 historical-superseded，不將 `1b44fd0` 倒填為 DELIVERY-003。新增 PLAN-011、PLAN-012、TEST-007、REVIEW-006、DELIVERY-004、HUMAN-004，Current Phase 設為 PLAN-012。未進行 implementation、測試、Git 或 PR/thread actions；本次同步不構成 approval、verdict、routing 或 delivery authorization。
+
+2026-09-02 — Plan-Creator：僅同步既有獨立結果：PLAN-012 為 Plan-Reviewer 明示 `approved`，TEST-007 為 Tester 明示 PASS。Current Phase 更新為 REVIEW-006；REVIEW-006、DELIVERY-004 與 HUMAN-004 維持 pending。未變更 scope、其他 artifacts、Git 或 PR/thread state；Tester PASS 不構成 verdict，且未回填任何 verdict。

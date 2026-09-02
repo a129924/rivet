@@ -31,7 +31,8 @@
 - `94b6506` 早於 REVIEW-001，且 REVIEW-001 的歷史 verdict 為 `needs-rework`；不得倒填、改寫或宣稱該 commit 曾獲 REVIEW-001 核可。
 - `09043bf` 早於未執行的 REVIEW-002，`ed2bbcf` 早於未執行的 REVIEW-003；不得倒填、改寫或宣稱任一 commit 曾獲相應 review 核可。
 - `768f6be` 早於未執行的 REVIEW-004；不得倒填、改寫或宣稱該 commit 曾獲相應 review 核可。
-- 未經獨立 REVIEW-005 明示 `approved` 的 audit-correction delivery（commit、push、PR thread resolution）、release，或進入下一個產品 slice。
+- `1b44fd0` 早於未執行的 REVIEW-005；不得倒填、改寫或宣稱該 commit 曾獲相應 review 核可。
+- 未經獨立 REVIEW-006 明示 `approved` 的 audit-correction delivery（commit、push、PR thread resolution）、release，或進入下一個產品 slice。
 
 ## Acceptance Criteria
 
@@ -40,11 +41,12 @@
 - source layout 不含 Swift source、target、module、test 或 contract。
 - formatter 對目錄 lint 使用 `--recursive`；renderer check 可在 frozen lockfile 準備後執行，且該準備不變更 lockfile 或產生可追蹤檔案。
 - formatter、renderer check 與完整 pre-commit hook 均通過；原始 delivery commit 範圍僅包含原七個 topic 檔案與 `scripts/check-swift-format.sh`，既授權 remediation commit 才另含三份 BC 文件的受限單行回寫。
-- 既有 commit 與 PR 歷史維持不改寫；僅在獨立 REVIEW-005 明示 `approved` 後，才可建立 DELIVERY-003 topic commit、push branch 並處理已核可的 PR threads，然後停止於 HUMAN-003 human review。
+- ledger 保留獨立 `verdict` 欄；僅可記錄獨立角色明示的 `approved`、`needs-rework`、`blocked` 或 `human-check`，不得以 status、validation evidence 或 Tester PASS 代替。
+- 既有 commit 與 PR 歷史維持不改寫；僅在獨立 REVIEW-006 明示 `approved` 後，才可建立 DELIVERY-004 topic commit、push branch 並處理已核可的 PR threads，然後停止於 HUMAN-004 human review。
 
 ## Delivery Actions
 
-既有 topic delivery 已形成 `94b6506`、`09043bf`、`ed2bbcf` 與 `768f6be`。`94b6506` 早於 REVIEW-001，且 REVIEW-001 的歷史 verdict 為 `needs-rework`；`09043bf`、`ed2bbcf` 與 `768f6be` 分別早於未執行的 REVIEW-002、REVIEW-003 與 REVIEW-004。四者皆為必須如實保留的 historical workflow deviations。後續僅限新的 DELIVERY-003；它只可在新的獨立 REVIEW-005 明示 `approved` 後執行，且 commit 僅可包含四份 topic artifacts，完成後交還 HUMAN-003 human review，不得 merge 或 release。
+既有 topic delivery 已形成 `94b6506`、`09043bf`、`ed2bbcf`、`768f6be` 與 `1b44fd0`。`94b6506` 早於 REVIEW-001，且 REVIEW-001 的歷史 verdict 為 `needs-rework`；`09043bf`、`ed2bbcf`、`768f6be` 與 `1b44fd0` 分別早於未執行的 REVIEW-002、REVIEW-003、REVIEW-004 與 REVIEW-005。五者皆為必須如實保留的 historical workflow deviations。後續僅限新的 DELIVERY-004；它只可在新的獨立 REVIEW-006 明示 `approved` 後執行，且 commit 僅可包含四份 topic artifacts，完成後交還 HUMAN-004 human review，不得 merge 或 release。
 
 ## Stop Conditions
 
@@ -53,7 +55,7 @@
 - formatter、renderer check 或 pre-commit 發現 scope、contract 或 workflow drift。
 - BC 文件回寫需要超出暫定 source location baseline 的內容。
 - planning amendment 未經獨立 Plan-Reviewer 明示核可。
-- 第三次 planning-audit amendment 未經獨立 PLAN-010 明示 `approved`，或 TEST-006 未完成驗證、REVIEW-005 未明示 `approved`。
+- 第四次 planning-audit amendment 未經獨立 PLAN-012 明示 `approved`，或 TEST-007 未完成驗證、REVIEW-006 未明示 `approved`。
 
 ## PR Review Remediation
 
@@ -70,3 +72,7 @@ Human 明示授權第二次、僅限四份 topic artifacts 的 audit amendment�
 ## Third Planning-Audit Amendment
 
 Human 明示授權第三次、僅限四份 topic artifacts 的 audit amendment：如實記錄 `768f6be` 早於未執行的 REVIEW-004；不得將該 commit backfill 為 REVIEW-004 已核可的 DELIVERY-002。新增 REVIEW-005 → DELIVERY-003 → HUMAN-003 gate。不得修改其他檔案、重開三 BC／source path／module／contract，或 backfill、rewrite history、force push。
+
+## Fourth Planning-Audit Amendment
+
+Human 明示授權第四次、僅限四份 topic artifacts 的 audit amendment：如實記錄 `1b44fd0` 早於未執行的 REVIEW-005；不得將該 commit backfill 為 REVIEW-005 已核可的 DELIVERY-003。REVIEW-005、DELIVERY-003 與 HUMAN-003 均由新的 PLAN-011 → PLAN-012 → TEST-007 → REVIEW-006 → DELIVERY-004 → HUMAN-004 flow 取代。不得修改其他檔案、重開三 BC／source path／module／contract，或 backfill、rewrite history、force push。
