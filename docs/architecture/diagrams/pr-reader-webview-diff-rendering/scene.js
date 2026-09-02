@@ -46,8 +46,8 @@ const BANDS = [
 const BOXES = [
   {
     id: "swift-snapshot", plane: "swift", band: "band-swift", x: 200, y: 260, w: 500, h: 70, r: 10,
-    name: "Swift 快照發送端", about: "Swift 提供完整且有序的 DiffViewModel 快照。",
-    texts: [["bl", 224, 288, "Swift 快照發送端"], ["bs", 224, 310, "完整、有序的 DiffViewModel[]"]],
+    name: "Swift 快照發送端", about: "Swift 提供帶 PR 與快照身分、完整且有序檔案的 DiffSnapshot。",
+    texts: [["bl", 224, 288, "Swift 快照發送端"], ["bs", 224, 310, "完整 DiffSnapshot · PR · 快照 · 有序檔案"]],
   },
   {
     id: "swift-viewed", plane: "swift", band: "band-swift", x: 780, y: 260, w: 600, h: 70, r: 10,
@@ -56,8 +56,8 @@ const BOXES = [
   },
   {
     id: "snapshot-adapter", plane: "adapter", band: "band-adapter", x: 200, y: 490, w: 500, h: 78, r: 10, dash: true,
-    name: "DiffSnapshotAdapter", about: "宣告 Swift 快照輸入邊界，不包含橋接行為。",
-    texts: [["bl", 224, 518, "DiffSnapshotAdapter"], ["bs", 224, 540, "Swift 快照輸入邊界"]],
+    name: "DiffSnapshotAdapter", about: "宣告接收 DiffSnapshot 的 Swift 輸入邊界，不包含橋接行為。",
+    texts: [["bl", 224, 518, "DiffSnapshotAdapter"], ["bs", 224, 540, "接收 DiffSnapshot 的 Swift 輸入邊界"]],
   },
   {
     id: "viewed-adapter", plane: "adapter", band: "band-adapter", x: 780, y: 490, w: 600, h: 78, r: 10, dash: true,
@@ -66,8 +66,8 @@ const BOXES = [
   },
   {
     id: "diff-model", plane: "contract", band: "band-contract", x: 200, y: 740, w: 360, h: 94, r: 10, dash: true,
-    name: "DiffViewModel", about: "Swift 傳入差異管線的完整檔案快照契約。",
-    texts: [["bl", 224, 768, "DiffViewModel"], ["bs", 224, 790, "fileId · patch · viewed"], ["bn", 224, 816, "快照內的檔案身分"]],
+    name: "DiffSnapshot", about: "差異管線的輸入 envelope，帶 PR、快照身分與完整且有序的檔案。",
+    texts: [["bl", 224, 768, "DiffSnapshot"], ["bs", 224, 790, "pullRequestId · snapshotId"], ["bn", 224, 816, "完整且有序的 files"]],
   },
   {
     id: "viewed-change", plane: "contract", band: "band-contract", x: 610, y: 740, w: 360, h: 94, r: 10, dash: true,
@@ -81,8 +81,8 @@ const BOXES = [
   },
   {
     id: "validator-port", plane: "core", band: "band-core", x: 190, y: 1018, w: 220, h: 82, r: 10, dash: true,
-    name: "驗證 Port", about: "宣告完整檔案快照的驗證。",
-    texts: [["bl", 210, 1046, "驗證 Port"], ["bs", 210, 1068, "檔案 → 已驗證輸入"]],
+    name: "驗證 Port", about: "宣告 DiffSnapshot 輸入 envelope 的驗證。",
+    texts: [["bl", 210, 1046, "驗證 Port"], ["bs", 210, 1068, "DiffSnapshot → 已驗證輸入"]],
   },
   {
     id: "parser-port", plane: "core", band: "band-core", x: 435, y: 1018, w: 220, h: 82, r: 10, dash: true,
@@ -122,9 +122,9 @@ const BOXES = [
 ];
 
 const EDGES = [
-  { from: "swift-snapshot", to: "snapshot-adapter", pts: [[450,334], [450,484]], label: { s: "al", x: 464, y: 412, t: "快照" } },
-  { from: "snapshot-adapter", to: "diff-model", pts: [[450,572], [450,734]], label: { s: "al", x: 464, y: 650, t: "宣告輸入" } },
-  { from: "diff-model", to: "validator-port", pts: [[380,838], [380,1012]], label: { s: "al", x: 394, y: 930, t: "檔案" } },
+  { from: "swift-snapshot", to: "snapshot-adapter", pts: [[450,334], [450,484]], label: { s: "al", x: 464, y: 412, t: "DiffSnapshot" } },
+  { from: "snapshot-adapter", to: "diff-model", pts: [[450,572], [450,734]], label: { s: "al", x: 464, y: 650, t: "DiffSnapshot" } },
+  { from: "diff-model", to: "validator-port", pts: [[380,838], [380,1012]], label: { s: "al", x: 394, y: 930, t: "DiffSnapshot" } },
   { from: "validator-port", to: "parser-port", pts: [[414,1059], [429,1059]] },
   { from: "parser-port", to: "renderer-port", pts: [[659,1059], [674,1059]] },
   { from: "renderer-port", to: "output-port", pts: [[904,1059], [919,1059]] },
