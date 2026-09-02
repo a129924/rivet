@@ -1,0 +1,58 @@
+# GitHub API Endpoint Catalog — Implementation Plan
+
+## Goal
+
+新增已官方校驗、按 endpoint family 分檔的 GitHub PR API catalog，供後續 implementation topic 參考。
+
+## Non-Goal
+
+不建立產品行為、API client、資料模型、OAuth、SQLite、圖或 BC contract；不改變既有文件。
+
+## In-Scope
+
+- 建立四份正式 topic artifacts。
+- 建立 `docs/github-api/` 索引及 REST、GraphQL、notification/local-state 分拆文件。
+- 為每個 capability 提供官方來源、產品狀態及可實作所需的 API metadata。
+
+## Out-Of-Scope
+
+- GitHub Enterprise、多帳號、同步與所有 GitHub 寫入能力的實作。
+- 對 `docs/architecture/`、既有 BC 文件、產品規範或 source code 的變更。
+
+## ReadOnly
+
+- `README.md`、`docs/design-principles.md`、`docs/product.md`
+- `docs/architecture/README.md`、`docs/architecture/bounded-contexts/`
+- GitHub 官方 REST、GraphQL、Search 與 Notifications 文件
+
+## Written
+
+- `analysis/github-api-catalog/requirements.md`
+- `analysis/github-api-catalog/technical-spec.md`
+- `plan/github-api-catalog/github-api-catalog.plan.md`
+- `plan/github-api-catalog/github-api-catalog.step.md`
+- `docs/github-api/README.md`
+- `docs/github-api/rest-inbox-discovery.md`
+- `docs/github-api/rest-pr-reader.md`
+- `docs/github-api/rest-discussion-reviews.md`
+- `docs/github-api/graphql-pr-state.md`
+- `docs/github-api/graphql-write-actions.md`
+- `docs/github-api/rest-notifications-local-state.md`
+
+## Modify
+
+無。
+
+## Deleted
+
+無。
+
+## TestCase
+
+| ID | 情境 | 預期結果 |
+| --- | --- | --- |
+| TC-01 | capability 索引審閱 | 原始清單每項能力皆可找到唯一主文件與產品狀態。 |
+| TC-02 | REST／GraphQL operation 審閱 | 每個 operation 有官方來源、輸入、輸出與限制。 |
+| TC-03 | MVP boundary 審閱 | 寫入、merge、notification 與 local state 均不被誤標為現行 MVP。 |
+| TC-04 | 關鍵事實審閱 | `user-review-requested:@me`、`DISMISSED`、diff media type、classic-PAT notification 限制均正確。 |
+| TC-05 | 連結與 scope 檢查 | Markdown 連結可解析，diff 只包含 Written 清單中的新增檔案。 |
