@@ -27,7 +27,7 @@
 | 用途 | 尋找直接要求目前使用者 review 的 open PR。 |
 | 重要欄位 | items 中的 number、title、state、user、repository_url、pull_request、updated_at |
 | 分頁 | `per_page` 最大 100；Search API 另有結果與 rate-limit 限制，實作時必須處理 incomplete 結果與分頁。 |
-| 認證／權限 | 查詢 private resources 時必須成功認證且具有 repository access；多資源查詢只回傳 token 可存取的資源。 |
+| 認證／權限 | 此 catalog 固定使用代表目前使用者的 `@me`，因此必須以有效 token 呼叫；查詢 private resources 時 token 另須具有 repository access。多資源查詢只回傳 token 可存取的資源。 |
 | 官方來源 | [Search issues and pull requests](https://docs.github.com/en/rest/search/search#search-issues-and-pull-requests)、[search access errors](https://docs.github.com/en/rest/search/search#access-errors-or-missing-search-results) |
 
 `review-requested:USERNAME` 用於指定使用者；`user-review-requested:@me` 是「直接要求我 review」的明確 qualifier。team review request 不是本 MVP Inbox 的既定 membership 規則。

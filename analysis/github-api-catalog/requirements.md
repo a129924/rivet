@@ -29,9 +29,10 @@
 - PR 是 Issue 的一種；一般 PR conversation 使用 Issues comments API，diff inline comment 使用 Pull request review comments API。
 - `PullRequestChangedFile.viewerViewedState` 的 `DISMISSED` 是 GitHub API 回傳的 state，官方定義為檔案在上次 viewed 後有新變更。
 - `PullRequest.reviewThreads` 回傳 `PullRequestReviewThreadConnection`，其 nodes 與 resolve/unresolve 的 thread identity 都是 `PullRequestReviewThread.id`。
-- Notifications REST API 僅支援 classic PAT，不支援 GitHub App user／installation token 或 fine-grained PAT；因此它是延後能力且有獨立認證限制。
+- Notifications REST API 僅支援 classic PAT，不支援 GitHub App user／installation token 或 fine-grained PAT；每次呼叫另需 `notifications` 或 `repo` scope，因此它是延後能力且有獨立認證限制。
 - `GET /notifications` 的官方 query 為 `all`、`participating`、`since`、`before`、`page` 與 `per_page`，後者每頁最多 50 筆。
 - 直接要求目前使用者 review 的明確 search qualifier 為 `user-review-requested:@me`；不將未經官方參考確認的 `review-involves:@me` 列為可採用 query。
+- 建立 review 時，`REQUEST_CHANGES` 與 `COMMENT` 兩種 `event` 必須帶 review `body`；inline review comments 與 review summary 都使用 `page` 與 `per_page` 分頁。
 
 ## Official Sources
 

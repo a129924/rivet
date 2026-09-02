@@ -24,6 +24,7 @@ Rivet catalog composition rule：完整 PR discussion 視圖在需要時組合�
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments` |
 | 用途 | 取得 diff 上的 review comments。 |
 | 重要欄位 | id、pull_request_review_id、path、line、side、start_line、start_side、commit_id、original_commit_id、body、in_reply_to_id |
+| 分頁 | `page`／`per_page`；依 Link header 取下一頁。 |
 | 注意事項 | Rivet mapping 可使用 GitHub comment `id` 作 identity；thread grouping、resolved 與 outdated 見 GraphQL 文件。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List review comments on a pull request](https://docs.github.com/en/rest/pulls/comments#list-review-comments-on-a-pull-request) |
@@ -37,6 +38,7 @@ Rivet catalog composition rule：完整 PR discussion 視圖在需要時組合�
 | 用途 | 取得 PR reviews 的時序與結果。 |
 | 重要欄位 | id、user、body、state、commit_id、submitted_at |
 | Review state | `APPROVED`、`CHANGES_REQUESTED`、`COMMENTED`、`DISMISSED`、`PENDING`。 |
+| 分頁 | `page`／`per_page`；依 Link header 取下一頁。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List reviews for a pull request](https://docs.github.com/en/rest/pulls/reviews#list-reviews-for-a-pull-request) |
 
@@ -47,7 +49,7 @@ Rivet catalog composition rule：完整 PR discussion 視圖在需要時組合�
 | 狀態 | 後續寫入 |
 | Operation | `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews` |
 | 用途 | 提交整體 review。 |
-| 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；可帶 `body` 與 comments。 |
+| 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；`REQUEST_CHANGES` 與 `COMMENT` 必須帶 `body`，可帶 comments。 |
 | 注意事項 | 不屬目前 MVP，亦不在本 topic 實作。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（write）。 |
 | 官方來源 | [Create a review for a pull request](https://docs.github.com/en/rest/pulls/reviews#create-a-review-for-a-pull-request) |
