@@ -21,3 +21,14 @@ type _parsedDiffInputIsOpaque = Expect<
 type _renderPlanIsOpaque = Expect<
   Equal<object extends RenderPlan ? true : false, false>
 >;
+
+type _opaqueStageInputsHaveNoRuntimeExports = Expect<
+  Equal<keyof typeof import("./opaque-stage-inputs"), never>
+>;
+
+// @ts-expect-error Required module-private never brand rejects structural construction.
+const _ordinaryObjectIsNotValidatedInput: ValidatedDiffInput = {};
+// @ts-expect-error Required module-private never brand rejects structural construction.
+const _ordinaryObjectIsNotParsedInput: ParsedDiffInput = {};
+// @ts-expect-error Required module-private never brand rejects structural construction.
+const _ordinaryObjectIsNotRenderPlan: RenderPlan = {};

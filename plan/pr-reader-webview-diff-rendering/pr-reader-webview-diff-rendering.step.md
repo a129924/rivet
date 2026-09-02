@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-rendering`
-- Current phase: RV-06 needs-rework（僅待補齊本 ledger 的 workflow evidence，之後必須重新獨立審查）
+- Current phase: GH-07 pending（RV-07 final recheck 已獨立核准；等待已授權的 GitHub handoff）
 - Ledger rule: 此帳本只索引 handoff evidence 與目前狀態；checkbox、status 或 tracker 結果不構成 approval。只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Steps
@@ -49,18 +49,25 @@
 | RV-06 | needs-rework | Reviewer | 獨立審查 IM-06 的 README 與 diagram-local accessibility scope、資料真相、keyboard／screen-reader fallback、既定 pipeline contract 與驗證 evidence。 | Independent Reviewer 明示 verdict：`needs-rework`；唯一 finding 為本 ledger 尚未記錄 PC-06 至 TE-06 的真實 workflow evidence。完成本次 ledger correction 後，必須重新交由獨立 Reviewer 審查。 |
 | GH-06 | pending | Implementer | 僅在 RV-06 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve R4 的四個已修正 threads。 | 尚無；不得在 RV-06 approval 前進行 GitHub handoff 或 resolve threads。 |
 | HC-05 | pending | Human | 審閱 PR #4 的 IM-06 accessibility／wording 修正、驗證與 review evidence，以及 resolved R4 threads。 | GH-06 完成後停止於此 human boundary。 |
+| PC-07 | completed | Plan-Creator | 將同 topic 四份 artifacts 收斂為 canvas ownership／boundary responsibility、Archify runtime `dataflow`、diagram-local single reproducible build entry、visible fallback 與 opaque phantom brand 的既定 revision contract；依 RV-07 recheck 唯一 finding，將所有 Archify validate／deliver 指令入口精確修正為 `<archify-skill>/bin/archify.mjs`。 | 四份 artifacts 已同步完成最小 PC-07 rework；此 Plan-Creator completion 不取代 Plan-Reviewer recheck。 |
+| PR-07 | approved | Plan-Reviewer | 獨立 recheck PC-07 artifacts：所有 Archify validate／deliver（及若有 visual-check）指令均使用 `<archify-skill>/bin/archify.mjs`，且既定 canvas／`dataflow` responsibility、scope、contract、two-artifact atomic policy 與 gates 未漂移。 | Independent Plan-Reviewer 明示 verdict：`approved`。以 `<archify-skill>/bin/archify.mjs` 逐一重檢所有記載的 validate／deliver（及 visual-check）入口；未發現 contract、scope、責任邊界、two-artifact atomic policy 或 gate drift。 |
+| IM-07 | completed | Implementer | 僅在 PR-07 明示 `approved` 後，最小實作 R5 的 canvas responsibility split、Archify `dataflow`、single build entry、visible fallback 與 opaque brand 修正。 | Implementer 已完成已鎖定的 diagram responsibility split、artifact-local build／a11y 行為、Archify `dataflow` 與 opaque brand 修正；未實作 concrete pipeline、Swift bridge、global template、其他圖、套件或新架構事實。 |
+| TE-07 | completed | Tester | 驗證既有 Bun gates、opaque type-level assertions、canvas commands，以及 Archify `node <archify-skill>/bin/archify.mjs validate dataflow <spec> --quality showcase --json`／寫至 same-filesystem temporary target 的 `node <archify-skill>/bin/archify.mjs deliver dataflow <spec> <temporary-output.html> --quality showcase --json`、兩 artifact hash／consistency check、atomic rename、single build entry idempotence／failure safety 與 static accessibility assertions。 | Independent Tester 已完成既有 Bun gates、canvas／Archify command、rebuild safety 與 static accessibility evidence；runtime browser／screen-reader 未在此 gate 宣稱完成。 |
+| RV-07 | approved | Reviewer | 在 PR-07 明示 `approved` 後，獨立 final recheck IM-07、Archify `dataflow` verify／delivery evidence、R5 四個 findings 與既定 contract／scope／workflow。 | 歷史 verdict：`needs-rework`；唯一 finding 為所有 Archify validate／deliver 指令錯誤指向 `<archify-skill>/scripts/archify.mjs`，正確入口為 `<archify-skill>/bin/archify.mjs`。PC-07 最小修正與 PR-07 bin-path／no-drift recheck 後，Independent Reviewer final verdict：`approved`；R5 findings、build transaction、CLI path 與既有 test evidence 均已 recheck，未發現 blocker 或 drift。 |
+| GH-07 | pending | Code-Implementer | 僅在 RV-07 明示 `approved` 後，依 human 已授權流程 commit、push 更新既有 PR #4，回覆並 resolve 本輪四個 R5 threads。 | 尚無；不得在 RV-07 approval 前 Git handoff 或 resolve threads。 |
+| HC-06 | pending | Human | 審閱 PR #4 的 IM-07 修正、驗證／review evidence 與 resolved R5 threads；實際 browser／screen-reader 行為在此確認。 | GH-07 完成後停止於此 human boundary。 |
 
 ## Blockers
 
-- 無已知 blocker。
-- RV-06 的唯一 needs-rework 為 ledger workflow evidence；本次校正後仍須重新取得獨立 Reviewer verdict。GH-06／HC-05 仍 pending。既有 GH-05／HC-04 記錄保留作為前一輪 handoff history；不得跳過 PC-06 revision chain 直接進行 GitHub handoff。
+- 無需 human 決策的未解析 blocker；RV-07 final recheck 已核准，下一關為 GH-07 GitHub handoff。
+- RV-07 歷史唯一 finding 為 Archify 指令入口誤用 `scripts/archify.mjs`；四份 artifacts 已統一為 `<archify-skill>/bin/archify.mjs`，並經 PR-07 與 RV-07 recheck 核准。GH-07／HC-06 仍 pending，既有 gate 不得跳過 GitHub handoff 或 human boundary。
 
 ## Human Check
 
-- GH-06 完成後，停止於 HC-05；實體 browser／VoiceOver fallback 驗證屬於此 human-check，不得由 agent 或 ledger 假稱已完成。
+- GH-07 完成後，停止於 HC-06；除實體 browser／screen-reader fallback 外，Archify 英文 global viewer chrome 與 `lang="en"` 在實際閱讀情境下的 visibility／readability 亦屬 human-check，不得由 agent 或 ledger 假稱已完成或已繁中化。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 補齊 PC-06、PR-06、IM-06、TE-06 的真實 handoff evidence，並記錄 RV-06 僅因 ledger evidence needs-rework。
-- Update status: RV-06 needs-rework；完成此 ledger correction 後等待重新獨立審查。GH-06／HC-05 仍 pending；checkbox、status 或 tracker 結果不構成 approval。
+- Update reason: 記錄 RV-07 對 R5、build transaction、Archify CLI path 與既有 test evidence 的獨立 final recheck approval，並將下一關移交 GH-07。
+- Update status: RV-07 approved；GH-07／HC-06 仍 pending；checkbox、status 或 tracker 結果不構成 approval。

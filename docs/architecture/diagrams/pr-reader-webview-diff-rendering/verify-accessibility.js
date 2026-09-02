@@ -32,7 +32,11 @@ try {
   assert(html.includes('role="status" aria-live="polite" aria-atomic="true"'), 'readout 必須是 polite live status');
   assert(html.includes('BOXES.forEach((box, index) =>') && html.includes('EDGES.forEach(edge =>'), 'fallback 必須由 runtime scene 資料生成');
   assert(html.includes("button.addEventListener('focus', () => selectBox(box.id, true))") && html.includes("button.addEventListener('click', () => selectBox(box.id, true))"), 'fallback controls 必須共用選取行為');
-  assert(html.includes('class="sr-only"') && !html.includes('#diagram-fallback { display: none'), 'fallback 必須保留給輔助技術');
+  assert(html.includes("document.createElement('details')") && html.includes("document.createElement('summary')"), 'fallback 必須提供可發現的原生 disclosure');
+  assert(html.includes('#diagram-fallback {\n    position: relative;') && html.includes('#diagram-fallback:focus-within') && html.includes('#diagram-fallback button:focus-visible'), 'fallback 必須在正常文件流並提供焦點可見性');
+  assert(!html.includes('id="diagram-fallback" class="sr-only"') && !html.includes('#diagram-fallback { display: none'), 'fallback 不得長期視覺隱藏');
+  assert(!html.includes('Swift 快照 → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output'), 'canvas 不得呈現 runtime render sequence');
+  assert(!html.includes('Validator → Parser → Renderer → Output'), 'canvas 不得將 stage Port 表示為 sequential flow');
   assert(!html.includes('Zoom out') && !html.includes('Fit to screen') && !html.includes('Toggle light and dark theme'), 'viewer UI 不得保留英文操作文字');
   process.stdout.write(`可近用性驗證通過：${input}\n`);
 } catch (error) {

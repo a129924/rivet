@@ -18,22 +18,47 @@ function once(html, from, to, label) {
   return html.replace(from, to);
 }
 
-function removePrior(html) {
-  return html.replace(/\n?<!-- PR_READER_A11Y:START -->[\s\S]*?<!-- PR_READER_A11Y:END -->\n?/g, '\n');
-}
-
 function enhance(source) {
-  if (source.includes('<!-- PR_READER_A11Y:START -->') || source.includes('<!-- PR_READER_A11Y:END -->')) {
-    if (!source.includes('<!-- PR_READER_A11Y:START -->') || !source.includes('<!-- PR_READER_A11Y:END -->')) {
-      throw new Error('可近用性補強標記不完整');
-    }
+  const hasStart = source.includes('<!-- PR_READER_A11Y:START -->');
+  const hasEnd = source.includes('<!-- PR_READER_A11Y:END -->');
+  if (hasStart || hasEnd) {
+    if (!hasStart || !hasEnd) throw new Error('可近用性補強標記不完整');
     return source;
   }
-  let html = removePrior(source);
+
+  let html = source;
   html = once(html, '<html lang="en">', '<html lang="zh-Hant">', '文件語言');
-  html = once(html, '  #stage { position: fixed; inset: 0; }', `  #stage { position: fixed; inset: 0; }\n  #stage:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }\n  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }`, 'stage 樣式');
-  html = once(html, '<div id="stage"><canvas id="c"></canvas></div>', `<div id="stage" tabindex="0" role="region" aria-label="PR Reader WebView 差異管線互動圖" aria-describedby="diagram-operations"><canvas id="c" aria-hidden="true"></canvas></div>\n\n<!-- PR_READER_A11Y:START -->\n<p id="diagram-operations" class="sr-only">此互動圖可用方向鍵平移，0 縮放至符合視窗，1 回到原始大小，T 切換主題，加號與減號縮放，Esc 清除選取；方括號左與右依節點順序巡覽。下方另有可使用 Tab 瀏覽的節點與關係清單。</p>\n<section id="diagram-fallback" class="sr-only" aria-label="PR Reader WebView 差異管線文字替代內容"></section>\n<!-- PR_READER_A11Y:END -->`, 'stage 標記');
-  html = once(html, `<div id="hint">\n  <div><kbd>drag / two-finger scroll</kbd> pan &nbsp;·&nbsp; <kbd>pinch</kbd> zoom</div>\n  <div><kbd>click</kbd> isolate &nbsp;·&nbsp; <kbd>0</kbd> fit &nbsp;·&nbsp; <kbd>t</kbd> theme &nbsp;·&nbsp; <kbd>esc</kbd> clear</div>\n</div>`, `<div id="hint">\n  <div><kbd>拖曳／雙指捲動</kbd> 平移 &nbsp;·&nbsp; <kbd>雙指縮放</kbd> 縮放</div>\n  <div><kbd>點擊</kbd> 聚焦 &nbsp;·&nbsp; <kbd>[</kbd><kbd>]</kbd> 巡覽 &nbsp;·&nbsp; <kbd>0</kbd> 符合視窗 &nbsp;·&nbsp; <kbd>T</kbd> 主題 &nbsp;·&nbsp; <kbd>Esc</kbd> 清除</div>\n</div>`, '操作提示');
+  html = once(html, '  #stage { position: fixed; inset: 0; }', `  #stage { position: fixed; inset: 0; }
+  #stage:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+  #diagram-fallback {
+    position: relative; z-index: 11; width: min(31rem, calc(100vw - 36px));
+    margin: 18px 18px 88px auto; border: 1px solid var(--chrome-border);
+    border-radius: 12px; background: var(--chrome); color: var(--ink);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  }
+  #diagram-fallback:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; }
+  #diagram-fallback details { padding: 0; }
+  #diagram-fallback summary { cursor: pointer; padding: 11px 13px; font-size: 12px; font-weight: 700; }
+  #diagram-fallback .fallback-content { padding: 0 13px 13px; font-size: 12px; line-height: 1.6; }
+  #diagram-fallback h2, #diagram-fallback h3 { font-size: 13px; margin: 12px 0 6px; }
+  #diagram-fallback ol, #diagram-fallback ul { margin: 0; padding-left: 22px; }
+  #diagram-fallback li + li { margin-top: 6px; }
+  #diagram-fallback button { width: 100%; border: 1px solid var(--chrome-border); border-radius: 7px; background: transparent; color: var(--ink); cursor: pointer; padding: 7px 8px; text-align: left; font: inherit; }
+  #diagram-fallback button:hover { border-color: var(--accent); }
+  #diagram-fallback button:focus-visible, #diagram-fallback summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }`, 'stage 與 fallback 樣式');
+  html = once(html, '<div id="stage"><canvas id="c"></canvas></div>', `<div id="stage" tabindex="0" role="region" aria-label="PR Reader WebView 差異宣告邊界互動圖" aria-describedby="diagram-operations"><canvas id="c" aria-hidden="true"></canvas></div>
+
+<!-- PR_READER_A11Y:START -->
+<p id="diagram-operations" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">此互動圖可用方向鍵平移，0 縮放至符合視窗，1 回到原始大小，T 切換主題，加號與減號縮放，Esc 清除選取；方括號左與右依節點順序巡覽。可展開下方的文字替代內容，以 Tab 瀏覽節點與關係。</p>
+<section id="diagram-fallback" aria-label="PR Reader WebView 差異宣告邊界文字替代內容"></section>
+<!-- PR_READER_A11Y:END -->`, 'stage 標記');
+  html = once(html, `<div id="hint">
+  <div><kbd>drag / two-finger scroll</kbd> pan &nbsp;·&nbsp; <kbd>pinch</kbd> zoom</div>
+  <div><kbd>click</kbd> isolate &nbsp;·&nbsp; <kbd>0</kbd> fit &nbsp;·&nbsp; <kbd>t</kbd> theme &nbsp;·&nbsp; <kbd>esc</kbd> clear</div>
+</div>`, `<div id="hint">
+  <div><kbd>拖曳／雙指捲動</kbd> 平移 &nbsp;·&nbsp; <kbd>雙指縮放</kbd> 縮放</div>
+  <div><kbd>點擊</kbd> 聚焦 &nbsp;·&nbsp; <kbd>[</kbd><kbd>]</kbd> 巡覽 &nbsp;·&nbsp; <kbd>0</kbd> 符合視窗 &nbsp;·&nbsp; <kbd>T</kbd> 主題 &nbsp;·&nbsp; <kbd>Esc</kbd> 清除</div>
+</div>`, '操作提示');
   html = once(html, '<div id="readout">', '<div id="readout" role="status" aria-live="polite" aria-atomic="true">', 'readout');
   html = once(html, '  <button id="bOut" title="Zoom out (−)" aria-label="Zoom out">', '  <button id="bOut" title="縮小（−）" aria-label="縮小">', '縮小按鈕');
   html = once(html, '  <button id="bIn" title="Zoom in (+)" aria-label="Zoom in">', '  <button id="bIn" title="放大（+）" aria-label="放大">', '放大按鈕');
@@ -62,12 +87,15 @@ function enhance(source) {
 
   function createTextFallback() {
     const fallback = document.getElementById('diagram-fallback');
-    const title = document.createElement('h2');
-    title.textContent = 'PR Reader WebView 差異管線文字替代內容';
-    fallback.appendChild(title);
-    const nodeTitle = document.createElement('h3');
+    const disclosure = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = '開啟文字替代內容（節點與關係）';
+    disclosure.appendChild(summary);
+    const content = document.createElement('div');
+    content.className = 'fallback-content';
+    const nodeTitle = document.createElement('h2');
     nodeTitle.textContent = '節點';
-    fallback.appendChild(nodeTitle);
+    content.appendChild(nodeTitle);
     const nodes = document.createElement('ol');
     BOXES.forEach((box, index) => {
       const item = document.createElement('li');
@@ -80,20 +108,22 @@ function enhance(source) {
       item.appendChild(button);
       nodes.appendChild(item);
     });
-    fallback.appendChild(nodes);
+    content.appendChild(nodes);
     const relationTitle = document.createElement('h3');
     relationTitle.textContent = '關係';
-    fallback.appendChild(relationTitle);
+    content.appendChild(relationTitle);
     const relations = document.createElement('ul');
     EDGES.forEach(edge => {
       const item = document.createElement('li');
       const from = BOX_BY_ID.get(edge.from);
       const to = BOX_BY_ID.get(edge.to);
       const label = edge.label ? \`：\${edge.label.t}\` : '';
-      item.textContent = \`\${from ? from.name : edge.from} 指向 \${to ? to.name : edge.to}\${label}\`;
+      item.textContent = \`\${from ? from.name : edge.from} 與 \${to ? to.name : edge.to} 的關係\${label}\`;
       relations.appendChild(item);
     });
-    fallback.appendChild(relations);
+    content.appendChild(relations);
+    disclosure.appendChild(content);
+    fallback.appendChild(disclosure);
   }
 `;
   html = once(html, '  // ---- pointer\n', `${functions}\n  // ---- pointer\n`, '共用選取行為');

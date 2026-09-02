@@ -13,8 +13,9 @@
 - 定義 `viewed` 的 ownership、通知時機與 WebView 本地暫態狀態邊界，並將其 best-effort `void` notification 明定為對一般 `Outcome` 規則的狹義架構例外。
 - 對各 module 的 import surface、相鄰 stage output、snapshot input、Facade API、Adapter／Port assignability 與 layer dependency 進行 strict TypeScript type-level tests 與既有檢查。
 - 將已確認的 snapshot、render flow 與 viewed notification exception 事實回寫至架構 README 與 PR Reader BC 文件。
-- 更新既有 architecture-canvas scene 與 generated index，使其主路徑反映已鎖定的 `DiffSnapshot` flow，並完成 skill 要求的 validate、build 與 evidence capture。
-- 修正文檔架構 README 對 baseline、compile-time dependency、Adapter 邊界與 render request runtime flow 的敘述；並為同一份 PR Reader WebView diff 圖加入僅限該 artifact 的 keyboard／screen-reader fallback。
+- 更新既有 architecture-canvas scene 與 generated index，使其只表達已鎖定的 ownership／boundary；以同 topic 的 Archify `dataflow` artifact／specification 表達既定 `DiffSnapshot` runtime render flow，並以 `node <archify-skill>/bin/archify.mjs validate dataflow <spec> --quality showcase --json` 驗證及寫入 same-filesystem temporary target 的 `node <archify-skill>/bin/archify.mjs deliver dataflow <spec> <temporary-output.html> --quality showcase --json` 交付，保存兩個 skill 的 evidence。
+- 修正文檔架構 README 對 baseline、compile-time dependency、Adapter 邊界與 render request runtime flow 的敘述；為同一份 PR Reader WebView diff canvas 加入僅限該 artifact、可見且可操作的 keyboard／screen-reader fallback，以及單一可重建 build entry。
+- 將 opaque stage inputs 的 phantom brand 限為 module-private `declare const ...: unique symbol`，不匯出品牌 value、不建立 runtime `Symbol`，且維持 opaque types 不可由一般 consumer 建構。
 
 ## Out-Of-Scope
 
@@ -23,7 +24,7 @@
 - viewed notification 的 reliable transport、enqueue／serialization failure outcome、acknowledgement、retry、delivery guarantee 或 bridge implementation。
 - 新增套件、package manifest 或 lockfile 變更。
 - 其他 Bounded Context、產品行為或未來 concrete implementation 的變更。
-- TypeScript pipeline、Swift bridge、global `architecture-canvas` template、其他 architecture-canvas 圖與任何套件變更。
+- TypeScript pipeline 以外的 concrete rendering、Swift bridge、global `architecture-canvas` template、其他 architecture-canvas 圖、其他 Archify 圖與任何套件變更。
 
 ## Success Criteria
 
@@ -33,8 +34,11 @@
 - `index.ts` 僅公開 Presentation 所需的 Facade 與 contracts（含 `DiffSnapshot`）；opaque stage types、Ports、Adapters、dependency descriptors 與 UseCase 均非 public surface。
 - 介面保持零依賴，核心層不依賴 Swift、WebView 或 Adapter，且不偷渡任何具體 rendering 或 transport 決策。
 - architecture README 明確區分 `Presentation → Facade → UseCase → Port` 的 core compile-time dependency、Adapter 對 Port 的符合與 Outside 隔離，以及 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output` 的 runtime render request；不改變既定 ownership。
-- architecture-canvas 以 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output` 呈現 render 主路徑；generated `index.html` 的文件語言與 viewer UI 皆為繁體中文，且有可追溯的 validate／build evidence。
-- 該圖提供 diagram-local 可近用性 fallback：stage 可聚焦、僅在 stage 聚焦時處理 viewport keyboard keys、`[`／`]` 可巡覽 scene `BOXES`、選取狀態會以 live readout 宣告，並由 `BOXES`／`EDGES` 動態產生可 Tab 到達的語意節點與關係內容；不使用 `role="application"` 或 window-global keyboard listener。
+- architecture-canvas 只呈現 declaration-only pipeline 的 ownership／boundary，不以箭頭、標題或文字暗示 runtime render sequence；同一資料夾的 Archify `dataflow` artifact／specification 以既定 `Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output` 表達 runtime flow，且不新增架構事實；它必須以指定的 `validate dataflow` 與 `deliver dataflow` showcase JSON commands 驗證與交付。
+- 所有 canvas 與 Archify specification 的作者內容皆為繁體中文；canvas generated `index.html` 維持 `lang="zh-Hant"`。Archify 的 global generated viewer chrome 與文件語言只支援英文／簡體中文，且本 PR 不修改 global template，因此其 generated HTML 保留英文 chrome 與 `lang="en"`；不得宣稱整個 viewer 已完成繁中化，實際可見性與可讀性留在 HC-06 人工確認。
+- diagram-local 單一 build entry 必須將 canvas `index.html` 與 Archify `dataflow` HTML 視為同一交付組：先在各自 committed target 同一 filesystem 的 temporary target 完成 canvas validate／build／a11y enhancement／verification，以及 Archify validate／deliver；兩者皆成功後，對 temporary outputs 執行 hash／consistency check，才以 atomic rename 分別更新兩個 committed HTML。任一步失敗不得變更任一 committed output，且必須清除 temporary outputs；重跑成功輸出必須相同。
+- 該 canvas 提供 diagram-local 可近用性 fallback：stage 可聚焦、僅在 stage 聚焦時處理 viewport keyboard keys、`[`／`]` 可巡覽 scene `BOXES`、選取狀態會以 live readout 宣告，並由 `BOXES`／`EDGES` 動態產生可 Tab 到達的語意節點與關係內容；fallback controls 在正常文件流中可見且有 focus-within／focus-visible 樣式，不使用 `role="application"` 或 window-global keyboard listener，且不另建 selection state。
+- opaque stage inputs 的 module-private phantom brands 不可由 barrel 或 module value surface 匯出，也不得產生 runtime `Symbol`；type-level tests 證明一般 consumer 不能以結構物件建構它們。
 
 ## Non-Goals
 
