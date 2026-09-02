@@ -25,17 +25,19 @@
 - 變更任何 BC responsibility、Bounded Context Map、architecture path decision 或圖。
 - 任何產品 Swift 行為、BC contract、SwiftPM target、product、module 或 GitHub integration。
 - 修改 `scripts/check-swift-format.sh` 以外的既有 tracked path，或提交 lockfile、`surfaces/pr-reader-webview/node_modules/` 或其他本地 dependency 產物。
-- 未經 REVIEW-002 明示核可的 commit、push、向 `main` 開 Draft PR、release，或進入下一個產品 slice。
+- 未經新的獨立 REVIEW-003 明示核可的 audit-correction commit、push、PR thread resolution、release，或進入下一個產品 slice。
+- 本次 PR review 已明示授權的三份既有 BC 文件回寫為既有 remediation 例外；不得據此修改其他架構文件或改變既定三 BC baseline。
+- commit `94b6506` 與 `09043bf` 均早於 REVIEW-002；不得倒填、改寫、force push 或宣稱兩者曾獲 REVIEW-002 核可。後續 audit-correction delivery 必須在新的獨立 REVIEW-003 明示核可後才可執行。
 
 ## ReadOnly
 
-Layout Implementation 僅可讀取 `AGENTS.md`、`README.md`、設計原則、架構、本 topic planning artifacts、`scripts/check-swift-format.sh`、既有 renderer check 與必要時的 `.gitignore`。`requirements.md`、`technical-spec.md` 與本 plan 在 Layout Implementation 開始後一律為 ReadOnly。
+Layout Implementation 僅可讀取 `AGENTS.md`、`README.md`、設計原則、架構、本 topic planning artifacts、`scripts/check-swift-format.sh`、既有 renderer check 與必要時的 `.gitignore`。`requirements.md`、`technical-spec.md` 與本 plan 在 Layout Implementation 開始後一律為 ReadOnly；Human 明示授權的 PR review planning-artifact amendment 是唯一例外，且僅可記錄既已授權 remediation、historical audit 與 delivery consistency。
 
 Human 明示授權後，僅 Plan-Creator 可受限更新 `.step.md` 的 `Current Phase`、既有 Ledger steps 的 `status` 與 `validation evidence`、`Blockers`、`Last Updated`。每筆更新必須可追溯至已明示的上游角色結果；不得改變 BC/path、scope、Written、Deleted、Modify、acceptance 或 Human Check，亦不得將 ledger status/evidence 視為 approval、verdict、routing 或 gate pass。
 
 ## Written
 
-Plan-Creator 只可建立或更新本 topic 四份 artifacts。Implementer 只可 create-only 接觸：
+Plan-Creator 只可建立或更新本 topic 四份 artifacts。Human 明示授權的 PR review planning-artifact amendment 僅可記錄既已授權的 BC-document remediation、historical audit 與 delivery consistency；不得重新定義三 BC baseline、paths 或 contracts。Implementer 只可 create-only 接觸：
 
 - `Sources/`
 - `Sources/BoundedContexts/`
@@ -61,20 +63,22 @@ PR review remediation 時，Implementer 僅可在下列三份文件各加入一�
 
 ## Modify
 
-允許修改的既有 tracked paths 僅為 `scripts/check-swift-format.sh` 與三份明列 BC 文件。formatter 僅可將既有目錄 lint 調整為使用 `--recursive`；BC 文件僅可加入上述單行 baseline；不得變更其他 formatter 行為、設定、path、BC responsibility、Map 或圖。Planning Artifact Creation 僅能變更本 topic 四份 artifacts。
+允許修改的既有 tracked paths 僅為 `scripts/check-swift-format.sh` 與三份明列 BC 文件。formatter 僅可將既有目錄 lint 調整為使用 `--recursive`；BC 文件僅可加入上述單行 baseline；不得變更其他 formatter 行為、設定、path、BC responsibility、Map 或圖。Human 明示授權的 planning-artifact amendment 是上述限制的唯一 artifacts 例外，且只能記錄既已授權 remediation、historical audit 與 delivery consistency；不得改變 scope 或 contract。
 
 ## TestCase
 
-- 四份 planning artifacts 在 Layout Implementation 前已建立；實作 phase 不改動 `requirements.md`、`technical-spec.md` 或本 plan。`.step.md` 僅可依明示 human 授權，於受限 ledger 維護例外內更新。
+- 四份 planning artifacts 在 Layout Implementation 前已建立；實作 phase 不改動 `requirements.md`、`technical-spec.md` 或本 plan。Human 明示授權的 PR review planning-artifact amendment 是唯一例外，且只可記錄既已授權 remediation、historical audit 與 delivery consistency；`.step.md` 僅可依明示 human 授權，於受限 ledger 維護例外內更新。
 - 三個指定 `.gitkeep` 存在、空白，且在正確的 BC directory。
 - `Sources/BoundedContexts/` 只含 `PRInbox`、`PRReader`、`GitHubIntegration`；每個 directory 只含 `.gitkeep`。
 - 不存在 `PresentationSession` 或其他未確認 BC directory，亦沒有 Swift source、target、module、test 或 contract。
 - Layout Implementation 不寫入、修改或刪除任何未列入 `Written`、`Modify` 或本地 dependency 準備例外的 repo path。
 - `scripts/check-swift-format.sh` 的目錄 lint 使用 `--recursive`，formatter 成功完成。
 - 在 `surfaces/pr-reader-webview/` 執行 frozen lockfile install 後，renderer check 與完整 pre-commit hook 成功完成；install 不變更 lockfile，且 `node_modules/` 維持 ignored、未追蹤。
-- staged commit 範圍只包含三個 `.gitkeep`、四份 topic artifacts 與 `scripts/check-swift-format.sh`。
+- 原始 staged delivery 範圍只包含三個 `.gitkeep`、四份 topic artifacts 與 `scripts/check-swift-format.sh`；既授權 remediation commit 才另含三份 BC 文件的受限單行回寫。
 - remediation commit 的範圍僅新增三份 BC 文件的受限單行回寫與 audit correction；三份文件均不可出現 responsibility、Map、圖、target、module、dependency 或 contract drift。
 - 如實記錄 `94b6506` 先於 review gate 的 historical workflow deviation；不得倒填、宣稱 prior approval、rewrite history 或 force push。C thread 的 PR Inbox-only 要求是與 Human 鎖定三 BC decision 衝突的 non-actionable finding。
+- 如實記錄 `94b6506` 與 `09043bf` 均早於 REVIEW-002，且 REVIEW-002 未執行；不得將其記為 approved 或 pending gate。planning-audit amendment 完成後，獨立 TEST-004 必須驗證 artifacts 的 audit consistency；新的獨立 REVIEW-003 明示核可前，不得進行 audit-correction commit、push 或 PR thread resolution。
+- audit-correction delivery 僅可包含本次 planning-audit amendment 的四份 topic artifacts；不得變更既有 commits、BC 文件、source layout 或其他 tracked path。
 - 獨立 Reviewer 確認沒有 scope、contract 或 workflow drift。
 
 ## Stop Conditions
@@ -87,4 +91,4 @@ PR review remediation 時，Implementer 僅可在下列三份文件各加入一�
 
 ## Human Check Gate
 
-PR review remediation 經獨立 Plan-Reviewer、Tester 與 Reviewer 明示核可後，可建立第二個 remediation commit、push branch 並處理已核可的 PR threads。第二個 commit 只可更正文件與 audit；不得 rewrite 已 push history 或 force push。完成後停止於 human review；不得 merge、release 或進入下一個產品 slice。
+既有 PR review remediation 已交付後，僅可在 planning-audit amendment 經獨立 TEST-004 與新的獨立 REVIEW-003 明示核可後，建立新的 audit-correction commit、push branch 並處理已核可的 PR threads。不得重做、改寫或 force push `94b6506`／`09043bf`；完成 audit-correction delivery 後停止於 human review，不得 merge、release 或進入下一個產品 slice。

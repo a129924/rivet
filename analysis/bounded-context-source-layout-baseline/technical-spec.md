@@ -69,6 +69,12 @@ Human 明示授權後，僅 Plan-Creator 可在 Layout Implementation 後更新 
 
 每筆更新必須可追溯至已明示的上游角色結果。此例外不允許修改 `requirements.md`、BC/path、scope、Written、Deleted、Modify、acceptance 或 Human Check；也不得將 ledger 的 status 或 evidence 視為 approval、verdict、routing 或 gate pass。
 
+## PR Review Planning-Artifact Amendment Exception
+
+Human 已就 PR review 明示授權一次可追溯的 planning-artifact amendment。僅 Plan-Creator 可更新本 topic 的四份 artifacts，以記錄既已授權的三份 BC 文件 remediation、historical audit 與 delivery consistency；不得改變三 BC baseline、既定 paths、contract 或 C thread 的 non-actionable 結論。
+
+commit `94b6506` 與 `09043bf` 均早於 REVIEW-002；此為 historical workflow deviation，必須如實記錄為未執行的 review gate，不得 backfill、rewrite history、force push，或宣稱任一 commit 曾獲 REVIEW-002 核可。此 exception 本身不構成 approval、verdict 或 delivery 授權。
+
 ## Deleted
 
 無。不得刪除任何檔案或資料夾。
@@ -89,4 +95,4 @@ Human 明示授權後，僅 Plan-Creator 可在 Layout Implementation 後更新 
 - renderer check 必須在 frozen lockfile 的本地 dependency 準備後成功完成。
 - 完整 pre-commit hook 必須成功完成；驗證前後 staged commit 範圍只可包含三個 `.gitkeep`、四份 topic artifacts 與 `scripts/check-swift-format.sh`。
 - PR review remediation 驗證必須確認三份 BC 文件各僅有對應的一行暫定 source location，且明示不代表 target、module、dependency 或 contract；不得有 BC responsibility、Map、圖或 path decision drift。
-- `94b6506` 的 commit-before-review-gate 偏差必須如實記錄；後續僅可用第二個 remediation commit 更正文件與 audit，禁止 rewrite history 或 force push。PR Inbox-only C thread 為與 Human 鎖定三 BC decision 衝突的 non-actionable finding。
+- `94b6506` 與 `09043bf` 的 commit-before-REVIEW-002 偏差必須如實記錄為 historical workflow deviations；僅在新的獨立 REVIEW-003 明示核可後，才可用第三個 audit-correction delivery commit 更正 audit。該 commit 僅可包含四份 topic artifacts，禁止 backfill、rewrite history 或 force push。PR Inbox-only C thread 為與 Human 鎖定三 BC decision 衝突的 non-actionable finding。
