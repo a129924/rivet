@@ -4,6 +4,7 @@
 
 提供閱讀單一 Pull Request 所需的背景、一般討論、review 摘要、inline comment、checks、檔案與 unified diff 資料。
 
+- 暫定 source location：`Sources/BoundedContexts/PRReader/`；此位置不代表 target、module、dependency 或 contract。
 ## 非責任
 
 - 不決定 PR 是否屬於待審閱佇列，也不排序 Inbox。
