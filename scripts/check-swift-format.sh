@@ -12,5 +12,5 @@ done
 
 if [[ ${#targets[@]} -gt 0 ]]; then
   cd "$root_dir"
-  swift format lint --strict "${targets[@]}"
+  swift format lint --strict --recursive "${targets[@]}"
 fi
