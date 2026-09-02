@@ -14,7 +14,7 @@
 | 文件 | API 範圍 |
 | --- | --- |
 | `README.md` | capability 索引、產品狀態、使用規則與共通限制 |
-| `rest-inbox-discovery.md` | repository PR list、跨 repository search、自己建立的 PR |
+| `rest-inbox-discovery.md` | repository PR list、跨 repository 的直接 review request search |
 | `rest-pr-reader.md` | PR detail、changed files、unified diff |
 | `rest-discussion-reviews.md` | conversation comments、inline comments、reviews、提交 review |
 | `graphql-pr-state.md` | files viewed、review threads、review/merge state |
@@ -25,7 +25,7 @@
 
 - endpoint path 使用 GitHub 官方 placeholder，例如 `{owner}`、`{repo}`、`{pull_number}`；GraphQL 使用正式 operation 或 field 名稱。
 - REST 內容區分 Pull requests、Issues comments、Pull request review comments 與 Pull request reviews，避免把三種 comment 混為同一資源。
-- `viewerViewedState` 是 GitHub API 的遠端 PR file 資料；既有 Swift viewed persistence 是 WebView snapshot-local state。兩者是否同步，以及 Rivet UI 採用哪一者，留待後續 implementation topic 決定。
+- `viewerViewedState` 是 GitHub API 的遠端 PR file 資料；本 catalog 不定義本機持久化、同步或 Rivet UI 的狀態採用規則。
 - PR files 的 REST endpoint 記錄 3,000 files 上限；GraphQL connections 與 REST list endpoints 均記錄 cursor/page 分頁責任。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 

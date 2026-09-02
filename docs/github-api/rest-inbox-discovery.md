@@ -32,18 +32,6 @@
 
 `review-requested:USERNAME` 用於指定使用者；`user-review-requested:@me` 是「直接要求我 review」的明確 qualifier。team review request 不是本 MVP Inbox 的既定 membership 規則。
 
-## Authored Pull Requests
-
-| 項目 | 定義 |
-| --- | --- |
-| 狀態 | MVP 唯讀 |
-| Operation | `GET /search/issues` |
-| query | `is:pr is:open author:@me` |
-| 用途 | 找出目前使用者建立的 open PR。 |
-| 分頁 | 同 Cross-Repository Search。 |
-| 認證／權限 | 同 Cross-Repository Review Requests。 |
-| 官方來源 | [Search issues and pull requests](https://docs.github.com/en/rest/search/search#search-issues-and-pull-requests) |
-
 ## Sources
 
 - [List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)

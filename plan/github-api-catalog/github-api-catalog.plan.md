@@ -17,6 +17,7 @@
 ## Out-Of-Scope
 
 - GitHub Enterprise、多帳號、同步與所有 GitHub 寫入能力的實作。
+- 使用 `author:@me` 的使用者自建 PR 瀏覽；它不屬目前待 review MVP 集合。
 - 對 `docs/architecture/`、既有 BC 文件、產品規範或 source code 的變更。
 
 ## ReadOnly
@@ -57,4 +58,5 @@
 | TC-04 | 關鍵事實審閱 | `user-review-requested:@me`、`DISMISSED`、diff media type、classic-PAT notification 限制均正確。 |
 | TC-05 | 連結與 scope 檢查 | Markdown 連結可解析，diff 只包含 Written 清單中的新增檔案。 |
 | TC-06 | Review thread schema 審閱 | `reviewThreads`、nodes 與 `threadId` 一律使用 `PullRequestReviewThread`。 |
-| TC-07 | Viewed authority 審閱 | catalog 只將 `viewerViewedState` 描述為遠端 API 資料，並與 Swift snapshot-local state 明確區分。 |
+| TC-07 | Viewed boundary 審閱 | catalog 只將 `viewerViewedState` 描述為遠端 API 資料，不宣告本機持久化、同步或 UI authority。 |
+| TC-08 | Inbox scope 審閱 | catalog 不列出 `author:@me`，且只以目前使用者的 direct review request 作為跨 repository Inbox query。 |

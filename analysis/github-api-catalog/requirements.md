@@ -6,7 +6,7 @@
 
 ## In-Scope
 
-- 整理 PR list/search、PR detail/diff、comments/reviews、file viewed state、review threads、merge、notifications，以及 comment-level last-seen 的可選本機 state。
+- 整理等待目前使用者 review 的 PR discovery、PR detail/diff、comments/reviews、file viewed state、review threads、merge、notifications，以及 comment-level last-seen 的可選本機 state。
 - 依 endpoint family 分拆文件，並以總索引連結每項能力。
 - 對每個 operation 記錄用途、輸入、關鍵欄位、分頁或上限、權限注意事項、產品狀態與官方來源。
 - 將能力標記為「MVP 唯讀」、「後續寫入」或「可選本機狀態」。
@@ -14,6 +14,7 @@
 ## Out-Of-Scope
 
 - API client、OAuth／Keychain、SQLite schema、Swift type、Port、DTO、UI 或資料同步實作。
+- 使用 `author:@me` 瀏覽使用者建立的 PR；這不是目前 MVP 的待 review 集合。
 - 變更產品範圍、Bounded Context 責任、架構圖或現有架構文件。
 - GitHub Enterprise、多帳號、跨裝置同步與通知功能的產品實作。
 
