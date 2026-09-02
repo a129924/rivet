@@ -93,15 +93,21 @@ Human 已明示授權第四次、僅限四份 topic artifacts 的 planning-audit
 
 此 exception 不允許修改其他檔案、重開三 BC、source paths、module 或 contract，亦不得 backfill、rewrite history 或 force push；它本身不構成 approval、verdict 或 delivery 授權。
 
+## Fifth Planning-Audit Amendment Exception
+
+Human 已明示授權第五次、僅限四份 topic artifacts 的 planning-audit amendment。僅 Plan-Creator 可如實記錄：`a1e5b4a` 早於未執行的 REVIEW-006。該 commit 不得 backfill 為 REVIEW-006 已核可的 DELIVERY-004；REVIEW-006 必須保留為 `historical-deviation-not-run`，DELIVERY-004 與 HUMAN-004 必須標為 historical-superseded，並由 PLAN-013 → PLAN-014 → TEST-008 → REVIEW-007 → DELIVERY-005 → HUMAN-005 取代後續 flow。
+
+此 exception 不允許修改其他檔案、重開三 BC、source paths、module 或 contract，亦不得 backfill、rewrite history 或 force push；它本身不構成 approval、verdict 或 delivery 授權。
+
 ## Deleted
 
 無。不得刪除任何檔案或資料夾。
 
 ## Modify
 
-允許修改的既有 tracked paths 僅為 `scripts/check-swift-format.sh` 與 PR Review Remediation Documentation 所列三份 BC 文件。Implementer 僅可將 formatter 的目錄 lint 呼叫調整為使用 `--recursive`，使既有 Swift formatter 對 `Sources/` 或 `Tests/` 下的目錄正確遞迴檢查；不得進行其他 formatter 行為、設定或 path 變更。三份 BC 文件僅可依該 section 的單行限制回寫。四次明示授權的 planning-artifact amendment 是唯一四份 topic artifacts 例外，且第四次僅可作本節所定 `1b44fd0` audit 記錄與新 flow。
+允許修改的既有 tracked paths 僅為 `scripts/check-swift-format.sh` 與 PR Review Remediation Documentation 所列三份 BC 文件。Implementer 僅可將 formatter 的目錄 lint 呼叫調整為使用 `--recursive`，使既有 Swift formatter 對 `Sources/` 或 `Tests/` 下的目錄正確遞迴檢查；不得進行其他 formatter 行為、設定或 path 變更。三份 BC 文件僅可依該 section 的單行限制回寫。五次明示授權的 planning-artifact amendment 是唯一四份 topic artifacts 例外，且第五次僅可作本節所定 `a1e5b4a` audit 記錄與新 flow。
 
-除上述 path 外，不得修改既有檔案或既有資料夾內容；Planning Artifact Creation 只允許新增或更新 `Written` 所列的四份 artifacts。四次明示授權的 planning-artifact amendment 是唯一四份 topic artifacts 例外；第四次僅可作本節所定 `1b44fd0` historical audit 記錄與新 flow。
+除上述 path 外，不得修改既有檔案或既有資料夾內容；Planning Artifact Creation 只允許新增或更新 `Written` 所列的四份 artifacts。五次明示授權的 planning-artifact amendment 是唯一四份 topic artifacts 例外；第五次僅可作本節所定 `a1e5b4a` historical audit 記錄與新 flow。
 
 ## Failure Boundary
 
@@ -118,3 +124,4 @@ Human 已明示授權第四次、僅限四份 topic artifacts 的 planning-audit
 - REVIEW-004 原定為 DELIVERY-002 的獨立 gate，但 `768f6be` 早於該 review；因此 REVIEW-004 與其後續 DELIVERY-002／HUMAN-002 均不得視為已獲授權或已完成。PR Inbox-only C thread 為與 Human 鎖定三 BC decision 衝突的 non-actionable finding。
 - `768f6be` 早於未執行的 REVIEW-004，必須如實記錄為 historical workflow deviation；不得將它倒填為 DELIVERY-002 或宣稱 REVIEW-004 曾核可。原定的 REVIEW-005 → DELIVERY-003 → HUMAN-003 flow 已由第四次 amendment 取代，該 commit 僅可包含四份 topic artifacts，禁止 backfill、rewrite history 或 force push。
 - `1b44fd0` 早於未執行的 REVIEW-005，必須如實記錄為 historical workflow deviation；不得將它倒填為 DELIVERY-003 或宣稱 REVIEW-005 曾核可。REVIEW-005、DELIVERY-003 與 HUMAN-003 均不得視為已獲授權或已完成。只有新的獨立 REVIEW-006 明示 `approved` 後，才可建立 DELIVERY-004、push 與已核可 thread resolution，並交還 HUMAN-004。該 commit 僅可包含四份 topic artifacts，禁止 backfill、rewrite history 或 force push。
+- `a1e5b4a` 早於未執行的 REVIEW-006，必須如實記錄為 historical workflow deviation；不得將它倒填為 DELIVERY-004 或宣稱 REVIEW-006 曾核可。REVIEW-006、DELIVERY-004 與 HUMAN-004 均不得視為已獲授權或已完成。只有新的獨立 REVIEW-007 明示 `approved` 後，才可建立 DELIVERY-005、push 與已核可 thread resolution，並交還 HUMAN-005。該 commit 僅可包含四份 topic artifacts，禁止 backfill、rewrite history 或 force push。
