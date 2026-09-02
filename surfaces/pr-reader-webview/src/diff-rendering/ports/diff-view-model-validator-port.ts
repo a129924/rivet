@@ -1,6 +1,6 @@
-import type { DiffViewModel } from "../contracts/diff-view-model";
+import type { DiffSnapshot } from "../contracts/diff-snapshot";
 import type { ValidationResult } from "../contracts/stage-results";
 
 export interface DiffViewModelValidatorPort {
-  validate(files: readonly DiffViewModel[]): ValidationResult;
+  validate(snapshot: DiffSnapshot): ValidationResult;
 }

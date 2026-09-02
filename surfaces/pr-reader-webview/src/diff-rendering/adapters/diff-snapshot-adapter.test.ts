@@ -1,4 +1,4 @@
-import type { DiffViewModel } from "../contracts/diff-view-model";
+import type { DiffSnapshot } from "../contracts/diff-snapshot";
 import type { DiffSnapshotAdapter } from "./diff-snapshot-adapter";
 
 type Equal<Left, Right> =
@@ -12,6 +12,6 @@ type Expect<Condition extends true> = Condition;
 type _snapshotBoundary = Expect<
   Equal<
     DiffSnapshotAdapter["receiveSnapshot"],
-    (files: readonly DiffViewModel[]) => void
+    (snapshot: DiffSnapshot) => void
   >
 >;

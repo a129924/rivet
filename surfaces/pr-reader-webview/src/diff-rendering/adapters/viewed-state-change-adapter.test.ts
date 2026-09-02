@@ -1,4 +1,4 @@
-import type { ViewedStateChange } from "../contracts/viewed-state-change";
+import type { ViewedStateChangePort } from "../ports/viewed-state-change-port";
 import type { ViewedStateChangeAdapter } from "./viewed-state-change-adapter";
 
 type Equal<Left, Right> =
@@ -10,8 +10,5 @@ type Equal<Left, Right> =
 type Expect<Condition extends true> = Condition;
 
 type _notificationBoundary = Expect<
-  Equal<
-    ViewedStateChangeAdapter["sendViewedStateChange"],
-    (change: ViewedStateChange) => void
-  >
+  Equal<ViewedStateChangeAdapter, ViewedStateChangePort>
 >;

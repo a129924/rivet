@@ -1,7 +1,5 @@
-import type {
-  DiffRenderOutcome,
-  DiffViewModel,
-} from "../contracts/diff-view-model";
+import type { DiffRenderOutcome } from "../contracts/diff-view-model";
+import type { DiffSnapshot } from "../contracts/diff-snapshot";
 import type { DiffOutputPort } from "../ports/diff-output-port";
 import type { DiffParserPort } from "../ports/diff-parser-port";
 import type { DiffRendererPort } from "../ports/diff-renderer-port";
@@ -15,5 +13,5 @@ export interface DiffRenderUseCaseDependencies {
 }
 
 export interface DiffRenderUseCase {
-  execute(files: readonly DiffViewModel[]): DiffRenderOutcome;
+  execute(snapshot: DiffSnapshot): DiffRenderOutcome;
 }

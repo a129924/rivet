@@ -1,5 +1,5 @@
-import type { DiffViewModel } from "../contracts/diff-view-model";
+import type { DiffSnapshot } from "../contracts/diff-snapshot";
 
 export interface DiffSnapshotAdapter {
-  receiveSnapshot(files: readonly DiffViewModel[]): void;
+  receiveSnapshot(snapshot: DiffSnapshot): void;
 }

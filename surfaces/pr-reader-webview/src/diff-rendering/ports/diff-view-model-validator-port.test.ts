@@ -1,4 +1,4 @@
-import type { DiffViewModel } from "../contracts/diff-view-model";
+import type { DiffSnapshot } from "../contracts/diff-snapshot";
 import type { ValidationResult } from "../contracts/stage-results";
 import type { DiffViewModelValidatorPort } from "./diff-view-model-validator-port";
 
@@ -13,6 +13,6 @@ type Expect<Condition extends true> = Condition;
 type _validatorPort = Expect<
   Equal<
     DiffViewModelValidatorPort["validate"],
-    (files: readonly DiffViewModel[]) => ValidationResult
+    (snapshot: DiffSnapshot) => ValidationResult
   >
 >;

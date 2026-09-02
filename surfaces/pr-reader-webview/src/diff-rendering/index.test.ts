@@ -2,6 +2,7 @@ import type {
   DiffFacade,
   DiffFileStatus,
   DiffRenderOutcome,
+  DiffSnapshot,
   DiffViewModel,
   ViewedStateChange,
 } from "./index";
@@ -21,6 +22,7 @@ type _status = Expect<
 >;
 type _outcome = Expect<DiffRenderOutcome extends object ? true : false>;
 type _viewModel = Expect<DiffViewModel extends object ? true : false>;
+type _snapshot = Expect<DiffSnapshot extends object ? true : false>;
 type _viewedStateChange = Expect<
   ViewedStateChange extends object ? true : false
 >;

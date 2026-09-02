@@ -2,17 +2,17 @@
 
 ## Goal
 
-定義 Swift 向 PR Reader WebView 提供檔案 diff 快照，以及 TypeScript 對該快照進行後續處理所需的穩定介面契約。此 topic 以實體、分層的 TypeScript module tree 建立 declaration-only pipeline，為零依賴的後續實作切片提供邊界。
+定義 Swift 向 PR Reader WebView 提供的 diff snapshot envelope，以及 TypeScript 對其進行後續處理所需的穩定介面契約。此 topic 以實體、分層的 TypeScript module tree 建立 declaration-only pipeline，為零依賴的後續實作切片提供邊界。
 
 ## In-Scope
 
-- 定義 `DiffViewModel`、檔案狀態、帶 PR／snapshot identity 的 viewed-state 變更與公開結果型別。
+- 定義 `DiffSnapshot` envelope、`DiffViewModel`、檔案狀態、帶 PR／snapshot identity 的 viewed-state 變更與公開結果型別。
 - 定義 `Validator → Parser → Renderer → Output` 的 stage-specific result unions 與 opaque 中間資料。
 - 建立 contracts、adapters、ports、usecases、facades 與 presentation barrel 的分層 module 結構；每個 module 只宣告自己 layer 的 type／interface。
 - 定義 `Adapter ↔ Port → UseCase → Facade` 的 Port、UseCase、Facade 與 dependency descriptor 方法簽名。
 - 定義 `viewed` 的 ownership、通知時機與 WebView 本地暫態狀態邊界。
-- 對各 module 的 import surface、相鄰 stage output、Facade API 與 layer dependency 進行 strict TypeScript type-level tests 與既有檢查。
-- 將已落實的 WebView diff pipeline 長期責任回寫至 PR Reader BC 文件，並以 `architecture-canvas` 產生並驗證其責任邊界圖。
+- 對各 module 的 import surface、相鄰 stage output、snapshot input、Facade API、Adapter／Port assignability 與 layer dependency 進行 strict TypeScript type-level tests 與既有檢查。
+- 將已確認的 snapshot envelope input 事實回寫至 PR Reader BC 文件；本次 revision 不變更既有 architecture-canvas 圖。
 
 ## Out-Of-Scope
 
@@ -23,10 +23,10 @@
 
 ## Success Criteria
 
-- Swift 可提供一個完整、有序的 `readonly DiffViewModel[]` snapshot；TS 以 module tree 呈現完整 pipeline，且公開入口與相鄰 stages 的型別相容性可由 typecheck 驗證。
+- Swift 可提供一個帶 `pullRequestId`、`snapshotId` 與完整有序 `readonly DiffViewModel[]` 的 `DiffSnapshot`；TS 以 module tree 呈現完整 pipeline，且公開入口與相鄰 stages 的型別相容性可由 typecheck 驗證。
 - Snapshot 可表達檔案路徑、rename、變更類型、可選 patch、增刪計數與 viewed 狀態。
 - `present` 僅回傳 success、validation、parse、render 或 output 的既定 outcome；viewed 變更帶 `pullRequestId`、`snapshotId`、snapshot-local `fileId` 與 boolean，並為單向、非同步通知，不等待 acknowledgement。
-- `index.ts` 僅公開 Presentation 所需的 Facade 與 contracts；opaque stage types、Ports、Adapters、dependency descriptors 與 UseCase 均非 public surface。
+- `index.ts` 僅公開 Presentation 所需的 Facade 與 contracts（含 `DiffSnapshot`）；opaque stage types、Ports、Adapters、dependency descriptors 與 UseCase 均非 public surface。
 - 介面保持零依賴，核心層不依賴 Swift、WebView 或 Adapter，且不偷渡任何具體 rendering 或 transport 決策。
 
 ## Non-Goals

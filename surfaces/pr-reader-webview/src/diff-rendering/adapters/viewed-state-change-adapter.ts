@@ -1,5 +1,3 @@
-import type { ViewedStateChange } from "../contracts/viewed-state-change";
+import type { ViewedStateChangePort } from "../ports/viewed-state-change-port";
 
-export interface ViewedStateChangeAdapter {
-  sendViewedStateChange(change: ViewedStateChange): void;
-}
+export interface ViewedStateChangeAdapter extends ViewedStateChangePort {}
