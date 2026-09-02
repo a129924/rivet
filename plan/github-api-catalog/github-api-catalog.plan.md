@@ -52,7 +52,9 @@
 | ID | 情境 | 預期結果 |
 | --- | --- | --- |
 | TC-01 | capability 索引審閱 | 原始清單每項能力皆可找到唯一主文件與產品狀態。 |
-| TC-02 | REST／GraphQL operation 審閱 | 每個 operation 有官方來源、輸入、輸出與限制。 |
+| TC-02 | REST／GraphQL operation 審閱 | 每個 operation 有直接官方來源、輸入、輸出、限制與認證／權限注意事項。 |
 | TC-03 | MVP boundary 審閱 | 寫入、merge、notification 與 local state 均不被誤標為現行 MVP。 |
 | TC-04 | 關鍵事實審閱 | `user-review-requested:@me`、`DISMISSED`、diff media type、classic-PAT notification 限制均正確。 |
 | TC-05 | 連結與 scope 檢查 | Markdown 連結可解析，diff 只包含 Written 清單中的新增檔案。 |
+| TC-06 | Review thread schema 審閱 | `reviewThreads`、nodes 與 `threadId` 一律使用 `PullRequestReviewThread`。 |
+| TC-07 | Viewed authority 審閱 | catalog 只將 `viewerViewedState` 描述為遠端 API 資料，並與 Swift snapshot-local state 明確區分。 |

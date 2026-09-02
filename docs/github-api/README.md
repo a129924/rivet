@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | 指定 repository 的 open PR 列表 | MVP 唯讀 | [REST Inbox](rest-inbox-discovery.md) |
 | 跨 repository、直接要求我 review 的 PR | MVP 唯讀 | [REST Inbox](rest-inbox-discovery.md) |
-| 我建立的 open PR | 後續閱讀入口 | [REST Inbox](rest-inbox-discovery.md) |
+| 我建立的 open PR | MVP 唯讀 | [REST Inbox](rest-inbox-discovery.md) |
 | PR 基本資訊、changed files、unified diff | MVP 唯讀 | [REST PR Reader](rest-pr-reader.md) |
 | PR conversation、inline comments、reviews | MVP 唯讀 | [REST Discussion & Reviews](rest-discussion-reviews.md) |
 | Files Viewed 與變更後失效 | 後續寫入 | [GraphQL PR State](graphql-pr-state.md) |
@@ -30,7 +30,7 @@
 
 - REST list endpoints 使用 page/per-page 與 Link header；GraphQL connection 使用 cursor 與 `pageInfo`。不要假設單頁結果完整。
 - GitHub REST 的 API version、Accept header 與 token 細節屬 Integration Adapter 的未來實作決策；文件只保留 endpoint 特有的 media type 與限制。
-- GitHub 管理 files viewed、review thread resolved/outdated、review decision 與 merge state。除 comment-level last-seen 外，不建立本機 mirror state engine。
+- `viewerViewedState` 是 GitHub API 回傳的遠端 PR file 資料；既有 Swift viewed persistence 是 WebView snapshot-local state。兩者是否同步、Rivet UI 最終採用哪個狀態，留待後續 implementation topic 決定。
 - 原稿中的 `review-involves:@me` 未在本次官方 search qualifier 參考中確認，因此不列為可採用 query。
 
 ## Official Sources
@@ -39,3 +39,4 @@
 - [REST Search](https://docs.github.com/en/rest/search/search)
 - [Search qualifiers](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/filtering-and-searching-issues-and-pull-requests)
 - [GraphQL Pull requests](https://docs.github.com/en/graphql/reference/pulls)
+- [GraphQL endpoint and request method](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api)

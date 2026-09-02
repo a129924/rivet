@@ -4,7 +4,7 @@
 
 - Topic slug 固定為 `github-api-catalog`。
 - 長期 API 參考資料位於 `docs/github-api/`；使用一個索引與六份 endpoint family 文件，不為每一條 endpoint 產生獨立檔案。
-- 每個 operation 都必須有：產品狀態、API protocol、operation、必要輸入、主要輸出、分頁或上限、認證／權限注意事項、限制與官方來源。
+- 每個 operation 都必須有：產品狀態、API protocol、operation、必要輸入、主要輸出、分頁或上限、認證／權限注意事項、限制，以及指向該 operation 的官方來源。
 - GitHub API 的 version、auth 實作與內部 mapping 不在本 topic 鎖定；參考文件只記錄官方 operation 的當前能力與限制。
 - Review、merge、notification 寫入一律標為「後續寫入」，即使 GitHub 官方 API 已支援。
 - comment-level last-seen 是「可選本機狀態」；文件只描述 ownership 與 identity，不定義持久化技術或 schema。
@@ -25,7 +25,7 @@
 
 - endpoint path 使用 GitHub 官方 placeholder，例如 `{owner}`、`{repo}`、`{pull_number}`；GraphQL 使用正式 operation 或 field 名稱。
 - REST 內容區分 Pull requests、Issues comments、Pull request review comments 與 Pull request reviews，避免把三種 comment 混為同一資源。
-- `viewerViewedState`、review thread resolved/outdated、review decision 與 merge state 都由 GitHub 管理；文件不得建議自行以 diff hash 重建它們。
+- `viewerViewedState` 是 GitHub API 的遠端 PR file 資料；既有 Swift viewed persistence 是 WebView snapshot-local state。兩者是否同步，以及 Rivet UI 採用哪一者，留待後續 implementation topic 決定。
 - PR files 的 REST endpoint 記錄 3,000 files 上限；GraphQL connections 與 REST list endpoints 均記錄 cursor/page 分頁責任。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
