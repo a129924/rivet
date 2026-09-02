@@ -2,54 +2,59 @@
 
 ## Goal
 
-在 PR Reader WebView surface 將集中式 diff contract 替換為實體、分層的零依賴 declaration-only pipeline，並固定以 `DiffSnapshot` 為 input 的 `Adapter ↔ Port → UseCase → Facade` 與 `Validator → Parser → Renderer → Output` 未來實作邊界。
+在 PR Reader WebView surface 選定並加入 `diff2html` `^3.4.56` 作為未來 concrete diff pipeline 的 runtime dependency；接受 MIT license、direct dependencies `diff` 與 `@profoundlogic/hogan`，並同步 Bun lockfile。
 
 ## Non-Goal
 
-不實作任何 parser、renderer、DOM、UI、collapse、syntax highlighting、Swift bridge、GitHub mapping 或 viewed-state 持久化；不新增 package 或修改 lockfile。僅回寫本 topic 已鎖定的 PR Reader WebView diff pipeline 長期責任，不重開或變更 PR Reader BC 邊界；本次 revision 不修改既有 architecture-canvas 圖。
+不實作或 import parser、renderer、Output、DOM、UI、CSS、syntax highlighting、Swift bridge、GitHub mapping、viewed behavior、patch normalization 或 raw HTML injection；不改變 public contract、PR Reader BC 文件或 architecture。
+
+## In-Scope
+
+- 同 slug 四份 artifacts 的 dependency-only revision。
+- 在 PR-05 明示 approval 後，新增 `surfaces/pr-reader-webview/package.json` 的 `dependencies.diff2html: "^3.4.56"` 與必要 Bun lockfile resolution。
+
+## Out-Of-Scope
+
+- 任一 TypeScript source、test、import、package script、其他 dependency、toolchain、CI、BC 文件或 diagram。
+- 既有 dirty source、test 與 BC 文件變更；它們不得被修改、stage、commit 或視為本輪產出。
 
 ## ReadOnly
 
-- `AGENTS.md`、`README.md`、`docs/design-principles.md`、`docs/architecture/README.md`、PR Reader BC 文件與既有 WebView toolchain 設定。
-- 既有 TypeScript source、tests、package scripts 與 compiler 設定，以確認實際放置位置與 strict typecheck 命令。
+- 現有 contracts、tests、package scripts、Bun／TypeScript config、PR Reader BC 文件與本 topic evidence。
+- 現有 manifest 與 lockfile，只用於確認最小 dependency diff。
 
 ## Written
 
-- 同 topic 的四份 planning artifacts。
-- `src/diff-rendering/` 下的 declaration-only modules 與依 module 分檔的 type-level tests，限於既有 PR Reader WebView surface。
-- PR Reader BC 文件中已確認的 `DiffSnapshot` input envelope 事實；既有 `docs/architecture/diagrams/pr-reader-webview-diff-rendering/` 圖僅供 read-only 查證，本次 revision 不修改它。
-
-## Modify
-
-僅可修改本 topic 的四份 artifacts，以及 Implementer 為落實已鎖定 contract 所需的 TypeScript declarations、tests 與 PR Reader BC 文件。移除既有集中式 `src/diff-rendering.contract.ts` 與其 test，替換為已鎖定的 `src/diff-rendering/` tree。除已確認的 PR Reader BC input envelope writeback 外，其他現有 repository 檔案不修改；本次 revision 不修改 architecture-canvas 圖。
+- 本 topic 四份 planning artifacts。
+- 僅在 IM-05 gate 後的 `surfaces/pr-reader-webview/package.json` 與 `surfaces/pr-reader-webview/bun.lock`。
 
 ## Deleted
 
-僅刪除由 module tree 取代的集中式 diff contract source 與 test。
+無。
 
-## Implementation Changes
+## Modify
 
-1. 建立 technical spec 指定的 `contracts/`、`adapters/`、`ports/`、`usecases/`、`facades/` 與 `index.ts`；每個 module 只宣告其 layer 的 type／interface，不建立任何 concrete behavior。
-2. 新增 public `DiffSnapshot` contract，固定 `readonly pullRequestId`、`snapshotId` 與 `files: readonly DiffViewModel[]`；既有 `DiffViewModel` 不變。將它與 `DiffFileStatus`、帶 PR／snapshot identity 的 `ViewedStateChange`、含 `output-error` 的 `DiffRenderOutcome`、opaque stage inputs 與 stage-specific results 放入對應 contracts modules。
-3. 定義 `DiffSnapshotAdapter.receiveSnapshot(snapshot): void`、exact Port signatures、internal `DiffRenderUseCase.execute(snapshot)` 與 public `DiffFacade.present(snapshot)`／`requestViewedStateChange`；Validator、UseCase 與 Facade 都只接受 `DiffSnapshot`。UseCase 是四個 pipeline Ports（含 Output）的唯一協調者與 Output caller，Facade 只依賴 UseCase 與 viewed-state Port。
-4. 定義 `ViewedStateChangeAdapter` 直接 extends `ViewedStateChangePort`，不得新增 wrapper 或第二個 notification method。`index.ts` 只匯出 `DiffFacade`、`DiffSnapshot`、`DiffViewModel`、`DiffFileStatus`、`ViewedStateChange`、`DiffRenderOutcome`；所有 opaque types、Ports、Adapters、dependency descriptors 與 UseCase 均保持 internal。
-5. 建立依 module 分檔的 type-level tests，驗證 snapshot contract、未變更的 file model、相鄰 stage outputs、`output-error`、viewed notification identity、Adapter-to-Port assignability、UseCase／Facade dependency ownership、barrel export surface 與禁止跨層依賴；不以 tests 引入 DOM 或第三方工具。
-6. 僅將已確認的 `DiffSnapshot` input envelope 事實回寫 PR Reader BC 文件；既有 architecture-canvas 圖不修改、不重建或發布。
+- 本 revision 僅撤除「零依賴／不得改 package manifest 或 lockfile」限制，改為授權一筆已鎖定的 runtime dependency 與必要 Bun resolution。
+- 既定 architecture、path、`DiffSnapshot`、Ports、Facade、viewed ownership、failure outcomes 與 declaration-only boundary 不變。
 
-## Test Cases
+## TestCase
 
-- `DiffSnapshot` 以 readonly PR identity、snapshot identity 與完整有序 `readonly DiffViewModel[]` 表達 render input；`DiffViewModel` 繼續表達 added、removed、modified、renamed、optional patch、rename 前路徑、非負增刪計數與 viewed 狀態。
-- 四個 stage 只接受前一 stage success value，且只產生各自允許的 error kind；Output 失敗只使用 `output-error`；UseCase 與 Facade 的 dependency descriptors 只含既定 keys。
-- `DiffSnapshotAdapter.receiveSnapshot`、Validator、UseCase 與 Facade 的方法參數、回傳型別與 readonly snapshot envelope contract 完全相符；UseCase 是 Output Port 唯一 caller，Facade 不依賴 Output Port。
-- viewed notification 以 `pullRequestId`、`snapshotId`、snapshot-local `fileId` 與 boolean 送出、回傳 `void`，不產生 acknowledgement 或 snapshot mutation API。
-- `ViewedStateChangeAdapter` 可結構性指派為 `ViewedStateChangePort`，且不包含 wrapper 或第二個 notification method。
-- barrel 僅公開 `DiffFacade`、`DiffSnapshot`、`DiffViewModel`、`DiffFileStatus`、`ViewedStateChange`、`DiffRenderOutcome`；core 不得 import Adapter、Swift、WebView 或 Presentation。
-- PR Reader BC 文件只陳述已確認的 snapshot envelope input boundary；本次 revision 不修改既有 architecture-canvas 圖。
-- 既有 Bun typecheck、tests 與 coverage gate 通過；若命令或環境不存在，明確分類為 blocker。
+- manifest 只新增 `dependencies.diff2html: "^3.4.56"`，不新增 scripts、imports 或其他 direct dependencies。
+- lockfile 可由 Bun frozen-lockfile install 重現 `diff2html` 與必要 resolution。
+- Tester 執行 `bun run check`、`bun test`、`bun test:coverage` 與 `git diff --check`；若 package install 或既有 gate 失敗，回報明確 blocker。
+- 本輪 authorized diff 只含 manifest 與 lockfile；source、test、BC 文件或 diagram diff 一律是 scope drift。
 
-## Stop Conditions
+## Phase and Gates
 
-- Plan-Reviewer 未明示 `approved` 前，不得建立、移除或修改 TypeScript contract declarations、tests、PR Reader BC 文件或 architecture-canvas 圖。
-- 若現有 surface 無法定位、strict TypeScript 設定不明，或 contract 與既有公開入口衝突，Implementer 停止並回報具體 blocker；不得自行改寫已鎖定 contract。
-- Tester 或 Reviewer 發現 contract、scope 或 workflow drift 時，只由獨立 Implementer 進行最小相符修正並重新驗證。
-- Reviewer 明示 `approved` 後，Code-Implementer 可依 human 已授權的本 topic Git 流程 commit、push 更新既有 PR #4，然後才可進入 GitHub handoff；GitHub handoff 完成後停止於 human review。
+1. **PC-05 / Plan-Creator**：修訂同 slug 四份 artifacts，記錄已鎖定 package admission。
+2. **PR-05 / independent Plan-Reviewer**：檢查 package、license、direct dependencies、runtime placement、lockfile、scope isolation 與 contract 不變；只有明示 `approved` 可前進。
+3. **IM-05 / independent Implementer**：僅修改 manifest 與 Bun lockfile。
+4. **TE-05 / Tester**：執行 dependency 與既有 validation evidence。
+5. **RV-05 / independent Reviewer**：審查最小 diff、scope isolation 與 validation evidence。
+6. **GH-05 → HC-04**：在 RV-05 明示 `approved` 後依 human-authorized Git 流程 handoff，隨即停止於 human review。
+
+## Acceptance and Stop Conditions
+
+- Acceptance 需要 PR-05、TE-05、RV-05 各自的明示 verdict，且 implementation diff 僅為指定 manifest entry 與 lockfile update。
+- PR-04 是已完成的歷史 revision，已被 dependency-only PC-05／PR-05 chain superseded，不得作為 IM-05 approval。
+- 在 PR-05 approval 前不得修改 package；發現未鎖定 version、license exception、額外 dependency、source/test/BC diff、安裝失敗或 contract drift 時停止並交回相應角色或 human。
