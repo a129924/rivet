@@ -28,8 +28,9 @@
 - 本次 PR review 已明示授權的既有例外僅為 `docs/architecture/bounded-contexts/pr-inbox.md`、`docs/architecture/bounded-contexts/pr-reader.md` 與 `docs/architecture/bounded-contexts/github-integration.md` 的受限回寫；除該既授權 remediation 外，不得將 BC 文件或其他架構文件納入本 topic。
 - 任何產品 Swift 行為、BC contract、SwiftPM target、product、module 或 GitHub integration。
 - 除 `scripts/check-swift-format.sh` 外的既有 tracked path；亦不得提交 lockfile 或 `surfaces/pr-reader-webview/node_modules/`。
-- commit `94b6506` 與 `09043bf` 均早於 REVIEW-002；不得倒填、改寫或宣稱兩者曾經 REVIEW-002 核可。
-- 未經獨立 REVIEW-003 明示核可的 audit-correction delivery（commit、push、PR thread resolution）、release，或進入下一個產品 slice。
+- `94b6506` 早於 REVIEW-001，且 REVIEW-001 的歷史 verdict 為 `needs-rework`；不得倒填、改寫或宣稱該 commit 曾獲 REVIEW-001 核可。
+- `09043bf` 早於未執行的 REVIEW-002，`ed2bbcf` 早於未執行的 REVIEW-003；不得倒填、改寫或宣稱任一 commit 曾獲相應 review 核可。
+- 未經獨立 REVIEW-004 明示 `approved` 的 audit-correction delivery（commit、push、PR thread resolution）、release，或進入下一個產品 slice。
 
 ## Acceptance Criteria
 
@@ -38,11 +39,11 @@
 - source layout 不含 Swift source、target、module、test 或 contract。
 - formatter 對目錄 lint 使用 `--recursive`；renderer check 可在 frozen lockfile 準備後執行，且該準備不變更 lockfile 或產生可追蹤檔案。
 - formatter、renderer check 與完整 pre-commit hook 均通過；原始 delivery commit 範圍僅包含原七個 topic 檔案與 `scripts/check-swift-format.sh`，既授權 remediation commit 才另含三份 BC 文件的受限單行回寫。
-- 獨立 Reviewer 明示核可後，建立單一 topic commit、push branch 並向 `main` 開 Draft PR，然後停止於 human review。
+- 既有 commit 與 PR 歷史維持不改寫；僅在獨立 REVIEW-004 明示 `approved` 後，才可建立 DELIVERY-002 topic commit、push branch 並處理已核可的 PR threads，然後停止於 HUMAN-002 human review。
 
 ## Delivery Actions
 
-既有 topic delivery 已形成 commit `94b6506` 與 remediation commit `09043bf`；兩者均早於未執行的 REVIEW-002，均為必須如實保留的 historical workflow deviations。後續僅限第三個 audit-correction delivery；它只可在新的獨立 REVIEW-003 明示 `approved` 後執行，且 commit 僅可包含四份 topic artifacts，完成後交還 human review，不得 merge 或 release。
+既有 topic delivery 已形成 `94b6506`、`09043bf` 與 `ed2bbcf`。`94b6506` 早於 REVIEW-001，且 REVIEW-001 的歷史 verdict 為 `needs-rework`；`09043bf` 與 `ed2bbcf` 分別早於未執行的 REVIEW-002 與 REVIEW-003。三者皆為必須如實保留的 historical workflow deviations。後續僅限新的 DELIVERY-002；它只可在新的獨立 REVIEW-004 明示 `approved` 後執行，且 commit 僅可包含四份 topic artifacts，完成後交還 HUMAN-002 human review，不得 merge 或 release。
 
 ## Stop Conditions
 
@@ -51,11 +52,16 @@
 - formatter、renderer check 或 pre-commit 發現 scope、contract 或 workflow drift。
 - BC 文件回寫需要超出暫定 source location baseline 的內容。
 - planning amendment 未經獨立 Plan-Reviewer 明示核可。
+- 第二次 planning-audit amendment 未經獨立 PLAN-008 明示 `approved`，或 TEST-005 未完成驗證、REVIEW-004 未明示 `approved`。
 
 ## PR Review Remediation
 
 - `docs/architecture/bounded-contexts/pr-inbox.md`、`pr-reader.md` 與 `github-integration.md` 各僅可加入一行，記錄其對應的暫定 source location：`Sources/BoundedContexts/PRInbox/`、`PRReader/`、`GitHubIntegration/`。
 - 每一行必須明示此 baseline 不代表 target、module、dependency 或 contract；不得改變既有 BC responsibility、Map、圖或 path decision。
-- commit `94b6506` 與 `09043bf` 均早於未執行的 REVIEW-002；兩者皆為 historical workflow deviations，必須如實保留，不得倒填或宣稱已獲先前 approval。
-- 僅在新的獨立 REVIEW-003 明示核可後，才可建立第三個 audit-correction delivery commit；它僅可包含四份 topic artifacts，不得改寫已 push history 或 force push。
+- `94b6506` 早於 REVIEW-001，且 REVIEW-001 的歷史 verdict 為 `needs-rework`；`09043bf` 與 `ed2bbcf` 分別早於未執行的 REVIEW-002 與 REVIEW-003。三者皆為 historical workflow deviations，必須如實保留，不得倒填、改寫已 push history 或 force push。
+- 僅在新的獨立 REVIEW-004 明示 `approved` 後，才可建立 DELIVERY-002 audit-correction delivery commit；它僅可包含四份 topic artifacts。
 - C thread 要求僅保留 PR Inbox 的建議，與 Human 已鎖定的三 BC decision 衝突，因此為 non-actionable finding；不得以此調整 architecture 或 source paths。
+
+## Second Planning-Audit Amendment
+
+Human 明示授權第二次、僅限四份 topic artifacts 的 audit amendment：如實記錄三個 commit 各自越過的 review gate、在 ledger 加入獨立 `verdict` 欄，並建立 REVIEW-004 → DELIVERY-002 → HUMAN-002 gate。不得修改其他檔案、重開三 BC／source path／module／contract，或 backfill、rewrite history、force push。

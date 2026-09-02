@@ -73,7 +73,13 @@ Human 明示授權後，僅 Plan-Creator 可在 Layout Implementation 後更新 
 
 Human 已就 PR review 明示授權一次可追溯的 planning-artifact amendment。僅 Plan-Creator 可更新本 topic 的四份 artifacts，以記錄既已授權的三份 BC 文件 remediation、historical audit 與 delivery consistency；不得改變三 BC baseline、既定 paths、contract 或 C thread 的 non-actionable 結論。
 
-commit `94b6506` 與 `09043bf` 均早於 REVIEW-002；此為 historical workflow deviation，必須如實記錄為未執行的 review gate，不得 backfill、rewrite history、force push，或宣稱任一 commit 曾獲 REVIEW-002 核可。此 exception 本身不構成 approval、verdict 或 delivery 授權。
+`09043bf` 早於 REVIEW-002；此為 historical workflow deviation，必須如實記錄為未執行的 review gate，不得 backfill、rewrite history、force push，或宣稱該 commit 曾獲 REVIEW-002 核可。`94b6506` 的精確 gate mapping 由下列第二次 amendment 記錄。此 exception 本身不構成 approval、verdict 或 delivery 授權。
+
+## Second Planning-Audit Amendment Exception
+
+Human 已明示授權第二次、僅限四份 topic artifacts 的 planning-audit amendment。僅 Plan-Creator 可如實記錄：`94b6506` 早於 REVIEW-001，且 REVIEW-001 的歷史 verdict 為 `needs-rework`；`09043bf` 早於未執行的 REVIEW-002；`ed2bbcf` 早於未執行的 REVIEW-003。此 amendment 必須新增 ledger 的獨立 `verdict` 欄，且只有獨立角色明示的 `approved`、`needs-rework`、`blocked` 或 `human-check` 可填入；status、validation evidence 與 Tester 的 PASS 不得作為 verdict。它並建立 REVIEW-004 → DELIVERY-002 → HUMAN-002 新 gate。
+
+此 exception 不允許修改其他檔案、重開三 BC、source paths、module 或 contract，亦不得 backfill、rewrite history 或 force push；它本身不構成 approval、verdict 或 delivery 授權。
 
 ## Deleted
 
@@ -81,7 +87,7 @@ commit `94b6506` 與 `09043bf` 均早於 REVIEW-002；此為 historical workflow
 
 ## Modify
 
-允許修改的既有 tracked paths 僅為 `scripts/check-swift-format.sh` 與 PR Review Remediation Documentation 所列三份 BC 文件。Implementer 僅可將 formatter 的目錄 lint 呼叫調整為使用 `--recursive`，使既有 Swift formatter 對 `Sources/` 或 `Tests/` 下的目錄正確遞迴檢查；不得進行其他 formatter 行為、設定或 path 變更。三份 BC 文件僅可依該 section 的單行限制回寫。
+允許修改的既有 tracked paths 僅為 `scripts/check-swift-format.sh` 與 PR Review Remediation Documentation 所列三份 BC 文件。Implementer 僅可將 formatter 的目錄 lint 呼叫調整為使用 `--recursive`，使既有 Swift formatter 對 `Sources/` 或 `Tests/` 下的目錄正確遞迴檢查；不得進行其他 formatter 行為、設定或 path 變更。三份 BC 文件僅可依該 section 的單行限制回寫。兩次明示授權的 planning-artifact amendment 是唯一四份 topic artifacts 例外，且第二次僅可作本節所定 audit 記錄與新 gate。
 
 除上述 path 外，不得修改既有檔案或既有資料夾內容；Planning Artifact Creation 只允許新增或更新 `Written` 所列的四份 artifacts。
 
@@ -95,4 +101,6 @@ commit `94b6506` 與 `09043bf` 均早於 REVIEW-002；此為 historical workflow
 - renderer check 必須在 frozen lockfile 的本地 dependency 準備後成功完成。
 - 完整 pre-commit hook 必須成功完成；驗證前後 staged commit 範圍只可包含三個 `.gitkeep`、四份 topic artifacts 與 `scripts/check-swift-format.sh`。
 - PR review remediation 驗證必須確認三份 BC 文件各僅有對應的一行暫定 source location，且明示不代表 target、module、dependency 或 contract；不得有 BC responsibility、Map、圖或 path decision drift。
-- `94b6506` 與 `09043bf` 的 commit-before-REVIEW-002 偏差必須如實記錄為 historical workflow deviations；僅在新的獨立 REVIEW-003 明示核可後，才可用第三個 audit-correction delivery commit 更正 audit。該 commit 僅可包含四份 topic artifacts，禁止 backfill、rewrite history 或 force push。PR Inbox-only C thread 為與 Human 鎖定三 BC decision 衝突的 non-actionable finding。
+- `94b6506` 早於 REVIEW-001，且 REVIEW-001 的歷史 verdict 為 `needs-rework`；`09043bf` 與 `ed2bbcf` 分別早於未執行的 REVIEW-002 與 REVIEW-003。三者必須如實記錄為 historical workflow deviations。
+- ledger 必須使用獨立 `verdict` 欄；只有獨立角色明示的 `approved`、`needs-rework`、`blocked` 或 `human-check` 可填入，未執行與非-verdict step 均為 `—`。status、validation evidence 與 PASS 不得作為 verdict。
+- 僅在新的獨立 REVIEW-004 明示 `approved` 後，才可建立 DELIVERY-002 audit-correction commit、push 與已核可 thread resolution，並交還 HUMAN-002。該 commit 僅可包含四份 topic artifacts，禁止 backfill、rewrite history 或 force push。PR Inbox-only C thread 為與 Human 鎖定三 BC decision 衝突的 non-actionable finding。
