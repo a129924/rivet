@@ -77,7 +77,11 @@
 | REVIEW-015 | complete | External Reviewer | 檢查 thread location nullability、巢狀 cursor traversal、notifications 結果範圍與 cross-API comment identity。 | 前三項中，thread nullability／traversal 有現行官方 GraphQL 來源支持；Notifications 90 天主張不見於現行官方 reference；REST response 有 `id`／`node_id`，但未直接宣告與 GraphQL id 的可互換性。 |
 | IMPL-017 | complete | Implementer | 僅修正 REVIEW-015 中由官方來源直接支持或為本機 last-seen 邊界澄清所需的 catalog 與同 topic artifacts。 | 補 thread location nullable、雙層 traversal、REST inline `node_id` 與 source-qualified opaque identity；未加入無現行官方來源的 Notifications 90 天主張。 |
 | TEST-017 | complete | Tester | 驗證 TC-23、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-017 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-015 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-017 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-015 threads。 | `4686af8`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-016 | complete | External Reviewer | 檢查 GraphQL mutation payload、REST list 與 notification response 的 nullable contract。 | 四項均有現行官方 GraphQL schema 或 REST OpenAPI 的直接 nullable 標記。 |
+| IMPL-018 | complete | Implementer | 僅修正 REVIEW-016 指出的 catalog 與同 topic artifacts。 | 補五個 mutation payload resource、REST PR／inline comment／notification response 的 nullable contract。 |
+| TEST-018 | complete | Tester | 驗證 TC-24、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-018 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-016 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -124,3 +128,5 @@
 2026-09-03 — 依 REVIEW-014 補 GraphQL `replyTo` nullable；Notifications token 類型與 REST `user` 則維持現行官方文件／schema 能直接支持的表述，未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-015 補 review thread 位置欄位 nullable、外層與巢狀 comments 的獨立 cursor traversal，以及 REST／GraphQL comment identity 的 source boundary；未加入沒有現行官方來源的 Notifications 90 天主張，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-016 補 GraphQL mutation payload 與 REST response 的 nullable contract；未推論 null 成因、failure mapping 或實作策略，未修改架構文件或 source code。

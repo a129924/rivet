@@ -10,10 +10,10 @@
 | Operation | `GET /repos/{owner}/{repo}/pulls` |
 | 用途 | 取得指定 repository 的 PR；預設只回傳 open PR。 |
 | 重要 query | `state`, `head`, `base`, `sort`, `direction`, `per_page`, `page` |
-| 重要欄位 | number、title、body、user、head、base、state、draft、`_links` |
+| 重要欄位 | number、title、body（nullable）、user、head、base、state、draft、`_links` |
 | 分頁 | `per_page` 最大 100；依 Link header 取下一頁。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
-| 官方來源 | [List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests) |
+| 官方來源 | [List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)、[GitHub REST OpenAPI `pull-request-simple` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json) |
 
 此 endpoint 適合 repository 範圍瀏覽，不決定「等待我 review」的 Inbox membership。
 

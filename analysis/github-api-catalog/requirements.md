@@ -51,6 +51,8 @@
 - Cross-repository Issues Search 的必要 query parameter 名稱為 `q`，其值為 `is:pr is:open user-review-requested:@me`。
 - Files viewed mutation 的官方來源必須同時連結 operation／payload 與 input，讓成功 `pullRequest` output 與輸入都可追溯。
 - REST inline review comment response 提供 `id` 與 `node_id`；可選本機 last-seen 的 Rivet 規則使用 API source 與 opaque identity，不推論其與 GraphQL `PullRequestReviewComment.id` 的跨 API 對應。
+- `MarkFileAsViewedPayload.pullRequest`、`UnmarkFileAsViewedPayload.pullRequest`、`ResolveReviewThreadPayload.thread`、`UnresolveReviewThreadPayload.thread` 與 `MergePullRequestPayload.pullRequest` 都沒有 non-null 標記；catalog 必須保留 nullable contract，不推論 null 成因。
+- REST OpenAPI 的 `pull-request-simple.body`、`pull-request-review-comment.start_line`／`start_side`／`original_start_line` 與 `notification-thread.last_read_at` 都明示為 nullable。
 - Submit Review 的多行 inline comment 範圍（非 reply）必須將 `start_line` 與 `start_side` 記錄為條件必填；不得以「可帶」弱化該 contract。
 - Review thread resolution mutations 的官方來源必須同時連結 operation／payload 與 input，讓成功 thread output 與輸入都可追溯。
 - Cross-repository Issues Search 除 `q` 與 `per_page` 外，必須列出 `page` 與依 Link header next URL 的 traversal。

@@ -75,3 +75,4 @@
 | TC-21 | Reader、checks、thread 與 Search output contract 審閱 | REST PR `body` 保留 nullable，`previous_filename`、`patch`、`submitted_at` 保留可能缺席語意；GraphQL locator、check output、resolver 與 author 保留 nullable；Search root response 列出 `total_count` 與 `incomplete_results`，且不對 null／缺席成因作推論。 |
 | TC-22 | Thread reply 關係與來源邊界審閱 | `PullRequestReviewComment.replyTo` 標記為 nullable；Notifications 維持官方明示的 classic-PAT 限制；REST `user` 不因 component 名稱而作未被 schema 直接支持的 nullable 宣告。 |
 | TC-23 | Thread 位置、雙層分頁與 comment identity 審閱 | `PullRequestReviewThread` 的其餘位置欄位保留 nullable；外層與巢狀 comments 各以自身 `hasNextPage`／`endCursor` 推進 `after`；REST inline response 保留 `id`／`node_id`，last-seen key 以 API source 與 opaque identity 區隔，不假定可跨 API 對應。 |
+| TC-24 | Mutation 與 REST response nullable contract 審閱 | 五個 GraphQL mutation payload resource fields 保留 nullable；REST repository PR list `body`、inline comment 的三個多行範圍欄位與 notification `last_read_at` 均依官方 OpenAPI 標為 nullable。 |
