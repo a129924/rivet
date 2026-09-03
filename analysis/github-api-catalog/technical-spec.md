@@ -37,6 +37,7 @@
 - API schema 的 nullability、REST response required set 與官方 HTTP status 必須如實記錄；原因推論、failure mapping 與 fallback 仍留給後續 implementation topic。已標示 closing-down 的定位欄位不得作為新整合的首選。
 - REST root response metadata 與 nested output 的 nullable／可能缺席 contract 都必須列入後續 Adapter 可讀取的主要輸出；不得將官方 schema 未指定的成因當作 API 事實。
 - GraphQL nested comment node 的 nullable fields 必須逐一記錄；REST component 名稱本身不等同於 schema 的 nullable 宣告。
+- REST nullable 必須區分 schema 的 `nullable` 與未列於 `required` 的可能缺席；不得把後者或 component 名稱推論成 nullable。Submit Review 的 `comments` input 只列該 operation 官方定義欄位，不暗示 `in_reply_to` 支援。
 - 巢狀 GraphQL connection 必須逐層記錄其自身的 `hasNextPage`、`endCursor` 與下一次同層 `after`；可選本機 last-seen identity 必須保留 API source，且不得把 REST 與 GraphQL identifier 的對應當作既定事實。
 - Mutation payload 的資源欄位與 REST list response 的欄位若在官方 schema 明示 nullable，必須逐一標記；不得僅以「成功結果」或一般重要欄位掩蓋其 nullable contract。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
