@@ -18,7 +18,7 @@ createDiffFacade(
 ```
 
 - `execute(snapshot)` 依序執行 `validator.validate`、`parser.parse`、`renderer.createRenderPlan`、`output.output`。只有前一 stage 回傳 success 才可呼叫下游；error outcome 原樣回傳，禁止包裝、重分類或繼續執行。
-- Output success 映射為 `{ type: "success" }`。未定義 thrown exception 不新增 failure mapping，也不在本 topic catch。
+- `output.output(renderPlan)` 的 success value 一律正規化為新建的 `{ type: "success" }`；不得將 Output success 的額外欄位帶入 Facade outcome。四個既定 error outcome 則原樣回傳，不包裝、不重分類。未定義 thrown exception 不新增 failure mapping，也不在本 topic catch。
 - `present(snapshot)` 只呼叫一次 `useCase.execute(snapshot)` 並回傳其 outcome。
 - `requestViewedStateChange(change)` 只呼叫一次 `viewedStateChange.notify(change)` 並回傳 `void`；不等待、不 retry、不呼叫 UseCase、不修改 snapshot。
 - 既有 opaque types 保持 opaque。runtime tests 僅使用 test-local sentinel 或 type assertion，不得建立 production schema。
@@ -27,9 +27,9 @@ createDiffFacade(
 
 | Category | Paths / policy |
 | --- | --- |
-| ReadOnly | contracts、ports、adapters、`index.ts`、package manifest、lockfile、architecture／PR Reader BC docs。 |
+| ReadOnly | contracts、ports、adapters、`index.ts`、package manifest、lockfile，以及除本輪最小 amendment 外的 architecture／PR Reader BC docs。 |
 | Written | 同 slug 的 requirements、technical spec、plan、step ledger 四份 artifacts。 |
-| Modify | UseCase、Facade 及它們各自 tests、public-surface regression test。 |
+| Modify | UseCase、Facade 及它們各自 tests、public-surface regression test；`docs/architecture/README.md` 與 `docs/architecture/bounded-contexts/pr-reader.md` 僅可加入下列 truth amendment：Facade／UseCase orchestration 已有 runtime 實作；Validator、Parser、Renderer、Output 四個 concrete stages、DOM、Swift bridge、viewed-state persistence 仍未實作。 |
 | Deleted | 無。 |
 
 ## Explicit Exclusions
@@ -37,11 +37,13 @@ createDiffFacade(
 - 禁止 concrete Validator、Parser、Renderer、Output、Git diff template、diff2html 或 patch policy。
 - 禁止 DOM／HTML、escaping／security policy、UI，及 Swift／WebView bridge 或 viewed persistence。
 - 禁止新增 public API、Port、stage、failure kind、dependency，或改變 snapshot 與 Swift ownership contract。
+- 除 File Impact Contract 指定的兩個 docs 及其唯一 truth amendment 外，禁止修改 architecture／BC 文件；不得重開架構、path 或 contract decision。
 
 ## Verification Contract
 
 - Runtime tests 必須建立可觀察的 fake dependencies，以驗證順序、值傳遞、四種 failure short-circuit、Facade delegation 與 viewed forwarding。
-- Type-level regression 必須證明 factories 不經 public barrel 洩漏，且既有 public contracts 不變。
+- Output fake 回傳含 test-local 額外欄位的 success 時，UseCase 必須回傳新建的唯一 `{ type: "success" }`；四個既定 error outcome 必須維持 reference／shape 不變地轉送。
+- Type-level regression 必須以 `typeof import("./index")` 取得 public value export map，並驗證兩個 factory 不經 public barrel 洩漏；既有 public contracts 不變。
 - 實作後執行 `bun run check` 與 `bun test`；任何失敗交給對應 Implementer 回修，不以 workaround 擴張 scope。
 
 ## Stop Conditions

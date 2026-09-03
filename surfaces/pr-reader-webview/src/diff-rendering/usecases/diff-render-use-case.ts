@@ -38,7 +38,12 @@ export function createDiffRenderUseCase(
         return renderPlanResult;
       }
 
-      return dependencies.output.output(renderPlanResult.value);
+      const outputResult = dependencies.output.output(renderPlanResult.value);
+      if (outputResult.type === "error") {
+        return outputResult;
+      }
+
+      return { type: "success" };
     },
   };
 }

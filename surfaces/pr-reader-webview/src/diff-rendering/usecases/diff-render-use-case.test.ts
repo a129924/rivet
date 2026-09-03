@@ -96,6 +96,40 @@ describe("createDiffRenderUseCase", () => {
     expect(calls).toEqual(["validate", "parse", "render", "output"]);
   });
 
+  test("normalizes output success without leaking its private fields", () => {
+    const outputSuccess = {
+      type: "success",
+      privateOutputDetail: "not part of the facade outcome",
+    } as const;
+    const useCase = createDiffRenderUseCase({
+      validator: {
+        validate() {
+          return { type: "success", value: validatedInput };
+        },
+      },
+      parser: {
+        parse() {
+          return { type: "success", value: parsedInput };
+        },
+      },
+      renderer: {
+        createRenderPlan() {
+          return { type: "success", value: renderPlan };
+        },
+      },
+      output: {
+        output() {
+          return outputSuccess;
+        },
+      },
+    });
+
+    const outcome = useCase.execute(snapshot);
+
+    expect(outcome).toEqual({ type: "success" });
+    expect(outcome).not.toBe(outputSuccess);
+  });
+
   test("returns invalid-input without calling downstream stages", () => {
     const calls: string[] = [];
     const outcome = {

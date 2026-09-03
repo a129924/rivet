@@ -37,10 +37,10 @@ type _opaqueStageTypeIsNotPublic = import("./index").ValidatedDiffInput;
 type _useCaseIsNotPublic = import("./index").DiffRenderUseCase;
 
 // @ts-expect-error Internal use case factories are not part of the public barrel.
-type _useCaseFactoryIsNotPublic = import("./index").createDiffRenderUseCase;
+type _useCaseFactory = typeof import("./index").createDiffRenderUseCase;
 
 // @ts-expect-error Internal facade factories are not part of the public barrel.
-type _facadeFactoryIsNotPublic = import("./index").createDiffFacade;
+type _facadeFactory = typeof import("./index").createDiffFacade;
 
 // @ts-expect-error Adapter boundaries are not part of the public barrel.
 type _adapterIsNotPublic = import("./index").DiffSnapshotAdapter;
