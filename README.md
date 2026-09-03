@@ -14,6 +14,7 @@ Rivet 是一個個人 GitHub PR 工作台。
 - [架構規範](docs/architecture/)
 - [設計原則](docs/design-principles.md)
 - [開發工具鏈](docs/toolchain.md)
+- [開發分支流程](docs/development-workflow.md)
 
 ## 目前狀態
 
