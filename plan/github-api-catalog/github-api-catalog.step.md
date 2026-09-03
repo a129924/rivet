@@ -117,7 +117,10 @@
 | REVIEW-025 | complete | External Reviewer | 檢查 inline review location presence、Notifications token、Issue comment traversal、catalog discoverability 與 action table structure。 | OAuth app token 與 nullable 主張不受官方 reference 支持；其餘項目有 official schema／文件或 Markdown 結構依據。 |
 | IMPL-027 | complete | Implementer | 僅修正 REVIEW-025 中由官方 reference 或 Markdown 結構支持的 catalog 與同 topic artifacts。 | 補可能缺席／Link traversal／first-read link／六欄 delimiter；Notifications 維持 classic PAT 限制。 |
 | TEST-027 | complete | Tester | 驗證 TC-34、TC-35、Markdown links、diff 與完整 pre-commit。 | GitHub REST OpenAPI／Notifications／pagination references、`git diff --check`、五個官方來源 link check 與完整 pre-commit 均通過。 |
-| DELIVERY-027 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-025 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-027 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-025 threads。 | `a74cf58` 已推送至既有 feature branch，且 REVIEW-025 的 5 個 threads 已 resolved。 |
+| REVIEW-026 | complete | External Reviewer | 檢查 REST list traversal、plan contract 與 Capability Index 的產品狀態。 | Changed Files／Notifications 少了 `Link` traversal；Non-Goal 與實際 Modify 不一致；Index 混合 REST MVP 與 GraphQL 後續唯讀。 |
+| IMPL-028 | complete | Implementer | 僅修正 REVIEW-026 有官方來源或本 topic contract 支持的文件與 artifacts。 | 補 Changed Files／Notifications `Link` traversal，收斂 Non-Goal，並分列 REST changed files、checks 與 GraphQL Files Viewed state。 |
+| TEST-028 | complete | Tester | 驗證 TC-36、Markdown links、scope 與完整 pre-commit。 | `git diff --check`、官方 REST pagination／Pulls／Notifications links 與完整 pre-commit 均通過。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers

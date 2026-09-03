@@ -6,7 +6,7 @@
 
 ## Non-Goal
 
-不建立產品行為、API client、資料模型、OAuth、SQLite、圖或 BC contract；不改變既有文件。
+不建立產品行為、API client、資料模型、OAuth、SQLite、圖或 BC contract；不修改產品規範、架構或 Bounded Context 文件。
 
 ## In-Scope
 
@@ -87,3 +87,4 @@
 | TC-33 | REST GET success response contract 審閱 | 每個 catalog REST GET operation 均列出正常 `200 OK` response；只有官方 operation reference 列出的 conditional response 才標記 `304 Not Modified`。 |
 | TC-34 | Inline review nullable 與 traversal contract 審閱 | `line`、`side`、`original_line` 標為可能缺席而非 nullable；issue comments 與其餘 REST list operation 均明列 Link header traversal。 |
 | TC-35 | First-read 與 table structure 審閱 | root README 連結 catalog；兩個 GraphQL action table 的 header 與 delimiter 皆為六欄。 |
+| TC-36 | REST list traversal 與 capability index 審閱 | Changed Files 與 Notifications 均依 `Link` header 取得下一頁；Index 分列 MVP 的 REST changed files 與後續唯讀的 GraphQL Files Viewed state。 |

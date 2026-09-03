@@ -24,7 +24,7 @@
 | 用途 | 取得檔案清單與變更統計。 |
 | 成功結果 | `200 OK` 與 changed-files list response。 |
 | 重要欄位 | filename、status、additions、deletions、changes、sha、previous_filename、patch；`previous_filename` 與 `patch` 都可能缺席，不能當作必填字串。 |
-| 分頁與上限 | `page`／`per_page`；此 endpoint 的回應最多 3,000 files。 |
+| 分頁與上限 | `page`／`per_page`；依 response `Link` header 的 next URL 取得下一頁。此 endpoint 的回應最多 3,000 files。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List pull requests files](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests-files)、[GitHub REST OpenAPI `diff-entry` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`previous_filename` 與 `patch` 未列於 `required`） |
 

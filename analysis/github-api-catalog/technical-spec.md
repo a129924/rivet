@@ -48,6 +48,8 @@
 - Review-thread connection 的 nodes list／element 均須明確標示 nullable；只有非 null node 才可讀取 review thread 欄位，並再依各欄位自己的 contract 判空。
 - 外層 `reviewThreads` 與每個巢狀 `comments` connection 都必須各自記錄 1–100 window、自己的 `hasNextPage`／`endCursor` 與同層 `after`；REST GET operation 則必須記錄正常 `200 OK` response，適用時另記錄官方列出的 conditional `304 Not Modified`。
 - REST inline review comment 的 `line`、`side` 與 `original_line` 未列於 required set 時，必須標記為可能缺席並與 nullable 區分；所有 REST list operation 均須記錄 Link header traversal。
+- REST changed-files 與 notifications list 的 operation metadata 必須明列依 response `Link` header 的 next URL 取得下一頁；只列 `page`／`per_page` 不足以滿足 list traversal contract。
+- Capability Index 的每一列只能對應一個產品狀態；REST changed-files 與 GraphQL Files Viewed state 必須分列，避免將後續唯讀 GraphQL state 誤列為 MVP。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

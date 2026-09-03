@@ -31,6 +31,8 @@
 - `PullRequest.reviewThreads` 回傳 `PullRequestReviewThreadConnection`，其 nodes 與 resolve/unresolve 的 thread identity 都是 `PullRequestReviewThread.id`。
 - Notifications REST API 僅支援 classic PAT，不支援 GitHub App user／installation token 或 fine-grained PAT；每次呼叫另需 `notifications` 或 `repo` scope，因此它是延後能力且有獨立認證限制。
 - `GET /notifications` 的官方 query 為 `all`、`participating`、`since`、`before`、`page` 與 `per_page`，後者每頁最多 50 筆。
+- REST changed-files 與 notifications list 都必須依 response `Link` header 的 next URL 取得下一頁；不得只列 query parameter。
+- Capability Index 必須分開記錄 MVP 的 REST changed-files 與後續唯讀的 GraphQL Files Viewed state，避免同一 capability row 混合不同產品狀態。
 - Issues Search 單一 query 最多提供 1,000 筆結果；跨 repository review-request Inbox 超出此上限時的處理策略不在本 topic 鎖定。
 - `PATCH /notifications/threads/{thread_id}` 成功時回傳 `205 Reset Content`，無 response body。
 - 直接要求目前使用者 review 的明確 search qualifier 為 `user-review-requested:@me`；不將未經官方參考確認的 `review-involves:@me` 列為可採用 query。
