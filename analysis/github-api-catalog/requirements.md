@@ -49,6 +49,9 @@
 - REST inline review comments 的 fallback output 必須保留 `user`、`created_at`、`updated_at` 與 `html_url`，以供顯示作者、時間與連結。
 - Cross-repository Issues Search 的必要 query parameter 名稱為 `q`，其值為 `is:pr is:open user-review-requested:@me`。
 - Files viewed mutation 的官方來源必須同時連結 operation／payload 與 input，讓成功 `pullRequest` output 與輸入都可追溯。
+- Submit Review 的多行 inline comment 範圍（非 reply）必須將 `start_line` 與 `start_side` 記錄為條件必填；不得以「可帶」弱化該 contract。
+- Review thread resolution mutations 的官方來源必須同時連結 operation／payload 與 input，讓成功 thread output 與輸入都可追溯。
+- Cross-repository Issues Search 除 `q` 與 `per_page` 外，必須列出 `page` 與依 Link header next URL 的 traversal。
 
 ## Official Sources
 

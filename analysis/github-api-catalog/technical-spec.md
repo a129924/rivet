@@ -33,6 +33,7 @@
 - Checks 的 union output、巢狀 GraphQL connection、inline review comment 定位、outdated comment 原始位置、notification conditional polling 與 merge method gate，都必須記錄必要欄位或輸入；不得以 aggregate state 或泛稱的 cursor 取代。
 - Read／write operation 的 response 與 nested content source 必須記錄可供後續 Adapter 讀取的主要欄位；GraphQL pagination 必須明示 window、`hasNextPage`、`endCursor` 與後續 `after` 的關係。
 - REST Search 必須使用官方必填 query parameter 名稱；mutation 官方來源必須能分別追溯 operation payload 與 input。
+- REST list／search operation 的 pagination 必須記錄實際後續頁參數及 Link header traversal；條件必填的 inline comment 定位欄位不得標為單純 optional。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract
