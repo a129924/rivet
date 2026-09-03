@@ -11,9 +11,9 @@ node "$CANVAS_SKILL/scripts/validate.js" scene.js
 node "$CANVAS_SKILL/scripts/build.js" \
   --scene scene.js \
   --out "$RAW_DIR/index.html" \
-  --title "RivetHTTPClient — 預定 package 結構" \
-  --kicker "RIVETHTTPCLIENT — DECLARATION-ONLY" \
-  --sub "<b>HTTPClient</b> → <b>Requester</b> → <b>Transport</b> → <b>Foundation</b>；<b>HTTPClient</b> → <b>TokenProvider</b>" \
+  --title "RivetHTTPClient — 最小介面結構" \
+  --kicker "RIVETHTTPCLIENT — MINIMAL INTERFACE" \
+  --sub "<b>HTTPURL</b> → <b>HTTPRequest</b> → <b>HTTPClient</b> → <b>Requester</b> → <b>Transport</b>" \
   --slug http-client-package-structure
 node enhance-accessibility.js \
   --input "$RAW_DIR/index.html" \

@@ -13,7 +13,7 @@ node "$CANVAS_SKILL/scripts/build.js" \
   --out "$RAW_DIR/index.html" \
   --title "Rivet — GitHub Integration 與 HTTP Client 邊界" \
   --kicker "RIVET — GITHUB INTEGRATION BOUNDARY" \
-  --sub "<b>Integration Adapter</b> 符合 <b>核心 Port</b>，並依賴 <b>預定 transport foundation</b>" \
+  --sub "<b>Integration Adapter</b> 符合 <b>核心 Port</b>，並採用 <b>最小 HTTP interface</b>" \
   --slug github-integration-http-client-boundary
 node enhance-accessibility.js \
   --input "$RAW_DIR/index.html" \

@@ -16,7 +16,8 @@ GitHub Integration 是 Supporting BC，隔離 GitHub.com 的身分、外部資�
 - GitHub 對外 API 的具體選型屬於延後決策；本階段只定義各核心 BC 經由自己擁有的 Port 取得轉換後資料。
 - OAuth、Keychain、網路與 GitHub API 屬於 Outside；Adapter 在此 BC 邊界轉換外部協定與資料。
 - PR Inbox 與 PR Reader 各自經由自己的 Port 取得轉換後資料，彼此不直接相依。
-- `packages/RivetHTTPClient/` 是此 Adapter 未來可採用的 declaration-only transport foundation，不是新的 Bounded Context；它不使 HTTP、token 或 infrastructure failure 跨越核心 BC Port。
+- `packages/RivetHTTPClient/` 是此 Adapter 可採用的內部 transport foundation，不是新的 Bounded Context；它提供已驗證 `HTTPURL`、`HTTPRequest`、`HTTPClient`、`Requester`、injected `Transport` 與 raw `HTTPResponse` 的最小鏈，但不使 HTTP、token 或 infrastructure failure 跨越核心 BC Port。
+- Endpoint、Base URL、Path 與 Query 的 API domain 組裝責任留在呼叫端或其 domain layer，不由 `RivetHTTPClient` 提供。package 也不實作 `URLSessionTransport`、實際網路呼叫、retry、token refresh 或 response decode policy。
 
 ## Failure Contract
 
