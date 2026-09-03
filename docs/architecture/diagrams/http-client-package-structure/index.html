@@ -377,7 +377,7 @@ const EDGES = [
 const TEXTS = [
   {s:'title',x:160,y:86,t:'RivetHTTPClient — 預定 package 結構'},
   {s:'sub',x:160,y:118,t:'HTTPClient → Requester → Transport → Foundation；HTTPClient → TokenProvider；僅表達 ownership 與預定依賴'},
-  {s:'tag',x:160,y:146,runs:[{t:'HTTPClient',fill:C.violet},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:C.violet},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:C.green},{t:' → ',fill:'#4A5462'},{t:'URLSession',fill:C.slate}]},
+  {s:'tag',x:160,y:146,runs:[{t:'HTTPClient',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')},{t:' → ',fill:'#4A5462'},{t:'URLSession',fill:planeColor('outside')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有、尚未實作的抽象'},
   {s:'legend',x:1082,y:110,t:'實線 — Foundation 或外部 infrastructure'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},

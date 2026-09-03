@@ -23,6 +23,8 @@ Review-and-fix
 | TE-06 | completed | 驗證最新 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、scope assertion、`git diff --check` 與完整 pre-commit 均通過。 |
 | IM-08 | completed | 回修最新 PR review：校正 HTTPClient 的兩條分支依賴，並為兩張 canvas 補齊 artifact-local rebuild entry。 | package subtitle 明確分開 Requester／Transport 與 TokenProvider；兩份 `BUILD.md` 固定記錄完整交付流程。 |
 | TE-07 | completed | 驗證最新 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；兩份 artifact-local rebuild、accessibility verifier、重建一致性、scope assertion、`git diff --check` 與完整 pre-commit 均通過。 |
+| IM-09 | completed | 回修最新 PR review：讓 rebuild entry fail-fast，並將 strapline 顏色對齊 scene responsibility plane。 | 兩份 `BUILD.md` 以 `set -e` 失敗即停止；兩個 scene 以 `planeColor(...)` 產生 strapline 色彩。 |
+| TE-08 | completed | 驗證最新 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；兩份 fail-fast artifact-local rebuild、accessibility verifier、色彩與 fail-fast assertion、`git diff --check` 與完整 pre-commit 均通過。 |
 | HUMAN-01 | pending | Human review draft PR。 | 不自動 merge 或 release。 |
 
 ## Blockers

@@ -94,7 +94,7 @@ const EDGES = [
 const TEXTS = [
   { s:'title', x:160, y:86, t:'Rivet — GitHub Integration 與 HTTP Client 邊界' },
   { s:'sub', x:160, y:118, t:'Integration Adapter 符合核心 Port，並依賴預定 transport foundation；本圖不宣稱已有 HTTP 實作' },
-  { s:'tag', x:160, y:146, runs:[{t:'GitHub Integration Adapter',fill:C.orange},{t:' → ',fill:'#4A5462'},{t:'核心 Port',fill:C.sky},{t:' ║ ',fill:'#4A5462'},{t:'Integration Adapter',fill:C.orange},{t:' → ',fill:'#4A5462'},{t:'RivetHTTPClient（預定）',fill:C.violet}] },
+  { s:'tag', x:160, y:146, runs:[{t:'GitHub Integration Adapter',fill:planeColor('integration')},{t:' → ',fill:'#4A5462'},{t:'核心 Port',fill:planeColor('core')},{t:' ║ ',fill:'#4A5462'},{t:'Integration Adapter',fill:planeColor('integration')},{t:' → ',fill:'#4A5462'},{t:'RivetHTTPClient（預定）',fill:planeColor('package')}] },
   { s:'legend', x:1082, y:86, t:'虛線 — 尚未實作的 Rivet abstraction' },
   { s:'legend', x:1082, y:110, t:'實線 — 已存在 artifact、Foundation 與外部 surface' },
   { s:'legend', x:1143, y:134, t:'顏色 — 所屬的責任 plane' },

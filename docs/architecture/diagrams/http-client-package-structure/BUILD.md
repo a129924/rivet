@@ -5,6 +5,7 @@
 在此目錄設定 `CANVAS_SKILL` 為 architecture-canvas skill 根目錄，然後執行：
 
 ```sh
+set -e
 RAW_DIR="$(mktemp -d)"
 node "$CANVAS_SKILL/scripts/validate.js" scene.js
 node "$CANVAS_SKILL/scripts/build.js" \
