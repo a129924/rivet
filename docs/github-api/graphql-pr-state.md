@@ -45,13 +45,13 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 必要定位輸入 | 依「共通 PR 定位」提供 `owner`、`name`、`number`；外層使用 `reviewThreads(first: ..., after: ...)`，每個 thread 的巢狀 comments 使用 `comments(first: ..., after: ...)`。 |
 | Query path | `PullRequest.reviewThreads(first: ...)` → `PullRequestReviewThreadConnection` → `PullRequestReviewThread` |
 | 重要欄位 | `id`、`path`、`subjectType`、`line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine`、`diffSide`、`comments`、`isResolved`、`isOutdated`、`resolvedBy` |
-| Nullability | `line`、`startLine` 與 `resolvedBy` 都沒有 non-null 標記，必須保留 nullable 語意。 |
+| Nullability | `line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine` 與 `resolvedBy` 都沒有 non-null 標記，必須保留 nullable 語意。 |
 | Target kind | `subjectType` 表示 thread 目標是 diff line 或 file。 |
 | Comment node 輸出 | `comments.nodes` 選取 `PullRequestReviewComment.id`、`body`、`author`（nullable）、`createdAt`、`updatedAt`、`replyTo`（nullable）與 `url`，以提供 inline content、作者、時間與回覆關係。 |
 | 權限能力 | `viewerCanResolve`、`viewerCanUnresolve` 可供未來 UI 判斷。 |
-| 分頁 | 外層與每個巢狀 comments connection 都各自使用 `pageInfo` 的 cursor；不可將外層 cursor 用於 thread comments。 |
+| 分頁 | 外層 `reviewThreads` 以其 `pageInfo.hasNextPage` 判斷，將其 `pageInfo.endCursor` 帶入下一個 `reviewThreads(after: ...)`，直到 `hasNextPage` 為 false。每個 thread 的巢狀 `comments` connection 也各自依自己的 `hasNextPage`／`endCursor` 推進 `comments(after: ...)`；不可交叉使用兩層 cursor。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
-| 官方來源 | [PullRequest reviewThreads](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[PullRequestReviewThread](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
+| 官方來源 | [PullRequest reviewThreads](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[PullRequestReviewThread](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
 `isResolved` 與 `isOutdated` 是 `PullRequestReviewThread` 的 GitHub API fields；REST inline comments 的資料範圍見其獨立 endpoint reference。
 

@@ -73,7 +73,11 @@
 | REVIEW-014 | complete | External Reviewer | 檢查 Notifications token 類型、REST discussion user 與 GraphQL reply relationship contract。 | 三項意見中，僅 `replyTo` nullability 有現行官方 GraphQL schema 的直接支持。 |
 | IMPL-016 | complete | Implementer | 僅修正 REVIEW-014 中由官方來源直接支持的 catalog 與同 topic artifacts。 | 補 `replyTo` nullable；Notifications 與 REST `user` 維持現行文件／schema 能直接支持的表述。 |
 | TEST-016 | complete | Tester | 驗證 TC-22、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-016 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-014 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-016 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-014 threads。 | `93a7b25`、更新後 PR #7 與 3 則 resolved thread。 |
+| REVIEW-015 | complete | External Reviewer | 檢查 thread location nullability、巢狀 cursor traversal、notifications 結果範圍與 cross-API comment identity。 | 前三項中，thread nullability／traversal 有現行官方 GraphQL 來源支持；Notifications 90 天主張不見於現行官方 reference；REST response 有 `id`／`node_id`，但未直接宣告與 GraphQL id 的可互換性。 |
+| IMPL-017 | complete | Implementer | 僅修正 REVIEW-015 中由官方來源直接支持或為本機 last-seen 邊界澄清所需的 catalog 與同 topic artifacts。 | 補 thread location nullable、雙層 traversal、REST inline `node_id` 與 source-qualified opaque identity；未加入無現行官方來源的 Notifications 90 天主張。 |
+| TEST-017 | complete | Tester | 驗證 TC-23、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-017 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-015 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -118,3 +122,5 @@
 2026-09-03 — 依 REVIEW-013 補 REST PR／file／review fields、GraphQL locator／checks／thread fields 的 nullable 或可能缺席 contract，以及 Search `total_count` output；未推論 null／缺席原因或 failure mapping，未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-014 補 GraphQL `replyTo` nullable；Notifications token 類型與 REST `user` 則維持現行官方文件／schema 能直接支持的表述，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-015 補 review thread 位置欄位 nullable、外層與巢狀 comments 的獨立 cursor traversal，以及 REST／GraphQL comment identity 的 source boundary；未加入沒有現行官方來源的 Notifications 90 天主張，未修改架構文件或 source code。
