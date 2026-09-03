@@ -36,7 +36,7 @@ function enhance(source, label) {
   #stage:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
   #diagram-fallback {
     position: relative; z-index: 11; width: min(34rem, calc(100vw - 36px));
-    margin: 18px 18px 88px auto; border: 1px solid var(--chrome-border);
+    margin: 88px 18px 88px auto; border: 1px solid var(--chrome-border);
     border-radius: 12px; background: var(--chrome); color: var(--ink);
   }
   #diagram-fallback summary { cursor: pointer; padding: 11px 13px; font-size: 12px; font-weight: 700; }
@@ -98,6 +98,18 @@ function enhance(source, label) {
       relations.appendChild(item);
     });
     content.appendChild(relations);
+    const annotationTitle = document.createElement('h3');
+    annotationTitle.textContent = '圖表註記';
+    content.appendChild(annotationTitle);
+    const annotations = document.createElement('ul');
+    TEXTS.forEach(entry => {
+      const text = entry.t || (entry.runs ? entry.runs.map(run => run.t).join('') : '');
+      if (!text || entry.s === 'plane') return;
+      const item = document.createElement('li');
+      item.textContent = text;
+      annotations.appendChild(item);
+    });
+    content.appendChild(annotations);
     details.appendChild(content);
     target.appendChild(details);
   }

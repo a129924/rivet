@@ -51,7 +51,7 @@
 - Integration boundary canvas 呈現核心 BC Port、GitHub Adapter、預定 `RivetHTTPClient`、TokenProvider implementation boundary、URLSession 與 GitHub API。
 - HTTP Client canvas 僅呈現預定的 `HTTPClient → Requester → Transport → URLSession` 編譯期依賴，以及 TokenProvider、endpoint、request／response contract；所有內容標示為 declaration-only，非既有 API。
 - 兩張圖以 `scene.js` 為唯一真相，使用繁體中文與 `lang="zh-Hant"`；不以箭頭或文字描述 runtime request flow。
-- 每張圖以 diagram-local enhancer／verifier 從 runtime `BOXES`／`EDGES` 產生可鍵盤巡覽的文字替代內容；不得維護第二份圖資料。
+- 每張圖以 diagram-local enhancer／verifier 從 runtime `BOXES`／`EDGES`／`TEXTS` 產生可鍵盤巡覽的文字替代內容與圖表註記；不得維護第二份圖資料，且 fallback 不得遮蔽操作提示。
 
 ## TestCase
 
@@ -61,7 +61,7 @@
 - TC-04：根 `Package.swift` 沒有新增 local dependency、target 或 product。
 - TC-05：GitHub Integration 文件明確保留 HTTP、token 與 infrastructure failure 在 Adapter 邊界。
 - TC-06：兩張 canvas 各自通過 architecture-canvas validate 與 build，視覺檢查無溢位或碰撞，且不宣稱已有實作。
-- TC-07：兩份 HTML 的文字替代內容由 runtime `BOXES`／`EDGES` 生成，並通過 diagram-local accessibility verifier 與重建一致性檢查。
+- TC-07：兩份 HTML 的文字替代內容與圖表註記由 runtime `BOXES`／`EDGES`／`TEXTS` 生成，並通過 diagram-local accessibility verifier 與重建一致性檢查。
 - TC-08：canvas 快捷鍵僅在可聚焦 stage 處理；fallback 與工具列可使用原生鍵盤操作，且 artifact-local 操作介面與 accessible names 為繁體中文。
 
 ## Assumptions

@@ -24,8 +24,8 @@ const BANDS = [
 
 const BOXES = [
   { id:'github-adapter', plane:'integration', band:'band-integration', x:510,y:260,w:460,h:88,r:10,dash:true,
-    name:'GitHub Data Adapter',about:'未來唯一可使用此 package 的 GitHub Integration Adapter 邊界。',
-    texts:[['bl',534,288,'GitHub Data Adapter'],['bs',534,310,'未來 package consumer'],['bn',534,332,'核心 BC 不直接依賴 HTTP client']] },
+    name:'GitHub Data Adapter',about:'未來可採用此 package 的 GitHub Integration Adapter 邊界。',
+    texts:[['bl',534,288,'GitHub Data Adapter'],['bs',534,310,'可採用此 package'],['bn',534,332,'核心 BC 不直接依賴 HTTP client']] },
   { id:'http-client', plane:'client', band:'band-client', x:200,y:530,w:350,h:88,r:10,dash:true,
     name:'HTTPClient',about:'預定的 typed HTTP 入口，尚未有 API、product 或 target。',
     texts:[['bl',224,558,'HTTPClient'],['bs',224,580,'預定 typed HTTP 入口'],['bn',224,602,'尚未有 Swift declaration']] },
