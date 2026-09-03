@@ -23,11 +23,11 @@ Rivet catalog composition rule：issue-level comments 是獨立內容來源。�
 | 狀態 | MVP 唯讀 |
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments` |
 | 用途 | 取得 diff 上的 review comments。 |
-| 重要欄位 | id、node_id、pull_request_review_id（nullable）、path、line、side、start_line（nullable）、start_side（nullable）、commit_id、original_commit_id、original_position、original_line、original_start_line（nullable）、body、`user`、`created_at`、`updated_at`、`html_url`、in_reply_to_id |
+| 重要欄位 | id、node_id、pull_request_review_id（nullable）、path、line、side、start_line（nullable）、start_side（nullable）、commit_id、original_commit_id、original_position（可能缺席）、original_line、original_start_line（nullable）、body、`user`、`created_at`、`updated_at`、`html_url`、in_reply_to_id（可能缺席） |
 | 分頁 | `page`／`per_page`；依 Link header 取下一頁。 |
 | 注意事項 | REST fallback 保留 `id` 與 `node_id`。可選本機 last-seen 使用 API source 與該 source 回傳的 opaque comment identity，catalog 不宣告 REST `node_id` 與 GraphQL `PullRequestReviewComment.id` 可直接互換；thread grouping、resolved 與 outdated 見 GraphQL 文件。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
-| 官方來源 | [List review comments on a pull request](https://docs.github.com/en/rest/pulls/comments#list-review-comments-on-a-pull-request)、[GitHub REST OpenAPI `pull-request-review-comment` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json) |
+| 官方來源 | [List review comments on a pull request](https://docs.github.com/en/rest/pulls/comments#list-review-comments-on-a-pull-request)、[GitHub REST OpenAPI `pull-request-review-comment` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`original_position` 與 `in_reply_to_id` 未列於 `required`） |
 
 ## Review Summary
 

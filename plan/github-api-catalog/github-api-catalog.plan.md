@@ -77,3 +77,4 @@
 | TC-23 | Thread 位置、雙層分頁與 comment identity 審閱 | `PullRequestReviewThread` 的其餘位置欄位保留 nullable；外層與巢狀 comments 各以自身 `hasNextPage`／`endCursor` 推進 `after`；REST inline response 保留 `id`／`node_id`，last-seen key 以 API source 與 opaque identity 區隔，不假定可跨 API 對應。 |
 | TC-24 | Mutation 與 REST response nullable contract 審閱 | 五個 GraphQL mutation payload resource fields 保留 nullable；REST repository PR list `body`、inline comment 的三個多行範圍欄位與 notification `last_read_at` 均依官方 OpenAPI 標為 nullable。 |
 | TC-25 | REST review nullable 與 Submit Review input contract 審閱 | REST inline comment 的 `pull_request_review_id` 與 review resource 的 `commit_id` 依官方 OpenAPI 標為 nullable；`original_position` 不因未列於 `required` 而標 nullable；Submit Review 的多行範圍描述不暗示 `in_reply_to` input。 |
+| TC-26 | REST inline optional-presence contract 審閱 | `pull-request-review-comment.original_position` 與 `in_reply_to_id` 未列於官方 OpenAPI required set，因此標為可能缺席，而非 nullable；不推論缺席原因。 |

@@ -67,6 +67,7 @@
 - `PullRequestReviewComment.replyTo` 沒有 non-null 標記；catalog 必須標為 nullable，且不推論 null 的成因。Notifications operation 的 token 限制與 REST `user` nullable claim 則必須以現行官方文件或 schema 的明確標記為準，不以 component 名稱或未驗證行為延伸。
 - REST OpenAPI 的 `pull-request-review-comment.pull_request_review_id` 與 `pull-request-review.commit_id` 都明示為 nullable；`original_position` 沒有 nullable 標記，不得僅因其未列於 `required` 而推論可為 null。
 - `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews` 的 `comments` item 官方輸入只列 `path`、`position`、`body`、`line`、`side`、`start_line` 與 `start_side`；catalog 不得暗示支援 `in_reply_to`。
+- REST OpenAPI 的 `pull-request-review-comment.original_position` 與 `in_reply_to_id` 沒有列於 `required`；catalog 必須標為可能缺席，並與 nullable contract 區分，不推論缺席原因。
 
 ## Official Sources
 

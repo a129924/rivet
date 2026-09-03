@@ -85,7 +85,11 @@
 | REVIEW-017 | complete | External Reviewer | 檢查 REST inline/review response 的 nullable contract 與 Submit Review input 描述。 | `pull_request_review_id` 與 `commit_id` 有明確 nullable 標記；`original_position` 沒有 nullable 標記；Submit Review comments input 未列 `in_reply_to`。 |
 | IMPL-019 | complete | Implementer | 僅修正 REVIEW-017 中有官方 schema 或 operation reference 直接支持的 catalog 與同 topic artifacts。 | 補兩個 nullable 欄位，移除 `in_reply_to` 暗示；`original_position` 不作 null 推論。 |
 | TEST-019 | complete | Tester | 驗證 TC-25、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-019 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-017 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-019 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-017 threads。 | `0d4ae53`、更新後 PR #7 與 3 則 resolved thread。 |
+| REVIEW-018 | complete | External Reviewer | 檢查 REST inline comment 的 optional-presence contract。 | `original_position` 與 `in_reply_to_id` 未列於現行官方 OpenAPI required set。 |
+| IMPL-020 | complete | Implementer | 僅修正 REVIEW-018 中由官方 OpenAPI required set 直接支持的 catalog 與同 topic artifacts。 | 將兩個欄位標為可能缺席，並與 nullable contract 區分。 |
+| TEST-020 | complete | Tester | 驗證 TC-26、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-020 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-018 thread。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -136,3 +140,5 @@
 2026-09-03 — 依 REVIEW-016 補 GraphQL mutation payload 與 REST response 的 nullable contract；未推論 null 成因、failure mapping 或實作策略，未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-017 補 REST inline／review response 的 nullable contract，並移除 Submit Review 未被 operation input 支持的 `in_reply_to` 暗示；`original_position` 維持官方 schema 可直接支持的表述，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-018 補 REST inline comment 的 `original_position` 與 `in_reply_to_id` 可能缺席 contract；兩者僅依 OpenAPI required set 表述，未推論成 nullable 或缺席原因，未修改架構文件或 source code。
