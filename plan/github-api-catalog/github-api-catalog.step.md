@@ -104,8 +104,12 @@
 | DELIVERY-023 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-021 threads。 | `970a796`、更新後 PR #7 與 2 則 resolved thread。 |
 | REVIEW-022 | complete | External Reviewer | 檢查 Checks 與 changed-files connection `nodes` 的 nullable contract。 | 兩個 `nodes` field 的 list 與 element 均未標 non-null。 |
 | IMPL-024 | complete | Implementer | 僅修正 REVIEW-022 中由 GitHub GraphQL schema 直接支持的 catalog 與同 topic artifacts。 | 補兩個 connection nodes list／element 的逐層 nullable contract。 |
-| TEST-024 | complete | Tester | 驗證 TC-30、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果待交付前執行。 |
-| DELIVERY-024 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-022 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| TEST-024 | complete | Tester | 驗證 TC-30、Markdown links、diff 與完整 pre-commit。 | `git diff --check`、兩個官方來源 link check 與完整 pre-commit 均通過。 |
+| DELIVERY-024 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-022 threads。 | `bc011e9`、更新後 PR #7 與 2 則 resolved thread。 |
+| REVIEW-023 | complete | External Reviewer | 檢查 review-thread nodes nullable contract 與 TEST-024 ledger evidence。 | reviewThreads nodes list／element 未標 non-null；TEST-024 的 complete status 與 placeholder evidence 不一致。 |
+| IMPL-025 | complete | Implementer | 僅修正 REVIEW-023 中由 GitHub GraphQL schema 或實際驗證結果直接支持的 catalog 與同 topic artifacts。 | 補 review-thread nodes 逐層 nullable，並以實際驗證結果取代 TEST-024 placeholder。 |
+| TEST-025 | complete | Tester | 驗證 TC-31、Markdown links、diff 與完整 pre-commit。 | GraphQL introspection、`git diff --check`、兩個官方來源 link check 與完整 pre-commit 均通過。 |
+| DELIVERY-025 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-023 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -166,3 +170,5 @@
 2026-09-03 — 依 REVIEW-021 補 GraphQL `endCursor` 與 review-thread nested comment nodes 的逐層 nullable contract；不推論 null 成因，未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-022 補 Checks 與 changed-files connection nodes list／element 的逐層 nullable contract；不推論 null 成因，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-023 補 review-thread connection nodes list／element 的逐層 nullable contract，並以實際驗證結果取代 TEST-024 placeholder；未修改架構文件或 source code。

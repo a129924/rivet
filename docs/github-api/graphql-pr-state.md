@@ -46,7 +46,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 必要定位輸入 | 依「共通 PR 定位」提供 `owner`、`name`、`number`；外層使用 `reviewThreads(first: ..., after: ...)`，每個 thread 的巢狀 comments 使用 `comments(first: ..., after: ...)`。 |
 | Query path | `PullRequest.reviewThreads(first: ...)` → `PullRequestReviewThreadConnection` → `PullRequestReviewThread` |
 | 重要欄位 | `id`、`path`、`subjectType`、`line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine`、`diffSide`、`comments`、`isResolved`、`isOutdated`、`resolvedBy` |
-| Nullability | `line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine` 與 `resolvedBy` 都沒有 non-null 標記，必須保留 nullable 語意。 |
+| Nullability | `reviewThreads.nodes` 的 list 與每個 element 都沒有 non-null 標記，必須逐層判空後才讀取 thread 欄位。`line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine` 與 `resolvedBy` 也都沒有 non-null 標記，必須保留 nullable 語意。 |
 | Target kind | `subjectType` 表示 thread 目標是 diff line 或 file。 |
 | Comment node 輸出 | `comments.nodes` 的 list 與每個 element 都沒有 non-null 標記，必須先判空；非 null node 再選取 `PullRequestReviewComment.id`、`body`、`author`（nullable）、`createdAt`、`updatedAt`、`replyTo`（nullable）與 `url`，以提供 inline content、作者、時間與回覆關係。 |
 | 權限能力 | `viewerCanResolve`、`viewerCanUnresolve` 可供未來 UI 判斷。 |
