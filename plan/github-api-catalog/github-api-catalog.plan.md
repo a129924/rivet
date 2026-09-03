@@ -64,3 +64,5 @@
 | TC-10 | REST operation contract 審閱 | Notification operations 列出 classic PAT 與所需 scope；`@me` search 要求有效 token；inline comments 與 review summary 皆有分頁；`REQUEST_CHANGES`／`COMMENT` 均要求 `body`。 |
 | TC-11 | 延後唯讀 taxonomy 審閱 | repository PR list 與 `GET /notifications` 標為「後續唯讀」；`PATCH /notifications/threads/{thread_id}` 維持「後續寫入」，且 Capability Index 分列讀取與寫入能力。 |
 | TC-12 | Search／Viewed／notification contract 審閱 | Search 明列單一 query 1,000 筆上限；`PullRequest.files` 與 Files Viewed state index 為「後續唯讀」，viewed mutations 為「後續寫入」；notification PATCH 列出 `205 Reset Content` 與無 response body。 |
+| TC-13 | GraphQL Reader query contract 審閱 | 所有 PR state query 均記錄 `repository(owner:, name:) → pullRequest(number:)` 定位；Checks 以 `statusCheckRollup`、`state` 與 cursor-paginated `contexts` 表達。 |
+| TC-14 | Discussion、local identity 與寫入 contract 審閱 | issue-level 與 inline source 不重複串接；last-seen identity 覆蓋兩種 comment；submit review 的 `commit_id`、thread viewer gates、merge 成功 payload 與 permission gate 均有直接官方來源。 |

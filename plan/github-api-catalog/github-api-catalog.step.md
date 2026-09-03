@@ -38,6 +38,10 @@
 | IMPL-007 | complete | Implementer | 僅修正 REVIEW-005 中有直接官方或既有 taxonomy 依據的 metadata。 | 補 Search 上限、Viewed read/write 分類、`205 Reset Content`／空 body 與 TC-12；不新增未有直接官方來源的作者限制。 |
 | TEST-007 | complete | Tester | 驗證 TC-12、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
 | DELIVERY-007 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-005 threads。 | 修正 commit、更新後 PR #7 與 resolved thread 狀態。 |
+| REVIEW-006 | complete | External Reviewer | 檢查 GraphQL query locator、Checks、discussion composition、last-seen identity 與寫入 operation contract。 | 指出 10 項問題；其中 notifications OAuth 與 PENDING visibility 兩項無法由目前直接官方來源支持，其餘 8 項有官方依據。 |
+| IMPL-008 | complete | Implementer | 僅修正 REVIEW-006 中有官方依據的 catalog 與同 topic artifacts。 | 補 PR locator、Checks、last-seen identity、merge output/permission、review `commit_id`、thread viewer gate 與不重複 inline composition。 |
+| TEST-008 | complete | Tester | 驗證 TC-13、TC-14、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-008 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-006 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -64,3 +68,5 @@
 2026-09-02 — Human 授權新增「後續唯讀」taxonomy，將 repository PR list 與 `GET /notifications` 與延後寫入明確區分；未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-005 補 Search 1,000 筆上限、Files Viewed read/write 分類與 notification PATCH 成功輸出；作者 review 限制因目前沒有直接官方來源而不列入 catalog；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-006 補 GraphQL PR 定位、Checks、last-seen identity、merge output／權限、review `commit_id`、thread viewer gates 與 inline content source；notifications OAuth 與 PENDING visibility 因直接官方來源分別相反或不足而只回覆說明；未修改架構文件或 source code。

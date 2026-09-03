@@ -17,7 +17,7 @@ Notification thread 的 read state 與「某一個 review comment 是否已在 R
 | --- | --- |
 | 狀態 | 可選本機狀態 |
 | GitHub 等價能力 | 本 catalog 未識別 GitHub 官方的 per-comment viewed state。 |
-| 最小 identity | review thread id 與最後已看見的 comment id 或時間。 |
+| 最小 identity | PR identity、comment resource 類型（issue-level 或 inline review）與 comment id；只有 inline review comment 在取得 GraphQL thread 時，才可額外保留 review thread id。 |
 | Rivet 資料邊界 | GitHub API 提供 comment、thread、outdated 與 resolved；本機只保存 Rivet 自己的 last-seen UX。 |
 | 非決策 | 不定義 SQLite、schema、同步規則、保留期限或跨裝置行為。 |
 

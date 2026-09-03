@@ -6,7 +6,7 @@
 
 ## In-Scope
 
-- 整理等待目前使用者 review 的 PR discovery、PR detail/diff、comments/reviews、file viewed state、review threads、merge、notifications，以及 comment-level last-seen 的可選本機 state。
+- 整理等待目前使用者 review 的 PR discovery、PR detail/diff、checks、comments/reviews、file viewed state、review threads、merge、notifications，以及 comment-level last-seen 的可選本機 state。
 - 依 endpoint family 分拆文件，並以總索引連結每項能力。
 - 對每個 operation 記錄用途、輸入、關鍵欄位、分頁或上限、權限注意事項、產品狀態與官方來源。
 - 將能力標記為「MVP 唯讀」、「後續唯讀」、「後續寫入」或「可選本機狀態」。
@@ -35,6 +35,9 @@
 - `PATCH /notifications/threads/{thread_id}` 成功時回傳 `205 Reset Content`，無 response body。
 - 直接要求目前使用者 review 的明確 search qualifier 為 `user-review-requested:@me`；不將未經官方參考確認的 `review-involves:@me` 列為可採用 query。
 - 建立 review 時，`REQUEST_CHANGES` 與 `COMMENT` 兩種 `event` 必須帶 review `body`；inline review comments 與 review summary 都使用 `page` 與 `per_page` 分頁。
+- GraphQL PR state query 以 `repository(owner:, name:) { pullRequest(number:) }` 定位 PR；`PullRequest.statusCheckRollup` 提供 PR head ref 的 check/status rollup，其 `contexts` 是 cursor-paginated connection。
+- `mergePullRequest` 成功 payload 含已合併的 `pullRequest`；fine-grained token 的 REST merge reference 要求 `Contents` permission（write），而 `viewerCanMergeAsAdmin` 只描述 branch-protection bypass 能力。
+- 建立 review 的 `commit_id` 省略時預設為送出時 PR 的最新 commit；可選 last-seen identity 必須區分 issue-level 與 inline review comment，且只有後者可選用 review thread identity。
 
 ## Official Sources
 

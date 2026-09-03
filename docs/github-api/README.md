@@ -17,7 +17,7 @@
 | --- | --- | --- |
 | 指定 repository 的 open PR 列表 | 後續唯讀 | [REST Inbox](rest-inbox-discovery.md) |
 | 跨 repository、直接要求我 review 的 PR | MVP 唯讀 | [REST Inbox](rest-inbox-discovery.md) |
-| PR 基本資訊、changed files、unified diff | MVP 唯讀 | [REST PR Reader](rest-pr-reader.md) |
+| PR 基本資訊、checks、changed files、unified diff | MVP 唯讀 | [REST PR Reader](rest-pr-reader.md)、[GraphQL PR State](graphql-pr-state.md) |
 | PR conversation、inline comments、reviews | MVP 唯讀 | [REST Discussion & Reviews](rest-discussion-reviews.md) |
 | Files Viewed state 讀取與變更後失效 | 後續唯讀 | [GraphQL PR State](graphql-pr-state.md) |
 | 將 Files Viewed 標記／取消標記 | 後續寫入 | [GraphQL Write Actions](graphql-write-actions.md) |

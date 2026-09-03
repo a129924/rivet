@@ -14,7 +14,7 @@
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Issues` 或 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List issue comments](https://docs.github.com/en/rest/issues/comments#list-issue-comments) |
 
-Rivet catalog composition rule：完整 PR discussion 視圖在需要時組合此 issue-level resource、下列 inline review comments 與 GraphQL review threads；本規則不將單一 endpoint 描述為完整 conversation。
+Rivet catalog composition rule：issue-level comments 是獨立內容來源。若同次閱讀取得 GraphQL `reviewThreads`，以其 `comments` 作為 inline comment 內容來源，並以同一 thread 取得 resolved／outdated；不得再與下列 REST inline comments 串接成兩份 feed。REST inline comments 是未取得 review threads 時的替代內容來源。本規則不將任一單一 endpoint 描述為完整 conversation。
 
 ## Inline Review Comments
 
@@ -49,7 +49,8 @@ Rivet catalog composition rule：完整 PR discussion 視圖在需要時組合�
 | 狀態 | 後續寫入 |
 | Operation | `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews` |
 | 用途 | 提交整體 review。 |
-| 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；`REQUEST_CHANGES` 與 `COMMENT` 必須帶 `body`，可帶 comments。 |
+| 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；`REQUEST_CHANGES` 與 `COMMENT` 必須帶 `body`，可帶 comments。`commit_id` 指向受 review 的 commit SHA；省略時 GitHub 預設使用送出時 PR 的最新 commit。 |
+| 併發注意事項 | 將 Reader snapshot 的 head SHA 帶入 `commit_id` 與送出時重新讀取策略，都是後續 implementation topic 才決定的 Rivet policy。 |
 | 注意事項 | 不屬目前 MVP，亦不在本 topic 實作。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（write）。 |
 | 官方來源 | [Create a review for a pull request](https://docs.github.com/en/rest/pulls/reviews#create-a-review-for-a-pull-request) |

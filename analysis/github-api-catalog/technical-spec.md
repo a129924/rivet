@@ -17,7 +17,7 @@
 | `rest-inbox-discovery.md` | repository PR list、跨 repository 的直接 review request search |
 | `rest-pr-reader.md` | PR detail、changed files、unified diff |
 | `rest-discussion-reviews.md` | conversation comments、inline comments、reviews、提交 review |
-| `graphql-pr-state.md` | files viewed、review threads、review/merge state |
+| `graphql-pr-state.md` | checks、files viewed、review threads、review/merge state |
 | `graphql-write-actions.md` | viewed、thread resolution、merge mutations |
 | `rest-notifications-local-state.md` | notification thread 與 local last-seen boundary |
 
@@ -27,6 +27,9 @@
 - REST 內容區分 Pull requests、Issues comments、Pull request review comments 與 Pull request reviews，避免把三種 comment 混為同一資源。
 - `viewerViewedState` 是 GitHub API 的遠端 PR file 資料；本 catalog 不定義本機持久化、同步或 Rivet UI 的狀態採用規則。
 - PR files 的 REST endpoint 記錄 3,000 files 上限；GraphQL connections 記錄 cursor 分頁，REST list endpoints 使用官方 query 名稱 `page` 與 `per_page`。Notifications 的 `per_page` 上限為 50。
+- GraphQL PR state query 必須明示 PR 的定位路徑與 `owner`、`name`、`number` 輸入；Checks 採 `PullRequest.statusCheckRollup`，並記錄其 `contexts` connection 的輸出與 cursor 分頁。
+- 只在取得 `reviewThreads` 時以 GraphQL thread comments 作 inline content source；REST inline comments 是不取得 thread 時的替代 source，兩者不得串接為重複 feed。
+- 寫入 operation 除 token／repository access 外，必須記錄可由官方欄位或 endpoint reference 支持的 capability／permission gate、成功 payload，以及適用的 SHA 行為。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

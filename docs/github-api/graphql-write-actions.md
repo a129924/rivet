@@ -17,8 +17,8 @@
 
 | Operation | 重要輸入 | 成功結果 | 認證／權限 | 狀態 | 官方來源 |
 | --- | --- | --- | --- | --- |
-| `resolveReviewThread` | `threadId` | 更新後的 thread | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/input](https://docs.github.com/en/graphql/reference/pulls#resolvereviewthreadinput)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
-| `unresolveReviewThread` | `threadId` | 更新後的 thread | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/input](https://docs.github.com/en/graphql/reference/pulls#unresolvereviewthreadinput)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
+| `resolveReviewThread` | `threadId` | 更新後的 thread | GitHub 要求有效 token 且可存取目標 repository；呼叫前 `PullRequestReviewThread.viewerCanResolve` 必須為 true。reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/input](https://docs.github.com/en/graphql/reference/pulls#resolvereviewthreadinput)、[thread capability](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
+| `unresolveReviewThread` | `threadId` | 更新後的 thread | GitHub 要求有效 token 且可存取目標 repository；呼叫前 `PullRequestReviewThread.viewerCanUnresolve` 必須為 true。reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/input](https://docs.github.com/en/graphql/reference/pulls#unresolvereviewthreadinput)、[thread capability](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
 `threadId` 是 `PullRequestReviewThread.id`，不是 REST inline comment id。
 
@@ -29,9 +29,10 @@
 | 狀態 | 後續寫入 |
 | Operation | `mergePullRequest` |
 | 重要輸入 | `pullRequestId`、`expectedHeadOid`、`mergeMethod` |
+| 成功結果 | `MergePullRequestPayload.pullRequest` 為已合併的 PR。 |
 | 併發安全 | 若提供 `expectedHeadOid`，PR head OID 必須相符才允許 merge。以目前 `headRefOid` 作為輸入及失敗後重新載入，皆是未來 Rivet UX policy。 |
-| 認證／權限 | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 |
-| 官方來源 | [MergePullRequestInput](https://docs.github.com/en/graphql/reference/pulls#mergepullrequestinput)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
+| 認證／權限 | 有效 token 與 repository read access 並不足夠；呼叫者必須具備 GitHub 允許合併該 PR 的寫入權限。fine-grained token 的 REST merge reference 要求 `Contents` permission（write）；`viewerCanMergeAsAdmin` 僅表示可略過 branch protection 並立即 merge。 |
+| 官方來源 | [merge mutation/payload/input](https://docs.github.com/en/graphql/reference/pulls#mergepullrequest)、[MergePullRequestInput](https://docs.github.com/en/graphql/reference/pulls#mergepullrequestinput)、[PullRequest viewerCanMergeAsAdmin](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[REST merge permission](https://docs.github.com/en/rest/pulls/pulls#merge-a-pull-request)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
 REST 替代方案為 `PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge`，可帶 `sha` 與 `merge_method`；後續實作 topic 才選定 protocol 與 UX。
 
