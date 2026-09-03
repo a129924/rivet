@@ -15,3 +15,30 @@ export interface DiffRenderUseCaseDependencies {
 export interface DiffRenderUseCase {
   execute(snapshot: DiffSnapshot): DiffRenderOutcome;
 }
+
+export function createDiffRenderUseCase(
+  dependencies: DiffRenderUseCaseDependencies,
+): DiffRenderUseCase {
+  return {
+    execute(snapshot) {
+      const validationResult = dependencies.validator.validate(snapshot);
+      if (validationResult.type === "error") {
+        return validationResult;
+      }
+
+      const parseResult = dependencies.parser.parse(validationResult.value);
+      if (parseResult.type === "error") {
+        return parseResult;
+      }
+
+      const renderPlanResult = dependencies.renderer.createRenderPlan(
+        parseResult.value,
+      );
+      if (renderPlanResult.type === "error") {
+        return renderPlanResult;
+      }
+
+      return dependencies.output.output(renderPlanResult.value);
+    },
+  };
+}
