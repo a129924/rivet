@@ -33,8 +33,8 @@
 - `analysis/http-client-interface/technical-spec.md`
 - `plan/http-client-interface/http-client-interface.plan.md`
 - `plan/http-client-interface/http-client-interface.step.md`
-- `packages/RivetHTTPClient/Sources/RivetHTTPClient/HTTPClient.swift`
-- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/RivetHTTPClientTests.swift`
+- `packages/RivetHTTPClient/Sources/RivetHTTPClient/{URL,Request,Response,Execution}/`
+- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/{URL,Request,Response,Execution}/`
 
 ## Modify
 
@@ -54,6 +54,7 @@
 2. 只在 `HTTPURL` initializer 使用 typed throws；Requester 信任已驗證的 URL。
 3. 由 Requester 把 HTTPRequest 映射為 URLRequest，再委派 injected Transport；成功 response 與 error 均原樣傳遞。
 4. 更新 docs／canvas，明確將 Endpoint composition 留在 caller／domain layer，並標示沒有 concrete URLSession transport。
+5. source 與 tests 都依 URL、Request、Response、Execution folder 分組；此重排不得改變 public API 或行為。
 
 ## TestCase
 

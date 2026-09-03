@@ -40,3 +40,7 @@ Requester 將 `HTTPRequest` 映射為 Foundation `URLRequest`，並交給 inject
 ### Exclusions
 
 不實作 `URLSessionTransport`、網路呼叫、status code validation、retry、token refresh、decode policy 或 API domain Endpoint 設計。根 package 保持沒有 local dependency。
+
+## File Organization
+
+source 依責任分為 `URL/`、`Request/`、`Response/`、`Execution/`；每個 public type 位於其責任對應的 Swift file。tests 使用相同的 `URL/`、`Request/`、`Response/`、`Execution/` 分組，Execution test doubles 與 execution tests 放在一起。此調整不改變 public API 或 execution behavior。
