@@ -41,6 +41,7 @@
 - REST inline review comment 的 `original_position` 與 `in_reply_to_id` 必須依 `pull-request-review-comment` required set 標記為可能缺席；不得將可能缺席改寫為 nullable 或推論其原因。
 - 巢狀 GraphQL connection 必須逐層記錄其自身的 `hasNextPage`、`endCursor` 與下一次同層 `after`；可選本機 last-seen identity 必須保留 API source，且不得把 REST 與 GraphQL identifier 的對應當作既定事實。
 - Mutation payload 的資源欄位與 REST list response 的欄位若在官方 schema 明示 nullable，必須逐一標記；不得僅以「成功結果」或一般重要欄位掩蓋其 nullable contract。
+- GraphQL mutation 的 operation field 與其 payload resource field 若皆未標 non-null，必須逐層標記 nullable；不得只記錄 payload 的內層資源欄位。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract
