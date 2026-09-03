@@ -31,6 +31,7 @@
 - 只在取得 `reviewThreads` 時以 GraphQL thread comments 作 inline content source；REST inline comments 是不取得 thread 時的替代 source，兩者不得串接為重複 feed。
 - 寫入 operation 除 token／repository access 外，必須記錄可由官方欄位或 endpoint reference 支持的 capability／permission gate、成功 payload，以及適用的 SHA 行為。
 - Checks 的 union output、巢狀 GraphQL connection、inline review comment 定位、outdated comment 原始位置、notification conditional polling 與 merge method gate，都必須記錄必要欄位或輸入；不得以 aggregate state 或泛稱的 cursor 取代。
+- Read／write operation 的 response 與 nested content source 必須記錄可供後續 Adapter 讀取的主要欄位；GraphQL pagination 必須明示 window、`hasNextPage`、`endCursor` 與後續 `after` 的關係。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

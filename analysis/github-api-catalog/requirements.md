@@ -42,6 +42,9 @@
 - `StatusCheckRollup.contexts` 的 node 是 `CheckRun`／`StatusContext` union，query 必須用 `__typename` 與對應 inline fragments；review thread 的巢狀 comments 也有自己的 window input 與 cursor。
 - Notifications conditional polling 需將 response `Last-Modified` 原樣傳入下一次的 `If-Modified-Since`，並遵守 `X-Poll-Interval`。
 - `mergePullRequest.mergeMethod` 必須符合 repository 的 `mergeCommitAllowed`、`squashMergeAllowed` 或 `rebaseMergeAllowed` 設定。
+- 提交 review 成功回傳 `200 OK` 與 Pull Request Review resource；catalog 必須記錄能讓後續 Adapter 取得 review identity、state 與 commit 的主要 output。
+- `PullRequestReviewThread` 的多行範圍需同時保留 `startLine` 與 `startDiffSide`；其 `comments.nodes` 需選取 identity、body、author、時間、reply 關係與 URL。
+- Checks cursor traversal 以 `pageInfo.hasNextPage` 與 `endCursor` 驅動下一個 `contexts(after: ...)` query；所有 GraphQL connection 的 window 為 1–100。
 
 ## Official Sources
 

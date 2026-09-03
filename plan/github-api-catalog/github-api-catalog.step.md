@@ -45,7 +45,11 @@
 | REVIEW-007 | complete | External Reviewer | 檢查 inline review input、outdated position、checks union、nested pagination、notification polling 與 merge method gate。 | 指出六項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
 | IMPL-009 | complete | Implementer | 僅修正 REVIEW-007 指出的 catalog 與同 topic artifacts。 | 補齊六項 operation contract，且不變更架構文件或 BC 責任。 |
 | TEST-009 | complete | Tester | 驗證 TC-15、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-009 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-007 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-009 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-007 threads。 | `789bb98`、更新後 PR #7 與 6 則 resolved thread。 |
+| REVIEW-008 | complete | External Reviewer | 檢查 submit review response、thread comment output／多行起始 side，以及 Checks cursor traversal。 | 指出四項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
+| IMPL-010 | complete | Implementer | 僅修正 REVIEW-008 指出的 catalog 與同 topic artifacts。 | 補 200 review response、thread content／start side 與 Checks cursor traversal。 |
+| TEST-010 | complete | Tester | 驗證 TC-16、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-010 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-008 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -76,3 +80,5 @@
 2026-09-03 — 依 REVIEW-006 補 GraphQL PR 定位、Checks、last-seen identity、merge output／權限、review `commit_id`、thread viewer gates 與 inline content source；notifications OAuth 與 PENDING visibility 因直接官方來源分別相反或不足而只回覆說明；未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-007 補 inline review 定位、outdated 原始位置、checks union output、nested thread comments 分頁、notification conditional polling 與 merge method gate；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-008 補 submit review 成功 response、thread comment content／多行起始 side，以及 Checks cursor traversal；未修改架構文件或 source code。
