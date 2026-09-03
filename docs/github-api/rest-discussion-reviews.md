@@ -36,11 +36,11 @@ Rivet catalog composition rule：issue-level comments 是獨立內容來源。�
 | 狀態 | MVP 唯讀 |
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews` |
 | 用途 | 取得 PR reviews 的時序與結果。 |
-| 重要欄位 | id、user、body、state、commit_id、submitted_at |
+| 重要欄位 | id、user、body、state、commit_id、submitted_at（可能缺席，不能當作必填時間） |
 | Review state | `APPROVED`、`CHANGES_REQUESTED`、`COMMENTED`、`DISMISSED`、`PENDING`。 |
 | 分頁 | `page`／`per_page`；依 Link header 取下一頁。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
-| 官方來源 | [List reviews for a pull request](https://docs.github.com/en/rest/pulls/reviews#list-reviews-for-a-pull-request) |
+| 官方來源 | [List reviews for a pull request](https://docs.github.com/en/rest/pulls/reviews#list-reviews-for-a-pull-request)、[GitHub REST OpenAPI `pull-request-review` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`submitted_at` 未列於 `required`） |
 
 ## Submit Review
 
@@ -62,3 +62,4 @@ Rivet catalog composition rule：issue-level comments 是獨立內容來源。�
 - [List review comments on a pull request](https://docs.github.com/en/rest/pulls/comments#list-review-comments-on-a-pull-request)
 - [List reviews for a pull request](https://docs.github.com/en/rest/pulls/reviews#list-reviews-for-a-pull-request)
 - [Create a review for a pull request](https://docs.github.com/en/rest/pulls/reviews#create-a-review-for-a-pull-request)
+- [GitHub REST API description](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)

@@ -72,3 +72,4 @@
 | TC-18 | 多行 review、thread resolution 與 Search pagination contract 審閱 | Submit Review 的非 reply 多行範圍將 `start_line`／`start_side` 列為條件必填；thread resolution mutations 同時連結 operation payload 與 input；Search 列出 `page` 與 Link next traversal。 |
 | TC-19 | Diff failure、checks nullability 與 thread target contract 審閱 | Unified diff 只記錄官方 `406`，不推論原因或 fallback；`statusCheckRollup` 及 thread line fields 保留 nullable 語意；thread 選取 `subjectType`；新整合優先 line-based 定位，`position` 僅為 closing-down 相容用途。 |
 | TC-20 | Review decision 與 changed-file optional contract 審閱 | `reviewDecision` 保留 nullable 語意且不推論 null 原因；REST changed-file `patch` 標記為可能缺席，並以官方 OpenAPI `diff-entry` required set 支持，且不歸因於特定檔案類型。 |
+| TC-21 | Reader、checks、thread 與 Search output contract 審閱 | REST PR `body` 保留 nullable，`previous_filename`、`patch`、`submitted_at` 保留可能缺席語意；GraphQL locator、check output、resolver 與 author 保留 nullable；Search root response 列出 `total_count` 與 `incomplete_results`，且不對 null／缺席成因作推論。 |

@@ -35,6 +35,7 @@
 - REST Search 必須使用官方必填 query parameter 名稱；mutation 官方來源必須能分別追溯 operation payload 與 input。
 - REST list／search operation 的 pagination 必須記錄實際後續頁參數及 Link header traversal；條件必填的 inline comment 定位欄位不得標為單純 optional。
 - API schema 的 nullability、REST response required set 與官方 HTTP status 必須如實記錄；原因推論、failure mapping 與 fallback 仍留給後續 implementation topic。已標示 closing-down 的定位欄位不得作為新整合的首選。
+- REST root response metadata 與 nested output 的 nullable／可能缺席 contract 都必須列入後續 Adapter 可讀取的主要輸出；不得將官方 schema 未指定的成因當作 API 事實。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

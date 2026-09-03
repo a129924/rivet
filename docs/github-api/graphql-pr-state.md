@@ -8,6 +8,8 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 
 本文件所有 query 都先以 `repository(owner: ..., name: ...) { pullRequest(number: ...) }` 定位目標 PR；因此必要輸入為 repository `owner`、repository `name` 與 PR `number`。`Repository.pullRequest` 的 `number` 為必填輸入。
 
+`Query.repository` 與 `Repository.pullRequest` 的 type 都沒有 non-null 標記，可能為 `null`；呼叫端必須逐層判空。本 catalog 不對 null 的原因或後續 failure mapping 作推論。
+
 ## Checks
 
 | 項目 | 定義 |
@@ -15,7 +17,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 狀態 | MVP 唯讀 |
 | Query path | nullable `PullRequest.statusCheckRollup` → `StatusCheckRollup.contexts(first: ..., after: ...)` |
 | 重要欄位 | 整體為 `state`。`contexts` 的 `nodes` 是 `StatusCheckRollupContext` union，需選取 `__typename`：`CheckRun` 使用 `name`、`status`、`conclusion`、`detailsUrl`；`StatusContext` 使用 `context`、`state`、`targetUrl`。 |
-| Nullability | `statusCheckRollup` type 沒有 non-null 標記，可能為 `null`；不得直接取其 `contexts`，也不由本 catalog 推論 null 的原因。 |
+| Nullability | `statusCheckRollup` type 沒有 non-null 標記，可能為 `null`；不得直接取其 `contexts`。`CheckRun.conclusion`、`CheckRun.detailsUrl` 與 `StatusContext.targetUrl` 也沒有 non-null 標記，必須保留 nullable 語意。本 catalog 不推論任何 null 的原因。 |
 | 分頁 | 所有 GraphQL connection 必須提供 `first` 或 `last`（1–100）。前向分頁以 `pageInfo.hasNextPage` 判斷，並把 `pageInfo.endCursor` 傳入下一頁的 `after`。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest statusCheckRollup](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[StatusCheckRollup and union](https://docs.github.com/en/graphql/reference/commits#statuscheckrollup)、[CheckRun](https://docs.github.com/en/graphql/reference/checks#checkrun)、[Repository pullRequest](https://docs.github.com/en/graphql/reference/repos#repository)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
@@ -43,8 +45,9 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 必要定位輸入 | 依「共通 PR 定位」提供 `owner`、`name`、`number`；外層使用 `reviewThreads(first: ..., after: ...)`，每個 thread 的巢狀 comments 使用 `comments(first: ..., after: ...)`。 |
 | Query path | `PullRequest.reviewThreads(first: ...)` → `PullRequestReviewThreadConnection` → `PullRequestReviewThread` |
 | 重要欄位 | `id`、`path`、`subjectType`、`line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine`、`diffSide`、`comments`、`isResolved`、`isOutdated`、`resolvedBy` |
-| Target kind | `subjectType` 表示 thread 目標是 diff line 或 file；`line` 與 `startLine` 是 nullable fields，必須保留其 nullable 語意。 |
-| Comment node 輸出 | `comments.nodes` 選取 `PullRequestReviewComment.id`、`body`、`author`、`createdAt`、`updatedAt`、`replyTo` 與 `url`，以提供 inline content、作者、時間與回覆關係。 |
+| Nullability | `line`、`startLine` 與 `resolvedBy` 都沒有 non-null 標記，必須保留 nullable 語意。 |
+| Target kind | `subjectType` 表示 thread 目標是 diff line 或 file。 |
+| Comment node 輸出 | `comments.nodes` 選取 `PullRequestReviewComment.id`、`body`、`author`（nullable）、`createdAt`、`updatedAt`、`replyTo` 與 `url`，以提供 inline content、作者、時間與回覆關係。 |
 | 權限能力 | `viewerCanResolve`、`viewerCanUnresolve` 可供未來 UI 判斷。 |
 | 分頁 | 外層與每個巢狀 comments connection 都各自使用 `pageInfo` 的 cursor；不可將外層 cursor 用於 thread comments。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |

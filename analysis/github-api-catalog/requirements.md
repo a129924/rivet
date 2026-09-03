@@ -57,6 +57,9 @@
 - Review thread 必須選取 `subjectType`，並保留 nullable line／start-line fields；Submit Review 新整合優先 line-based 定位，`position` 僅記錄為 closing-down 相容方式。
 - `PullRequest.reviewDecision` 沒有 non-null 標記；catalog 必須保留其 nullable 語意，且不推論 null 的原因。
 - REST changed-file 的官方 `diff-entry` schema 不將 `patch` 列為 required；catalog 必須標示其可能缺席，但不得將缺席歸因於未被該來源支持的特定檔案類型。
+- REST `pull-request` schema 將 `body` 標為 nullable；`diff-entry` 的 `previous_filename` 與 `patch`、以及 `pull-request-review` 的 `submitted_at` 都未列於 required，catalog 必須分別保留 nullable 或可能缺席語意，不推論成因。
+- GraphQL `Query.repository`、`Repository.pullRequest`、`CheckRun.conclusion`、`CheckRun.detailsUrl`、`StatusContext.targetUrl`、`PullRequestReviewThread.resolvedBy` 與 `PullRequestReviewComment.author` 都沒有 non-null 標記，catalog 必須保留逐層 nullable contract；不得推論 null 原因或 failure mapping。
+- Cross-repository Issues Search 的 root response 必須列出 `total_count`，與既有 `incomplete_results` 共同作為 search response output。
 
 ## Official Sources
 
