@@ -69,7 +69,11 @@
 | REVIEW-013 | complete | External Reviewer | 檢查 REST／GraphQL nullable contract 與 Search root response output。 | 指出 REST body／file／review fields、GraphQL locator／checks／thread fields，以及 Search `total_count` 的 contract 缺口。 |
 | IMPL-015 | complete | Implementer | 僅修正 REVIEW-013 中由 GitHub GraphQL schema、REST reference 與官方 REST OpenAPI 直接支持的 catalog 與同 topic artifacts。 | 補 nullable／可能缺席與 `total_count` output；不推論 null／缺席原因或 failure mapping。 |
 | TEST-015 | complete | Tester | 驗證 TC-21、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-015 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-013 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-015 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-013 threads。 | `08eeb53`、更新後 PR #7 與 8 則 resolved thread。 |
+| REVIEW-014 | complete | External Reviewer | 檢查 Notifications token 類型、REST discussion user 與 GraphQL reply relationship contract。 | 三項意見中，僅 `replyTo` nullability 有現行官方 GraphQL schema 的直接支持。 |
+| IMPL-016 | complete | Implementer | 僅修正 REVIEW-014 中由官方來源直接支持的 catalog 與同 topic artifacts。 | 補 `replyTo` nullable；Notifications 與 REST `user` 維持現行文件／schema 能直接支持的表述。 |
+| TEST-016 | complete | Tester | 驗證 TC-22、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-016 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-014 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -112,3 +116,5 @@
 2026-09-03 — 依 REVIEW-012 補 `reviewDecision` nullable 與 REST changed-file `patch` 可能缺席的 contract；後者以 GitHub REST OpenAPI `diff-entry` required set 驗證，未推論任何缺席成因，未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-013 補 REST PR／file／review fields、GraphQL locator／checks／thread fields 的 nullable 或可能缺席 contract，以及 Search `total_count` output；未推論 null／缺席原因或 failure mapping，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-014 補 GraphQL `replyTo` nullable；Notifications token 類型與 REST `user` 則維持現行官方文件／schema 能直接支持的表述，未修改架構文件或 source code。

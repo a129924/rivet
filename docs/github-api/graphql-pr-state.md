@@ -47,7 +47,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 重要欄位 | `id`、`path`、`subjectType`、`line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine`、`diffSide`、`comments`、`isResolved`、`isOutdated`、`resolvedBy` |
 | Nullability | `line`、`startLine` 與 `resolvedBy` 都沒有 non-null 標記，必須保留 nullable 語意。 |
 | Target kind | `subjectType` 表示 thread 目標是 diff line 或 file。 |
-| Comment node 輸出 | `comments.nodes` 選取 `PullRequestReviewComment.id`、`body`、`author`（nullable）、`createdAt`、`updatedAt`、`replyTo` 與 `url`，以提供 inline content、作者、時間與回覆關係。 |
+| Comment node 輸出 | `comments.nodes` 選取 `PullRequestReviewComment.id`、`body`、`author`（nullable）、`createdAt`、`updatedAt`、`replyTo`（nullable）與 `url`，以提供 inline content、作者、時間與回覆關係。 |
 | 權限能力 | `viewerCanResolve`、`viewerCanUnresolve` 可供未來 UI 判斷。 |
 | 分頁 | 外層與每個巢狀 comments connection 都各自使用 `pageInfo` 的 cursor；不可將外層 cursor 用於 thread comments。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
