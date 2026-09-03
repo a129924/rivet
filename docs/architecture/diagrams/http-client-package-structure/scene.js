@@ -70,8 +70,7 @@ const EDGES = [
   { from:'http-client',to:'response',pts:[[500,622],[500,722],[1185,722],[1185,844]],label:{s:'al',x:1199,y:782,t:'使用 contract',rot:-90,anchor:'center'} },
   { from:'requester',to:'transport',pts:[[765,622],[765,1074],[525,1074],[525,1144]],label:{s:'al',x:539,y:848,t:'預定依賴',rot:-90,anchor:'center'} },
   { from:'requester',to:'url-request',pts:[[800,622],[800,1280],[322,1280],[322,1404]],label:{s:'al',x:336,y:1100,t:'Foundation request surface',rot:-90,anchor:'center'} },
-  { from:'transport',to:'urlsession',pts:[[790,1222],[790,1300],[952,1300],[952,1404]],label:{s:'al',x:966,y:1352,t:'依賴 Foundation surface',rot:-90,anchor:'center'} },
-  { from:'github-adapter',to:'token-provider',pts:[[970,352],[970,420],[1155,420],[1155,524]],label:{s:'al',x:984,y:456,t:'符合 contract',rot:-90,anchor:'center'} }
+  { from:'transport',to:'urlsession',pts:[[790,1222],[790,1300],[952,1300],[952,1404]],label:{s:'al',x:966,y:1352,t:'依賴 Foundation surface',rot:-90,anchor:'center'} }
 ];
 
 const TEXTS = [

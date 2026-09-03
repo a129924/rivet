@@ -50,6 +50,7 @@
 - 根 package 維持不變；待後續 implementation topic 建立 module product 後，才加入 local path dependency。
 - Integration boundary canvas 呈現核心 BC Port、GitHub Adapter、預定 `RivetHTTPClient`、TokenProvider implementation boundary、URLSession 與 GitHub API。
 - HTTP Client canvas 僅呈現預定的 `HTTPClient → Requester → Transport → URLSession` 編譯期依賴，以及 TokenProvider、endpoint、request／response contract；所有內容標示為 declaration-only，非既有 API。
+- 具體 failure mapper 與 TokenProvider 實作者均屬後續實作決策；package 結構圖不得指定任一實作者，TokenProvider 實作邊界只在 Integration boundary canvas 表達。
 - 兩張圖以 `scene.js` 為唯一真相，使用繁體中文與 `lang="zh-Hant"`；不以箭頭或文字描述 runtime request flow。
 - 每張圖以 diagram-local enhancer／verifier 從 runtime `BOXES`／`EDGES`／`TEXTS` 產生可鍵盤巡覽的文字替代內容與圖表註記；不得維護第二份圖資料，且 fallback 不得遮蔽操作提示。
 

@@ -19,6 +19,8 @@ Review-and-fix
 | TE-04 | completed | 驗證第三輪 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、DTO／Foundation ownership assertions、Node syntax check 與 `git diff --check` 均通過。 |
 | IM-06 | completed | 回修最新 PR review：補齊 runtime `TEXTS` 的 fallback 註記、移除單一 consumer 限制，並避免 fallback 遮蔽操作提示。 | 兩份 generated canvas 已由修正後的 scene 與 enhancer 重建。 |
 | TE-05 | completed | 驗證最新 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、Node syntax、scope assertion、`git diff --check` 與完整 pre-commit 均通過。 |
+| IM-07 | completed | 回修最新 PR review：移除未授權的 BC Failure Mapper，並讓 TokenProvider 實作者只在 Integration boundary canvas 表達。 | package 結構圖不再指定 GitHub Data Adapter 為 TokenProvider 實作者；兩份 canvas 已重建。 |
+| TE-06 | completed | 驗證最新 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、scope assertion、`git diff --check` 與完整 pre-commit 均通過。 |
 | HUMAN-01 | pending | Human review draft PR。 | 不自動 merge 或 release。 |
 
 ## Blockers
