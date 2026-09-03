@@ -10,10 +10,10 @@
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}` |
 | 用途 | 取得單一 PR 的背景與 refs。 |
 | 成功結果 | `200 OK` 與 PR response；conditional request 時 GitHub 另列 `304 Not Modified`。 |
-| 重要欄位 | title、body（nullable）、user、state、draft（可能缺席）、head、base、mergeable、merged、commits、changed_files |
+| 重要欄位 | title、body（nullable）、user、state、draft（可能缺席）、head（其中 `repo` 為 nullable）、base、mergeable、merged、commits、changed_files |
 | 限制 | `mergeable` 可能暫時為 `null`；詳細 merge gating 應使用 GraphQL PR state。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
-| 官方來源 | [Get a pull request](https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request)、[GitHub REST OpenAPI `pull-request` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`body` 為 nullable，`draft` 未列於 `required`） |
+| 官方來源 | [Get a pull request](https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request)、[GitHub REST OpenAPI `pull-request` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`body` 與 `head.repo` 為 nullable，`draft` 未列於 `required`） |
 
 ## Changed Files
 

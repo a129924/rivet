@@ -2,7 +2,7 @@
 
 本目錄是 Rivet 後續 GitHub Integration 實作的外部 API 參考。它不定義 Swift contract、BC data model 或 authentication 實作；那些決策必須留給對應的 implementation topic。
 
-最後官方校驗：2026-09-02（GitHub.com）。
+最後官方校驗：2026-09-03（GitHub.com）。
 
 ## 產品狀態
 

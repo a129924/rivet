@@ -51,6 +51,7 @@
 - REST changed-files 與 notifications list 的 operation metadata 必須明列依 response `Link` header 的 next URL 取得下一頁；只列 `page`／`per_page` 不足以滿足 list traversal contract。
 - Capability Index 的每一列只能對應一個產品狀態；REST changed-files 與 GraphQL Files Viewed state 必須分列，避免將後續唯讀 GraphQL state 誤列為 MVP。
 - Cross-repository Issues Search 的 `issue-search-result-item.user` 必須標為 nullable，並直接連結 GitHub REST OpenAPI schema；不得把其他 REST response 的 `user` contract 類推為相同結果。
+- Repository PR list 與 PR detail 必須各自標記 `head.repo` 為 nullable，並直接連結各自的 GitHub REST OpenAPI schema；不得以外層 `head` 存在推論其巢狀 repository 必定存在。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

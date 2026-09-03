@@ -67,6 +67,7 @@
 - GraphQL `Query.repository`、`Repository.pullRequest`、`CheckRun.conclusion`、`CheckRun.detailsUrl`、`StatusContext.targetUrl`、`PullRequestReviewThread.resolvedBy` 與 `PullRequestReviewComment.author` 都沒有 non-null 標記，catalog 必須保留逐層 nullable contract；不得推論 null 原因或 failure mapping。
 - Cross-repository Issues Search 的 root response 必須列出 `total_count`，與既有 `incomplete_results` 共同作為 search response output。
 - REST OpenAPI 的 `issue-search-result-item.user` 是 nullable；Cross-repository Issues Search 的 item output 必須保留此 contract，且只以該 schema 作為此 nullable claim 的來源。
+- REST OpenAPI 的 `pull-request-simple.head.repo` 與 `pull-request.head.repo` 是 nullable；repository PR list 與 PR detail 的 output 必須各自保留此巢狀 contract。
 - `PullRequestReviewComment.replyTo` 沒有 non-null 標記；catalog 必須標為 nullable，且不推論 null 的成因。Notifications operation 的 token 限制與 REST `user` nullable claim 則必須以現行官方文件或 schema 的明確標記為準，不以 component 名稱或未驗證行為延伸。
 - REST OpenAPI 的 `pull-request-review-comment.pull_request_review_id` 與 `pull-request-review.commit_id` 都明示為 nullable；`original_position` 沒有 nullable 標記，不得僅因其未列於 `required` 而推論可為 null。
 - `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews` 的 `comments` item 官方輸入只列 `path`、`position`、`body`、`line`、`side`、`start_line` 與 `start_side`；catalog 不得暗示支援 `in_reply_to`。

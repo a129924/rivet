@@ -89,3 +89,4 @@
 | TC-35 | First-read 與 table structure 審閱 | root README 連結 catalog；兩個 GraphQL action table 的 header 與 delimiter 皆為六欄。 |
 | TC-36 | REST list traversal 與 capability index 審閱 | Changed Files 與 Notifications 均依 `Link` header 取得下一頁；Index 分列 MVP 的 REST changed files 與後續唯讀的 GraphQL Files Viewed state。 |
 | TC-37 | Search user nullable contract 審閱 | Cross-repository Issues Search 的 item `user` 標為 nullable，並直接連結 GitHub REST OpenAPI `issue-search-result-item` schema。 |
+| TC-38 | Pull Request head repository nullable contract 審閱 | Repository PR list 與 PR detail 均將巢狀 `head.repo` 標為 nullable，並各自連結對應的 GitHub REST OpenAPI schema。 |
