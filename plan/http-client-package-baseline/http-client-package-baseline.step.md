@@ -15,6 +15,8 @@ Review-and-fix
 | TE-02 | completed | 驗證 review-fix 產物與品質 gate。 | accessibility verifier、enhancer 重建一致性、Node syntax check、`git diff --check` 與完整 pre-commit 均通過。 |
 | IM-04 | completed | 回修後續 PR review：移除 failure 種類／流程，校正圖表 dependency 文案，並補齊 stage-only keyboard handling 與繁中操作介面。 | scene 只表達 ownership／compile-time boundary；enhancer 產生繁中可近用 UI。 |
 | TE-03 | completed | 驗證第二輪 review-fix 產物與品質 gate。 | scene validate 皆為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、未授權 failure flow／window-global keyboard assertion 與 `git diff --check` 均通過。 |
+| IM-05 | completed | 回修第三輪 PR review：將 Foundation 型別移至 Outside、區分既有 manifest 與未實作 abstraction，並移除未授權的 DTO mapper。 | scene 未新增 package API 或 DTO 設計；兩份 generated canvas 已重建。 |
+| TE-04 | completed | 驗證第三輪 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、DTO／Foundation ownership assertions、Node syntax check 與 `git diff --check` 均通過。 |
 | HUMAN-01 | pending | Human review draft PR。 | 不自動 merge 或 release。 |
 
 ## Blockers

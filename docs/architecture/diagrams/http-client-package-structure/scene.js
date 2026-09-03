@@ -18,8 +18,8 @@ const BANDS = [
     hdr:{x:184,y:810,t:'HTTP CONTRACTS'}, tagr:{x:1396,y:810,t:'預定資料形狀 · 未鎖定 WIRE SHAPE',alpha:0.6} },
   { id:'band-transport', plane:'transport', x:160, y:1080, w:1260, h:150, alpha:0.5, dash:true,
     hdr:{x:184,y:1110,t:'TRANSPORT BOUNDARY'}, tagr:{x:1396,y:1110,t:'預定可替換邊界',alpha:0.6} },
-  { id:'band-outside', plane:'outside', x:250, y:1340, w:980, h:150, alpha:0.48,
-    hdr:{x:274,y:1370,t:'OUTSIDE — FOUNDATION URLSESSION'}, tagr:{x:1206,y:1370,t:'非 RIVET 所有',alpha:0.6} }
+  { id:'band-outside', plane:'outside', x:160, y:1340, w:1260, h:150, alpha:0.48,
+    hdr:{x:184,y:1370,t:'OUTSIDE — FOUNDATION SURFACES'}, tagr:{x:1396,y:1370,t:'非 RIVET 所有',alpha:0.6} }
 ];
 
 const BOXES = [
@@ -44,21 +44,21 @@ const BOXES = [
   { id:'response', plane:'contracts', band:'band-contracts', x:1000,y:850,w:370,h:88,r:10,dash:true,
     name:'Response',about:'預定 status、headers 與 payload contract，尚未定義 decode policy。',
     texts:[['bl',1024,878,'Response'],['bs',1024,900,'預定 status · headers · payload'],['bn',1024,922,'未選擇 decode policy']] },
-  { id:'transport', plane:'transport', band:'band-transport', x:200,y:1150,w:360,h:68,r:10,dash:true,
+  { id:'transport', plane:'transport', band:'band-transport', x:200,y:1150,w:1180,h:68,r:10,dash:true,
     name:'Transport',about:'預定可替換的 URLSession abstraction，尚未宣告 protocol。',
     texts:[['bl',374,1178,'Transport'],['bs',374,1200,'預定 URLSession boundary']] },
-  { id:'url-request', plane:'transport', band:'band-transport', x:590,y:1150,w:400,h:68,r:10,
+  { id:'url-request', plane:'outside', band:'band-outside', x:180,y:1410,w:285,h:68,r:10,
     name:'URLRequest',about:'Foundation request surface，非 package 自有 contract。',
-    texts:[['bl',814,1178,'Foundation URLRequest'],['bs',814,1200,'Foundation surface']] },
-  { id:'url-response', plane:'transport', band:'band-transport', x:1020,y:1150,w:400,h:68,r:10,
+    texts:[['bl',204,1438,'Foundation URLRequest'],['bs',204,1460,'Foundation surface']] },
+  { id:'url-response', plane:'outside', band:'band-outside', x:495,y:1410,w:285,h:68,r:10,
     name:'HTTPURLResponse',about:'Foundation HTTP response surface，非 package 自有 contract。',
-    texts:[['bl',1144,1178,'HTTPURLResponse'],['bs',1144,1200,'Foundation surface']] },
-  { id:'urlsession', plane:'outside', band:'band-outside', x:280,y:1410,w:430,h:68,r:10,
+    texts:[['bl',519,1438,'HTTPURLResponse'],['bs',519,1460,'Foundation surface']] },
+  { id:'urlsession', plane:'outside', band:'band-outside', x:810,y:1410,w:285,h:68,r:10,
     name:'Foundation URLSession',about:'Foundation 提供的資料任務與網路執行 surface。',
-    texts:[['bl',374,1438,'Foundation URLSession'],['bs',374,1460,'網路執行 surface']] },
-  { id:'network', plane:'outside', band:'band-outside', x:770,y:1410,w:430,h:68,r:10,
+    texts:[['bl',834,1438,'Foundation URLSession'],['bs',834,1460,'網路執行 surface']] },
+  { id:'network', plane:'outside', band:'band-outside', x:1125,y:1410,w:285,h:68,r:10,
     name:'Network',about:'網路與 server availability 皆為 package 外的 infrastructure。',
-    texts:[['bl',814,1438,'Network'],['bs',814,1460,'外部 infrastructure']] }
+    texts:[['bl',1149,1438,'Network'],['bs',1149,1460,'外部 infrastructure']] }
 ];
 
 const EDGES = [
@@ -69,8 +69,8 @@ const EDGES = [
   { from:'http-client',to:'request',pts:[[445,622],[445,742],[635,742],[635,844]],label:{s:'al',x:649,y:792,t:'使用 contract',rot:-90,anchor:'center'} },
   { from:'http-client',to:'response',pts:[[500,622],[500,722],[1185,722],[1185,844]],label:{s:'al',x:1199,y:782,t:'使用 contract',rot:-90,anchor:'center'} },
   { from:'requester',to:'transport',pts:[[765,622],[765,1074],[525,1074],[525,1144]],label:{s:'al',x:539,y:848,t:'預定依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'url-request',pts:[[800,622],[800,1144]],label:{s:'al',x:814,y:884,t:'Foundation request',rot:-90,anchor:'center'} },
-  { from:'transport',to:'urlsession',pts:[[525,1222],[525,1404]],label:{s:'al',x:539,y:1313,t:'依賴 Foundation surface',rot:-90,anchor:'center'} },
+  { from:'requester',to:'url-request',pts:[[800,622],[800,1280],[322,1280],[322,1404]],label:{s:'al',x:336,y:1100,t:'Foundation request surface',rot:-90,anchor:'center'} },
+  { from:'transport',to:'urlsession',pts:[[790,1222],[790,1300],[952,1300],[952,1404]],label:{s:'al',x:966,y:1352,t:'依賴 Foundation surface',rot:-90,anchor:'center'} },
   { from:'github-adapter',to:'token-provider',pts:[[970,352],[970,420],[1155,420],[1155,524]],label:{s:'al',x:984,y:456,t:'符合 contract',rot:-90,anchor:'center'} }
 ];
 
