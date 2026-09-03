@@ -42,6 +42,7 @@
 - 巢狀 GraphQL connection 必須逐層記錄其自身的 `hasNextPage`、`endCursor` 與下一次同層 `after`；可選本機 last-seen identity 必須保留 API source，且不得把 REST 與 GraphQL identifier 的對應當作既定事實。
 - Mutation payload 的資源欄位與 REST list response 的欄位若在官方 schema 明示 nullable，必須逐一標記；不得僅以「成功結果」或一般重要欄位掩蓋其 nullable contract。
 - GraphQL mutation 的 operation field 與其 payload resource field 若皆未標 non-null，必須逐層標記 nullable；不得只記錄 payload 的內層資源欄位。
+- GraphQL connection field 若未標 non-null，必須在讀取其 `nodes` 或 `pageInfo` 前記錄外層 nullable；REST field 未列於 required set 時則標為可能缺席。Query parameter 的官方預設值與 filter 語意亦必須保留，但產品是否採用特定 filter 留給後續 topic 決定。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

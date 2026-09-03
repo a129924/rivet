@@ -28,9 +28,10 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | --- | --- |
 | 狀態 | 後續唯讀 |
 | 必要定位輸入 | 依「共通 PR 定位」提供 `owner`、`name`、`number`；`files` 使用 `first` 與後續頁的 `after`。 |
-| Query path | `PullRequest.files(first: ..., after: ...)` → `PullRequestChangedFile` |
+| Query path | nullable `PullRequest.files(first: ..., after: ...)` → `PullRequestChangedFile` |
 | 重要欄位 | `path`、`additions`、`deletions`、`changeType`、`viewerViewedState` |
 | Viewed state | `UNVIEWED`、`VIEWED`、`DISMISSED`；`DISMISSED` 表示上次 viewed 後檔案有新 changes。 |
+| Nullability | `files` type 沒有 non-null 標記，可能為 `null`；必須先判空，才可取 connection 的 `nodes` 或 `pageInfo`。本 catalog 不推論 null 的原因。 |
 | 分頁 | 所有 GraphQL connection 必須提供 `first` 或 `last`（1–100）。前向分頁以 `pageInfo.hasNextPage` 判斷，並把 `pageInfo.endCursor` 傳入下一頁的 `after`。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest files and PullRequestChangedFile](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |

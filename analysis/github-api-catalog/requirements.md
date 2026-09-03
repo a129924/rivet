@@ -69,6 +69,9 @@
 - `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews` 的 `comments` item 官方輸入只列 `path`、`position`、`body`、`line`、`side`、`start_line` 與 `start_side`；catalog 不得暗示支援 `in_reply_to`。
 - REST OpenAPI 的 `pull-request-review-comment.original_position` 與 `in_reply_to_id` 沒有列於 `required`；catalog 必須標為可能缺席，並與 nullable contract 區分，不推論缺席原因。
 - `markFileAsViewed`、`unmarkFileAsViewed`、`resolveReviewThread`、`unresolveReviewThread` 與 `mergePullRequest` 的 mutation operation field 都沒有 non-null 標記；catalog 必須同時保留 operation field 與 payload resource field 的 nullable contract。
+- `PullRequest.files` 沒有 non-null 標記；catalog 必須在取其 connection 的 `nodes` 或 `pageInfo` 前保留外層 nullable contract，且不推論 null 原因。
+- REST `pull-request-simple.draft` 與 `pull-request.draft` 未列於各自 required set；catalog 必須標為可能缺席，並與 nullable contract 區分。
+- `GET /notifications` 的 `all` query 預設為 `false`，省略時只顯示未讀 notification；是否包含已讀 notification 是後續產品決策。
 
 ## Official Sources
 

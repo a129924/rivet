@@ -79,3 +79,4 @@
 | TC-25 | REST review nullable 與 Submit Review input contract 審閱 | REST inline comment 的 `pull_request_review_id` 與 review resource 的 `commit_id` 依官方 OpenAPI 標為 nullable；`original_position` 不因未列於 `required` 而標 nullable；Submit Review 的多行範圍描述不暗示 `in_reply_to` input。 |
 | TC-26 | REST inline optional-presence contract 審閱 | `pull-request-review-comment.original_position` 與 `in_reply_to_id` 未列於官方 OpenAPI required set，因此標為可能缺席，而非 nullable；不推論缺席原因。 |
 | TC-27 | GraphQL mutation operation nullable contract 審閱 | 五個寫入 mutation 的 operation field 與其 payload resource field 均保留 nullable contract；不只記錄 payload 內層資源欄位。 |
+| TC-28 | Files、PR draft 與 notification filter contract 審閱 | `PullRequest.files` 保留外層 nullable；REST list/detail 的 `draft` 標為可能缺席；Notifications `all` 預設為 `false` 且省略時只回傳未讀 notification，是否採用 `all=true` 留給後續產品 topic。 |
