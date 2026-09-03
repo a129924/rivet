@@ -60,7 +60,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 必要定位輸入 | 依「共通 PR 定位」提供 `owner`、`name`、`number`。 |
 | Query path | `PullRequest.reviewDecision`、`mergeable`、`mergeStateStatus`、`isDraft`、`headRefOid` |
 | 用途 | 顯示整體 review decision、merge conflict 或 gating 狀態，以及目前 head SHA。 |
-| 注意事項 | `mergeable` 或 merge state 可能暫時未知；UI 不得將未知解讀為可 merge。 |
+| Nullability | `reviewDecision` type 沒有 non-null 標記，可能為 `null`；不得將其解讀為任一 review 結果，亦不由本 catalog 推論 null 的原因。`mergeable` 或 merge state 也可能暫時未知；UI 不得將未知解讀為可 merge。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest state fields](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 

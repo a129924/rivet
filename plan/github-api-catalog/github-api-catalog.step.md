@@ -61,7 +61,11 @@
 | REVIEW-011 | complete | External Reviewer | 檢查 diff failure、checks nullability、thread target kind 與 inline review positioning。 | 指出三項直接官方 contract 缺口，以及一項只可確認 HTTP status、不可確認原因的 diff failure claim。 |
 | IMPL-013 | complete | Implementer | 僅修正 REVIEW-011 中由官方來源支持的 catalog 與同 topic artifacts。 | 補 406 status、nullable checks／thread target、line-based preference，且不推論 406 成因、fallback 或 REST `subject_type` output。 |
 | TEST-013 | complete | Tester | 驗證 TC-19、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-013 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-011 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-013 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-011 threads。 | `f038e19`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-012 | complete | External Reviewer | 檢查 review decision 與 changed-file response 的 optional contract。 | 指出 `reviewDecision` nullable 與 REST `patch` 未列於 required set。 |
+| IMPL-014 | complete | Implementer | 僅修正 REVIEW-012 中由 GitHub GraphQL schema 與官方 REST OpenAPI 直接支持的 catalog 與同 topic artifacts。 | 補 `reviewDecision` nullable 與 `patch` 可能缺席；不推論兩者的成因。 |
+| TEST-014 | complete | Tester | 驗證 TC-20、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-014 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-012 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -100,3 +104,5 @@
 2026-09-03 — 依 REVIEW-010 補多行 review comment 條件必填、thread resolution payload source 與 Issues Search page／Link traversal；未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-011 補 unified diff `406`、checks nullability、thread target kind 與 line-based review positioning；不推論 406 成因／fallback 或未由 list response reference 支持的 REST `subject_type` output，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-012 補 `reviewDecision` nullable 與 REST changed-file `patch` 可能缺席的 contract；後者以 GitHub REST OpenAPI `diff-entry` required set 驗證，未推論任何缺席成因，未修改架構文件或 source code。

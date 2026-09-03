@@ -55,6 +55,8 @@
 - Unified diff endpoint 必須記錄官方列出的 `406 Unacceptable`，但不得將其歸因於未被官方來源支持的特定 diff 大小，或預先定義 fallback。
 - Checks contract 必須保留 nullable `statusCheckRollup`，且不得對 null 原因作未證實推論。
 - Review thread 必須選取 `subjectType`，並保留 nullable line／start-line fields；Submit Review 新整合優先 line-based 定位，`position` 僅記錄為 closing-down 相容方式。
+- `PullRequest.reviewDecision` 沒有 non-null 標記；catalog 必須保留其 nullable 語意，且不推論 null 的原因。
+- REST changed-file 的官方 `diff-entry` schema 不將 `patch` 列為 required；catalog 必須標示其可能缺席，但不得將缺席歸因於未被該來源支持的特定檔案類型。
 
 ## Official Sources
 
@@ -67,3 +69,4 @@
 - [REST Notifications](https://docs.github.com/en/rest/activity/notifications)
 - [GraphQL Pull requests](https://docs.github.com/en/graphql/reference/pulls)
 - [GraphQL introduction and transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api)
+- [GitHub REST API description](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)
