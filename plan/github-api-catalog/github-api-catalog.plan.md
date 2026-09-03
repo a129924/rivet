@@ -81,3 +81,4 @@
 | TC-27 | GraphQL mutation operation nullable contract 審閱 | 五個寫入 mutation 的 operation field 與其 payload resource field 均保留 nullable contract；不只記錄 payload 內層資源欄位。 |
 | TC-28 | Files、PR draft 與 notification filter contract 審閱 | `PullRequest.files` 保留外層 nullable；REST list/detail 的 `draft` 標為可能缺席；Notifications `all` 預設為 `false` 且省略時只回傳未讀 notification，是否採用 `all=true` 留給後續產品 topic。 |
 | TC-29 | GraphQL cursor 與 nested comment nodes nullability 審閱 | `PageInfo.endCursor` 保留 nullable，只有在 `hasNextPage` 為 true 且 cursor 存在時才傳入 `after`；review-thread comments 的 nodes list 與元素各自保留 nullable。 |
+| TC-30 | Checks／changed-files nodes nullable contract 審閱 | `StatusCheckRollupContextConnection.nodes` 與 `PullRequestChangedFileConnection.nodes` 的 list 與每個 node 均保留 nullable；只有非 null node 才讀取 union fragment 或 changed-file 欄位。 |

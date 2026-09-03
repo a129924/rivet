@@ -17,7 +17,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 狀態 | MVP 唯讀 |
 | Query path | nullable `PullRequest.statusCheckRollup` → `StatusCheckRollup.contexts(first: ..., after: ...)` |
 | 重要欄位 | 整體為 `state`。`contexts` 的 `nodes` 是 `StatusCheckRollupContext` union，需選取 `__typename`：`CheckRun` 使用 `name`、`status`、`conclusion`、`detailsUrl`；`StatusContext` 使用 `context`、`state`、`targetUrl`。 |
-| Nullability | `statusCheckRollup` type 沒有 non-null 標記，可能為 `null`；不得直接取其 `contexts`。`CheckRun.conclusion`、`CheckRun.detailsUrl` 與 `StatusContext.targetUrl` 也沒有 non-null 標記，必須保留 nullable 語意。本 catalog 不推論任何 null 的原因。 |
+| Nullability | `statusCheckRollup` type 沒有 non-null 標記，可能為 `null`；不得直接取其 `contexts`。`contexts.nodes` 的 list 與每個 element 也都沒有 non-null 標記，必須逐層判空；只有非 null node 才選取 `__typename` 與對應 union fragment 欄位。`CheckRun.conclusion`、`CheckRun.detailsUrl` 與 `StatusContext.targetUrl` 也沒有 non-null 標記，必須保留 nullable 語意。本 catalog 不推論任何 null 的原因。 |
 | 分頁 | 所有 GraphQL connection 必須提供 `first` 或 `last`（1–100）。`pageInfo.endCursor` 為 nullable；前向分頁只在 `hasNextPage` 為 true 且 `endCursor` 存在時，才把它傳入下一頁的 `after`。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest statusCheckRollup](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[StatusCheckRollup and union](https://docs.github.com/en/graphql/reference/commits#statuscheckrollup)、[CheckRun](https://docs.github.com/en/graphql/reference/checks#checkrun)、[Repository pullRequest](https://docs.github.com/en/graphql/reference/repos#repository)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
@@ -31,7 +31,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | Query path | nullable `PullRequest.files(first: ..., after: ...)` → `PullRequestChangedFile` |
 | 重要欄位 | `path`、`additions`、`deletions`、`changeType`、`viewerViewedState` |
 | Viewed state | `UNVIEWED`、`VIEWED`、`DISMISSED`；`DISMISSED` 表示上次 viewed 後檔案有新 changes。 |
-| Nullability | `files` type 沒有 non-null 標記，可能為 `null`；必須先判空，才可取 connection 的 `nodes` 或 `pageInfo`。本 catalog 不推論 null 的原因。 |
+| Nullability | `files` type 沒有 non-null 標記，可能為 `null`；必須先判空，才可取 connection 的 `nodes` 或 `pageInfo`。`files.nodes` 的 list 與每個 element 也都沒有 non-null 標記，必須逐層判空後才讀取 changed-file 欄位。本 catalog 不推論 null 的原因。 |
 | 分頁 | 所有 GraphQL connection 必須提供 `first` 或 `last`（1–100）。`pageInfo.endCursor` 為 nullable；前向分頁只在 `hasNextPage` 為 true 且 `endCursor` 存在時，才把它傳入下一頁的 `after`。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest files and PullRequestChangedFile](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |

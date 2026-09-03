@@ -44,6 +44,7 @@
 - GraphQL mutation 的 operation field 與其 payload resource field 若皆未標 non-null，必須逐層標記 nullable；不得只記錄 payload 的內層資源欄位。
 - GraphQL connection field 若未標 non-null，必須在讀取其 `nodes` 或 `pageInfo` 前記錄外層 nullable；REST field 未列於 required set 時則標為可能缺席。Query parameter 的官方預設值與 filter 語意亦必須保留，但產品是否採用特定 filter 留給後續 topic 決定。
 - GraphQL pagination 的 `endCursor` 與 connection nodes list／element 若未標 non-null，必須逐層記錄 nullable；只在 `hasNextPage` 為 true 且 cursor 存在時才建構下一頁的 `after`。
+- Checks 與 changed-files connection 的 nodes list／element 均須明確標示 nullable；只有非 null node 才可選取 `__typename` 的 union fragment 或 changed-file 欄位。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

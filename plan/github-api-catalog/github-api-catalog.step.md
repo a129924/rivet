@@ -101,7 +101,11 @@
 | REVIEW-021 | complete | External Reviewer | 檢查 GraphQL cursor 與 review-thread nested comment nodes 的 nullable contract。 | `PageInfo.endCursor`、comments nodes list 與 list element 均未標 non-null。 |
 | IMPL-023 | complete | Implementer | 僅修正 REVIEW-021 中由 GitHub GraphQL schema 直接支持的 catalog 與同 topic artifacts。 | 補 cursor、nodes list 與 node element 的逐層 nullable contract。 |
 | TEST-023 | complete | Tester | 驗證 TC-29、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-023 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-021 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-023 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-021 threads。 | `970a796`、更新後 PR #7 與 2 則 resolved thread。 |
+| REVIEW-022 | complete | External Reviewer | 檢查 Checks 與 changed-files connection `nodes` 的 nullable contract。 | 兩個 `nodes` field 的 list 與 element 均未標 non-null。 |
+| IMPL-024 | complete | Implementer | 僅修正 REVIEW-022 中由 GitHub GraphQL schema 直接支持的 catalog 與同 topic artifacts。 | 補兩個 connection nodes list／element 的逐層 nullable contract。 |
+| TEST-024 | complete | Tester | 驗證 TC-30、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果待交付前執行。 |
+| DELIVERY-024 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-022 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -160,3 +164,5 @@
 2026-09-03 — 依 REVIEW-020 補 GraphQL files nullable、REST PR draft 可能缺席與 Notifications `all` 預設 filter contract；是否要求包含已讀 notification 留給後續產品 topic，未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-021 補 GraphQL `endCursor` 與 review-thread nested comment nodes 的逐層 nullable contract；不推論 null 成因，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-022 補 Checks 與 changed-files connection nodes list／element 的逐層 nullable contract；不推論 null 成因，未修改架構文件或 source code。

@@ -74,6 +74,7 @@
 - `GET /notifications` 的 `all` query 預設為 `false`，省略時只顯示未讀 notification；是否包含已讀 notification 是後續產品決策。
 - `PageInfo.endCursor` 沒有 non-null 標記；所有 connection traversal 只在 `hasNextPage` 為 true 且 cursor 存在時才使用 `after`。
 - `PullRequestReviewCommentConnection.nodes` 的 list 與每個 list element 都沒有 non-null 標記；catalog 必須保留兩層 nullable contract，再讀取 comment node fields。
+- `StatusCheckRollupContextConnection.nodes` 與 `PullRequestChangedFileConnection.nodes` 的 list 與 list element 都沒有 non-null 標記；catalog 必須逐層保留 nullable contract，再讀取 union fragment 或 changed-file 欄位。
 
 ## Official Sources
 
