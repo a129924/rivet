@@ -21,7 +21,7 @@
 ## Success Criteria
 
 - 原始 capability 清單的每個項目皆能從 API catalog 索引找到唯一的主文件。
-- 每個紀錄均連向 GitHub 官方文件，且與 2026-09-02 的官方 REST／GraphQL reference 相符。
+- 每個紀錄均連向 GitHub 官方文件，且與 2026-09-03 的官方 REST／GraphQL reference 相符。
 - 現行 MVP 唯讀、延後唯讀與延後寫入能力不會混淆。
 
 ## Research Findings
@@ -38,6 +38,10 @@
 - GraphQL PR state query 以 `repository(owner:, name:) { pullRequest(number:) }` 定位 PR；`PullRequest.statusCheckRollup` 提供 PR head ref 的 check/status rollup，其 `contexts` 是 cursor-paginated connection。
 - `mergePullRequest` 成功 payload 含已合併的 `pullRequest`；fine-grained token 的 REST merge reference 要求 `Contents` permission（write），而 `viewerCanMergeAsAdmin` 只描述 branch-protection bypass 能力。
 - 建立 review 的 `commit_id` 省略時預設為送出時 PR 的最新 commit；可選 last-seen identity 必須區分 issue-level 與 inline review comment，且只有後者可選用 review thread identity。
+- 建立 review 的每筆 inline comment 必帶 `path` 與 `body`，並以 diff `position` 或 line-based `line`／`side` 定位；REST 回應與 `PullRequestReviewThread` 都有可保留 outdated comment 原始位置的欄位。
+- `StatusCheckRollup.contexts` 的 node 是 `CheckRun`／`StatusContext` union，query 必須用 `__typename` 與對應 inline fragments；review thread 的巢狀 comments 也有自己的 window input 與 cursor。
+- Notifications conditional polling 需將 response `Last-Modified` 原樣傳入下一次的 `If-Modified-Since`，並遵守 `X-Poll-Interval`。
+- `mergePullRequest.mergeMethod` 必須符合 repository 的 `mergeCommitAllowed`、`squashMergeAllowed` 或 `rebaseMergeAllowed` 設定。
 
 ## Official Sources
 

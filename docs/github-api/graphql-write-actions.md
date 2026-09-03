@@ -2,7 +2,7 @@
 
 所有 operation 的 request body 都使用 `POST https://api.github.com/graphql`。本文件是後續能力的官方參考，不授權目前 MVP 實作寫入操作。
 
-最後官方校驗：2026-09-02。
+最後官方校驗：2026-09-03。
 
 ## File Viewed
 
@@ -29,10 +29,11 @@
 | 狀態 | 後續寫入 |
 | Operation | `mergePullRequest` |
 | 重要輸入 | `pullRequestId`、`expectedHeadOid`、`mergeMethod` |
+| merge method gate | `mergeMethod` 為 `MERGE`、`SQUASH` 或 `REBASE`；呼叫前分別確認 `Repository.mergeCommitAllowed`、`squashMergeAllowed` 或 `rebaseMergeAllowed` 為 true。 |
 | 成功結果 | `MergePullRequestPayload.pullRequest` 為已合併的 PR。 |
 | 併發安全 | 若提供 `expectedHeadOid`，PR head OID 必須相符才允許 merge。以目前 `headRefOid` 作為輸入及失敗後重新載入，皆是未來 Rivet UX policy。 |
 | 認證／權限 | 有效 token 與 repository read access 並不足夠；呼叫者必須具備 GitHub 允許合併該 PR 的寫入權限。fine-grained token 的 REST merge reference 要求 `Contents` permission（write）；`viewerCanMergeAsAdmin` 僅表示可略過 branch protection 並立即 merge。 |
-| 官方來源 | [merge mutation/payload/input](https://docs.github.com/en/graphql/reference/pulls#mergepullrequest)、[MergePullRequestInput](https://docs.github.com/en/graphql/reference/pulls#mergepullrequestinput)、[PullRequest viewerCanMergeAsAdmin](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[REST merge permission](https://docs.github.com/en/rest/pulls/pulls#merge-a-pull-request)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
+| 官方來源 | [merge mutation/payload/input](https://docs.github.com/en/graphql/reference/pulls#mergepullrequest)、[MergePullRequestInput](https://docs.github.com/en/graphql/reference/pulls#mergepullrequestinput)、[PullRequest merge method enum](https://docs.github.com/en/graphql/reference/pulls#pullrequestmergemethod)、[Repository merge settings](https://docs.github.com/en/graphql/reference/repos#repository)、[PullRequest viewerCanMergeAsAdmin](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[REST merge permission](https://docs.github.com/en/rest/pulls/pulls#merge-a-pull-request)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
 REST 替代方案為 `PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge`，可帶 `sha` 與 `merge_method`；後續實作 topic 才選定 protocol 與 UX。
 

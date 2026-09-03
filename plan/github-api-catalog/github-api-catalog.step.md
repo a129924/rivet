@@ -41,7 +41,11 @@
 | REVIEW-006 | complete | External Reviewer | 檢查 GraphQL query locator、Checks、discussion composition、last-seen identity 與寫入 operation contract。 | 指出 10 項問題；其中 notifications OAuth 與 PENDING visibility 兩項無法由目前直接官方來源支持，其餘 8 項有官方依據。 |
 | IMPL-008 | complete | Implementer | 僅修正 REVIEW-006 中有官方依據的 catalog 與同 topic artifacts。 | 補 PR locator、Checks、last-seen identity、merge output/permission、review `commit_id`、thread viewer gate 與不重複 inline composition。 |
 | TEST-008 | complete | Tester | 驗證 TC-13、TC-14、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-008 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-006 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-008 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-006 threads。 | `6ffa142`、更新後 PR #7 與 10 則 resolved thread。 |
+| REVIEW-007 | complete | External Reviewer | 檢查 inline review input、outdated position、checks union、nested pagination、notification polling 與 merge method gate。 | 指出六項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
+| IMPL-009 | complete | Implementer | 僅修正 REVIEW-007 指出的 catalog 與同 topic artifacts。 | 補齊六項 operation contract，且不變更架構文件或 BC 責任。 |
+| TEST-009 | complete | Tester | 驗證 TC-15、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-009 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-007 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -70,3 +74,5 @@
 2026-09-03 — 依 REVIEW-005 補 Search 1,000 筆上限、Files Viewed read/write 分類與 notification PATCH 成功輸出；作者 review 限制因目前沒有直接官方來源而不列入 catalog；未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-006 補 GraphQL PR 定位、Checks、last-seen identity、merge output／權限、review `commit_id`、thread viewer gates 與 inline content source；notifications OAuth 與 PENDING visibility 因直接官方來源分別相反或不足而只回覆說明；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-007 補 inline review 定位、outdated 原始位置、checks union output、nested thread comments 分頁、notification conditional polling 與 merge method gate；未修改架構文件或 source code。

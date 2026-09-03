@@ -1,6 +1,6 @@
 # REST Discussion & Reviews
 
-最後官方校驗：2026-09-02。
+最後官方校驗：2026-09-03。
 
 ## PR Conversation Comments
 
@@ -23,7 +23,7 @@ Rivet catalog composition rule：issue-level comments 是獨立內容來源。�
 | 狀態 | MVP 唯讀 |
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments` |
 | 用途 | 取得 diff 上的 review comments。 |
-| 重要欄位 | id、pull_request_review_id、path、line、side、start_line、start_side、commit_id、original_commit_id、body、in_reply_to_id |
+| 重要欄位 | id、pull_request_review_id、path、line、side、start_line、start_side、commit_id、original_commit_id、original_position、original_line、original_start_line、body、in_reply_to_id |
 | 分頁 | `page`／`per_page`；依 Link header 取下一頁。 |
 | 注意事項 | Rivet mapping 可使用 GitHub comment `id` 作 identity；thread grouping、resolved 與 outdated 見 GraphQL 文件。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
@@ -49,7 +49,7 @@ Rivet catalog composition rule：issue-level comments 是獨立內容來源。�
 | 狀態 | 後續寫入 |
 | Operation | `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews` |
 | 用途 | 提交整體 review。 |
-| 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；`REQUEST_CHANGES` 與 `COMMENT` 必須帶 `body`，可帶 comments。`commit_id` 指向受 review 的 commit SHA；省略時 GitHub 預設使用送出時 PR 的最新 commit。 |
+| 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；`REQUEST_CHANGES` 與 `COMMENT` 必須帶 `body`。`commit_id` 指向受 review 的 commit SHA；省略時 GitHub 預設使用送出時 PR 的最新 commit。可帶 `comments` 陣列：每筆必帶 `path` 與 `body`，並使用 diff `position` 或 line-based `line`／`side` 定位；多行範圍另可帶 `start_line`／`start_side`。 |
 | 併發注意事項 | 將 Reader snapshot 的 head SHA 帶入 `commit_id` 與送出時重新讀取策略，都是後續 implementation topic 才決定的 Rivet policy。 |
 | 注意事項 | 不屬目前 MVP，亦不在本 topic 實作。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（write）。 |

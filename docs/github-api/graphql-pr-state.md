@@ -2,7 +2,7 @@
 
 GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.com/graphql`；本文件以 query field 與 object 分類，而非誤將每個 field 當成獨立 REST endpoint。
 
-最後官方校驗：2026-09-02。
+最後官方校驗：2026-09-03。
 
 ## 共通 PR 定位
 
@@ -14,10 +14,10 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | --- | --- |
 | 狀態 | MVP 唯讀 |
 | Query path | `PullRequest.statusCheckRollup` → `StatusCheckRollup` |
-| 重要欄位 | `state`、`contexts(first: ...)`；後者包含 check runs 與 status contexts。 |
+| 重要欄位 | 整體為 `state`。`contexts(first: ...)` 的 `nodes` 是 `StatusCheckRollupContext` union，需選取 `__typename`：`CheckRun` 使用 `name`、`status`、`conclusion`、`detailsUrl`；`StatusContext` 使用 `context`、`state`、`targetUrl`。 |
 | 分頁 | `contexts` 是 connection，使用 cursor 與 `pageInfo`。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
-| 官方來源 | [PullRequest statusCheckRollup](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[StatusCheckRollup](https://docs.github.com/en/graphql/reference/commits#statuscheckrollup)、[Repository pullRequest](https://docs.github.com/en/graphql/reference/repos#repository)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
+| 官方來源 | [PullRequest statusCheckRollup](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[StatusCheckRollup and union](https://docs.github.com/en/graphql/reference/commits#statuscheckrollup)、[CheckRun](https://docs.github.com/en/graphql/reference/checks#checkrun)、[Repository pullRequest](https://docs.github.com/en/graphql/reference/repos#repository)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
 ## Changed Files and Viewed State
 
@@ -39,11 +39,11 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 項目 | 定義 |
 | --- | --- |
 | 狀態 | MVP 唯讀 |
-| 必要定位輸入 | 依「共通 PR 定位」提供 `owner`、`name`、`number`；`reviewThreads` 另需 `first`。 |
+| 必要定位輸入 | 依「共通 PR 定位」提供 `owner`、`name`、`number`；外層使用 `reviewThreads(first: ..., after: ...)`，每個 thread 的巢狀 comments 使用 `comments(first: ..., after: ...)`。 |
 | Query path | `PullRequest.reviewThreads(first: ...)` → `PullRequestReviewThreadConnection` → `PullRequestReviewThread` |
-| 重要欄位 | `id`、`path`、`line`、`diffSide`、`startLine`、`comments`、`isResolved`、`isOutdated`、`resolvedBy` |
+| 重要欄位 | `id`、`path`、`line`、`startLine`、`originalLine`、`originalStartLine`、`diffSide`、`comments`、`isResolved`、`isOutdated`、`resolvedBy` |
 | 權限能力 | `viewerCanResolve`、`viewerCanUnresolve` 可供未來 UI 判斷。 |
-| 分頁 | review thread 與 comments connection 都須使用 cursor。 |
+| 分頁 | 外層與每個巢狀 comments connection 都各自使用 `pageInfo` 的 cursor；不可將外層 cursor 用於 thread comments。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest reviewThreads](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[PullRequestReviewThread](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 

@@ -66,3 +66,4 @@
 | TC-12 | Search／Viewed／notification contract 審閱 | Search 明列單一 query 1,000 筆上限；`PullRequest.files` 與 Files Viewed state index 為「後續唯讀」，viewed mutations 為「後續寫入」；notification PATCH 列出 `205 Reset Content` 與無 response body。 |
 | TC-13 | GraphQL Reader query contract 審閱 | 所有 PR state query 均記錄 `repository(owner:, name:) → pullRequest(number:)` 定位；Checks 以 `statusCheckRollup`、`state` 與 cursor-paginated `contexts` 表達。 |
 | TC-14 | Discussion、local identity 與寫入 contract 審閱 | issue-level 與 inline source 不重複串接；last-seen identity 覆蓋兩種 comment；submit review 的 `commit_id`、thread viewer gates、merge 成功 payload 與 permission gate 均有直接官方來源。 |
+| TC-15 | Nested output 與操作限制審閱 | inline review comment 有定位必要輸入與原始位置欄位；checks union 列出 `__typename`／兩種 fragment output；nested thread comments 各自有 window/cursor；notification polling 有 conditional header 與 interval；merge method 有 repository setting gate。 |
