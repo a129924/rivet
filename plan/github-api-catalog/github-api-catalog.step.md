@@ -57,7 +57,11 @@
 | REVIEW-010 | complete | External Reviewer | 檢查多行 review 條件輸入、thread resolution payload source 與 Search 後續分頁。 | 指出三項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
 | IMPL-012 | complete | Implementer | 僅修正 REVIEW-010 指出的 catalog 與同 topic artifacts。 | 補多行條件必填、thread resolution payload sources 與 Search page／Link traversal。 |
 | TEST-012 | complete | Tester | 驗證 TC-18、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-012 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-010 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-012 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-010 threads。 | `ab4d92e`、更新後 PR #7 與 3 則 resolved thread。 |
+| REVIEW-011 | complete | External Reviewer | 檢查 diff failure、checks nullability、thread target kind 與 inline review positioning。 | 指出三項直接官方 contract 缺口，以及一項只可確認 HTTP status、不可確認原因的 diff failure claim。 |
+| IMPL-013 | complete | Implementer | 僅修正 REVIEW-011 中由官方來源支持的 catalog 與同 topic artifacts。 | 補 406 status、nullable checks／thread target、line-based preference，且不推論 406 成因、fallback 或 REST `subject_type` output。 |
+| TEST-013 | complete | Tester | 驗證 TC-19、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-013 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-011 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -94,3 +98,5 @@
 2026-09-03 — 依 REVIEW-009 補 changed-files cursor traversal、REST inline fallback 作者／時間／連結、Issues Search 必填 `q` 與 viewed mutation payload source；未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-010 補多行 review comment 條件必填、thread resolution payload source 與 Issues Search page／Link traversal；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-011 補 unified diff `406`、checks nullability、thread target kind 與 line-based review positioning；不推論 406 成因／fallback 或未由 list response reference 支持的 REST `subject_type` output，未修改架構文件或 source code。

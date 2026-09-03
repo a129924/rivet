@@ -33,7 +33,7 @@
 | 狀態 | MVP 唯讀 |
 | Operation | 同 PR detail endpoint，Accept 為 `application/vnd.github.diff` |
 | 用途 | 取得 raw unified diff，供 renderer parse 與呈現。 |
-| 注意事項 | diff 是外部表示；parser/rendering 是 PR Reader implementation topic 的責任。 |
+| 注意事項 | GitHub 對同 endpoint 列出 `406 Unacceptable`。本 catalog 不推論該 status 的原因，亦不定義 failure mapping 或 fallback；parser／rendering 與後續處理是 PR Reader implementation topic 的責任。 |
 | 認證／權限 | 同 Pull Request Detail，因使用相同 endpoint。 |
 | 官方來源 | [Get a pull request media types](https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request) |
 

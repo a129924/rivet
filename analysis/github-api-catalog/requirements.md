@@ -52,6 +52,9 @@
 - Submit Review 的多行 inline comment 範圍（非 reply）必須將 `start_line` 與 `start_side` 記錄為條件必填；不得以「可帶」弱化該 contract。
 - Review thread resolution mutations 的官方來源必須同時連結 operation／payload 與 input，讓成功 thread output 與輸入都可追溯。
 - Cross-repository Issues Search 除 `q` 與 `per_page` 外，必須列出 `page` 與依 Link header next URL 的 traversal。
+- Unified diff endpoint 必須記錄官方列出的 `406 Unacceptable`，但不得將其歸因於未被官方來源支持的特定 diff 大小，或預先定義 fallback。
+- Checks contract 必須保留 nullable `statusCheckRollup`，且不得對 null 原因作未證實推論。
+- Review thread 必須選取 `subjectType`，並保留 nullable line／start-line fields；Submit Review 新整合優先 line-based 定位，`position` 僅記錄為 closing-down 相容方式。
 
 ## Official Sources
 

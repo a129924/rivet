@@ -49,7 +49,7 @@ Rivet catalog composition rule：issue-level comments 是獨立內容來源。�
 | 狀態 | 後續寫入 |
 | Operation | `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews` |
 | 用途 | 提交整體 review。 |
-| 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；`REQUEST_CHANGES` 與 `COMMENT` 必須帶 `body`。`commit_id` 指向受 review 的 commit SHA；省略時 GitHub 預設使用送出時 PR 的最新 commit。可帶 `comments` 陣列：每筆必帶 `path` 與 `body`，並使用 diff `position` 或 line-based `line`／`side` 定位；line-based 多行範圍（非 `in_reply_to`）時，`start_line` 與 `start_side` 均為條件必填。 |
+| 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；`REQUEST_CHANGES` 與 `COMMENT` 必須帶 `body`。`commit_id` 指向受 review 的 commit SHA；省略時 GitHub 預設使用送出時 PR 的最新 commit。可帶 `comments` 陣列：每筆必帶 `path` 與 `body`。新整合優先使用 line-based `line`／`side` 定位；line-based 多行範圍（非 `in_reply_to`）時，`start_line` 與 `start_side` 均為條件必填。`position` 為 closing-down 的相容定位方式。 |
 | 成功結果 | `200 OK` 與 Pull Request Review resource；主要欄位為 `id`、`state`、`commit_id`、`submitted_at`、`body`、`user`。 |
 | 併發注意事項 | 將 Reader snapshot 的 head SHA 帶入 `commit_id` 與送出時重新讀取策略，都是後續 implementation topic 才決定的 Rivet policy。 |
 | 注意事項 | 不屬目前 MVP，亦不在本 topic 實作。 |
