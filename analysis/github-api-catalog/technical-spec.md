@@ -50,6 +50,7 @@
 - REST inline review comment 的 `line`、`side` 與 `original_line` 未列於 required set 時，必須標記為可能缺席並與 nullable 區分；所有 REST list operation 均須記錄 Link header traversal。
 - REST changed-files 與 notifications list 的 operation metadata 必須明列依 response `Link` header 的 next URL 取得下一頁；只列 `page`／`per_page` 不足以滿足 list traversal contract。
 - Capability Index 的每一列只能對應一個產品狀態；REST changed-files 與 GraphQL Files Viewed state 必須分列，避免將後續唯讀 GraphQL state 誤列為 MVP。
+- Cross-repository Issues Search 的 `issue-search-result-item.user` 必須標為 nullable，並直接連結 GitHub REST OpenAPI schema；不得把其他 REST response 的 `user` contract 類推為相同結果。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

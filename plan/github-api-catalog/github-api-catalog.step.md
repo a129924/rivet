@@ -121,6 +121,7 @@
 | REVIEW-026 | complete | External Reviewer | 檢查 REST list traversal、plan contract 與 Capability Index 的產品狀態。 | Changed Files／Notifications 少了 `Link` traversal；Non-Goal 與實際 Modify 不一致；Index 混合 REST MVP 與 GraphQL 後續唯讀。 |
 | IMPL-028 | complete | Implementer | 僅修正 REVIEW-026 有官方來源或本 topic contract 支持的文件與 artifacts。 | 補 Changed Files／Notifications `Link` traversal，收斂 Non-Goal，並分列 REST changed files、checks 與 GraphQL Files Viewed state。 |
 | TEST-028 | complete | Tester | 驗證 TC-36、Markdown links、scope 與完整 pre-commit。 | `git diff --check`、官方 REST pagination／Pulls／Notifications links 與完整 pre-commit 均通過。 |
+| DELIVERY-028 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-026 threads。 | `2958645` 已推送至既有 feature branch，且 REVIEW-026 的 4 個 threads 已 resolved。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers

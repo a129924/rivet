@@ -73,7 +73,7 @@
 | TC-19 | Diff failure、checks nullability 與 thread target contract 審閱 | Unified diff 只記錄官方 `406`，不推論原因或 fallback；`statusCheckRollup` 及 thread line fields 保留 nullable 語意；thread 選取 `subjectType`；新整合優先 line-based 定位，`position` 僅為 closing-down 相容用途。 |
 | TC-20 | Review decision 與 changed-file optional contract 審閱 | `reviewDecision` 保留 nullable 語意且不推論 null 原因；REST changed-file `patch` 標記為可能缺席，並以官方 OpenAPI `diff-entry` required set 支持，且不歸因於特定檔案類型。 |
 | TC-21 | Reader、checks、thread 與 Search output contract 審閱 | REST PR `body` 保留 nullable，`previous_filename`、`patch`、`submitted_at` 保留可能缺席語意；GraphQL locator、check output、resolver 與 author 保留 nullable；Search root response 列出 `total_count` 與 `incomplete_results`，且不對 null／缺席成因作推論。 |
-| TC-22 | Thread reply 關係與來源邊界審閱 | `PullRequestReviewComment.replyTo` 標記為 nullable；Notifications 維持官方明示的 classic-PAT 限制；REST `user` 不因 component 名稱而作未被 schema 直接支持的 nullable 宣告。 |
+| TC-22 | Thread reply 關係與來源邊界審閱 | `PullRequestReviewComment.replyTo` 標記為 nullable；Notifications 維持官方明示的 classic-PAT 限制；REST `user` 只在精確 schema 直接支持時標記 nullable。 |
 | TC-23 | Thread 位置、雙層分頁與 comment identity 審閱 | `PullRequestReviewThread` 的其餘位置欄位保留 nullable；外層與巢狀 comments 各以自身 `hasNextPage`／`endCursor` 推進 `after`；REST inline response 保留 `id`／`node_id`，last-seen key 以 API source 與 opaque identity 區隔，不假定可跨 API 對應。 |
 | TC-24 | Mutation 與 REST response nullable contract 審閱 | 五個 GraphQL mutation payload resource fields 保留 nullable；REST repository PR list `body`、inline comment 的三個多行範圍欄位與 notification `last_read_at` 均依官方 OpenAPI 標為 nullable。 |
 | TC-25 | REST review nullable 與 Submit Review input contract 審閱 | REST inline comment 的 `pull_request_review_id` 與 review resource 的 `commit_id` 依官方 OpenAPI 標為 nullable；`original_position` 不因未列於 `required` 而標 nullable；Submit Review 的多行範圍描述不暗示 `in_reply_to` input。 |
@@ -88,3 +88,4 @@
 | TC-34 | Inline review nullable 與 traversal contract 審閱 | `line`、`side`、`original_line` 標為可能缺席而非 nullable；issue comments 與其餘 REST list operation 均明列 Link header traversal。 |
 | TC-35 | First-read 與 table structure 審閱 | root README 連結 catalog；兩個 GraphQL action table 的 header 與 delimiter 皆為六欄。 |
 | TC-36 | REST list traversal 與 capability index 審閱 | Changed Files 與 Notifications 均依 `Link` header 取得下一頁；Index 分列 MVP 的 REST changed files 與後續唯讀的 GraphQL Files Viewed state。 |
+| TC-37 | Search user nullable contract 審閱 | Cross-repository Issues Search 的 item `user` 標為 nullable，並直接連結 GitHub REST OpenAPI `issue-search-result-item` schema。 |

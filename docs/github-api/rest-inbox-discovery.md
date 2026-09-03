@@ -27,10 +27,10 @@
 | 必要 query | `q=is:pr is:open user-review-requested:@me` |
 | 用途 | 尋找直接要求目前使用者 review 的 open PR。 |
 | 成功結果 | `200 OK` 與 search response；conditional request 時 GitHub 另列 `304 Not Modified`。 |
-| 重要輸出 | response 的 `total_count`、`incomplete_results` 與 items 中的 number、title、state、user、repository_url、pull_request、updated_at |
+| 重要輸出 | response 的 `total_count`、`incomplete_results` 與 items 中的 number、title、state、user（nullable）、repository_url、pull_request、updated_at |
 | 分頁與上限 | `per_page` 最大 100，使用 `page` 取得後續頁，並依 Link header 的 next URL traversal。單一 Search query 最多提供 1,000 筆結果。Search API 另有 rate-limit 限制，實作時必須處理 `incomplete_results` 與分頁；超過上限時的切分 query 或不完整結果 UX 留給未來 implementation topic 決定。 |
 | 認證／權限 | 此 catalog 固定使用代表目前使用者的 `@me`，因此必須以有效 token 呼叫；查詢 private resources 時 token 另須具有 repository access。多資源查詢只回傳 token 可存取的資源。 |
-| 官方來源 | [Search issues and pull requests](https://docs.github.com/en/rest/search/search#search-issues-and-pull-requests)、[REST pagination](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api)、[search access errors](https://docs.github.com/en/rest/search/search#access-errors-or-missing-search-results) |
+| 官方來源 | [Search issues and pull requests](https://docs.github.com/en/rest/search/search#search-issues-and-pull-requests)、[REST pagination](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api)、[search access errors](https://docs.github.com/en/rest/search/search#access-errors-or-missing-search-results)、[GitHub REST OpenAPI `issue-search-result-item` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`user` 為 nullable） |
 
 `review-requested:USERNAME` 用於指定使用者；`user-review-requested:@me` 是「直接要求我 review」的明確 qualifier。team review request 不是本 MVP Inbox 的既定 membership 規則。
 
