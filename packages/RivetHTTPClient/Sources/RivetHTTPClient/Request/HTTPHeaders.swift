@@ -6,6 +6,12 @@ public struct HTTPHeaders: Equatable, ExpressibleByDictionaryLiteral, Sendable {
     }
 
     public init(dictionaryLiteral elements: (String, String)...) {
-        self.init(Dictionary(uniqueKeysWithValues: elements))
+        var values: [String: String] = [:]
+
+        for (name, value) in elements {
+            values[name] = value
+        }
+
+        self.init(values)
     }
 }

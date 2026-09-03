@@ -65,3 +65,4 @@
 - TC-05：fake Transport 驗證 HTTPClient 到 Requester 到 Transport 的呼叫鏈，並回傳 raw HTTPResponse。
 - TC-06：Transport error 維持原始型別向上傳遞。
 - TC-07：SwiftPM manifest、Swift tests、canvas validate／build／accessibility verifier 與 pre-commit 通過。
+- TC-08：HTTPHeaders dictionary literal 的重複 name 不會 crash，且後者覆蓋前者。

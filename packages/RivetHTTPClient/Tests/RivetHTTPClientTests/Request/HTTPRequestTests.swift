@@ -5,6 +5,16 @@ import RivetHTTPClient
 @Suite("HTTPRequest")
 struct HTTPRequestTests {
     @Test
+    func headersUseLaterValueForDuplicateDictionaryLiteralKey() {
+        let headers = HTTPHeaders(
+            dictionaryLiteral: ("Accept", "text/plain"),
+            ("Accept", "application/json")
+        )
+
+        #expect(headers.values == ["Accept": "application/json"])
+    }
+
+    @Test
     func retainsValidatedURLAndRequestMetadata() throws {
         let url = try HTTPURL(#require(URL(string: "https://example.com/issues")))
         let body = Data("payload".utf8)

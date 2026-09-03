@@ -23,6 +23,8 @@ case missingHost
 
 `HTTPRequest` 直接持有已驗證的 `HTTPURL`，以及 `HTTPMethod`、`HTTPHeaders`、`body: Data?`；initializer 不 throws。
 
+`HTTPHeaders` 的 dictionary literal 若包含重複 name，採用後者覆蓋前者的 deterministic 行為；不得以 `Dictionary(uniqueKeysWithValues:)` 造成 runtime trap。
+
 `HTTPClient` 維持一般 throws：
 
 ```swift
