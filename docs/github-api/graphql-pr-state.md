@@ -8,7 +8,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 
 | 項目 | 定義 |
 | --- | --- |
-| 狀態 | 後續寫入 |
+| 狀態 | 後續唯讀 |
 | Query path | `PullRequest.files(first: ...)` → `PullRequestChangedFile` |
 | 重要欄位 | `path`、`additions`、`deletions`、`changeType`、`viewerViewedState` |
 | Viewed state | `UNVIEWED`、`VIEWED`、`DISMISSED`；`DISMISSED` 表示上次 viewed 後檔案有新 changes。 |

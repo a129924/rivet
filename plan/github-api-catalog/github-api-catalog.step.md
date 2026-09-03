@@ -34,6 +34,10 @@
 | IMPL-006 | complete | Implementer | 僅在本 topic 的 catalog 與 artifacts 新增「後續唯讀」taxonomy。 | repository PR list、`GET /notifications` 與 Capability Index 均使用正確狀態。 |
 | TEST-006 | complete | Tester | 驗證 TC-11、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
 | DELIVERY-006 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-004 最後 thread。 | 修正 commit、更新後 PR #7 與 resolved thread 狀態。 |
+| REVIEW-005 | complete | External Reviewer | 檢查 Search 上限、Viewed taxonomy、notification success output 與 review 限制。 | 指出 Search 1,000 筆上限、Viewed query 分類、notification PATCH `205`，以及未附直接官方來源的作者 review 限制。 |
+| IMPL-007 | complete | Implementer | 僅修正 REVIEW-005 中有直接官方或既有 taxonomy 依據的 metadata。 | 補 Search 上限、Viewed read/write 分類、`205 Reset Content`／空 body 與 TC-12；不新增未有直接官方來源的作者限制。 |
+| TEST-007 | complete | Tester | 驗證 TC-12、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-007 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-005 threads。 | 修正 commit、更新後 PR #7 與 resolved thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -58,3 +62,5 @@
 2026-09-02 — 依 REVIEW-004 補齊 notification scopes、review conditional body、`@me` token、inline comment 與 review summary 分頁；taxonomy 與 repository browse scope 的衝突留待 human decision，未修改架構文件或 source code。
 
 2026-09-02 — Human 授權新增「後續唯讀」taxonomy，將 repository PR list 與 `GET /notifications` 與延後寫入明確區分；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-005 補 Search 1,000 筆上限、Files Viewed read/write 分類與 notification PATCH 成功輸出；作者 review 限制因目前沒有直接官方來源而不列入 catalog；未修改架構文件或 source code。
