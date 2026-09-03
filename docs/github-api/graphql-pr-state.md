@@ -18,7 +18,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | Query path | nullable `PullRequest.statusCheckRollup` → `StatusCheckRollup.contexts(first: ..., after: ...)` |
 | 重要欄位 | 整體為 `state`。`contexts` 的 `nodes` 是 `StatusCheckRollupContext` union，需選取 `__typename`：`CheckRun` 使用 `name`、`status`、`conclusion`、`detailsUrl`；`StatusContext` 使用 `context`、`state`、`targetUrl`。 |
 | Nullability | `statusCheckRollup` type 沒有 non-null 標記，可能為 `null`；不得直接取其 `contexts`。`CheckRun.conclusion`、`CheckRun.detailsUrl` 與 `StatusContext.targetUrl` 也沒有 non-null 標記，必須保留 nullable 語意。本 catalog 不推論任何 null 的原因。 |
-| 分頁 | 所有 GraphQL connection 必須提供 `first` 或 `last`（1–100）。前向分頁以 `pageInfo.hasNextPage` 判斷，並把 `pageInfo.endCursor` 傳入下一頁的 `after`。 |
+| 分頁 | 所有 GraphQL connection 必須提供 `first` 或 `last`（1–100）。`pageInfo.endCursor` 為 nullable；前向分頁只在 `hasNextPage` 為 true 且 `endCursor` 存在時，才把它傳入下一頁的 `after`。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest statusCheckRollup](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[StatusCheckRollup and union](https://docs.github.com/en/graphql/reference/commits#statuscheckrollup)、[CheckRun](https://docs.github.com/en/graphql/reference/checks#checkrun)、[Repository pullRequest](https://docs.github.com/en/graphql/reference/repos#repository)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
@@ -32,7 +32,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 重要欄位 | `path`、`additions`、`deletions`、`changeType`、`viewerViewedState` |
 | Viewed state | `UNVIEWED`、`VIEWED`、`DISMISSED`；`DISMISSED` 表示上次 viewed 後檔案有新 changes。 |
 | Nullability | `files` type 沒有 non-null 標記，可能為 `null`；必須先判空，才可取 connection 的 `nodes` 或 `pageInfo`。本 catalog 不推論 null 的原因。 |
-| 分頁 | 所有 GraphQL connection 必須提供 `first` 或 `last`（1–100）。前向分頁以 `pageInfo.hasNextPage` 判斷，並把 `pageInfo.endCursor` 傳入下一頁的 `after`。 |
+| 分頁 | 所有 GraphQL connection 必須提供 `first` 或 `last`（1–100）。`pageInfo.endCursor` 為 nullable；前向分頁只在 `hasNextPage` 為 true 且 `endCursor` 存在時，才把它傳入下一頁的 `after`。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest files and PullRequestChangedFile](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
@@ -48,9 +48,9 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | 重要欄位 | `id`、`path`、`subjectType`、`line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine`、`diffSide`、`comments`、`isResolved`、`isOutdated`、`resolvedBy` |
 | Nullability | `line`、`startLine`、`startDiffSide`、`originalLine`、`originalStartLine` 與 `resolvedBy` 都沒有 non-null 標記，必須保留 nullable 語意。 |
 | Target kind | `subjectType` 表示 thread 目標是 diff line 或 file。 |
-| Comment node 輸出 | `comments.nodes` 選取 `PullRequestReviewComment.id`、`body`、`author`（nullable）、`createdAt`、`updatedAt`、`replyTo`（nullable）與 `url`，以提供 inline content、作者、時間與回覆關係。 |
+| Comment node 輸出 | `comments.nodes` 的 list 與每個 element 都沒有 non-null 標記，必須先判空；非 null node 再選取 `PullRequestReviewComment.id`、`body`、`author`（nullable）、`createdAt`、`updatedAt`、`replyTo`（nullable）與 `url`，以提供 inline content、作者、時間與回覆關係。 |
 | 權限能力 | `viewerCanResolve`、`viewerCanUnresolve` 可供未來 UI 判斷。 |
-| 分頁 | 外層 `reviewThreads` 以其 `pageInfo.hasNextPage` 判斷，將其 `pageInfo.endCursor` 帶入下一個 `reviewThreads(after: ...)`，直到 `hasNextPage` 為 false。每個 thread 的巢狀 `comments` connection 也各自依自己的 `hasNextPage`／`endCursor` 推進 `comments(after: ...)`；不可交叉使用兩層 cursor。 |
+| 分頁 | `PageInfo.endCursor` 為 nullable。外層 `reviewThreads` 只在其 `hasNextPage` 為 true 且 `endCursor` 存在時，才帶入下一個 `reviewThreads(after: ...)`。每個 thread 的巢狀 `comments` connection 也各自依自己的 `hasNextPage` 與非 null `endCursor` 推進 `comments(after: ...)`；不可交叉使用兩層 cursor。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest reviewThreads](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[PullRequestReviewThread](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 

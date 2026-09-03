@@ -72,6 +72,8 @@
 - `PullRequest.files` 沒有 non-null 標記；catalog 必須在取其 connection 的 `nodes` 或 `pageInfo` 前保留外層 nullable contract，且不推論 null 原因。
 - REST `pull-request-simple.draft` 與 `pull-request.draft` 未列於各自 required set；catalog 必須標為可能缺席，並與 nullable contract 區分。
 - `GET /notifications` 的 `all` query 預設為 `false`，省略時只顯示未讀 notification；是否包含已讀 notification 是後續產品決策。
+- `PageInfo.endCursor` 沒有 non-null 標記；所有 connection traversal 只在 `hasNextPage` 為 true 且 cursor 存在時才使用 `after`。
+- `PullRequestReviewCommentConnection.nodes` 的 list 與每個 list element 都沒有 non-null 標記；catalog 必須保留兩層 nullable contract，再讀取 comment node fields。
 
 ## Official Sources
 

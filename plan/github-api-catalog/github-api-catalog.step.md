@@ -97,7 +97,11 @@
 | REVIEW-020 | complete | External Reviewer | 檢查 files connection、REST draft response 與 Notifications `all` filter contract。 | `PullRequest.files` 未標 non-null；兩個 REST draft field 未列 required；`all` 預設為 false。 |
 | IMPL-022 | complete | Implementer | 僅修正 REVIEW-020 中由 GitHub GraphQL schema 與 REST OpenAPI 直接支持的 catalog 與同 topic artifacts。 | 補 files nullable、draft 可能缺席與 Notifications `all` 預設／filter 語意。 |
 | TEST-022 | complete | Tester | 驗證 TC-28、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-022 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-020 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-022 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-020 threads。 | `747b245`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-021 | complete | External Reviewer | 檢查 GraphQL cursor 與 review-thread nested comment nodes 的 nullable contract。 | `PageInfo.endCursor`、comments nodes list 與 list element 均未標 non-null。 |
+| IMPL-023 | complete | Implementer | 僅修正 REVIEW-021 中由 GitHub GraphQL schema 直接支持的 catalog 與同 topic artifacts。 | 補 cursor、nodes list 與 node element 的逐層 nullable contract。 |
+| TEST-023 | complete | Tester | 驗證 TC-29、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-023 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-021 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -154,3 +158,5 @@
 2026-09-03 — 依 REVIEW-019 補五個 GraphQL mutation operation field 的 nullable contract；Notification subject URLs 因現行 REST schema 為 required string 而未修改，未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-020 補 GraphQL files nullable、REST PR draft 可能缺席與 Notifications `all` 預設 filter contract；是否要求包含已讀 notification 留給後續產品 topic，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-021 補 GraphQL `endCursor` 與 review-thread nested comment nodes 的逐層 nullable contract；不推論 null 成因，未修改架構文件或 source code。
