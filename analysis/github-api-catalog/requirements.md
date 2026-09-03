@@ -76,6 +76,8 @@
 - `PullRequestReviewCommentConnection.nodes` 的 list 與每個 list element 都沒有 non-null 標記；catalog 必須保留兩層 nullable contract，再讀取 comment node fields。
 - `StatusCheckRollupContextConnection.nodes` 與 `PullRequestChangedFileConnection.nodes` 的 list 與 list element 都沒有 non-null 標記；catalog 必須逐層保留 nullable contract，再讀取 union fragment 或 changed-file 欄位。
 - `PullRequestReviewThreadConnection.nodes` 的 list 與 list element 都沒有 non-null 標記；catalog 必須逐層保留 nullable contract，再讀取 review thread 欄位。
+- 外層 `reviewThreads` 與每個巢狀 `comments` connection 都必須各自提供 1–100 的 GraphQL window；兩層 cursor 不可交叉使用。
+- catalog 的每個 REST GET operation 都必須列出正常 `200 OK` response；只有官方 operation reference 另列 `304 Not Modified` 時才記錄 conditional response。
 
 ## Official Sources
 

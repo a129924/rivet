@@ -9,6 +9,7 @@
 | 狀態 | MVP 唯讀 |
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}` |
 | 用途 | 取得單一 PR 的背景與 refs。 |
+| 成功結果 | `200 OK` 與 PR response；conditional request 時 GitHub 另列 `304 Not Modified`。 |
 | 重要欄位 | title、body（nullable）、user、state、draft（可能缺席）、head、base、mergeable、merged、commits、changed_files |
 | 限制 | `mergeable` 可能暫時為 `null`；詳細 merge gating 應使用 GraphQL PR state。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
@@ -21,6 +22,7 @@
 | 狀態 | MVP 唯讀 |
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}/files` |
 | 用途 | 取得檔案清單與變更統計。 |
+| 成功結果 | `200 OK` 與 changed-files list response。 |
 | 重要欄位 | filename、status、additions、deletions、changes、sha、previous_filename、patch；`previous_filename` 與 `patch` 都可能缺席，不能當作必填字串。 |
 | 分頁與上限 | `page`／`per_page`；此 endpoint 的回應最多 3,000 files。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
@@ -33,6 +35,7 @@
 | 狀態 | MVP 唯讀 |
 | Operation | 同 PR detail endpoint，Accept 為 `application/vnd.github.diff` |
 | 用途 | 取得 raw unified diff，供 renderer parse 與呈現。 |
+| 成功結果 | `200 OK` 與 unified diff response；conditional request 時 GitHub 另列 `304 Not Modified`。 |
 | 注意事項 | GitHub 對同 endpoint 列出 `406 Unacceptable`。本 catalog 不推論該 status 的原因，亦不定義 failure mapping 或 fallback；parser／rendering 與後續處理是 PR Reader implementation topic 的責任。 |
 | 認證／權限 | 同 Pull Request Detail，因使用相同 endpoint。 |
 | 官方來源 | [Get a pull request media types](https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request) |

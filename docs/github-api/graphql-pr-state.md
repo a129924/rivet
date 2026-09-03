@@ -50,7 +50,7 @@ GraphQL 有 request body 的 query 與 mutation 使用 `POST https://api.github.
 | Target kind | `subjectType` 表示 thread 目標是 diff line 或 file。 |
 | Comment node 輸出 | `comments.nodes` 的 list 與每個 element 都沒有 non-null 標記，必須先判空；非 null node 再選取 `PullRequestReviewComment.id`、`body`、`author`（nullable）、`createdAt`、`updatedAt`、`replyTo`（nullable）與 `url`，以提供 inline content、作者、時間與回覆關係。 |
 | 權限能力 | `viewerCanResolve`、`viewerCanUnresolve` 可供未來 UI 判斷。 |
-| 分頁 | `PageInfo.endCursor` 為 nullable。外層 `reviewThreads` 只在其 `hasNextPage` 為 true 且 `endCursor` 存在時，才帶入下一個 `reviewThreads(after: ...)`。每個 thread 的巢狀 `comments` connection 也各自依自己的 `hasNextPage` 與非 null `endCursor` 推進 `comments(after: ...)`；不可交叉使用兩層 cursor。 |
+| 分頁 | 外層 `reviewThreads` 與每個 thread 的巢狀 `comments` connection 都必須各自提供 `first` 或 `last`，window 為 1–100。`PageInfo.endCursor` 為 nullable。外層 `reviewThreads` 只在其 `hasNextPage` 為 true 且 `endCursor` 存在時，才帶入下一個 `reviewThreads(after: ...)`。每個 thread 的巢狀 `comments` connection 也各自依自己的 `hasNextPage` 與非 null `endCursor` 推進 `comments(after: ...)`；不可交叉使用兩層 cursor。 |
 | 認證／權限 | GitHub 要求有效 token；token 必須可存取目標 repository。此 GraphQL field reference 未列出 operation-specific fine-grained permission。 |
 | 官方來源 | [PullRequest reviewThreads](https://docs.github.com/en/graphql/reference/pulls#pullrequest)、[PullRequestReviewThread](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[GraphQL pagination](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)、[GraphQL transport](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 

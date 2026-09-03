@@ -83,3 +83,5 @@
 | TC-29 | GraphQL cursor 與 nested comment nodes nullability 審閱 | `PageInfo.endCursor` 保留 nullable，只有在 `hasNextPage` 為 true 且 cursor 存在時才傳入 `after`；review-thread comments 的 nodes list 與元素各自保留 nullable。 |
 | TC-30 | Checks／changed-files nodes nullable contract 審閱 | `StatusCheckRollupContextConnection.nodes` 與 `PullRequestChangedFileConnection.nodes` 的 list 與每個 node 均保留 nullable；只有非 null node 才讀取 union fragment 或 changed-file 欄位。 |
 | TC-31 | Review-thread nodes nullable contract 審閱 | `PullRequestReviewThreadConnection.nodes` 的 list 與每個 node 均保留 nullable；只有非 null node 才讀取 review thread 欄位，並依欄位自己的 contract 判空。 |
+| TC-32 | Review-thread window contract 審閱 | 外層 `reviewThreads` 與每個巢狀 `comments` connection 均各自使用 1–100 window，並以自身 cursor 推進。 |
+| TC-33 | REST GET success response contract 審閱 | 每個 catalog REST GET operation 均列出正常 `200 OK` response；只有官方 operation reference 列出的 conditional response 才標記 `304 Not Modified`。 |
