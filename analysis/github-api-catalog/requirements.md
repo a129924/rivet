@@ -45,6 +45,10 @@
 - 提交 review 成功回傳 `200 OK` 與 Pull Request Review resource；catalog 必須記錄能讓後續 Adapter 取得 review identity、state 與 commit 的主要 output。
 - `PullRequestReviewThread` 的多行範圍需同時保留 `startLine` 與 `startDiffSide`；其 `comments.nodes` 需選取 identity、body、author、時間、reply 關係與 URL。
 - Checks cursor traversal 以 `pageInfo.hasNextPage` 與 `endCursor` 驅動下一個 `contexts(after: ...)` query；所有 GraphQL connection 的 window 為 1–100。
+- Changed files cursor traversal 同樣以 `pageInfo.hasNextPage` 與 `endCursor` 驅動下一個 `files(after: ...)` query；不得只泛稱 cursor。
+- REST inline review comments 的 fallback output 必須保留 `user`、`created_at`、`updated_at` 與 `html_url`，以供顯示作者、時間與連結。
+- Cross-repository Issues Search 的必要 query parameter 名稱為 `q`，其值為 `is:pr is:open user-review-requested:@me`。
+- Files viewed mutation 的官方來源必須同時連結 operation／payload 與 input，讓成功 `pullRequest` output 與輸入都可追溯。
 
 ## Official Sources
 

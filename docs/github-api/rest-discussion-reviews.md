@@ -23,7 +23,7 @@ Rivet catalog composition rule：issue-level comments 是獨立內容來源。�
 | 狀態 | MVP 唯讀 |
 | Operation | `GET /repos/{owner}/{repo}/pulls/{pull_number}/comments` |
 | 用途 | 取得 diff 上的 review comments。 |
-| 重要欄位 | id、pull_request_review_id、path、line、side、start_line、start_side、commit_id、original_commit_id、original_position、original_line、original_start_line、body、in_reply_to_id |
+| 重要欄位 | id、pull_request_review_id、path、line、side、start_line、start_side、commit_id、original_commit_id、original_position、original_line、original_start_line、body、`user`、`created_at`、`updated_at`、`html_url`、in_reply_to_id |
 | 分頁 | `page`／`per_page`；依 Link header 取下一頁。 |
 | 注意事項 | Rivet mapping 可使用 GitHub comment `id` 作 identity；thread grouping、resolved 與 outdated 見 GraphQL 文件。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |

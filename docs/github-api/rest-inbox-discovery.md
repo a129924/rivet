@@ -23,7 +23,7 @@
 | --- | --- |
 | 狀態 | MVP 唯讀 |
 | Operation | `GET /search/issues` |
-| query | `is:pr is:open user-review-requested:@me` |
+| 必要 query | `q=is:pr is:open user-review-requested:@me` |
 | 用途 | 尋找直接要求目前使用者 review 的 open PR。 |
 | 重要欄位 | items 中的 number、title、state、user、repository_url、pull_request、updated_at |
 | 分頁與上限 | `per_page` 最大 100；單一 Search query 最多提供 1,000 筆結果。Search API 另有 rate-limit 限制，實作時必須處理 `incomplete_results` 與分頁；超過上限時的切分 query 或不完整結果 UX 留給未來 implementation topic 決定。 |

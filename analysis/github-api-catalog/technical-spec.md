@@ -27,11 +27,12 @@
 - REST 內容區分 Pull requests、Issues comments、Pull request review comments 與 Pull request reviews，避免把三種 comment 混為同一資源。
 - `viewerViewedState` 是 GitHub API 的遠端 PR file 資料；本 catalog 不定義本機持久化、同步或 Rivet UI 的狀態採用規則。
 - PR files 的 REST endpoint 記錄 3,000 files 上限；GraphQL connections 記錄 cursor 分頁，REST list endpoints 使用官方 query 名稱 `page` 與 `per_page`。Notifications 的 `per_page` 上限為 50。
-- GraphQL PR state query 必須明示 PR 的定位路徑與 `owner`、`name`、`number` 輸入；Checks 採 `PullRequest.statusCheckRollup`，並記錄其 `contexts` connection 的輸出與 cursor 分頁。
+- GraphQL PR state query 必須明示 PR 的定位路徑與 `owner`、`name`、`number` 輸入；Checks 採 `PullRequest.statusCheckRollup`，並記錄其 `contexts` connection 的輸出與 cursor 分頁；`files` 亦須明示同樣的 traversal。
 - 只在取得 `reviewThreads` 時以 GraphQL thread comments 作 inline content source；REST inline comments 是不取得 thread 時的替代 source，兩者不得串接為重複 feed。
 - 寫入 operation 除 token／repository access 外，必須記錄可由官方欄位或 endpoint reference 支持的 capability／permission gate、成功 payload，以及適用的 SHA 行為。
 - Checks 的 union output、巢狀 GraphQL connection、inline review comment 定位、outdated comment 原始位置、notification conditional polling 與 merge method gate，都必須記錄必要欄位或輸入；不得以 aggregate state 或泛稱的 cursor 取代。
 - Read／write operation 的 response 與 nested content source 必須記錄可供後續 Adapter 讀取的主要欄位；GraphQL pagination 必須明示 window、`hasNextPage`、`endCursor` 與後續 `after` 的關係。
+- REST Search 必須使用官方必填 query parameter 名稱；mutation 官方來源必須能分別追溯 operation payload 與 input。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract

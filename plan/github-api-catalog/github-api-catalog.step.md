@@ -49,7 +49,11 @@
 | REVIEW-008 | complete | External Reviewer | 檢查 submit review response、thread comment output／多行起始 side，以及 Checks cursor traversal。 | 指出四項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
 | IMPL-010 | complete | Implementer | 僅修正 REVIEW-008 指出的 catalog 與同 topic artifacts。 | 補 200 review response、thread content／start side 與 Checks cursor traversal。 |
 | TEST-010 | complete | Tester | 驗證 TC-16、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
-| DELIVERY-010 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-008 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-010 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-008 threads。 | `faaf1cf`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-009 | complete | External Reviewer | 檢查 changed-files pagination、REST inline fallback output、Search query key 與 viewed mutation source coverage。 | 指出四項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
+| IMPL-011 | complete | Implementer | 僅修正 REVIEW-009 指出的 catalog 與同 topic artifacts。 | 補 files traversal、inline fallback display fields、Search `q` 與 viewed mutation payload sources。 |
+| TEST-011 | complete | Tester | 驗證 TC-17、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-011 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-009 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -82,3 +86,5 @@
 2026-09-03 — 依 REVIEW-007 補 inline review 定位、outdated 原始位置、checks union output、nested thread comments 分頁、notification conditional polling 與 merge method gate；未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-008 補 submit review 成功 response、thread comment content／多行起始 side，以及 Checks cursor traversal；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-009 補 changed-files cursor traversal、REST inline fallback 作者／時間／連結、Issues Search 必填 `q` 與 viewed mutation payload source；未修改架構文件或 source code。

@@ -68,3 +68,4 @@
 | TC-14 | Discussion、local identity 與寫入 contract 審閱 | issue-level 與 inline source 不重複串接；last-seen identity 覆蓋兩種 comment；submit review 的 `commit_id`、thread viewer gates、merge 成功 payload 與 permission gate 均有直接官方來源。 |
 | TC-15 | Nested output 與操作限制審閱 | inline review comment 有定位必要輸入與原始位置欄位；checks union 列出 `__typename`／兩種 fragment output；nested thread comments 各自有 window/cursor；notification polling 有 conditional header 與 interval；merge method 有 repository setting gate。 |
 | TC-16 | Review response、thread content 與 checks traversal 審閱 | Submit Review 列出 `200` 與 review resource output；thread 有 `startDiffSide` 與完整 comment node output；Checks 明列 `first`／`after`、`hasNextPage`／`endCursor` traversal。 |
+| TC-17 | Files、inline fallback、Search 與 viewed mutation contract 審閱 | `files` 明列 `first`／`after`、`hasNextPage`／`endCursor` traversal；REST inline fallback 有作者、時間與連結欄位；Search 使用必填 `q`；viewed mutations 同時連結 operation payload 與 input。 |
