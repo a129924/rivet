@@ -113,7 +113,11 @@
 | REVIEW-024 | complete | External Reviewer | 檢查 REST／GraphQL response contract、review-thread window 與 DELIVERY-025 ledger state。 | Issue comment `body` nullable 主張不受官方 OpenAPI 支持；其餘三項有官方 reference 或實際交付證據支持。 |
 | IMPL-026 | complete | Implementer | 僅修正 REVIEW-024 中由官方 reference 或實際交付證據支持的 catalog 與同 topic artifacts。 | 補 REST GET `200 OK`、適用的 `304`、雙層 review-thread 1–100 window，並同步 DELIVERY-025。 |
 | TEST-026 | complete | Tester | 驗證 TC-32、TC-33、Markdown links、diff 與完整 pre-commit。 | GitHub REST OpenAPI／GraphQL pagination reference、`git diff --check`、九個官方來源 link check 與完整 pre-commit 均通過。 |
-| DELIVERY-026 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-024 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
+| DELIVERY-026 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-024 threads。 | `e1b1095`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-025 | complete | External Reviewer | 檢查 inline review location presence、Notifications token、Issue comment traversal、catalog discoverability 與 action table structure。 | OAuth app token 與 nullable 主張不受官方 reference 支持；其餘項目有 official schema／文件或 Markdown 結構依據。 |
+| IMPL-027 | complete | Implementer | 僅修正 REVIEW-025 中由官方 reference 或 Markdown 結構支持的 catalog 與同 topic artifacts。 | 補可能缺席／Link traversal／first-read link／六欄 delimiter；Notifications 維持 classic PAT 限制。 |
+| TEST-027 | complete | Tester | 驗證 TC-34、TC-35、Markdown links、diff 與完整 pre-commit。 | GitHub REST OpenAPI／Notifications／pagination references、`git diff --check`、五個官方來源 link check 與完整 pre-commit 均通過。 |
+| DELIVERY-027 | in progress | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-025 threads。 | 待 commit、push 與 GitHub thread 狀態。 |
 | HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
 
 ## Blockers
@@ -178,3 +182,5 @@
 2026-09-03 — 依 REVIEW-023 補 review-thread connection nodes list／element 的逐層 nullable contract，並以實際驗證結果取代 TEST-024 placeholder；未修改架構文件或 source code。
 
 2026-09-03 — 依 REVIEW-024 補 REST GET 成功 response、適用 conditional response 與雙層 review-thread window contract，並同步 DELIVERY-025；Issue comment `body` nullable 主張因不受官方 OpenAPI 支持而僅回覆說明，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-025 補 inline review location 的可能缺席、Issue comments Link traversal、catalog first-read 入口與 GraphQL action table 結構；Notifications OAuth app token 與 location nullable 主張因不受官方來源支持而不採用，未修改架構文件或 source code。

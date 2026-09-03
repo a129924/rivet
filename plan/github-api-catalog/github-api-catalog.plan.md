@@ -22,7 +22,7 @@
 
 ## ReadOnly
 
-- `README.md`、`docs/design-principles.md`、`docs/product.md`
+- `docs/design-principles.md`、`docs/product.md`
 - `docs/architecture/README.md`、`docs/architecture/bounded-contexts/`
 - GitHub 官方 REST、GraphQL、Search 與 Notifications 文件
 
@@ -42,7 +42,7 @@
 
 ## Modify
 
-無。
+- `README.md`：新增 GitHub PR API catalog 的 first-read 文件導覽。
 
 ## Deleted
 
@@ -56,7 +56,7 @@
 | TC-02 | REST／GraphQL operation 審閱 | 每個 operation 有直接官方來源、輸入、輸出、限制與認證／權限注意事項。 |
 | TC-03 | MVP boundary 審閱 | 寫入、merge、notification 與 local state 均不被誤標為現行 MVP。 |
 | TC-04 | 關鍵事實審閱 | `user-review-requested:@me`、`DISMISSED`、diff media type、classic-PAT notification 限制均正確。 |
-| TC-05 | 連結與 scope 檢查 | Markdown 連結可解析，diff 只包含 Written 清單中的新增檔案。 |
+| TC-05 | 連結與 scope 檢查 | Markdown 連結可解析，diff 只包含 Written 或 Modify 清單中的檔案。 |
 | TC-06 | Review thread schema 審閱 | `reviewThreads`、nodes 與 `threadId` 一律使用 `PullRequestReviewThread`。 |
 | TC-07 | Viewed boundary 審閱 | catalog 只將 `viewerViewedState` 描述為遠端 API 資料，不宣告本機持久化、同步或 UI authority。 |
 | TC-08 | Inbox scope 審閱 | catalog 不列出 `author:@me`，且只以目前使用者的 direct review request 作為跨 repository Inbox query。 |
@@ -85,3 +85,5 @@
 | TC-31 | Review-thread nodes nullable contract 審閱 | `PullRequestReviewThreadConnection.nodes` 的 list 與每個 node 均保留 nullable；只有非 null node 才讀取 review thread 欄位，並依欄位自己的 contract 判空。 |
 | TC-32 | Review-thread window contract 審閱 | 外層 `reviewThreads` 與每個巢狀 `comments` connection 均各自使用 1–100 window，並以自身 cursor 推進。 |
 | TC-33 | REST GET success response contract 審閱 | 每個 catalog REST GET operation 均列出正常 `200 OK` response；只有官方 operation reference 列出的 conditional response 才標記 `304 Not Modified`。 |
+| TC-34 | Inline review nullable 與 traversal contract 審閱 | `line`、`side`、`original_line` 標為可能缺席而非 nullable；issue comments 與其餘 REST list operation 均明列 Link header traversal。 |
+| TC-35 | First-read 與 table structure 審閱 | root README 連結 catalog；兩個 GraphQL action table 的 header 與 delimiter 皆為六欄。 |

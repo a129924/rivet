@@ -47,13 +47,14 @@
 - Checks 與 changed-files connection 的 nodes list／element 均須明確標示 nullable；只有非 null node 才可選取 `__typename` 的 union fragment 或 changed-file 欄位。
 - Review-thread connection 的 nodes list／element 均須明確標示 nullable；只有非 null node 才可讀取 review thread 欄位，並再依各欄位自己的 contract 判空。
 - 外層 `reviewThreads` 與每個巢狀 `comments` connection 都必須各自記錄 1–100 window、自己的 `hasNextPage`／`endCursor` 與同層 `after`；REST GET operation 則必須記錄正常 `200 OK` response，適用時另記錄官方列出的 conditional `304 Not Modified`。
+- REST inline review comment 的 `line`、`side` 與 `original_line` 未列於 required set 時，必須標記為可能缺席並與 nullable 區分；所有 REST list operation 均須記錄 Link header traversal。
 - 只在官方 reference 已確認時列出 qualifier、enum、欄位或 token 限制；否則標為不採用或待未來 topic 驗證。
 
 ## File Impact Contract
 
 ### ReadOnly
 
-- `README.md`、`docs/design-principles.md`、`docs/product.md`
+- `docs/design-principles.md`、`docs/product.md`
 - `docs/architecture/README.md` 與三份 Bounded Context 文件
 - 既有 `analysis/` 與 `plan/` artifacts
 - GitHub 官方 REST／GraphQL reference
@@ -66,6 +67,10 @@
 - `plan/github-api-catalog/github-api-catalog.step.md`
 - `docs/github-api/` 及其七份 catalog Markdown 文件
 
-### Modify / Deleted
+### Modify
 
-無。不得修改或刪除既有 tracked files。
+- `README.md`：新增 GitHub PR API catalog 的 first-read 文件導覽。
+
+### Deleted
+
+無。

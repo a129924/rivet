@@ -7,7 +7,7 @@
 ## File Viewed
 
 | Operation | 重要輸入 | 成功結果 | 認證／權限 | 狀態 | 官方來源 |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- |
 | `markFileAsViewed` | `pullRequestId`、`path` | mutation field `markFileAsViewed` 為 nullable；其 `MarkFileAsViewedPayload.pullRequest` 亦為 nullable 的更新後 PR。 | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/payload](https://docs.github.com/en/graphql/reference/pulls#markfileasviewed)、[input](https://docs.github.com/en/graphql/reference/pulls#markfileasviewedinput)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 | `unmarkFileAsViewed` | `pullRequestId`、`path` | mutation field `unmarkFileAsViewed` 為 nullable；其 `UnmarkFileAsViewedPayload.pullRequest` 亦為 nullable 的更新後 PR。 | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/payload](https://docs.github.com/en/graphql/reference/pulls#unmarkfileasviewed)、[input](https://docs.github.com/en/graphql/reference/pulls#unmarkfileasviewedinput)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
@@ -16,7 +16,7 @@
 ## Review Thread Resolution
 
 | Operation | 重要輸入 | 成功結果 | 認證／權限 | 狀態 | 官方來源 |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- |
 | `resolveReviewThread` | `threadId` | mutation field `resolveReviewThread` 為 nullable；其 `ResolveReviewThreadPayload.thread` 亦為 nullable 的更新後 thread。 | GitHub 要求有效 token 且可存取目標 repository；呼叫前 `PullRequestReviewThread.viewerCanResolve` 必須為 true。reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/payload](https://docs.github.com/en/graphql/reference/pulls#resolvereviewthread)、[input](https://docs.github.com/en/graphql/reference/pulls#resolvereviewthreadinput)、[thread capability](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 | `unresolveReviewThread` | `threadId` | mutation field `unresolveReviewThread` 為 nullable；其 `UnresolveReviewThreadPayload.thread` 亦為 nullable 的更新後 thread。 | GitHub 要求有效 token 且可存取目標 repository；呼叫前 `PullRequestReviewThread.viewerCanUnresolve` 必須為 true。reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/payload](https://docs.github.com/en/graphql/reference/pulls#unresolvereviewthread)、[input](https://docs.github.com/en/graphql/reference/pulls#unresolvereviewthreadinput)、[thread capability](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
