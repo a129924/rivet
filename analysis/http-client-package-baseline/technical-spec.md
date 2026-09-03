@@ -19,7 +19,7 @@ GitHub Integration 文件只可新增此 skeleton 的邊界事實：`RivetHTTPCl
 
 兩圖的虛線都代表 Rivet 擁有、尚未實作的抽象；實線代表可替換的 Foundation／外部 surface。Adapter implementation 必須指向核心 Port 或 package contract，不能反向；scene 不得將構想畫成已實作 API，且不得表達 runtime sequence、回傳資料流、錯誤種類、重試或 token refresh policy。
 
-每個 diagram folder 必須有 artifact-local enhancer 與 verifier。enhancer 從 generated canvas 的 runtime `BOXES`／`EDGES` 產生正常文件流中的中文文字替代內容，讓鍵盤與螢幕閱讀器取得相同節點與關係；不得手抄第二份 node／edge 資料。verifier 必須確認 `zh-Hant`、可聚焦 region、canvas 對輔助技術隱藏、文字 fallback 與 runtime scene generation。
+每個 diagram folder 必須有 artifact-local enhancer 與 verifier。enhancer 從 generated canvas 的 runtime `BOXES`／`EDGES` 產生正常文件流中的中文文字替代內容，讓鍵盤與螢幕閱讀器取得相同節點與關係；不得手抄第二份 node／edge 資料。canvas 快捷鍵只能在可聚焦的 stage 處理，不得攔截 fallback 或工具列的 keyboard interaction；artifact-local hint、toolbar title 與 accessible name 必須使用繁體中文。verifier 必須確認 `zh-Hant`、可聚焦 region、canvas 對輔助技術隱藏、文字 fallback、runtime scene generation、stage-only keyboard handling 與繁中操作介面。
 
 ## Written
 

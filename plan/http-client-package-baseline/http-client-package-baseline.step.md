@@ -13,6 +13,8 @@ Review-and-fix
 | TE-01 | completed | 驗證 manifest、skeleton、root manifest 不變與 canvas 產物。 | `swift package dump-package --package-path packages/RivetHTTPClient` 成功；source/test 目錄無 `.swift`；根 manifest 無 diff；兩份 HTML 均為 `lang="zh-Hant"`；完整 pre-commit 通過。 |
 | IM-03 | completed | 回修 PR review：移除 runtime flow／failure 提前定義、校正 Adapter 依賴方向與未實作樣式，並加入 diagram-local accessibility fallback。 | 兩個 scene 均為 0 errors、0 warnings；fallback 由 runtime `BOXES`／`EDGES` 生成。 |
 | TE-02 | completed | 驗證 review-fix 產物與品質 gate。 | accessibility verifier、enhancer 重建一致性、Node syntax check、`git diff --check` 與完整 pre-commit 均通過。 |
+| IM-04 | completed | 回修後續 PR review：移除 failure 種類／流程，校正圖表 dependency 文案，並補齊 stage-only keyboard handling 與繁中操作介面。 | scene 只表達 ownership／compile-time boundary；enhancer 產生繁中可近用 UI。 |
+| TE-03 | completed | 驗證第二輪 review-fix 產物與品質 gate。 | scene validate 皆為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、未授權 failure flow／window-global keyboard assertion 與 `git diff --check` 均通過。 |
 | HUMAN-01 | pending | Human review draft PR。 | 不自動 merge 或 release。 |
 
 ## Blockers

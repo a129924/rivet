@@ -13,6 +13,9 @@ try {
   assert(html.includes('BOXES.forEach(box =>') && html.includes('EDGES.forEach(edge =>'), 'fallback 必須由 runtime scene 資料產生');
   assert(html.includes("(from ? from.name : edge.from) + ' → ' + (to ? to.name : edge.to)"), '每個關係必須包含來源、方向與目標');
   assert(html.includes('#diagram-fallback {') && html.includes('position: relative; z-index: 11;'), 'fallback 必須在正常文件流');
+  assert(!html.includes("window.addEventListener('keydown'"), '不得使用 window-global keyboard handler');
+  assert(html.includes("stage.addEventListener('keydown'") && html.includes('e.target !== stage'), '快捷鍵必須只在 stage 取得焦點時處理');
+  assert(!html.includes('Zoom out') && !html.includes('Fit to screen') && !html.includes('Toggle light and dark theme'), '操作介面必須使用繁體中文');
   process.stdout.write(`可近用性驗證通過：${input}\n`);
 } catch (error) {
   process.stderr.write(`${error.message}\n`);

@@ -51,6 +51,20 @@ function enhance(source, label) {
 <p id="diagram-operations" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">此互動圖可用方向鍵平移，0 縮放至符合視窗，1 回到原始大小，T 切換主題，Esc 清除選取。可展開下方文字替代內容以讀取節點與關係。</p>
 <section id="diagram-fallback" aria-label="${label}文字替代內容"></section>
 <!-- HTTP_CLIENT_A11Y:END -->`, 'stage 標記');
+  html = once(html, `<div id="hint">
+  <div><kbd>drag / two-finger scroll</kbd> pan &nbsp;·&nbsp; <kbd>pinch</kbd> zoom</div>
+  <div><kbd>click</kbd> isolate &nbsp;·&nbsp; <kbd>0</kbd> fit &nbsp;·&nbsp; <kbd>t</kbd> theme &nbsp;·&nbsp; <kbd>esc</kbd> clear</div>
+</div>`, `<div id="hint">
+  <div><kbd>拖曳／雙指捲動</kbd> 平移 &nbsp;·&nbsp; <kbd>雙指縮放</kbd> 縮放</div>
+  <div><kbd>點擊</kbd> 聚焦 &nbsp;·&nbsp; <kbd>0</kbd> 符合視窗 &nbsp;·&nbsp; <kbd>T</kbd> 主題 &nbsp;·&nbsp; <kbd>Esc</kbd> 清除</div>
+</div>`, '操作提示');
+  html = once(html, '<div class="bar" id="toolbar">', '<div class="bar" id="toolbar" role="toolbar" aria-label="互動圖工具列">', '工具列');
+  html = once(html, '  <button id="bOut" title="Zoom out (−)" aria-label="Zoom out">', '  <button id="bOut" title="縮小（−）" aria-label="縮小">', '縮小按鈕');
+  html = once(html, '  <button id="bIn" title="Zoom in (+)" aria-label="Zoom in">', '  <button id="bIn" title="放大（+）" aria-label="放大">', '放大按鈕');
+  html = once(html, '  <button id="bFit" title="Fit to screen (0)">Fit</button>', '  <button id="bFit" title="符合視窗（0）">符合視窗</button>', '符合視窗按鈕');
+  html = once(html, '  <button id="bOne" title="Actual size (1)">1:1</button>', '  <button id="bOne" title="原始大小（1）">1:1</button>', '原始大小按鈕');
+  html = once(html, '  <button id="bTheme" title="Light theme (t)" aria-label="Toggle light and dark theme"></button>', '  <button id="bTheme" title="切換淺色與深色主題（T）" aria-label="切換淺色與深色主題"></button>', '主題按鈕');
+  html = once(html, '  <button id="bPng" title="Download PNG @2×">', '  <button id="bPng" title="下載 PNG（2 倍）" aria-label="下載 PNG（2 倍）">', 'PNG 按鈕');
   const fallback = `
   function createTextFallback() {
     const target = document.getElementById('diagram-fallback');
@@ -89,6 +103,55 @@ function enhance(source, label) {
   }
 `;
   html = once(html, '  // ---- pointer\n', `${fallback}\n  // ---- pointer\n`, 'fallback 函式');
+  html = once(html, `  canvas.addEventListener('pointerdown', (e) => {
+    canvas.setPointerCapture(e.pointerId);`, `  canvas.addEventListener('pointerdown', (e) => {
+    document.getElementById('stage').focus({ preventScroll: true });
+    canvas.setPointerCapture(e.pointerId);`, '指標聚焦');
+  const oldKeyboard = `  // ---- keyboard
+  window.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey) return;
+    const pan = e.shiftKey ? 220 : 70;
+    switch (e.key) {
+      case '0': fit(true); break;
+      case '1': actualSize(); break;
+      case 't': case 'T': toggleTheme(); break;
+      case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
+      case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
+      case 'Escape':
+        focused = null; readout.classList.remove('on'); schedule(); break;
+      case 'ArrowLeft':  view.x += pan; schedule(); break;
+      case 'ArrowRight': view.x -= pan; schedule(); break;
+      case 'ArrowUp':    view.y += pan; schedule(); break;
+      case 'ArrowDown':  view.y -= pan; schedule(); break;
+      default: return;
+    }
+    e.preventDefault();
+    hint.classList.add('faded');
+  });`;
+  const newKeyboard = `  // ---- keyboard
+  const stage = document.getElementById('stage');
+  stage.addEventListener('keydown', (e) => {
+    if (e.target !== stage || e.metaKey || e.ctrlKey) return;
+    const pan = e.shiftKey ? 220 : 70;
+    switch (e.key) {
+      case '0': fit(true); break;
+      case '1': actualSize(); break;
+      case 't': case 'T': toggleTheme(); break;
+      case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
+      case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
+      case 'Escape': focused = null; readout.classList.remove('on'); schedule(); break;
+      case 'ArrowLeft': view.x += pan; schedule(); break;
+      case 'ArrowRight': view.x -= pan; schedule(); break;
+      case 'ArrowUp': view.y += pan; schedule(); break;
+      case 'ArrowDown': view.y -= pan; schedule(); break;
+      default: return;
+    }
+    e.preventDefault();
+    hint.classList.add('faded');
+  });`;
+  html = once(html, oldKeyboard, newKeyboard, '鍵盤行為');
+  html = once(html, "    themeButton.title = (t === 'dark' ? 'Light' : 'Dark') + ' theme (t)';", "    const nextThemeLabel = t === 'dark' ? '切換為淺色主題（T）' : '切換為深色主題（T）';\n    themeButton.title = nextThemeLabel;\n    themeButton.setAttribute('aria-label', nextThemeLabel);", '主題文字');
+  html = once(html, "  if (embedded) pngButton.title = 'Open PNG @2× in a new tab';", "  if (embedded) { pngButton.title = '在新分頁開啟 PNG（2 倍）'; pngButton.setAttribute('aria-label', '在新分頁開啟 PNG（2 倍）'); }", '內嵌 PNG 文字');
   html = once(html, '  // ---- toolbar\n', '  createTextFallback();\n\n  // ---- toolbar\n', 'fallback 初始化');
   return html;
 }

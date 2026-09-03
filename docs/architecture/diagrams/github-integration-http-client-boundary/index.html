@@ -171,12 +171,12 @@
 
 <div id="plate">
   <div class="k">RIVET — GITHUB INTEGRATION BOUNDARY</div>
-  <div class="n"><b>核心 Port</b> → <b>Integration Adapter</b> → <b>預定 transport foundation</b> → <b>Outside</b></div>
+  <div class="n"><b>Integration Adapter</b> 符合 <b>核心 Port</b>，並依賴 <b>預定 transport foundation</b></div>
 </div>
 
 <div id="hint">
-  <div><kbd>drag / two-finger scroll</kbd> pan &nbsp;·&nbsp; <kbd>pinch</kbd> zoom</div>
-  <div><kbd>click</kbd> isolate &nbsp;·&nbsp; <kbd>0</kbd> fit &nbsp;·&nbsp; <kbd>t</kbd> theme &nbsp;·&nbsp; <kbd>esc</kbd> clear</div>
+  <div><kbd>拖曳／雙指捲動</kbd> 平移 &nbsp;·&nbsp; <kbd>雙指縮放</kbd> 縮放</div>
+  <div><kbd>點擊</kbd> 聚焦 &nbsp;·&nbsp; <kbd>0</kbd> 符合視窗 &nbsp;·&nbsp; <kbd>T</kbd> 主題 &nbsp;·&nbsp; <kbd>Esc</kbd> 清除</div>
 </div>
 
 <div id="readout">
@@ -185,20 +185,20 @@
   <div class="d"></div>
 </div>
 
-<div class="bar" id="toolbar">
-  <button id="bOut" title="Zoom out (−)" aria-label="Zoom out">
+<div class="bar" id="toolbar" role="toolbar" aria-label="互動圖工具列">
+  <button id="bOut" title="縮小（−）" aria-label="縮小">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M8 11h6"/></svg>
   </button>
   <div id="zoomLabel">100%</div>
-  <button id="bIn" title="Zoom in (+)" aria-label="Zoom in">
+  <button id="bIn" title="放大（+）" aria-label="放大">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M8 11h6M11 8v6"/></svg>
   </button>
   <div class="sep"></div>
-  <button id="bFit" title="Fit to screen (0)">Fit</button>
-  <button id="bOne" title="Actual size (1)">1:1</button>
+  <button id="bFit" title="符合視窗（0）">符合視窗</button>
+  <button id="bOne" title="原始大小（1）">1:1</button>
   <div class="sep"></div>
-  <button id="bTheme" title="Light theme (t)" aria-label="Toggle light and dark theme"></button>
-  <button id="bPng" title="Download PNG @2×">
+  <button id="bTheme" title="切換淺色與深色主題（T）" aria-label="切換淺色與深色主題"></button>
+  <button id="bPng" title="下載 PNG（2 倍）" aria-label="下載 PNG（2 倍）">
     <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
   </button>
 </div>
@@ -333,10 +333,10 @@ const BOXES = [
     texts: [['bl',524,298,'PR Content Source'],['bs',524,320,'PR Reader 擁有的 Port'],['bn',524,342,'不接觸外部 DTO']] },
   { id: 'inbox-failure', plane: 'core', band: 'band-core', x: 800, y: 270, w: 270, h: 88, r: 10, dash: true,
     name: 'Inbox Failure Contract', about: 'PR Inbox 對外表達的語意失敗，不含 infrastructure 細節。',
-    texts: [['bl',824,298,'Inbox Failure Contract'],['bs',824,320,'待審閱佇列不可取得'],['bn',824,342,'不含 HTTP status']] },
+    texts: [['bl',824,298,'Inbox Failure Contract'],['bs',824,320,'PR Inbox 擁有的失敗契約'],['bn',824,342,'不含外部 infrastructure 細節']] },
   { id: 'reader-failure', plane: 'core', band: 'band-core', x: 1100, y: 270, w: 270, h: 88, r: 10, dash: true,
     name: 'Reader Failure Contract', about: 'PR Reader 對外表達的閱讀語意失敗，不含 GitHub failure。',
-    texts: [['bl',1124,298,'Reader Failure Contract'],['bs',1124,320,'閱讀內容暫時不可得'],['bn',1124,342,'不含 GitHub failure']] },
+    texts: [['bl',1124,298,'Reader Failure Contract'],['bs',1124,320,'PR Reader 擁有的失敗契約'],['bn',1124,342,'不含外部 GitHub failure']] },
 
   { id: 'adapter', plane: 'integration', band: 'band-integration', x: 200, y: 600, w: 360, h: 88, r: 10, dash: true,
     name: 'GitHub Data Adapter', about: '把外部資料轉換為兩個核心 Port 所需的資料。',
@@ -389,9 +389,6 @@ const EDGES = [
   { from: 'adapter', to: 'content-port', pts: [[380,594],[380,500],[635,500],[635,362]], label: { s:'al', x:507, y:492, t:'符合 Port', anchor:'center' } },
   { from: 'adapter', to: 'dto-mapper', pts: [[564,644],[584,644]], label: { s:'al', x:574, y:632, t:'內部轉換', anchor:'center' } },
   { from: 'adapter', to: 'normalizer', pts: [[560,660],[740,660],[740,560],[1175,560],[1175,594]], label: { s:'al', x:754, y:648, t:'外部失敗邊界' } },
-  { from: 'normalizer', to: 'bc-mapper', pts: [[1175,692],[1175,744],[1089,744]], label: { s:'al', x:1132, y:732, t:'正規化', anchor:'center' } },
-  { from: 'bc-mapper', to: 'inbox-failure', pts: [[925,706],[925,402],[935,402],[935,362]], label: { s:'al', x:939, y:534, t:'轉為 Inbox 語意', rot:-90, anchor:'center' } },
-  { from: 'bc-mapper', to: 'reader-failure', pts: [[1089,744],[1436,744],[1436,314],[1376,314]], label: { s:'al', x:1452, y:529, t:'轉為 Reader 語意', rot:-90, anchor:'center' } },
   { from: 'adapter', to: 'http-client', pts: [[380,692],[380,844],[635,844],[635,954]], label: { s:'al', x:649, y:898, t:'預定 package 使用者', rot:-90, anchor:'center' } },
   { from: 'http-client', to: 'requester', pts: [[774,1004],[794,1004]], label: { s:'al', x:784, y:992, t:'預定依賴', anchor:'center' } },
   { from: 'requester', to: 'transport', pts: [[1074,1004],[1094,1004]], label: { s:'al', x:1084, y:992, t:'預定依賴', anchor:'center' } },
@@ -404,8 +401,8 @@ const EDGES = [
 
 const TEXTS = [
   { s:'title', x:160, y:86, t:'Rivet — GitHub Integration 與 HTTP Client 邊界' },
-  { s:'sub', x:160, y:118, t:'核心 Port → Integration Adapter → 預定 transport foundation → Outside；本圖不宣稱已有 HTTP 實作' },
-  { s:'tag', x:160, y:146, runs:[{t:'核心 BC',fill:C.sky},{t:' → ',fill:'#4A5462'},{t:'GitHub Integration',fill:C.orange},{t:' → ',fill:'#4A5462'},{t:'RivetHTTPClient（預定）',fill:C.violet},{t:' → Outside',fill:'#4A5462'}] },
+  { s:'sub', x:160, y:118, t:'Integration Adapter 符合核心 Port，並依賴預定 transport foundation；本圖不宣稱已有 HTTP 實作' },
+  { s:'tag', x:160, y:146, runs:[{t:'GitHub Integration Adapter',fill:C.orange},{t:' → ',fill:'#4A5462'},{t:'核心 Port',fill:C.sky},{t:' ║ ',fill:'#4A5462'},{t:'Integration Adapter',fill:C.orange},{t:' → ',fill:'#4A5462'},{t:'RivetHTTPClient（預定）',fill:C.violet}] },
   { s:'legend', x:1082, y:86, t:'虛線 — Rivet 擁有、尚未實作的抽象' },
   { s:'legend', x:1082, y:110, t:'實線 — Foundation、外部系統或實作邊界' },
   { s:'legend', x:1143, y:134, t:'顏色 — 所屬的責任 plane' },
@@ -920,6 +917,7 @@ const CHIPS = ['core','integration','package','outside'].map((id,i) => ({ x:1046
   let pinchDist = 0, pinchK = 1;
 
   canvas.addEventListener('pointerdown', (e) => {
+    document.getElementById('stage').focus({ preventScroll: true });
     canvas.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, [e.clientX, e.clientY]);
     if (pointers.size === 2) {
@@ -1052,8 +1050,9 @@ const CHIPS = ['core','integration','package','outside'].map((id,i) => ({ x:1046
   });
 
   // ---- keyboard
-  window.addEventListener('keydown', (e) => {
-    if (e.metaKey || e.ctrlKey) return;
+  const stage = document.getElementById('stage');
+  stage.addEventListener('keydown', (e) => {
+    if (e.target !== stage || e.metaKey || e.ctrlKey) return;
     const pan = e.shiftKey ? 220 : 70;
     switch (e.key) {
       case '0': fit(true); break;
@@ -1061,12 +1060,11 @@ const CHIPS = ['core','integration','package','outside'].map((id,i) => ({ x:1046
       case 't': case 'T': toggleTheme(); break;
       case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
       case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
-      case 'Escape':
-        focused = null; readout.classList.remove('on'); schedule(); break;
-      case 'ArrowLeft':  view.x += pan; schedule(); break;
+      case 'Escape': focused = null; readout.classList.remove('on'); schedule(); break;
+      case 'ArrowLeft': view.x += pan; schedule(); break;
       case 'ArrowRight': view.x -= pan; schedule(); break;
-      case 'ArrowUp':    view.y += pan; schedule(); break;
-      case 'ArrowDown':  view.y -= pan; schedule(); break;
+      case 'ArrowUp': view.y += pan; schedule(); break;
+      case 'ArrowDown': view.y -= pan; schedule(); break;
       default: return;
     }
     e.preventDefault();
@@ -1096,7 +1094,9 @@ const CHIPS = ['core','integration','package','outside'].map((id,i) => ({ x:1046
     theme = t;
     document.documentElement.setAttribute('data-theme', t);
     themeButton.innerHTML = t === 'dark' ? SUN : MOON;
-    themeButton.title = (t === 'dark' ? 'Light' : 'Dark') + ' theme (t)';
+    const nextThemeLabel = t === 'dark' ? '切換為淺色主題（T）' : '切換為深色主題（T）';
+    themeButton.title = nextThemeLabel;
+    themeButton.setAttribute('aria-label', nextThemeLabel);
     if (remember) { try { localStorage.setItem('ac-theme', t); } catch (e) {} }
     schedule();
   }
@@ -1117,7 +1117,7 @@ const CHIPS = ['core','integration','package','outside'].map((id,i) => ({ x:1046
   } catch (e) {
     embedded = true;   // cross-origin parent — same sandbox story
   }
-  if (embedded) pngButton.title = 'Open PNG @2× in a new tab';
+  if (embedded) { pngButton.title = '在新分頁開啟 PNG（2 倍）'; pngButton.setAttribute('aria-label', '在新分頁開啟 PNG（2 倍）'); }
 
   // Renders the full diagram at 2× into an offscreen canvas, ignoring the
   // current pan/zoom and any focus state.

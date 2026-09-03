@@ -32,10 +32,10 @@ const BOXES = [
     texts: [['bl',524,298,'PR Content Source'],['bs',524,320,'PR Reader 擁有的 Port'],['bn',524,342,'不接觸外部 DTO']] },
   { id: 'inbox-failure', plane: 'core', band: 'band-core', x: 800, y: 270, w: 270, h: 88, r: 10, dash: true,
     name: 'Inbox Failure Contract', about: 'PR Inbox 對外表達的語意失敗，不含 infrastructure 細節。',
-    texts: [['bl',824,298,'Inbox Failure Contract'],['bs',824,320,'待審閱佇列不可取得'],['bn',824,342,'不含 HTTP status']] },
+    texts: [['bl',824,298,'Inbox Failure Contract'],['bs',824,320,'PR Inbox 擁有的失敗契約'],['bn',824,342,'不含外部 infrastructure 細節']] },
   { id: 'reader-failure', plane: 'core', band: 'band-core', x: 1100, y: 270, w: 270, h: 88, r: 10, dash: true,
     name: 'Reader Failure Contract', about: 'PR Reader 對外表達的閱讀語意失敗，不含 GitHub failure。',
-    texts: [['bl',1124,298,'Reader Failure Contract'],['bs',1124,320,'閱讀內容暫時不可得'],['bn',1124,342,'不含 GitHub failure']] },
+    texts: [['bl',1124,298,'Reader Failure Contract'],['bs',1124,320,'PR Reader 擁有的失敗契約'],['bn',1124,342,'不含外部 GitHub failure']] },
 
   { id: 'adapter', plane: 'integration', band: 'band-integration', x: 200, y: 600, w: 360, h: 88, r: 10, dash: true,
     name: 'GitHub Data Adapter', about: '把外部資料轉換為兩個核心 Port 所需的資料。',
@@ -88,9 +88,6 @@ const EDGES = [
   { from: 'adapter', to: 'content-port', pts: [[380,594],[380,500],[635,500],[635,362]], label: { s:'al', x:507, y:492, t:'符合 Port', anchor:'center' } },
   { from: 'adapter', to: 'dto-mapper', pts: [[564,644],[584,644]], label: { s:'al', x:574, y:632, t:'內部轉換', anchor:'center' } },
   { from: 'adapter', to: 'normalizer', pts: [[560,660],[740,660],[740,560],[1175,560],[1175,594]], label: { s:'al', x:754, y:648, t:'外部失敗邊界' } },
-  { from: 'normalizer', to: 'bc-mapper', pts: [[1175,692],[1175,744],[1089,744]], label: { s:'al', x:1132, y:732, t:'正規化', anchor:'center' } },
-  { from: 'bc-mapper', to: 'inbox-failure', pts: [[925,706],[925,402],[935,402],[935,362]], label: { s:'al', x:939, y:534, t:'轉為 Inbox 語意', rot:-90, anchor:'center' } },
-  { from: 'bc-mapper', to: 'reader-failure', pts: [[1089,744],[1436,744],[1436,314],[1376,314]], label: { s:'al', x:1452, y:529, t:'轉為 Reader 語意', rot:-90, anchor:'center' } },
   { from: 'adapter', to: 'http-client', pts: [[380,692],[380,844],[635,844],[635,954]], label: { s:'al', x:649, y:898, t:'預定 package 使用者', rot:-90, anchor:'center' } },
   { from: 'http-client', to: 'requester', pts: [[774,1004],[794,1004]], label: { s:'al', x:784, y:992, t:'預定依賴', anchor:'center' } },
   { from: 'requester', to: 'transport', pts: [[1074,1004],[1094,1004]], label: { s:'al', x:1084, y:992, t:'預定依賴', anchor:'center' } },
@@ -103,8 +100,8 @@ const EDGES = [
 
 const TEXTS = [
   { s:'title', x:160, y:86, t:'Rivet — GitHub Integration 與 HTTP Client 邊界' },
-  { s:'sub', x:160, y:118, t:'核心 Port → Integration Adapter → 預定 transport foundation → Outside；本圖不宣稱已有 HTTP 實作' },
-  { s:'tag', x:160, y:146, runs:[{t:'核心 BC',fill:C.sky},{t:' → ',fill:'#4A5462'},{t:'GitHub Integration',fill:C.orange},{t:' → ',fill:'#4A5462'},{t:'RivetHTTPClient（預定）',fill:C.violet},{t:' → Outside',fill:'#4A5462'}] },
+  { s:'sub', x:160, y:118, t:'Integration Adapter 符合核心 Port，並依賴預定 transport foundation；本圖不宣稱已有 HTTP 實作' },
+  { s:'tag', x:160, y:146, runs:[{t:'GitHub Integration Adapter',fill:C.orange},{t:' → ',fill:'#4A5462'},{t:'核心 Port',fill:C.sky},{t:' ║ ',fill:'#4A5462'},{t:'Integration Adapter',fill:C.orange},{t:' → ',fill:'#4A5462'},{t:'RivetHTTPClient（預定）',fill:C.violet}] },
   { s:'legend', x:1082, y:86, t:'虛線 — Rivet 擁有、尚未實作的抽象' },
   { s:'legend', x:1082, y:110, t:'實線 — Foundation、外部系統或實作邊界' },
   { s:'legend', x:1143, y:134, t:'顏色 — 所屬的責任 plane' },

@@ -175,8 +175,8 @@
 </div>
 
 <div id="hint">
-  <div><kbd>drag / two-finger scroll</kbd> pan &nbsp;·&nbsp; <kbd>pinch</kbd> zoom</div>
-  <div><kbd>click</kbd> isolate &nbsp;·&nbsp; <kbd>0</kbd> fit &nbsp;·&nbsp; <kbd>t</kbd> theme &nbsp;·&nbsp; <kbd>esc</kbd> clear</div>
+  <div><kbd>拖曳／雙指捲動</kbd> 平移 &nbsp;·&nbsp; <kbd>雙指縮放</kbd> 縮放</div>
+  <div><kbd>點擊</kbd> 聚焦 &nbsp;·&nbsp; <kbd>0</kbd> 符合視窗 &nbsp;·&nbsp; <kbd>T</kbd> 主題 &nbsp;·&nbsp; <kbd>Esc</kbd> 清除</div>
 </div>
 
 <div id="readout">
@@ -185,20 +185,20 @@
   <div class="d"></div>
 </div>
 
-<div class="bar" id="toolbar">
-  <button id="bOut" title="Zoom out (−)" aria-label="Zoom out">
+<div class="bar" id="toolbar" role="toolbar" aria-label="互動圖工具列">
+  <button id="bOut" title="縮小（−）" aria-label="縮小">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M8 11h6"/></svg>
   </button>
   <div id="zoomLabel">100%</div>
-  <button id="bIn" title="Zoom in (+)" aria-label="Zoom in">
+  <button id="bIn" title="放大（+）" aria-label="放大">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M8 11h6M11 8v6"/></svg>
   </button>
   <div class="sep"></div>
-  <button id="bFit" title="Fit to screen (0)">Fit</button>
-  <button id="bOne" title="Actual size (1)">1:1</button>
+  <button id="bFit" title="符合視窗（0）">符合視窗</button>
+  <button id="bOne" title="原始大小（1）">1:1</button>
   <div class="sep"></div>
-  <button id="bTheme" title="Light theme (t)" aria-label="Toggle light and dark theme"></button>
-  <button id="bPng" title="Download PNG @2×">
+  <button id="bTheme" title="切換淺色與深色主題（T）" aria-label="切換淺色與深色主題"></button>
+  <button id="bPng" title="下載 PNG（2 倍）" aria-label="下載 PNG（2 倍）">
     <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
   </button>
 </div>
@@ -892,6 +892,7 @@ const CHIPS = ['integration','client','contracts','transport','outside'].map((id
   let pinchDist = 0, pinchK = 1;
 
   canvas.addEventListener('pointerdown', (e) => {
+    document.getElementById('stage').focus({ preventScroll: true });
     canvas.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, [e.clientX, e.clientY]);
     if (pointers.size === 2) {
@@ -1024,8 +1025,9 @@ const CHIPS = ['integration','client','contracts','transport','outside'].map((id
   });
 
   // ---- keyboard
-  window.addEventListener('keydown', (e) => {
-    if (e.metaKey || e.ctrlKey) return;
+  const stage = document.getElementById('stage');
+  stage.addEventListener('keydown', (e) => {
+    if (e.target !== stage || e.metaKey || e.ctrlKey) return;
     const pan = e.shiftKey ? 220 : 70;
     switch (e.key) {
       case '0': fit(true); break;
@@ -1033,12 +1035,11 @@ const CHIPS = ['integration','client','contracts','transport','outside'].map((id
       case 't': case 'T': toggleTheme(); break;
       case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
       case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
-      case 'Escape':
-        focused = null; readout.classList.remove('on'); schedule(); break;
-      case 'ArrowLeft':  view.x += pan; schedule(); break;
+      case 'Escape': focused = null; readout.classList.remove('on'); schedule(); break;
+      case 'ArrowLeft': view.x += pan; schedule(); break;
       case 'ArrowRight': view.x -= pan; schedule(); break;
-      case 'ArrowUp':    view.y += pan; schedule(); break;
-      case 'ArrowDown':  view.y -= pan; schedule(); break;
+      case 'ArrowUp': view.y += pan; schedule(); break;
+      case 'ArrowDown': view.y -= pan; schedule(); break;
       default: return;
     }
     e.preventDefault();
@@ -1068,7 +1069,9 @@ const CHIPS = ['integration','client','contracts','transport','outside'].map((id
     theme = t;
     document.documentElement.setAttribute('data-theme', t);
     themeButton.innerHTML = t === 'dark' ? SUN : MOON;
-    themeButton.title = (t === 'dark' ? 'Light' : 'Dark') + ' theme (t)';
+    const nextThemeLabel = t === 'dark' ? '切換為淺色主題（T）' : '切換為深色主題（T）';
+    themeButton.title = nextThemeLabel;
+    themeButton.setAttribute('aria-label', nextThemeLabel);
     if (remember) { try { localStorage.setItem('ac-theme', t); } catch (e) {} }
     schedule();
   }
@@ -1089,7 +1092,7 @@ const CHIPS = ['integration','client','contracts','transport','outside'].map((id
   } catch (e) {
     embedded = true;   // cross-origin parent — same sandbox story
   }
-  if (embedded) pngButton.title = 'Open PNG @2× in a new tab';
+  if (embedded) { pngButton.title = '在新分頁開啟 PNG（2 倍）'; pngButton.setAttribute('aria-label', '在新分頁開啟 PNG（2 倍）'); }
 
   // Renders the full diagram at 2× into an offscreen canvas, ignoring the
   // current pan/zoom and any focus state.

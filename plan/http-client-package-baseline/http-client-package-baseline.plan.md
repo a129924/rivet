@@ -62,6 +62,7 @@
 - TC-05：GitHub Integration 文件明確保留 HTTP、token 與 infrastructure failure 在 Adapter 邊界。
 - TC-06：兩張 canvas 各自通過 architecture-canvas validate 與 build，視覺檢查無溢位或碰撞，且不宣稱已有實作。
 - TC-07：兩份 HTML 的文字替代內容由 runtime `BOXES`／`EDGES` 生成，並通過 diagram-local accessibility verifier 與重建一致性檢查。
+- TC-08：canvas 快捷鍵僅在可聚焦 stage 處理；fallback 與工具列可使用原生鍵盤操作，且 artifact-local 操作介面與 accessible names 為繁體中文。
 
 ## Assumptions
 
