@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-runtime-rendering`
-- Current phase: Plan-Creator correction after PR-03 needs-rework
+- Current phase: Human PR review after DL-01 delivery；另有兩個未解 review threads
 - Ledger rule: step status 與 checklist 不構成 approval；只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Goal
@@ -55,26 +55,27 @@
 | PC-02 | completed | Plan-Creator | 如實記錄 historical deviation，加入兩個 PR fixes 與最小 docs amendment，且保留 mission／其他 exclusions。 | 本次 planning artifact amendment；不是 approval。 |
 | PR-03 | needs-rework | Plan-Reviewer | 獨立審查 PC-02 amendment 的 scope、historical ledger、PR fixes、docs 限界與 handoff。 | 本次明示 verdict 為 `needs-rework`；不構成 implementation gate pass。 |
 | PC-03 | completed | Plan-Creator | 依 PR-03 needs-rework 修正 historical PR-01 表述與 delivery／human handoff。 | 本次最小 ledger／plan amendment；不是 approval。 |
-| PR-04 | pending | Plan-Reviewer | 獨立審查 PC-03 correction 的 historical ledger 與 delivery／human handoff，並明示 verdict。 | 尚無 verdict；`approved` 前不得開始 IM-02。 |
-| IM-02 | pending | Implementer | 僅於 PR-04 `approved` 後，實作兩個 PR fixes 與明示 docs truth amendment。 | 尚無；不得提早實作。 |
-| TE-02 | pending | Tester | IM-02 明示完成後，執行指定 runtime／type-level tests、`bun run check` 與 `bun test`。 | 尚無。 |
-| RV-02 | pending | Reviewer | TE-02 verdict 後，獨立審查 IM-02 scope、contracts、docs amendment 與 evidence。 | 尚無。 |
-| DL-01 | pending | Implementer | 僅於 RV-02 `approved` 後，依既有 human 明示授權 commit by topic、push，並只 resolve 已驗證處理的四個 review threads。 | 尚無；human 已明示授權本輪在 RV-02 approved 後 delivery，且不得 resolve 未驗證 thread。 |
-| HC-01 | pending | Human | DL-01 delivery 完成後進行 PR review。 | 尚無；為 delivery 後的人類 PR review stop。 |
+| PR-04 | approved | Plan-Reviewer | 獨立審查 PC-03 correction 的 historical ledger 與 delivery／human handoff，並明示 verdict。 | 原始獨立審查 verdict：`approved`；結論接受 PC-03 對 historical ledger 與 delivery／human handoff 的 correction，且不追溯滿足 PR-01。當時下一步為 IM-02。 |
+| IM-02 | completed | Implementer | 僅於 PR-04 `approved` 後，實作兩個 PR fixes 與明示 docs truth amendment。 | 原始 handoff 明示完成 remediation implementation，commit `0b06f3d`。 |
+| TE-02 | completed | Tester | IM-02 明示完成後，執行指定 runtime／type-level tests、`bun run check` 與 `bun test`。 | 原始 Tester verdict：`pass`。 |
+| RV-02 | approved | Reviewer | TE-02 verdict 後，獨立審查 IM-02 scope、contracts、docs amendment 與 evidence。 | 原始 Reviewer verdict：`approved`。 |
+| DL-01 | completed | Implementer | 僅於 RV-02 `approved` 後，依既有 human 明示授權 commit by topic、push，並只 resolve 已驗證處理的四個 review threads。 | 原始 handoff 明示 `0b06f3d` 已 push，且指定四個已驗證處理的 review threads 已 resolve。 |
+| HC-01 | in-progress | Human | DL-01 delivery 完成後進行 PR review。 | PR 目前仍處於人類 review；另有兩個未解 review threads，未被本次補記宣稱已處理或 resolve。 |
 
 ## Blockers
 
 - 無新的 scope 或 contract blocker。
 - 已知 workflow deviation：`0f1cb1e` 先於可追溯 gate 記錄，且此前無獨立 PR-01 verdict 或 approval 的可追溯證據；不得將它補記為 gate pass。
-- 現行唯一下一步為 PR-04 的獨立 Plan-Reviewer review；PR-04 `approved` 是 IM-02、TE-02、RV-02、delivery 與 human boundary 的前提。
+- PR-04、IM-02、TE-02、RV-02 與 DL-01 已依原始明示 handoff 補記完成狀態；此補記不追溯滿足 PR-01。
+- PR 仍處於人類 review，且有兩個未解 review threads；未提供其已驗證處理的明示 handoff 前，不得將其 resolve。
 
 ## Human Check
 
-- PR-04、TE-02 或 RV-02 回傳 `blocked` 或 `human-check` 時，停止自動前進並交還 human。
-- RV-02 明示 `approved` 後，依既有 human 授權進入 DL-01；HC-01 是 delivery 後的人類 PR review stop，不是 pre-delivery gate。不得以 historical IM-01 取代本輪 gate。
+- HC-01 進行中：停止於人類 PR review，兩個未解 review threads 須由後續獨立 triage 判定；不得以本次補記將其視為已驗證處理。
+- PR-01 的 historical deviation 仍未獲追溯滿足；不得以 PR-04 或本次 ledger amendment 取代 initial implementation gate。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 依 PR-03 needs-rework 修正未有證據的 PR-01 verdict 表述，並校正 delivery／human handoff。
-- Update status: PR-01 not-completed historical deviation；PR-02、PR-03 needs-rework；PC-03 completed；唯一下一步為獨立 Plan-Reviewer 的 PR-04 review。
+- Update reason: 依 PR-04 approved 與後續原始 handoffs，如實補記 IM-02 remediation、TE-02、RV-02 與 DL-01；不追溯改寫 PR-01。
+- Update status: PR-01 仍為 not-completed historical deviation；PR-04 approved、IM-02／TE-02／DL-01 completed、RV-02 approved；PR 目前處於 human review，且有兩個未解 review threads。
