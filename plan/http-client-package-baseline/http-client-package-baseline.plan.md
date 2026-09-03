@@ -32,7 +32,7 @@
 - `analysis/http-client-package-baseline/` 下的 `requirements.md`、`technical-spec.md`。
 - `plan/http-client-package-baseline/` 下的 `.plan.md`、`.step.md`。
 - `packages/RivetHTTPClient/Package.swift`、`Sources/.gitkeep`、`Tests/.gitkeep`。
-- 兩個新 canvas artifact 的 `scene.js`、generated `index.html` 與 diagram-local accessibility enhancer／verifier。
+- 兩個新 canvas artifact 的 `scene.js`、generated `index.html`、artifact-local `BUILD.md` 與 diagram-local accessibility enhancer／verifier。
 
 ## Modify
 
@@ -53,6 +53,7 @@
 - 具體 failure mapper 與 TokenProvider 實作者均屬後續實作決策；package 結構圖不得指定任一實作者，TokenProvider 實作邊界只在 Integration boundary canvas 表達。
 - 兩張圖以 `scene.js` 為唯一真相，使用繁體中文與 `lang="zh-Hant"`；不以箭頭或文字描述 runtime request flow。
 - 每張圖以 diagram-local enhancer／verifier 從 runtime `BOXES`／`EDGES`／`TEXTS` 產生可鍵盤巡覽的文字替代內容與圖表註記；不得維護第二份圖資料，且 fallback 不得遮蔽操作提示。
+- 每張圖的 artifact-local `BUILD.md` 固定記錄 validate → build → enhance → verify 與 metadata／accessible label；不得只重建原始 HTML 而遺失可近用性增強。
 
 ## TestCase
 
@@ -64,6 +65,7 @@
 - TC-06：兩張 canvas 各自通過 architecture-canvas validate 與 build，視覺檢查無溢位或碰撞，且不宣稱已有實作。
 - TC-07：兩份 HTML 的文字替代內容與圖表註記由 runtime `BOXES`／`EDGES`／`TEXTS` 生成，並通過 diagram-local accessibility verifier 與重建一致性檢查。
 - TC-08：canvas 快捷鍵僅在可聚焦 stage 處理；fallback 與工具列可使用原生鍵盤操作，且 artifact-local 操作介面與 accessible names 為繁體中文。
+- TC-09：每個 diagram folder 的 `BUILD.md` 都記錄可重現的 validate → build → enhance → verify 流程與固定 label，且產出的 HTML 通過 accessibility verifier。
 
 ## Assumptions
 

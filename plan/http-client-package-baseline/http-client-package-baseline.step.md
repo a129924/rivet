@@ -21,6 +21,8 @@ Review-and-fix
 | TE-05 | completed | 驗證最新 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、Node syntax、scope assertion、`git diff --check` 與完整 pre-commit 均通過。 |
 | IM-07 | completed | 回修最新 PR review：移除未授權的 BC Failure Mapper，並讓 TokenProvider 實作者只在 Integration boundary canvas 表達。 | package 結構圖不再指定 GitHub Data Adapter 為 TokenProvider 實作者；兩份 canvas 已重建。 |
 | TE-06 | completed | 驗證最新 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；accessibility verifier、enhancer 重建一致性、scope assertion、`git diff --check` 與完整 pre-commit 均通過。 |
+| IM-08 | completed | 回修最新 PR review：校正 HTTPClient 的兩條分支依賴，並為兩張 canvas 補齊 artifact-local rebuild entry。 | package subtitle 明確分開 Requester／Transport 與 TokenProvider；兩份 `BUILD.md` 固定記錄完整交付流程。 |
+| TE-07 | completed | 驗證最新 review-fix 產物與品質 gate。 | scene validate 均為 0 errors、0 warnings；兩份 artifact-local rebuild、accessibility verifier、重建一致性、scope assertion、`git diff --check` 與完整 pre-commit 均通過。 |
 | HUMAN-01 | pending | Human review draft PR。 | 不自動 merge 或 release。 |
 
 ## Blockers
