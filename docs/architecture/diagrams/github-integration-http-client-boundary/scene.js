@@ -46,7 +46,7 @@ const BOXES = [
   { id: 'normalizer', plane: 'integration', band: 'band-integration', x: 980, y: 600, w: 390, h: 88, r: 10, dash: true,
     name: 'Failure Normalizer', about: '在 Adapter 邊界正規化外部 infrastructure failure。',
     texts: [['bl',1004,628,'Failure Normalizer'],['bs',1004,650,'Adapter 邊界正規化'],['bn',1004,672,'核心 BC 只取語意 failure']] },
-  { id: 'identity-boundary', plane: 'integration', band: 'band-integration', x: 395, y: 710, w: 320, h: 68, r: 10,
+  { id: 'identity-boundary', plane: 'integration', band: 'band-integration', x: 395, y: 710, w: 320, h: 68, r: 10, dash: true,
     name: 'TokenProvider 實作邊界', about: 'TokenProvider 的未來實作留在 Integration／Outside 邊界。',
     texts: [['bl',419,738,'TokenProvider 實作邊界'],['bs',419,760,'不形成獨立 Auth BC']] },
   { id: 'bc-mapper', plane: 'integration', band: 'band-integration', x: 765, y: 710, w: 320, h: 68, r: 10, dash: true,
@@ -84,8 +84,8 @@ const BOXES = [
 ];
 
 const EDGES = [
-  { from: 'review-port', to: 'adapter', pts: [[335,362],[335,594]], label: { s:'al', x:349, y:478, t:'符合 Port', rot:-90, anchor:'center' } },
-  { from: 'content-port', to: 'adapter', pts: [[635,362],[635,500],[380,500],[380,594]], label: { s:'al', x:507, y:492, t:'符合 Port', anchor:'center' } },
+  { from: 'adapter', to: 'review-port', pts: [[335,594],[335,362]], label: { s:'al', x:349, y:478, t:'符合 Port', rot:-90, anchor:'center' } },
+  { from: 'adapter', to: 'content-port', pts: [[380,594],[380,500],[635,500],[635,362]], label: { s:'al', x:507, y:492, t:'符合 Port', anchor:'center' } },
   { from: 'adapter', to: 'dto-mapper', pts: [[564,644],[584,644]], label: { s:'al', x:574, y:632, t:'內部轉換', anchor:'center' } },
   { from: 'adapter', to: 'normalizer', pts: [[560,660],[740,660],[740,560],[1175,560],[1175,594]], label: { s:'al', x:754, y:648, t:'外部失敗邊界' } },
   { from: 'normalizer', to: 'bc-mapper', pts: [[1175,692],[1175,744],[1089,744]], label: { s:'al', x:1132, y:732, t:'正規化', anchor:'center' } },
@@ -97,9 +97,8 @@ const EDGES = [
   { from: 'http-client', to: 'contracts', pts: [[635,1052],[635,1094]], label: { s:'al', x:649, y:1074, t:'使用契約', rot:-90, anchor:'center' } },
   { from: 'http-client', to: 'token-contract', pts: [[700,1052],[700,1074],[950,1074],[950,1094]], label: { s:'al', x:825, y:1066, t:'預定 token 依賴', anchor:'center' } },
   { from: 'transport', to: 'urlsession', pts: [[1235,1052],[1235,1300],[335,1300],[335,1394]], label: { s:'al', x:349, y:1248, t:'Foundation surface', rot:-90, anchor:'center' } },
-  { from: 'token-contract', to: 'identity-boundary', pts: [[950,1094],[950,844],[555,844],[555,784]], label: { s:'al', x:964, y:964, t:'由邊界實作', rot:-90, anchor:'center' } },
+  { from: 'identity-boundary', to: 'token-contract', pts: [[555,784],[555,844],[950,844],[950,1094]], label: { s:'al', x:964, y:964, t:'符合 contract', rot:-90, anchor:'center' } },
   { from: 'identity-boundary', to: 'identity-store', pts: [[555,784],[555,1320],[770,1320],[770,1394]], label: { s:'al', x:784, y:1248, t:'外部憑證細節', rot:-90, anchor:'center' } },
-  { from: 'urlsession', to: 'github-api', pts: [[474,1434],[1064,1434]], label: { s:'al', x:769, y:1422, t:'網路通訊', anchor:'center' } }
 ];
 
 const TEXTS = [

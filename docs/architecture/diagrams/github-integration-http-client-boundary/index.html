@@ -52,13 +52,26 @@
     --hint-faded: 0.75;
   }
   * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0; height: 100%; overflow: hidden;
+  html { min-height: 100%; overflow-x: hidden; overflow-y: auto; }
+  body {
+    margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; overflow-y: auto;
     background: var(--bg); color: var(--ink);
     font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     -webkit-font-smoothing: antialiased;
   }
   #stage { position: fixed; inset: 0; }
+  #stage:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+  #diagram-fallback {
+    position: relative; z-index: 11; width: min(34rem, calc(100vw - 36px));
+    margin: 18px 18px 88px auto; border: 1px solid var(--chrome-border);
+    border-radius: 12px; background: var(--chrome); color: var(--ink);
+  }
+  #diagram-fallback summary { cursor: pointer; padding: 11px 13px; font-size: 12px; font-weight: 700; }
+  #diagram-fallback .fallback-content { padding: 0 13px 13px; font-size: 12px; line-height: 1.6; }
+  #diagram-fallback h2, #diagram-fallback h3 { font-size: 13px; margin: 12px 0 6px; }
+  #diagram-fallback ol, #diagram-fallback ul { margin: 0; padding-left: 22px; }
+  #diagram-fallback li + li { margin-top: 6px; }
+  #diagram-fallback:focus-within, #diagram-fallback summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   #c { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
   #c.panning { cursor: grabbing; }
   #c.pointing { cursor: pointer; }
@@ -149,7 +162,12 @@
 </head>
 <body>
 
-<div id="stage"><canvas id="c"></canvas></div>
+<div id="stage" tabindex="0" role="region" aria-label="GitHub Integration 與 HTTP Client 邊界互動圖" aria-describedby="diagram-operations"><canvas id="c" aria-hidden="true"></canvas></div>
+
+<!-- HTTP_CLIENT_A11Y:START -->
+<p id="diagram-operations" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">此互動圖可用方向鍵平移，0 縮放至符合視窗，1 回到原始大小，T 切換主題，Esc 清除選取。可展開下方文字替代內容以讀取節點與關係。</p>
+<section id="diagram-fallback" aria-label="GitHub Integration 與 HTTP Client 邊界文字替代內容"></section>
+<!-- HTTP_CLIENT_A11Y:END -->
 
 <div id="plate">
   <div class="k">RIVET — GITHUB INTEGRATION BOUNDARY</div>
@@ -329,7 +347,7 @@ const BOXES = [
   { id: 'normalizer', plane: 'integration', band: 'band-integration', x: 980, y: 600, w: 390, h: 88, r: 10, dash: true,
     name: 'Failure Normalizer', about: '在 Adapter 邊界正規化外部 infrastructure failure。',
     texts: [['bl',1004,628,'Failure Normalizer'],['bs',1004,650,'Adapter 邊界正規化'],['bn',1004,672,'核心 BC 只取語意 failure']] },
-  { id: 'identity-boundary', plane: 'integration', band: 'band-integration', x: 395, y: 710, w: 320, h: 68, r: 10,
+  { id: 'identity-boundary', plane: 'integration', band: 'band-integration', x: 395, y: 710, w: 320, h: 68, r: 10, dash: true,
     name: 'TokenProvider 實作邊界', about: 'TokenProvider 的未來實作留在 Integration／Outside 邊界。',
     texts: [['bl',419,738,'TokenProvider 實作邊界'],['bs',419,760,'不形成獨立 Auth BC']] },
   { id: 'bc-mapper', plane: 'integration', band: 'band-integration', x: 765, y: 710, w: 320, h: 68, r: 10, dash: true,
@@ -367,8 +385,8 @@ const BOXES = [
 ];
 
 const EDGES = [
-  { from: 'review-port', to: 'adapter', pts: [[335,362],[335,594]], label: { s:'al', x:349, y:478, t:'符合 Port', rot:-90, anchor:'center' } },
-  { from: 'content-port', to: 'adapter', pts: [[635,362],[635,500],[380,500],[380,594]], label: { s:'al', x:507, y:492, t:'符合 Port', anchor:'center' } },
+  { from: 'adapter', to: 'review-port', pts: [[335,594],[335,362]], label: { s:'al', x:349, y:478, t:'符合 Port', rot:-90, anchor:'center' } },
+  { from: 'adapter', to: 'content-port', pts: [[380,594],[380,500],[635,500],[635,362]], label: { s:'al', x:507, y:492, t:'符合 Port', anchor:'center' } },
   { from: 'adapter', to: 'dto-mapper', pts: [[564,644],[584,644]], label: { s:'al', x:574, y:632, t:'內部轉換', anchor:'center' } },
   { from: 'adapter', to: 'normalizer', pts: [[560,660],[740,660],[740,560],[1175,560],[1175,594]], label: { s:'al', x:754, y:648, t:'外部失敗邊界' } },
   { from: 'normalizer', to: 'bc-mapper', pts: [[1175,692],[1175,744],[1089,744]], label: { s:'al', x:1132, y:732, t:'正規化', anchor:'center' } },
@@ -380,9 +398,8 @@ const EDGES = [
   { from: 'http-client', to: 'contracts', pts: [[635,1052],[635,1094]], label: { s:'al', x:649, y:1074, t:'使用契約', rot:-90, anchor:'center' } },
   { from: 'http-client', to: 'token-contract', pts: [[700,1052],[700,1074],[950,1074],[950,1094]], label: { s:'al', x:825, y:1066, t:'預定 token 依賴', anchor:'center' } },
   { from: 'transport', to: 'urlsession', pts: [[1235,1052],[1235,1300],[335,1300],[335,1394]], label: { s:'al', x:349, y:1248, t:'Foundation surface', rot:-90, anchor:'center' } },
-  { from: 'token-contract', to: 'identity-boundary', pts: [[950,1094],[950,844],[555,844],[555,784]], label: { s:'al', x:964, y:964, t:'由邊界實作', rot:-90, anchor:'center' } },
+  { from: 'identity-boundary', to: 'token-contract', pts: [[555,784],[555,844],[950,844],[950,1094]], label: { s:'al', x:964, y:964, t:'符合 contract', rot:-90, anchor:'center' } },
   { from: 'identity-boundary', to: 'identity-store', pts: [[555,784],[555,1320],[770,1320],[770,1394]], label: { s:'al', x:784, y:1248, t:'外部憑證細節', rot:-90, anchor:'center' } },
-  { from: 'urlsession', to: 'github-api', pts: [[474,1434],[1064,1434]], label: { s:'al', x:769, y:1422, t:'網路通訊', anchor:'center' } }
 ];
 
 const TEXTS = [
@@ -860,6 +877,43 @@ const CHIPS = ['core','integration','package','outside'].map((id,i) => ({ x:1046
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
+
+  function createTextFallback() {
+    const target = document.getElementById('diagram-fallback');
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = '開啟文字替代內容（節點與關係）';
+    details.appendChild(summary);
+    const content = document.createElement('div');
+    content.className = 'fallback-content';
+    const nodeTitle = document.createElement('h2');
+    nodeTitle.textContent = '節點';
+    content.appendChild(nodeTitle);
+    const nodes = document.createElement('ol');
+    BOXES.forEach(box => {
+      const item = document.createElement('li');
+      const plane = PLANES[box.plane] || { label: box.plane };
+      item.textContent = box.name + '；' + plane.label + '。' + box.about;
+      nodes.appendChild(item);
+    });
+    content.appendChild(nodes);
+    const relationTitle = document.createElement('h3');
+    relationTitle.textContent = '關係';
+    content.appendChild(relationTitle);
+    const relations = document.createElement('ul');
+    EDGES.forEach(edge => {
+      const item = document.createElement('li');
+      const from = BOX_BY_ID.get(edge.from);
+      const to = BOX_BY_ID.get(edge.to);
+      const relationLabel = edge.label ? '：' + edge.label.t : '';
+      item.textContent = (from ? from.name : edge.from) + ' → ' + (to ? to.name : edge.to) + relationLabel;
+      relations.appendChild(item);
+    });
+    content.appendChild(relations);
+    details.appendChild(content);
+    target.appendChild(details);
+  }
+
   // ---- pointer
   let dragging = false, moved = false, lastX = 0, lastY = 0, downX = 0, downY = 0;
   const pointers = new Map();
@@ -1018,6 +1072,8 @@ const CHIPS = ['core','integration','package','outside'].map((id,i) => ({ x:1046
     e.preventDefault();
     hint.classList.add('faded');
   });
+
+  createTextFallback();
 
   // ---- toolbar
   document.getElementById('bIn').onclick  = () => zoomAt(view.k * 1.3, vw / 2, vh / 2, true);

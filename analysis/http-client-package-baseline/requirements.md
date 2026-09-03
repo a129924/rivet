@@ -30,3 +30,4 @@
 - 根 `Package.swift` 不變。
 - GitHub Integration 文件明確表示 package 是 Adapter 的預定 transport foundation，而非新的 BC；HTTP、token 與 infrastructure failure 不可穿越核心 BC Port。
 - 兩張 architecture-canvas 圖以繁體中文表達 declaration-only ownership 與 compile-time boundary；不敘述 runtime request flow。
+- 兩張 generated canvas 必須提供由 scene runtime data 產生的可鍵盤與螢幕閱讀器讀取之文字替代內容。

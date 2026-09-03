@@ -64,4 +64,4 @@ PR Reader 的 WebView diff rendering 已鎖定為 declaration-only pipeline。re
 
 ## 尚未定義的項目
 
-Rivet 仍是 architecture baseline。除已鎖定的 PR Reader WebView diff pipeline contract 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package、target 或實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。
+Rivet 仍是 architecture baseline。除已鎖定的 PR Reader WebView diff pipeline contract，以及 GitHub Integration 可採用、但尚無 product、target、module 或 Swift source 的 `RivetHTTPClient` declaration-only package baseline 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package、target 或實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。
