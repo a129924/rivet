@@ -57,9 +57,11 @@ PR Reader 的 WebView diff rendering 已鎖定為 declaration-only pipeline。re
 - [設計原則](../design-principles.md)：Rivet 的產品取捨與工作方法。
 - [Bounded Context](bounded-contexts/)：每個 BC 的長期責任與邊界。
 - [Bounded Context Map](diagrams/bounded-context-map/index.html)：BC、Presentation Session 與外部邊界的互動式全景圖。
+- [GitHub Integration 與 HTTP Client 邊界](diagrams/github-integration-http-client-boundary/index.html)：預定 transport foundation 在 Integration Adapter 與 Outside 之間的 ownership 與依賴邊界。
+- [HTTP Client package 結構](diagrams/http-client-package-structure/index.html)：預定 HTTPClient、Requester、Transport、TokenProvider 與 Foundation URLSession 的 declaration-only 結構。
 - [Repository Knowledge Map](diagrams/repository-knowledge-map/index.html)：公開讀者與 agent 如何從入口、文件、analysis、plan 走向下一個 BC 切片。
 - [Topic Lifecycle](diagrams/topic-lifecycle/index.html)：正式 topic 從分析、計畫、受限實作到回寫與 human review 的可互動流程圖。
 
 ## 尚未定義的項目
 
-Rivet 仍是 architecture baseline。除已鎖定的 PR Reader WebView diff pipeline contract 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package、target 或實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。
+Rivet 仍是 architecture baseline。除已鎖定的 PR Reader WebView diff pipeline contract，以及 GitHub Integration 可採用、但尚無 product、target、module 或 Swift source 的 `RivetHTTPClient` declaration-only package baseline 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package、target 或實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。
