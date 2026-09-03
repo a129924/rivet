@@ -13,3 +13,16 @@ export interface DiffFacade {
   present(snapshot: DiffSnapshot): DiffRenderOutcome;
   requestViewedStateChange(change: ViewedStateChange): void;
 }
+
+export function createDiffFacade(
+  dependencies: DiffFacadeDependencies,
+): DiffFacade {
+  return {
+    present(snapshot) {
+      return dependencies.useCase.execute(snapshot);
+    },
+    requestViewedStateChange(change) {
+      dependencies.viewedStateChange.notify(change);
+    },
+  };
+}
