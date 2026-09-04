@@ -324,12 +324,9 @@ const BANDS = [
 ];
 
 const BOXES = [
-  { id:'endpoint-domain', plane:'caller', band:'band-caller', x:250,y:260,w:450,h:68,r:10,
+  { id:'endpoint-domain', plane:'caller', band:'band-caller', x:250,y:260,w:1080,h:68,r:10,
     name:'Endpoint／Base URL／Path／Query',about:'呼叫端或 domain layer 組裝 API URL；package 不提供此 API。',
-    texts:[['bl',274,288,'Endpoint／Base URL／Path／Query'],['bs',274,310,'呼叫端組裝；不屬於 package']] },
-  { id:'validated-url', plane:'caller', band:'band-caller', x:780,y:260,w:450,h:68,r:10,
-    name:'Foundation URL',about:'由呼叫端提供，再交由 HTTPURL 做受限 validation。',
-    texts:[['bl',804,288,'Foundation URL'],['bs',804,310,'交給 HTTPURL 驗證']] },
+    texts:[['bl',274,288,'Endpoint／Base URL／Path／Query'],['bs',274,310,'呼叫端組裝；再建立 HTTPURL']] },
 
   { id:'http-url', plane:'contracts', band:'band-contracts', x:200,y:510,w:270,h:88,r:10,dash:true,
     name:'HTTPURL',about:'package-owned value object；只接受有 host 的 http 或 https URL。',
@@ -358,17 +355,19 @@ const BOXES = [
     name:'Transport',about:'注入式 async throws contract；錯誤會原樣向上傳遞。',
     texts:[['bl',224,1088,'Transport'],['bs',224,1110,'injected；沒有統一 error model']] },
 
-  { id:'url-request', plane:'outside', band:'band-outside', x:200,y:1300,w:540,h:68,r:10,
+  { id:'url-request', plane:'outside', band:'band-outside', x:200,y:1300,w:350,h:68,r:10,
     name:'Foundation URLRequest',about:'Requester 實際映射到的 Foundation request surface。',
     texts:[['bl',224,1328,'Foundation URLRequest'],['bs',224,1350,'Requester 的輸出 surface']] },
-  { id:'urlsession', plane:'outside', band:'band-outside', x:880,y:1300,w:540,h:68,r:10,
+  { id:'foundation-url-data', plane:'outside', band:'band-outside', x:590,y:1300,w:350,h:68,r:10,
+    name:'Foundation URL／Data',about:'HTTPURL value 與 request／response body 直接使用的 Foundation types。',
+    texts:[['bl',614,1328,'Foundation URL／Data'],['bs',614,1350,'value 與 body 的直接依賴']] },
+  { id:'urlsession', plane:'outside', band:'band-outside', x:980,y:1300,w:440,h:68,r:10,
     name:'Foundation URLSession',about:'可能的 future transport implementation；此切片不實作或依賴它。',
-    texts:[['bl',904,1328,'Foundation URLSession'],['bs',904,1350,'本切片未實作']] }
+    texts:[['bl',1004,1328,'Foundation URLSession'],['bs',1004,1350,'本切片未實作']] }
 ];
 
 const EDGES = [
-  { from:'endpoint-domain',to:'validated-url',pts:[[704,294],[774,294]],label:{s:'al',x:739,y:282,t:'組裝 URL',anchor:'center'} },
-  { from:'validated-url',to:'http-url',pts:[[1005,334],[1005,400],[335,400],[335,504]],label:{s:'al',x:349,y:444,t:'驗證',rot:-90,anchor:'center'} },
+  { from:'endpoint-domain',to:'http-url',pts:[[740,334],[740,400],[335,400],[335,504]],label:{s:'al',x:349,y:444,t:'建立',rot:-90,anchor:'center'} },
   { from:'http-url',to:'url-error',pts:[[474,554],[494,554]],label:{s:'al',x:484,y:542,t:'typed error',anchor:'center'} },
   { from:'request',to:'http-url',pts:[[935,604],[935,628],[335,628],[335,604]],label:{s:'al',x:635,y:620,t:'依賴',anchor:'center'} },
   { from:'request',to:'method-headers',pts:[[1076,554],[1080,554],[1080,637],[1064,637]],label:{s:'al',x:1074,y:592,t:'依賴',rot:-90,anchor:'center'} },
@@ -376,7 +375,10 @@ const EDGES = [
   { from:'http-client',to:'request',pts:[[480,814],[480,718],[935,718],[935,604]],label:{s:'al',x:949,y:706,t:'使用',rot:-90,anchor:'center'} },
   { from:'http-client',to:'response',pts:[[520,814],[520,738],[1235,738],[1235,604]],label:{s:'al',x:1249,y:698,t:'回傳型別',rot:-90,anchor:'center'} },
   { from:'requester',to:'transport',pts:[[1140,894],[1140,994],[810,994],[810,1054]],label:{s:'al',x:824,y:956,t:'注入依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'url-request',pts:[[1140,894],[1140,1180],[470,1180],[470,1294]],label:{s:'al',x:484,y:1126,t:'Foundation mapping',rot:-90,anchor:'center'} }
+  { from:'requester',to:'url-request',pts:[[1140,894],[1140,1180],[375,1180],[375,1294]],label:{s:'al',x:389,y:1126,t:'Foundation mapping',rot:-90,anchor:'center'} },
+  { from:'http-url',to:'foundation-url-data',pts:[[335,604],[335,700],[765,700],[765,1294]],label:{s:'al',x:779,y:942,t:'URL value',rot:-90,anchor:'center'} },
+  { from:'request',to:'foundation-url-data',pts:[[935,604],[935,720],[765,720],[765,1294]],label:{s:'al',x:949,y:662,t:'body Data',rot:-90,anchor:'center'} },
+  { from:'response',to:'foundation-url-data',pts:[[1235,604],[1235,740],[765,740],[765,1294]],label:{s:'al',x:1249,y:672,t:'body Data',rot:-90,anchor:'center'} }
 ];
 
 const TEXTS = [

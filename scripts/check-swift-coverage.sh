@@ -31,16 +31,16 @@ if [[ ${#package_paths[@]} -eq 0 ]]; then
 fi
 
 for package_path in "${package_paths[@]}"; do
+  bin_path="$(swift build --package-path "$package_path" --show-bin-path)"
   swift test --package-path "$package_path" --enable-code-coverage
 
-  coverage_profile="$(find "$package_path/.build" -type f -path '*/codecov/*.profdata' -print -quit)"
+  coverage_profile="$(find "$bin_path/codecov" -maxdepth 1 -type f -name '*.profdata' -print -quit)"
 
   if [[ -z "${coverage_profile:-}" || ! -f "$coverage_profile" ]]; then
     echo "error: SwiftPM did not produce a coverage profile for $package_path." >&2
     exit 1
   fi
 
-  bin_path="$(swift build --package-path "$package_path" --show-bin-path)"
   test_binary="$(find "$bin_path" -type f -path '*.xctest/Contents/MacOS/*' -perm -u+x -print -quit)"
 
   if [[ -z "${test_binary:-}" || ! -f "$test_binary" ]]; then

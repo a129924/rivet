@@ -321,9 +321,12 @@ const BANDS = [
 ];
 
 const BOXES = [
-  { id:'review-port', plane:'core', band:'band-core', x:200,y:260,w:540,h:68,r:10,dash:true,
-    name:'PR Inbox／Reader Port',about:'核心 BC 擁有的資料需求，不認識 GitHub 或 HTTP。',
-    texts:[['bl',224,288,'PR Inbox／Reader Port'],['bs',224,310,'不依賴 GitHub 或 HTTP']] },
+  { id:'inbox-port', plane:'core', band:'band-core', x:200,y:260,w:250,h:68,r:10,dash:true,
+    name:'PR Inbox Port',about:'PR Inbox 自有的資料需求，不認識 GitHub 或 HTTP。',
+    texts:[['bl',224,288,'PR Inbox Port'],['bs',224,310,'不依賴 GitHub 或 HTTP']] },
+  { id:'reader-port', plane:'core', band:'band-core', x:480,y:260,w:250,h:68,r:10,dash:true,
+    name:'PR Reader Port',about:'PR Reader 自有的資料需求，不認識 GitHub 或 HTTP。',
+    texts:[['bl',504,288,'PR Reader Port'],['bs',504,310,'不依賴 GitHub 或 HTTP']] },
   { id:'inbox-failure-contract', plane:'core', band:'band-core', x:880,y:260,w:250,h:68,r:10,dash:true,
     name:'PR Inbox Failure Contract',about:'PR Inbox 自有的語意 failure contract，不含 infrastructure detail。',
     texts:[['bl',904,288,'Inbox Failure Contract'],['bs',904,310,'僅屬於 PR Inbox']] },
@@ -360,7 +363,8 @@ const BOXES = [
 ];
 
 const EDGES = [
-  { from:'adapter',to:'review-port',pts:[[470,504],[470,334]],label:{s:'al',x:484,y:420,t:'符合 Port',rot:-90,anchor:'center'} },
+  { from:'adapter',to:'inbox-port',pts:[[470,504],[470,400],[325,400],[325,334]],label:{s:'al',x:339,y:366,t:'符合 Inbox Port',rot:-90,anchor:'center'} },
+  { from:'adapter',to:'reader-port',pts:[[470,504],[470,420],[605,420],[605,334]],label:{s:'al',x:619,y:386,t:'符合 Reader Port',rot:-90,anchor:'center'} },
   { from:'adapter',to:'domain-url',pts:[[744,554],[874,554]],label:{s:'al',x:809,y:542,t:'呼叫端組裝',anchor:'center'} },
   { from:'domain-url',to:'http-url',pts:[[1150,604],[1150,720],[335,720],[335,824]],label:{s:'al',x:349,y:666,t:'提供 URL',rot:-90,anchor:'center'} },
   { from:'http-url',to:'request',pts:[[474,874],[494,874]],label:{s:'al',x:484,y:862,t:'已驗證 URL',anchor:'center'} },
