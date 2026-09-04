@@ -44,6 +44,74 @@ function createOutputTestDouble() {
 }
 
 describe("concrete diff rendering stages", () => {
+  test("parses and renders every patch status without Git blob index metadata", () => {
+    const statusSnapshot: DiffSnapshot = {
+      ...validSnapshot,
+      files: [
+        {
+          fileId: "added",
+          filename: "src/added.ts",
+          status: "added",
+          patch: "@@ -0,0 +1 @@\n+new",
+          additions: 1,
+          deletions: 0,
+          viewed: false,
+        },
+        {
+          fileId: "removed",
+          filename: "src/removed.ts",
+          status: "removed",
+          patch: "@@ -1 +0,0 @@\n-old",
+          additions: 0,
+          deletions: 1,
+          viewed: false,
+        },
+        {
+          fileId: "modified",
+          filename: "src/modified.ts",
+          status: "modified",
+          patch: "@@ -1 +1 @@\n-old\n+new",
+          additions: 1,
+          deletions: 1,
+          viewed: false,
+        },
+        {
+          fileId: "renamed",
+          filename: "src/renamed.ts",
+          previousFilename: "src/previous.ts",
+          status: "renamed",
+          patch: "@@ -1 +1 @@\n-old\n+new",
+          additions: 1,
+          deletions: 1,
+          viewed: false,
+        },
+      ],
+    };
+    const validationResult =
+      createDiffViewModelValidator().validate(statusSnapshot);
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const parseResult = createDiffParser().parse(validationResult.value);
+    expect(parseResult.type).toBe("success");
+    if (parseResult.type === "error") {
+      throw new Error(parseResult.message);
+    }
+
+    const renderResult = createDiffRenderer().createRenderPlan(
+      parseResult.value,
+    );
+    expect(renderResult.type).toBe("success");
+    if (renderResult.type === "error") {
+      throw new Error(renderResult.message);
+    }
+    expect(readRenderPlan(renderResult.value).entries).toHaveLength(4);
+    expect(
+      readRenderPlan(renderResult.value).entries.map((entry) => entry.kind),
+    ).toEqual(["rendered", "rendered", "rendered", "rendered"]);
+  });
+
   test("renders an empty patch as a line-by-line entry", () => {
     const emptyPatchSnapshot: DiffSnapshot = {
       ...validSnapshot,

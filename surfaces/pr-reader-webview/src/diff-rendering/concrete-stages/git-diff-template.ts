@@ -39,7 +39,6 @@ function createUnifiedDiff(input: GitDiffTemplateInput): string {
       return [
         header,
         "new file mode 100644",
-        "index 0000000..1111111",
         "--- /dev/null",
         `+++ b/${input.filename}`,
         patchLines,
@@ -48,7 +47,6 @@ function createUnifiedDiff(input: GitDiffTemplateInput): string {
       return [
         header,
         "deleted file mode 100644",
-        "index 1111111..0000000",
         `--- a/${input.filename}`,
         "+++ /dev/null",
         patchLines,
@@ -56,7 +54,6 @@ function createUnifiedDiff(input: GitDiffTemplateInput): string {
     case "modified":
       return [
         header,
-        "index 1111111..2222222 100644",
         `--- a/${input.filename}`,
         `+++ b/${input.filename}`,
         patchLines,

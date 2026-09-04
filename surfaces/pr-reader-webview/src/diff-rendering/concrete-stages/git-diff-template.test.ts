@@ -61,6 +61,7 @@ describe("GitDiffTemplate", () => {
       for (const expectedLine of expectedLines) {
         expect(source).toContain(expectedLine);
       }
+      expect(source).not.toContain("index ");
       expect(source).toEndWith(patch);
     },
   );

@@ -80,13 +80,13 @@ function createParsedEntry(
     patch: file.patch,
   });
   const diff = parseDiff(createGitDiffTemplate(templateInput).toUnifiedDiff());
-  if (!isUsableParsedDiff(diff, file.patch)) {
+  if (!isCompleteDiff2HtmlParseResult(diff, file.patch)) {
     throw new Error("Diff parser returned an unusable result.");
   }
   return Object.freeze({ kind: "parsed", file, diff: Object.freeze(diff) });
 }
 
-function isUsableParsedDiff(
+function isCompleteDiff2HtmlParseResult(
   value: unknown,
   patch: string,
 ): value is DiffFile[] {
