@@ -20,10 +20,13 @@ struct StaticIsolationTests {
   @Test
   func targetSourceDoesNotImportExternalIntegrationOrNetworkDependencies() throws {
     let sourceDirectory = repositoryRoot.appendingPathComponent("Sources/BoundedContexts/PRInbox")
-    let sourceFiles = try FileManager.default.contentsOfDirectory(
-      at: sourceDirectory,
-      includingPropertiesForKeys: nil
+    let sourceFiles = try #require(
+      FileManager.default.enumerator(
+        at: sourceDirectory,
+        includingPropertiesForKeys: [.isRegularFileKey]
+      )
     )
+    .compactMap { $0 as? URL }
     .filter { $0.pathExtension == "swift" }
 
     for sourceFile in sourceFiles {

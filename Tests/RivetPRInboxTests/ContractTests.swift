@@ -1,5 +1,5 @@
+import RivetPRInbox
 import Testing
-@testable import RivetPRInbox
 
 @Suite("PRInbox contract")
 struct PRInboxContractTests {

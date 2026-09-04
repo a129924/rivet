@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-最終 outcome／code review（Delivered-baseline Amendment Rework；RV-03 pending）
+程式碼審查（Selected PR Comment Amendment；RV-04 pending）
 
 ## Scope Register
 
@@ -14,6 +14,7 @@
 - Written：四份本 topic artifacts、PRInbox target-local source、`Tests/RivetPRInboxTests/` tests/fake。
 - Deleted：僅實際 source 建立時的 `Sources/BoundedContexts/PRInbox/.gitkeep`。
 - Modify：root `Package.swift` 與 `docs/architecture/bounded-contexts/pr-inbox.md` 的既定 target／contract truth writeback。
+- PR-04 後 implementation allowlist：僅 `Sources/BoundedContexts/PRInbox/ReviewRequestCandidate.swift`、`Tests/RivetPRInboxTests/ContractTests.swift`、`Tests/RivetPRInboxTests/StaticIsolationTests.swift`；IM-03 已在此範圍內完成，不得修改其他 source 或 test path。
 
 ## Amendment Scope Register
 
@@ -40,6 +41,8 @@
 | TC-08 | Result alias syntax | Swift 6 編譯 `public typealias Outcome<Success: Sendable, Failure: Error & Sendable> = Result<Success, Failure>`，且具體 `Outcome` 維持 Sendable。 |
 | TC-09 | API semantic preservation | `ReviewRequestSource`、`PRInboxFacade` 與既有 tests 持續使用 `Outcome` 的 `.success(...)`／`.failure(...)`；membership、來源順序、empty success 與 `.unavailable` passthrough 不變。 |
 | TC-10 | amendment scope isolation | diff 只含四份 topic artifacts、`Outcome.swift` 及直接必要的既有 PR Inbox tests；沒有 manifest、BC 文件、dependency、其他 BC 或規則變更。 |
+| TC-11 | public initializer contract | 普通 client import 可透過 `ReviewRequestCandidate(item:isOpen:isDirectlyRequestedForCurrentUser:)` 建立 candidate；既有 `Outcome`／`Result`、`Sendable` 與 failure assertions 保留。 |
+| TC-12 | recursive target-only isolation scan | Static-isolation test 遞迴列舉且只列舉 PRInbox target `.swift` files，並保留既有 banned import／network token checks。 |
 
 ## Ledger
 
@@ -57,18 +60,25 @@
 | RV-02 | needs-rework | Reviewer | 獨立審查 amendment scope、code 與 Tester evidence。 | Reviewer 提供明示 verdict。 | 已收到 `needs-rework`：plan 仍含 custom `Outcome` enum declaration，且 ledger 未如實記錄 PR-02、IM-02、TE-02 evidence。 |
 | PC-03 | completed | Plan-Creator | 只修正四份同 topic artifacts：以 locked `Result` typealias 取代 plan 中殘留的 custom declaration，並對齊已收到的 evidence 與後續 gates。 | 四份 artifacts 對 amendment contract、scope、verdict 與下一個獨立審查 gate 一致；不修改 source、tests 或其他 path。 | 本次 artifacts 回修已寫入；不構成 PR-03 approval。 |
 | PR-03 | completed | Plan-Reviewer | 獨立審查 PC-03 artifacts：確認所有 amendment contract 中的 `Outcome` declaration 均為 locked `Result` typealias，且 evidence／phase／routing 無虛構 approval。 | Plan-Reviewer 提供明示 verdict。 | 已收到獨立 Plan-Reviewer 明示 `approved`。 |
-| RV-03 | pending | Reviewer | 在 PR-03 明示 `approved` 後，獨立重審未變更的 amendment source／test scope 與 TE-02 evidence。 | Reviewer 提供明示 verdict。 | PR-03 已 `approved`；待 RV-03 verdict，不得重跑或重寫未授權 scope。 |
-| HC-02 | pending | Human | 審閱 RV-03 結果與既有 draft PR #12 的 amendment diff。 | Human 明示後續決策。 | RV-03 verdict 後停止自動前進；不可自行 merge、release 或處理 review comments。 |
+| RV-03 | historical/superseded | Reviewer | 曾在 PR-03 後被指定為 amendment source／test scope 與 TE-02 evidence 的 review gate。 | 不適用；本次 human-authorized PR comment amendment 已在其產生記錄結果前取代此 gate。 | 未記錄 RV-03 verdict、delivery 或 review-thread resolution 結果；不得將此列解讀為任何 verdict。 |
+| HC-02 | historical/superseded | Human | 曾規劃於 RV-03 後審閱 amendment diff。 | 不適用；RV-03 已由本次 amendment 取代。 | 不產生 human decision 或 delivery 結果。 |
+| PC-04 | completed | Plan-Creator | 記錄 selected review threads 1–4 的 Comment-Reviewer `needs-rework` input，並建立只新增 `ReviewRequestCandidate` public initializer 與兩個受影響 tests 的受限 amendment flow。 | 四份 artifacts 一致記錄 public initializer、三個 implementation paths、TC-11／TC-12、required validation commands、限制與獨立 gates。 | 本次 artifacts 已更新；不構成 PR-04 approval，未回填未收到的歷史 verdict。 |
+| PR-04 | completed | Plan-Reviewer | 獨立審查 selected PR comment amendment，確認 initializer 是唯一 public API 增加、三個 locked implementation paths、ordinary import、recursive target-only scan、既有 checks 與 workflow。 | Plan-Reviewer 提供明示 verdict。 | 已收到獨立 Plan-Reviewer 明示 `approved`。 |
+| IM-03 | completed | Implementer | 在 PR-04 明示 `approved` 後，於三個 locked implementation paths 完成 selected review fixes。 | 新 initializer 與兩個 test changes 符合 locked contract，沒有其他 path 或 behavior 變更。 | 已完成；實際 scope 僅 `Sources/BoundedContexts/PRInbox/ReviewRequestCandidate.swift`、`Tests/RivetPRInboxTests/ContractTests.swift`、`Tests/RivetPRInboxTests/StaticIsolationTests.swift`。 |
+| TE-03 | completed | Tester | 獨立執行 TC-01 至 TC-12 與所有六個指定 validation commands。 | 回報每一 testcase／command 的明示結果或 blocker。 | 已收到 Tester 對六個指定 commands 與 8 個 tests 明示 `approved`。 |
+| RV-04 | pending | Reviewer | 獨立審查 IM-03 scope 與 TE-03 evidence。 | Reviewer 提供明示 verdict。 | 待 Tester handoff。 |
+| HC-03 | pending | Human | 審閱 RV-04 結果與既有 ready PR #12 的最小 amendment diff。 | Human 明示後續決策。 | RV-04 verdict 後停止自動前進；不可自行 commit、push、改 PR 狀態、merge、release 或處理 review comments。 |
 
 ## Blockers
 
 - baseline 已交付於 feature branch `feat/pr-inbox-swift-contract-baseline` 的 commit `2db4d13` 與既有 draft PR #12；歷史 PC-01 至 RV-01 status 保留原樣，不得回填為 approval。
-- RV-02 已明示 `needs-rework`。PC-03 已完成其 artifact-only 回修，且 PR-03 已明示 `approved`；目前等待 RV-03 verdict，尚無 source、test 或 scope blocker。
+- RV-02 已明示 `needs-rework`。PC-03 已完成其 artifact-only 回修，且 PR-03 已明示 `approved`；RV-03 未記錄 verdict、delivery 或 review-thread resolution 結果，且已被本次 human-authorized PR comment amendment 取代為 historical／superseded。
+- selected review threads 1–4 的 Comment-Reviewer 已明示 `needs-rework`。PC-04、PR-04、IM-03 與 TE-03 已完成；RV-04 是唯一 current pending gate，尚無其他已知 blocker。
 
 ## Human Check
 
-- PR-03 的 `approved` 僅代表 planning artifacts 可前進至 RV-03，不代表 RV-03 approval 或 delivery 結果。
-- RV-03 明示結果後停止自動前進，交由 human 審閱既有 draft PR #12；不可自行 merge、release 或處理 review comments。
+- PR-04 的 `approved` 僅代表 selected comment amendment 可前進至 IM-03，不代表 Tester、Reviewer 或 delivery approval。
+- RV-04 明示結果後停止自動前進，交由 human 審閱既有 ready PR #12；不可自行 commit、push、改 PR 狀態、merge、release 或處理 review comments。
 
 ## Last Updated
 

@@ -64,6 +64,12 @@ public struct ReviewRequestCandidate: Equatable, Sendable {
   public let item: InboxItem
   public let isOpen: Bool
   public let isDirectlyRequestedForCurrentUser: Bool
+
+  public init(
+    item: InboxItem,
+    isOpen: Bool,
+    isDirectlyRequestedForCurrentUser: Bool
+  )
 }
 
 public enum PRInboxFailure: Error, Equatable, Sendable {
@@ -116,14 +122,33 @@ current／snapshot／cache state。
    `scripts/check-swift-coverage.sh` 與 `git diff --check`。
 3. RV-02 的 `needs-rework` 僅回交 PC-03：移除本計畫內殘留的 custom `Outcome` enum
    declaration，並使四份 artifacts 與已收到的 verdict 一致。PC-03 完成後，交由獨立
-   PR-03 審查；PR-03 已明示 `approved`，現交由獨立 RV-03 重新審查未變更的 source／test
-   scope 與既有 TE-02 evidence。
+   PR-03 審查；PR-03 已明示 `approved`。RV-03 曾被指定為後續 review gate，但未記錄任何
+   verdict、delivery 或 review-thread resolution 結果；本次 human-authorized PR comment amendment
+   已將它取代為 historical／superseded 紀錄，不再是 current gate。
+
+## Selected PR Comment Amendment
+
+1. 已選取 review threads 1–4 的 Comment-Reviewer `needs-rework` 結論；本 amendment
+   只新增 `ReviewRequestCandidate` 的 public initializer，完全保留 `Outcome`／`Result`、
+   PRInbox failure、membership、refresh-only、source-order 與 empty-inbox contracts。
+2. PR-04 已由獨立 Plan-Reviewer 明示 `approved`。IM-03 已完成 selected review fixes，
+   僅修改
+   `Sources/BoundedContexts/PRInbox/ReviewRequestCandidate.swift`、
+   `Tests/RivetPRInboxTests/ContractTests.swift` 與
+   `Tests/RivetPRInboxTests/StaticIsolationTests.swift`。Contract test 使用普通
+   `import RivetPRInbox`，保留既有 `Outcome`／`Result`、`Sendable`、failure assertions，
+   並透過新 initializer 建立 candidate；static-isolation test 遞迴列舉僅限 PRInbox target
+   的 `.swift` source，並保留既有 banned import／network token checks。
+3. TE-03 已對 8 個 tests 與 `swift package dump-package`、`swift test`、
+   `scripts/check-swift-format.sh`、`scripts/check-swiftlint.sh`、
+   `scripts/check-swift-coverage.sh`、`git diff --check`。獨立 Reviewer 完成後回到
+   Human Check；不提交、push、改 PR 狀態、merge 或 release。
 
 ## Workflow Gate
 
-本計畫不是 approval。baseline 的歷史 PR-01 至 RV-01 不追溯補填 verdict。RV-02 已明示
-`needs-rework`；獨立 Plan-Reviewer 已對 PR-03 明示 `approved`。目前 phase 是最終
-outcome／code review，RV-03 為 pending gate。RV-03 的 `needs-rework` 交回 Dispatcher
-triage，`blocked` 或 `human-check` 停止自動前進；RV-03 明示結果後交還 human review，
-不可自行 merge、release 或繞過 human boundary。未來 adapter topic 才可採用 GitHub API
-catalog 的 query 並在 PR Inbox Port 前映射外部 contract。
+本計畫不是 approval。baseline 的歷史 PR-01 至 RV-01 不追溯補填 verdict。selected PR
+comment amendment 已完成 PR-04、IM-03 與 TE-03；RV-04 是唯一 current pending gate。RV-04 的
+`needs-rework` 只回交 Plan-Creator，`blocked` 或 `human-check` 停止自動前進。
+最終 Reviewer 明示結果後交還 human review，不可自行 commit、push、改 PR 狀態、merge、
+release 或繞過 human boundary。未來 adapter topic 才可採用 GitHub API catalog 的 query
+並在 PR Inbox Port 前映射外部 contract。

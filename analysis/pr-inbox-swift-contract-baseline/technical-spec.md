@@ -26,6 +26,12 @@ public struct ReviewRequestCandidate: Equatable, Sendable {
   public let item: InboxItem
   public let isOpen: Bool
   public let isDirectlyRequestedForCurrentUser: Bool
+
+  public init(
+    item: InboxItem,
+    isOpen: Bool,
+    isDirectlyRequestedForCurrentUser: Bool
+  )
 }
 
 public enum PRInboxFailure: Error, Equatable, Sendable {
@@ -68,5 +74,32 @@ scope 限於 `Sources/BoundedContexts/PRInbox/Outcome.swift` 與
 validation commands 明示 `approved`。RV-02 的 code review verdict 是
 `needs-rework`，只要求移除 planning contract 中殘留的 custom `Outcome` enum
 declaration，並使 ledger 如實反映上述 evidence。PC-03 不授權任何 source、test 或
-其他非-artifact path 變更。獨立 Plan-Reviewer 已對 PR-03 明示 `approved`；目前
-RV-03 是最終 outcome／code review 的 pending gate，尚未有其 verdict 或 delivery 結果。
+其他非-artifact path 變更。獨立 Plan-Reviewer 已對 PR-03 明示 `approved`。RV-03 曾被指定為
+review gate，但未記錄任何 verdict、delivery 或 review-thread resolution 結果；本次
+human-authorized PR comment amendment 已將它取代為 historical／superseded 紀錄。PR-04 是唯一
+current pending gate。
+
+### Selected PR Comment Amendment
+
+已選取的 review threads 1–4 由 Comment-Reviewer 分類為 `needs-rework`。此 amendment
+只新增 `ReviewRequestCandidate` 的上述 public initializer；它只指定既有 stored
+properties，沒有新的 failure、membership、排序、source-order、empty-inbox 或 refresh
+semantics。
+
+PR-04 已由獨立 Plan-Reviewer 明示 `approved`。IM-03 已在下列三個 locked paths 完成
+selected review fixes；TE-03 已對六個指定 validation commands 與 8 個 tests 明示
+`approved`。RV-04 是唯一 current pending gate。實作範圍只可修改：
+
+- `Sources/BoundedContexts/PRInbox/ReviewRequestCandidate.swift`
+- `Tests/RivetPRInboxTests/ContractTests.swift`
+- `Tests/RivetPRInboxTests/StaticIsolationTests.swift`
+
+Contract test 必須使用普通 `import RivetPRInbox`，保留既有 `Outcome`／`Result`、`Sendable`
+及 failure assertions，並以新 initializer 編譯一個 candidate。Static-isolation test 必須
+遞迴列舉且只列舉 PRInbox target 的 `.swift` files，保留既有 banned import 與 network token
+checks。不得修改 manifest、dependency、GitHub／HTTP／adapter／network、其他 BC、architecture
+或 lint／format 規則。
+
+Tester 已執行 `swift package dump-package`、`swift test`、`scripts/check-swift-format.sh`、
+`scripts/check-swiftlint.sh`、`scripts/check-swift-coverage.sh` 與 `git diff --check`；這些
+evidence 不等同 approval。
