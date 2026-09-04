@@ -44,8 +44,8 @@ const BOXES = [
     texts:[['bs',444,643,'HTTPMethod 與 HTTPHeaders — package-owned request metadata']] },
 
   { id:'http-client', plane:'client', band:'band-client', x:200,y:820,w:560,h:68,r:10,dash:true,
-    name:'HTTPClient',about:'公開入口；以一般 async throws 委派給 Requester。',
-    texts:[['bl',224,848,'HTTPClient'],['bs',224,870,'execute(HTTPRequest) async throws']] },
+    name:'HTTPClient',about:'公開 method facade 與 advanced execute 入口；所有 facade 經 execute 委派給 Requester。',
+    texts:[['bl',224,848,'HTTPClient'],['bs',224,870,'request(...)／五個 verb → execute(_:)']] },
   { id:'requester', plane:'client', band:'band-client', x:860,y:820,w:560,h:68,r:10,dash:true,
     name:'Requester',about:'把已驗證 HTTPRequest 映射為 Foundation URLRequest；不重驗 URL。',
     texts:[['bl',884,848,'Requester'],['bs',884,870,'HTTPRequest → URLRequest']] },
@@ -86,7 +86,7 @@ const EDGES = [
 
 const TEXTS = [
   {s:'title',x:160,y:86,t:'RivetHTTPClient — 最小介面結構'},
-  {s:'sub',x:160,y:118,t:'已實作 HTTPURL → HTTPRequest → HTTPClient → Requester → injected Transport → HTTPResponse；不含 Endpoint 或 URLSession 實作'},
+  {s:'sub',x:160,y:118,t:'呼叫端提供已驗證 HTTPURL → HTTP method facade → execute(_:) → Requester → injected Transport → HTTPResponse；不含 Endpoint 或 URLSession 實作'},
   {s:'tag',x:160,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPClient',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部 surface'},
