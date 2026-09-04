@@ -10,6 +10,8 @@ for directory in Sources Tests packages/RivetHTTPClient/Sources packages/RivetHT
   fi
 done
 
+cd "$root_dir"
+
 if [[ ${#targets[@]} -eq 0 ]] || ! find "${targets[@]}" -type f -name '*.swift' -print -quit 2>/dev/null | grep -q .; then
   exit 0
 fi
@@ -21,5 +23,4 @@ if [[ "$developer_dir" != */Xcode.app/Contents/Developer ]]; then
   exit 2
 fi
 
-cd "$root_dir"
 swiftlint lint --strict "${targets[@]}"

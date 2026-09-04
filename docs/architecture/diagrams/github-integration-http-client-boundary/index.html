@@ -324,9 +324,12 @@ const BOXES = [
   { id:'review-port', plane:'core', band:'band-core', x:200,y:260,w:540,h:68,r:10,dash:true,
     name:'PR Inbox／Reader Port',about:'核心 BC 擁有的資料需求，不認識 GitHub 或 HTTP。',
     texts:[['bl',224,288,'PR Inbox／Reader Port'],['bs',224,310,'不依賴 GitHub 或 HTTP']] },
-  { id:'failure-contract', plane:'core', band:'band-core', x:880,y:260,w:540,h:68,r:10,dash:true,
-    name:'Core Failure Contract',about:'核心 BC 的語意 failure contract，不含 infrastructure detail。',
-    texts:[['bl',904,288,'Core Failure Contract'],['bs',904,310,'不含 infrastructure detail']] },
+  { id:'inbox-failure-contract', plane:'core', band:'band-core', x:880,y:260,w:250,h:68,r:10,dash:true,
+    name:'PR Inbox Failure Contract',about:'PR Inbox 自有的語意 failure contract，不含 infrastructure detail。',
+    texts:[['bl',904,288,'Inbox Failure Contract'],['bs',904,310,'僅屬於 PR Inbox']] },
+  { id:'reader-failure-contract', plane:'core', band:'band-core', x:1160,y:260,w:250,h:68,r:10,dash:true,
+    name:'PR Reader Failure Contract',about:'PR Reader 自有的語意 failure contract，不含 infrastructure detail。',
+    texts:[['bl',1184,288,'Reader Failure Contract'],['bs',1184,310,'僅屬於 PR Reader']] },
 
   { id:'adapter', plane:'integration', band:'band-integration', x:200,y:510,w:540,h:88,r:10,dash:true,
     name:'GitHub Data Adapter',about:'將外部資料轉換成核心 Port 所需的資料。',
@@ -348,9 +351,9 @@ const BOXES = [
     name:'Transport／HTTPResponse',about:'注入式 transport boundary 與未經 policy 轉換的 raw response。',
     texts:[['bl',1124,858,'Transport／HTTPResponse'],['bs',1124,880,'injected · raw response'],['bn',1124,902,'error 原樣傳遞']] },
 
-  { id:'url-request', plane:'outside', band:'band-outside', x:200,y:1140,w:540,h:68,r:10,
-    name:'Foundation URLRequest',about:'Requester 實際建立的 Foundation request surface。',
-    texts:[['bl',224,1168,'Foundation URLRequest'],['bs',224,1190,'唯一直接使用的 Foundation type']] },
+  { id:'foundation-types', plane:'outside', band:'band-outside', x:200,y:1140,w:540,h:68,r:10,
+    name:'Foundation URLRequest／URL／Data',about:'package 直接使用的 Foundation request、URL 與 body types。',
+    texts:[['bl',224,1168,'Foundation URLRequest／URL／Data'],['bs',224,1190,'package 直接使用的 Foundation types']] },
   { id:'urlsession', plane:'outside', band:'band-outside', x:880,y:1140,w:540,h:68,r:10,
     name:'URLSession／GitHub.com API',about:'future concrete transport 與外部 API；不在此切片實作。',
     texts:[['bl',904,1168,'URLSession／GitHub.com API'],['bs',904,1190,'future implementation surface']] }
@@ -363,7 +366,7 @@ const EDGES = [
   { from:'http-url',to:'request',pts:[[474,874],[494,874]],label:{s:'al',x:484,y:862,t:'已驗證 URL',anchor:'center'} },
   { from:'client',to:'request',pts:[[794,874],[776,874]],label:{s:'al',x:785,y:862,t:'使用',anchor:'center'} },
   { from:'client',to:'transport',pts:[[1074,874],[1094,874]],label:{s:'al',x:1084,y:862,t:'注入依賴',anchor:'center'} },
-  { from:'client',to:'url-request',pts:[[935,924],[935,1040],[470,1040],[470,1134]],label:{s:'al',x:484,y:1084,t:'Foundation mapping',rot:-90,anchor:'center'} },
+  { from:'client',to:'foundation-types',pts:[[935,924],[935,1040],[470,1040],[470,1134]],label:{s:'al',x:484,y:1084,t:'Foundation mapping',rot:-90,anchor:'center'} },
   { from:'adapter',to:'client',pts:[[470,604],[470,700],[935,700],[935,824]],label:{s:'al',x:949,y:752,t:'採用 package',rot:-90,anchor:'center'} }
 ];
 
