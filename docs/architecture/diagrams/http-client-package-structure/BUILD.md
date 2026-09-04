@@ -13,7 +13,7 @@ node "$CANVAS_SKILL/scripts/build.js" \
   --out "$RAW_DIR/index.html" \
   --title "RivetHTTPClient — 最小介面結構" \
   --kicker "RIVETHTTPCLIENT — MINIMAL INTERFACE" \
-  --sub "<b>HTTPURL</b> → <b>HTTPRequest</b> → <b>HTTPClient</b> → <b>Requester</b> → <b>Transport</b>" \
+  --sub "<b>已驗證 HTTPURL</b> → <b>HTTP method facade</b> → <b>execute(_:)</b> → <b>Requester</b> → <b>Transport</b>" \
   --slug http-client-package-structure
 node enhance-accessibility.js \
   --input "$RAW_DIR/index.html" \
