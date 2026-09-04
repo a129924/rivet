@@ -1,4 +1,1 @@
-public enum Outcome<Success: Sendable, Failure: Error & Sendable>: Sendable {
-  case success(Success)
-  case failure(Failure)
-}
+public typealias Outcome<Success: Sendable, Failure: Error & Sendable> = Result<Success, Failure>

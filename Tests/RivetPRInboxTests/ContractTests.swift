@@ -25,6 +25,18 @@ struct PRInboxContractTests {
     #expect(candidate.isOpen)
     #expect(candidate.isDirectlyRequestedForCurrentUser)
   }
+
+  @Test
+  func outcomeIsUsableAsTheStandardLibraryResult() {
+    let item = InboxItem(owner: "octo", repository: "rivet", number: 42, title: "Review")
+    let success: Outcome<InboxItem, PRInboxFailure> = .success(item)
+    let failure: Outcome<InboxItem, PRInboxFailure> = .failure(.unavailable)
+
+    acceptStandardResult(success)
+    acceptStandardResult(failure)
+  }
 }
 
 private func assertSendable<Value: Sendable>(_ type: Value.Type) {}
+
+private func acceptStandardResult(_ result: Result<InboxItem, PRInboxFailure>) {}

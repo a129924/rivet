@@ -4,6 +4,8 @@
 
 在 root SwiftPM package 建立 `RivetPRInbox` library product／target，使用既有 `Sources/BoundedContexts/PRInbox/` source path，提供 PR Inbox 自有的 Core contract、refresh-only Facade 與可測試的 semantic fake 基線。
 
+已交付 baseline 的最小 amendment：保留專案用語 `Outcome`，但改以 Swift 標準庫 `Result` 的 target-local typealias 表達 success／failure；不再維護重複的 custom enum。
+
 ## Non-Goal
 
 不建立 GitHub Integration Adapter、HTTP client dependency、外部 query、DTO、真實網路、UI、PR Reader、Presentation Session、cache 或 sync。
@@ -14,16 +16,33 @@
 - target-local `Outcome`、`InboxItem`、`ReviewRequestCandidate`、`PRInboxFailure`、`ReviewRequestSource`、internal refresh use case 與 `PRInboxFacade`。
 - semantic fake source 與 Swift Testing。
 - PR Inbox BC 文件對本 target 與 Core contract 邊界的長期事實回寫。
+- amendment 僅限 `Outcome.swift` 改為 `Result` typealias，以及直接證明 alias／public API 語意所需的既有 PR Inbox tests。
 
 ## Out-Of-Scope
 
 - `RivetHTTPClient` 或任何外部 package dependency。
 - GitHub search query、pagination、incomplete-result policy、HTTP/auth/rate-limit、`InfraUnknownError`、GitHub DTO 與 failure mapping。
 - 排序、snapshot/current state、cache、sync、跨 BC contract、Git、release、PR 或 artifact 發布。
+- shared Core target、跨 BC 搬移 `Outcome` 或 Failure、任何新 dependency、以及 GitHub Integration／`RivetHTTPClient`／其他 BC／全域 architecture／lint 或 format 規則修改。
 
 ## Success Criteria
 
 - refresh 只回傳 open 且明確直接要求目前使用者 review 的 Inbox item；空集合是成功結果。
 - failure 僅以 PR Inbox 自有 `.unavailable` 表達並原樣傳遞。
+- `Outcome<Success, Failure>` 是 `RivetPRInbox` target-local 的 `Result<Success, Failure>` typealias；`Success: Sendable` 與 `Failure: Error & Sendable` 仍受約束，呼叫端持續使用 `.success(...)` 與 `.failure(...)`。
+- 每個 BC 仍自行擁有 Failure contract；本 amendment 不建立 shared Core target。
 - target、source import 與 manifest 均不依賴 HTTP client 或外部 integration。
 - 四份同 slug artifacts 可完整描述本次受限實作、驗收與 human boundary。
+
+## Amendment Status
+
+- 獨立 Plan-Reviewer 已對 PR-02 明示 `approved`；Implementer 隨後只修改
+  `Sources/BoundedContexts/PRInbox/Outcome.swift` 與
+  `Tests/RivetPRInboxTests/ContractTests.swift`。
+- Tester 已對 TC-01 至 TC-10 與指定 command 明示 `approved`。
+- RV-02 的獨立 code review 結果為 `needs-rework`：planning contract 仍保留舊的
+  custom `Outcome` enum declaration，且 ledger 尚未如實記錄已收到的 verdict。
+  PC-03 已只修正這些 planning artifacts；不改變已鎖定的 source、test 或 public
+  contract。
+- 獨立 Plan-Reviewer 已對 PR-03 明示 `approved`。目前進入最終 outcome／code review，
+  RV-03 為下一個 pending gate；尚未收到 RV-03 verdict 或任何 delivery 結果。
