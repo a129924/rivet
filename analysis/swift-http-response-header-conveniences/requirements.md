@@ -12,6 +12,7 @@
 - 為 `HTTPHeaders` 新增 `value(for: String) -> String?` case-insensitive lookup，並持續接受任意自訂 header name；同時新增九個對應常見 header 的 read-only computed properties：`accept`、`authorization`、`contentType`、`userAgent`、`etag`、`ifNoneMatch`、`location`、`link`、`retryAfter`。
 - 為 `HTTPResponse` 新增 `text(encoding: String.Encoding = .utf8) -> String?`，只依呼叫端指定的 encoding 解碼 raw `body`。
 - 擴充既有 request/header 與 response test surface，驗證 constants、lookup 與文字解碼的成功／失敗行為。
+- 受限更新 `docs/architecture/bounded-contexts/github-integration.md`，如實記錄已完成的 `RivetHTTPClient` public surface 與既有 BC boundary；不更新任何 architecture diagram。
 
 ## Out of Scope
 
@@ -19,7 +20,7 @@
 - 依 `Content-Type` 自動推論 charset。
 - status validation、retry、error mapping、多值 header／`Set-Cookie`。
 - GitHub-specific header constants、URLSession 或任何 concrete transport。
-- `HTTPClient`、`Requester`、`Transport`、package manifest、Bounded Context 文件或 architecture diagrams 的修改。
+- 除授權的 `docs/architecture/bounded-contexts/github-integration.md` 外，任何 Bounded Context 文件或 architecture diagram 的修改。
 
 ## Success Criteria
 
@@ -30,3 +31,4 @@
 - `response.text()` 正確解碼 UTF-8 body；指定 encoding 時只依該 encoding 解碼。
 - 無法依指定 encoding 解碼時回傳 `nil`，不新增 package error type。
 - `HTTPResponse.body` 仍是 canonical raw `Data`，不因 headers 或 JSON 改變行為。
+- GitHub Integration BC 文件只如實列入已驗證的 `HTTPURL`、`HTTPRequest`、`HTTPHeaders`（constants、case-insensitive lookup、九個 getters）、raw `HTTPResponse`（explicit text helper）與 `HTTPClient → Requester → injected Transport`；同時維持 endpoint/base URL/path/query、concrete transport、retry/token refresh/status validation/response decode policy 不屬於 package，且外部 detail 不跨越 BC Port。

@@ -33,16 +33,18 @@
 - setter、subscript setter、`mutating` API、builder API 或 dynamic-member lookup。
 - immutable header storage、duplicate later-wins 或 public `values` contract 的任何變更。
 - `HTTPClient → Requester → Transport` chain、raw `Data` contract、charset inference、JSON／decode policy、status validation、retry、error mapping、多值 headers、GitHub-specific headers 或 concrete transport。
+- 除指定 GitHub Integration BC writeback 外的任何 Bounded Context 文件或 architecture diagram 變更。
 
 **ReadOnly**
 
-- `Execution/HTTPClient.swift`、`Execution/Requester.swift`、`Execution/Transport.swift`、package manifest、GitHub Integration BC 文件與 architecture diagrams：僅供理解與 regression verification，禁止寫入。
+- `Execution/HTTPClient.swift`、`Execution/Requester.swift`、`Execution/Transport.swift`、package manifest、所有 architecture diagrams 與除 `docs/architecture/bounded-contexts/github-integration.md` 外的所有 BC 文件：僅供理解與 regression verification，禁止寫入。
 
 **Modify**
 
 - `Request/HTTPHeaders.swift`：新增既定 lookup API 與九個 read-only computed properties。
 - `Response/HTTPResponse.swift`：新增既定 text API。
 - 既有 request/header 與 response test surface：新增本 topic contract tests。
+- `docs/architecture/bounded-contexts/github-integration.md`：只如實記錄 GitHub Integration 可採用的已完成 `RivetHTTPClient` public surface：`HTTPURL`、`HTTPRequest`、`HTTPHeaders`（nine `HTTPHeaderName` constants、case-insensitive `value(for:)`、九個 read-only getters）、raw `HTTPResponse`（explicit `text(encoding:)` helper）與 `HTTPClient → Requester → injected Transport`。同一段落必須保留 endpoint/base URL/path/query、concrete transport、retry/token refresh/status validation/response decode policy 不由 package 提供，並重申外部 detail 不跨越 BC Port；不改 package-structure diagram。
 
 **Written**
 
@@ -68,4 +70,4 @@
 - 已存在的 `HTTPHeaders` lower-case canonicalization 是本 topic 唯一 lookup normalization 規則。
 - 九個點語法 properties 全數以對應 `HTTPHeaderName` constant 呼叫 `value(for:)`，不直接存取 storage。
 - `String.Encoding` 為既定 Foundation API，可直接作為 `text(encoding:)` 的 public parameter；不需建立 package decode or error contract。
-- 本 topic 不產生 architecture 長期 truth writeback，因 locked path 明確禁止修改 BC docs 與 diagrams。
+- 唯一授權的 architecture 長期 truth writeback 是 `docs/architecture/bounded-contexts/github-integration.md`，內容與本 handoff 的 `Modify` 條目完全一致；所有 diagram（包含 package-structure diagram）仍為 read-only。
