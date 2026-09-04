@@ -1,91 +1,102 @@
 const W = 1480, H = 1680;
 
-// 此圖只表達未來 package 的 ownership 與預定編譯期依賴，並非執行期 request flow。
+// 此圖只表達 package ownership 與編譯期依賴，不描述 transport 的執行期 request／response flow。
 const PLANES = {
-  integration: { c: '#F6821F', label: 'GitHub Integration Adapter' },
-  client:      { c: '#A78BFA', label: 'HTTP client abstraction' },
-  contracts:   { c: '#22D3EE', label: 'HTTP contracts' },
-  transport:   { c: '#4ADE80', label: 'Transport boundary' },
-  outside:     { c: '#94A3B8', label: 'Outside' }
+  caller:     { c: '#F6821F', label: '呼叫端 API domain' },
+  client:     { c: '#A78BFA', label: 'HTTP client abstraction' },
+  contracts:  { c: '#22D3EE', label: 'HTTP contracts' },
+  transport:  { c: '#4ADE80', label: 'Transport boundary' },
+  outside:    { c: '#94A3B8', label: 'Outside' }
 };
 
 const BANDS = [
-  { id:'band-integration', plane:'integration', x:450, y:200, w:580, h:174, alpha:0.5,
-    hdr:{x:474,y:230,t:'GITHUB INTEGRATION ADAPTER'}, tagr:{x:1006,y:230,t:'未來的 PACKAGE CONSUMER',alpha:0.6} },
-  { id:'band-client', plane:'client', x:160, y:460, w:1260, h:238, alpha:0.5, dash:true,
-    hdr:{x:184,y:490,t:'RIVETHTTPCLIENT — CLIENT ABSTRACTIONS'}, tagr:{x:1396,y:490,t:'預定 · 尚無 SWIFT DECLARATION',alpha:0.6} },
-  { id:'band-contracts', plane:'contracts', x:160, y:780, w:1260, h:218, alpha:0.5, dash:true,
-    hdr:{x:184,y:810,t:'HTTP CONTRACTS'}, tagr:{x:1396,y:810,t:'預定資料形狀 · 未鎖定 WIRE SHAPE',alpha:0.6} },
-  { id:'band-transport', plane:'transport', x:160, y:1080, w:1260, h:150, alpha:0.5, dash:true,
-    hdr:{x:184,y:1110,t:'TRANSPORT BOUNDARY'}, tagr:{x:1396,y:1110,t:'預定可替換邊界',alpha:0.6} },
-  { id:'band-outside', plane:'outside', x:160, y:1340, w:1260, h:150, alpha:0.48,
-    hdr:{x:184,y:1370,t:'OUTSIDE — FOUNDATION SURFACES'}, tagr:{x:1396,y:1370,t:'非 RIVET 所有',alpha:0.6} }
+  { id:'band-caller', plane:'caller', x:160, y:200, w:1260, h:156, alpha:0.48,
+    hdr:{x:184,y:230,t:'CALLER／DOMAIN LAYER'}, tagr:{x:1396,y:230,t:'不屬於 RIVETHTTPCLIENT',alpha:0.6} },
+  { id:'band-contracts', plane:'contracts', x:160, y:440, w:1260, h:238, alpha:0.5, dash:true,
+    hdr:{x:184,y:470,t:'RIVETHTTPCLIENT — HTTP CONTRACTS'}, tagr:{x:1396,y:470,t:'已實作最小介面',alpha:0.6} },
+  { id:'band-client', plane:'client', x:160, y:760, w:1260, h:156, alpha:0.5, dash:true,
+    hdr:{x:184,y:790,t:'CLIENT ABSTRACTIONS'}, tagr:{x:1396,y:790,t:'已實作 · 無底層 transport',alpha:0.6} },
+  { id:'band-transport', plane:'transport', x:160, y:1000, w:1260, h:156, alpha:0.5, dash:true,
+    hdr:{x:184,y:1030,t:'TRANSPORT BOUNDARY'}, tagr:{x:1396,y:1030,t:'注入式 contract',alpha:0.6} },
+  { id:'band-outside', plane:'outside', x:160, y:1240, w:1260, h:156, alpha:0.48,
+    hdr:{x:184,y:1270,t:'OUTSIDE — FOUNDATION SURFACE'}, tagr:{x:1396,y:1270,t:'非 RIVET 所有',alpha:0.6} }
 ];
 
 const BOXES = [
-  { id:'github-adapter', plane:'integration', band:'band-integration', x:510,y:260,w:460,h:88,r:10,dash:true,
-    name:'GitHub Data Adapter',about:'未來可採用此 package 的 GitHub Integration Adapter 邊界。',
-    texts:[['bl',534,288,'GitHub Data Adapter'],['bs',534,310,'可採用此 package'],['bn',534,332,'核心 BC 不直接依賴 HTTP client']] },
-  { id:'http-client', plane:'client', band:'band-client', x:200,y:530,w:350,h:88,r:10,dash:true,
-    name:'HTTPClient',about:'預定的 typed HTTP 入口，尚未有 API、product 或 target。',
-    texts:[['bl',224,558,'HTTPClient'],['bs',224,580,'預定 typed HTTP 入口'],['bn',224,602,'尚未有 Swift declaration']] },
-  { id:'requester', plane:'client', band:'band-client', x:590,y:530,w:350,h:88,r:10,dash:true,
-    name:'Requester',about:'預定將 HTTP contract 組裝為 Foundation request 的 abstraction。',
-    texts:[['bl',614,558,'Requester'],['bs',614,580,'預定 request construction'],['bn',614,602,'不定義 header 或 body 規則']] },
-  { id:'token-provider', plane:'client', band:'band-client', x:980,y:530,w:350,h:88,r:10,dash:true,
-    name:'TokenProvider',about:'預定 token contract；不包含 OAuth、Keychain 或 refresh 行為。',
-    texts:[['bl',1004,558,'TokenProvider'],['bs',1004,580,'預定 token contract'],['bn',1004,602,'不含授權實作']] },
-  { id:'endpoint', plane:'contracts', band:'band-contracts', x:200,y:850,w:370,h:88,r:10,dash:true,
-    name:'Endpoint',about:'預定 URL、method 與 query 的 contract，尚未定義型別。',
-    texts:[['bl',224,878,'Endpoint'],['bs',224,900,'預定 URL · method · query'],['bn',224,922,'尚未定義型別']] },
-  { id:'request', plane:'contracts', band:'band-contracts', x:600,y:850,w:370,h:88,r:10,dash:true,
-    name:'Request',about:'預定 headers 與 body 的 contract，尚未選擇 encode policy。',
-    texts:[['bl',624,878,'Request'],['bs',624,900,'預定 headers · body'],['bn',624,922,'未選擇 encode policy']] },
-  { id:'response', plane:'contracts', band:'band-contracts', x:1000,y:850,w:370,h:88,r:10,dash:true,
-    name:'Response',about:'預定 status、headers 與 payload contract，尚未定義 decode policy。',
-    texts:[['bl',1024,878,'Response'],['bs',1024,900,'預定 status · headers · payload'],['bn',1024,922,'未選擇 decode policy']] },
-  { id:'transport', plane:'transport', band:'band-transport', x:200,y:1150,w:1180,h:68,r:10,dash:true,
-    name:'Transport',about:'預定可替換的 URLSession abstraction，尚未宣告 protocol。',
-    texts:[['bl',374,1178,'Transport'],['bs',374,1200,'預定 URLSession boundary']] },
-  { id:'url-request', plane:'outside', band:'band-outside', x:180,y:1410,w:285,h:68,r:10,
-    name:'URLRequest',about:'Foundation request surface，非 package 自有 contract。',
-    texts:[['bl',204,1438,'Foundation URLRequest'],['bs',204,1460,'Foundation surface']] },
-  { id:'url-response', plane:'outside', band:'band-outside', x:495,y:1410,w:285,h:68,r:10,
-    name:'HTTPURLResponse',about:'Foundation HTTP response surface，非 package 自有 contract。',
-    texts:[['bl',519,1438,'HTTPURLResponse'],['bs',519,1460,'Foundation surface']] },
-  { id:'urlsession', plane:'outside', band:'band-outside', x:810,y:1410,w:285,h:68,r:10,
-    name:'Foundation URLSession',about:'Foundation 提供的資料任務與網路執行 surface。',
-    texts:[['bl',834,1438,'Foundation URLSession'],['bs',834,1460,'網路執行 surface']] },
-  { id:'network', plane:'outside', band:'band-outside', x:1125,y:1410,w:285,h:68,r:10,
-    name:'Network',about:'網路與 server availability 皆為 package 外的 infrastructure。',
-    texts:[['bl',1149,1438,'Network'],['bs',1149,1460,'外部 infrastructure']] }
+  { id:'endpoint-domain', plane:'caller', band:'band-caller', x:250,y:260,w:1080,h:68,r:10,
+    name:'Endpoint／Base URL／Path／Query',about:'呼叫端或 domain layer 組裝 API URL；package 不提供此 API。',
+    texts:[['bl',274,288,'Endpoint／Base URL／Path／Query'],['bs',274,310,'呼叫端組裝；再建立 HTTPURL']] },
+
+  { id:'http-url', plane:'contracts', band:'band-contracts', x:200,y:510,w:270,h:88,r:10,dash:true,
+    name:'HTTPURL',about:'package-owned value object；只接受有 host 的 http 或 https URL。',
+    texts:[['bl',224,538,'HTTPURL'],['bs',224,560,'http／https + host'],['bn',224,582,'唯一 typed throws 邊界']] },
+  { id:'url-error', plane:'contracts', band:'band-contracts', x:500,y:510,w:270,h:88,r:10,dash:true,
+    name:'HTTPURLValidationError',about:'HTTPURL construction 的封閉 validation error。',
+    texts:[['bl',524,538,'HTTPURLValidationError'],['bs',524,560,'scheme 或 host validation'],['bn',524,582,'package-owned error']] },
+  { id:'request', plane:'contracts', band:'band-contracts', x:800,y:510,w:270,h:88,r:10,dash:true,
+    name:'HTTPRequest',about:'只持有已驗證 HTTPURL、method、headers 與 optional body。',
+    texts:[['bl',824,538,'HTTPRequest'],['bs',824,560,'HTTPURL · method · headers'],['bn',824,582,'body: Data?；不 throws']] },
+  { id:'response', plane:'contracts', band:'band-contracts', x:1100,y:510,w:270,h:88,r:10,dash:true,
+    name:'HTTPResponse',about:'Transport 未經 status 或 decode policy 處理的 raw response contract。',
+    texts:[['bl',1124,538,'HTTPResponse'],['bs',1124,560,'status · headers · body'],['bn',1124,582,'raw return value']] },
+  { id:'method-headers', plane:'contracts', band:'band-contracts', x:420,y:616,w:640,h:42,r:10,dash:true,
+    name:'HTTPMethod 與 HTTPHeaders',about:'HTTPRequest 使用的 package-owned method 與 header value types。',
+    texts:[['bs',444,643,'HTTPMethod 與 HTTPHeaders — package-owned request metadata']] },
+
+  { id:'http-client', plane:'client', band:'band-client', x:200,y:820,w:560,h:68,r:10,dash:true,
+    name:'HTTPClient',about:'公開入口；以一般 async throws 委派給 Requester。',
+    texts:[['bl',224,848,'HTTPClient'],['bs',224,870,'execute(HTTPRequest) async throws']] },
+  { id:'requester', plane:'client', band:'band-client', x:860,y:820,w:560,h:68,r:10,dash:true,
+    name:'Requester',about:'把已驗證 HTTPRequest 映射為 Foundation URLRequest；不重驗 URL。',
+    texts:[['bl',884,848,'Requester'],['bs',884,870,'HTTPRequest → URLRequest']] },
+
+  { id:'transport', plane:'transport', band:'band-transport', x:200,y:1060,w:1220,h:68,r:10,dash:true,
+    name:'Transport',about:'注入式 async throws contract；錯誤會原樣向上傳遞。',
+    texts:[['bl',224,1088,'Transport'],['bs',224,1110,'injected；沒有統一 error model']] },
+
+  { id:'url-request', plane:'outside', band:'band-outside', x:200,y:1300,w:350,h:68,r:10,
+    name:'Foundation URLRequest',about:'Requester 實際映射到的 Foundation request surface。',
+    texts:[['bl',224,1328,'Foundation URLRequest'],['bs',224,1350,'Requester 的輸出 surface']] },
+  { id:'foundation-url-data', plane:'outside', band:'band-outside', x:590,y:1300,w:350,h:68,r:10,
+    name:'Foundation URL／Data',about:'HTTPURL value 與 request／response body 直接使用的 Foundation types。',
+    texts:[['bl',614,1328,'Foundation URL／Data'],['bs',614,1350,'value 與 body 的直接依賴']] },
+  { id:'urlsession', plane:'outside', band:'band-outside', x:980,y:1300,w:440,h:68,r:10,
+    name:'Foundation URLSession',about:'可能的 future transport implementation；此切片不實作或依賴它。',
+    texts:[['bl',1004,1328,'Foundation URLSession'],['bs',1004,1350,'本切片未實作']] }
 ];
 
 const EDGES = [
-  { from:'github-adapter',to:'http-client',pts:[[740,352],[740,420],[375,420],[375,524]],label:{s:'al',x:389,y:470,t:'預定使用',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'requester',pts:[[554,574],[584,574]],label:{s:'al',x:569,y:562,t:'預定依賴',anchor:'center'} },
-  { from:'http-client',to:'token-provider',pts:[[375,622],[375,662],[1155,662],[1155,624]],label:{s:'al',x:765,y:654,t:'預定依賴',anchor:'center'} },
-  { from:'http-client',to:'endpoint',pts:[[375,622],[375,844]],label:{s:'al',x:389,y:734,t:'使用 contract',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'request',pts:[[445,622],[445,742],[635,742],[635,844]],label:{s:'al',x:649,y:792,t:'使用 contract',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'response',pts:[[500,622],[500,722],[1185,722],[1185,844]],label:{s:'al',x:1199,y:782,t:'使用 contract',rot:-90,anchor:'center'} },
-  { from:'requester',to:'transport',pts:[[765,622],[765,1074],[525,1074],[525,1144]],label:{s:'al',x:539,y:848,t:'預定依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'url-request',pts:[[800,622],[800,1280],[322,1280],[322,1404]],label:{s:'al',x:336,y:1100,t:'Foundation request surface',rot:-90,anchor:'center'} },
-  { from:'transport',to:'urlsession',pts:[[790,1222],[790,1300],[952,1300],[952,1404]],label:{s:'al',x:966,y:1352,t:'依賴 Foundation surface',rot:-90,anchor:'center'} }
+  { from:'endpoint-domain',to:'http-url',pts:[[740,334],[740,400],[335,400],[335,504]],label:{s:'al',x:349,y:444,t:'建立',rot:-90,anchor:'center'} },
+  { from:'http-url',to:'url-error',pts:[[474,554],[494,554]],label:{s:'al',x:484,y:542,t:'typed error',anchor:'center'} },
+  { from:'request',to:'http-url',pts:[[935,604],[935,628],[335,628],[335,604]],label:{s:'al',x:635,y:620,t:'依賴',anchor:'center'} },
+  { from:'request',to:'method-headers',pts:[[1076,554],[1080,554],[1080,637],[1064,637]],label:{s:'al',x:1074,y:592,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'http-client',to:'requester',pts:[[764,854],[854,854]],label:{s:'al',x:809,y:842,t:'依賴',anchor:'center'} },
+  { from:'http-client',to:'request',pts:[[480,814],[480,718],[935,718],[935,604]],label:{s:'al',x:949,y:706,t:'使用',rot:-90,anchor:'center'} },
+  { from:'http-client',to:'response',pts:[[520,814],[520,738],[1235,738],[1235,604]],label:{s:'al',x:1249,y:698,t:'回傳型別',rot:-90,anchor:'center'} },
+  { from:'requester',to:'request',pts:[[1000,814],[1000,680],[935,680],[935,604]],label:{s:'al',x:1014,y:746,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'requester',to:'response',pts:[[1360,814],[1360,680],[1094,680],[1094,554]],label:{s:'al',x:1374,y:746,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'requester',to:'transport',pts:[[1140,894],[1140,994],[810,994],[810,1054]],label:{s:'al',x:824,y:956,t:'注入依賴',rot:-90,anchor:'center'} },
+  { from:'transport',to:'response',pts:[[810,1054],[810,976],[1235,976],[1235,604]],label:{s:'al',x:1249,y:790,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'requester',to:'url-request',pts:[[1140,894],[1140,1180],[375,1180],[375,1294]],label:{s:'al',x:389,y:1126,t:'Foundation mapping',rot:-90,anchor:'center'} },
+  { from:'transport',to:'url-request',pts:[[375,1134],[375,1294]],label:{s:'al',x:389,y:1214,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'http-url',to:'foundation-url-data',pts:[[335,604],[335,700],[765,700],[765,1294]],label:{s:'al',x:779,y:942,t:'URL value',rot:-90,anchor:'center'} },
+  { from:'request',to:'foundation-url-data',pts:[[935,604],[935,720],[765,720],[765,1294]],label:{s:'al',x:949,y:662,t:'body Data',rot:-90,anchor:'center'} },
+  { from:'response',to:'foundation-url-data',pts:[[1235,604],[1235,740],[765,740],[765,1294]],label:{s:'al',x:1249,y:672,t:'body Data',rot:-90,anchor:'center'} }
 ];
 
 const TEXTS = [
-  {s:'title',x:160,y:86,t:'RivetHTTPClient — 預定 package 結構'},
-  {s:'sub',x:160,y:118,t:'HTTPClient → Requester → Transport → Foundation；HTTPClient → TokenProvider；僅表達 ownership 與預定依賴'},
-  {s:'tag',x:160,y:146,runs:[{t:'HTTPClient',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')},{t:' → ',fill:'#4A5462'},{t:'URLSession',fill:planeColor('outside')}]},
-  {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有、尚未實作的抽象'},
-  {s:'legend',x:1082,y:110,t:'實線 — Foundation 或外部 infrastructure'},
+  {s:'title',x:160,y:86,t:'RivetHTTPClient — 最小介面結構'},
+  {s:'sub',x:160,y:118,t:'已實作 HTTPURL → HTTPRequest → HTTPClient → Requester → injected Transport → HTTPResponse；不含 Endpoint 或 URLSession 實作'},
+  {s:'tag',x:160,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPClient',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
+  {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
+  {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部 surface'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
-  {s:'bn',x:160,y:1560,t:'不變量：package failure 不等於 PR Inbox 或 PR Reader 的 failure contract；Adapter 必須先完成語意映射'},
-  {s:'bn',x:160,y:1580,t:'baseline：只有 Package.swift、Sources/.gitkeep、Tests/.gitkeep；本圖中的每個 owned abstraction 都尚未成為 Swift API'},
-  {s:'bn',x:160,y:1600,t:'延後：Codable schema、header precedence、status validation、retry、token refresh 與 URLSession configuration'}
+  {s:'bn',x:160,y:1530,t:'不變量：Endpoint、Base URL、Path 與 Query 由呼叫端／domain layer 組裝，不是 package API'},
+  {s:'bn',x:160,y:1550,t:'不變量：typed throws 只限 HTTPURL validation；Transport error 維持一般 async throws 並原樣傳遞'},
+  {s:'bn',x:160,y:1570,t:'延後：URLSessionTransport、網路呼叫、status validation、retry、token refresh 與 decode policy'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},
   {x:1046,y:99,w:26,h:13,stroke:C.boxStroke,alpha:1,fill:C.boxFill}
 ];
-const CHIPS = ['integration','client','contracts','transport','outside'].map((id,i)=>({x:1046+i*13,y:123,w:9,h:13,fill:planeColor(id)}));
+const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>({x:1046+i*13,y:123,w:9,h:13,fill:planeColor(id)}));
