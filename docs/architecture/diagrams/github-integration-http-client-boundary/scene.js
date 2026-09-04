@@ -66,7 +66,7 @@ const EDGES = [
   { from:'adapter',to:'reader-port',pts:[[470,504],[470,420],[605,420],[605,334]],label:{s:'al',x:619,y:386,t:'符合 Reader Port',rot:-90,anchor:'center'} },
   { from:'adapter',to:'domain-url',pts:[[744,554],[874,554]],label:{s:'al',x:809,y:542,t:'呼叫端組裝',anchor:'center'} },
   { from:'domain-url',to:'http-url',pts:[[1150,604],[1150,720],[335,720],[335,824]],label:{s:'al',x:349,y:666,t:'提供 URL',rot:-90,anchor:'center'} },
-  { from:'http-url',to:'request',pts:[[474,874],[494,874]],label:{s:'al',x:484,y:862,t:'已驗證 URL',anchor:'center'} },
+  { from:'request',to:'http-url',pts:[[494,874],[474,874]],label:{s:'al',x:484,y:862,t:'依賴',anchor:'center'} },
   { from:'client',to:'request',pts:[[794,874],[776,874]],label:{s:'al',x:785,y:862,t:'使用',anchor:'center'} },
   { from:'client',to:'transport',pts:[[1074,874],[1094,874]],label:{s:'al',x:1084,y:862,t:'注入依賴',anchor:'center'} },
   { from:'client',to:'foundation-types',pts:[[935,924],[935,1040],[470,1040],[470,1134]],label:{s:'al',x:484,y:1084,t:'Foundation mapping',rot:-90,anchor:'center'} },

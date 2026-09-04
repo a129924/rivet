@@ -74,6 +74,7 @@ const EDGES = [
   { from:'http-client',to:'request',pts:[[480,814],[480,718],[935,718],[935,604]],label:{s:'al',x:949,y:706,t:'使用',rot:-90,anchor:'center'} },
   { from:'http-client',to:'response',pts:[[520,814],[520,738],[1235,738],[1235,604]],label:{s:'al',x:1249,y:698,t:'回傳型別',rot:-90,anchor:'center'} },
   { from:'requester',to:'transport',pts:[[1140,894],[1140,994],[810,994],[810,1054]],label:{s:'al',x:824,y:956,t:'注入依賴',rot:-90,anchor:'center'} },
+  { from:'transport',to:'response',pts:[[810,1054],[810,976],[1235,976],[1235,604]],label:{s:'al',x:1249,y:790,t:'依賴',rot:-90,anchor:'center'} },
   { from:'requester',to:'url-request',pts:[[1140,894],[1140,1180],[375,1180],[375,1294]],label:{s:'al',x:389,y:1126,t:'Foundation mapping',rot:-90,anchor:'center'} },
   { from:'http-url',to:'foundation-url-data',pts:[[335,604],[335,700],[765,700],[765,1294]],label:{s:'al',x:779,y:942,t:'URL value',rot:-90,anchor:'center'} },
   { from:'request',to:'foundation-url-data',pts:[[935,604],[935,720],[765,720],[765,1294]],label:{s:'al',x:949,y:662,t:'body Data',rot:-90,anchor:'center'} },
