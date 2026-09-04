@@ -14,6 +14,7 @@
 - typed-throwing `HTTPURL` validation，以及不 throws 的 `HTTPRequest` construction。
 - `HTTPMethod`、`HTTPHeaders`、raw `HTTPResponse`、`HTTPClient`、`Requester`、injected `Transport`。
 - Foundation `URLRequest` mapping、Swift Testing、長期架構文件與兩張既有 HTTP Client canvas。
+- 既有 Swift format、SwiftLint、coverage scripts 對 standalone package 的涵蓋。
 
 ## Out-Of-Scope
 
@@ -41,6 +42,7 @@
 - `packages/RivetHTTPClient/Package.swift`
 - `docs/architecture/README.md`
 - `docs/architecture/bounded-contexts/github-integration.md`
+- `scripts/check-swift-format.sh`、`scripts/check-swiftlint.sh`、`scripts/check-swift-coverage.sh`
 - 兩張既有 HTTP Client architecture-canvas 的 `scene.js`、`BUILD.md`、generated `index.html`。
 
 ## Deleted
@@ -66,3 +68,5 @@
 - TC-06：Transport error 維持原始型別向上傳遞。
 - TC-07：SwiftPM manifest、Swift tests、canvas validate／build／accessibility verifier 與 pre-commit 通過。
 - TC-08：HTTPHeaders dictionary literal 的重複 name 不會 crash，且後者覆蓋前者。
+- TC-09：HTTPURL 拒絕空字串 host；HTTPHeaders 對 name 採大小寫不敏感的正規化；HTTPClient 與 Requester 符合 Sendable。
+- TC-10：Swift quality scripts 檢查有 source 的 standalone package；package coverage 維持至少 90%。

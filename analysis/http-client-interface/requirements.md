@@ -15,6 +15,7 @@
 - `HTTPRequest`、`HTTPMethod`、`HTTPHeaders`、raw `HTTPResponse`。
 - `HTTPClient`、`Requester`、injected `Transport` 與 Foundation `URLRequest` mapping。
 - package product／source target／test target 與 Swift Testing。
+- 既有 Swift format、SwiftLint 與 coverage scripts 對有 Swift source 的 standalone package 執行 quality gates。
 - 將 architecture docs 與既有 HTTP Client canvas 回寫為此 interface 的長期真相。
 
 ## Out-Of-Scope

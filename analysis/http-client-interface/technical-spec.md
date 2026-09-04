@@ -12,7 +12,7 @@
 init(_ value: URL) throws(HTTPURLValidationError)
 ```
 
-它接受 `http`、`https` scheme，且 URL 必須有 host。錯誤型別為封閉的 package-owned `HTTPURLValidationError`，至少包含：
+它接受 `http`、`https` scheme，且 URL 必須有非空的 host。錯誤型別為封閉的 package-owned `HTTPURLValidationError`，至少包含：
 
 ```swift
 case unsupportedScheme(String?)
@@ -23,7 +23,7 @@ case missingHost
 
 `HTTPRequest` 直接持有已驗證的 `HTTPURL`，以及 `HTTPMethod`、`HTTPHeaders`、`body: Data?`；initializer 不 throws。
 
-`HTTPHeaders` 的 dictionary literal 若包含重複 name，採用後者覆蓋前者的 deterministic 行為；不得以 `Dictionary(uniqueKeysWithValues:)` 造成 runtime trap。
+`HTTPHeaders` 將 name 正規化為小寫。dictionary literal 若包含相同或僅大小寫不同的 name，採用後者覆蓋前者的 deterministic 行為；不得以 `Dictionary(uniqueKeysWithValues:)` 造成 runtime trap。
 
 `HTTPClient` 維持一般 throws：
 
@@ -37,11 +37,15 @@ func execute(_ request: HTTPRequest) async throws -> HTTPResponse
 
 Requester 將 `HTTPRequest` 映射為 Foundation `URLRequest`，並交給 injected `Transport`。它不驗證 URL，因為驗證已在 `HTTPURL` construction 完成。
 
+`Requester` 與 `HTTPClient` 都符合 `Sendable`，可安全由隔離的 UI 或 domain state 傳遞。
+
 `HTTPResponse` 是 Transport 直接回傳的 raw response contract；本 topic 不新增 status 或 decode policy。
 
 ### Exclusions
 
 不實作 `URLSessionTransport`、網路呼叫、status code validation、retry、token refresh、decode policy 或 API domain Endpoint 設計。根 package 保持沒有 local dependency。
+
+既有 Swift format、SwiftLint 與 coverage scripts 必須偵測並驗證包含 Swift source 的 standalone package。
 
 ## File Organization
 

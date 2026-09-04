@@ -1,5 +1,5 @@
 import Foundation
 
 public protocol Transport: Sendable {
-    func execute(_ request: URLRequest) async throws -> HTTPResponse
+  func execute(_ request: URLRequest) async throws -> HTTPResponse
 }
