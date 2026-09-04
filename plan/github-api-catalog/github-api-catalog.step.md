@@ -1,0 +1,190 @@
+# GitHub API Endpoint Catalog — Step Ledger
+
+## Topic and Current Phase
+
+- Topic: `github-api-catalog`
+- Current phase: Human Check 待處理。
+- Ledger rule: status 與驗證證據只記錄工作狀態；不構成 approval 或取代 human review。
+
+## Steps
+
+| ID | Status | Owner | Completion Condition | Validation Evidence |
+| --- | --- | --- | --- | --- |
+| PLAN-001 | complete | Human / Plan-Creator | Human 已確認 catalog plan，四份 topic artifacts 已建立。 | 本 request 的計畫確認與四份 artifacts。 |
+| IMPL-001 | complete | Implementer | 僅新增 catalog artifacts 與 `docs/github-api/` 文件。 | `git diff --check` 與 file impact contract。 |
+| TEST-001 | complete | Tester | 驗證索引完整性、關鍵 API facts、官方來源與 scope。 | TC-01 至 TC-05 的本地文件檢查。 |
+| DELIVERY-001 | complete | Implementer | topic commit、push，並建立以 `dev` 為 base 的 draft PR。 | commit、remote branch 與 draft PR URL。 |
+| REVIEW-001 | complete | External Reviewer | 核對 API catalog 與官方文件。 | 回報 thread schema、metadata、taxonomy、auth contract 與 authority boundary 的修正要求。 |
+| IMPL-002 | complete | Implementer | 僅修正 REVIEW-001 指出的 catalog 與同 topic artifacts。 | 修正型別、metadata、taxonomy、auth/source rows 與未鎖定 authority claim。 |
+| TEST-002 | complete | Tester | 驗證 TC-01 至 TC-08、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-002 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch。 | 修正 commit 與更新後 PR #7。 |
+| REVIEW-002 | complete | External Reviewer | 檢查 REVIEW-001 remediation 的 product scope 與架構依據。 | 指出 `author:@me` MVP drift 與無依據 Swift viewed claim。 |
+| IMPL-003 | complete | Implementer | 僅移除 REVIEW-002 指出的 catalog scope 與未鎖定推論。 | 移除 `author:@me`、Swift snapshot-local claim，並同步 artifacts 與 TC-08。 |
+| TEST-003 | complete | Tester | 驗證 Inbox scope、未鎖定 authority claim、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-003 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch。 | 修正 commit 與更新後 PR #7。 |
+| REVIEW-003 | complete | External Reviewer | 檢查 REST pagination metadata 與 Notifications operation inputs。 | 指出三處錯誤的連字號 pagination 名稱，以及 `GET /notifications` 漏列 query／分頁 metadata。 |
+| IMPL-004 | complete | Implementer | 僅修正 REVIEW-003 指出的 catalog metadata，並同步本 topic artifacts。 | REST 正式 query 名稱、Notifications query／上限與 TC-09。 |
+| TEST-004 | complete | Tester | 驗證 TC-09、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-004 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-003 threads。 | 修正 commit、更新後 PR #7 與 resolved thread 狀態。 |
+| REVIEW-004 | complete | External Reviewer | 檢查 REST operation contract 與 capability taxonomy。 | 指出 notification scopes、review body 條件、`@me` 認證、兩個 list 分頁，以及兩項 taxonomy 意見。 |
+| IMPL-005 | complete | Implementer | 僅修正 REVIEW-004 中有官方依據且不改變既有 taxonomy／架構的 metadata。 | 補 notification scopes、conditional body、`@me` token、inline/review 分頁與 TC-10。 |
+| TEST-005 | complete | Tester | 驗證 TC-10、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-005 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve 已處理 REVIEW-004 threads。 | 修正 commit、更新後 PR #7 與 resolved thread 狀態。 |
+| DECISION-001 | complete | Human | 授權以「後續唯讀」區分非 MVP 讀取與延後寫入。 | 本 request 的 `Execution Authorized`。 |
+| IMPL-006 | complete | Implementer | 僅在本 topic 的 catalog 與 artifacts 新增「後續唯讀」taxonomy。 | repository PR list、`GET /notifications` 與 Capability Index 均使用正確狀態。 |
+| TEST-006 | complete | Tester | 驗證 TC-11、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-006 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-004 最後 thread。 | 修正 commit、更新後 PR #7 與 resolved thread 狀態。 |
+| REVIEW-005 | complete | External Reviewer | 檢查 Search 上限、Viewed taxonomy、notification success output 與 review 限制。 | 指出 Search 1,000 筆上限、Viewed query 分類、notification PATCH `205`，以及未附直接官方來源的作者 review 限制。 |
+| IMPL-007 | complete | Implementer | 僅修正 REVIEW-005 中有直接官方或既有 taxonomy 依據的 metadata。 | 補 Search 上限、Viewed read/write 分類、`205 Reset Content`／空 body 與 TC-12；不新增未有直接官方來源的作者限制。 |
+| TEST-007 | complete | Tester | 驗證 TC-12、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-007 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-005 threads。 | 修正 commit、更新後 PR #7 與 resolved thread 狀態。 |
+| REVIEW-006 | complete | External Reviewer | 檢查 GraphQL query locator、Checks、discussion composition、last-seen identity 與寫入 operation contract。 | 指出 10 項問題；其中 notifications OAuth 與 PENDING visibility 兩項無法由目前直接官方來源支持，其餘 8 項有官方依據。 |
+| IMPL-008 | complete | Implementer | 僅修正 REVIEW-006 中有官方依據的 catalog 與同 topic artifacts。 | 補 PR locator、Checks、last-seen identity、merge output/permission、review `commit_id`、thread viewer gate 與不重複 inline composition。 |
+| TEST-008 | complete | Tester | 驗證 TC-13、TC-14、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-008 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-006 threads。 | `6ffa142`、更新後 PR #7 與 10 則 resolved thread。 |
+| REVIEW-007 | complete | External Reviewer | 檢查 inline review input、outdated position、checks union、nested pagination、notification polling 與 merge method gate。 | 指出六項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
+| IMPL-009 | complete | Implementer | 僅修正 REVIEW-007 指出的 catalog 與同 topic artifacts。 | 補齊六項 operation contract，且不變更架構文件或 BC 責任。 |
+| TEST-009 | complete | Tester | 驗證 TC-15、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-009 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-007 threads。 | `789bb98`、更新後 PR #7 與 6 則 resolved thread。 |
+| REVIEW-008 | complete | External Reviewer | 檢查 submit review response、thread comment output／多行起始 side，以及 Checks cursor traversal。 | 指出四項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
+| IMPL-010 | complete | Implementer | 僅修正 REVIEW-008 指出的 catalog 與同 topic artifacts。 | 補 200 review response、thread content／start side 與 Checks cursor traversal。 |
+| TEST-010 | complete | Tester | 驗證 TC-16、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-010 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-008 threads。 | `faaf1cf`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-009 | complete | External Reviewer | 檢查 changed-files pagination、REST inline fallback output、Search query key 與 viewed mutation source coverage。 | 指出四項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
+| IMPL-011 | complete | Implementer | 僅修正 REVIEW-009 指出的 catalog 與同 topic artifacts。 | 補 files traversal、inline fallback display fields、Search `q` 與 viewed mutation payload sources。 |
+| TEST-011 | complete | Tester | 驗證 TC-17、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-011 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-009 threads。 | `197750d`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-010 | complete | External Reviewer | 檢查多行 review 條件輸入、thread resolution payload source 與 Search 後續分頁。 | 指出三項均有直接 GitHub 官方 REST／GraphQL 來源支持的 operation contract 缺口。 |
+| IMPL-012 | complete | Implementer | 僅修正 REVIEW-010 指出的 catalog 與同 topic artifacts。 | 補多行條件必填、thread resolution payload sources 與 Search page／Link traversal。 |
+| TEST-012 | complete | Tester | 驗證 TC-18、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-012 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-010 threads。 | `ab4d92e`、更新後 PR #7 與 3 則 resolved thread。 |
+| REVIEW-011 | complete | External Reviewer | 檢查 diff failure、checks nullability、thread target kind 與 inline review positioning。 | 指出三項直接官方 contract 缺口，以及一項只可確認 HTTP status、不可確認原因的 diff failure claim。 |
+| IMPL-013 | complete | Implementer | 僅修正 REVIEW-011 中由官方來源支持的 catalog 與同 topic artifacts。 | 補 406 status、nullable checks／thread target、line-based preference，且不推論 406 成因、fallback 或 REST `subject_type` output。 |
+| TEST-013 | complete | Tester | 驗證 TC-19、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-013 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-011 threads。 | `f038e19`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-012 | complete | External Reviewer | 檢查 review decision 與 changed-file response 的 optional contract。 | 指出 `reviewDecision` nullable 與 REST `patch` 未列於 required set。 |
+| IMPL-014 | complete | Implementer | 僅修正 REVIEW-012 中由 GitHub GraphQL schema 與官方 REST OpenAPI 直接支持的 catalog 與同 topic artifacts。 | 補 `reviewDecision` nullable 與 `patch` 可能缺席；不推論兩者的成因。 |
+| TEST-014 | complete | Tester | 驗證 TC-20、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-014 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-012 threads。 | `e57a4b0`、更新後 PR #7 與 2 則 resolved thread。 |
+| REVIEW-013 | complete | External Reviewer | 檢查 REST／GraphQL nullable contract 與 Search root response output。 | 指出 REST body／file／review fields、GraphQL locator／checks／thread fields，以及 Search `total_count` 的 contract 缺口。 |
+| IMPL-015 | complete | Implementer | 僅修正 REVIEW-013 中由 GitHub GraphQL schema、REST reference 與官方 REST OpenAPI 直接支持的 catalog 與同 topic artifacts。 | 補 nullable／可能缺席與 `total_count` output；不推論 null／缺席原因或 failure mapping。 |
+| TEST-015 | complete | Tester | 驗證 TC-21、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-015 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-013 threads。 | `08eeb53`、更新後 PR #7 與 8 則 resolved thread。 |
+| REVIEW-014 | complete | External Reviewer | 檢查 Notifications token 類型、REST discussion user 與 GraphQL reply relationship contract。 | 三項意見中，僅 `replyTo` nullability 有現行官方 GraphQL schema 的直接支持。 |
+| IMPL-016 | complete | Implementer | 僅修正 REVIEW-014 中由官方來源直接支持的 catalog 與同 topic artifacts。 | 補 `replyTo` nullable；Notifications 與 REST `user` 維持現行文件／schema 能直接支持的表述。 |
+| TEST-016 | complete | Tester | 驗證 TC-22、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-016 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-014 threads。 | `93a7b25`、更新後 PR #7 與 3 則 resolved thread。 |
+| REVIEW-015 | complete | External Reviewer | 檢查 thread location nullability、巢狀 cursor traversal、notifications 結果範圍與 cross-API comment identity。 | 前三項中，thread nullability／traversal 有現行官方 GraphQL 來源支持；Notifications 90 天主張不見於現行官方 reference；REST response 有 `id`／`node_id`，但未直接宣告與 GraphQL id 的可互換性。 |
+| IMPL-017 | complete | Implementer | 僅修正 REVIEW-015 中由官方來源直接支持或為本機 last-seen 邊界澄清所需的 catalog 與同 topic artifacts。 | 補 thread location nullable、雙層 traversal、REST inline `node_id` 與 source-qualified opaque identity；未加入無現行官方來源的 Notifications 90 天主張。 |
+| TEST-017 | complete | Tester | 驗證 TC-23、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-017 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-015 threads。 | `4686af8`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-016 | complete | External Reviewer | 檢查 GraphQL mutation payload、REST list 與 notification response 的 nullable contract。 | 四項均有現行官方 GraphQL schema 或 REST OpenAPI 的直接 nullable 標記。 |
+| IMPL-018 | complete | Implementer | 僅修正 REVIEW-016 指出的 catalog 與同 topic artifacts。 | 補五個 mutation payload resource、REST PR／inline comment／notification response 的 nullable contract。 |
+| TEST-018 | complete | Tester | 驗證 TC-24、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-018 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-016 threads。 | `72482a0`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-017 | complete | External Reviewer | 檢查 REST inline/review response 的 nullable contract 與 Submit Review input 描述。 | `pull_request_review_id` 與 `commit_id` 有明確 nullable 標記；`original_position` 沒有 nullable 標記；Submit Review comments input 未列 `in_reply_to`。 |
+| IMPL-019 | complete | Implementer | 僅修正 REVIEW-017 中有官方 schema 或 operation reference 直接支持的 catalog 與同 topic artifacts。 | 補兩個 nullable 欄位，移除 `in_reply_to` 暗示；`original_position` 不作 null 推論。 |
+| TEST-019 | complete | Tester | 驗證 TC-25、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-019 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-017 threads。 | `0d4ae53`、更新後 PR #7 與 3 則 resolved thread。 |
+| REVIEW-018 | complete | External Reviewer | 檢查 REST inline comment 的 optional-presence contract。 | `original_position` 與 `in_reply_to_id` 未列於現行官方 OpenAPI required set。 |
+| IMPL-020 | complete | Implementer | 僅修正 REVIEW-018 中由官方 OpenAPI required set 直接支持的 catalog 與同 topic artifacts。 | 將兩個欄位標為可能缺席，並與 nullable contract 區分。 |
+| TEST-020 | complete | Tester | 驗證 TC-26、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-020 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-018 thread。 | `d8fb69b`、更新後 PR #7 與 1 則 resolved thread。 |
+| REVIEW-019 | complete | External Reviewer | 檢查 GraphQL mutation operation field 與 notification subject URL 的 nullable contract。 | 五個 mutation operation field 未標 non-null；notification subject 兩個 URL 在現行 REST schema 為 required string，未標 nullable。 |
+| IMPL-021 | complete | Implementer | 僅修正 REVIEW-019 中由 GitHub GraphQL schema 直接支持的 operation-field nullable contract。 | 補五個 mutation operation field nullable；notification subject URL 維持現行 schema 可直接支持的 required string 表述。 |
+| TEST-021 | complete | Tester | 驗證 TC-27、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-021 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-019 threads。 | `3013891`、更新後 PR #7 與 2 則 resolved thread。 |
+| REVIEW-020 | complete | External Reviewer | 檢查 files connection、REST draft response 與 Notifications `all` filter contract。 | `PullRequest.files` 未標 non-null；兩個 REST draft field 未列 required；`all` 預設為 false。 |
+| IMPL-022 | complete | Implementer | 僅修正 REVIEW-020 中由 GitHub GraphQL schema 與 REST OpenAPI 直接支持的 catalog 與同 topic artifacts。 | 補 files nullable、draft 可能缺席與 Notifications `all` 預設／filter 語意。 |
+| TEST-022 | complete | Tester | 驗證 TC-28、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-022 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-020 threads。 | `747b245`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-021 | complete | External Reviewer | 檢查 GraphQL cursor 與 review-thread nested comment nodes 的 nullable contract。 | `PageInfo.endCursor`、comments nodes list 與 list element 均未標 non-null。 |
+| IMPL-023 | complete | Implementer | 僅修正 REVIEW-021 中由 GitHub GraphQL schema 直接支持的 catalog 與同 topic artifacts。 | 補 cursor、nodes list 與 node element 的逐層 nullable contract。 |
+| TEST-023 | complete | Tester | 驗證 TC-29、Markdown links、diff 與完整 pre-commit。 | 本次修正的驗證結果。 |
+| DELIVERY-023 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-021 threads。 | `970a796`、更新後 PR #7 與 2 則 resolved thread。 |
+| REVIEW-022 | complete | External Reviewer | 檢查 Checks 與 changed-files connection `nodes` 的 nullable contract。 | 兩個 `nodes` field 的 list 與 element 均未標 non-null。 |
+| IMPL-024 | complete | Implementer | 僅修正 REVIEW-022 中由 GitHub GraphQL schema 直接支持的 catalog 與同 topic artifacts。 | 補兩個 connection nodes list／element 的逐層 nullable contract。 |
+| TEST-024 | complete | Tester | 驗證 TC-30、Markdown links、diff 與完整 pre-commit。 | `git diff --check`、兩個官方來源 link check 與完整 pre-commit 均通過。 |
+| DELIVERY-024 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-022 threads。 | `bc011e9`、更新後 PR #7 與 2 則 resolved thread。 |
+| REVIEW-023 | complete | External Reviewer | 檢查 review-thread nodes nullable contract 與 TEST-024 ledger evidence。 | reviewThreads nodes list／element 未標 non-null；TEST-024 的 complete status 與 placeholder evidence 不一致。 |
+| IMPL-025 | complete | Implementer | 僅修正 REVIEW-023 中由 GitHub GraphQL schema 或實際驗證結果直接支持的 catalog 與同 topic artifacts。 | 補 review-thread nodes 逐層 nullable，並以實際驗證結果取代 TEST-024 placeholder。 |
+| TEST-025 | complete | Tester | 驗證 TC-31、Markdown links、diff 與完整 pre-commit。 | GraphQL introspection、`git diff --check`、兩個官方來源 link check 與完整 pre-commit 均通過。 |
+| DELIVERY-025 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，逐則回覆並 resolve REVIEW-023 threads。 | `6d1ecb0`、更新後 PR #7 與 2 則 resolved thread。 |
+| REVIEW-024 | complete | External Reviewer | 檢查 REST／GraphQL response contract、review-thread window 與 DELIVERY-025 ledger state。 | Issue comment `body` nullable 主張不受官方 OpenAPI 支持；其餘三項有官方 reference 或實際交付證據支持。 |
+| IMPL-026 | complete | Implementer | 僅修正 REVIEW-024 中由官方 reference 或實際交付證據支持的 catalog 與同 topic artifacts。 | 補 REST GET `200 OK`、適用的 `304`、雙層 review-thread 1–100 window，並同步 DELIVERY-025。 |
+| TEST-026 | complete | Tester | 驗證 TC-32、TC-33、Markdown links、diff 與完整 pre-commit。 | GitHub REST OpenAPI／GraphQL pagination reference、`git diff --check`、九個官方來源 link check 與完整 pre-commit 均通過。 |
+| DELIVERY-026 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-024 threads。 | `e1b1095`、更新後 PR #7 與 4 則 resolved thread。 |
+| REVIEW-025 | complete | External Reviewer | 檢查 inline review location presence、Notifications token、Issue comment traversal、catalog discoverability 與 action table structure。 | OAuth app token 與 nullable 主張不受官方 reference 支持；其餘項目有 official schema／文件或 Markdown 結構依據。 |
+| IMPL-027 | complete | Implementer | 僅修正 REVIEW-025 中由官方 reference 或 Markdown 結構支持的 catalog 與同 topic artifacts。 | 補可能缺席／Link traversal／first-read link／六欄 delimiter；Notifications 維持 classic PAT 限制。 |
+| TEST-027 | complete | Tester | 驗證 TC-34、TC-35、Markdown links、diff 與完整 pre-commit。 | GitHub REST OpenAPI／Notifications／pagination references、`git diff --check`、五個官方來源 link check 與完整 pre-commit 均通過。 |
+| DELIVERY-027 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-025 threads。 | `a74cf58` 已推送至既有 feature branch，且 REVIEW-025 的 5 個 threads 已 resolved。 |
+| REVIEW-026 | complete | External Reviewer | 檢查 REST list traversal、plan contract 與 Capability Index 的產品狀態。 | Changed Files／Notifications 少了 `Link` traversal；Non-Goal 與實際 Modify 不一致；Index 混合 REST MVP 與 GraphQL 後續唯讀。 |
+| IMPL-028 | complete | Implementer | 僅修正 REVIEW-026 有官方來源或本 topic contract 支持的文件與 artifacts。 | 補 Changed Files／Notifications `Link` traversal，收斂 Non-Goal，並分列 REST changed files、checks 與 GraphQL Files Viewed state。 |
+| TEST-028 | complete | Tester | 驗證 TC-36、Markdown links、scope 與完整 pre-commit。 | `git diff --check`、官方 REST pagination／Pulls／Notifications links 與完整 pre-commit 均通過。 |
+| DELIVERY-028 | complete | Implementer | 建立單一修正 commit 並推送既有 feature branch，回覆並 resolve REVIEW-026 threads。 | `2958645` 已推送至既有 feature branch，且 REVIEW-026 的 4 個 threads 已 resolved。 |
+| HUMAN-001 | pending | Human | 審閱 draft PR 的文件內容與 scope。 | Human review。 |
+
+## Blockers
+
+- 無已知 blocker；Human Check 是唯一未完成邊界。
+- 若 GitHub 官方文件與 catalog 任一記錄不一致，以官方文件為準並在 PR 中揭露。
+
+## Human Check
+
+- 確認 catalog 的產品分級、官方校驗結果與未納入實作的範圍。
+
+## Last Updated
+
+2026-09-02 — 建立 topic artifacts 與 API catalog；未修改既有文件或 source code。
+
+2026-09-02 — 依 external reviewer report 修正 GraphQL review thread schema、REST metadata、status taxonomy、每個 operation 的認證／權限與來源，以及未證實延伸敘述；未修改架構文件或 source code。
+
+2026-09-02 — 依後續 reviewer feedback 移除不屬待 review MVP 集合的 `author:@me` catalog entry，並移除無既有架構依據的 Swift snapshot-local viewed claim；未修改架構文件或 source code。
+
+2026-09-02 — 依 REVIEW-003 修正 REST pagination query 名稱，補齊 `GET /notifications` 的 query、分頁上限與 TC-09；未修改架構文件或 source code。
+
+2026-09-02 — 依 REVIEW-004 補齊 notification scopes、review conditional body、`@me` token、inline comment 與 review summary 分頁；taxonomy 與 repository browse scope 的衝突留待 human decision，未修改架構文件或 source code。
+
+2026-09-02 — Human 授權新增「後續唯讀」taxonomy，將 repository PR list 與 `GET /notifications` 與延後寫入明確區分；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-005 補 Search 1,000 筆上限、Files Viewed read/write 分類與 notification PATCH 成功輸出；作者 review 限制因目前沒有直接官方來源而不列入 catalog；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-006 補 GraphQL PR 定位、Checks、last-seen identity、merge output／權限、review `commit_id`、thread viewer gates 與 inline content source；notifications OAuth 與 PENDING visibility 因直接官方來源分別相反或不足而只回覆說明；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-007 補 inline review 定位、outdated 原始位置、checks union output、nested thread comments 分頁、notification conditional polling 與 merge method gate；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-008 補 submit review 成功 response、thread comment content／多行起始 side，以及 Checks cursor traversal；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-009 補 changed-files cursor traversal、REST inline fallback 作者／時間／連結、Issues Search 必填 `q` 與 viewed mutation payload source；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-010 補多行 review comment 條件必填、thread resolution payload source 與 Issues Search page／Link traversal；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-011 補 unified diff `406`、checks nullability、thread target kind 與 line-based review positioning；不推論 406 成因／fallback 或未由 list response reference 支持的 REST `subject_type` output，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-012 補 `reviewDecision` nullable 與 REST changed-file `patch` 可能缺席的 contract；後者以 GitHub REST OpenAPI `diff-entry` required set 驗證，未推論任何缺席成因，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-013 補 REST PR／file／review fields、GraphQL locator／checks／thread fields 的 nullable 或可能缺席 contract，以及 Search `total_count` output；未推論 null／缺席原因或 failure mapping，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-014 補 GraphQL `replyTo` nullable；Notifications token 類型與 REST `user` 則維持現行官方文件／schema 能直接支持的表述，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-015 補 review thread 位置欄位 nullable、外層與巢狀 comments 的獨立 cursor traversal，以及 REST／GraphQL comment identity 的 source boundary；未加入沒有現行官方來源的 Notifications 90 天主張，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-016 補 GraphQL mutation payload 與 REST response 的 nullable contract；未推論 null 成因、failure mapping 或實作策略，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-017 補 REST inline／review response 的 nullable contract，並移除 Submit Review 未被 operation input 支持的 `in_reply_to` 暗示；`original_position` 維持官方 schema 可直接支持的表述，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-018 補 REST inline comment 的 `original_position` 與 `in_reply_to_id` 可能缺席 contract；兩者僅依 OpenAPI required set 表述，未推論成 nullable 或缺席原因，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-019 補五個 GraphQL mutation operation field 的 nullable contract；Notification subject URLs 因現行 REST schema 為 required string 而未修改，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-020 補 GraphQL files nullable、REST PR draft 可能缺席與 Notifications `all` 預設 filter contract；是否要求包含已讀 notification 留給後續產品 topic，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-021 補 GraphQL `endCursor` 與 review-thread nested comment nodes 的逐層 nullable contract；不推論 null 成因，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-022 補 Checks 與 changed-files connection nodes list／element 的逐層 nullable contract；不推論 null 成因，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-023 補 review-thread connection nodes list／element 的逐層 nullable contract，並以實際驗證結果取代 TEST-024 placeholder；未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-024 補 REST GET 成功 response、適用 conditional response 與雙層 review-thread window contract，並同步 DELIVERY-025；Issue comment `body` nullable 主張因不受官方 OpenAPI 支持而僅回覆說明，未修改架構文件或 source code。
+
+2026-09-03 — 依 REVIEW-025 補 inline review location 的可能缺席、Issue comments Link traversal、catalog first-read 入口與 GraphQL action table 結構；Notifications OAuth app token 與 location nullable 主張因不受官方來源支持而不採用，未修改架構文件或 source code。
