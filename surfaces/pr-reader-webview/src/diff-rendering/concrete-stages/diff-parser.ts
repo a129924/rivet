@@ -101,14 +101,41 @@ function isCompleteDiff2HtmlParseResult(
         (patch.length === 0
           ? file.blocks.length === 0
           : file.blocks.length > 0 &&
-            file.blocks.every(
-              (block) =>
-                isRecord(block) &&
-                typeof block.header === "string" &&
-                isUnifiedDiffHunkHeader(block.header) &&
-                Array.isArray(block.lines),
-            )),
+            file.blocks.every(isCompleteDiff2HtmlBlock)),
     )
+  );
+}
+
+function isCompleteDiff2HtmlBlock(value: unknown): boolean {
+  if (
+    !isRecord(value) ||
+    typeof value.header !== "string" ||
+    !Array.isArray(value.lines)
+  ) {
+    return false;
+  }
+
+  const hunkCounts = readUnifiedDiffHunkCounts(value.header);
+  if (hunkCounts === undefined) {
+    return false;
+  }
+
+  let oldLineCount = 0;
+  let newLineCount = 0;
+  for (const line of value.lines) {
+    if (!isRecord(line)) {
+      return false;
+    }
+    if (typeof line.oldNumber === "number") {
+      oldLineCount += 1;
+    }
+    if (typeof line.newNumber === "number") {
+      newLineCount += 1;
+    }
+  }
+  return (
+    oldLineCount === hunkCounts.oldLineCount &&
+    newLineCount === hunkCounts.newLineCount
   );
 }
 
@@ -116,10 +143,23 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function isUnifiedDiffHunkHeader(value: string): boolean {
-  return /^@@ -(?:0(?:,0)?|[1-9]\d*(?:,\d+)?) \+(?:0(?:,0)?|[1-9]\d*(?:,\d+)?) @@(?:.*)$/.test(
-    value,
-  );
+function readUnifiedDiffHunkCounts(
+  value: string,
+):
+  | { readonly oldLineCount: number; readonly newLineCount: number }
+  | undefined {
+  const match =
+    /^@@ -(0|[1-9]\d*)(?:,(0|[1-9]\d*))? \+(0|[1-9]\d*)(?:,(0|[1-9]\d*))? @@(?:.*)$/.exec(
+      value,
+    );
+  if (match === null) {
+    return undefined;
+  }
+
+  return {
+    oldLineCount: match[2] === undefined ? 1 : Number(match[2]),
+    newLineCount: match[4] === undefined ? 1 : Number(match[4]),
+  };
 }
 
 function parseErrorResult(): ParseResult {

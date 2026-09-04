@@ -8,17 +8,17 @@
 
 - **Goal**：將有效 `DiffSnapshot` 轉為 internal `RenderPlan`，有 patch 的檔案使用 repo-local diff2html 產生逐檔 line-by-line HTML，無 patch 的檔案保留 metadata-unavailable entry。
 - **Non-Goal**：不實作 concrete Output 或顯示 HTML；不處理 HTML safety、CSS、UI、syntax highlighting、Swift bridge、viewed persistence、side-by-side 或 file list。
-- **In-Scope**：structural validation、per-file immutable VO、unified Git diff template、parse、render、internal opaque representation、tests，以及 concrete-stage verified 後的最小 docs truth amendment。Validator 只處理 raw `DiffSnapshot` runtime structure/invariants；Parser 才負責 template、diff2html parse 與第三方結果完整性防禦。
+- **In-Scope**：structural validation、per-file immutable VO、unified Git diff template、parse、render、internal opaque representation、tests，以及 concrete-stage verified 後的最小 docs truth amendment。Validator 只處理 raw `DiffSnapshot` runtime structure/invariants；Parser 才負責 template、diff2html parse 與第三方結果完整性防禦。本輪僅處理五個 selected PR comment remediations。
 - **Out-Of-Scope**：公開 API／Port／contract／dependency 變更；Validator 的 patch parsing 或 diff2html result checking；UseCase 對 diff2html、unified diff 或 parsed shape 的認知；修改 snapshot；no-patch failure 或 skip；其他 architecture／BC 結論。
 
 ## Implementation Changes
 
 - 建立 `concrete-stages/diff-view-model-validator.ts`，實作既有 Validator Port 的 locked structural checks；成功時建立不可變 branded validated input，失敗時回傳穩定 `invalid-input`。
 - 讓 `concrete-stages/diff-view-model-validator.ts` 只驗證 raw `DiffSnapshot` runtime structure/invariants；它不得產生 unified source、呼叫 diff2html 或檢查 parsed result。
-- 建立 `concrete-stages/git-diff-template.ts`，以沒有 blob SHA 的 immutable `GitDiffTemplateInput` 根據單一檔案 status 組裝 unified Git diff source；保留必要 header/path/rename metadata/patch，完全省略 `index ` 行；不對外 export VO 或 template。
-- 建立 `concrete-stages/diff-parser.ts`，只接收 `ValidatedDiffInput`，依 input order 對 patch entries 執行 template 與 `diff2html.parse`，對 no-patch entries 保留 metadata-unavailable。以 internal `isCompleteDiff2HtmlParseResult` 確認第三方回傳代表一份完整的單檔 Git diff，且 nonempty patch 有完整 valid hunk blocks；此 helper 不得重驗 raw snapshot。template／parse exception 或完整性失敗一律收斂為不洩漏內容的穩定 `parse-error`。
+- 建立 `concrete-stages/git-diff-template.ts`，以沒有 blob SHA 的 immutable `GitDiffTemplateInput` 根據單一檔案 status 組裝 unified Git diff source；保留必要 header/path/rename metadata/patch，完全省略 `index ` 與所有 fake mode metadata（含 `100644`）；不對外 export VO 或 template。非 `/dev/null` path 先加入 `a/`／`b/` side prefix，再以 deterministic Git C-style serializer 輸出：safe ASCII `[A-Za-z0-9._/+\-]` unquoted；否則雙引號包覆、quote/backslash/named controls C-escape，其餘 control、DEL 與 UTF-8 bytes 為零補三位八進位 escape。
+- 建立 `concrete-stages/diff-parser.ts`，只接收 `ValidatedDiffInput`，依 input order 對 patch entries 執行 template 與 `diff2html.parse`，對 no-patch entries 保留 metadata-unavailable。以 internal `isCompleteDiff2HtmlParseResult` 確認第三方回傳代表一份完整的單檔 Git diff：nonempty patch 的每一 parsed hunk old/new line-array counts 必須與 header old/new counts 等價；empty patch 是 zero blocks。此 helper 不得重驗 raw snapshot。template／parse exception 或完整性失敗一律收斂為不洩漏內容的穩定 `parse-error`。
 - 建立 `concrete-stages/diff-renderer.ts`，依 input order 對 parsed entries 執行 `diff2html.html`，固定 line-by-line 且不繪製 file list，建立 opaque `RenderPlan`；render exception 為 `render-error`。
-- 在同一 internal folder 建立對應 tests；必要時僅註冊既有 test harness。完成 concrete-stage verification 後，最小更新 architecture README 與 PR Reader BC 的 implementation truth，其他 docs 不動。
+- 在同一 internal folder 建立對應 tests；必要時僅註冊既有 test harness。完成 concrete-stage verification 後，最小更新 architecture README 與 PR Reader BC 的 implementation truth；本輪 docs remediation 只校正 architecture README 首段，其他 docs 不動。
 - Implementer 必須以 TypeScript TDD 完成每個可觀察 stage 與 integration behavior：先新增可歸因於尚未實作行為的 failing test（red），再以最小 strict TypeScript implementation 使其通過（green），最後只在 tests 持續通過時重構。Implementer handoff 必須逐一提供 red failure 與 green local verification evidence；不得以 `any` 或弱化 strict 設定迴避型別問題。
 
 ## File Operations
@@ -27,22 +27,29 @@
 | --- | --- |
 | ReadOnly | `contracts/`、`ports/`、`usecases/`、`facades/`、`adapters/`、public `index.ts`、`package.json`、`bun.lock`、既有 dependency topic artifacts。 |
 | Written | 同 slug 四份 artifacts，及 `concrete-stages/` 下四個 internal implementation modules 與其 test modules。 |
-| Modify | 僅既有 test harness（如必需）及在 concrete success 後的 `docs/architecture/README.md`、`docs/architecture/bounded-contexts/pr-reader.md` 既定 truth statement。 |
+| Modify | 僅既有 test harness（如必需）及在 concrete success 後的 `docs/architecture/README.md`、`docs/architecture/bounded-contexts/pr-reader.md` 既定 truth statement；本輪 PR remediation 的 docs edit 只限 architecture README 首段。 |
 | Deleted | 無。 |
 
 ## Test Plan
 
 - Validator：valid snapshot；empty identity；duplicate `fileId`；invalid status；rename metadata mismatch；invalid `viewed`；negative／unsafe counters；non-string patch。
-- Template／Parser：added、removed、modified、renamed unified diff 均沒有 `index ` 行且仍可 parse/render；no-patch metadata entry；empty patch 成功可 render；nonempty malformed patch、incomplete third-party parse result 與 diff2html exception 是穩定 `parse-error`，且訊息不含 patch 或 dependency message。
+- Template／Parser：added、removed、modified、renamed unified diff 均沒有 `index ` 或 fake mode metadata 且仍可 parse/render；nonempty patch 的每個 parsed hunk old/new line-array counts 與 header counts 等價；empty patch 是 zero blocks 且成功可 render；no-patch metadata entry；path fixture 鎖定 `a/`／`b/` prefixes 與 Git C-style quote、backslash、named control、octal UTF-8 escapes；nonempty malformed patch、incomplete third-party parse result 與 diff2html exception 是穩定 `parse-error`，且訊息不含 patch 或 dependency message。
 - Renderer：每檔固定 `outputFormat: "line-by-line"` 與 `drawFileList: false`；file identity/order、HTML entry、metadata entry；dependency exception 是 `render-error`。
 - Integration：concrete stages 與既有 non-DOM `DiffOutputPort` test double 注入既有 UseCase。success flow 必須斷言 test double 恰接收一次 Renderer 產出的 RenderPlan；只有 `invalid-input`／`parse-error`／`render-error` short-circuit 可斷言 Output 未呼叫；任何情境均不得接觸 DOM。
-- Tester 執行 frozen install、check、test、coverage、`git diff --check`；Reviewer 確認 diff 未觸及 read-only surface 或 dependency topic。
+- Tester 執行 frozen install、check、test、coverage、`git diff --check`；Reviewer 確認 diff 未觸及 read-only surface 或 dependency topic，且五個 selected PR threads 均有對應 evidence。
 
 ## Delivery Gates
 
 - Legacy `PR-02`、`IM-01`、`TE-01`、`RV-01`、`DL-01` 與 `HC-01` 永久保留 pending historical-deviation entries；它們不構成 correction 的實作、delivery 或 human-review prerequisite。
-- Human 對 `PC-03` 的接受建立唯一 authoritative correction route：`PC-03 → PR-03 approved → IM-02 → TE-02 → RV-02 approved → DL-02 → HC-02`。
-- `DL-02` 只可將 correction commit push 至已存在的 draft PR branch，不得建立另一個 PR；任何 `needs-rework`、`blocked` 或 `human-check` 仍依 ledger 停止或回修。
+- Human 對 `PC-03` 的接受曾建立 correction route：`PC-03 → PR-03 approved → IM-02 → TE-02 → RV-02 approved → DL-02 → HC-02`；此 route 與其 status 保留為歷史紀錄。
+- `DL-02` 對既有 draft PR branch 的 delivery record 保留為歷史；任何 `needs-rework`、`blocked` 或 `human-check` 仍依目前 ledger 停止或回修。
+
+## PR Comment Review Correction Gates
+
+- `PC-05` 只記錄五個 selected PR thread remediations；不改寫 PC-01 至 PC-04 或既有 PR／IM／TE／RV／DL／HC statuses。
+- `PR-04` 已由獨立 Plan-Reviewer 明示 `approved`；因此 `IM-03` 可開始新的 TDD correction。IM-03 已提供 red／green evidence，TE-03 已提供獨立 Tester `pass` evidence；兩者均保留為歷史事實，不取代 Reviewer verdict。
+- `RV-03` 已明示 `needs-rework`，不得視為 approval。Plan-Creator 的本次 ledger-evidence correction 不新增未被要求的 implementation 或 Tester gate；後續唯一 route 為 `PC-06 → RV-04 fresh independent review approved → DL-03 → HC-03`。RV-04 必須是獨立於 IM-03 Implementer 與 TE-03 Tester 的 fresh Reviewer，並審查更正後 ledger、RV-03 verdict 與既有 factual evidence/statuses。
+- 僅 RV-04 明示 `approved` 後，DL-03 才可建立 correction commit、push 至既有 PR branch，並只 resolve 五個已驗證處理的 threads；不得 commit/push/resolve 其他 thread。DL-03 後停止於 HC-03 human review。
 
 ## Accepted Historical Deviation and Corrective Routing
 
@@ -54,4 +61,4 @@
 
 - 此 correction 保持 `DiffRenderUseCase` 為既定的 orchestration-only caller：只協調 Validator → Parser → Renderer → Output 與既定 failure short-circuit；不得新增 diff2html、unified diff 或 parsed-shape logic。
 - `PC-04` 只記錄本次 bounded correction；舊 `PR-02`、`IM-01`、`TE-01`、`RV-01`、`DL-01` 與 `HC-01` 的 status 與 historical-deviation record 均不回填，且不參與 correction routing。
-- 只有獨立 Plan-Reviewer 對 `PR-03` 明示 `approved`，Implementer 才可進行 `IM-02` 的新 TDD correction。Tester 在 `IM-02` handoff 後獨立執行 frozen install、check、test、coverage、diff check；獨立 Reviewer 對 `RV-02` 明示 `approved` 後，Implementer 才可於 `DL-02` 將 correction commit 推送至既有 draft PR branch。交付後停止於 `HC-02` human re-review。
+- `PR-03` 至 `HC-02` 保留當時 correction routing 的歷史內容，不改寫其 step status；它們不 gate PC-05 及其後的 PR-comment remediation route。

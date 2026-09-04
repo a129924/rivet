@@ -1,6 +1,6 @@
 # Rivet 架構規範
 
-本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline；PR Reader WebView diff 的 Facade／UseCase orchestration 與 `RivetHTTPClient` 的最小 HTTP 介面切片已有實作，但 Validator、Parser、Renderer、Output 四個 concrete stage、DOM、Swift bridge 與 viewed-state persistence 仍未實作；除其單一架構圖的 artifact-local viewer 可近用性補強外，不建立其他產品功能。
+本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline；PR Reader WebView diff 的 Facade／UseCase orchestration、Validator、Parser、Renderer internal concrete stages 與 `RivetHTTPClient` 的最小 HTTP 介面切片已有實作；Output、DOM、Swift bridge 與 viewed-state persistence 仍未實作。除其單一架構圖的 artifact-local viewer 可近用性補強外，不建立其他產品功能。
 
 ## 架構方向
 

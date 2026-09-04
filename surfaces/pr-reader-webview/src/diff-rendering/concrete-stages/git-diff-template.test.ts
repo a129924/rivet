@@ -14,13 +14,13 @@ describe("GitDiffTemplate", () => {
       "added",
       "src/added.ts",
       undefined,
-      ["new file mode 100644", "--- /dev/null", "+++ b/src/added.ts"],
+      ["--- /dev/null", "+++ b/src/added.ts"],
     ],
     [
       "removed",
       "src/removed.ts",
       undefined,
-      ["deleted file mode 100644", "--- a/src/removed.ts", "+++ /dev/null"],
+      ["--- a/src/removed.ts", "+++ /dev/null"],
     ],
     [
       "modified",
@@ -62,7 +62,34 @@ describe("GitDiffTemplate", () => {
         expect(source).toContain(expectedLine);
       }
       expect(source).not.toContain("index ");
+      expect(source).not.toContain("100644");
       expect(source).toEndWith(patch);
     },
   );
+
+  test("serializes every non-null path with Git C-style quoting and side prefixes", () => {
+    const filename = 'src/new name"\\\n\u0007\u007f\u00e9.ts';
+    const previousFilename = "src/old name\t\u00e9.ts";
+    const source = createGitDiffTemplate(
+      createGitDiffTemplateInput({
+        fileId: "file-1",
+        filename,
+        previousFilename,
+        status: "renamed",
+        patch,
+      }),
+    ).toUnifiedDiff();
+
+    expect(source).toContain(
+      'diff --git "a/src/old name\\t\\303\\251.ts" "b/src/new name\\"\\\\\\n\\a\\177\\303\\251.ts"',
+    );
+    expect(source).toContain('rename from "src/old name\\t\\303\\251.ts"');
+    expect(source).toContain(
+      'rename to "src/new name\\"\\\\\\n\\a\\177\\303\\251.ts"',
+    );
+    expect(source).toContain('--- "a/src/old name\\t\\303\\251.ts"');
+    expect(source).toContain(
+      '+++ "b/src/new name\\"\\\\\\n\\a\\177\\303\\251.ts"',
+    );
+  });
 });

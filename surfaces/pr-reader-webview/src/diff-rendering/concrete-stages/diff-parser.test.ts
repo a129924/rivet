@@ -1,6 +1,7 @@
 // @ts-expect-error Bun's test module lacks a local type declaration in this package.
 import { describe, expect, test } from "bun:test";
 import type { DiffSnapshot } from "../contracts/diff-snapshot";
+import type { DiffFile } from "diff2html/lib/types";
 import { createDiffViewModelValidator } from "./diff-view-model-validator";
 import { createDiffParser, readParsedDiffInput } from "./diff-parser";
 
@@ -131,5 +132,42 @@ describe("createDiffParser", () => {
       throw new Error("Expected malformed patch parsing to fail.");
     }
     expect(result.message).not.toContain(malformedPatch);
+  });
+
+  test("converts an incomplete third-party hunk result to a stable parse-error", () => {
+    const result = createDiffParser({
+      parseDiff() {
+        return [
+          {
+            isGitDiff: true,
+            blocks: [
+              {
+                header: "@@ -1,2 +1,2 @@",
+                lines: [
+                  {
+                    content: "-old",
+                    type: "delete",
+                    oldNumber: 1,
+                    newNumber: undefined,
+                  },
+                  {
+                    content: "+new",
+                    type: "insert",
+                    oldNumber: undefined,
+                    newNumber: 1,
+                  },
+                ],
+              },
+            ],
+          },
+        ] as unknown as DiffFile[];
+      },
+    }).parse(validatedSnapshot());
+
+    expect(result).toEqual({
+      type: "error",
+      kind: "parse-error",
+      message: "Diff parsing failed.",
+    });
   });
 });
