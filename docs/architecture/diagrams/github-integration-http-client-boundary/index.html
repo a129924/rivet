@@ -318,7 +318,7 @@ const BANDS = [
   { id:'band-package', plane:'package', x:160, y:910, w:1260, h:238, alpha:0.5, dash:true,
     hdr:{x:184,y:940,t:'RIVETHTTPCLIENT — MINIMAL INTERFACE'}, tagr:{x:1396,y:940,t:'已實作 product、target 與 tests',alpha:0.6} },
   { id:'band-outside', plane:'outside', x:160, y:1230, w:1260, h:156, alpha:0.48,
-    hdr:{x:184,y:1260,t:'OUTSIDE — FOUNDATION、CREDENTIAL 與 GITHUB.COM'}, tagr:{x:1396,y:1260,t:'未實作 concrete transport',alpha:0.6} }
+    hdr:{x:184,y:1260,t:'OUTSIDE — FOUNDATION、CREDENTIAL 與 GITHUB.COM'}, tagr:{x:1396,y:1260,t:'Foundation networking surface',alpha:0.6} }
 ];
 
 const BOXES = [
@@ -355,11 +355,11 @@ const BOXES = [
     name:'HTTPRequest',about:'已實作的 request value，直接持有 HTTPURL。',
     texts:[['bl',524,1008,'HTTPRequest'],['bs',524,1030,'method · headers · body'],['bn',524,1052,'不重新驗證 URL']] },
   { id:'client', plane:'package', band:'band-package', x:800,y:980,w:270,h:88,r:10,dash:true,
-    name:'HTTPClient／Requester',about:'已實作的最小 HTTP 入口與 URLRequest mapping。',
-    texts:[['bl',824,1008,'HTTPClient／Requester'],['bs',824,1030,'一般 async throws'],['bn',824,1052,'無 URLSession transport']] },
+    name:'HTTPClient／Requester',about:'已實作的最小 HTTP 入口、typed transport failure 與 URLRequest mapping。',
+    texts:[['bl',824,1008,'HTTPClient／Requester'],['bs',824,1030,'throws(HTTPClientError)'],['bn',824,1052,'建立 Foundation request']] },
   { id:'transport', plane:'package', band:'band-package', x:1100,y:980,w:270,h:88,r:10,dash:true,
-    name:'Transport／HTTPResponse',about:'注入式 transport boundary 與 canonical raw response；HTTPResponse 的 opt-in JSON convenience 使用 caller-owned decoder，沒有 status 或 Content-Type policy。',
-    texts:[['bl',1124,1008,'Transport／HTTPResponse'],['bs',1124,1030,'injected · raw response'],['bn',1124,1052,'json decoder 由 caller 擁有']] },
+    name:'Transport／URLSessionTransport／HTTPResponse',about:'注入式 transport boundary、production URLSession transport 與未經 policy 轉換的 raw response；JSON convenience 使用 caller-owned decoder。',
+    texts:[['bl',1124,1008,'Transport／URLSessionTransport'],['bs',1124,1030,'HTTPClientError · raw response'],['bn',1124,1052,'JSON decoder 由 caller 擁有']] },
 
   { id:'foundation-types', plane:'outside', band:'band-outside', x:200,y:1290,w:360,h:68,r:10,
     name:'Foundation URLRequest／URL／Data',about:'package 直接使用的 Foundation request、URL 與 body types。',
@@ -368,8 +368,8 @@ const BOXES = [
     name:'使用者設定 PAT／Keychain',about:'既有的單一 fine-grained PAT 與其儲存位置都在 Outside；本 topic 不決定 concrete adapter。',
     texts:[['bl',644,1318,'使用者設定 PAT／Keychain'],['bs',644,1340,'Outside；不屬於 HTTP package']] },
   { id:'urlsession', plane:'outside', band:'band-outside', x:1040,y:1290,w:360,h:68,r:10,
-    name:'URLSession／GitHub.com API',about:'future concrete transport 與外部 API；不在此切片實作。',
-    texts:[['bl',1064,1318,'URLSession／GitHub.com API'],['bs',1064,1340,'future implementation surface']] }
+    name:'Foundation URLSession／GitHub.com API',about:'URLSessionTransport 採用的 Foundation networking surface；GitHub adapter 仍未實作。',
+    texts:[['bl',1064,1318,'Foundation URLSession／GitHub.com API'],['bs',1064,1340,'adapter direction 留待後續 topic']] }
 ];
 
 const EDGES = [
@@ -386,16 +386,16 @@ const EDGES = [
 
 const TEXTS = [
   {s:'title',x:160,y:86,t:'Rivet — GitHub Integration 與 HTTP Client 邊界'},
-  {s:'sub',x:160,y:118,t:'Integration 擁有 future authorization seam；HTTP package 維持最小 raw request interface'},
+  {s:'sub',x:160,y:118,t:'Integration 擁有 future authorization seam；HTTP package 維持最小 raw request interface 與 URLSession transport'},
   {s:'tag',x:160,y:146,runs:[{t:'Integration-owned authorization seam',fill:planeColor('integration')},{t:' · ',fill:'#4A5462'},{t:'HTTP package raw request interface',fill:planeColor('package')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — Foundation 或外部 surface'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:160,y:1530,t:'不變量：HTTP、token 與 infrastructure failure 不得跨越 PR Inbox 或 PR Reader 的 Port'},
   {s:'bn',x:160,y:1550,t:'不變量：RivetHTTPClient 不持有 token、沒有 TokenProvider API，也不處理 refresh 或 401 retry'},
-  {s:'bn',x:160,y:1570,t:'不變量：Transport error 不由 HTTP package 統一包裝；JSON decoder 由 caller 擁有；Adapter 仍負責跨 core Port 前的語意 mapping'},
+  {s:'bn',x:160,y:1570,t:'不變量：HTTP package 只以 HTTPClientError 表達 transport failure；JSON decoder 由 caller 擁有；Adapter 負責跨 core Port 前的語意 mapping'},
   {s:'bn',x:160,y:1590,t:'宣告而非實作：future provider／authorizer 屬 GitHub Integration；Keychain 與 PAT 都是 Outside；runtime lifecycle 見獨立圖'},
-  {s:'bn',x:160,y:1610,t:'延後：URLSessionTransport、OAuth、Keychain adapter、retry、status／Content-Type validation、decode policy 與 GitHub DTO mapping'}
+  {s:'bn',x:160,y:1610,t:'延後：OAuth、Keychain adapter、retry、status／Content-Type validation、decode policy、GitHub DTO mapping、Apollo schema 與 operation'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},
