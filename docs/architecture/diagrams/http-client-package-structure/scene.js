@@ -37,15 +37,15 @@ const BOXES = [
     name:'HTTPRequest',about:'只持有已驗證 HTTPURL、method、headers 與 optional body。',
     texts:[['bl',824,538,'HTTPRequest'],['bs',824,560,'HTTPURL · method · headers'],['bn',824,582,'body: Data?；不 throws']] },
   { id:'response', plane:'contracts', band:'band-contracts', x:1100,y:510,w:270,h:88,r:10,dash:true,
-    name:'HTTPResponse',about:'Transport 未經 status 或 decode policy 處理的 raw response contract。',
-    texts:[['bl',1124,538,'HTTPResponse'],['bs',1124,560,'status · headers · body'],['bn',1124,582,'raw return value']] },
+    name:'HTTPResponse',about:'Transport 回傳的 canonical raw response；提供 caller-owned decoder 的 opt-in JSON convenience，沒有 status 或 Content-Type policy。',
+    texts:[['bl',1124,538,'HTTPResponse'],['bs',1124,560,'status · headers · raw body'],['bn',1124,582,'json：caller-owned decoder']] },
   { id:'method-headers', plane:'contracts', band:'band-contracts', x:420,y:616,w:640,h:42,r:10,dash:true,
     name:'HTTPMethod 與 HTTPHeaders',about:'HTTPRequest 使用的 package-owned method 與 header value types。',
     texts:[['bs',444,643,'HTTPMethod 與 HTTPHeaders — package-owned request metadata']] },
 
   { id:'http-client', plane:'client', band:'band-client', x:200,y:820,w:560,h:68,r:10,dash:true,
-    name:'HTTPClient',about:'公開 method facade 與 advanced execute 入口；所有 facade 經 execute 委派給 Requester。',
-    texts:[['bl',224,848,'HTTPClient'],['bs',224,870,'request(...)／五個 verb → execute(_:)']] },
+    name:'HTTPClient',about:'公開 HTTP method facade 與 execute 入口；facade 建立 HTTPRequest，再由 execute 委派給 Requester。',
+    texts:[['bl',224,848,'HTTPClient'],['bs',224,870,'五個 verb → HTTPRequest → execute(_:)']] },
   { id:'requester', plane:'client', band:'band-client', x:860,y:820,w:560,h:68,r:10,dash:true,
     name:'Requester',about:'把已驗證 HTTPRequest 映射為 Foundation URLRequest；不重驗 URL。',
     texts:[['bl',884,848,'Requester'],['bs',884,870,'HTTPRequest → URLRequest']] },
@@ -70,8 +70,8 @@ const EDGES = [
   { from:'http-url',to:'url-error',pts:[[474,554],[494,554]],label:{s:'al',x:484,y:542,t:'typed error',anchor:'center'} },
   { from:'request',to:'http-url',pts:[[935,604],[935,628],[335,628],[335,604]],label:{s:'al',x:635,y:620,t:'依賴',anchor:'center'} },
   { from:'request',to:'method-headers',pts:[[1076,554],[1080,554],[1080,637],[1064,637]],label:{s:'al',x:1074,y:592,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'requester',pts:[[764,854],[854,854]],label:{s:'al',x:809,y:842,t:'依賴',anchor:'center'} },
-  { from:'http-client',to:'request',pts:[[480,814],[480,718],[935,718],[935,604]],label:{s:'al',x:949,y:706,t:'使用',rot:-90,anchor:'center'} },
+  { from:'http-client',to:'requester',pts:[[764,854],[854,854]],label:{s:'al',x:809,y:842,t:'execute(_:) 委派',anchor:'center'} },
+  { from:'http-client',to:'request',pts:[[480,814],[480,718],[935,718],[935,604]],label:{s:'al',x:949,y:706,t:'建立',rot:-90,anchor:'center'} },
   { from:'http-client',to:'response',pts:[[520,814],[520,738],[1235,738],[1235,604]],label:{s:'al',x:1249,y:698,t:'回傳型別',rot:-90,anchor:'center'} },
   { from:'requester',to:'request',pts:[[1000,814],[1000,680],[935,680],[935,604]],label:{s:'al',x:1014,y:746,t:'依賴',rot:-90,anchor:'center'} },
   { from:'requester',to:'response',pts:[[1360,814],[1360,680],[1094,680],[1094,554]],label:{s:'al',x:1374,y:746,t:'依賴',rot:-90,anchor:'center'} },
@@ -86,14 +86,14 @@ const EDGES = [
 
 const TEXTS = [
   {s:'title',x:160,y:86,t:'RivetHTTPClient — 最小介面結構'},
-  {s:'sub',x:160,y:118,t:'呼叫端提供已驗證 HTTPURL → HTTP method facade → execute(_:) → Requester → injected Transport → HTTPResponse；不含 Endpoint 或 URLSession 實作'},
-  {s:'tag',x:160,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPClient',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
+  {s:'sub',x:160,y:118,t:'HTTPURL → HTTP method facade（建立 HTTPRequest）→ execute(_:) → Requester → Transport → HTTPResponse'},
+  {s:'tag',x:160,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTP method facade',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'execute(_:)',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')},{t:' → ',fill:'#4A5462'},{t:'HTTPResponse',fill:planeColor('contracts')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部 surface'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:160,y:1530,t:'不變量：Endpoint、Base URL、Path 與 Query 由呼叫端／domain layer 組裝，不是 package API'},
   {s:'bn',x:160,y:1550,t:'不變量：typed throws 只限 HTTPURL validation；Transport error 維持一般 async throws 並原樣傳遞'},
-  {s:'bn',x:160,y:1570,t:'延後：URLSessionTransport、網路呼叫、status validation、retry、token refresh 與 decode policy'}
+  {s:'bn',x:160,y:1570,t:'延後：URLSessionTransport、網路呼叫、status／Content-Type validation、retry 與 token refresh'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},

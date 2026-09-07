@@ -57,8 +57,8 @@ const BOXES = [
     name:'HTTPClient／Requester',about:'已實作的最小 HTTP 入口與 URLRequest mapping。',
     texts:[['bl',824,1008,'HTTPClient／Requester'],['bs',824,1030,'一般 async throws'],['bn',824,1052,'無 URLSession transport']] },
   { id:'transport', plane:'package', band:'band-package', x:1100,y:980,w:270,h:88,r:10,dash:true,
-    name:'Transport／HTTPResponse',about:'注入式 transport boundary 與未經 policy 轉換的 raw response。',
-    texts:[['bl',1124,1008,'Transport／HTTPResponse'],['bs',1124,1030,'injected · raw response'],['bn',1124,1052,'error 原樣傳遞']] },
+    name:'Transport／HTTPResponse',about:'注入式 transport boundary 與 canonical raw response；HTTPResponse 的 opt-in JSON convenience 使用 caller-owned decoder，沒有 status 或 Content-Type policy。',
+    texts:[['bl',1124,1008,'Transport／HTTPResponse'],['bs',1124,1030,'injected · raw response'],['bn',1124,1052,'json decoder 由 caller 擁有']] },
 
   { id:'foundation-types', plane:'outside', band:'band-outside', x:200,y:1290,w:360,h:68,r:10,
     name:'Foundation URLRequest／URL／Data',about:'package 直接使用的 Foundation request、URL 與 body types。',
@@ -92,8 +92,9 @@ const TEXTS = [
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:160,y:1530,t:'不變量：HTTP、token 與 infrastructure failure 不得跨越 PR Inbox 或 PR Reader 的 Port'},
   {s:'bn',x:160,y:1550,t:'不變量：RivetHTTPClient 不持有 token、沒有 TokenProvider API，也不處理 refresh 或 401 retry'},
-  {s:'bn',x:160,y:1570,t:'宣告而非實作：future provider／authorizer 屬 GitHub Integration；Keychain 與 PAT 都是 Outside；runtime lifecycle 見獨立圖'},
-  {s:'bn',x:160,y:1590,t:'延後：URLSessionTransport、OAuth、Keychain adapter、retry、status validation、decode policy 與 GitHub DTO mapping'}
+  {s:'bn',x:160,y:1570,t:'不變量：Transport error 不由 HTTP package 統一包裝；JSON decoder 由 caller 擁有；Adapter 仍負責跨 core Port 前的語意 mapping'},
+  {s:'bn',x:160,y:1590,t:'宣告而非實作：future provider／authorizer 屬 GitHub Integration；Keychain 與 PAT 都是 Outside；runtime lifecycle 見獨立圖'},
+  {s:'bn',x:160,y:1610,t:'延後：URLSessionTransport、OAuth、Keychain adapter、retry、status／Content-Type validation、decode policy 與 GitHub DTO mapping'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},
