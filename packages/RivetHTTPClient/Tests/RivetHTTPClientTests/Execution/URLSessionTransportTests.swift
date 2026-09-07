@@ -62,7 +62,7 @@ struct URLSessionTransportTests {
   }
 
   @Test
-  func mapsURLLoadingFailureWithoutLosingCode() async throws {
+  func mapsNetworkFailureWithoutLosingCode() async throws {
     let url = try #require(URL(string: "https://example.invalid/network"))
     URLProtocolStub.configure(result: .failure(URLError(.notConnectedToInternet)))
     defer { URLProtocolStub.reset() }
@@ -71,15 +71,15 @@ struct URLSessionTransportTests {
       try await executeUsingStub(URLRequest(url: url))
     }
 
-    guard case .urlLoading(let urlError) = error else {
-      Issue.record("Expected urlLoading, got \(String(describing: error))")
+    guard case .networkFailure(let urlError) = error else {
+      Issue.record("Expected networkFailure, got \(String(describing: error))")
       return
     }
     #expect(urlError.code == .notConnectedToInternet)
   }
 
   @Test
-  func preservesCancellationAsURLLoadingFailure() async throws {
+  func mapsCancellationWithoutDiscardingUnderlyingError() async throws {
     let url = try #require(URL(string: "https://example.invalid/cancelled"))
     URLProtocolStub.configure(result: .failure(URLError(.cancelled)))
     defer { URLProtocolStub.reset() }
@@ -88,15 +88,34 @@ struct URLSessionTransportTests {
       try await executeUsingStub(URLRequest(url: url))
     }
 
-    guard case .urlLoading(let urlError) = error else {
-      Issue.record("Expected urlLoading, got \(String(describing: error))")
+    guard case .cancelled(let underlyingError) = error else {
+      Issue.record("Expected cancelled, got \(String(describing: error))")
       return
     }
+    let urlError = try #require(underlyingError as? URLError)
     #expect(urlError.code == .cancelled)
   }
 
   @Test
-  func mapsUnexpectedFailureWithoutDiscardingUnderlyingError() async throws {
+  func mapsTypedCancellationErrorWithoutDiscardingUnderlyingError() async throws {
+    let url = try #require(URL(string: "https://example.invalid/typed-cancelled"))
+    URLProtocolStub.configure(result: .failure(CancellationError()))
+    defer { URLProtocolStub.reset() }
+
+    let error = await #expect(throws: HTTPClientError.self) {
+      try await executeUsingStub(URLRequest(url: url))
+    }
+
+    guard case .cancelled(let underlyingError) = error else {
+      Issue.record("Expected cancelled, got \(String(describing: error))")
+      return
+    }
+    let underlyingNSError = underlyingError as NSError
+    #expect(underlyingNSError.domain == String(reflecting: CancellationError.self))
+  }
+
+  @Test
+  func mapsUnderlyingFailureWithoutDiscardingUnderlyingError() async throws {
     let url = try #require(URL(string: "https://example.invalid/unexpected"))
     let failure = NSError(
       domain: UnexpectedTransportFailure.domain,
@@ -109,8 +128,8 @@ struct URLSessionTransportTests {
       try await executeUsingStub(URLRequest(url: url))
     }
 
-    guard case .unexpected(let underlyingError) = error else {
-      Issue.record("Expected unexpected, got \(String(describing: error))")
+    guard case .underlyingFailure(let underlyingError) = error else {
+      Issue.record("Expected underlyingFailure, got \(String(describing: error))")
       return
     }
     let underlyingNSError = underlyingError as NSError

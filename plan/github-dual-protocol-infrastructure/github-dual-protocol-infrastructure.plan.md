@@ -53,8 +53,8 @@
 - `HTTPClient → Requester → URLSessionTransport` 完整轉送 URL、method、headers、body。
 - 2xx、4xx、5xx status、headers、body 都正確映射為 `HTTPResponse`。
 - 非 HTTP response 映射為 `.nonHTTPResponse`。
-- `URLError` 映射為 `.urlLoading` 並保留 code；`URLError.cancelled` 不被資訊壓縮。
-- 非預期底層 error 映射為 `.unexpected` 並保留 underlying error。
+- `URLError.cancelled` 與 `CancellationError` 映射為 `.cancelled(underlying:)`；其他 `URLError` 映射為 `.networkFailure` 並保留 code。
+- 非預期底層 error 映射為 `.underlyingFailure` 並保留 underlying error。
 - 所有測試只使用 injected ephemeral `URLSession` 與本地 `URLProtocol` fixture。
 
 ## Assumptions

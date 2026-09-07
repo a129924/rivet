@@ -26,10 +26,24 @@ public struct URLSessionTransport: Transport {
       return HTTPResponse(statusCode: httpResponse.statusCode, headers: headers, body: body)
     } catch let error as HTTPClientError {
       throw error
-    } catch let error as URLError {
-      throw .urlLoading(error)
+    } catch let error as URLError where error.code == .cancelled {
+      throw .cancelled(underlying: error)
     } catch {
-      throw .unexpected(error)
+      if Self.isCancellation(error) {
+        throw .cancelled(underlying: error)
+      }
+      if let urlError = error as? URLError {
+        throw .networkFailure(urlError)
+      }
+      throw .underlyingFailure(error)
     }
+  }
+
+  private static func isCancellation(_ error: any Error) -> Bool {
+    if error is CancellationError {
+      return true
+    }
+
+    return (error as NSError).domain == String(reflecting: CancellationError.self)
   }
 }

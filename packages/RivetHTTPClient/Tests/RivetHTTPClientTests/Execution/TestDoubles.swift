@@ -40,7 +40,7 @@ struct CapturingTransport: Transport {
 
 struct FailingTransport: Transport {
   func execute(_ request: URLRequest) async throws(HTTPClientError) -> HTTPResponse {
-    throw .unexpected(TransportFailure.unavailable)
+    throw .underlyingFailure(TransportFailure.unavailable)
   }
 }
 

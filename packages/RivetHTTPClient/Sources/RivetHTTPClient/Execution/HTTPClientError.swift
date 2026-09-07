@@ -1,7 +1,8 @@
 import Foundation
 
 public enum HTTPClientError: Error {
-  case urlLoading(URLError)
+  case cancelled(underlying: any Error)
+  case networkFailure(URLError)
   case nonHTTPResponse
-  case unexpected(any Error)
+  case underlyingFailure(any Error)
 }

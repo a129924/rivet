@@ -167,8 +167,8 @@ private func assertTransportFailure(
 }
 
 private func assertUnexpectedTransportFailure(_ error: HTTPClientError) {
-  guard case .unexpected(let underlyingError) = error else {
-    Issue.record("Expected unexpected HTTPClientError, got \(String(describing: error))")
+  guard case .underlyingFailure(let underlyingError) = error else {
+    Issue.record("Expected underlyingFailure HTTPClientError, got \(String(describing: error))")
     return
   }
   #expect((underlyingError as? TransportFailure) == .unavailable)
