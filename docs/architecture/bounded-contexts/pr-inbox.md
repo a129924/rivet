@@ -4,7 +4,7 @@
 
 定義目前明確要求使用者 review 的 GitHub.com open Pull Request，並提供列表、排序與重新整理所需的語意資料。
 
-- 暫定 source location：`Sources/BoundedContexts/PRInbox/`；此位置不代表 target、module、dependency 或 contract。
+- `RivetPRInbox` root library target 使用 `Sources/BoundedContexts/PRInbox/`，只提供 target-local `Outcome`、Inbox identity、review-request candidate、`ReviewRequestSource` Port 與 refresh-only Facade；尚未實作外部 GitHub Adapter。
 ## 非責任
 
 - 不讀取單一 PR 的完整背景、討論、checks、檔案或 diff。
