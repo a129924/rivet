@@ -10,6 +10,7 @@ GitHub Integration 是 Supporting BC，隔離 GitHub.com 的身分、外部資�
 - 不定義 PR Inbox 的待審閱規則或 PR Reader 的閱讀模型。
 - 不讓 GitHub DTO、HTTP status、token 或 OAuth 細節進入核心 BC。
 - 不因為 OAuth 存在而過早形成獨立 Auth BC。
+- `RivetHTTPClient` 不屬於 credential lifecycle：不持有或取得 token、不以 `TokenProvider` 作為 public API 或 constructor dependency，也不處理 GitHub authorization policy、refresh 或 401 retry。
 
 ## 核心概念與互動
 
@@ -18,6 +19,8 @@ GitHub Integration 是 Supporting BC，隔離 GitHub.com 的身分、外部資�
 - PR Inbox 與 PR Reader 各自經由自己的 Port 取得轉換後資料，彼此不直接相依。
 - `packages/RivetHTTPClient/` 是此 Adapter 可採用的內部 transport foundation，不是新的 Bounded Context；它提供已驗證 `HTTPURL`、`HTTPRequest`、`HTTPClient`、`Requester`、injected `Transport` 與 raw `HTTPResponse` 的最小鏈，但不使 HTTP、token 或 infrastructure failure 跨越核心 BC Port。
 - Endpoint、Base URL、Path 與 Query 的 API domain 組裝責任留在呼叫端或其 domain layer，不由 `RivetHTTPClient` 提供。package 也不實作 `URLSessionTransport`、實際網路呼叫、retry、token refresh 或 response decode policy。
+- authorization future seam 屬於 GitHub Integration。初版只預期一個使用者預先提供的 fine-grained PAT；未來 `GitHubTokenProvider.token() throws -> GitHubAccessToken` 與 request authorizer 都是 Integration-owned、declaration-only direction，並非現有 Swift API。authorizer 將在每個 GitHub request 交給 HTTP package 前設定或覆寫 Bearer `Authorization`。
+- Keychain 與使用者設定的 PAT 都是 Outside。本階段不決定 Keychain identity、entitlement、讀寫 adapter 或 UI，也不採用 OAuth payload、refresh token 或 401 retry。token、OAuth、HTTP status、DTO 與 infrastructure details 不得跨越 PR Inbox／PR Reader 的 core Port；實際 failure mapping 留待各 future adapter topic。
 
 ## Failure Contract
 

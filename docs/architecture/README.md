@@ -58,6 +58,7 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 - [Bounded Context](bounded-contexts/)：每個 BC 的長期責任與邊界。
 - [Bounded Context Map](diagrams/bounded-context-map/index.html)：BC、Presentation Session 與外部邊界的互動式全景圖。
 - [GitHub Integration 與 HTTP Client 邊界](diagrams/github-integration-http-client-boundary/index.html)：Integration Adapter 與 HTTP client 的 ownership、核心 Port 邊界，以及尚未實作的 Outside transport surface。
+- [GitHub request authorization 生命週期](diagrams/github-integration-http-client-boundary/github-authorization-lifecycle.html)：GitHub Integration future authorization seam 的 declaration-only flow；只表達既有 fine-grained PAT 的取得、Bearer header injection／overwrite 與 raw HTTP execution，不代表 OAuth、refresh、401 retry、Keychain adapter 或 network implementation 已存在。
 - [HTTP Client package 結構](diagrams/http-client-package-structure/index.html)：`HTTPClient` 已提供 `request(...)` 與常見 HTTP method facade，並經既有 `execute → Requester → Transport` 形成 `HTTPURL → HTTPRequest → HTTPResponse` 的最小介面鏈；不包含 Endpoint 組裝或 URLSession implementation。
 - [Repository Knowledge Map](diagrams/repository-knowledge-map/index.html)：公開讀者與 agent 如何從入口、文件、analysis、plan 走向下一個 BC 切片。
 - [Topic Lifecycle](diagrams/topic-lifecycle/index.html)：正式 topic 從分析、計畫、受限實作到回寫與 human review 的可互動流程圖。

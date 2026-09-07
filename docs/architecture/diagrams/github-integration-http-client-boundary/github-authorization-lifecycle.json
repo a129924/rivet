@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "GitHub request authorization：宣告中的生命週期",
+    "quality_profile": "showcase",
+    "viewBox": [980, 566]
+  },
+  "lanes": [
+    { "id": "main", "label": "GitHub Integration → HTTP package（宣告中的主路徑）" },
+    { "id": "outside", "label": "Outside（既有 credential）" }
+  ],
+  "states": [
+    {
+      "id": "prepare-request",
+      "type": "start",
+      "label": "準備 GitHub 請求",
+      "sublabel": "建立 request",
+      "lane": "main",
+      "col": 0,
+      "step": "01"
+    },
+    {
+      "id": "preconfigured-pat",
+      "type": "external",
+      "label": "既有 fine-grained PAT",
+      "sublabel": "使用者預先提供；Keychain 為 Outside",
+      "lane": "outside",
+      "col": 1,
+      "width": 146
+    },
+    {
+      "id": "token-provider",
+      "type": "active",
+      "label": "Token provider",
+      "sublabel": "GitHubTokenProvider",
+      "tag": "future declaration only",
+      "lane": "main",
+      "col": 1,
+      "width": 126,
+      "step": "02"
+    },
+    {
+      "id": "authorize-request",
+      "type": "active",
+      "label": "GitHub 請求授權器",
+      "sublabel": "覆寫 Bearer header",
+      "tag": "future declaration only",
+      "lane": "main",
+      "col": 2,
+      "step": "03"
+    },
+    {
+      "id": "execute-raw-request",
+      "type": "success",
+      "label": "HTTP client 執行",
+      "sublabel": "無 GitHub auth policy",
+      "lane": "main",
+      "col": 3,
+      "step": "04"
+    }
+  ],
+  "transitions": [
+    {
+      "id": "prepare-to-provider",
+      "from": "prepare-request",
+      "to": "token-provider",
+      "route": "straight"
+    },
+    {
+      "id": "pat-to-provider",
+      "from": "preconfigured-pat",
+      "to": "token-provider",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "via": [[556, 252], [248, 252]]
+    },
+    {
+      "id": "provider-to-authorizer",
+      "from": "token-provider",
+      "to": "authorize-request",
+      "route": "straight"
+    },
+    {
+      "id": "authorizer-to-http",
+      "from": "authorize-request",
+      "to": "execute-raw-request",
+      "route": "straight"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "slate",
+      "title": "刻意未定義",
+      "items": [
+        "不含 OAuth、refresh、401 retry、concrete network、DTO 或 core mapping。"
+      ]
+    }
+  ]
+}
