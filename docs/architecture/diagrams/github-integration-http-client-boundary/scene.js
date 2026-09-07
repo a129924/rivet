@@ -50,8 +50,8 @@ const BOXES = [
     name:'HTTPClient／Requester',about:'已實作的最小 HTTP 入口與 URLRequest mapping。',
     texts:[['bl',824,858,'HTTPClient／Requester'],['bs',824,880,'一般 async throws'],['bn',824,902,'無 URLSession transport']] },
   { id:'transport', plane:'package', band:'band-package', x:1100,y:830,w:270,h:88,r:10,dash:true,
-    name:'Transport／HTTPResponse',about:'注入式 transport boundary 與未經 policy 轉換的 raw response。',
-    texts:[['bl',1124,858,'Transport／HTTPResponse'],['bs',1124,880,'injected · raw response'],['bn',1124,902,'error 原樣傳遞']] },
+    name:'Transport／HTTPResponse',about:'注入式 transport boundary 與 canonical raw response；HTTPResponse 的 opt-in JSON convenience 使用 caller-owned decoder，沒有 status 或 Content-Type policy。',
+    texts:[['bl',1124,858,'Transport／HTTPResponse'],['bs',1124,880,'injected · raw response'],['bn',1124,902,'json decoder 由 caller 擁有']] },
 
   { id:'foundation-types', plane:'outside', band:'band-outside', x:200,y:1140,w:540,h:68,r:10,
     name:'Foundation URLRequest／URL／Data',about:'package 直接使用的 Foundation request、URL 與 body types。',
@@ -82,7 +82,7 @@ const TEXTS = [
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:160,y:1470,t:'不變量：HTTP、token 與 infrastructure failure 不得跨越 PR Inbox 或 PR Reader 的 Port'},
   {s:'bn',x:160,y:1490,t:'不變量：Transport error 不由 HTTP package 統一包裝；Adapter 仍負責跨 core Port 前的語意 mapping'},
-  {s:'bn',x:160,y:1510,t:'延後：URLSessionTransport、OAuth、Keychain、retry、status validation、decode policy 與 GitHub DTO mapping'}
+  {s:'bn',x:160,y:1510,t:'延後：URLSessionTransport、OAuth、Keychain、retry、status／Content-Type validation 與 GitHub DTO mapping'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},

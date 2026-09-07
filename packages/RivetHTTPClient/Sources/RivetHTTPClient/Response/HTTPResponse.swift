@@ -14,4 +14,8 @@ public struct HTTPResponse: Equatable, Sendable {
   public func text(encoding: String.Encoding = .utf8) -> String? {
     String(data: body, encoding: encoding)
   }
+
+  public func json<T: Decodable>(_ type: T.Type, decoder: JSONDecoder) throws -> T {
+    try decoder.decode(type, from: body)
+  }
 }
