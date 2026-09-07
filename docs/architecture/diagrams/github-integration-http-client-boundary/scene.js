@@ -50,8 +50,8 @@ const BOXES = [
     name:'HTTPClient／Requester',about:'已實作的最小 HTTP 入口、typed transport failure 與 URLRequest mapping。',
     texts:[['bl',824,858,'HTTPClient／Requester'],['bs',824,880,'throws(HTTPClientError)'],['bn',824,902,'建立 Foundation request']] },
   { id:'transport', plane:'package', band:'band-package', x:1100,y:830,w:270,h:88,r:10,dash:true,
-    name:'Transport／URLSessionTransport／HTTPResponse',about:'注入式 transport boundary、production URLSession transport 與未經 policy 轉換的 raw response。',
-    texts:[['bl',1124,858,'Transport／URLSessionTransport'],['bs',1124,880,'HTTPClientError · raw response'],['bn',1124,902,'不判斷 HTTP status']] },
+    name:'Transport／URLSessionTransport／HTTPResponse',about:'注入式 transport boundary、production URLSession transport 與未經 policy 轉換的 raw response；JSON convenience 使用 caller-owned decoder。',
+    texts:[['bl',1124,858,'Transport／URLSessionTransport'],['bs',1124,880,'HTTPClientError · raw response'],['bn',1124,902,'JSON decoder 由 caller 擁有']] },
 
   { id:'foundation-types', plane:'outside', band:'band-outside', x:200,y:1140,w:540,h:68,r:10,
     name:'Foundation URLRequest／URL／Data',about:'package 直接使用的 Foundation request、URL 與 body types。',
@@ -84,7 +84,7 @@ const TEXTS = [
   {s:'bn',x:160,y:1470,t:'不變量：HTTP、token 與 infrastructure failure 不得跨越 PR Inbox 或 PR Reader 的 Port'},
   {s:'bn',x:160,y:1490,t:'不變量：HTTP package 只以 HTTPClientError 表達 transport failure；Adapter 仍負責跨 core Port 前的語意 mapping'},
   {s:'bn',x:160,y:1510,t:'未來：GitHubRESTAdapter 採用 package；GitHubGraphQLAdapter 封裝 ApolloClient，兩者不暴露給 Domain'},
-  {s:'bn',x:160,y:1530,t:'延後：OAuth、Keychain、retry、status validation、decode policy、GitHub DTO mapping、Apollo schema 與 operation'}
+  {s:'bn',x:160,y:1530,t:'延後：OAuth、Keychain、retry、status／Content-Type validation、GitHub DTO mapping、Apollo schema 與 operation'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},
