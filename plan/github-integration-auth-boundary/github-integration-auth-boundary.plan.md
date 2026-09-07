@@ -26,6 +26,8 @@
 
 ## ReadOnly
 
+以下限制只適用於 **Tester 與 Reviewer 的驗證／審查階段**；該兩個角色對列出的 targets 僅讀，不得以驗證或審查名義修改。
+
 - `README.md`、`docs/design-principles.md`、`docs/architecture/README.md` 與既有 Bounded Context 文件。
 - `packages/RivetHTTPClient/` 的 source、tests、manifest 與 HTTP package structure canvas。
 - root package、product source surface、既有 HTTP topics 與 core BC contracts。
@@ -47,6 +49,8 @@
 本 Plan-Creator remediation 不執行刪除。
 
 ## Modify
+
+以下清單只授權 **Implementer 在其實作／交付階段** 修改；它不與 ReadOnly 衝突，因為後者不適用於 Implementer 的實作階段。除下列清單與其明列的 canonical artifact 外，Implementer 不得擴張修改範圍。
 
 - 後續 Implementer 修改 `docs/architecture/bounded-contexts/github-integration.md`：加入 authorization ownership、PAT-only limitation、Keychain Outside 與 core Port isolation。
 - 後續 Implementer 修改 `docs/architecture/README.md`：連結 declaration-only lifecycle artifact，並描述其限制。
@@ -70,8 +74,7 @@
 1. **Integration contract foundation**：建立 GitHub Integration module、`GitHubAccessToken`、`GitHubTokenProvider` 及 fake-provider tests；需由獨立 topic 鎖定 module/package path、token-delivery signature 與 failure contract。
 2. **Keychain credential adapter**：讀取單一 PAT；需先鎖定 Keychain service/account identity、entitlement、credential failure contract 與測試策略。
 3. **GitHub request authorizer**：每次 request 取得 token，設定或覆寫 `Authorization`，並保留 URL、method、body 與其他 headers。
-4. **Concrete HTTP transport**：實作 URLSession-backed `Transport`，維持 raw response 與 transport-error passthrough。
-5. **GitHub API data adapter／DTO**：僅為一個已選定 read operation 建立授權 request 與 Integration-internal DTO handling。
-6. **PR Inbox 或 PR Reader adapter**：各自獨立將 Integration output 映射到對應 core Port 與 failure contract。
+4. **GitHub API data adapter／DTO**：僅為一個已選定 read operation 建立授權 request 與 Integration-internal DTO handling。
+5. **PR Inbox 或 PR Reader adapter**：各自獨立將 Integration output 映射到對應 core Port 與 failure contract。
 
 每個 slice 都必須是獨立正式 topic，經 Plan-Reviewer gate 後才可實作，並停在其 human boundary。

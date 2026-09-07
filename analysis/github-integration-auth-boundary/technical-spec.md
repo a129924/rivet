@@ -15,7 +15,7 @@ GitHubAccessToken  // Integration-owned value type
 
 ## Boundary Rules
 
-- `RivetHTTPClient` 不持有 `TokenProvider`，不接受 token 作為 constructor dependency，沒有 public authorization API，也不負責 credential lookup、refresh、401 retry 或 GitHub policy。
+- `RivetHTTPClient` 不持有 `TokenProvider`，不接受 token 作為 constructor dependency，沒有 GitHub／token-specific authorization policy API，也不負責 credential lookup、refresh、401 retry 或 GitHub policy。這不否定 package 已有或未來可有的通用 `Authorization` header surface；該通用 header surface 不擁有 GitHub credential lifecycle 或 policy。
 - Keychain 與使用者設定的 PAT 都是 Outside。此 topic 不鎖定 Keychain service/account identity、entitlement、讀寫 adapter 或 UI。
 - GitHub Integration 在跨越 PR Inbox／PR Reader 的 core Port 前隔離 token、OAuth、HTTP status、DTO 與 infrastructure details。各 core BC 的 failure mapping 是後續 adapter topic 的責任。
 - 現有 HTTP package 的 raw response／transport-error passthrough contract 維持不變。
