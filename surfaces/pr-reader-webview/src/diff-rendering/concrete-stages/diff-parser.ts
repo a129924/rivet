@@ -79,8 +79,9 @@ function createParsedEntry(
     status: file.status,
     patch: file.patch,
   });
-  const diff = parseDiff(createGitDiffTemplate(templateInput).toUnifiedDiff());
-  if (!isCompleteDiff2HtmlParseResult(diff, file.patch)) {
+  const source = createGitDiffTemplate(templateInput).toUnifiedDiff();
+  const diff = parseDiff(source);
+  if (!isCompleteDiff2HtmlParseResult(diff, source, file.patch.length === 0)) {
     throw new Error("Diff parser returned an unusable result.");
   }
   return Object.freeze({ kind: "parsed", file, diff: Object.freeze(diff) });
@@ -88,8 +89,10 @@ function createParsedEntry(
 
 function isCompleteDiff2HtmlParseResult(
   value: unknown,
-  patch: string,
+  source: string,
+  isEmptyPatch: boolean,
 ): value is DiffFile[] {
+  const sourceHunks = readUnifiedDiffHunkTuples(source);
   return (
     Array.isArray(value) &&
     value.length === 1 &&
@@ -98,15 +101,21 @@ function isCompleteDiff2HtmlParseResult(
         isRecord(file) &&
         file.isGitDiff === true &&
         Array.isArray(file.blocks) &&
-        (patch.length === 0
+        (isEmptyPatch
           ? file.blocks.length === 0
-          : file.blocks.length > 0 &&
-            file.blocks.every(isCompleteDiff2HtmlBlock)),
+          : sourceHunks.length > 0 &&
+            file.blocks.length === sourceHunks.length &&
+            file.blocks.every((block, index) =>
+              isCompleteDiff2HtmlBlock(block, sourceHunks[index]),
+            )),
     )
   );
 }
 
-function isCompleteDiff2HtmlBlock(value: unknown): boolean {
+function isCompleteDiff2HtmlBlock(
+  value: unknown,
+  sourceHunk: UnifiedDiffHunkTuple,
+): boolean {
   if (
     !isRecord(value) ||
     typeof value.header !== "string" ||
@@ -115,8 +124,11 @@ function isCompleteDiff2HtmlBlock(value: unknown): boolean {
     return false;
   }
 
-  const hunkCounts = readUnifiedDiffHunkCounts(value.header);
-  if (hunkCounts === undefined) {
+  const parsedHunk = readUnifiedDiffHunkTuple(value.header);
+  if (
+    parsedHunk === undefined ||
+    !areEqualUnifiedDiffHunkTuples(sourceHunk, parsedHunk)
+  ) {
     return false;
   }
 
@@ -134,8 +146,8 @@ function isCompleteDiff2HtmlBlock(value: unknown): boolean {
     }
   }
   return (
-    oldLineCount === hunkCounts.oldLineCount &&
-    newLineCount === hunkCounts.newLineCount
+    oldLineCount === sourceHunk.old.count &&
+    newLineCount === sourceHunk.new.count
   );
 }
 
@@ -143,11 +155,28 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function readUnifiedDiffHunkCounts(
+interface UnifiedDiffHunkTuple {
+  readonly old: UnifiedDiffHunkRange;
+  readonly new: UnifiedDiffHunkRange;
+}
+
+interface UnifiedDiffHunkRange {
+  readonly start: number;
+  readonly count: number;
+}
+
+function readUnifiedDiffHunkTuples(
+  patch: string,
+): readonly UnifiedDiffHunkTuple[] {
+  return patch
+    .split(/\r?\n/)
+    .map((line) => readUnifiedDiffHunkTuple(line))
+    .filter((hunk): hunk is UnifiedDiffHunkTuple => hunk !== undefined);
+}
+
+function readUnifiedDiffHunkTuple(
   value: string,
-):
-  | { readonly oldLineCount: number; readonly newLineCount: number }
-  | undefined {
+): UnifiedDiffHunkTuple | undefined {
   const match =
     /^@@ -(0|[1-9]\d*)(?:,(0|[1-9]\d*))? \+(0|[1-9]\d*)(?:,(0|[1-9]\d*))? @@(?:.*)$/.exec(
       value,
@@ -157,9 +186,27 @@ function readUnifiedDiffHunkCounts(
   }
 
   return {
-    oldLineCount: match[2] === undefined ? 1 : Number(match[2]),
-    newLineCount: match[4] === undefined ? 1 : Number(match[4]),
+    old: {
+      start: Number(match[1]),
+      count: match[2] === undefined ? 1 : Number(match[2]),
+    },
+    new: {
+      start: Number(match[3]),
+      count: match[4] === undefined ? 1 : Number(match[4]),
+    },
   };
+}
+
+function areEqualUnifiedDiffHunkTuples(
+  source: UnifiedDiffHunkTuple,
+  parsed: UnifiedDiffHunkTuple,
+): boolean {
+  return (
+    source.old.start === parsed.old.start &&
+    source.old.count === parsed.old.count &&
+    source.new.start === parsed.new.start &&
+    source.new.count === parsed.new.count
+  );
 }
 
 function parseErrorResult(): ParseResult {

@@ -67,6 +67,17 @@ function validatedSnapshot() {
   return validationResult.value;
 }
 
+function validatedSingleFileSnapshot() {
+  const validationResult = createDiffViewModelValidator().validate({
+    ...snapshot,
+    files: [snapshot.files[0]],
+  });
+  if (validationResult.type === "error") {
+    throw new Error(validationResult.message);
+  }
+  return validationResult.value;
+}
+
 describe("createDiffParser", () => {
   test("parses each patch in snapshot order and retains no-patch metadata", () => {
     const result = createDiffParser().parse(validatedSnapshot());
@@ -162,12 +173,116 @@ describe("createDiffParser", () => {
           },
         ] as unknown as DiffFile[];
       },
-    }).parse(validatedSnapshot());
+    }).parse(validatedSingleFileSnapshot());
 
     expect(result).toEqual({
       type: "error",
       kind: "parse-error",
       message: "Diff parsing failed.",
     });
+  });
+
+  test("converts an unparseable third-party hunk header to a stable parse-error", () => {
+    const result = createDiffParser({
+      parseDiff() {
+        return [
+          {
+            isGitDiff: true,
+            blocks: [{ header: "unparseable", lines: [] }],
+          },
+        ] as unknown as DiffFile[];
+      },
+    }).parse(validatedSingleFileSnapshot());
+
+    expect(result).toEqual({
+      type: "error",
+      kind: "parse-error",
+      message: "Diff parsing failed.",
+    });
+  });
+
+  test("accepts equivalent source and parsed hunk tuples despite count shorthand", () => {
+    const result = createDiffParser({
+      parseDiff(source) {
+        expect(source).toContain("diff --git a/src/added.ts b/src/added.ts");
+        return [
+          {
+            isGitDiff: true,
+            blocks: [
+              {
+                header: "@@ -1,1 +1,1 @@",
+                lines: [
+                  {
+                    content: "-old",
+                    type: "delete",
+                    oldNumber: 1,
+                    newNumber: undefined,
+                  },
+                  {
+                    content: "+new",
+                    type: "insert",
+                    oldNumber: undefined,
+                    newNumber: 1,
+                  },
+                ],
+              },
+            ],
+          },
+        ] as unknown as DiffFile[];
+      },
+    }).parse(validatedSingleFileSnapshot());
+
+    expect(result.type).toBe("success");
+  });
+
+  test("converts a silently truncated multi-hunk parse result to a stable parse-error", () => {
+    const multiHunkPatch =
+      "@@ -1 +1 @@\n-old\n+new\n@@ -4 +4 @@\n-old-two\n+new-two";
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], patch: multiHunkPatch }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const result = createDiffParser({
+      parseDiff() {
+        return [
+          {
+            isGitDiff: true,
+            blocks: [
+              {
+                header: "@@ -1 +1 @@",
+                lines: [
+                  {
+                    content: "-old",
+                    type: "delete",
+                    oldNumber: 1,
+                    newNumber: undefined,
+                  },
+                  {
+                    content: "+new",
+                    type: "insert",
+                    oldNumber: undefined,
+                    newNumber: 1,
+                  },
+                ],
+              },
+            ],
+          },
+        ] as unknown as DiffFile[];
+      },
+    }).parse(validationResult.value);
+
+    expect(result).toEqual({
+      type: "error",
+      kind: "parse-error",
+      message: "Diff parsing failed.",
+    });
+    if (result.type === "success") {
+      throw new Error("Expected parsing to fail.");
+    }
+    expect(result.message).not.toContain(multiHunkPatch);
   });
 });
