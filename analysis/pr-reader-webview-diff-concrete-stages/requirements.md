@@ -49,7 +49,7 @@
 ## TestCase
 
 - Validator：有效 snapshot、空 identity、重複 `fileId`、非法 status、rename metadata 不一致、非布林 `viewed`、負數或非安全整數 counters、非字串 patch。
-- Template／Parser：added、removed、modified、renamed patch 皆不輸出 `index ` 或 fake mode metadata 且仍可 parse/render；四種 status 的 nonempty patch 必須從 template source 讀取一個以上有效 hunk header，並使每個來源 hunk 的 old/new start/count 與 parsed block header 在相同順序逐一相等，且 parsed old/new line counts 等於該來源 count；empty patch 必須為 zero parsed blocks；no-patch metadata entry；Git C-style path 的 prefix、quote、backslash、named control 與 octal UTF-8 escapes；非空 malformed patch、multi-hunk source 被第三方靜默截斷為僅第一個完整 block，以及 dependency exception 均為不洩漏 patch 或 dependency message 的穩定 `parse-error`；以內部 `isCompleteDiff2HtmlParseResult` 檢查第三方結果完整性，而非重驗 `DiffSnapshot`。
+- Template／Parser：added、removed、modified、renamed patch 皆不輸出 `index ` 或 fake mode metadata 且仍可 parse/render；四種 status 的 nonempty patch 必須從 template source 讀取一個以上有效 hunk header，並使每個來源 hunk 的 old/new start/count 與 parsed block header 在相同順序逐一相等，且 parsed old/new line counts 等於該來源 count；完整性檢查還必須逐行比較 template source expectation 與 parsed `DiffLine`：context／delete／insert 的 source marker 加 body，必須與 `DiffLine.content` 完全相等，且 type、old/new number 各自獨立相等。unknown source prefix、content/type/number mismatch 均為 stable `parse-error`。僅可忽略 source hunk body 因 trailing LF split 產生的 terminal empty segment；實際 blank context line 的 single-space marker 必須保留並檢查。empty patch 必須為 zero parsed blocks；no-patch metadata entry；Git C-style path 的 prefix、quote、backslash、named control 與 octal UTF-8 escapes；非空 malformed patch、multi-hunk source 被第三方靜默截斷為僅第一個完整 block，以及 dependency exception 均為不洩漏 patch 或 dependency message 的穩定 `parse-error`；以內部 `isCompleteDiff2HtmlParseResult` 檢查第三方結果完整性，而非重驗 `DiffSnapshot`。
 - Renderer：line-by-line config、`drawFileList: false`、identity 與順序保留、HTML entry、metadata entry，以及 dependency exception 為 `render-error`。
 - Integration：以 concrete stages 與既有 non-DOM `DiffOutputPort` test double 注入既有 UseCase；成功流須斷言 test double 恰收取一次 renderer 產出的 RenderPlan。僅 `invalid-input`／`parse-error`／`render-error` short-circuit 可斷言 Output 不呼叫；所有情境皆不得接觸 DOM。
 - Implementer 依 TypeScript TDD 的 red-green-refactor：先新增可歸因於目標行為的 failing test，再以最小 strict TypeScript implementation 轉綠，最後僅在 tests 持續通過下重構；handoff 必須保留 red 與 green evidence。
@@ -84,3 +84,25 @@
 - `IM-05` 的可歸因歷史 evidence 是本輪 Parser/tests 的 red／green TDD 結果；`TE-05` 的可歸因歷史 evidence 是獨立 Tester 的 `pass`。兩者僅供新的獨立審查檢視，不改寫既有 route，也不構成 `RV-06` 或 delivery approval。
 - `RV-06` 的歷史結果為 `human-check`／`blocked`，明確不是 `approved`。不得由此結果進入 `DL-05`、commit、push 或 resolve thread #1。
 - 唯一可前進的 corrective route 是：本次 Plan-Creator evidence record 完成後，交由 fresh independent Reviewer 審查既有 artifacts、`PR-06` pending 狀態、IM-05／TE-05 factual evidence 與 RV-06 的 non-approval result；只有該 Reviewer 明示 `approved`，才可進入既有 `DL-05`。不補造 `PR-06` approval，也不回填 prior status。
+
+## Sixth PR Thread #1 Source-Line Completeness Correction
+
+- 此 route 只處理第六個、仍未解決的 PR thread #1 所指出的 per-line completeness gap；它不改寫 prior route、status、evidence 或既定 hunk header/count defense。
+- `isCompleteDiff2HtmlParseResult` 必須從同一份 `GitDiffTemplate` source 建立每個 hunk 的逐行 internal expectation。` ` context line 必須一對一對應 parsed context line，body 相同且 old/new number 都等於由 hunk header 逐行推導的數值；`-` delete line 必須一對一對應 parsed delete line，body 相同、old number 相同且沒有 new number；`+` insert line 必須一對一對應 parsed insert line，body 相同、new number 相同且沒有 old number。此為 Parser-local third-party-result defense，不重新驗證 `DiffSnapshot`。
+- source hunk body 出現未知 prefix，或 parsed line 的 type、body、old/new number 任一不符，均收斂為既有 stable、no-leak `parse-error`。empty patch、no-patch representation 與既有 hunk tuple／line-count checks 維持既定行為。
+- `IM-06` 必須先加入可歸因的 injected parsed-line mismatch failing test（至少覆蓋一個 context／delete／insert expectation mismatch），再以最小 Parser/test change 轉綠；另保留一個實際由 Parser 解析的正常 patch control，證明正確 per-line mapping 不被拒絕。
+- 唯一新的 route 是 `PC-10 → PR-07 approved → IM-06 → TE-06 → RV-08 approved → DL-06 → HC-06`。`PC-10` 只更新四份 artifacts；`PR-07` 前不得改程式、docs、dependencies 或 Git；`DL-06` 只可 commit、push 並 resolve 此 thread #1。
+
+## Sixth PR Thread #1 Source-Marker Content Rework
+
+- `PR-07` 的明示 verdict 是 `needs-rework`：source line 的 body 不能單獨與 parsed `DiffLine.content` 比較。Parser 必須以 source marker 與 body 的完整串接，和 `DiffLine.content` 做 exact comparison；type 與 old/new number 必須為獨立 checks。此 verdict 不回填或改寫任何 prior status/evidence。
+- `isCompleteDiff2HtmlParseResult` 只可忽略 source hunk body 由 trailing LF split 造成的最後一個空 segment；它不可忽略真正的 blank context line，因其 source representation 是 single-space marker，且必須對應 `DiffLine.content` 的同一 single space。unknown prefix，以及 marker-plus-body content、type 或 old/new number 任一 mismatch 均回傳既有 stable、no-leak `parse-error`。
+- `IM-07` 必須先新增 injected parsed result 的 red test：使用明確定義的 source content，分別斷言 content、type、number mismatch 都是 `parse-error`；再以最小 Parser/test correction 轉綠。有效 trailing-LF control 必須由真正 Parser 解析，並涵蓋 context、delete、insert。
+- 唯一新的 route 是 `PC-11 → PR-08 approved → IM-07 → TE-07 → RV-09 approved → DL-07 → HC-07`。`PC-11` 只更新四份 artifacts；`PR-08` 前不得改程式、docs、dependencies 或 Git；`DL-07` 只可 commit、push 並 resolve 此 thread #1。
+
+## Sixth PR Thread #1 PR-08 Pre-Gate Historical Deviation
+
+- Human 已接受本次 deviation：`IM-07` 的可歸因 red／green TDD evidence 與 `TE-07` 的獨立 Tester `pass`，在 `PR-08` 仍 pending、未取得 Plan-Reviewer approval 時已發生。此接受不回溯核准 `PR-08`；`PR-08`、`IM-07` 與 `TE-07` 的 ledger status 均永久維持 `pending`。
+- `RV-09` 的歷史結果為 `blocked`，明確不是 `approved`，不得由既有 `PC-11 → PR-08 → IM-07 → TE-07 → RV-09 → DL-07` route 進入 delivery、commit、push 或 resolve thread #1。
+- 本次 Plan-Creator 僅如實記錄既有 evidence 與 non-approval result，不新增任何 implementation 或 test scope，包含不新增 nonblocking type-only mismatch test。
+- 唯一可前進的 corrective route 是 `PC-12 → RV-10 fresh independent review approved → DL-07 → HC-07`。`RV-10` 必須獨立審查 locked scope、`PR-08` pending 狀態、IM-07 red／green、TE-07 `pass` 與 RV-09 `blocked`；只有明示 `approved` 才可進入既有 `DL-07`。不補造 PR-08 approval，也不回填 prior status。

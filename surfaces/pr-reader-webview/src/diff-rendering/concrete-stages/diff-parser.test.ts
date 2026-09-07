@@ -285,4 +285,117 @@ describe("createDiffParser", () => {
     }
     expect(result.message).not.toContain(multiHunkPatch);
   });
+
+  test("converts mismatched third-party line content to a stable parse-error", () => {
+    const result = createDiffParser({
+      parseDiff() {
+        return parsedSingleHunkDiff([
+          parsedLine(" changed", "context", 1, 1),
+          parsedLine("-old", "delete", 2, undefined),
+          parsedLine("+new", "insert", undefined, 2),
+        ]);
+      },
+    }).parse(validatedTrailingLineFeedSnapshot());
+
+    expect(result).toEqual(parseError());
+  });
+
+  test("converts mismatched third-party line types to a stable parse-error", () => {
+    const result = createDiffParser({
+      parseDiff() {
+        return parsedSingleHunkDiff([
+          parsedLine(" ", "delete", 1, undefined),
+          parsedLine("-old", "context", 2, 2),
+          parsedLine("+new", "insert", undefined, 2),
+        ]);
+      },
+    }).parse(validatedTrailingLineFeedSnapshot());
+
+    expect(result).toEqual(parseError());
+  });
+
+  test("converts mismatched third-party line numbers to a stable parse-error", () => {
+    const result = createDiffParser({
+      parseDiff() {
+        return parsedSingleHunkDiff([
+          parsedLine(" ", "context", 2, 1),
+          parsedLine("-old", "delete", 1, undefined),
+          parsedLine("+new", "insert", undefined, 2),
+        ]);
+      },
+    }).parse(validatedTrailingLineFeedSnapshot());
+
+    expect(result).toEqual(parseError());
+  });
+
+  test("converts an unknown source hunk line prefix to a stable parse-error", () => {
+    const unknownPrefixPatch = "@@ -1 +1 @@\n!unexpected";
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], patch: unknownPrefixPatch }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const result = createDiffParser().parse(validationResult.value);
+
+    expect(result).toEqual(parseError());
+    if (result.type === "success") {
+      throw new Error("Expected parsing to fail.");
+    }
+    expect(result.message).not.toContain(unknownPrefixPatch);
+  });
+
+  test("accepts a real trailing-LF blank context, delete, and insert hunk", () => {
+    const result = createDiffParser().parse(
+      validatedTrailingLineFeedSnapshot(),
+    );
+
+    expect(result.type).toBe("success");
+  });
 });
+
+const trailingLineFeedPatch = "@@ -1,2 +1,2 @@\n \n-old\n+new\n";
+
+function validatedTrailingLineFeedSnapshot() {
+  const validationResult = createDiffViewModelValidator().validate({
+    ...snapshot,
+    files: [{ ...snapshot.files[0], patch: trailingLineFeedPatch }],
+  });
+  if (validationResult.type === "error") {
+    throw new Error(validationResult.message);
+  }
+  return validationResult.value;
+}
+
+function parsedSingleHunkDiff(lines: readonly unknown[]): DiffFile[] {
+  return [
+    {
+      isGitDiff: true,
+      blocks: [
+        {
+          header: "@@ -1,2 +1,2 @@",
+          lines,
+        },
+      ],
+    },
+  ] as unknown as DiffFile[];
+}
+
+function parsedLine(
+  content: string,
+  type: "context" | "delete" | "insert",
+  oldNumber: number | undefined,
+  newNumber: number | undefined,
+) {
+  return { content, type, oldNumber, newNumber };
+}
+
+function parseError() {
+  return {
+    type: "error" as const,
+    kind: "parse-error" as const,
+    message: "Diff parsing failed.",
+  };
+}

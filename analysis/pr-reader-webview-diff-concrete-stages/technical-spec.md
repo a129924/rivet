@@ -8,7 +8,7 @@
 - Validator success 建立 internal branded `ValidatedDiffInput`，不可變且保留 snapshot order、identity、metadata 與 optional patch。任何不合格資料回傳既有、不含 patch 的 `invalid-input`。
 - `GitDiffTemplateInput` 是 immutable per-file internal VO，承載 `fileId`、filename、status、rename metadata 與 patch，且沒有 old/new Git blob SHA。`GitDiffTemplate` 依 added／removed／modified／renamed 建立單檔 unified Git diff source：保留 `diff --git`、必要 file header、`---`／`+++` path、rename metadata 與 patch，但完全省略所有 `index ` 及 `new file mode`／`deleted file mode`／`old mode`／`new mode` 行；它不屬公開 contract。
 - Template 對每一個非 `/dev/null` path 先依 side 加入 `a/` 或 `b/`，再套用 deterministic Git C-style serializer。完整 token 僅含 `[A-Za-z0-9._/+\-]` 時保持 unquoted；否則以雙引號包覆，並將 quote、backslash、C named controls 轉為 `\"`、`\\`、`\a`／`\b`／`\f`／`\n`／`\r`／`\t`／`\v`，其餘 control、DEL 與每個 non-ASCII UTF-8 byte 轉為零補三位八進位 escape。added 的 old path 與 removed 的 new path 是 literal `/dev/null`。這個 serializer 僅是 internal template behavior，不改變 Validator 對 raw filename 的責任。
-- Parser 只按 `ValidatedDiffInput` 的原始順序處理。有 patch 時以 template source 呼叫 `diff2html.parse`；no-patch 時建立 metadata-unavailable parsed entry。Parser 的 internal `isCompleteDiff2HtmlParseResult` 僅防禦第三方結果：從 template source 擷取每個有效 hunk header 的 old/new start/count，要求輸入所產生的單一 Git diff 對應一個完整 git-diff result，並按相同順序使來源 hunk headers 與 parsed blocks 一對一相等；每個 block 的 old/new line arrays 亦必須等於同位置來源 header 的 old/new counts。nonempty patch 必須有至少一個有效來源 hunk header；empty patch 的來源 expectation 與 parsed blocks 都必須為 zero。此 helper 不重驗 `DiffSnapshot`。template、`diff2html.parse` throw 或該完整性檢查失敗時，回傳既有、不含 patch 或 dependency message 的穩定 `parse-error`。diff2html parsed data 維持 internal，UseCase 不認識其型別、source 或檢查規則。
+- Parser 只按 `ValidatedDiffInput` 的原始順序處理。有 patch 時以 template source 呼叫 `diff2html.parse`；no-patch 時建立 metadata-unavailable parsed entry。Parser 的 internal `isCompleteDiff2HtmlParseResult` 僅防禦第三方結果：從 template source 擷取每個有效 hunk header 的 old/new start/count，要求輸入所產生的單一 Git diff 對應一個完整 git-diff result，並按相同順序使來源 hunk headers 與 parsed blocks 一對一相等；每個 block 的 old/new line arrays 亦必須等於同位置來源 header 的 old/new counts。它還從同一 source hunk body 建立 ordered per-line expectation：source context (` `)、delete (`-`)、insert (`+`) 的 marker 加 body 必須分別與 parsed `DiffLine.content` 完全相等；parsed type、old/new number 則獨立比較。只可略過 trailing LF split 產生的 terminal empty segment，實際 blank context 的 single-space marker 必須保留。unknown source prefix 或任一 parsed line content/type/number mismatch 都是不完整結果。nonempty patch 必須有至少一個有效來源 hunk header；empty patch 的來源 expectation 與 parsed blocks 都必須為 zero。此 helper 不重驗 `DiffSnapshot`。template、`diff2html.parse` throw 或該完整性檢查失敗時，回傳既有、不含 patch 或 dependency message 的穩定 `parse-error`。diff2html parsed data 維持 internal，UseCase 不認識其型別、source 或檢查規則。
 - Renderer 按 parsed entry order 處理。它對 parsed diff 呼叫 `diff2html.html`，固定 `outputFormat: "line-by-line"`、`drawFileList: false`；對 metadata-unavailable entry 保留其 identity 與狀態。render throw 時回傳既有、不含 patch 的 `render-error`。HTML 與 `RenderPlan` internals 不公開，也不在此 topic 輸出至 DOM。
 - concrete stage 完成且驗證成功後，architecture README 與 PR Reader BC 文件只可將「Validator、Parser、Renderer 已有 internal concrete implementation」回寫為長期 truth，並繼續明示 Output、DOM、Swift bridge、viewed-state persistence 尚未實作。本輪只修正 architecture README 首段與該 truth 一致；不重寫其餘 README 或 BC 文本。
 
@@ -30,7 +30,7 @@
 - 不以 patch payload 或 raw dependency error 作為 public failure message；只使用既有 error kinds 與穩定 stage-specific message。
 - 成功流必須保留每個 file 的 `fileId` 及 snapshot order；no-patch 是成功 input 的 metadata-unavailable representation，不是 error 或省略。
 - Template 不得以 `0000000`、`1111111`、`2222222` 或其他 placeholder 偽造 Git object identity，亦不得輸出 fake `100644` 或其他 mode metadata；four-status fixture 必須確認 source 沒有 `index `／mode 行且仍可 parse/render。path fixtures 必須鎖定 old/new `a/`／`b/` prefix 與 deterministic Git C-style quoting／escaping。nonempty malformed patch 必須穩定地是 `parse-error`；empty patch 必須維持成功可 render。
-- `isCompleteDiff2HtmlParseResult` 對 template source 的 nonempty patch 擷取 ordered hunk header tuples（old/new start/count），並要求 parsed blocks 數量相同、同位置 header tuple 相同，且 parsed old/new line arrays 等於該來源 count；任一來源 header 缺失、數量、順序、header 或 line count 不等價即為 stable `parse-error`。empty patch 僅允許 zero source expectations 與 zero blocks。
+- `isCompleteDiff2HtmlParseResult` 對 template source 的 nonempty patch 擷取 ordered hunk header tuples（old/new start/count），並要求 parsed blocks 數量相同、同位置 header tuple 相同，且 parsed old/new line arrays 等於該來源 count；它必須再依 source hunk 逐行推導 context／delete／insert marker-plus-body `content` expectation，並與對應 `DiffLine.content` 精確相等，同時獨立比較 type 與 old/new number。只有 trailing LF split 產生的最後 empty segment 可略過；真正 blank context 的 single-space marker 仍是 required content。unknown source prefix、來源 header 缺失、數量、順序、header、line count、line content、type 或 number 不等價皆為 stable `parse-error`。empty patch 僅允許 zero source expectations 與 zero blocks。
 - `diff2html@3.4.56` 必須由 repo-local package resolution 提供；本 topic 不修改 manifest 或 lockfile。
 - Output 不實作 concrete stage，亦不接觸 DOM；integration success test 必須以既有 non-DOM `DiffOutputPort` test double 注入 UseCase，並斷言它恰接收一次 Renderer 所產出的 RenderPlan。僅前三種 stage failure short-circuit 可斷言 Output 未呼叫。
 - Implementer 必須採 TypeScript TDD：每個可觀察 stage／integration behavior 先建立可歸因的 failing test（red），以最小 strict TypeScript implementation 使其通過（green），只在 green 持續時重構；交接必須含 red failure 與 green local verification evidence。Tester 仍獨立執行 frozen install、check、test、coverage、diff check。
@@ -63,6 +63,26 @@
 - Human 已接受本次 deviation：`IM-05` 的可歸因 red／green TDD evidence 與 `TE-05` 的獨立 Tester `pass`，在 `PR-06` 仍 pending、未取得 Plan-Reviewer approval 時已發生。它們是歷史事實，僅供 fresh independent review；不構成 retroactive implementation gate。
 - `PR-06` 永久保留 `pending`，不得標為或推論為 `approved`。`RV-06` 的歷史 non-approval result 為 `human-check`／`blocked`，不得被重寫為 `approved`，且不授權 `DL-05`。
 - 本次記錄完成後，新的獨立 Reviewer 必須審查此 historical-deviation record、既有 locked boundary、IM-05／TE-05 factual evidence 與 RV-06 non-approval result。只有 fresh Reviewer 的明示 `approved` verdict 才可進入既有 `DL-05`；不新增或補造 `PR-06` approval。
+
+## Seventh Correction Record — Source-Line Completeness
+
+- 本 correction 只補強 Parser 對 diff2html parsed line 的 third-party-result defense。它使用 Parser 已建立的同一份 template source，按 hunk header 推導 old/new counters，逐行比較 source context／delete／insert prefix、body 與 expected old/new number 對應的 parsed line type、body 與 numbers；它不讀取 raw snapshot 以外的資料、不新增第二個 Validator，也不將 diff2html details 移入 UseCase。
+- 對 context source line，parsed line 必須是 context 並同時有相等的 old/new numbers；對 delete，必須是 delete 並只有相等 old number；對 insert，必須是 insert 並只有相等 new number。source 的 unknown prefix、缺少 parsed line，或 type/body/number mismatch，均只回傳既有穩定 `parse-error`，不得洩漏 source patch 或 dependency message。
+- `IM-06` 先以 injected parsed result 建立可歸因 red regression，證明一個 line-level mismatch 被拒絕；最小 Parser correction 後轉 green。另一個真正由 Parser 解析的正常 patch control 必須成功，涵蓋 context、delete 與 insert 的正確 mapping。不得改 Validator、UseCase、公開 contract、Port、docs、dependencies 或 Git。
+- 新 route 為 `PC-10 → PR-07 approved → IM-06 → TE-06 → RV-08 approved → DL-06 → HC-06`；PR-07 approval 前沒有實作權限，DL-06 只可 resolve 此一 thread #1。
+
+## Eighth Correction Record — Source-Marker Content
+
+- `PR-07` 明示 `needs-rework`：既有 body-only comparison 不足。Parser 必須以 source marker-plus-body 精確比對 `DiffLine.content`，並各自獨立檢查 parsed type 與 old/new number；此為同一 Parser-local third-party-result defense，不新增 Validator 或讓 UseCase 知道 diff2html details。
+- source hunk body 以 LF split 時，只能忽略最後一個由 trailing LF 造成的 empty segment；actual blank context line 的 single-space marker 是有效 source line，必須保留為 expected `DiffLine.content`。unknown prefix、content/type/number mismatch 一律為既有 stable、no-leak `parse-error`。
+- `IM-07` 的 TDD red fixture 必須有明確定義的 source content，並分別證明 injected parsed content、type、number mismatch 被拒絕；green control 必須由實際 Parser 解析帶 trailing LF 的有效 patch，涵蓋 context、delete、insert。不得改 Validator、UseCase、公開 contract、Port、docs、dependencies 或 Git。
+- 新 route 為 `PC-11 → PR-08 approved → IM-07 → TE-07 → RV-09 approved → DL-07 → HC-07`；PR-08 approval 前沒有實作權限，DL-07 只可 resolve 此一 thread #1。
+
+## Eighth Correction Record — PR-08 Pre-Gate Historical Deviation
+
+- Human 已接受：`IM-07` 的 red／green TDD evidence 與 `TE-07` 的獨立 Tester `pass` 在 `PR-08` 仍 pending、沒有 Plan-Reviewer approval 時已發生。它們只是不改寫歷史的 factual evidence；`PR-08`、`IM-07`、`TE-07` 永久維持 `pending`，不得視為或推論為完成 gate。
+- `RV-09` 的 historical verdict 為 `blocked`，不是 `approved`，不授權 `DL-07`。本次 record 不新增 Parser、test 或其他實作工作，特別是不加入 nonblocking type-only mismatch test。
+- `PC-12` 完成 evidence record 後，新的獨立 `RV-10` 必須審查 locked Parser-only boundary、PR-08 pending、IM-07 red／green、TE-07 `pass` 與 RV-09 `blocked`。只有 `RV-10` 的明示 `approved` 才可進入既有 `DL-07`；不新增或補造 PR-08 approval，且 prior route/status 保留為歷史。
 
 ## Historical Deviation Record
 

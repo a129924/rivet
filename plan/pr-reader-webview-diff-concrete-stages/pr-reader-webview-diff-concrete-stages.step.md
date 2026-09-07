@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-concrete-stages`
-- Current phase: 第六個 PR thread #1 的 pre-gate historical-deviation evidence 已記錄；待 fresh independent Reviewer 審查
+- Current phase: PC-12 PR-08 pre-gate historical-deviation evidence 已記錄；待 `RV-10` fresh independent Reviewer 審查
 - Ledger rule: status 與 checklist 不構成 approval；只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Goal
@@ -16,7 +16,7 @@
 
 ## In-Scope
 
-- Internal structural Validator、immutable per-file VO、unified Git diff template、Parser、Renderer 與 tests；Validator 只驗 raw `DiffSnapshot`，Parser 只接收 validated input 並處理 diff2html third-party-result defense。本輪第六個 PR thread #1 僅補強 Parser 將 template source 的 ordered hunk header tuples 與 parsed blocks 逐一比較。
+- Internal structural Validator、immutable per-file VO、unified Git diff template、Parser、Renderer 與 tests；Validator 只驗 raw `DiffSnapshot`，Parser 只接收 validated input 並處理 diff2html third-party-result defense。本輪第六個 PR thread #1 僅補強 Parser 將 template source 的 ordered hunk header tuples／marker-plus-body source-line expectations 與 parsed blocks／`DiffLine.content` 逐一比較。
 - concrete stage verified 後，最小 docs truth amendment；本輪只校正 architecture README 首段 implementation truth。
 - 本 topic 四份 formal artifacts。
 
@@ -35,7 +35,7 @@
 ## TestCase
 
 - Validator structural cases：valid、identity、uniqueness、status、rename、boolean、safe counter、patch type。
-- Template／Parser：four-status source 沒有 `index ` 或 fake mode metadata 且仍可 parse/render；nonempty patch 的 template source hunk header tuples（old/new start/count）必須與 parsed blocks 一對一、依序相符，且 block old/new line-array counts 等於同位置來源 count；empty patch 的 source expectation 與 parsed blocks 都是 zero 且成功；no-patch metadata；path fixture 鎖定 old/new `a/`／`b/` prefixes 與 deterministic Git C-style quote、backslash、named control、octal UTF-8 escapes；nonempty malformed patch、incomplete diff2html result／exception，以及 two-hunk source 被靜默截斷為一個完整 block 均為穩定且不洩漏的 `parse-error`。第三方結果 helper 命名為 `isCompleteDiff2HtmlParseResult`，不作 raw snapshot 重驗。
+- Template／Parser：four-status source 沒有 `index ` 或 fake mode metadata 且仍可 parse/render；nonempty patch 的 template source hunk header tuples（old/new start/count）必須與 parsed blocks 一對一、依序相符，且 block old/new line-array counts 等於同位置來源 count；每個 source context／delete／insert marker-plus-body 必須與 parsed `DiffLine.content` 精確相符，type、old/new number 獨立比較，unknown prefix 或任一 mismatch 均為 stable/no-leak `parse-error`；只可略過 trailing LF split 的 terminal empty segment，actual blank context 的 single-space marker 必須保留；empty patch 的 source expectation 與 parsed blocks 都是 zero 且成功；no-patch metadata；path fixture 鎖定 old/new `a/`／`b/` prefixes 與 deterministic Git C-style quote、backslash、named control、octal UTF-8 escapes；nonempty malformed patch、incomplete diff2html result／exception，以及 two-hunk source 被靜默截斷為一個完整 block 均為穩定且不洩漏的 `parse-error`。第三方結果 helper 命名為 `isCompleteDiff2HtmlParseResult`，不作 raw snapshot 重驗。
 - Renderer configuration、order／identity、HTML／metadata entries、exception `render-error`。
 - Existing UseCase composition 的 success 必須以既有 non-DOM `DiffOutputPort` test double 斷言 renderer 的 RenderPlan 恰被接收一次；三種 stage failure short-circuit 才斷言 Output 未呼叫；不得有 DOM call。
 - Implementer 必須依 TypeScript TDD 取得可歸因 red failure、最小 strict TypeScript green 與僅在持續 green 下的 refactor evidence；Tester 獨立執行 frozen install、check、test、coverage、diff check。
@@ -86,6 +86,22 @@
 | RV-07 | pending | Reviewer | PC-09 後，由 fresh independent Reviewer 審查 locked scope、PR-06 pending、IM-05 red／green evidence、TE-05 `pass` evidence、RV-06 human-check／blocked result 與 DL-05 eligibility。 | 尚無獨立 Reviewer verdict；只有明示 `approved` 才可進入 DL-05。 |
 | DL-05 | pending | Implementer | 僅於 RV-07 `approved` 後，建立 correction commit、push 至既有 PR branch，並只 resolve 第六個 PR thread #1。 | 尚無 delivery evidence；不得開新 PR，或處理、resolve、重開其他 thread。 |
 | HC-05 | pending | Human | DL-05 後，人類審閱既有 PR 的第六個 thread #1 correction。 | DL-05 後停止自動前進。 |
+| PC-10 | completed | Plan-Creator | 僅更新同 topic 四份 artifacts，鎖定第六個 PR thread #1 的 source-line completeness correction：同一 template source 的 context／delete／insert line expectation 與 parsed line type/body/old-new numbers 精確比較。 | 不改 TS、docs、dependencies 或 Git；不回填或改寫 prior route/status/evidence；不是 Plan-Reviewer approval。 |
+| PR-07 | pending | Plan-Reviewer | 獨立審查 PC-10：確認 per-line source expectation、unknown prefix／body/type/number mismatch `parse-error`、Parser-only boundary、TDD red/green 與只 resolve #1 的 route 完整。 | 尚無獨立明示 verdict；只有 `approved` 才可開始 IM-06。 |
+| IM-06 | pending | Implementer | 僅於 PR-07 `approved` 後，以新 TDD cycle 實作 internal Parser/tests 的 source-line completeness correction。 | 先有 injected parsed-line mismatch red evidence，再以最小 Parser/test change 轉綠；保留實際 Parser parsed normal control；不得觸及 ReadOnly surface。 |
+| TE-06 | pending | Tester | IM-06 明示完成後，獨立執行 frozen install、check、test、coverage、diff check。 | 必須驗證 line-level regression 與既有 checks；尚無 Tester result。 |
+| RV-08 | pending | Reviewer | TE-06 明示完成後，獨立審查 IM-06 scope、Parser-only boundary、ReadOnly preservation、TDD／Tester evidence 與 thread #1 對應。 | 尚無獨立 Reviewer verdict；只有明示 `approved` 才可進入 DL-06。 |
+| DL-06 | pending | Implementer | 僅於 RV-08 `approved` 後，建立 correction commit、push 至既有 PR branch，並只 resolve 第六個 PR thread #1。 | 尚無 delivery evidence；不得開新 PR，或處理、resolve、重開其他 thread。 |
+| HC-06 | pending | Human | DL-06 後，人類審閱既有 PR 的第六個 thread #1 source-line correction。 | DL-06 後停止自動前進。 |
+| PC-11 | completed | Plan-Creator | 僅更新同 topic 四份 artifacts，納入 PR-07 `needs-rework`：source marker-plus-body 必須精確比對 `DiffLine.content`，type/numbers 獨立檢查，並鎖定 trailing-LF split rule。 | 不改 TS、docs、dependencies 或 Git；不回填或改寫 prior route/status/evidence；不是 Plan-Reviewer approval。 |
+| PR-08 | pending | Plan-Reviewer | Permanently pending pre-gate historical-deviation entry；沒有且不得補造獨立 approval。 | 不構成 IM-07、TE-07、RV-09 或 fresh review 的 retrospective prerequisite。 |
+| IM-07 | pending | Implementer | Permanently pending pre-gate historical-deviation entry；implementation 已發生但不回填 status。 | 可歸因歷史 evidence：source-marker correction 的 red／green TDD 結果；不構成 gate completion 或 delivery approval。 |
+| TE-07 | pending | Tester | Permanently pending pre-gate historical-deviation entry；verification 已發生但不回填 status。 | 可歸因歷史 evidence：獨立 Tester `pass`；不構成 Reviewer 或 delivery approval。 |
+| RV-09 | blocked | Reviewer | 已發生的 historical non-approval review result。 | 明示結果為 `blocked`，不是 `approved`；不得進入 DL-07。 |
+| DL-07 | pending | Implementer | 既有 RV-09 route 已 blocked；僅於 `PC-12` 後 `RV-10` 明示 `approved`，才可建立 correction commit、push 至既有 PR branch，並只 resolve 第六個 PR thread #1。 | 尚無 delivery evidence；不得開新 PR，或處理、resolve、重開其他 thread。 |
+| HC-07 | pending | Human | DL-07 後，人類審閱既有 PR 的第六個 thread #1 source-marker correction。 | DL-07 後停止自動前進。 |
+| PC-12 | completed | Plan-Creator | Human 接受 PR-08 pre-gate historical deviation 後，只更新四份 formal artifacts，如實記錄 PR-08 pending、IM-07 red／green、TE-07 `pass` 與 RV-09 `blocked`。 | 不改 TS、docs、dependencies 或 Git；不補造 PR-08 approval、不回填 IM-07／TE-07 status，且不新增 nonblocking type-only test work；不是 Reviewer approval。 |
+| RV-10 | pending | Reviewer | PC-12 後，由 fresh independent Reviewer 審查 locked scope、PR-08 pending、IM-07 red／green evidence、TE-07 `pass` evidence、RV-09 `blocked` result 與 DL-07 eligibility。 | 尚無獨立 Reviewer verdict；只有明示 `approved` 才可進入 DL-07。 |
 
 ## Blockers
 
@@ -103,7 +119,11 @@
 - DL-05 只可 resolve 第六個 PR thread #1；任何其他 thread 的處理、resolve 或重開都是 human boundary。
 - Human 已接受本次新的 pre-gate historical deviation：`PR-06` 仍為 pending、沒有 approval；`IM-05` 的 red／green 與 `TE-05` 的 Tester `pass` 僅是可歸因歷史 evidence。它們不可回填 step status、不能取代 gate，也不授權 delivery。
 - `RV-06` 的歷史結果是 `human-check`／`blocked`，不是 approval。既有 `PC-08 → PR-06 → IM-05 → TE-05 → RV-06 → DL-05` route 保留為歷史，不能依其前進。
-- 新的唯一 delivery route 是 `PC-09 → RV-07 fresh independent review approved → DL-05 → HC-05`。RV-07 前不得 commit、push 或 resolve thread #1；RV-07 只檢視既有 factual evidence，不補造 PR-06 approval。
+- `PC-09 → RV-07 → DL-05 → HC-05` 保留為 prior historical-deviation corrective route；其 statuses 不被回填或改寫。新的 source-line review comment 已建立獨立後續 route，只有 `PC-10 → PR-07 approved → IM-06 → TE-06 → RV-08 approved → DL-06 → HC-06` 可處理並 resolve thread #1。PR-07 前不得修改程式、docs、dependencies 或 Git。
+- `PR-07` 的明示 verdict 是 `needs-rework`：body-only comparison 不符合 `DiffLine.content`。`PC-10 → PR-07 → IM-06 → TE-06 → RV-08 → DL-06 → HC-06` 保留為歷史，不得依它前進。唯一新的 route 是 `PC-11 → PR-08 approved → IM-07 → TE-07 → RV-09 approved → DL-07 → HC-07`；PR-08 前不得修改程式、docs、dependencies 或 Git。
+- Human 已接受本次 PR-08 pre-gate historical deviation：`PR-08` 仍為 pending、沒有 approval；`IM-07` 的 red／green 與 `TE-07` 的 Tester `pass` 僅為可歸因 historical evidence。它們不可回填 step status、不能取代 gate，也不授權 delivery。
+- `RV-09` 的歷史結果是 `blocked`，不是 approval。既有 `PC-11 → PR-08 → IM-07 → TE-07 → RV-09 → DL-07` route 保留為歷史，不能依其前進；本次不新增 nonblocking type-only mismatch test 或其他 implementation/test scope。
+- 唯一可前進 route 是 `PC-12 → RV-10 fresh independent review approved → DL-07 → HC-07`。RV-10 前不得 commit、push 或 resolve thread #1，且不得補造 PR-08 approval。
 
 ## Human Check
 
@@ -111,9 +131,12 @@
 - `DL-04` 完成後，停止於 `HC-04` human review；human 是唯一可決定第六個 PR thread #1 correction 是否接受或合併的人。
 - `DL-05` 完成後，停止於 `HC-05` human review；human 是唯一可決定 RV-05 corrective implementation 是否接受或合併的人。
 - `RV-06` 的 `human-check`／`blocked` 是本次 deviation 的 human boundary；Human 已僅授權 Plan-Creator 如實記錄 evidence。`RV-07` 的 fresh independent review 尚未完成前，不得進入 DL-05。
+- `PR-07` 只審查 source-line completeness correction；不得以它回填、取代或重新審查 PR-06、IM-05、TE-05、RV-06、PC-09 或 RV-07 的 historical evidence/status。PR-07 或 RV-08 任何非 `approved` verdict 均不得進入 DL-06。
+- `PR-08` 只審查 source-marker content correction；不得以它回填、取代或重新審查任何 prior route/status。PR-08 或 RV-09 任何非 `approved` verdict 均不得進入 DL-07。
+- `RV-09` 的 `blocked` 是本次 deviation 的 human boundary；Human 已僅授權 Plan-Creator 如實記錄 evidence。`RV-10` 的 fresh independent review 尚未明示 `approved` 前，不得進入 DL-07。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: Human 接受本次 PR-06 pre-gate historical deviation；如實記錄 IM-05 red／green、TE-05 Tester `pass` 與 RV-06 human-check／blocked，且不補造 PR-06 approval。
-- Update status: PC-09 completed；PR-06、IM-05、TE-05 永久維持 pending historical entries，RV-06 is human-check／blocked，不是 approval。唯一可前進 route 為 RV-07 fresh independent Reviewer approved → DL-05 → HC-05；prior routes/statuses 保留不變，status 不構成 approval。
+- Update reason: Human 接受 PR-08 pre-gate historical deviation；如實記錄 IM-07 red／green、TE-07 Tester `pass` 與 RV-09 `blocked`，且不補造 PR-08 approval。
+- Update status: PC-12 completed；PR-08、IM-07、TE-07 永久維持 pending historical entries，RV-09 is blocked，不是 approval。唯一可前進 route 為 RV-10 fresh independent Reviewer approved → DL-07 → HC-07；prior routes/statuses 保留不變，且不新增 nonblocking type-only test work。

@@ -94,6 +94,7 @@ function isCompleteDiff2HtmlParseResult(
 ): value is DiffFile[] {
   const sourceHunks = readUnifiedDiffHunkTuples(source);
   return (
+    sourceHunks !== undefined &&
     Array.isArray(value) &&
     value.length === 1 &&
     value.every(
@@ -114,7 +115,7 @@ function isCompleteDiff2HtmlParseResult(
 
 function isCompleteDiff2HtmlBlock(
   value: unknown,
-  sourceHunk: UnifiedDiffHunkTuple,
+  sourceHunk: UnifiedDiffHunk,
 ): boolean {
   if (
     !isRecord(value) ||
@@ -127,7 +128,7 @@ function isCompleteDiff2HtmlBlock(
   const parsedHunk = readUnifiedDiffHunkTuple(value.header);
   if (
     parsedHunk === undefined ||
-    !areEqualUnifiedDiffHunkTuples(sourceHunk, parsedHunk)
+    !areEqualUnifiedDiffHunkTuples(sourceHunk.tuple, parsedHunk)
   ) {
     return false;
   }
@@ -146,8 +147,26 @@ function isCompleteDiff2HtmlBlock(
     }
   }
   return (
-    oldLineCount === sourceHunk.old.count &&
-    newLineCount === sourceHunk.new.count
+    oldLineCount === sourceHunk.tuple.old.count &&
+    newLineCount === sourceHunk.tuple.new.count &&
+    value.lines.length === sourceHunk.lines.length &&
+    value.lines.every((line, index) =>
+      isExpectedDiff2HtmlLine(line, sourceHunk.lines[index]),
+    )
+  );
+}
+
+function isExpectedDiff2HtmlLine(
+  value: unknown,
+  expectation: UnifiedDiffLineExpectation | undefined,
+): boolean {
+  return (
+    expectation !== undefined &&
+    isRecord(value) &&
+    value.content === expectation.content &&
+    value.type === expectation.type &&
+    value.oldNumber === expectation.oldNumber &&
+    value.newNumber === expectation.newNumber
   );
 }
 
@@ -160,6 +179,18 @@ interface UnifiedDiffHunkTuple {
   readonly new: UnifiedDiffHunkRange;
 }
 
+interface UnifiedDiffHunk {
+  readonly tuple: UnifiedDiffHunkTuple;
+  readonly lines: readonly UnifiedDiffLineExpectation[];
+}
+
+interface UnifiedDiffLineExpectation {
+  readonly content: string;
+  readonly type: "context" | "delete" | "insert";
+  readonly oldNumber: number | undefined;
+  readonly newNumber: number | undefined;
+}
+
 interface UnifiedDiffHunkRange {
   readonly start: number;
   readonly count: number;
@@ -167,11 +198,87 @@ interface UnifiedDiffHunkRange {
 
 function readUnifiedDiffHunkTuples(
   patch: string,
-): readonly UnifiedDiffHunkTuple[] {
-  return patch
-    .split(/\r?\n/)
-    .map((line) => readUnifiedDiffHunkTuple(line))
-    .filter((hunk): hunk is UnifiedDiffHunkTuple => hunk !== undefined);
+): readonly UnifiedDiffHunk[] | undefined {
+  const sourceLines = patch.split(/\r?\n/);
+  if (sourceLines[sourceLines.length - 1] === "") {
+    sourceLines.pop();
+  }
+
+  const hunks: UnifiedDiffHunk[] = [];
+  let currentHunk: MutableUnifiedDiffHunk | undefined;
+  for (const sourceLine of sourceLines) {
+    const tuple = readUnifiedDiffHunkTuple(sourceLine);
+    if (tuple !== undefined) {
+      currentHunk = {
+        tuple,
+        lines: [],
+        nextOldNumber: tuple.old.start,
+        nextNewNumber: tuple.new.start,
+      };
+      hunks.push(currentHunk);
+      continue;
+    }
+
+    if (currentHunk !== undefined) {
+      const expectation = readUnifiedDiffLineExpectation(
+        sourceLine,
+        currentHunk,
+      );
+      if (expectation === undefined) {
+        return undefined;
+      }
+      currentHunk.lines.push(expectation);
+    }
+  }
+
+  return hunks;
+}
+
+interface MutableUnifiedDiffHunk extends UnifiedDiffHunk {
+  readonly lines: UnifiedDiffLineExpectation[];
+  nextOldNumber: number;
+  nextNewNumber: number;
+}
+
+function readUnifiedDiffLineExpectation(
+  sourceLine: string,
+  hunk: MutableUnifiedDiffHunk,
+): UnifiedDiffLineExpectation | undefined {
+  switch (sourceLine[0]) {
+    case " ": {
+      const expectation = {
+        content: sourceLine,
+        type: "context" as const,
+        oldNumber: hunk.nextOldNumber,
+        newNumber: hunk.nextNewNumber,
+      };
+      hunk.nextOldNumber += 1;
+      hunk.nextNewNumber += 1;
+      return expectation;
+    }
+    case "-": {
+      const expectation = {
+        content: sourceLine,
+        type: "delete" as const,
+        oldNumber: hunk.nextOldNumber,
+        newNumber: undefined,
+      };
+      hunk.nextOldNumber += 1;
+      return expectation;
+    }
+    case "+": {
+      const expectation = {
+        content: sourceLine,
+        type: "insert" as const,
+        oldNumber: undefined,
+        newNumber: hunk.nextNewNumber,
+      };
+      hunk.nextNewNumber += 1;
+      return expectation;
+    }
+    default:
+      return undefined;
+  }
 }
 
 function readUnifiedDiffHunkTuple(
