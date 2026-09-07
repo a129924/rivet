@@ -11,13 +11,14 @@
 ## In-Scope
 
 - 初版 credential 為使用者預先提供的一個 fine-grained PAT。
-- 鎖定 declaration-only future direction：`GitHubTokenProvider.token() throws -> GitHubAccessToken`。
+- 鎖定 declaration-only future direction：GitHub Integration 內的 `GitHubTokenProvider` 負責 token delivery，並交付 Integration-owned `GitHubAccessToken`。其具體 Swift signature、`throws`／`Outcome` 選擇、credential failure，以及 refresh／re-auth contract 延後至獨立 failure-contract topic；本 topic 不預先選擇任何 failure representation。
 - GitHub Integration future authorizer 為每個 GitHub request 設定或覆寫 `Authorization: Bearer …`。
 - Plan-Reviewer 通過後，由獨立 Implementer 將已批准且可長期成立的 boundary 回寫到 GitHub Integration BC 文件、architecture navigation、Integration/HTTP boundary canvas 與 lifecycle artifact；其後由獨立 Tester、Reviewer 與 human review 依序驗證。
 
 ## Out-Of-Scope
 
 - generic `TokenProvider`、`RivetHTTPClient` token dependency、constructor 變更或 HTTP package auth API。
+- `GitHubTokenProvider` 的具體 Swift signature、`throws`／`Outcome` 選擇，或 credential failure、refresh／re-auth contract。
 - OAuth-shaped token payload 的採用、refresh token、401 retry、多帳號、GitHub Enterprise、PAT UI、Keychain identity／adapter。
 - concrete network、HTTP status／decode policy、DTO、PR Inbox／PR Reader mapping，以及 core failure mapping。
 
@@ -62,8 +63,8 @@
 
 ## Future Swift Implementation Slices
 
-1. **Integration contract foundation**：建立 GitHub Integration module、`GitHubAccessToken`、`GitHubTokenProvider` 及 fake-provider tests；需由獨立 topic 鎖定 module/package path。
-2. **Keychain credential adapter**：讀取單一 PAT，驗證 delivery、missing 與 access failure；需先鎖定 Keychain service/account identity 與 entitlement 策略。
+1. **Integration contract foundation**：建立 GitHub Integration module、`GitHubAccessToken`、`GitHubTokenProvider` 及 fake-provider tests；需由獨立 topic 鎖定 module/package path、token-delivery signature 與 failure contract。
+2. **Keychain credential adapter**：讀取單一 PAT；需先鎖定 Keychain service/account identity、entitlement、credential failure contract 與測試策略。
 3. **GitHub request authorizer**：每次 request 取得 token，設定或覆寫 `Authorization`，並保留 URL、method、body 與其他 headers。
 4. **Concrete HTTP transport**：實作 URLSession-backed `Transport`，維持 raw response 與 transport-error passthrough。
 5. **GitHub API data adapter／DTO**：僅為一個已選定 read operation 建立授權 request 與 Integration-internal DTO handling。

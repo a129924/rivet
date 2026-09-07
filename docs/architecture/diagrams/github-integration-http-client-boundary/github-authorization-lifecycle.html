@@ -5323,7 +5323,7 @@
         </div>
         <ul>
           <li>&bull; 不含 OAuth、refresh、401 retry、concrete network、DTO 或 core mapping。</li>
-          <li>&bull; `token() throws` 的 credential failure、refresh 與 re-auth lifecycle 刻意不在此 declaration-only 圖表表示。</li>
+          <li>&bull; provider 的具體 operation signature、throws／Outcome、credential failure、refresh 與 re-auth contract 均延後至獨立 failure-contract topic。</li>
         </ul>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 ## Phase
 
-RV-02 approved；awaiting HR-02 human review
+RV-03 approved；awaiting HR-03 human review for deferred provider signature remediation
 
 ## Steps
 
@@ -18,6 +18,12 @@ RV-02 approved；awaiting HR-02 human review
 | TE-02 | Tester | completed with exception | 獨立驗證 IM-02 review remediation 的 contract、artifact synchronization、receipt coverage 與 scope。 | 重新執行適用 canvas／Archify checks、確認 current HTML SHA 與 receipt 一致、無本機絕對路徑、無 Swift／HTTP drift；如實分類結果。 | 獨立 Tester re-verification：current JSON／HTML SHA 分別為 `cf0b1eca050b77869e661935f8583a90f8bd83db127660b471bbbc22b8e241cd`／`bba16357d80f30404b801491a8386d5ac131eb0c9c70e305cb58ca7272de791d`，與 current receipt 一致；Archify showcase validate 9/9、frozen JSON temp deliver 與 canonical HTML byte-identical、canvas validate → temp build → enhance → accessibility verify、candidate absence、絕對路徑 audit、`git diff --check` 與 Swift／HTTP scope audit 均通過。Implementer 同一 canonical HTML SHA 的 fresh four-viewport `status: pass` receipt 維持為其 evidence。Tester 的獨立 fresh visual-check 因 Chrome DevTools intermittent `SIGABRT` 無法完成，沒有本輪獨立 visual-check pass。human 已明確授權受限 environment exception：接受 Implementer same-SHA fresh pass 加 Tester frozen deliver／canonical HTML byte identity；此例外不改寫為 Tester independent pass，路由 RV-02。 |
 | RV-02 | Reviewer | approved | 僅在 TE-02 completed 後，獨立審查 review remediation、scope 與 evidence。 | verdict 明確；任何 drift 優先保守收斂。 | 獨立 Reviewer verdict：`approved`。PR #17 threads 1–8 remediation、static／receipt／current SHA binding／scope evidence 均已接受；TE-02 的 human-authorized same-SHA environment exception 已接受。Tester fresh visual-check 的 Chrome DevTools intermittent `SIGABRT` 未被誤稱為 pass，且必須原樣保留在 PR。此為獨立 review evidence，非 Plan-Creator 自我 approval。 |
 | HR-02 | Human review | pending | 僅在 RV-02 approved 後，由 human 對更新後 PR delivery 進行 review。 | human 明確決定後續處置；不得由任何 agent 視同 approval。 | 待 human decision。 |
+| PC-03 | Plan-Creator | completed | 依 human 鎖定決策，僅修正四份 planning artifacts：延後 `GitHubTokenProvider` 的具體 Swift signature 與 failure-contract decision。 | artifacts 一致表達 token delivery 與 `GitHubAccessToken` ownership；不選擇 `throws`／`Outcome`，不決定 credential failure、refresh 或 re-auth contract；不修改 long-lived docs／diagrams。 | human 明確決定「延後 signature」；本次 Plan-Creator remediation 只修改此四份 official artifacts，供 PR-03 獨立審查。 |
+| PR-03 | Plan-Reviewer | approved | 獨立審查 PC-03 planning remediation 是否完整延後具體 signature 與 failure contract，且未擴張既有 topic scope。 | verdict 明確為 approved、needs-rework 或 blocked；只有 approved 才可進入 IM-03。 | 獨立 Plan-Reviewer verdict：`approved`；四份 artifacts 一致延後具體 signature、`throws`／`Outcome` 與 failure contract，未擴張 Swift／HTTP scope。 |
+| IM-03 | Implementer | completed | 僅在 PR-03 approved 後，依已鎖定的延後決策，修正 PR #17 待解 review thread 所指的 long-lived docs／diagram wording。 | 不保留具體 `GitHubTokenProvider` Swift signature；不選擇 `throws`／`Outcome` 或 credential failure／refresh／re-auth contract；不擴張 Swift／HTTP scope。 | `github-integration.md`、canvas `scene.js`／rebuilt `index.html` 與 lifecycle JSON／rebuilt HTML 已移除具體 provider signature，改為 Integration-owned token-delivery direction；PAT-only、Keychain Outside 與 HTTP package isolation 不變。canvas validate → build → enhance → accessibility verify 通過；Archify showcase validate 9/9 → deliver 通過（source SHA `43ae4457c39fa6ea93745c5e95d83621a977bb0fb887f6650b4ed39c74b2a878`、HTML SHA `da47dfd8438261b860815457673d6f26a63fa4ecdd469df07c6db9262343a8f5`）；fresh visual-check `status: pass`，四種 desktop viewport 均無 X/Y overflow，minimum projected node text 6.5px ≥ 6px。visual receipt 已保留 repository-relative artifact path 與 Chrome product identity。`rg` signature audit 與 `git diff --check` 待 TE-03 獨立確認。 |
+| TE-03 | Tester | completed with exception | 僅在 IM-03 completed 後，獨立驗證 deferred-signature remediation、artifact synchronization 與 scope。 | static／artifact checks、diff scope 與 PR thread 對應結果如實記錄；不將任何 environment exception 誤稱為 pass。 | 獨立 Tester re-verification：current lifecycle JSON／HTML SHA 分別為 `43ae4457c39fa6ea93745c5e95d83621a977bb0fb887f6650b4ed39c74b2a878`／`da47dfd8438261b860815457673d6f26a63fa4ecdd469df07c6db9262343a8f5`，與 current receipt 一致；receipt 的四種 desktop viewport 均無 X/Y overflow，minimum projected node text 6.5px ≥ 6px。Archify showcase validate 9/9、frozen JSON temp deliver 與 canonical HTML byte-identical、canvas validate → temp build → enhance → accessibility verify 與 canonical HTML byte-identical、deferred-signature audit、絕對路徑 audit、`git diff --check` 與 Swift／HTTP scope audit 均通過。Tester 未重跑 fresh visual-check：已知 Chrome DevTools intermittent `SIGABRT` 缺口依 human 明確授權，接受 same-SHA Implementer fresh four-viewport pass 加 Tester byte identity 作為受限 environment exception；本項不宣稱 Tester independent visual-check pass，路由 RV-03。 |
+| RV-03 | Reviewer | approved | 僅在 TE-03 completed 後，獨立審查 PR comment remediation 的 contract、scope、workflow 與 Tester evidence。 | verdict 明確；任何 scope／contract／workflow drift 優先保守收斂。 | 獨立 Reviewer verdict：`approved`。deferred-signature remediation 維持 Integration-owned token-delivery direction，未鎖定具體 Swift signature、`throws`／`Outcome`、credential failure、refresh 或 re-auth contract；long-lived docs／diagram、scope 與 workflow 均已接受。TE-03 的 human-authorized same-SHA Implementer fresh four-viewport pass 加 Tester byte identity environment exception 已接受，未誤稱為 Tester independent visual-check pass。僅路由 HR-03 human review。此為獨立 review evidence，非 Plan-Creator 自我 approval。 |
+| HR-03 | Human review | pending | 僅在 RV-03 approved 後，由 human 審查 PR #17 deferred-signature remediation。 | human 明確決定後續處置；不得由任何 agent 視同 approval。 | 待 human decision。 |
 
 ## Blockers
 
@@ -27,11 +33,11 @@ RV-02 approved；awaiting HR-02 human review
 
 ## Human Check
 
-Human 必須在 draft PR 檢查 architecture boundary 是否維持：GitHub Integration 擁有 future authorization seam、fine-grained PAT-only、Keychain Outside、`RivetHTTPClient` 無 token lifecycle，且 lifecycle artifact 不被誤解為已實作的 runtime behavior。
+Human 必須在 draft PR 檢查 architecture boundary 是否維持：GitHub Integration 擁有 future authorization seam、fine-grained PAT-only、Keychain Outside、`RivetHTTPClient` 無 token lifecycle，且 lifecycle artifact 不被誤解為已實作的 runtime behavior。另需確認本 topic 未把 provider 的具體 Swift signature、`throws`／`Outcome`、credential failure、refresh 或 re-auth contract 鎖定為長期架構真相。
 
 ## Handoff
 
-- Current phase：RV-02 approved；僅可進入 HR-02 human review。
+- Current phase：RV-03 approved；僅可進入 HR-03 human review。
 - Upstream verdict：`approved`；source 為獨立 Reviewer RV-02 verdict。PR-01 的 Plan-Reviewer approval 與 RV-01 的獨立 Reviewer approval 保留在各自 gate evidence。
 - Completed gate：IM-01；source 為 human 明確授權與 Implementer reconciliation evidence。
 - Completed gate：TE-01 with exception；receipt metadata remediation 已重新驗證。既有 Archify／canvas／scope evidence及 historical visual-check receipt 仍受限；fresh visual-check 沒有本輪 pass，Chrome DevTools `SIGABRT` 必須原樣保留。
@@ -39,8 +45,13 @@ Human 必須在 draft PR 檢查 architecture boundary 是否維持：GitHub Inte
 - Completed gate：IM-02；PR #17 threads 1–8 的 Implementer remediation 已交付 fresh current lifecycle receipt。
 - Completed gate：TE-02 with exception；獨立 Tester 已驗證 current receipt／HTML binding、static canvas／Archify pipeline、candidate absence、絕對路徑清理與 scope。Chrome DevTools intermittent `SIGABRT` 阻止本輪獨立 visual-check；human 接受 Implementer same-SHA fresh pass 與 Tester frozen deliver／canonical HTML byte identity 的受限 environment exception，未宣稱 Tester independent pass。
 - Completed gate：RV-02；獨立 Reviewer 已接受 PR #17 threads 1–8 remediation、static／receipt／current SHA binding／scope evidence，以及 TE-02 的 human-authorized same-SHA environment exception。Tester fresh visual-check 的 Chrome DevTools intermittent `SIGABRT` 未被誤稱為 pass，且必須原樣保留在 PR。
+- Completed gate：PR-03；獨立 Plan-Reviewer 已 approved deferred-signature planning remediation。
+- Completed gate：IM-03；Implementer 已更新 long-lived docs／diagram wording 並交付 fresh lifecycle validation evidence；此為 Implementer evidence，尚待 TE-03 獨立驗證。
+- Completed gate：TE-03 with exception；獨立 Tester 已驗證 deferred-signature remediation 的 receipt／current SHA binding、static canvas／Archify pipeline、canonical byte identity、signature／absolute-path／scope audit。Tester fresh visual-check 仍未重跑；human 已接受 Implementer same-SHA fresh four-viewport pass 加 Tester byte identity 的受限 environment exception，未宣稱 Tester independent pass。
+- Completed gate：RV-03；獨立 Reviewer 已 approved deferred-signature remediation 的 contract、scope、workflow 與 Tester evidence，並接受 TE-03 的 human-authorized same-SHA environment exception；未宣稱 Tester independent visual-check pass。
+- Pending PR thread：PR #17 關於 `GitHubTokenProvider` 具體 signature 與既有 BC failure-contract principle 的 review thread 已依 human 的「延後 signature」決策實作回應；僅可由 HR-03 human review 決定後續處置。
 - Requested next owner：Human review。
-- Next gate：HR-02；等待 human 對更新後 PR delivery 作出明確決定，不得由任何 agent 視同 approval。
+- Next gate：HR-03；human 審查 deferred-signature remediation。不得由任何 agent 視同 approval 或自行 resolve thread。
 
 ## Last Updated
 
@@ -64,8 +75,18 @@ Human 必須在 draft PR 檢查 architecture boundary 是否維持：GitHub Inte
 
 2026-09-07／09（當時狀態：獨立 Reviewer RV-01 `approved`。contract、scope 與 evidence approved；fresh Archify visual-check 因 Chrome DevTools `SIGABRT` 未完成的 environment exception 被接受，但必須在 draft PR 原樣揭露。轉交 HR-01 human review；未宣稱 human review 已完成。）
 
-2026-09-07／10（目前狀態：Implementer 完成 PR #17 threads 1–8 remediation。canvas 改為僅表達責任／compile-time boundary；lifecycle 明示 `token() throws` 的 credential failure、refresh 與 re-auth lifecycle 未在 declaration-only 圖表表示；local BUILD entry 補齊 lifecycle validate／deliver／visual-check 與 sidecar policy。current lifecycle HTML 已重新 deliver，fresh visual-check `status: pass`；四種 desktop viewport 為 light containment／readability，僅 1440×900 與 2048×1320 有 light／dark captures。receipt 已匿名本機 artifact 與 Chrome executable paths。此為 Implementer evidence；TE-02 pending，未宣稱獨立測試或 Reviewer approval。）
+2026-09-07／10（目前狀態：Implementer 完成 PR #17 threads 1–8 remediation。canvas 改為僅表達責任／compile-time boundary；lifecycle 明示先前採用的具體 provider signature 所涉及的 credential failure、refresh 與 re-auth lifecycle 未在 declaration-only 圖表表示；local BUILD entry 補齊 lifecycle validate／deliver／visual-check 與 sidecar policy。current lifecycle HTML 已重新 deliver，fresh visual-check `status: pass`；四種 desktop viewport 為 light containment／readability，僅 1440×900 與 2048×1320 有 light／dark captures。receipt 已匿名本機 artifact 與 Chrome executable paths。此為 Implementer evidence；TE-02 pending，未宣稱獨立測試或 Reviewer approval。）
 
 2026-09-07／11（目前狀態：獨立 Tester TE-02 `completed with exception`。current JSON／HTML SHA 與 receipt 一致；Archify showcase validate 9/9、frozen JSON temp deliver／canonical HTML byte identity、canvas static pipeline、candidate absence、絕對路徑與 Swift／HTTP scope audit 均通過。Tester fresh visual-check 因 Chrome DevTools intermittent `SIGABRT` 未完成，沒有本輪獨立 pass。human 明確接受同一 canonical SHA 的 Implementer fresh four-viewport pass 加 Tester frozen deliver／canonical HTML byte identity 作為受限 environment exception；僅路由 RV-02。）
 
 2026-09-07／12（目前狀態：獨立 Reviewer RV-02 `approved`。PR #17 threads 1–8 remediation、static／receipt／current SHA binding／scope evidence 均已接受；TE-02 的 human-authorized same-SHA environment exception 已接受。Tester fresh visual-check 的 Chrome DevTools intermittent `SIGABRT` 未被誤稱為 pass，且必須原樣保留在 PR。僅路由 HR-02 human review；未宣稱 human review 已完成。）
+
+2026-09-07／13（目前狀態：human 鎖定「延後 signature」決策。Plan-Creator 完成 PC-03：四份 official artifacts 改為僅保留 Integration-owned token-delivery direction 與 `GitHubAccessToken` ownership；具體 Swift signature、`throws`／`Outcome`、credential failure、refresh 與 re-auth contract 延後至獨立 failure-contract topic。本次未修改 long-lived docs／diagrams，亦未解決 PR #17 的待解 review thread；僅路由 PR-03 獨立 plan review，未宣稱 approval。）
+
+2026-09-07／14（factual correction：依 human 鎖定的「延後 signature」決策，僅修正／10 歷史敘述，不再重述先前採用的具體 provider signature；仍如實保留當時 declaration-only lifecycle 未表示 credential failure、refresh 與 re-auth lifecycle 的事實。本筆不構成 PR-03 verdict 或任何 approval。）
+
+2026-09-07／15（目前狀態：PR-03 已由獨立 Plan-Reviewer approved。Implementer 完成 IM-03：long-lived BC 文件、canvas source／rebuilt HTML 與 lifecycle source／rebuilt HTML 改為不具體的 Integration-owned token-delivery direction，將 operation signature、`throws`／`Outcome`、credential failure、refresh 與 re-auth contract 延後至獨立 failure-contract topic。PAT-only、Keychain Outside 與 HTTP package isolation 維持。canvas validate/build/enhance/accessibility、Archify showcase validate/deliver 與 fresh four-viewport visual-check 均通過；僅路由 TE-03，未宣稱獨立測試或 Reviewer approval。）
+
+2026-09-07／16（目前狀態：獨立 Tester TE-03 `completed with exception`。current lifecycle receipt SHA 與四 viewport evidence、Archify showcase validate／frozen deliver canonical byte identity、canvas validate/build/enhance/accessibility canonical byte identity、deferred-signature、絕對路徑及 Swift／HTTP scope audits 均通過。Tester 未重跑 fresh visual-check；human 已接受同一 SHA 的 Implementer fresh pass 加 Tester byte identity 作為受限 environment exception，未宣稱 Tester independent pass；僅路由 RV-03。）
+
+2026-09-07／17（目前狀態：獨立 Reviewer RV-03 `approved`。deferred-signature remediation 維持 Integration-owned token-delivery direction，未鎖定具體 Swift signature、`throws`／`Outcome`、credential failure、refresh 或 re-auth contract；long-lived docs／diagram、scope 與 workflow 已接受。TE-03 的 human-authorized same-SHA Implementer fresh four-viewport pass 加 Tester byte identity environment exception 已接受，未誤稱為 Tester independent visual-check pass；僅路由 HR-03 human review，未宣稱 human approval 或自行 resolve PR thread。）

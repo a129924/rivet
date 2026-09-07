@@ -42,7 +42,7 @@ const BOXES = [
     texts:[['bl',904,538,'API domain URL composition'],['bs',904,560,'Endpoint／Base URL／Path／Query'],['bn',904,582,'不屬於 RivetHTTPClient']] },
   { id:'token-provider', plane:'integration', band:'band-integration', x:200,y:650,w:540,h:104,r:10,dash:true,
     name:'GitHubTokenProvider（future declaration）',about:'GitHub Integration 擁有的 future seam；交付既有 PAT 對應的 Integration value type。',
-    texts:[['bl',224,678,'GitHubTokenProvider（future declaration）'],['bs',224,700,'token() throws → GitHubAccessToken'],['bs',224,722,'初版：一個既有 fine-grained PAT'],['bn',224,742,'不是 HTTP package API']] },
+    texts:[['bl',224,678,'GitHubTokenProvider（future declaration）'],['bs',224,700,'交付 Integration-owned GitHubAccessToken'],['bs',224,722,'初版：一個既有 fine-grained PAT'],['bn',224,742,'具體 failure contract 延後決定']] },
   { id:'request-authorizer', plane:'integration', band:'band-integration', x:880,y:650,w:540,h:104,r:10,dash:true,
     name:'GitHub request authorizer（future declaration）',about:'每個 GitHub request 進入 HTTP package 前，設定或覆寫 Bearer Authorization。',
     texts:[['bl',904,678,'GitHub request authorizer（future declaration）'],['bs',904,700,'每個 GitHub request 取得 token'],['bs',904,722,'設定／覆寫 Authorization: Bearer …'],['bn',904,742,'無 refresh、401 retry 或 HTTP policy']] },

@@ -5,10 +5,11 @@
 GitHub Integration 擁有 authorization seam 與其 policy。未來 contract direction 為：
 
 ```swift
-GitHubTokenProvider.token() throws -> GitHubAccessToken
+GitHubTokenProvider // Integration-owned token-delivery seam
+GitHubAccessToken  // Integration-owned value type
 ```
 
-這只是 declaration-only contract，不在本 topic 建立 Swift declaration。`GitHubAccessToken` 是 GitHub Integration 的 value type；它不退化為 `String`，也不成為 `RivetHTTPClient` 的公開 type。
+這只是 declaration-only direction，不在本 topic 建立 Swift declaration。未來 provider 有 token-delivery operation 並交付 `GitHubAccessToken`，但具體 Swift signature、`throws`／`Outcome` 選擇、credential failure，以及 refresh／re-auth contract 全部延後至獨立 failure-contract topic；本 topic 不預先選擇任何 failure representation。`GitHubAccessToken` 是 GitHub Integration 的 value type；它不退化為 `String`，也不成為 `RivetHTTPClient` 的公開 type。
 
 初版只支援一個使用者預先提供的 fine-grained PAT。該 credential 可由 future provider 在每次 GitHub request 前交付給 Integration authorizer。authorizer 設定或覆寫 `Authorization: Bearer …` 後，才將 raw request 交給 `RivetHTTPClient`。
 
@@ -22,7 +23,7 @@ GitHubTokenProvider.token() throws -> GitHubAccessToken
 ## Lifecycle Contract
 
 1. Integration 準備 GitHub request。
-2. future `GitHubTokenProvider` 取得既有的單一 PAT，交付 `GitHubAccessToken`。
+2. future `GitHubTokenProvider` 取得既有的單一 PAT，交付 `GitHubAccessToken`；其 exact operation signature 與 credential failure behavior 未在本 topic 決定。
 3. future Integration authorizer 將 request 的 `Authorization` 設定或覆寫為 Bearer token。
 4. `RivetHTTPClient` 執行未帶 GitHub authorization policy 的 raw request chain。
 

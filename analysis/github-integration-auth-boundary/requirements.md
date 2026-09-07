@@ -16,7 +16,7 @@
 ## In-Scope
 
 - 記錄 GitHub Integration 擁有 future authorization seam 的長期 architecture boundary。
-- 鎖定 declaration-only direction：`GitHubTokenProvider.token() throws -> GitHubAccessToken`；`GitHubAccessToken` 屬於 Integration，不是 `String` 或 HTTP package type。
+- 鎖定 declaration-only direction：未來 GitHub Integration 內的 `GitHubTokenProvider` 負責 token delivery，並交付 Integration-owned `GitHubAccessToken`；它不是 `String` 或 HTTP package type。具體 Swift signature、`throws`／`Outcome` 選擇、credential failure，以及 refresh／re-auth contract 均延後至獨立 failure-contract topic 決定。
 - 鎖定每個 GitHub request 的 future flow：取得既有 PAT → authorizer 設定或覆寫 Bearer `Authorization` → `RivetHTTPClient` 執行 raw request。
 - 將 Keychain 與使用者設定的 PAT 表示為 Outside；token、OAuth、HTTP status、DTO 與 infrastructure details 不跨越 PR Inbox／PR Reader core Port。
 - 建立本 topic 的正式 planning artifacts。長期 BC 文件與圖表的受限 delivery 必須在 Plan-Reviewer 通過後，交由獨立 Implementer 執行，並經獨立 Tester、Reviewer 與 human review。
@@ -24,6 +24,7 @@
 ## Out-Of-Scope
 
 - generic `TokenProvider`，或 `HTTPClient` constructor／public API 的 token dependency。
+- `GitHubTokenProvider` 的具體 Swift signature、`throws`／`Outcome` 選擇，或 credential failure、refresh／re-auth contract。
 - token refresh、refresh token schema、OAuth grant、401 retry、多帳號、GitHub Enterprise 與跨裝置同步。
 - concrete network request、HTTP status policy、decode policy、DTO mapping，以及各 core BC 的 failure mapping。
 - 任何 core Port 的 credential、OAuth、HTTP 或 infrastructure type。

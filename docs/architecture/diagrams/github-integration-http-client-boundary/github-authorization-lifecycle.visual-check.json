@@ -6,8 +6,8 @@
   "visualReview": "pending",
   "artifact": {
     "path": "docs/architecture/diagrams/github-integration-http-client-boundary/github-authorization-lifecycle.html",
-    "sha256": "bba16357d80f30404b801491a8386d5ac131eb0c9c70e305cb58ca7272de791d",
-    "bytes": 698638
+    "sha256": "da47dfd8438261b860815457673d6f26a63fa4ecdd469df07c6db9262343a8f5",
+    "bytes": 698672
   },
   "state": {
     "detail": "read",
