@@ -10,4 +10,8 @@ public struct HTTPResponse: Equatable, Sendable {
     self.headers = headers
     self.body = body
   }
+
+  public func text(encoding: String.Encoding = .utf8) -> String? {
+    String(data: body, encoding: encoding)
+  }
 }
