@@ -42,23 +42,29 @@ struct URLSessionTransportTests {
   @Test
   func mapsNonHTTPResponse() async throws {
     let url = try #require(URL(string: "https://example.invalid/non-http"))
+    let expectedBody = Data("non-http-body".utf8)
     let response = URLResponse(
       url: url,
-      mimeType: nil,
-      expectedContentLength: 0,
-      textEncodingName: nil
+      mimeType: "text/plain",
+      expectedContentLength: expectedBody.count,
+      textEncodingName: "utf-8"
     )
-    URLProtocolStub.configure(result: .response(response, Data()))
+    URLProtocolStub.configure(result: .response(response, expectedBody))
     defer { URLProtocolStub.reset() }
 
     let error = await #expect(throws: HTTPClientError.self) {
       try await executeUsingStub(URLRequest(url: url))
     }
 
-    guard case .nonHTTPResponse = error else {
+    guard case .nonHTTPResponse(let receivedResponse, let receivedBody) = error else {
       Issue.record("Expected nonHTTPResponse, got \(String(describing: error))")
       return
     }
+    #expect(receivedResponse.url == url)
+    #expect(receivedResponse.mimeType == "text/plain")
+    #expect(receivedResponse.expectedContentLength == Int64(expectedBody.count))
+    #expect(receivedResponse.textEncodingName == "utf-8")
+    #expect(receivedBody == expectedBody)
   }
 
   @Test

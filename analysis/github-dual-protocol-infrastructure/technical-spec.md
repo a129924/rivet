@@ -6,7 +6,7 @@
 public enum HTTPClientError: Error {
   case cancelled(underlying: any Error)
   case networkFailure(URLError)
-  case nonHTTPResponse
+  case nonHTTPResponse(response: URLResponse, body: Data)
   case underlyingFailure(any Error)
 }
 
@@ -22,7 +22,7 @@ public protocol Transport: Sendable {
 - `URLSessionTransport` 以 injected `URLSession` 執行原始 `URLRequest`；預設 session 為 `.shared`。
 - `HTTPURLResponse` 的 `statusCode`、headers 與 raw `Data` 映射為既有 `HTTPResponse`。
 - HTTP status 不帶成功／失敗語意；2xx、4xx、5xx 均回傳 `HTTPResponse`。
-- `URLError.cancelled` 與 `CancellationError` 映射為 `.cancelled(underlying:)`；其他 `URLError` 映射為 `.networkFailure`；非 HTTP response 映射為 `.nonHTTPResponse`；其他 error 映射為 `.underlyingFailure`。
+- `URLError.cancelled` 與 `CancellationError` 映射為 `.cancelled(underlying:)`；其他 `URLError` 映射為 `.networkFailure`；非 HTTP response 映射為保留原始 `URLResponse` 與 raw body 的 `.nonHTTPResponse(response:body:)`；其他 error 映射為 `.underlyingFailure`。
 - `HTTPClientError` 不宣告 `Equatable` 或 `Sendable`；`any Error` payload 保留原始底層 error。
 
 ## Boundaries

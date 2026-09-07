@@ -29,7 +29,7 @@ const BOXES = [
 
   { id:'http-url', plane:'contracts', band:'band-contracts', x:200,y:510,w:270,h:88,r:10,dash:true,
     name:'HTTPURL',about:'package-owned value object；只接受有 host 的 http 或 https URL。',
-    texts:[['bl',224,538,'HTTPURL'],['bs',224,560,'http／https + host'],['bn',224,582,'唯一 typed throws 邊界']] },
+    texts:[['bl',224,538,'HTTPURL'],['bs',224,560,'http／https + host'],['bn',224,582,'URL construction typed throws']] },
   { id:'url-error', plane:'contracts', band:'band-contracts', x:500,y:510,w:270,h:88,r:10,dash:true,
     name:'HTTPURLValidationError',about:'HTTPURL construction 的封閉 validation error。',
     texts:[['bl',524,538,'HTTPURLValidationError'],['bs',524,560,'scheme 或 host validation'],['bn',524,582,'package-owned error']] },

@@ -11,7 +11,7 @@ public struct URLSessionTransport: Transport {
     do {
       let (body, response) = try await session.data(for: request)
       guard let httpResponse = response as? HTTPURLResponse else {
-        throw HTTPClientError.nonHTTPResponse
+        throw HTTPClientError.nonHTTPResponse(response: response, body: body)
       }
 
       let headers = HTTPHeaders(
