@@ -25,13 +25,16 @@ struct HTTPClientTests {
   }
 
   @Test
-  func forwardsTransportErrorWithoutMapping() async throws {
+  func forwardsHTTPClientError() async throws {
     let client = HTTPClient(transport: FailingTransport())
     let url = try HTTPURL(#require(URL(string: "https://example.com")))
 
-    await #expect(throws: TransportFailure.unavailable) {
-      try await client.execute(HTTPRequest(url: url, method: .get))
-    }
+    let error = try #require(
+      await #expect(throws: HTTPClientError.self) {
+        try await client.execute(HTTPRequest(url: url, method: .get))
+      }
+    )
+    assertUnexpectedTransportFailure(error)
   }
 
   @Test
@@ -155,7 +158,18 @@ private func assertTransportFailure(
   let client = HTTPClient(transport: FailingTransport())
   let url = try HTTPURL(#require(URL(string: "https://example.com")))
 
-  await #expect(throws: TransportFailure.unavailable) {
-    try await invoke(client, url, HTTPHeaders(), nil)
+  let error = try #require(
+    await #expect(throws: HTTPClientError.self) {
+      try await invoke(client, url, HTTPHeaders(), nil)
+    }
+  )
+  assertUnexpectedTransportFailure(error)
+}
+
+private func assertUnexpectedTransportFailure(_ error: HTTPClientError) {
+  guard case .unexpected(let underlyingError) = error else {
+    Issue.record("Expected unexpected HTTPClientError, got \(String(describing: error))")
+    return
   }
+  #expect((underlyingError as? TransportFailure) == .unavailable)
 }

@@ -57,11 +57,11 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 - [設計原則](../design-principles.md)：Rivet 的產品取捨與工作方法。
 - [Bounded Context](bounded-contexts/)：每個 BC 的長期責任與邊界。
 - [Bounded Context Map](diagrams/bounded-context-map/index.html)：BC、Presentation Session 與外部邊界的互動式全景圖。
-- [GitHub Integration 與 HTTP Client 邊界](diagrams/github-integration-http-client-boundary/index.html)：Integration Adapter 與 HTTP client 的 ownership、核心 Port 邊界，以及尚未實作的 Outside transport surface。
-- [HTTP Client package 結構](diagrams/http-client-package-structure/index.html)：`HTTPClient` 已提供 `request(...)` 與常見 HTTP method facade，並經既有 `execute → Requester → Transport` 形成 `HTTPURL → HTTPRequest → HTTPResponse` 的最小介面鏈；不包含 Endpoint 組裝或 URLSession implementation。
+- [GitHub Integration 與 HTTP Client 邊界](diagrams/github-integration-http-client-boundary/index.html)：Integration Adapter 與 HTTP client 的 ownership、核心 Port 邊界，以及 package-owned `URLSessionTransport` 與 Outside Foundation URLSession 的邊界。
+- [HTTP Client package 結構](diagrams/http-client-package-structure/index.html)：`HTTPClient` 已提供 `request(...)` 與常見 HTTP method facade，並經既有 `execute → Requester → Transport` 形成 `HTTPURL → HTTPRequest → HTTPResponse` 的最小介面鏈；包含 `URLSessionTransport`，但不包含 Endpoint 組裝。
 - [Repository Knowledge Map](diagrams/repository-knowledge-map/index.html)：公開讀者與 agent 如何從入口、文件、analysis、plan 走向下一個 BC 切片。
 - [Topic Lifecycle](diagrams/topic-lifecycle/index.html)：正式 topic 從分析、計畫、受限實作到回寫與 human review 的可互動流程圖。
 
 ## 尚未定義的項目
 
-Rivet 仍是 architecture baseline。`RivetHTTPClient` 是 GitHub Integration 可採用的內部 package，且已具備 Swift product、target 與最小 HTTP 介面；它沒有 `URLSessionTransport`、真實網路呼叫、status validation、retry、token refresh、decode policy 或統一 package error model。它不提供 Endpoint、Base URL、Path 或 Query 的 URL 組裝 API，這些 API domain 責任留在呼叫端或其 domain layer。除這個受限切片與既定 PR Reader WebView diff pipeline contract 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package 或產品實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。
+Rivet 仍是 architecture baseline。`RivetHTTPClient` 是 GitHub Integration 可採用的內部 package，具備 Swift product、target、最小 HTTP 介面與 package-owned `URLSessionTransport`；它以 `HTTPClientError` 統一 URL loading、non-HTTP response 與無法分類的 transport failure，並將所有 HTTP status 與 raw response data 原樣保留給呼叫端。它不提供 Endpoint、Base URL、Path 或 Query 的 URL 組裝 API，也不實作 status validation、retry、token refresh 或 decode policy，這些 API domain 責任留在呼叫端或其 domain layer。除這個受限切片與既定 PR Reader WebView diff pipeline contract 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package 或產品實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。

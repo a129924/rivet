@@ -16,7 +16,7 @@ const BANDS = [
   { id:'band-package', plane:'package', x:160, y:760, w:1260, h:238, alpha:0.5, dash:true,
     hdr:{x:184,y:790,t:'RIVETHTTPCLIENT — MINIMAL INTERFACE'}, tagr:{x:1396,y:790,t:'已實作 product、target 與 tests',alpha:0.6} },
   { id:'band-outside', plane:'outside', x:160, y:1080, w:1260, h:156, alpha:0.48,
-    hdr:{x:184,y:1110,t:'OUTSIDE — FOUNDATION 與 GITHUB.COM'}, tagr:{x:1396,y:1110,t:'未實作 concrete transport',alpha:0.6} }
+    hdr:{x:184,y:1110,t:'OUTSIDE — FOUNDATION 與 GITHUB.COM'}, tagr:{x:1396,y:1110,t:'Foundation networking surface',alpha:0.6} }
 ];
 
 const BOXES = [
@@ -47,18 +47,18 @@ const BOXES = [
     name:'HTTPRequest',about:'已實作的 request value，直接持有 HTTPURL。',
     texts:[['bl',524,858,'HTTPRequest'],['bs',524,880,'method · headers · body'],['bn',524,902,'不重新驗證 URL']] },
   { id:'client', plane:'package', band:'band-package', x:800,y:830,w:270,h:88,r:10,dash:true,
-    name:'HTTPClient／Requester',about:'已實作的最小 HTTP 入口與 URLRequest mapping。',
-    texts:[['bl',824,858,'HTTPClient／Requester'],['bs',824,880,'一般 async throws'],['bn',824,902,'無 URLSession transport']] },
+    name:'HTTPClient／Requester',about:'已實作的最小 HTTP 入口、typed transport failure 與 URLRequest mapping。',
+    texts:[['bl',824,858,'HTTPClient／Requester'],['bs',824,880,'throws(HTTPClientError)'],['bn',824,902,'建立 Foundation request']] },
   { id:'transport', plane:'package', band:'band-package', x:1100,y:830,w:270,h:88,r:10,dash:true,
-    name:'Transport／HTTPResponse',about:'注入式 transport boundary 與未經 policy 轉換的 raw response。',
-    texts:[['bl',1124,858,'Transport／HTTPResponse'],['bs',1124,880,'injected · raw response'],['bn',1124,902,'error 原樣傳遞']] },
+    name:'Transport／URLSessionTransport／HTTPResponse',about:'注入式 transport boundary、production URLSession transport 與未經 policy 轉換的 raw response。',
+    texts:[['bl',1124,858,'Transport／URLSessionTransport'],['bs',1124,880,'HTTPClientError · raw response'],['bn',1124,902,'不判斷 HTTP status']] },
 
   { id:'foundation-types', plane:'outside', band:'band-outside', x:200,y:1140,w:540,h:68,r:10,
     name:'Foundation URLRequest／URL／Data',about:'package 直接使用的 Foundation request、URL 與 body types。',
     texts:[['bl',224,1168,'Foundation URLRequest／URL／Data'],['bs',224,1190,'package 直接使用的 Foundation types']] },
   { id:'urlsession', plane:'outside', band:'band-outside', x:880,y:1140,w:540,h:68,r:10,
-    name:'URLSession／GitHub.com API',about:'future concrete transport 與外部 API；不在此切片實作。',
-    texts:[['bl',904,1168,'URLSession／GitHub.com API'],['bs',904,1190,'future implementation surface']] }
+    name:'Foundation URLSession／GitHub.com API',about:'URLSessionTransport 採用的 Foundation networking surface；GitHub adapter 仍未實作。',
+    texts:[['bl',904,1168,'Foundation URLSession／GitHub.com API'],['bs',904,1190,'adapter direction 留待後續 topic']] }
 ];
 
 const EDGES = [
@@ -70,19 +70,21 @@ const EDGES = [
   { from:'client',to:'request',pts:[[794,874],[776,874]],label:{s:'al',x:785,y:862,t:'使用',anchor:'center'} },
   { from:'client',to:'transport',pts:[[1074,874],[1094,874]],label:{s:'al',x:1084,y:862,t:'注入依賴',anchor:'center'} },
   { from:'client',to:'foundation-types',pts:[[935,924],[935,1040],[470,1040],[470,1134]],label:{s:'al',x:484,y:1084,t:'Foundation mapping',rot:-90,anchor:'center'} },
-  { from:'adapter',to:'client',pts:[[470,604],[470,700],[935,700],[935,824]],label:{s:'al',x:949,y:752,t:'採用 package',rot:-90,anchor:'center'} }
+  { from:'adapter',to:'client',pts:[[470,604],[470,700],[935,700],[935,824]],label:{s:'al',x:949,y:752,t:'採用 package',rot:-90,anchor:'center'} },
+  { from:'transport',to:'urlsession',pts:[[1235,924],[1235,1134]],label:{s:'al',x:1249,y:1030,t:'production execution',rot:-90,anchor:'center'} }
 ];
 
 const TEXTS = [
   {s:'title',x:160,y:86,t:'Rivet — GitHub Integration 與 HTTP Client 邊界'},
-  {s:'sub',x:160,y:118,t:'Integration Adapter 可採用最小 HTTP interface；Endpoint 組裝與 concrete transport 均留在 package 外'},
+  {s:'sub',x:160,y:118,t:'Integration Adapter 可採用最小 HTTP interface；Endpoint 組裝留在 package 外，URLSession transport 由 package 擁有'},
   {s:'tag',x:160,y:146,runs:[{t:'Integration Adapter',fill:planeColor('integration')},{t:' → ',fill:'#4A5462'},{t:'HTTPURL',fill:planeColor('package')},{t:' → ',fill:'#4A5462'},{t:'HTTPClient',fill:planeColor('package')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('package')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — Foundation 或外部 surface'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:160,y:1470,t:'不變量：HTTP、token 與 infrastructure failure 不得跨越 PR Inbox 或 PR Reader 的 Port'},
-  {s:'bn',x:160,y:1490,t:'不變量：Transport error 不由 HTTP package 統一包裝；Adapter 仍負責跨 core Port 前的語意 mapping'},
-  {s:'bn',x:160,y:1510,t:'延後：URLSessionTransport、OAuth、Keychain、retry、status validation、decode policy 與 GitHub DTO mapping'}
+  {s:'bn',x:160,y:1490,t:'不變量：HTTP package 只以 HTTPClientError 表達 transport failure；Adapter 仍負責跨 core Port 前的語意 mapping'},
+  {s:'bn',x:160,y:1510,t:'未來：GitHubRESTAdapter 採用 package；GitHubGraphQLAdapter 封裝 ApolloClient，兩者不暴露給 Domain'},
+  {s:'bn',x:160,y:1530,t:'延後：OAuth、Keychain、retry、status validation、decode policy、GitHub DTO mapping、Apollo schema 與 operation'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},

@@ -7,7 +7,7 @@ public struct Requester: Sendable {
     self.transport = transport
   }
 
-  public func execute(_ request: HTTPRequest) async throws -> HTTPResponse {
+  public func execute(_ request: HTTPRequest) async throws(HTTPClientError) -> HTTPResponse {
     var urlRequest = URLRequest(url: request.url.value)
     urlRequest.httpMethod = request.method.rawValue
     urlRequest.httpBody = request.body

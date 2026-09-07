@@ -7,7 +7,7 @@ public struct HTTPClient: Sendable {
     requester = Requester(transport: transport)
   }
 
-  public func execute(_ request: HTTPRequest) async throws -> HTTPResponse {
+  public func execute(_ request: HTTPRequest) async throws(HTTPClientError) -> HTTPResponse {
     try await requester.execute(request)
   }
 
@@ -16,7 +16,7 @@ public struct HTTPClient: Sendable {
     url: HTTPURL,
     headers: HTTPHeaders = HTTPHeaders(),
     body: Data? = nil
-  ) async throws -> HTTPResponse {
+  ) async throws(HTTPClientError) -> HTTPResponse {
     try await execute(HTTPRequest(url: url, method: method, headers: headers, body: body))
   }
 
@@ -24,7 +24,7 @@ public struct HTTPClient: Sendable {
     url: HTTPURL,
     headers: HTTPHeaders = HTTPHeaders(),
     body: Data? = nil
-  ) async throws -> HTTPResponse {
+  ) async throws(HTTPClientError) -> HTTPResponse {
     try await request(method: .get, url: url, headers: headers, body: body)
   }
 
@@ -32,7 +32,7 @@ public struct HTTPClient: Sendable {
     url: HTTPURL,
     headers: HTTPHeaders = HTTPHeaders(),
     body: Data? = nil
-  ) async throws -> HTTPResponse {
+  ) async throws(HTTPClientError) -> HTTPResponse {
     try await request(method: .post, url: url, headers: headers, body: body)
   }
 
@@ -40,7 +40,7 @@ public struct HTTPClient: Sendable {
     url: HTTPURL,
     headers: HTTPHeaders = HTTPHeaders(),
     body: Data? = nil
-  ) async throws -> HTTPResponse {
+  ) async throws(HTTPClientError) -> HTTPResponse {
     try await request(method: .put, url: url, headers: headers, body: body)
   }
 
@@ -48,7 +48,7 @@ public struct HTTPClient: Sendable {
     url: HTTPURL,
     headers: HTTPHeaders = HTTPHeaders(),
     body: Data? = nil
-  ) async throws -> HTTPResponse {
+  ) async throws(HTTPClientError) -> HTTPResponse {
     try await request(method: .patch, url: url, headers: headers, body: body)
   }
 
@@ -56,7 +56,7 @@ public struct HTTPClient: Sendable {
     url: HTTPURL,
     headers: HTTPHeaders = HTTPHeaders(),
     body: Data? = nil
-  ) async throws -> HTTPResponse {
+  ) async throws(HTTPClientError) -> HTTPResponse {
     try await request(method: .delete, url: url, headers: headers, body: body)
   }
 }
