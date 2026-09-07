@@ -37,8 +37,8 @@ const BOXES = [
     name:'HTTPRequest',about:'只持有已驗證 HTTPURL、method、headers 與 optional body。',
     texts:[['bl',824,538,'HTTPRequest'],['bs',824,560,'HTTPURL · method · headers'],['bn',824,582,'body: Data?；不 throws']] },
   { id:'response', plane:'contracts', band:'band-contracts', x:1100,y:510,w:270,h:88,r:10,dash:true,
-    name:'HTTPResponse',about:'Transport 未經 status 或 decode policy 處理的 raw response contract。',
-    texts:[['bl',1124,538,'HTTPResponse'],['bs',1124,560,'status · headers · body'],['bn',1124,582,'raw return value']] },
+    name:'HTTPResponse',about:'Transport 回傳的 canonical raw response；提供 caller-owned decoder 的 opt-in JSON convenience，沒有 status 或 Content-Type policy。',
+    texts:[['bl',1124,538,'HTTPResponse'],['bs',1124,560,'status · headers · raw body'],['bn',1124,582,'json：caller-owned decoder']] },
   { id:'method-headers', plane:'contracts', band:'band-contracts', x:420,y:616,w:640,h:42,r:10,dash:true,
     name:'HTTPMethod 與 HTTPHeaders',about:'HTTPRequest 使用的 package-owned method 與 header value types。',
     texts:[['bs',444,643,'HTTPMethod 與 HTTPHeaders — package-owned request metadata']] },
@@ -93,7 +93,7 @@ const TEXTS = [
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:160,y:1530,t:'不變量：Endpoint、Base URL、Path 與 Query 由呼叫端／domain layer 組裝，不是 package API'},
   {s:'bn',x:160,y:1550,t:'不變量：typed throws 只限 HTTPURL validation；Transport error 維持一般 async throws 並原樣傳遞'},
-  {s:'bn',x:160,y:1570,t:'延後：URLSessionTransport、網路呼叫、status validation、retry、token refresh 與 decode policy'}
+  {s:'bn',x:160,y:1570,t:'延後：URLSessionTransport、網路呼叫、status／Content-Type validation、retry 與 token refresh'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},

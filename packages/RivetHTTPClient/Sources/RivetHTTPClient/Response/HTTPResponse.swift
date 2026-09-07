@@ -10,4 +10,8 @@ public struct HTTPResponse: Equatable, Sendable {
     self.headers = headers
     self.body = body
   }
+
+  public func json<T: Decodable>(_ type: T.Type, decoder: JSONDecoder) throws -> T {
+    try decoder.decode(type, from: body)
+  }
 }
