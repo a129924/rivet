@@ -2,7 +2,7 @@
 
 ## Phase
 
-RV-03 approved；awaiting HR-03 human review for deferred provider signature remediation
+RV-04 approved；awaiting HR-04 human review for lifecycle renderer locale remediation
 
 ## Steps
 
@@ -24,6 +24,12 @@ RV-03 approved；awaiting HR-03 human review for deferred provider signature rem
 | TE-03 | Tester | completed with exception | 僅在 IM-03 completed 後，獨立驗證 deferred-signature remediation、artifact synchronization 與 scope。 | static／artifact checks、diff scope 與 PR thread 對應結果如實記錄；不將任何 environment exception 誤稱為 pass。 | 獨立 Tester re-verification：current lifecycle JSON／HTML SHA 分別為 `43ae4457c39fa6ea93745c5e95d83621a977bb0fb887f6650b4ed39c74b2a878`／`da47dfd8438261b860815457673d6f26a63fa4ecdd469df07c6db9262343a8f5`，與 current receipt 一致；receipt 的四種 desktop viewport 均無 X/Y overflow，minimum projected node text 6.5px ≥ 6px。Archify showcase validate 9/9、frozen JSON temp deliver 與 canonical HTML byte-identical、canvas validate → temp build → enhance → accessibility verify 與 canonical HTML byte-identical、deferred-signature audit、絕對路徑 audit、`git diff --check` 與 Swift／HTTP scope audit 均通過。Tester 未重跑 fresh visual-check：已知 Chrome DevTools intermittent `SIGABRT` 缺口依 human 明確授權，接受 same-SHA Implementer fresh four-viewport pass 加 Tester byte identity 作為受限 environment exception；本項不宣稱 Tester independent visual-check pass，路由 RV-03。 |
 | RV-03 | Reviewer | approved | 僅在 TE-03 completed 後，獨立審查 PR comment remediation 的 contract、scope、workflow 與 Tester evidence。 | verdict 明確；任何 scope／contract／workflow drift 優先保守收斂。 | 獨立 Reviewer verdict：`approved`。deferred-signature remediation 維持 Integration-owned token-delivery direction，未鎖定具體 Swift signature、`throws`／`Outcome`、credential failure、refresh 或 re-auth contract；long-lived docs／diagram、scope 與 workflow 均已接受。TE-03 的 human-authorized same-SHA Implementer fresh four-viewport pass 加 Tester byte identity environment exception 已接受，未誤稱為 Tester independent visual-check pass。僅路由 HR-03 human review。此為獨立 review evidence，非 Plan-Creator 自我 approval。 |
 | HR-03 | Human review | pending | 僅在 RV-03 approved 後，由 human 審查 PR #17 deferred-signature remediation。 | human 明確決定後續處置；不得由任何 agent 視同 approval。 | 待 human decision。 |
+| PC-04 | Plan-Creator | completed | 依 human 鎖定決策，僅修正四份 planning artifacts，建立 lifecycle renderer locale thread 的最小 remediation chain。 | artifacts 一致鎖定：Archify 僅正式支援 `en`／`zh-CN`；繁體中文作者內容省略 `meta.locale`，Viewer UI／generated HTML fallback 英文；只計畫由 IM-04 修改 artifact-local `BUILD.md`，不重送 artifact。 | human 明確決定：不得設 `zh-CN`、不得手改 generated HTML；先以 renderer capability 為準。Plan-Creator 不修改 `BUILD.md`、lifecycle source／HTML／sidecar 或 Git。 |
+| PR-04 | Plan-Reviewer | approved | 獨立審查 PC-04 是否只記錄 locked renderer capability 與最小 delivery，且未擴張 topic scope。 | verdict 明確為 approved、needs-rework 或 blocked；只有 approved 才可進入 IM-04。 | 獨立 Plan-Reviewer verdict：`approved`。PC-04 僅記錄 Archify 正式支援 `en`／`zh-CN`、繁體中文作者內容省略 `meta.locale` 與英文 fallback；唯一 delivery 維持 artifact-local `BUILD.md`，未擴張 Swift／HTTP、renderer 或 generated artifact scope。此為獨立 review evidence，非 Plan-Creator 自我 approval。 |
+| IM-04 | Implementer | completed | 僅在 PR-04 approved 後，於 lifecycle artifact-local `BUILD.md` 明示 renderer locale limitation 與 source omission／英文 fallback 規則。 | 只修改 `BUILD.md`；說明正式支援僅 `en`／`zh-CN`、繁體中文作者內容省略 `meta.locale`、Viewer UI／generated HTML fallback 英文；不設 `zh-CN`、不手改 generated HTML／sidecar、不改 JSON、不重新 deliver。 | `BUILD.md` 已如實記錄：作者內容為繁體中文；Archify 僅正式支援 `en`／`zh-CN`；JSON 必須省略 `meta.locale`；Viewer UI／generated HTML language attribute 回退英文。未設定 `zh-CN`、未手改 generated HTML／sidecar、未改 JSON，亦未重新 deliver。 |
+| TE-04 | Tester | completed | 獨立驗證 IM-04 的文字、限定範圍與 diff。 | `BUILD.md` 如實表達 locked fact；diff 不含 lifecycle JSON、generated HTML、visual-check sidecar、receipt 或 architecture-canvas language handling 變更；`git diff --check` 通過。 | 獨立 Tester 驗證通過：Archify lifecycle showcase validate 9/9、source JSON 省略 `meta.locale` 且保有繁體中文作者內容；canonical HTML 的 `<html>` 與 lifecycle `<svg>` language attribute 均為英文 fallback。`BUILD.md` 如實記錄 Archify 僅正式支援 `en`／`zh-CN`、不得設定 `zh-CN` 錯標繁體中文、不得手改 generated HTML／sidecar，且不需重新 deliver。topic diff 僅含四份 planning artifacts 與 lifecycle artifact-local `BUILD.md`；不含 lifecycle JSON、generated HTML、visual-check sidecar、receipt 或 architecture-canvas language handling 變更；`git diff --check` 通過。路由 RV-04。 |
+| RV-04 | Reviewer | approved | 僅在 TE-04 completed 後，獨立審查 locale remediation 的 contract、scope、workflow 與 Tester evidence。 | verdict 明確；任何 renderer contract 或 scope drift 優先保守收斂。 | 獨立 Reviewer verdict：`approved`。locale remediation 維持 Archify 正式支援 `en`／`zh-CN`、繁體中文作者內容省略 `meta.locale` 與英文 fallback；唯一 delivery 為 artifact-local `BUILD.md`，未設定 `zh-CN`、未手改 generated HTML／sidecar、未重新 deliver，亦未擴張 Swift／HTTP、renderer 或 generated artifact scope。TE-04 evidence 已接受；僅路由 HR-04 human review。此為獨立 review evidence，非 Plan-Creator 自我 approval。 |
+| HR-04 | Human review | pending | 僅在 RV-04 approved 後，由 human 審查 PR #17 lifecycle renderer locale remediation。 | human 明確決定後續處置；不得由任何 agent 視同 approval。 | 待 human decision。 |
 
 ## Blockers
 
@@ -37,8 +43,8 @@ Human 必須在 draft PR 檢查 architecture boundary 是否維持：GitHub Inte
 
 ## Handoff
 
-- Current phase：RV-03 approved；僅可進入 HR-03 human review。
-- Upstream verdict：`approved`；source 為獨立 Reviewer RV-02 verdict。PR-01 的 Plan-Reviewer approval 與 RV-01 的獨立 Reviewer approval 保留在各自 gate evidence。
+- Current phase：RV-04 approved；awaiting HR-04 human review for lifecycle renderer locale remediation。HR-03 不代表 HR-04 approval。
+- Upstream verdict：`approved`；source 為獨立 Plan-Reviewer PR-04 verdict。PR-01 的 Plan-Reviewer approval 與 RV-01 的獨立 Reviewer approval 保留在各自 gate evidence。
 - Completed gate：IM-01；source 為 human 明確授權與 Implementer reconciliation evidence。
 - Completed gate：TE-01 with exception；receipt metadata remediation 已重新驗證。既有 Archify／canvas／scope evidence及 historical visual-check receipt 仍受限；fresh visual-check 沒有本輪 pass，Chrome DevTools `SIGABRT` 必須原樣保留。
 - Completed gate：RV-01；獨立 Reviewer 已 approved contract、scope 與 evidence，並接受 fresh visual-check 的 Chrome DevTools `SIGABRT` environment exception；draft PR 必須原樣揭露。
@@ -49,9 +55,14 @@ Human 必須在 draft PR 檢查 architecture boundary 是否維持：GitHub Inte
 - Completed gate：IM-03；Implementer 已更新 long-lived docs／diagram wording 並交付 fresh lifecycle validation evidence；此為 Implementer evidence，尚待 TE-03 獨立驗證。
 - Completed gate：TE-03 with exception；獨立 Tester 已驗證 deferred-signature remediation 的 receipt／current SHA binding、static canvas／Archify pipeline、canonical byte identity、signature／absolute-path／scope audit。Tester fresh visual-check 仍未重跑；human 已接受 Implementer same-SHA fresh four-viewport pass 加 Tester byte identity 的受限 environment exception，未宣稱 Tester independent pass。
 - Completed gate：RV-03；獨立 Reviewer 已 approved deferred-signature remediation 的 contract、scope、workflow 與 Tester evidence，並接受 TE-03 的 human-authorized same-SHA environment exception；未宣稱 Tester independent visual-check pass。
+- Completed gate：PR-04；獨立 Plan-Reviewer 已 approved lifecycle renderer locale remediation planning，確認其僅記錄 locked renderer capability 與 artifact-local `BUILD.md` delivery，未擴張 topic scope。
+- Completed gate：IM-04；Implementer 已完成 artifact-local `BUILD.md` locale limitation 說明；未設定 `zh-CN`、未手改 generated HTML／sidecar、未修改 JSON 或重新 deliver。
+- Completed gate：TE-04；獨立 Tester 已驗證 renderer locale disclosure、source `meta.locale` omission、英文 HTML fallback、限定 diff 與 `git diff --check`；不含 lifecycle JSON、generated HTML、visual-check sidecar、receipt 或 architecture-canvas language handling 變更。
+- Completed gate：RV-04；獨立 Reviewer 已 approved lifecycle renderer locale remediation 的 contract、scope、workflow 與 TE-04 evidence。維持 Archify 正式支援 `en`／`zh-CN`、繁體中文作者內容省略 `meta.locale` 與英文 fallback；唯一 delivery 為 artifact-local `BUILD.md`，未設定 `zh-CN`、未手改 generated HTML／sidecar、未重新 deliver，亦未擴張 Swift／HTTP、renderer 或 generated artifact scope。
 - Pending PR thread：PR #17 關於 `GitHubTokenProvider` 具體 signature 與既有 BC failure-contract principle 的 review thread 已依 human 的「延後 signature」決策實作回應；僅可由 HR-03 human review 決定後續處置。
+- Pending PR thread：lifecycle generated HTML 的 language attribute；human 已鎖定以 Archify capability 為準：僅 `en`／`zh-CN` 正式支援，繁體中文作者內容省略 `meta.locale`，Viewer UI／HTML fallback 英文。不得設 `zh-CN`、不得手改 generated HTML、不得重新 deliver；唯一計畫 delivery 是 `BUILD.md` 說明。
 - Requested next owner：Human review。
-- Next gate：HR-03；human 審查 deferred-signature remediation。不得由任何 agent 視同 approval 或自行 resolve thread。
+- Next gate：HR-04；human 審查 PR #17 lifecycle renderer locale remediation。不得由任何 agent 視同 human approval 或自行 resolve thread。
 
 ## Last Updated
 
@@ -90,3 +101,11 @@ Human 必須在 draft PR 檢查 architecture boundary 是否維持：GitHub Inte
 2026-09-07／16（目前狀態：獨立 Tester TE-03 `completed with exception`。current lifecycle receipt SHA 與四 viewport evidence、Archify showcase validate／frozen deliver canonical byte identity、canvas validate/build/enhance/accessibility canonical byte identity、deferred-signature、絕對路徑及 Swift／HTTP scope audits 均通過。Tester 未重跑 fresh visual-check；human 已接受同一 SHA 的 Implementer fresh pass 加 Tester byte identity 作為受限 environment exception，未宣稱 Tester independent pass；僅路由 RV-03。）
 
 2026-09-07／17（目前狀態：獨立 Reviewer RV-03 `approved`。deferred-signature remediation 維持 Integration-owned token-delivery direction，未鎖定具體 Swift signature、`throws`／`Outcome`、credential failure、refresh 或 re-auth contract；long-lived docs／diagram、scope 與 workflow 已接受。TE-03 的 human-authorized same-SHA Implementer fresh four-viewport pass 加 Tester byte identity environment exception 已接受，未誤稱為 Tester independent visual-check pass；僅路由 HR-03 human review，未宣稱 human approval 或自行 resolve PR thread。）
+
+2026-09-07／18（目前狀態：human 鎖定 lifecycle renderer locale remediation：Archify 僅正式支援 `en`／`zh-CN`；繁體中文作者內容必須省略 `meta.locale`，Viewer UI 與 generated HTML 的 language attribute fallback 英文。Plan-Creator 完成 PC-04，只於四份 official artifacts 建立 PR-04 → IM-04 → TE-04 → RV-04 → HR-04 最小 chain；唯一計畫 delivery 是 artifact-local `BUILD.md` 說明。不得設 `zh-CN`、不得手改 generated HTML／sidecar、不得重新 deliver；僅路由 PR-04 獨立 plan review，未宣稱 approval。）
+
+2026-09-07／19（目前狀態：human 明確授權記錄 PR-04 independent `approved` 與既有 IM-04 `completed` delivery evidence。PR-04 的獨立 Plan-Reviewer 已確認 remediation 僅記錄 locked renderer capability 與 artifact-local `BUILD.md` delivery，未擴張 topic scope；IM-04 維持只修改 `BUILD.md`，未設定 `zh-CN`、未手改 generated HTML／sidecar、未改 JSON 或重新 deliver。僅路由 TE-04 獨立驗證，未宣稱 Tester verdict、Reviewer approval 或自行 resolve PR thread。）
+
+2026-09-07／20（目前狀態：獨立 Tester TE-04 `completed`。Archify lifecycle showcase validate 9/9 通過；source JSON 省略 `meta.locale` 且保有繁體中文作者內容，canonical HTML 的 `<html>` 與 lifecycle `<svg>` language attribute 均為英文 fallback。`BUILD.md` 如實記錄正式支援僅 `en`／`zh-CN`、不得以 `zh-CN` 錯標繁體中文、不得手改 generated HTML／sidecar，且不需重新 deliver。topic diff 僅含四份 planning artifacts 與 lifecycle artifact-local `BUILD.md`，不含 lifecycle JSON、generated HTML、visual-check sidecar、receipt 或 architecture-canvas language handling 變更；`git diff --check` 通過。僅路由 RV-04 獨立 review，未宣稱 Reviewer approval 或自行 resolve PR thread。）
+
+2026-09-07／21（目前狀態：獨立 Reviewer RV-04 `approved`。locale remediation 維持 Archify 正式支援 `en`／`zh-CN`、繁體中文作者內容省略 `meta.locale` 與英文 fallback；唯一 delivery 為 artifact-local `BUILD.md`，未設定 `zh-CN`、未手改 generated HTML／sidecar、未重新 deliver，亦未擴張 Swift／HTTP、renderer 或 generated artifact scope。TE-04 evidence 已接受；僅路由 HR-04 human review，未宣稱 human approval 或自行 resolve PR thread。）

@@ -26,6 +26,12 @@ node verify-accessibility.js --input index.html
 
 ## 重建 declaration-only authorization lifecycle
 
+### Renderer 語系限制與可重現交付
+
+此 lifecycle 的作者內容使用繁體中文。Archify 正式支援的 locale 僅有 `en` 與 `zh-CN`；因此，當作者內容為繁體中文時，`github-authorization-lifecycle.json` 必須省略 `meta.locale`。在此情況下，Viewer UI 與 generated HTML 的 language attribute 會回退為英文。
+
+不得設定 `zh-CN` 來強制標示繁體中文，也不得手動 patch generated HTML 或 visual-check sidecar。這項 renderer limitation 的說明只影響本 `BUILD.md`；不需要重新執行 deliver。
+
 此 artifact 的 source 是 `github-authorization-lifecycle.json`；它與 canvas 的責任邊界不同，只表達 declaration-only lifecycle。設定 `ARCHIFY_SKILL` 為 Archify skill 根目錄，然後依序執行：
 
 ```sh

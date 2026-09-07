@@ -13,6 +13,7 @@
 - 初版 credential 為使用者預先提供的一個 fine-grained PAT。
 - 鎖定 declaration-only future direction：GitHub Integration 內的 `GitHubTokenProvider` 負責 token delivery，並交付 Integration-owned `GitHubAccessToken`。其具體 Swift signature、`throws`／`Outcome` 選擇、credential failure，以及 refresh／re-auth contract 延後至獨立 failure-contract topic；本 topic 不預先選擇任何 failure representation。
 - GitHub Integration future authorizer 為每個 GitHub request 設定或覆寫 `Authorization: Bearer …`。
+- 鎖定 Archify lifecycle 的 renderer locale limitation：正式支援僅 `en` 與 `zh-CN`；因作者內容為繁體中文，source JSON 省略 `meta.locale`，Viewer UI 與 generated HTML language attribute 依 renderer fallback 維持英文。這不是將繁體中文錯標為 `zh-CN` 的授權。
 - Plan-Reviewer 通過後，由獨立 Implementer 將已批准且可長期成立的 boundary 回寫到 GitHub Integration BC 文件、architecture navigation、Integration/HTTP boundary canvas 與 lifecycle artifact；其後由獨立 Tester、Reviewer 與 human review 依序驗證。
 
 ## Out-Of-Scope
@@ -21,6 +22,7 @@
 - `GitHubTokenProvider` 的具體 Swift signature、`throws`／`Outcome` 選擇，或 credential failure、refresh／re-auth contract。
 - OAuth-shaped token payload 的採用、refresh token、401 retry、多帳號、GitHub Enterprise、PAT UI、Keychain identity／adapter。
 - concrete network、HTTP status／decode policy、DTO、PR Inbox／PR Reader mapping，以及 core failure mapping。
+- 直接手改 generated lifecycle HTML 或 visual-check sidecar、設定 `meta.locale: "zh-CN"`、為 language thread 重新 deliver lifecycle artifact，或變更 architecture-canvas 的獨立 language handling。
 
 ## ReadOnly
 
@@ -50,6 +52,7 @@
 - 後續 Implementer 修改 `docs/architecture/README.md`：連結 declaration-only lifecycle artifact，並描述其限制。
 - 後續 Implementer 修改 `docs/architecture/diagrams/github-integration-http-client-boundary/scene.js`：區分 future Integration abstractions 與既有 HTTP package，且維持其 non-runtime-boundary purpose。
 - 後續 Implementer 交付唯一允許的 canonical lifecycle source、HTML 與 canonical visual-check evidence：`github-authorization-lifecycle.json`、`github-authorization-lifecycle.html`、`github-authorization-lifecycle.visual-check.*`；不得將 containment candidate 納入交付。
+- language thread 的唯一後續 delivery 是後續 Implementer 修改 lifecycle artifact-local `BUILD.md`，明示 Archify 僅正式支援 `en`／`zh-CN`、繁體中文作者內容必須省略 `meta.locale`，以及 Viewer UI／generated HTML 回退英文；不修改 lifecycle JSON、generated HTML、receipt 或 visual evidence，亦不重新 deliver。
 
 ## TestCase
 
@@ -60,6 +63,7 @@
 | TC-03 | Implementer delivery 後，canonical lifecycle 僅表達 request preparation、取得既有 PAT、Bearer header injection／overwrite 與 HTTP client raw execution；不含 OAuth、refresh、401 retry、concrete network、DTO 或 core mapping。 |
 | TC-04 | Tester 獨立驗證 existing architecture canvas 的 artifact-local validate → build → enhance → verify，及 canonical lifecycle 的 Archify showcase validate → deliver → visual-check。 |
 | TC-05 | Tester 確認兩組 containment candidate 已由 Implementer 移除，且交付只含 canonical lifecycle JSON／HTML／canonical visual-check evidence；Reviewer 再確認 `git diff --check` 與無 Swift／HTTP package drift。 |
+| TC-06 | language thread delivery 僅改 lifecycle artifact-local `BUILD.md`，如實記錄 `en`／`zh-CN` renderer limitation、`meta.locale` omission 與英文 fallback；diff 不含 lifecycle JSON、generated HTML、visual-check sidecar 或 architecture-canvas language handling 變更。 |
 
 ## Future Swift Implementation Slices
 

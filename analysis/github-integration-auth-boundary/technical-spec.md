@@ -29,6 +29,12 @@ GitHubAccessToken  // Integration-owned value type
 
 此 lifecycle 不包含 OAuth、refresh、401 retry、concrete Keychain call、concrete network implementation、DTO mapping 或 core failure mapping。
 
+## Lifecycle Renderer Locale Limitation
+
+Archify 正式支援的 locale 僅有 `en` 與 `zh-CN`。lifecycle 的作者內容為繁體中文，故 source JSON 必須省略 `meta.locale`，不得將繁體中文內容錯標為 `zh-CN`。在此 omission 下，Viewer UI 與 generated HTML 的 language attribute 會依 renderer fallback 維持英文；這是 renderer limitation，不是作者內容的語言決策。
+
+本 topic 不直接修改 generated lifecycle HTML、visual-check sidecar 或 source locale，亦不因這個 thread 重新 deliver。唯一後續 delivery 是由 Implementer 在 lifecycle artifact-local `BUILD.md` 如實記錄上述 limitation 與可重現規則。此規則僅適用 Archify lifecycle，不能推論或覆寫同目錄 architecture-canvas 的獨立 language handling。
+
 ## Deferred OAuth-Shaped Payload
 
 使用者提供的 `access_token`、`expires_in`、`refresh_token`、`refresh_token_expires_in`、`scope`、`token_type` JSON schema 是 OAuth-shaped payload；它不改變本 topic 的 fine-grained PAT-only decision。此 topic 不採用、保存、解析或暴露該 schema，也不以它擴大未來 provider contract。若未來評估 OAuth，必須以獨立 topic 重新鎖定 lifecycle、storage、refresh、failure 與 Port isolation。
