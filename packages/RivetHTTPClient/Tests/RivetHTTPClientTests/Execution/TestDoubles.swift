@@ -32,15 +32,15 @@ struct CapturingTransport: Transport {
   let captured: LockedBox<URLRequest?>
   let response: HTTPResponse
 
-  func execute(_ request: URLRequest) async throws -> HTTPResponse {
+  func execute(_ request: URLRequest) async throws(HTTPClientError) -> HTTPResponse {
     captured.set(request)
     return response
   }
 }
 
 struct FailingTransport: Transport {
-  func execute(_ request: URLRequest) async throws -> HTTPResponse {
-    throw TransportFailure.unavailable
+  func execute(_ request: URLRequest) async throws(HTTPClientError) -> HTTPResponse {
+    throw .underlyingFailure(TransportFailure.unavailable)
   }
 }
 
