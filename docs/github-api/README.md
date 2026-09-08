@@ -1,6 +1,6 @@
 # GitHub PR API Catalog
 
-本目錄是 Rivet 後續 GitHub Integration 實作的外部 API 參考。它不定義 Swift contract、BC data model 或 authentication 實作；那些決策必須留給對應的 implementation topic。
+本目錄是 Rivet 各 Domain BC 未來進行 GitHub Infra REST／GraphQL 外部協定工作時的 API 參考。GitHub Integration 已退役；未來需要時，各 BC 的 Infra 各自處理所需的 REST／GraphQL 外部協定工作。本目錄不定義 Swift contract、BC data model 或 authentication 實作；那些決策必須留給對應的 implementation topic。
 
 最後官方校驗：2026-09-03（GitHub.com）。
 
@@ -32,7 +32,7 @@
 ## 共通規則
 
 - REST list endpoints 使用 `page`／`per_page` 與 Link header；GraphQL connection 使用 cursor 與 `pageInfo`。不要假設單頁結果完整。
-- GitHub REST 的 API version、Accept header 與 token 細節屬 Integration Adapter 的未來實作決策；文件只保留 endpoint 特有的 media type 與限制。
+- GitHub REST／GraphQL 的 API version、Accept header 與 token 細節屬各 BC Infra 的未來實作決策；文件只保留 endpoint 特有的 media type 與限制。
 - `viewerViewedState` 是 GitHub API 回傳的遠端 PR file 資料；本 catalog 不定義本機持久化、同步或 Rivet UI 的狀態採用規則。
 - 原稿中的 `review-involves:@me` 未在本次官方 search qualifier 參考中確認，因此不列為可採用 query。
 
