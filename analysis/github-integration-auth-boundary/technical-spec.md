@@ -11,7 +11,7 @@ GitHubAccessToken  // Integration-owned value type
 
 這只是 declaration-only direction，不在本 topic 建立 Swift declaration。未來 provider 有 token-delivery operation 並交付 `GitHubAccessToken`，但具體 Swift signature、`throws`／`Outcome` 選擇、credential failure，以及 refresh／re-auth contract 全部延後至獨立 failure-contract topic；本 topic 不預先選擇任何 failure representation。`GitHubAccessToken` 是 GitHub Integration 的 value type；它不退化為 `String`，也不成為 `RivetHTTPClient` 的公開 type。
 
-初版只支援一個使用者預先提供的 fine-grained PAT。該 credential 可由 future provider 在每次 GitHub request 前交付給 Integration authorizer。authorizer 設定或覆寫 `Authorization: Bearer …` 後，才將 raw request 交給 `RivetHTTPClient`。
+初版只支援一個使用者預先提供的 fine-grained PAT。該 credential 可由 future provider 在每次 **GitHub REST request** 前交付給 Integration authorizer。authorizer 設定或覆寫 `Authorization: Bearer …` 後，才將該 REST raw request 交給 `RivetHTTPClient`。這不描述 `GitHubGraphQLAdapter` 的 Apollo route。
 
 ## Boundary Rules
 
@@ -19,15 +19,16 @@ GitHubAccessToken  // Integration-owned value type
 - Keychain 與使用者設定的 PAT 都是 Outside。此 topic 不鎖定 Keychain service/account identity、entitlement、讀寫 adapter 或 UI。
 - GitHub Integration 在跨越 PR Inbox／PR Reader 的 core Port 前隔離 token、OAuth、HTTP status、DTO 與 infrastructure details。各 core BC 的 failure mapping 是後續 adapter topic 的責任。
 - 現有 HTTP package 的 raw response／transport-error passthrough contract 維持不變。
+- 只有 `GitHubRESTAdapter` 的 request 經 Integration-owned authorizer 後使用 `RivetHTTPClient`。`GitHubGraphQLAdapter` 封裝 `ApolloClient`，不經 `RivetHTTPClient.Transport`；Apollo token interceptor 及其 token-delivery、failure、refresh、re-auth 行為均留待獨立 topic。
 
 ## Lifecycle Contract
 
-1. Integration 準備 GitHub request。
+1. `GitHubRESTAdapter` 準備 GitHub REST request。
 2. future `GitHubTokenProvider` 取得既有的單一 PAT，交付 `GitHubAccessToken`；其 exact operation signature 與 credential failure behavior 未在本 topic 決定。
 3. future Integration authorizer 將 request 的 `Authorization` 設定或覆寫為 Bearer token。
-4. `RivetHTTPClient` 執行未帶 GitHub authorization policy 的 raw request chain。
+4. `RivetHTTPClient` 執行未帶 GitHub authorization policy 的 REST raw request chain。
 
-此 lifecycle 不包含 OAuth、refresh、401 retry、concrete Keychain call、concrete network implementation、DTO mapping 或 core failure mapping。
+此 lifecycle 不包含 `GitHubGraphQLAdapter`／Apollo route、OAuth、refresh、401 retry、concrete Keychain call、concrete network implementation、DTO mapping 或 core failure mapping。
 
 ## Lifecycle Renderer Locale Limitation
 
