@@ -18,4 +18,12 @@ public struct HTTPResponse: Equatable, Sendable {
   public func json<T: Decodable>(_ type: T.Type, decoder: JSONDecoder) throws -> T {
     try decoder.decode(type, from: body)
   }
+
+  public func jsonSemantic<T: Decodable>(_ type: T.Type, decoder: JSONDecoder) throws -> T {
+    do {
+      return try decoder.decode(type, from: body)
+    } catch {
+      throw JSONSemanticDecodingError(underlyingError: error)
+    }
+  }
 }
