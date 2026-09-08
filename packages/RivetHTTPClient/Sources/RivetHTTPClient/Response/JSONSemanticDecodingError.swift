@@ -1,5 +1,3 @@
-import Foundation
-
 public struct JSONSemanticDecodingError: Error {
   public enum Kind {
     case dataCorrupted
