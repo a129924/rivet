@@ -1,4 +1,6 @@
 .build/
 .DS_Store
+.playwright-cli/
+__pycache__/
 surfaces/pr-reader-webview/coverage/
 surfaces/pr-reader-webview/node_modules/
