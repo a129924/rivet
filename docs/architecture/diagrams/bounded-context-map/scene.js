@@ -4,7 +4,7 @@ const W = 1480, H = 2030;
 const PLANES = {
   presentation: { c: '#7DD3FC', label: '呈現層' },
   facade: { c: '#A78BFA', label: 'Facade 層' },
-  core: { c: '#4ADE80', label: 'BC Core 層' },
+  usecase: { c: '#4ADE80', label: 'BC UseCase 層' },
   port: { c: '#FBBF24', label: '內部 Port 與契約' },
   infra: { c: '#F6821F', label: '各 BC 的 GitHub Infra' },
   outside: { c: '#94A3B8', label: '外部世界' }
@@ -15,10 +15,10 @@ const BANDS = [
     hdr: { x: 184, y: 230, t: '使用者與呈現層' }, tagr: { x: 1396, y: 230, t: 'APP SURFACE · SESSION 非 BC', alpha: 0.6 } },
   { id: 'band-facade', plane: 'facade', x: 160, y: 470, w: 1260, h: 150, alpha: 0.55, dash: true,
     hdr: { x: 184, y: 500, t: 'FACADE — 穩定的呈現層入口' }, tagr: { x: 1396, y: 500, t: '內部擁有 · UI 從此進入', alpha: 0.6 } },
-  { id: 'band-core', plane: null, x: 160, y: 710, w: 1260, h: 460, stroke: '#3A4250', alpha: 1,
-    hdr: { x: 184, y: 740, t: '核心 BOUNDED CONTEXT' }, tagr: { x: 1396, y: 740, t: 'PR INBOX ║ PR READER — 不直接相依', alpha: 0.7 } },
+  { id: 'band-usecase', plane: null, x: 160, y: 710, w: 1260, h: 460, stroke: '#3A4250', alpha: 1,
+    hdr: { x: 184, y: 740, t: 'BOUNDED CONTEXT APPLICATION' }, tagr: { x: 1396, y: 740, t: 'PR INBOX ║ PR READER — 不直接相依', alpha: 0.7 } },
   { id: 'band-infra', plane: 'infra', x: 160, y: 1260, w: 1260, h: 370, alpha: 0.48,
-    hdr: { x: 184, y: 1290, t: '各 BC 的 GITHUB INFRA — 未來外部協定邊界' }, tagr: { x: 1396, y: 1290, t: '無 CENTRAL GITHUB INTEGRATION', alpha: 0.6 } },
+    hdr: { x: 184, y: 1290, t: '各 BC 的 GITHUB INFRA — 未來外部協定邊界' }, tagr: { x: 1396, y: 1290, t: '不設集中 GITHUB 邊界', alpha: 0.6 } },
   { id: 'band-outside', plane: 'outside', x: 160, y: 1720, w: 1260, h: 166, alpha: 0.48,
     hdr: { x: 184, y: 1750, t: '外部世界 — GITHUB.COM' }, tagr: { x: 1396, y: 1750, t: '外部系統', alpha: 0.6 } }
 ];
@@ -36,17 +36,17 @@ const BOXES = [
     name: 'Inbox Facade', about: '取得待審閱佇列的穩定呈現層入口。', texts: [['bl', 244, 558, 'Inbox Facade'], ['bs', 244, 580, '目前待審閱佇列的穩定入口']] },
   { id: 'reader-facade', plane: 'facade', band: 'band-facade', x: 820, y: 530, w: 540, h: 68, r: 10, dash: true,
     name: 'Reader Facade', about: '載入單一 PR 閱讀快照的穩定呈現層入口。', texts: [['bl', 844, 558, 'Reader Facade'], ['bs', 844, 580, '單一閱讀快照的穩定入口']] },
-  { id: 'inbox-core', plane: 'core', band: 'band-core', x: 200, y: 795, w: 540, h: 88, r: 10, dash: true,
-    name: 'PR Inbox Core', about: '定義待審閱佇列與排序語意。', texts: [['bl', 224, 823, 'PR Inbox Core'], ['bs', 224, 845, '待審閱佇列 · 排序'], ['bn', 224, 867, '空佇列是成功結果']] },
-  { id: 'reader-core', plane: 'core', band: 'band-core', x: 800, y: 795, w: 540, h: 88, r: 10, dash: true,
-    name: 'PR Reader Core', about: '組織單一 PR 的閱讀快照。', texts: [['bl', 824, 823, 'PR Reader Core'], ['bs', 824, 845, '背景 · 討論 · checks · diff'], ['bn', 824, 867, '不決定 Inbox 成員']] },
-  { id: 'inbox-port', plane: 'port', band: 'band-core', x: 190, y: 1000, w: 280, h: 104, r: 10, dash: true,
+  { id: 'inbox-usecase', plane: 'usecase', band: 'band-usecase', x: 200, y: 795, w: 540, h: 88, r: 10, dash: true,
+    name: 'PR Inbox UseCase', about: '協調待審閱佇列的更新與排序語意。', texts: [['bl', 224, 823, 'PR Inbox UseCase'], ['bs', 224, 845, '更新佇列 · 套用排序'], ['bn', 224, 867, '空佇列是成功結果']] },
+  { id: 'reader-usecase', plane: 'usecase', band: 'band-usecase', x: 800, y: 795, w: 540, h: 88, r: 10, dash: true,
+    name: 'PR Reader UseCase', about: '協調單一 PR 的閱讀快照。', texts: [['bl', 824, 823, 'PR Reader UseCase'], ['bs', 824, 845, '載入背景 · 討論 · diff'], ['bn', 824, 867, '不決定 Inbox 成員']] },
+  { id: 'inbox-port', plane: 'port', band: 'band-usecase', x: 190, y: 1000, w: 280, h: 104, r: 10, dash: true,
     name: 'Inbox Port', about: '由 PR Inbox 擁有的資料需求。', texts: [['bl', 214, 1028, 'Review Request Source'], ['bs', 214, 1050, 'Inbox 擁有的資料需求'], ['bn', 214, 1074, '不是 GitHub query']] },
-  { id: 'inbox-failure', plane: 'port', band: 'band-core', x: 490, y: 1000, w: 250, h: 104, r: 10, dash: true,
+  { id: 'inbox-failure', plane: 'port', band: 'band-usecase', x: 490, y: 1000, w: 250, h: 104, r: 10, dash: true,
     name: 'Inbox Failure Contract', about: 'PR Inbox 對呼叫端公開的語意失敗。', texts: [['bl', 514, 1028, 'Inbox Failure Contract'], ['bs', 514, 1050, '無法更新佇列'], ['bn', 514, 1074, '不洩漏 HTTP status']] },
-  { id: 'reader-port', plane: 'port', band: 'band-core', x: 800, y: 1000, w: 280, h: 104, r: 10, dash: true,
+  { id: 'reader-port', plane: 'port', band: 'band-usecase', x: 800, y: 1000, w: 280, h: 104, r: 10, dash: true,
     name: 'Reader Port', about: '由 PR Reader 擁有的資料需求。', texts: [['bl', 824, 1028, 'PR Content Source Port'], ['bs', 824, 1050, 'Reader 擁有的資料需求'], ['bn', 824, 1074, '不是 GitHub DTO']] },
-  { id: 'reader-failure', plane: 'port', band: 'band-core', x: 1100, y: 1000, w: 250, h: 104, r: 10, dash: true,
+  { id: 'reader-failure', plane: 'port', band: 'band-usecase', x: 1100, y: 1000, w: 250, h: 104, r: 10, dash: true,
     name: 'Reader Failure Contract', about: 'PR Reader 對呼叫端公開的語意失敗。', texts: [['bl', 1124, 1028, 'Reader Failure Contract'], ['bs', 1124, 1050, 'PR 內容不可讀'], ['bn', 1124, 1074, '不洩漏 GitHub error']] },
   { id: 'inbox-infra', plane: 'infra', band: 'band-infra', x: 200, y: 1320, w: 540, h: 88, r: 10,
     name: 'PR Inbox GitHub Infra', about: 'PR Inbox 未來獨自擁有的 GitHub adapter、endpoint、DTO 與 failure mapping 邊界。', texts: [['bl', 224, 1348, 'PR Inbox GitHub Infra'], ['bs', 224, 1370, 'adapter · endpoint · DTO mapping'], ['bn', 224, 1392, '只服務 Inbox 自己的 Port']] },
@@ -72,10 +72,10 @@ const EDGES = [
   { from: 'reader-view', to: 'session', pts: [[1086,304],[1066,304]] },
   { from: 'session', to: 'inbox-facade', pts: [[880,352],[880,414],[490,414],[490,524]], label: { s: 'al', x: 694, y: 406, t: '請求佇列', anchor: 'center' } },
   { from: 'session', to: 'reader-facade', pts: [[1000,352],[1000,524]] },
-  { from: 'inbox-facade', to: 'inbox-core', pts: [[490,602],[490,789]] },
-  { from: 'reader-facade', to: 'reader-core', pts: [[1090,602],[1090,789]] },
-  { from: 'inbox-core', to: 'inbox-port', pts: [[470,887],[470,940],[330,940],[330,994]] },
-  { from: 'reader-core', to: 'reader-port', pts: [[1070,887],[1070,940],[940,940],[940,994]] },
+  { from: 'inbox-facade', to: 'inbox-usecase', pts: [[490,602],[490,789]] },
+  { from: 'reader-facade', to: 'reader-usecase', pts: [[1090,602],[1090,789]] },
+  { from: 'inbox-usecase', to: 'inbox-port', pts: [[470,887],[470,940],[330,940],[330,994]] },
+  { from: 'reader-usecase', to: 'reader-port', pts: [[1070,887],[1070,940],[940,940],[940,994]] },
   { from: 'inbox-port', to: 'inbox-infra', pts: [[330,1108],[330,1314]], label: { s: 'al', x: 344, y: 1216, t: 'Inbox Port', rot: -90, anchor: 'center' } },
   { from: 'reader-port', to: 'reader-infra', pts: [[940,1108],[940,1314]], label: { s: 'al', x: 954, y: 1216, t: 'Reader Port', rot: -90, anchor: 'center' } },
   { from: 'band-outside', to: 'inbox-infra-failure', pts: [[156,1802],[116,1802],[116,1582],[194,1582]], label: { s: 'al', x: 100, y: 1692, t: '外部 failure', rot: -90, anchor: 'center' } },
@@ -91,8 +91,8 @@ const TEXTS = [
   { s: 'legend', x: 1082, y: 86, t: '虛線 — 內部擁有的抽象' },
   { s: 'legend', x: 1082, y: 110, t: '實線 — app surface、技術面與外部系統' },
   { s: 'legend', x: 1143, y: 134, t: '顏色 — 所屬的 plane' },
-  { s: 'plane', x: 470, y: 775, t: 'PR INBOX', anchor: 'center', fill: planeColor('core') },
-  { s: 'plane', x: 1070, y: 775, t: 'PR READER', anchor: 'center', fill: planeColor('core') },
+  { s: 'plane', x: 470, y: 775, t: 'PR INBOX', anchor: 'center', fill: planeColor('usecase') },
+  { s: 'plane', x: 1070, y: 775, t: 'PR READER', anchor: 'center', fill: planeColor('usecase') },
   { s: 'plane', x: 620, y: 985, t: '內部擁有的 PORT 與 FAILURE CONTRACT', anchor: 'center', fill: planeColor('port') },
   { s: 'bn', x: 160, y: 1976, t: '不變量：Core、UseCase、Port 不依賴 GitHub protocol 或 GitHubTransport；BC 之間沒有 compile-time dependency' },
   { s: 'bn', x: 160, y: 1996, t: '不變量：各 BC Infra 自己映射 GitHub DTO、HTTP status 與 technical failure；不會交給集中 Integration BC' },
@@ -104,5 +104,5 @@ const SWATCHES = [
   { x: 1046, y: 99, w: 26, h: 13, stroke: C.boxStroke, alpha: 1, fill: C.boxFill }
 ];
 
-const CHIPS = ['presentation', 'facade', 'core', 'port', 'infra', 'outside']
+const CHIPS = ['presentation', 'facade', 'usecase', 'port', 'infra', 'outside']
   .map((id, i) => ({ x: 1046 + i * 13, y: 123, w: 9, h: 13, fill: planeColor(id) }));

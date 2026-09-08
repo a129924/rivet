@@ -23,10 +23,10 @@
 
 ## Test Plan
 
-- Human-only: validate Rover `v0.41.0` default SDL stdout, fixed endpoint and four required headers, zero exit, non-empty SDL, mode `0600` same-parent temporary/staging files, cleanup trap, same-parent `mv`, fixed three provenance comment lines and no token-like secret in the resulting schema. Do not print matched secret content.
+- Human-only: validate Rover `v0.41.0` default SDL stdout, fixed endpoint and four required headers, zero exit, non-empty SDL, mode `0600` same-parent temporary/staging files, cleanup trap, same-parent `mv`, fixed three provenance comment lines and no token-like secret in the resulting schema. `0600` is not a repository-managed schema mode or verification condition. Do not print matched secret content.
 - Static schema presence: read-only search confirms `PullRequestReviewThread`, `PullRequestReviewComment`, `reviewThreads(`, `isResolved:`, `isOutdated:` and `comments(`. This is presence evidence only, not GraphQL validation.
 - Architecture: validate and build the bounded-context map using `architecture-canvas`; inspect a temporary nonpublished render to confirm no central GitHub Integration and only the two local Infra boundaries plus a dashed future `GitHubTransport` box.
-- Repository hygiene: active docs/map have no retired GitHub Integration identifier, `git diff --check` passes, and changed/deleted paths match this plan exactly.
+- Repository hygiene: retired BC doc, placeholder source directory and dedicated boundary diagram root are absent; map scene has no former central box／edge identifiers, and each remaining active-doc `GitHub Integration` mention is explicit retirement or nonownership wording rather than a BC／owner／adapter claim. `git diff --check` passes, and changed/deleted paths match this plan exactly.
 
 ## Human Gate
 

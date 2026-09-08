@@ -25,7 +25,7 @@
 ```sh
 rover graph introspect https://api.github.com/graphql --header 'Accept: application/vnd.github+json' --header 'X-GitHub-Api-Version: 2022-11-28' --header 'User-Agent: RivetSchemaSnapshot/1.0' --header "Authorization: Bearer ${GITHUB_TOKEN}"
 ```
-- Rover stdout 先寫入 `Schema.graphqls` parent directory 的 mode `0600` temporary file。human must use `umask 077` and explicitly preserve mode `0600`; a cleanup trap removes every temporary/staging file on `EXIT`, `INT`, `HUP` or `TERM`. Only a zero Rover exit and non-empty SDL permit composing the three provenance comments plus unchanged SDL in a mode `0600` staging file. The final staging file is moved with `mv` from the same parent directory to `Schema.graphqls`; otherwise every temporary file is removed and any existing schema remains unchanged.
+- Rover stdout 先寫入 `Schema.graphqls` parent directory 的 mode `0600` temporary file。human 必須使用 `umask 077`；mode `0600` 僅適用於下載期間的 temporary／staging files。cleanup trap 必須在 `EXIT`、`INT`、`HUP` 或 `TERM` 清除每個 temporary／staging file。只有 Rover 為 zero exit 且 SDL 非空，才能把三行 provenance comments 與未變更 SDL 組合至 mode `0600` staging file；再由同一 parent directory 的 `mv` 取代 `Schema.graphqls`。否則清除所有 temporary file，既有 schema 維持不變。Git 不保留 `0600` mode；repository-managed `Schema.graphqls` 不規定、驗證或宣稱任何檔案 mode。
 - agent 不得執行 Rover、要求 token、取得 token、將 token 寫入 env/config/file，或輸出／記錄它。human 接受 Authorization header 在 Rover process argv 的風險，並必須避免 shell history、terminal/log capture 與 shared host。下載失敗或產出為空時清除 temporary file，既有 schema 維持不變。
 - 若沒有受控終端、Rover 或安全 token，這是 `human-check`；不得以 public schema URL、手寫 SDL、替代 CLI 或 stored credential 取代。
 
@@ -57,6 +57,6 @@ rover graph introspect https://api.github.com/graphql --header 'Accept: applicat
 
 - schema acquisition 的 evidence 是 Rover 成功、非空 SDL 與三行 exact provenance；不宣稱 GraphQL schema type validation、operation validation、codegen 或 runtime verification。
 - 使用 read-only `rg` 確認 schema 的 exact provenance comments，並在 SDL 中確認 `PullRequestReviewThread`、`PullRequestReviewComment`、`reviewThreads(`、`isResolved:`、`isOutdated:`、`comments(` 存在。
-- 用 `rg` 在 active docs/map 尋找 retired GitHub Integration identifiers，預期為零；必要的歷史 artifacts 不列入此檢查範圍。
+- active docs/map verification 不以 `GitHub Integration` 的零搜尋結果作為條件，因為明確 retirement wording 與 nonownership wording 仍是必要的架構事實。改為確認 retired BC doc、placeholder source directory 與 dedicated boundary diagram root 均不存在；確認 map scene 不含 `github-integration`、`github-adapter`、`identity-context`、`failure-normalizer` 或 `infra-unknown` 的 box／edge identifiers；並以 `rg` 檢視 active docs 中每個剩餘的 `GitHub Integration` 提及均為明確 retirement 或 nonownership wording，不宣稱它仍是 BC、集中 owner 或 adapter。
 - `architecture-canvas` 對 BC map 進行 validate/build，並只在 temporary copy 進行 nonpublishing visual check；不得發布 artifact.cafe。
 - 執行 `git diff --check` 與 allowed-path isolation check。token／secret scan 對新 schema 與本 topic 改動的文字檔執行；命中時僅輸出 path 與 count，不輸出內容。
