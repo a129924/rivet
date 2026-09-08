@@ -14,7 +14,9 @@
 - 鎖定 declaration-only future direction：GitHub Integration 內的 `GitHubTokenProvider` 負責 token delivery，並交付 Integration-owned `GitHubAccessToken`。其具體 Swift signature、`throws`／`Outcome` 選擇、credential failure，以及 refresh／re-auth contract 延後至獨立 failure-contract topic；本 topic 不預先選擇任何 failure representation。
 - GitHub Integration future authorizer 為每個 GitHub request 設定或覆寫 `Authorization: Bearer …`。
 - 鎖定 Archify lifecycle 的 renderer locale limitation：正式支援僅 `en` 與 `zh-CN`；因作者內容為繁體中文，source JSON 省略 `meta.locale`，Viewer UI 與 generated HTML language attribute 依 renderer fallback 維持英文。這不是將繁體中文錯標為 `zh-CN` 的授權。
-- Plan-Reviewer 通過後，由獨立 Implementer 將已批准且可長期成立的 boundary 回寫到 GitHub Integration BC 文件、architecture navigation、Integration/HTTP boundary canvas 與 lifecycle artifact；其後由獨立 Tester、Reviewer 與 human review 依序驗證。
+- 已發生的 review-audit planning correction 已經獨立 PR-05 Plan-Reviewer `approved`；該 verdict 僅接受 correction 的 workflow／provenance，不重開既有 architecture、path 或 contract decision，亦不改變 HR-03 與 HR-04 各自獨立 pending 的狀態。
+- 兩個 canvas review fixes 已經獨立 PR-06 Plan-Reviewer `approved`：恢復 `Transport → Foundation URLSession／GitHub.com API` 的 compile-time／ownership edge；並讓 `adapter → client` 的 route 與 label 繞過 token-provider／authorizer，避免被誤讀為 runtime flow。canvas 仍只表達 ownership／compile-time boundary。
+- 獨立 Tester 已完成 TE-05：兩個 canvas-only review fixes 的 validator／build／enhance／accessibility、source/build byte identity、syntax、diff 與 artifact-local containment checks 均通過。browser CLI 的 fresh viewport 兩次逾時，未形成 browser evidence，且不得宣稱為 browser pass；這不影響 artifact-local containment TestCase。獨立 RV-05 已 `approved`；下一關為 delivery，完成後才可進入 HR-05 pending human review。HR-05 不得取代 HR-03 或 HR-04 各自獨立 pending 的 human gate。既有 GitHub Integration BC、architecture navigation 與 lifecycle artifact 的交付範圍不因本輪 canvas-only fix 而重開。
 
 ## Out-Of-Scope
 
@@ -23,6 +25,7 @@
 - OAuth-shaped token payload 的採用、refresh token、401 retry、多帳號、GitHub Enterprise、PAT UI、Keychain identity／adapter。
 - concrete network、HTTP status／decode policy、DTO、PR Inbox／PR Reader mapping，以及 core failure mapping。
 - 直接手改 generated lifecycle HTML 或 visual-check sidecar、設定 `meta.locale: "zh-CN"`、為 language thread 重新 deliver lifecycle artifact，或變更 architecture-canvas 的獨立 language handling。
+- 將 canvas 擴張成 runtime sequence、token-delivery／failure contract，或改變 deferred signature、PAT-only 與 locale fallback 的既定結論。
 
 ## ReadOnly
 
@@ -57,6 +60,7 @@
 - 後續 Implementer 修改 `docs/architecture/diagrams/github-integration-http-client-boundary/scene.js`：區分 future Integration abstractions 與既有 HTTP package，且維持其 non-runtime-boundary purpose。
 - 後續 Implementer 交付唯一允許的 canonical lifecycle source、HTML 與 canonical visual-check evidence：`github-authorization-lifecycle.json`、`github-authorization-lifecycle.html`、`github-authorization-lifecycle.visual-check.*`；不得將 containment candidate 納入交付。
 - language thread 的唯一後續 delivery 是後續 Implementer 修改 lifecycle artifact-local `BUILD.md`，明示 Archify 僅正式支援 `en`／`zh-CN`、繁體中文作者內容必須省略 `meta.locale`，以及 Viewer UI／generated HTML 回退英文；不修改 lifecycle JSON、generated HTML、receipt 或 visual evidence，亦不重新 deliver。
+- 本輪 canvas-only Implementer delivery 僅可修改 `docs/architecture/diagrams/github-integration-http-client-boundary/scene.js` 與由 artifact-local build 產生的 `index.html`：恢復 `Transport → Foundation URLSession／GitHub.com API` 的 compile-time／ownership edge，並將 `adapter → client` route／label 保持在 token-provider／authorizer 外側；不得新增 runtime sequence edge 或更動其他 target。
 
 ## TestCase
 
@@ -68,6 +72,8 @@
 | TC-04 | Tester 獨立驗證 existing architecture canvas 的 artifact-local validate → build → enhance → verify，及 canonical lifecycle 的 Archify showcase validate → deliver → visual-check。 |
 | TC-05 | Tester 確認兩組 containment candidate 已由 Implementer 移除，且交付只含 canonical lifecycle JSON／HTML／canonical visual-check evidence；Reviewer 再確認 `git diff --check` 與無 Swift／HTTP package drift。 |
 | TC-06 | language thread delivery 僅改 lifecycle artifact-local `BUILD.md`，如實記錄 `en`／`zh-CN` renderer limitation、`meta.locale` omission 與英文 fallback；diff 不含 lifecycle JSON、generated HTML、visual-check sidecar 或 architecture-canvas language handling 變更。 |
+| TC-07 | review-audit planning correction 由 PR-05 獨立 Plan-Reviewer 審查；在其 verdict 前，Phase 與 Handoff 明確指向 PR-05，且 HR-03、HR-04 維持各自 pending human gate。 |
+| TC-08 | PR-06 approved 後，canvas-only delivery 恢復 `Transport → Foundation URLSession／GitHub.com API` compile-time／ownership edge；`adapter → client` 的 route 與 label 不穿過或指向 token-provider／authorizer；artifact-local validate → build → enhance → verify、source/build byte identity、syntax、diff 與 artifact-local containment 均通過，且無 runtime sequence、token contract、Swift／HTTP package 或其他文件 drift。browser CLI fresh viewport 若未取得 evidence，不得誤稱 browser pass，且不影響此 artifact-local containment TestCase。 |
 
 ## Future Swift Implementation Slices
 

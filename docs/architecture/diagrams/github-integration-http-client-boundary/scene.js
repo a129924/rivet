@@ -80,7 +80,8 @@ const EDGES = [
   { from:'client',to:'request',pts:[[794,1024],[776,1024]],label:{s:'al',x:785,y:1012,t:'使用',anchor:'center'} },
   { from:'client',to:'transport',pts:[[1074,1024],[1094,1024]],label:{s:'al',x:1084,y:1012,t:'注入依賴',anchor:'center'} },
   { from:'client',to:'foundation-types',pts:[[935,1074],[935,1190],[380,1190],[380,1284]],label:{s:'al',x:394,y:1234,t:'Foundation mapping',rot:-90,anchor:'center'} },
-  { from:'adapter',to:'client',pts:[[470,604],[470,860],[935,860],[935,974]],label:{s:'al',x:949,y:752,t:'採用 package',rot:-90,anchor:'center'} }
+  { from:'transport',to:'urlsession',pts:[[1235,1074],[1235,1284]],label:{s:'al',x:1249,y:1178,t:'compile-time 採用',rot:-90,anchor:'center'} },
+  { from:'adapter',to:'client',pts:[[194,554],[140,554],[140,860],[935,860],[935,974]],label:{s:'al',x:537,y:848,t:'compile-time 採用 package',anchor:'center'} }
 ];
 
 const TEXTS = [
