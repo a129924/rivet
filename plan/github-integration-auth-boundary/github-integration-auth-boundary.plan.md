@@ -18,6 +18,10 @@
 - 兩個 canvas review fixes 已經獨立 PR-06 Plan-Reviewer `approved`：恢復 `Transport → Foundation URLSession／GitHub.com API` 的 compile-time／ownership edge；並讓 `adapter → client` 的 route 與 label 繞過 token-provider／authorizer，避免被誤讀為 runtime flow。canvas 仍只表達 ownership／compile-time boundary。
 - 獨立 Tester 已完成 TE-05：兩個 canvas-only review fixes 的 validator／build／enhance／accessibility、source/build byte identity、syntax、diff 與 artifact-local containment checks 均通過。browser CLI 的 fresh viewport 兩次逾時，未形成 browser evidence，且不得宣稱為 browser pass；這不影響 artifact-local containment TestCase。獨立 RV-05 已 `approved`；canvas delivery 已由 commit `7f6f9fa` 提交。IM-05 的未提交敘述只保留為 delivery 前的 historical evidence，不得誤稱 current uncommitted；HR-05 仍是 pending，且不得取代 HR-03 或 HR-04 各自獨立 pending 的 human gate。既有 GitHub Integration BC、architecture navigation 與 lifecycle artifact 的交付範圍不因本輪 canvas-only fix 而重開。
 - PR #17 本輪 bounded remediation 僅補齊 RV-05 後的可稽核 delivery gate，並限縮 BC wording：只有 `GitHubRESTAdapter` 的 request 經 authorizer 後使用 `RivetHTTPClient`；`GitHubGraphQLAdapter` 封裝 `ApolloClient`、不經 `RivetHTTPClient.Transport`，Apollo token interceptor 留待獨立 topic。此 correction 不改變 Integration-owned PAT、deferred concrete signature／failure／refresh／re-auth 或 locale fallback 的既定決策。
+- human 已明確確認 HR-01、HR-02 為「被後續 revision 取代」，不是 human approval；HR-03、HR-04、HR-05 仍各自獨立 pending，不受此事實影響。
+- 本輪僅建立兩張 canonical diagram 的 REST-only wording correction chain：canvas 與 lifecycle 都必須明示 authorizer／request preparation 只描述 GitHub REST request。獨立 Implementer 必須依各 artifact 的正式流程重建 generated output；這不把 canvas 變成 runtime sequence，亦不把 REST lifecycle 推論為 GraphQL／Apollo 行為。
+- human 已決定保留 GitHub Integration BC／canonical diagrams，並將 conflict tree 的 GraphQL SDL／draft 改為 future Integration GraphQL adapter／schema snapshot topic material。本輪不接受、驗證、移動或實作 SDL；candidate material 不會產生 PR Reader local-exclusive Infra、Apollo interceptor 或 token／failure contract。
+- 本輪新建的 reconciliation chain 僅回寫六份 active docs 與 bounded-context map：移除 local-exclusive Infra／`GitHubTransport`／Integration retirement claims，回到中央 Integration boundary；map 必須從 `scene.js` 正式重建 `index.html`，且只表達中央 Integration construct、Core／Port isolation 與 compile-time ownership，絕不表達 runtime。
 
 ## Out-Of-Scope
 
@@ -28,6 +32,8 @@
 - 直接手改 generated lifecycle HTML 或 visual-check sidecar、設定 `meta.locale: "zh-CN"`、為 language thread 重新 deliver lifecycle artifact，或變更 architecture-canvas 的獨立 language handling。
 - 將 canvas 擴張成 runtime sequence、token-delivery／failure contract，或改變 deferred signature、PAT-only 與 locale fallback 的既定結論。
 - 將 REST authorizer 套用到 GraphQL／Apollo、建立或選擇 Apollo token interceptor 的具體 contract，或改變 Apollo 不經 `RivetHTTPClient.Transport` 的既定 boundary。
+- 以本輪 wording correction 重新開啟 PAT、deferred concrete signature／failure／refresh／re-auth、locale fallback、GraphQL Apollo boundary，或將 canvas 擴張為 runtime dataflow。
+- 接受、搬移、下載、驗證或宣稱 GraphQL SDL 已交付；建立 PR Reader local-exclusive GitHub Infra、`GitHubTransport`、Apollo interceptor 或任何 GraphQL／token／failure implementation。
 
 ## ReadOnly
 
@@ -64,6 +70,8 @@
 - language thread 的唯一後續 delivery 是後續 Implementer 修改 lifecycle artifact-local `BUILD.md`，明示 Archify 僅正式支援 `en`／`zh-CN`、繁體中文作者內容必須省略 `meta.locale`，以及 Viewer UI／generated HTML 回退英文；不修改 lifecycle JSON、generated HTML、receipt 或 visual evidence，亦不重新 deliver。
 - 本輪 canvas-only Implementer delivery 已僅修改 `docs/architecture/diagrams/github-integration-http-client-boundary/scene.js` 與由 artifact-local build 產生的 `index.html`：恢復 `Transport → Foundation URLSession／GitHub.com API` 的 compile-time／ownership edge，並將 `adapter → client` route／label 保持在 token-provider／authorizer 外側；canvas delivery 已由 commit `7f6f9fa` 提交。不得新增 runtime sequence edge 或更動其他 target。
 - 本輪 REST／GraphQL wording correction 的正式 delivery 僅可修改 `docs/architecture/bounded-contexts/github-integration.md`：限縮 authorizer → `RivetHTTPClient` 為 `GitHubRESTAdapter` request，明列 `GitHubGraphQLAdapter` → `ApolloClient` 不經 `RivetHTTPClient.Transport`，並將 Apollo token interceptor 留給獨立 topic；不得改動圖表、HTTP package、Swift source 或既定 PAT／deferred-signature／locale contract。
+- 本輪 diagram wording correction 的正式 delivery 只可修改兩組 canonical source 與其正式 generated output：canvas `scene.js` → `index.html`（依 validate → build → enhance → verify）；lifecycle `github-authorization-lifecycle.json` → `github-authorization-lifecycle.html`（依 showcase validate → deliver，並依 BUILD 的 visual-check policy 如實處理 canonical evidence）。兩組 source 的 authorizer／request wording 都必須限於 GitHub REST request。不得修改 BC 文件、HTTP package、Swift source、PAT／deferred-signature／locale／GraphQL Apollo contract，亦不得將 canvas 畫成 runtime sequence。
+- 本輪 retained-Integration reconciliation 的 Implementer 僅可修改：`docs/design-principles.md`、`docs/architecture/README.md`、`docs/architecture/bounded-contexts/README.md`、`docs/architecture/bounded-contexts/pr-inbox.md`、`docs/architecture/bounded-contexts/pr-reader.md`、`docs/github-api/README.md`，以及 bounded-context map `scene.js` → 正式 generated `index.html`。六份 docs 必須移除 local-exclusive Infra／`GitHubTransport`／Integration retirement claim，回到 GitHub Integration 的集中 boundary；map 必須重建中央 Integration construct、PR Inbox／PR Reader Core／Port isolation，且仍只表達 ownership／compile-time boundary。不得改動 GitHub Integration canonical boundary diagrams、lifecycle、SDL candidate、Swift／HTTP package 或其他路徑。
 
 ## TestCase
 
@@ -80,6 +88,10 @@
 | TC-09 | BC wording 明確限定只有 `GitHubRESTAdapter` request 經 authorizer 後使用 `RivetHTTPClient`；`GitHubGraphQLAdapter` → `ApolloClient` 不經 `RivetHTTPClient.Transport`，且 Apollo token interceptor 留待獨立 topic。驗證不得將 REST authorization lifecycle 推論為 GraphQL 行為，也不得改變 Integration-owned PAT、deferred concrete signature／failure／refresh／re-auth 或 locale fallback。 |
 | TC-10 | RV-05 後的 `DL-01` 保有 owner、pending/completed status、completion criteria 與可稽核 commit、push、exact-thread-resolution evidence；只有獨立 RV-06 approved 後才能完成 DL-01。其 delivery 待 resolve 精確清單只包含 `PRRT_kwDOUFu0Cc6gF0CL` 與 `PRRT_kwDOUFu0Cc6gF0CR`；`PRRT_kwDOUFu0Cc6gHnG1` 已由外部處置 resolved，不納入 DL-01。DL-01 completed 前，HR-05 必須維持 pending，且不得取代 HR-03 或 HR-04。 |
 | TC-11 | TE-06 scope audit 發現的 `PRRT_kwDOUFu0Cc6gHnG1` 已被獨立列入 thread audit；其 correction 只將 IM-05 的未提交敘述限為 historical pre-delivery evidence，並綁定 canvas delivery commit `7f6f9fa`。獨立 Tester 已確認遠端 `isResolved=true`，故此 thread 為外部已完成的 resolution，不納入 DL-01 的待 delivery 精確清單。此 correction 不改變 REST-only／Apollo-only boundary、既定 deferred 決策或 HR-03、HR-04、HR-05 的狀態。 |
+| TC-12 | human 已確認 HR-01、HR-02 均為「被後續 revision 取代」，並非 human approval；HR-03、HR-04、HR-05 維持各自 independent pending human gate。ledger 不得再將 DL-01 或其 F0CL／F0CR 清單表示為 pending：delivery commit `d43aa09` 已 push，兩個精確 threads 均已 resolved；`PRRT_kwDOUFu0Cc6gHnG1` 維持外部 resolved。 |
+| TC-13 | PR-09 approved 後，兩張 canonical diagram 的 source 及正式 generated output 都只以「GitHub REST request」描述 request preparation／authorizer。canvas 維持 ownership／compile-time boundary，不新增 runtime edge；lifecycle 不描述 GraphQL／Apollo。Tester 必須獨立執行 canvas validate → build → enhance → verify 與 lifecycle showcase validate → deliver，並依 BUILD 如實驗證或分類 visual-check 結果；Reviewer 再確認 source／output 同步、scope、`git diff --check`、無 Swift／HTTP package drift，以及新的精確 thread audit／delivery清單。 |
+| TC-14 | `PRRT_kwDOUFu0Cc6gIli5`、`PRRT_kwDOUFu0Cc6gIli9`、`PRRT_kwDOUFu0Cc6gIljC`、`PRRT_kwDOUFu0Cc6gIljF` 是本輪唯一可由 DL-02 在 approved delivery 後 resolve 的精確清單；audit 必須個別對應 finding、correction 與 pending status。DL-02 前不得由 local planning edit 宣稱 resolve；DL-02 後仍須記錄 commit、push 與每個 remote resolution evidence，且不得 merge PR。 |
+| TC-15 | PR-10 approved 後，六份 active docs 不再表達 GitHub Integration retirement、local-exclusive GitHub Infra 或 future `GitHubTransport`；它們回到 Integration 作為集中 external protocol／identity／DTO／infrastructure-failure boundary。bounded-context map 的 `scene.js` 經正式 renderer 產生 byte-identical `index.html`，包含中央 Integration construct 與 PR Inbox／PR Reader Core／Port isolation，且不含 runtime／REST／GraphQL／authorization dataflow。SDL candidate 維持未驗證、未接受，且不納入此 TestCase 的 implementation claim。 |
 
 ## Future Swift Implementation Slices
 

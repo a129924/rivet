@@ -2,20 +2,20 @@
   "schema_version": 1,
   "diagram_type": "lifecycle",
   "meta": {
-    "title": "GitHub request authorization：宣告中的生命週期",
+    "title": "GitHub REST request authorization：宣告中的生命週期",
     "quality_profile": "showcase",
     "viewBox": [980, 566]
   },
   "lanes": [
-    { "id": "main", "label": "GitHub Integration → HTTP package（宣告中的主路徑）" },
+    { "id": "main", "label": "GitHub REST request：Integration → HTTP package（宣告中的主路徑）" },
     { "id": "outside", "label": "Outside（既有 credential）" }
   ],
   "states": [
     {
       "id": "prepare-request",
       "type": "start",
-      "label": "準備 GitHub 請求",
-      "sublabel": "建立 request",
+      "label": "REST 請求準備",
+      "sublabel": "建立 REST request",
       "lane": "main",
       "col": 0,
       "step": "01"
@@ -43,7 +43,7 @@
     {
       "id": "authorize-request",
       "type": "active",
-      "label": "GitHub 請求授權器",
+      "label": "REST 請求授權器",
       "sublabel": "覆寫 Bearer header",
       "tag": "future declaration only",
       "lane": "main",
@@ -53,7 +53,7 @@
     {
       "id": "execute-raw-request",
       "type": "success",
-      "label": "HTTP client 執行",
+      "label": "執行 REST 請求",
       "sublabel": "無 GitHub auth policy",
       "lane": "main",
       "col": 3,

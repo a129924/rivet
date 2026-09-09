@@ -44,8 +44,8 @@ const BOXES = [
     name:'GitHubTokenProvider（future declaration）',about:'GitHub Integration 擁有的 future seam；交付既有 PAT 對應的 Integration value type。',
     texts:[['bl',224,678,'GitHubTokenProvider（future declaration）'],['bs',224,700,'交付 Integration-owned GitHubAccessToken'],['bs',224,722,'初版：一個既有 fine-grained PAT'],['bn',224,742,'具體 failure contract 延後決定']] },
   { id:'request-authorizer', plane:'integration', band:'band-integration', x:880,y:650,w:540,h:104,r:10,dash:true,
-    name:'GitHub request authorizer（future declaration）',about:'每個 GitHub request 進入 HTTP package 前，設定或覆寫 Bearer Authorization。',
-    texts:[['bl',904,678,'GitHub request authorizer（future declaration）'],['bs',904,700,'每個 GitHub request 取得 token'],['bs',904,722,'設定／覆寫 Authorization: Bearer …'],['bn',904,742,'無 refresh、401 retry 或 HTTP policy']] },
+    name:'GitHub REST request authorizer（future declaration）',about:'每個 GitHub REST request 進入 HTTP package 前，設定或覆寫 Bearer Authorization。',
+    texts:[['bl',904,678,'GitHub REST request authorizer（future declaration）'],['bs',904,700,'每個 GitHub REST request 取得 token'],['bs',904,722,'設定／覆寫 Authorization: Bearer …'],['bn',904,742,'無 refresh、401 retry 或 HTTP policy']] },
 
   { id:'http-url', plane:'package', band:'band-package', x:200,y:980,w:270,h:88,r:10,dash:true,
     name:'HTTPURL',about:'已實作的 validated URL value object。',
@@ -86,15 +86,15 @@ const EDGES = [
 
 const TEXTS = [
   {s:'title',x:160,y:86,t:'Rivet — GitHub Integration 與 HTTP Client 邊界'},
-  {s:'sub',x:160,y:118,t:'Integration 擁有 future authorization seam；HTTP package 維持最小 raw request interface 與 URLSession transport'},
-  {s:'tag',x:160,y:146,runs:[{t:'Integration-owned authorization seam',fill:planeColor('integration')},{t:' · ',fill:'#4A5462'},{t:'HTTP package raw request interface',fill:planeColor('package')}]},
+  {s:'sub',x:160,y:118,t:'Integration 擁有 future REST authorization seam；HTTP package 維持最小 raw request interface 與 URLSession transport'},
+  {s:'tag',x:160,y:146,runs:[{t:'Integration-owned REST authorization seam',fill:planeColor('integration')},{t:' · ',fill:'#4A5462'},{t:'HTTP package raw request interface',fill:planeColor('package')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — Foundation 或外部 surface'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:160,y:1530,t:'不變量：HTTP、token 與 infrastructure failure 不得跨越 PR Inbox 或 PR Reader 的 Port'},
   {s:'bn',x:160,y:1550,t:'不變量：RivetHTTPClient 不持有 token、沒有 TokenProvider API，也不處理 refresh 或 401 retry'},
   {s:'bn',x:160,y:1570,t:'不變量：HTTP package 只以 HTTPClientError 表達 transport failure；JSON decoder 由 caller 擁有；Adapter 負責跨 core Port 前的語意 mapping'},
-  {s:'bn',x:160,y:1590,t:'宣告而非實作：future provider／authorizer 屬 GitHub Integration；Keychain 與 PAT 都是 Outside；runtime lifecycle 見獨立圖'},
+  {s:'bn',x:160,y:1590,t:'宣告而非實作：future provider／REST authorizer 屬 GitHub Integration；Keychain 與 PAT 都是 Outside；runtime lifecycle 見獨立圖'},
   {s:'bn',x:160,y:1610,t:'延後：OAuth、Keychain adapter、retry、status／Content-Type validation、decode policy、GitHub DTO mapping、Apollo schema 與 operation'}
 ];
 const SWATCHES = [

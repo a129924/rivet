@@ -8,6 +8,7 @@
 - Bun 1.4.0（PR Reader WebView 的 package manager 與 test runner）
 - pre-commit 4.6.2（Git hook runner）
 - SwiftLint 0.65.1（Swift lint）
+- Rover（GitHub GraphQL schema introspection 開發工具）
 
 ## Apple 工具鏈初始化
 
@@ -34,7 +35,13 @@ nvm use
 
 ## 日常品質檢查
 
-全域工具：Bun、pre-commit 與 SwiftLint。Swift formatter 使用 Xcode toolchain 內建的 `swift format`，不另外安裝 formatter。
+全域工具：Bun、pre-commit、SwiftLint 與 Rover。Swift formatter 使用 Xcode toolchain 內建的 `swift format`，不另外安裝 formatter。
+
+## GitHub GraphQL Schema Research
+
+根目錄的 `Brewfile` 宣告 Apollo Rover。執行 `brew bundle` 安裝後，以 `rover --version` 確認工具可用。
+
+Rover 僅供開發者以自己的 GitHub token 對 GitHub GraphQL API 做 introspection、取得 schema 時使用；它不是 Rivet 的 runtime dependency，不加入 SwiftPM、Bun 或產品執行流程。
 
 PR Reader WebView 的 TypeScript 與 Biome 是 local dev dependencies；安裝與執行都使用 Bun：
 

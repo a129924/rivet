@@ -10,8 +10,9 @@
 
 - 一次只處理一個 Bounded Context；未經 topic 授權，不因為未來可能需要而預先建立 package、module 或抽象層。
 - PR Inbox、PR Reader 與 GitHub Integration 的責任邊界優先於技術框架或目錄便利性。
-- 外部 GitHub DTO、HTTP status、OAuth／Keychain 細節與 infrastructure failure 不得洩漏到核心 BC。
-- 每個 BC 擁有自己的 failure contract；`InfraUnknownError` 僅在 Adapter／GitHub Integration 邊界產生或正規化。
+- 每個 Domain BC 的 Core、UseCase 與 Port 不依賴 GitHub 外部協定或 transport；GitHub Integration 作為 Supporting BC 隔離 GitHub 的外部協定、身分、DTO 與 infrastructure failure。
+- 外部 GitHub DTO、HTTP status、OAuth／Keychain 細節與 infrastructure failure 不得洩漏到核心 BC，也不得形成 BC-to-BC compile-time dependency。
+- 每個 BC 擁有自己的 failure contract；GitHub Integration 在其 Adapter 邊界正規化外部 infrastructure failure，跨越 core Port 前仍必須映射為對應 BC 的語意。
 - Presentation Session 是 UI 狀態，不是假裝成 Bounded Context。
 
 ## 工作方法

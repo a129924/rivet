@@ -30,6 +30,8 @@ GitHubAccessToken  // Integration-owned value type
 
 此 lifecycle 不包含 `GitHubGraphQLAdapter`／Apollo route、OAuth、refresh、401 retry、concrete Keychain call、concrete network implementation、DTO mapping 或 core failure mapping。
 
+兩張 canonical diagram 的 wording 也必須保留同一限制：canvas 的 future authorizer 只描述 GitHub REST request，但仍只表達 ownership／compile-time boundary；lifecycle 的 request preparation／authorizer 只描述 GitHub REST request，且不表示 GraphQL／Apollo route。source wording 變更後，必須由獨立 Implementer 依 canvas 的 validate → build → enhance → verify 與 lifecycle 的 showcase validate → deliver（及 BUILD 規定的 visual-check policy）正式重建 output；此 topic 不以 generated output 手動 patch。
+
 ## Lifecycle Renderer Locale Limitation
 
 Archify 正式支援的 locale 僅有 `en` 與 `zh-CN`。lifecycle 的作者內容為繁體中文，故 source JSON 必須省略 `meta.locale`，不得將繁體中文內容錯標為 `zh-CN`。在此 omission 下，Viewer UI 與 generated HTML 的 language attribute 會依 renderer fallback 維持英文；這是 renderer limitation，不是作者內容的語言決策。
@@ -39,6 +41,22 @@ Archify 正式支援的 locale 僅有 `en` 與 `zh-CN`。lifecycle 的作者內�
 ## Deferred OAuth-Shaped Payload
 
 使用者提供的 `access_token`、`expires_in`、`refresh_token`、`refresh_token_expires_in`、`scope`、`token_type` JSON schema 是 OAuth-shaped payload；它不改變本 topic 的 fine-grained PAT-only decision。此 topic 不採用、保存、解析或暴露該 schema，也不以它擴大未來 provider contract。若未來評估 OAuth，必須以獨立 topic 重新鎖定 lifecycle、storage、refresh、failure 與 Port isolation。
+
+## Retained Integration Reconciliation
+
+human 已鎖定 GitHub Integration 仍是 Supporting BC，且現有 BC 文件與 canonical diagrams 必須保留。衝突樹中的 GraphQL SDL 只作為 future GitHub Integration GraphQL adapter／schema snapshot topic 的 candidate material；本輪不驗證、移動、接受或以它建立 PR Reader local-exclusive ownership。
+
+後續 implementation 的唯一 architecture writeback 是下列六份 active docs 與 bounded-context map：
+
+- `docs/design-principles.md`
+- `docs/architecture/README.md`
+- `docs/architecture/bounded-contexts/README.md`
+- `docs/architecture/bounded-contexts/pr-inbox.md`
+- `docs/architecture/bounded-contexts/pr-reader.md`
+- `docs/github-api/README.md`
+- `docs/architecture/diagrams/bounded-context-map/scene.js` → formal generated `index.html`
+
+這些 docs 必須刪除 local-exclusive Infra、future `GitHubTransport` 及 GitHub Integration retirement 的 claim，回到 Integration 作為集中 external protocol／identity／DTO／infrastructure-failure boundary。map 必須重建中央 Integration construct，以及 PR Inbox／PR Reader Core／Port isolation；canvas 只表達 ownership／compile-time boundary，不加入 REST、GraphQL、authorization 或 runtime dataflow edge。具體 GraphQL adapter、Apollo interceptor、token delivery、failure、refresh 與 re-auth 仍為 deferred topic。
 
 ## Delivery Responsibility 與歷史偏差
 

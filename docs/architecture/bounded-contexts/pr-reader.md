@@ -10,6 +10,7 @@
 - 不決定 PR 是否屬於待審閱佇列，也不排序 Inbox。
 - 不擁有 UI 的選取與切換狀態。
 - 不執行 review、comment、approve、merge 或任何 GitHub 寫入操作。
+- Core、UseCase 與 Port 不依賴 GitHub REST／GraphQL、GitHub DTO 或任何 transport。
 
 ## 核心概念與互動
 
@@ -17,6 +18,7 @@
 - 對 Presentation 提供穩定的 Reader Facade。
 - 透過自己擁有的 PR Content Source Port 取得資料；不直接依賴 PR Inbox。
 - Presentation 可用目前選取的 PR 向 Reader 請求閱讀快照。
+- 未來若需 GitHub 資料，GitHub Integration 在其 Supporting BC 邊界隔離外部協定、身分、DTO 與 infrastructure failure，並為 Reader 自己擁有的 Port 提供轉換後資料；PR Reader 不直接依賴 PR Inbox 或 GitHub 外部協定。
 
 ## WebView Diff Rendering Boundary
 
@@ -29,7 +31,7 @@
 
 ## Failure Contract
 
-PR Reader 僅表達「PR 無法閱讀／無權存取」或「內容暫時不可取得」等閱讀語意；GitHub 外部失敗由 Integration 邊界隔離。
+PR Reader 僅表達「PR 無法閱讀／無權存取」或「內容暫時不可取得」等閱讀語意；GitHub Integration 不得將 GitHub 外部失敗洩漏至 Reader core Port，跨越 Port 前必須映射為 Reader failure contract。
 
 ## 延後能力
 
