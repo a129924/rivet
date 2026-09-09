@@ -158,6 +158,43 @@ describe("concrete diff rendering stages", () => {
     expect(entry.html).toContain("d2h-file-diff");
   });
 
+  test("preserves distinct snapshot envelopes through Parser and Renderer", () => {
+    const firstSnapshot: DiffSnapshot = {
+      ...validSnapshot,
+      pullRequestId: "pr-first",
+      snapshotId: "snapshot-first",
+    };
+    const secondSnapshot: DiffSnapshot = {
+      ...validSnapshot,
+      pullRequestId: "pr-second",
+      snapshotId: "snapshot-second",
+    };
+
+    const renderPlans = [firstSnapshot, secondSnapshot].map((snapshot) => {
+      const validationResult =
+        createDiffViewModelValidator().validate(snapshot);
+      if (validationResult.type === "error") {
+        throw new Error(validationResult.message);
+      }
+      const parseResult = createDiffParser().parse(validationResult.value);
+      if (parseResult.type === "error") {
+        throw new Error(parseResult.message);
+      }
+      const renderResult = createDiffRenderer().createRenderPlan(
+        parseResult.value,
+      );
+      if (renderResult.type === "error") {
+        throw new Error(renderResult.message);
+      }
+      return readRenderPlan(renderResult.value);
+    });
+
+    expect(renderPlans).toMatchObject([
+      { pullRequestId: "pr-first", snapshotId: "snapshot-first" },
+      { pullRequestId: "pr-second", snapshotId: "snapshot-second" },
+    ]);
+  });
+
   test("delivers the renderer's plan exactly once to a non-DOM output test double", () => {
     const { output, receivedPlans } = createOutputTestDouble();
     const useCase = createDiffRenderUseCase({

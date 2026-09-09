@@ -5,6 +5,7 @@ import type { DiffSnapshot } from "../contracts/diff-snapshot";
 import type { DiffFile } from "diff2html/lib/types";
 import { createDiffViewModelValidator } from "./diff-view-model-validator";
 import { createDiffParser, readParsedDiffInput } from "./diff-parser";
+import { createGitDiffTemplate } from "./git-diff-template";
 
 const patch = "@@ -1 +1 @@\n-old\n+new";
 
@@ -103,6 +104,88 @@ describe("createDiffParser", () => {
         expect(entry.diff).not.toHaveLength(0);
       }
     }
+  });
+
+  test("retains the validated pull request and snapshot identities", () => {
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      pullRequestId: "pr-identity",
+      snapshotId: "snapshot-identity",
+      files: [snapshot.files[0]],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const result = createDiffParser().parse(validationResult.value);
+
+    expect(result.type).toBe("success");
+    if (result.type === "error") {
+      throw new Error(result.message);
+    }
+    expect(readParsedDiffInput(result.value)).toMatchObject({
+      pullRequestId: "pr-identity",
+      snapshotId: "snapshot-identity",
+    });
+  });
+
+  test("rejects a non-template nonempty line before the first hunk", () => {
+    const malformedPreamblePatch =
+      "unexpected preamble content\n@@ -1 +1 @@\n-old\n+new";
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], patch: malformedPreamblePatch }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const result = createDiffParser({
+      parseDiff(source) {
+        return parseDiff2Html(
+          source.replace("unexpected preamble content\n", ""),
+        );
+      },
+    }).parse(validationResult.value);
+
+    expect(result).toEqual(parseError());
+    if (result.type === "success") {
+      throw new Error("Expected malformed preamble parsing to fail.");
+    }
+    expect(result.message).not.toContain("unexpected preamble content");
+  });
+
+  test("does not create a template or call diff2html for a renamed file without an old path", () => {
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], status: "renamed", patch }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    let templateCalls = 0;
+    let parseCalls = 0;
+    const result = createDiffParser({
+      createTemplate(input) {
+        templateCalls += 1;
+        return createGitDiffTemplate(input);
+      },
+      parseDiff() {
+        parseCalls += 1;
+        return [];
+      },
+    }).parse(validationResult.value);
+
+    expect(result.type).toBe("success");
+    if (result.type === "error") {
+      throw new Error(result.message);
+    }
+    expect(readParsedDiffInput(result.value).entries).toMatchObject([
+      { kind: "metadata-unavailable", file: { fileId: "added" } },
+    ]);
+    expect(templateCalls).toBe(0);
+    expect(parseCalls).toBe(0);
   });
 
   test("converts dependency exceptions to a stable parse-error without patch content", () => {

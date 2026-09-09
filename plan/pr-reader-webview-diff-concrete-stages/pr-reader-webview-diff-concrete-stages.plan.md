@@ -32,7 +32,7 @@
 
 ## Test Plan
 
-- Validator：valid snapshot；empty identity；duplicate `fileId`；invalid status；rename metadata mismatch；invalid `viewed`；negative／unsafe counters；non-string patch。
+- Validator：valid snapshot；empty identity；duplicate `fileId`；invalid status；non-renamed `previousFilename`、empty `previousFilename`；renamed missing `previousFilename` remains valid；invalid `viewed`；negative／unsafe counters；non-string patch。
 - Template／Parser：added、removed、modified、renamed unified diff 均沒有 `index ` 或 fake mode metadata 且仍可 parse/render；nonempty patch 的 template source hunk header tuples 與 parsed blocks 必須一對一、依序相符，且 parsed old/new line-array counts 等於來源 header counts；每個 hunk 的 source context／delete／insert marker-plus-body 必須與 parsed `DiffLine.content` 精確相符，type 與 old/new number 另行比較，unknown prefix 或任一 mismatch 都是 stable `parse-error`；只可略過 trailing LF split 的 terminal empty segment，actual blank context 的 single-space marker 必須保留；empty patch 的 source expectation 與 parsed blocks 都是 zero 且成功可 render；no-patch metadata entry；path fixture 鎖定 `a/`／`b/` prefixes 與 Git C-style quote、backslash、named control、octal UTF-8 escapes；nonempty malformed patch、incomplete third-party parse result、兩個來源 hunk 被靜默截斷為僅第一個完整 block，以及 diff2html exception 是穩定 `parse-error`，且訊息不含 patch 或 dependency message；TDD 使用明確 source content 的 injected content/type/number mismatch red regressions，與實際 Parser parsed trailing-LF normal control green regression。
 - Renderer：每檔固定 `outputFormat: "line-by-line"` 與 `drawFileList: false`；file identity/order、HTML entry、metadata entry；dependency exception 是 `render-error`。
 - Integration：concrete stages 與既有 non-DOM `DiffOutputPort` test double 注入既有 UseCase。success flow 必須斷言 test double 恰接收一次 Renderer 產出的 RenderPlan；只有 `invalid-input`／`parse-error`／`render-error` short-circuit 可斷言 Output 未呼叫；任何情境均不得接觸 DOM。
@@ -108,6 +108,19 @@
 - Existing independent Plan-Reviewer 已對 `PR-10` 明示 `approved`；`IM-09` 僅新增上述 single negative test，並保留 production Parser、其他 TypeScript、Validator、UseCase、template、public surface、docs、dependencies 與 Git 不變的 factual evidence。
 - Existing independent Tester 的 `TE-09` evidence 已涵蓋 frozen install、check、test、coverage、diff check，以及 nonexact marker 與既有 EOF／CRLF／unknown-prefix controls。`RV-12` 的既有 verdict 為 `blocked`，因當時 ledger 漏記 PR-10 approval；它不是 delivery approval，且不得改寫為 `approved`。
 - `PC-15` 只如實補記上述 evidence 與 RV-12 blocked，保留所有既有 status/history。唯一可前進 route：`PC-15 → RV-13 fresh independent review approved → DL-08 → HC-08`。RV-13 必須重審 test-only scope、stable/no-leak result、exact EOF／CRLF coverage、ReadOnly preservation 與 RV-12 blocked 原因；只有其明示 `approved` 可解鎖 DL-08。
+
+## Eleventh PR Comment Correction — Preamble, Identity, and Rename Metadata
+
+- **Scope**：只修正 Parser 對第一個 hunk 前非 template preamble 的 nonempty garbage 拒絕、internal Parser→Renderer 的 PR／snapshot identity 保留，以及 renamed 無 `previousFilename` 時的 metadata-unavailable fallback。缺少舊路徑不是 Validator error；provided empty old path 仍是 `invalid-input`，non-renamed 仍不得帶 old path。
+- **Implementation**：Validator 的 validated input 保留既有 immutable envelope。Parser 僅接受 template-generated preamble；其他第一個 hunk 前非空 source line 一律是 stable/no-leak `parse-error`。Parser 對缺少 `previousFilename` 的 renamed 檔案直接建立 metadata entry，完全不建立 template 或呼叫 parse；Renderer 原樣保留其 identity／metadata，完全不呼叫 render dependency。對可解析 entries，Parser 將 `pullRequestId`／`snapshotId` 與 `fileId` 放入 internal parsed envelope，Renderer 原值轉入 opaque RenderPlan；不調整 public type 或 UseCase。
+- **TDD and verification**：先建立 generated-preamble green control 與 pre-hunk garbage red regression；建立兩組不同 PR／snapshot 的 Parser→Renderer identity regression；建立 missing-rename Validator-success、Parser／Renderer metadata result 與 Template／parse／render zero-call regression；保留有 `previousFilename` renamed parse/render control。獨立 Tester 執行 frozen install、check、test、coverage、diff check；Reviewer 檢查 public/read-only surface、stable no-leak failures、identity propagation 與三個 thread 對應。
+- **Delivery**：`PC-16 → PR-11 approved → IM-10 → TE-10 → RV-14 approved → DL-09 → HC-09`。PR-11 前不改程式；DL-09 只可依已授權流程 commit、push、更新既有 PR，並 resolve 精確三個 selected threads。任何非 approved verdict、需改公開 contract／Port／UseCase／依賴，或 metadata entry 無法保存既有 internal fields，均停止並交還 human。
+
+## Eleventh Correction Historical-Deviation Route
+
+- Human 已接受 `IM-10` TDD 與 `TE-10` Tester pass 在 `PR-11` approval 前發生的 deviation。`PR-11`、`IM-10`、`TE-10` 永久保持 `pending`，只保留其 factual evidence；不得補造 Plan-Reviewer approval。
+- `RV-14` 的既有 verdict 是 `blocked`，不能 delivery。`PC-17` 只更新四份 artifacts，如實記錄上述 evidence/status；不改實作、tests、docs、dependencies 或 Git。
+- 唯一 delivery route 改為 `PC-17 → RV-15 fresh independent review approved → DL-09 → HC-09`。RV-15 必須審查 locked scope、歷史 evidence 與 ReadOnly preservation；DL-09 僅可 commit、push 至既有 branch 並 resolve 三個 selected threads。
 
 ## Accepted Historical Deviation and Corrective Routing
 

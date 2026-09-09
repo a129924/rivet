@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-concrete-stages`
-- Current phase: PC-15 已如實補記既有 PR-10／IM-09／TE-09／RV-12 evidence；待 `RV-13` fresh independent Reviewer re-review
+- Current phase: PC-17 已記錄 Human 接受的 PR-11 pre-gate historical deviation；待 `RV-15` fresh independent review
 - Ledger rule: status 與 checklist 不構成 approval；只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Goal
@@ -116,6 +116,15 @@
 | RV-13 | pending | Reviewer | PC-15 後，由 fresh independent Reviewer 重新審查 test-only diff、PR-10／IM-09／TE-09 factual evidence、RV-12 blocked 原因、stable/no-leak `parse-error`、coverage 與 ReadOnly preservation。 | 尚無 fresh independent Reviewer verdict；只有明示 `approved` 才可進入 DL-08。 |
 | DL-08 | pending | Implementer | 僅於 RV-13 `approved` 後，建立 correction commit、push 至既有 PR branch，並只 resolve 此兩個 selected PR threads。 | 尚無 delivery evidence；不得開新 PR、處理、resolve 或重開其他 thread。 |
 | HC-08 | pending | Human | DL-08 後，人類審閱既有 PR 的 EOF marker／CRLF correction。 | DL-08 後停止自動前進。 |
+| PC-16 | completed | Plan-Creator | 僅更新同 topic 四份 artifacts，鎖定三個 selected threads：template preamble 以外的 first-hunk-before nonempty garbage 必須 `parse-error`、internal Parsed／Render envelopes 保留 PR／snapshot identity、renamed 缺少 optional `previousFilename` 走 metadata-unavailable 且不呼叫 Template／diff2html。 | 不改 TypeScript、docs、dependencies 或 Git；不回填、改寫或解除任何 prior route/status/evidence；不是 Plan-Reviewer approval。 |
+| PR-11 | pending | Plan-Reviewer | Permanently pending pre-gate historical-deviation entry；沒有且不得補造 independent approval。 | 不構成 IM-10、TE-10、RV-14 或 fresh review 的 retrospective prerequisite。 |
+| IM-10 | pending | Implementer | Permanently pending pre-gate historical-deviation entry；implementation 已發生但不回填 status。 | 可歸因歷史 evidence：三個 selected-thread correction 的 TDD red／green；不構成 gate completion 或 delivery approval。 |
+| TE-10 | pending | Tester | Permanently pending pre-gate historical-deviation entry；verification 已發生但不回填 status。 | 可歸因歷史 evidence：independent Tester `pass`；不構成 Reviewer 或 delivery approval。 |
+| RV-14 | blocked | Reviewer | 已發生的 historical non-approval review result。 | 明示結果為 `blocked`，不是 `approved`；不得進入 DL-09。 |
+| PC-17 | completed | Plan-Creator | Human 接受 PR-11 pre-gate historical deviation 後，只更新四份 formal artifacts，如實記錄 PR-11 pending、IM-10 TDD、TE-10 `pass` 與 RV-14 `blocked`。 | 不改 TS、tests、docs、dependencies 或 Git；不補造 PR-11 approval、不回填 IM-10／TE-10 status；不是 Reviewer approval。 |
+| RV-15 | pending | Reviewer | PC-17 後，由 fresh independent Reviewer 審查 locked scope、PR-11 pending、IM-10 red／green evidence、TE-10 `pass` evidence、RV-14 `blocked` 與 DL-09 eligibility。 | 尚無 fresh independent Reviewer verdict；只有明示 `approved` 才可進入 DL-09。 |
+| DL-09 | pending | Implementer | 僅於 RV-15 `approved` 後，依已授權流程建立 correction commit、push 更新既有 PR branch，並只 resolve 此三個 selected threads。 | 尚無 delivery evidence；不得開新 PR、處理、resolve 或重開其他 thread。 |
+| HC-09 | pending | Human | DL-09 後，人類審閱此三個 selected-thread correction。 | DL-09 後停止自動前進。 |
 
 ## Blockers
 
@@ -145,6 +154,10 @@
 - `PC-14` 的唯一 rework 是 nonexact backslash EOF-marker negative regression：只有精確 `\ No newline at end of file` 可作 metadata；fixture `\ No newline at end of file ` 必須仍為 strict unknown prefix 並回傳 stable/no-leak `parse-error`。不得修改 production code；若 test 不 green，屬 scope-expanding blocker，交還 human。
 - `PR-10` 的 independent `approved`、IM-09 test-only factual evidence 與 TE-09 independent Tester evidence 均已發生；`RV-12` 的明示 verdict 是 `blocked`，因 ledger 當時漏記 PR-10 approval。此 blocked verdict 不得重寫為 approval，也不得進入 DL-08。
 - 唯一可前進 route 是 `PC-15 → RV-13 fresh independent review approved → DL-08 → HC-08`。RV-13 前不得 commit、push 或 resolve threads。
+- 本輪三個 selected threads 的唯一新 route 是 `PC-16 → PR-11 approved → IM-10 → TE-10 → RV-14 approved → DL-09 → HC-09`。PR-11 前不得修改 TypeScript、docs、dependencies 或 Git；DL-09 只可 resolve 這三個 threads。任何要求修改 public contract、Port、UseCase orchestration、package manifest／lockfile 或將 metadata-unavailable 改為偽造 renamed path 的需求均是 human boundary。
+- Human 已接受本次 PR-11 pre-gate historical deviation：`PR-11` 維持 pending、沒有 approval；`IM-10` 的 TDD red／green 與 `TE-10` 的 independent Tester `pass` 僅為可歸因 historical evidence，不能回填 status、取代 gate 或授權 delivery。
+- `RV-14` 的既有結果是 `blocked`，不是 approval。既有 `PC-16 → PR-11 → IM-10 → TE-10 → RV-14 → DL-09` route 保留為歷史，不能依其前進。
+- 唯一可前進 route 是 `PC-17 → RV-15 fresh independent review approved → DL-09 → HC-09`。RV-15 前不得 commit、push 或 resolve；DL-09 仍只可 resolve 三個 selected threads。
 
 ## Human Check
 
@@ -158,9 +171,11 @@
 - `PR-09` 只審查 EOF metadata／CRLF completeness-comparison correction；不得以它回填、取代或重新審查任何 prior route/status。PR-09 或 RV-11 任何非 `approved` verdict 均不得進入 DL-08。
 - `RV-11` 的 `needs-rework` 是本輪 test-only correction 的 boundary；既有 `PR-10` approved 後才新增 nonexact marker regression。`RV-12` 已明示 `blocked`，不得進入 DL-08；只有 `RV-13` fresh independent review 明示 `approved` 才可 delivery。
 - `DL-08` 完成後停止於 `HC-08` human review；human 是唯一可決定此兩個 selected threads correction 是否接受或合併的人。
+- `PR-11` 只審查 preamble、internal identity 與 missing-rename metadata fallback；不得回填、取代或重新審查既有 route/status。PR-11 或 RV-14 的任何非 `approved` verdict 均不得進入 DL-09；DL-09 完成後停止於 HC-09 human review。
+- `RV-14` 的 `blocked` 是本次 deviation 的 human boundary；Human 已僅授權 Plan-Creator 如實記錄 evidence。只有 `RV-15` fresh independent review 明示 `approved` 才可進入 DL-09；DL-09 後停止於 HC-09 human review。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: 如實補記既有 PR-10 approved、IM-09／TE-09 factual evidence 與 RV-12 blocked；不改寫任何 prior status/history。
-- Update status: PC-15 completed；RV-12 維持 blocked，等待 RV-13 fresh independent Reviewer re-review。唯一新 route 為 RV-13 approved → DL-08 → HC-08；prior routes/statuses 保留不變。
+- Update reason: Human 接受 PR-11 pre-gate historical deviation 後，如實記錄既有 evidence、RV-14 blocked 與 fresh review route；不改寫任何 prior status/history。
+- Update status: PC-17 completed；待 RV-15 fresh independent Reviewer review。唯一新 route 為 RV-15 approved → DL-09 → HC-09；prior routes/statuses 保留不變。

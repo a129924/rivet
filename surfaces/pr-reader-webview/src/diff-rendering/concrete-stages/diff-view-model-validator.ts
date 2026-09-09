@@ -103,7 +103,7 @@ function validateFile(
 
   let validatedPreviousFilename: string | undefined;
   if (status === "renamed") {
-    if (!isNonEmptyString(previousFilename)) {
+    if (previousFilename !== undefined && !isNonEmptyString(previousFilename)) {
       return undefined;
     }
     validatedPreviousFilename = previousFilename;

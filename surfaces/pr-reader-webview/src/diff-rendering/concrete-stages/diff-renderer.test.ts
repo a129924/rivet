@@ -63,6 +63,63 @@ describe("createDiffRenderer", () => {
     expect(entries[0].html).toContain("d2h-file-wrapper");
   });
 
+  test("preserves parser pull request and snapshot identities in the render plan", () => {
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      pullRequestId: "pr-render-identity",
+      snapshotId: "snapshot-render-identity",
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+    const parseResult = createDiffParser().parse(validationResult.value);
+    if (parseResult.type === "error") {
+      throw new Error(parseResult.message);
+    }
+
+    const result = createDiffRenderer().createRenderPlan(parseResult.value);
+
+    expect(result.type).toBe("success");
+    if (result.type === "error") {
+      throw new Error(result.message);
+    }
+    expect(readRenderPlan(result.value)).toMatchObject({
+      pullRequestId: "pr-render-identity",
+      snapshotId: "snapshot-render-identity",
+    });
+  });
+
+  test("does not render a renamed metadata entry without an old path", () => {
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], status: "renamed" }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+    const parseResult = createDiffParser().parse(validationResult.value);
+    if (parseResult.type === "error") {
+      throw new Error(parseResult.message);
+    }
+
+    let renderCalls = 0;
+    const result = createDiffRenderer({
+      renderDiff() {
+        renderCalls += 1;
+        return "<section>unexpected</section>";
+      },
+    }).createRenderPlan(parseResult.value);
+
+    expect(result.type).toBe("success");
+    if (result.type === "error") {
+      throw new Error(result.message);
+    }
+    expect(readRenderPlan(result.value).entries).toMatchObject([
+      { kind: "metadata-unavailable", file: { fileId: "rendered" } },
+    ]);
+    expect(renderCalls).toBe(0);
+  });
+
   test("renders a valid two-hunk patch after Parser completeness checking", () => {
     const validationResult = createDiffViewModelValidator().validate({
       ...snapshot,

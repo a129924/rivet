@@ -26,6 +26,15 @@ describe("createDiffViewModelValidator", () => {
     expect(result.type).toBe("success");
   });
 
+  test("accepts a renamed file without optional previous filename", () => {
+    const result = createDiffViewModelValidator().validate({
+      ...validSnapshot,
+      files: [{ ...validSnapshot.files[0], status: "renamed" }],
+    });
+
+    expect(result.type).toBe("success");
+  });
+
   test.each([
     ["non-object snapshot", "not a snapshot"],
     ["empty snapshot identity", { ...validSnapshot, snapshotId: "" }],
@@ -45,11 +54,15 @@ describe("createDiffViewModelValidator", () => {
       },
     ],
     [
-      "renamed file without previous filename",
+      "renamed file with an empty previous filename",
       {
         ...validSnapshot,
         files: [
-          { ...validSnapshot.files[0], status: "renamed", patch: undefined },
+          {
+            ...validSnapshot.files[0],
+            status: "renamed",
+            previousFilename: "",
+          },
         ],
       },
     ],

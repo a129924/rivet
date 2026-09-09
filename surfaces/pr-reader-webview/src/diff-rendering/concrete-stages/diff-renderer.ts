@@ -18,6 +18,8 @@ export type RenderPlanEntry =
     };
 
 export interface RenderPlanData {
+  readonly pullRequestId: string;
+  readonly snapshotId: string;
   readonly entries: readonly RenderPlanEntry[];
 }
 
@@ -47,12 +49,15 @@ export function createDiffRenderer(
   return {
     createRenderPlan(input) {
       try {
-        const entries = readParsedDiffInput(input).entries.map((entry) =>
+        const parsedInput = readParsedDiffInput(input);
+        const entries = parsedInput.entries.map((entry) =>
           createRenderPlanEntry(entry, renderDiff),
         );
         return {
           type: "success",
           value: Object.freeze({
+            pullRequestId: parsedInput.pullRequestId,
+            snapshotId: parsedInput.snapshotId,
             entries: Object.freeze(entries),
           }) as unknown as RenderPlan,
         };

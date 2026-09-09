@@ -6,6 +6,8 @@ import type { DiffParserPort } from "../ports/diff-parser-port";
 import {
   createGitDiffTemplate,
   createGitDiffTemplateInput,
+  type GitDiffTemplate,
+  type GitDiffTemplateInput,
 } from "./git-diff-template";
 import {
   readValidatedDiffInput,
@@ -24,11 +26,14 @@ export type ParsedDiffEntry =
     };
 
 export interface ParsedDiffInputData {
+  readonly pullRequestId: string;
+  readonly snapshotId: string;
   readonly entries: readonly ParsedDiffEntry[];
 }
 
 export interface DiffParserDependencies {
   readonly parseDiff?: (source: string) => DiffFile[];
+  readonly createTemplate?: (input: GitDiffTemplateInput) => GitDiffTemplate;
 }
 
 const parseErrorMessage = "Diff parsing failed.";
@@ -37,15 +42,20 @@ export function createDiffParser(
   dependencies: DiffParserDependencies = {},
 ): DiffParserPort {
   const parseDiff = dependencies.parseDiff ?? parseDiff2Html;
+  const createTemplate = dependencies.createTemplate ?? createGitDiffTemplate;
 
   return {
     parse(input) {
       try {
-        const files = readValidatedDiffInput(input).files;
-        const entries = files.map((file) => createParsedEntry(file, parseDiff));
+        const validatedInput = readValidatedDiffInput(input);
+        const entries = validatedInput.files.map((file) =>
+          createParsedEntry(file, createTemplate, parseDiff),
+        );
         return {
           type: "success",
           value: Object.freeze({
+            pullRequestId: validatedInput.pullRequestId,
+            snapshotId: validatedInput.snapshotId,
             entries: Object.freeze(entries),
           }) as unknown as ParsedDiffInput,
         };
@@ -64,9 +74,13 @@ export function readParsedDiffInput(
 
 function createParsedEntry(
   file: ValidatedDiffFile,
+  createTemplate: (input: GitDiffTemplateInput) => GitDiffTemplate,
   parseDiff: (source: string) => DiffFile[],
 ): ParsedDiffEntry {
-  if (file.patch === undefined) {
+  if (
+    file.patch === undefined ||
+    (file.status === "renamed" && file.previousFilename === undefined)
+  ) {
     return Object.freeze({ kind: "metadata-unavailable", file });
   }
 
@@ -79,9 +93,9 @@ function createParsedEntry(
     status: file.status,
     patch: file.patch,
   });
-  const source = createGitDiffTemplate(templateInput).toUnifiedDiff();
+  const source = createTemplate(templateInput).toUnifiedDiff();
   const diff = parseDiff(source);
-  if (!isCompleteDiff2HtmlParseResult(diff, source, file.patch.length === 0)) {
+  if (!isCompleteDiff2HtmlParseResult(diff, source, file.patch)) {
     throw new Error("Diff parser returned an unusable result.");
   }
   return Object.freeze({ kind: "parsed", file, diff: Object.freeze(diff) });
@@ -90,11 +104,16 @@ function createParsedEntry(
 function isCompleteDiff2HtmlParseResult(
   value: unknown,
   source: string,
-  isEmptyPatch: boolean,
+  patch: string,
 ): value is DiffFile[] {
-  const sourceHunks = readUnifiedDiffHunkTuples(source);
+  const sourceHunks = readUnifiedDiffHunkTuples(patch);
+  const isEmptyPatch = patch.length === 0;
+  const templatePreamble =
+    patch.length === 0 ? source : source.slice(0, -patch.length);
   return (
     sourceHunks !== undefined &&
+    source.endsWith(patch) &&
+    isCompleteGitDiffTemplatePreamble(templatePreamble) &&
     Array.isArray(value) &&
     value.length === 1 &&
     value.every(
@@ -197,9 +216,9 @@ interface UnifiedDiffHunkRange {
 }
 
 function readUnifiedDiffHunkTuples(
-  patch: string,
+  source: string,
 ): readonly UnifiedDiffHunk[] | undefined {
-  const sourceLines = canonicalizeForDiff2HtmlComparison(patch).split("\n");
+  const sourceLines = canonicalizeForDiff2HtmlComparison(source).split("\n");
   if (sourceLines[sourceLines.length - 1] === "") {
     sourceLines.pop();
   }
@@ -219,22 +238,40 @@ function readUnifiedDiffHunkTuples(
       continue;
     }
 
-    if (currentHunk !== undefined) {
-      if (isNoNewlineAtEndOfFileMarker(sourceLine)) {
-        continue;
-      }
-      const expectation = readUnifiedDiffLineExpectation(
-        sourceLine,
-        currentHunk,
-      );
-      if (expectation === undefined) {
+    if (currentHunk === undefined) {
+      if (sourceLine !== "") {
         return undefined;
       }
-      currentHunk.lines.push(expectation);
+      continue;
     }
+
+    if (isNoNewlineAtEndOfFileMarker(sourceLine)) {
+      continue;
+    }
+    const expectation = readUnifiedDiffLineExpectation(sourceLine, currentHunk);
+    if (expectation === undefined) {
+      return undefined;
+    }
+    currentHunk.lines.push(expectation);
   }
 
   return hunks;
+}
+
+function isCompleteGitDiffTemplatePreamble(source: string): boolean {
+  const sourceLines = canonicalizeForDiff2HtmlComparison(source).split("\n");
+  if (sourceLines[sourceLines.length - 1] === "") {
+    sourceLines.pop();
+  }
+
+  return sourceLines.every(
+    (sourceLine) =>
+      sourceLine.startsWith("diff --git ") ||
+      sourceLine.startsWith("rename from ") ||
+      sourceLine.startsWith("rename to ") ||
+      sourceLine.startsWith("--- ") ||
+      sourceLine.startsWith("+++ "),
+  );
 }
 
 function canonicalizeForDiff2HtmlComparison(source: string): string {
