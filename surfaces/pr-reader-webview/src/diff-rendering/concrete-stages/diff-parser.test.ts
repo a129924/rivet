@@ -451,6 +451,66 @@ describe("createDiffParser", () => {
     expect(result.message).not.toContain(malformedMarkerPatch);
   });
 
+  test("converts an EOF marker before any hunk data line to a stable parse-error", () => {
+    const malformedMarkerPatch =
+      "@@ -1 +1 @@\n\\ No newline at end of file\n-old\n+new";
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], patch: malformedMarkerPatch }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const result = createDiffParser({
+      parseDiff() {
+        return parsedSingleHunkDiff(
+          [
+            parsedLine("-old", "delete", 1, undefined),
+            parsedLine("+new", "insert", undefined, 1),
+          ],
+          "@@ -1 +1 @@",
+        );
+      },
+    }).parse(validationResult.value);
+
+    expect(result).toEqual(parseError());
+    if (result.type === "success") {
+      throw new Error("Expected misplaced EOF marker parsing to fail.");
+    }
+    expect(result.message).not.toContain(malformedMarkerPatch);
+  });
+
+  test("converts repeated EOF markers after one hunk data line to a stable parse-error", () => {
+    const malformedMarkerPatch =
+      "@@ -1 +1 @@\n-old\n\\ No newline at end of file\n\\ No newline at end of file\n+new";
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], patch: malformedMarkerPatch }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const result = createDiffParser({
+      parseDiff() {
+        return parsedSingleHunkDiff(
+          [
+            parsedLine("-old", "delete", 1, undefined),
+            parsedLine("+new", "insert", undefined, 1),
+          ],
+          "@@ -1 +1 @@",
+        );
+      },
+    }).parse(validationResult.value);
+
+    expect(result).toEqual(parseError());
+    if (result.type === "success") {
+      throw new Error("Expected repeated EOF marker parsing to fail.");
+    }
+    expect(result.message).not.toContain(malformedMarkerPatch);
+  });
+
   test("accepts a real trailing-LF blank context, delete, and insert hunk", () => {
     const result = createDiffParser().parse(
       validatedTrailingLineFeedSnapshot(),
@@ -495,13 +555,16 @@ function validatedTrailingLineFeedSnapshot() {
   return validationResult.value;
 }
 
-function parsedSingleHunkDiff(lines: readonly unknown[]): DiffFile[] {
+function parsedSingleHunkDiff(
+  lines: readonly unknown[],
+  header = "@@ -1,2 +1,2 @@",
+): DiffFile[] {
   return [
     {
       isGitDiff: true,
       blocks: [
         {
-          header: "@@ -1,2 +1,2 @@",
+          header,
           lines,
         },
       ],

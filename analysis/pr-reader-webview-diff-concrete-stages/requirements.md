@@ -136,3 +136,25 @@
 - 此為 test-only bounded rework；不得修改 production Parser、Validator、UseCase、template、public contract、Port、docs、dependencies 或 Git。若現有 Parser 未使 regression 轉為既定 `parse-error`，即屬 scope-expanding blocker，必須交還 human，不得在本 route 補做 production fix。既有 exact EOF marker、CRLF、malformed patch 與 unknown-prefix tests 維持不變。
 - Existing independent Plan-Reviewer 已對 `PR-10` 明示 `approved`；IM-09 的 single nonexact-marker negative regression 與 TE-09 的 independent verification 均為既有 factual evidence。`RV-12` 的既有 verdict 為 `blocked`，原因是當時 ledger 漏記 PR-10 approval；它不是 approval，也不允許進入 `DL-08`。
 - `PC-15` 只更新四份 artifacts，如實保留 PR-10、IM-09、TE-09 與 RV-12 的既有事實和全部 prior history/status。唯一可前進 route 是 `PC-15 → RV-13 fresh independent review approved → DL-08 → HC-08`；只有 RV-13 的明示 `approved` 才可 delivery。
+
+## Final PR Comment Correction — EOF Marker Position and Git Path Validation
+
+- 本輪只處理最後兩個 selected PR threads：(1) exact `\ No newline at end of file` metadata marker 目前可在錯誤位置或無資料行間隔地重複出現而被接受；(2) Validator 以 `trim()` 判斷 Git path，因而錯誤拒絕合法的純空白 path。它不改寫任何既有 route、status、evidence 或已鎖定 contract。
+- EOF marker 仍是 Parser-local completeness metadata，且只可緊接在同一 hunk 的 context／delete／insert source data line 後；每一資料行至多可有一個 exact marker。marker 不可位於第一個資料行前、hunk data 以外、另一 marker 後，或在未以另一資料行分隔的情況下重複；任一違反均為既有 stable、no-leak `parse-error`。兩個各自緊接不同資料行的 exact markers 仍是合法形式，且各自不建立 expectation 或 count。
+- Validator 對 identity（`pullRequestId`、`snapshotId`、`fileId`）維持 non-whitespace 規則：必須為字串且 `trim()` 後非空。對 Git path（`filename` 及 present 的 `previousFilename`）改採原始字串長度規則：必須為字串且 `length > 0`，不得 trim、canonicalize 或修改值；因此純空白 path 合法，空字串仍為 `invalid-input`。renamed 的 optional `previousFilename` 仍依既定 missing-value metadata-unavailable policy。
+- Implementer 必須採 TDD：先新增可歸因 failing tests，覆蓋有效單一 marker、marker-before-data、無資料行間隔的 duplicate marker、兩個分別緊接不同資料行的 marker，以及 identity whitespace rejection、filename／present previousFilename pure-whitespace acceptance 和 raw-empty-path rejection；再以最小 Parser／Validator 修正轉綠。保留 empty-patch、精確 marker、nonexact-marker、CRLF、unknown-prefix、renamed metadata-unavailable 與 malformed-patch controls。
+- 唯一新 route 是 `PC-18 → PR-12 approved → IM-11 → TE-11 → RV-16 approved → DL-10 → HC-10`。`PC-18` 只更新四份 artifacts；PR-12 前不得修改 TypeScript、tests、docs、dependencies 或 Git。DL-10 只可建立此最終 correction commit、push 至既有 PR branch，並 resolve 這兩個 selected threads；完成後停止於 HC-10 human review。
+
+## Final PR Comment Test-Coverage Rework
+
+- `PR-12` 已由獨立 Plan-Reviewer 明示 `approved`；`IM-11` 已完成 EOF placement/multiplicity 與 identity/path validation 的可歸因 TDD red／green evidence，`TE-11` 已有獨立 Tester `pass` evidence。這些 factual records 不取代 `RV-16` verdict。
+- `RV-16` 的明示 verdict 為 `needs-rework`：production behavior 與 boundary 未被要求改動，但缺少兩個合法 EOF metadata 形式的可歸因 positive regression coverage：(1) exact marker 緊接單一 hunk data line 時成功；(2) 兩個 exact markers 分別緊接由資料行分隔的兩個 hunk data lines 時成功。此 verdict 不授權 `DL-10`，也不改寫前述 status/evidence。
+- 本輪只允許新增這兩個 internal Parser test cases；不得修改 Parser、Validator、Template、Renderer、UseCase、公開 contract、Port、docs、dependencies 或 Git。測試必須使用既定 exact marker，並驗證 Parser／Renderer success；若任一 case 無法在既有 production code 下通過，即為 scope-expanding blocker，必須交還 human，不得在本 route 補做 production fix。
+- 唯一可前進 route 為 `PC-19 → PR-13 approved → IM-12 → TE-12 → RV-17 approved → DL-10 → HC-10`。`PC-19` 只更新四份 artifacts；`PR-13` 前不得修改 TypeScript、tests、docs、dependencies 或 Git。`DL-10` 只可建立最終 correction commit、push 至既有 PR branch，並 resolve 最後兩個 selected threads；完成後直接停止於 HC-10 human review。
+
+## Final PR Comment Evidence Correction — Legal EOF Parser→Renderer Coverage
+
+- `PR-13` 已由獨立 Plan-Reviewer 明示 `approved`；`IM-12` 已完成可歸因的 TDD red／green evidence，`TE-12` 已有獨立 Tester `pass` evidence。這些是既有事實，不回填、推論或取代任何其他 route 的 approval。
+- `IM-12` 的 test-only allowed scope 包含既有 internal `diff-parser.test.ts` 與既有 internal `diff-renderer.test.ts`。後者只用於從 validated input 經 Parser 到 Renderer 的 legal EOF metadata 正向 regression；不得修改任何 production TypeScript、public contract、Port、UseCase orchestration、docs、package manifest、lockfile、dependencies 或 Git。
+- `RV-17` 的既有明示 verdict 為 `blocked`，不是 delivery approval：其阻礙是先前 artifact 對 internal Parser test module 的狹義表述未涵蓋既有 `diff-renderer.test.ts` 的 Parser→Renderer positive regression。`PC-20` 僅如實修正此 test-only scope 與已發生 evidence；不得將 `RV-17` 改寫為 approved，亦不得重做或擴張 implementation。
+- 唯一可前進 route 為 `PC-20 → RV-18 fresh independent review approved → DL-10 → HC-10`。`RV-18` 必須審查 PR-13 approved、IM-12／TE-12 factual evidence、RV-17 blocked reason、兩個 legal EOF Parser→Renderer regressions、既有 negative controls 與 ReadOnly preservation。只有明示 `approved` 可進入 DL-10；完成 delivery 後直接停止於 HC-10 human review。

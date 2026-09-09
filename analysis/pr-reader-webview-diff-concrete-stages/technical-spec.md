@@ -129,3 +129,24 @@
 ## Supersession Note
 
 - 上述 PC-03／PC-04 correction route 與其全部 step status 保留為歷史紀錄。本次 PC-05 不回填其中任何 gate；它只為五個已選 PR comment remediations 新增後續 route。
+
+## Final Correction Contract — EOF Marker Position and Git Path Validation
+
+- `isCompleteDiff2HtmlParseResult` 必須在同一 immutable template source 的每個 hunk 中，以 Parser-private state 記錄最近的 context／delete／insert source data line 是否已消耗 exact EOF metadata marker。僅完全等於 `\ No newline at end of file`（不含 source line ending）的 marker，且其前一 source line 為尚未有 marker 的 hunk data line，才可略過 expectation 與 count；任何孤立、開頭、連續、重複或非精確 marker 都是 stable、no-leak `parse-error`。這不改寫 template source、parse input、snapshot 或 diff2html result，亦不移入 Validator／UseCase。
+- Validator 必須使用兩個語意明確的 private predicates：identity string 為 `typeof value === "string" && value.trim().length > 0`；Git path string 為 `typeof value === "string" && value.length > 0`。不得以 path predicate 檢查 identity，亦不得 trim、normalize 或重寫 accepted path。`filename` 一律使用 path predicate；present 的 `previousFilename` 亦使用 path predicate。空 path 維持 `invalid-input`；缺少 renamed `previousFilename` 維持既定 metadata-unavailable，而非 validation failure。
+- 新增 tests 必須先 red 後 green，並證明：(a) valid exact marker 直接跟隨 data line 成功；(b) marker 位於第一個 hunk data line 前或沒有 intervening data line 而重複時，回傳 stable/no-leak `parse-error`；(c) 各自跟隨不同 data line 的兩個 exact markers 可成功；(d) whitespace-only identities 被拒；(e) whitespace-only current／previous Git paths 被保留並接受，而 raw empty paths 被拒。Parser 與 Validator 以外的 production module、public surface、docs、dependencies 與 Git metadata 必須維持 ReadOnly。
+- Gate 只可依序為 `PC-18 → PR-12 approved → IM-11 → TE-11 → RV-16 approved → DL-10 → HC-10`；每個非 `approved` verdict、測試無法以 Parser／Validator-local 最小修正滿足，或任何 scope drift，均停止並交還 human。DL-10 只可 commit、push 既有 PR branch 並 resolve 兩個 selected threads，隨即停止於 HC-10。
+
+## Final Correction Contract — Legal EOF Marker Coverage
+
+- `PR-12` 的 independent `approved`、`IM-11` 的 TDD red／green 與 `TE-11` 的 independent `pass` 都是已發生的 factual records。`RV-16` 的明示 verdict 是 `needs-rework`，且只要求補足 legal EOF metadata 的正向測試覆蓋；它不是 delivery approval。
+- `IM-12` 只能新增兩個 Parser positive regressions：exact `\ No newline at end of file` 緊接一個 context／delete／insert data line 時 Parser／Renderer 成功，以及兩個 exact markers 各自緊接被另一 source data line 分隔的兩個 data lines 時 Parser／Renderer 成功。兩個 marker 都維持 metadata：不建立 expectation 或 count，且不影響該 data line 的既定比對。
+- 此為 test-only route：不得變更任何 production TypeScript module，包括 Parser、Validator、Template、Renderer、UseCase 與 contracts／ports。若新增任一 legal-positive test 在現有 production code 下失敗，該失敗是 scope-expanding blocker；不得將其轉為 production rework，必須交還 human。
+- Gate 只可依序為 `PC-19 → PR-13 approved → IM-12 → TE-12 → RV-17 approved → DL-10 → HC-10`。`TE-12` 必須獨立執行既定 frozen install、check、test、coverage 與 diff check；`RV-17` 必須 fresh independent review test-only diff、兩個 legal-positive cases、既有 invalid-marker negative controls 與 ReadOnly preservation。只有 `RV-17` 明示 `approved` 可進入既有 `DL-10`。
+
+## Final Correction Contract — Legal EOF Evidence and Fresh Review
+
+- 既有事實為：`PR-13` 的 independent Plan-Reviewer verdict 是 `approved`；`IM-12` 已產生可歸因 TDD red／green evidence；`TE-12` 的 independent Tester verdict 是 `pass`；`RV-17` 的明示 verdict 是 `blocked`。`RV-17` 不是 approval，且不得藉由本節回填或偽造任何 approval。
+- 兩個 legal EOF metadata 正向 regressions 必須經既有 `diff-renderer.test.ts` 的 validated-input → Parser → Renderer 成功流驗證；它是 internal test-only scope 的一部分，而非 Renderer production change。既有 `diff-parser.test.ts` 與 `diff-renderer.test.ts` 均可修改測試；所有 production modules、公開 surface、docs、manifest、lockfile、dependencies 與 Git 維持 ReadOnly。
+- `RV-17 blocked` 的可追溯原因是原本 `IM-12` 的 test-only scope 未明示允許既有 renderer test module，故既有 Parser→Renderer positive regression 缺乏可追溯 scope。`PC-20` 只補正此 scope 與 evidence record，不變更程式或測試。
+- Gate 改為 `PC-20 → RV-18 fresh independent review approved → DL-10 → HC-10`。`RV-18` 只審查既有 evidence、legal EOF Parser→Renderer positive cases、invalid EOF negative controls 與 ReadOnly preservation；只有明示 `approved` 才可進入既有 DL-10。

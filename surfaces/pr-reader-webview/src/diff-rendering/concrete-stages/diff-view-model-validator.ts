@@ -51,8 +51,8 @@ function validateSnapshot(
   const snapshotId = snapshot.snapshotId;
   const files = snapshot.files;
   if (
-    !isNonEmptyString(pullRequestId) ||
-    !isNonEmptyString(snapshotId) ||
+    !isNonBlankString(pullRequestId) ||
+    !isNonBlankString(snapshotId) ||
     !Array.isArray(files)
   ) {
     return undefined;
@@ -89,9 +89,9 @@ function validateFile(
   const patch = file.patch;
   const previousFilename = file.previousFilename;
   if (
-    !isNonEmptyString(fileId) ||
+    !isNonBlankString(fileId) ||
     fileIds.has(fileId) ||
-    !isNonEmptyString(filename) ||
+    !isRawNonEmptyString(filename) ||
     !isDiffFileStatus(status) ||
     typeof viewed !== "boolean" ||
     !isNonNegativeSafeInteger(additions) ||
@@ -103,7 +103,10 @@ function validateFile(
 
   let validatedPreviousFilename: string | undefined;
   if (status === "renamed") {
-    if (previousFilename !== undefined && !isNonEmptyString(previousFilename)) {
+    if (
+      previousFilename !== undefined &&
+      !isRawNonEmptyString(previousFilename)
+    ) {
       return undefined;
     }
     validatedPreviousFilename = previousFilename;
@@ -137,8 +140,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function isNonEmptyString(value: unknown): value is string {
+function isNonBlankString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function isRawNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.length > 0;
 }
 
 function isNonNegativeSafeInteger(value: unknown): value is number {

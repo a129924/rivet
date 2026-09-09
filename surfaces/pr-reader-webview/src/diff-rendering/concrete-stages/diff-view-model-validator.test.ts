@@ -35,6 +35,36 @@ describe("createDiffViewModelValidator", () => {
     expect(result.type).toBe("success");
   });
 
+  test.each([" ", "\t", "\n"])(
+    "accepts a raw nonempty filename containing only %j",
+    (filename: string) => {
+      const result = createDiffViewModelValidator().validate({
+        ...validSnapshot,
+        files: [{ ...validSnapshot.files[0], filename }],
+      });
+
+      expect(result.type).toBe("success");
+    },
+  );
+
+  test.each([" ", "\t", "\n"])(
+    "accepts a raw nonempty renamed previous filename containing only %j",
+    (previousFilename: string) => {
+      const result = createDiffViewModelValidator().validate({
+        ...validSnapshot,
+        files: [
+          {
+            ...validSnapshot.files[0],
+            status: "renamed",
+            previousFilename,
+          },
+        ],
+      });
+
+      expect(result.type).toBe("success");
+    },
+  );
+
   test.each([
     ["non-object snapshot", "not a snapshot"],
     ["empty snapshot identity", { ...validSnapshot, snapshotId: "" }],
@@ -116,10 +146,10 @@ describe("createDiffViewModelValidator", () => {
       },
     ],
     [
-      "whitespace-only filename",
+      "empty filename",
       {
         ...validSnapshot,
-        files: [{ ...validSnapshot.files[0], filename: "\n" }],
+        files: [{ ...validSnapshot.files[0], filename: "" }],
       },
     ],
     [

@@ -233,6 +233,7 @@ function readUnifiedDiffHunkTuples(
         lines: [],
         nextOldNumber: tuple.old.start,
         nextNewNumber: tuple.new.start,
+        canReadNoNewlineAtEndOfFileMarker: false,
       };
       hunks.push(currentHunk);
       continue;
@@ -246,6 +247,10 @@ function readUnifiedDiffHunkTuples(
     }
 
     if (isNoNewlineAtEndOfFileMarker(sourceLine)) {
+      if (!currentHunk.canReadNoNewlineAtEndOfFileMarker) {
+        return undefined;
+      }
+      currentHunk.canReadNoNewlineAtEndOfFileMarker = false;
       continue;
     }
     const expectation = readUnifiedDiffLineExpectation(sourceLine, currentHunk);
@@ -253,6 +258,7 @@ function readUnifiedDiffHunkTuples(
       return undefined;
     }
     currentHunk.lines.push(expectation);
+    currentHunk.canReadNoNewlineAtEndOfFileMarker = true;
   }
 
   return hunks;
@@ -286,6 +292,7 @@ interface MutableUnifiedDiffHunk extends UnifiedDiffHunk {
   readonly lines: UnifiedDiffLineExpectation[];
   nextOldNumber: number;
   nextNewNumber: number;
+  canReadNoNewlineAtEndOfFileMarker: boolean;
 }
 
 function readUnifiedDiffLineExpectation(

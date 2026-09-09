@@ -133,3 +133,23 @@
 - 此 correction 保持 `DiffRenderUseCase` 為既定的 orchestration-only caller：只協調 Validator → Parser → Renderer → Output 與既定 failure short-circuit；不得新增 diff2html、unified diff 或 parsed-shape logic。
 - `PC-04` 只記錄本次 bounded correction；舊 `PR-02`、`IM-01`、`TE-01`、`RV-01`、`DL-01` 與 `HC-01` 的 status 與 historical-deviation record 均不回填，且不參與 correction routing。
 - `PR-03` 至 `HC-02` 保留當時 correction routing 的歷史內容，不改寫其 step status；它們不 gate PC-05 及其後的 PR-comment remediation route。
+
+## Final PR Comment Correction Gates — EOF Marker Position and Git Path Validation
+
+- `PC-18` 只更新同 topic 四份 artifacts，鎖定最後兩個 selected threads：exact EOF marker 只可緊接 source hunk data line 且每個 data line 至多一個，以及 Validator 將 identity 的 trim-based non-whitespace validation 與 Git path 的 raw-length validation 分離。不改 TypeScript、tests、docs、dependencies 或 Git，也不回填或改寫任何 prior route/status/evidence。
+- `PR-12` 必須由獨立 Plan-Reviewer 明示 `approved`，才可開始 `IM-11`。`IM-11` 必須先建立可歸因 failing tests：marker-before-data、連續 duplicate marker 均為 stable/no-leak `parse-error`；directly-adjacent valid marker 與由不同 data lines 分隔的兩個 markers 均維持 success；whitespace-only identity 為 `invalid-input`，而 whitespace-only `filename`／present `previousFilename` 保留 raw value 並合法，raw empty path 為 `invalid-input`。再以最小 Parser／Validator-private change 轉綠。
+- `TE-11` 獨立執行 frozen install、check、test、coverage、diff check，並保留 exact/nonexact EOF、CRLF、empty patch、unknown-prefix、malformed patch、renamed metadata-unavailable controls。`RV-16` 獨立確認 Parser／Validator-only scope、public/read-only surface preservation、no-leak outcomes、TDD evidence 與兩個 thread 對應。只有 `RV-16` 明示 `approved`，`DL-10` 才可依既有授權 commit、push 既有 PR branch，並只 resolve 這兩個 selected threads；完成後停止於 `HC-10` human review。
+- 固定 route：`PC-18 → PR-12 approved → IM-11 → TE-11 → RV-16 approved → DL-10 → HC-10`。任何非 approved verdict、需改 public contract／Port／UseCase orchestration／dependency、或 EOF validity 無法在 Parser-local 與 path validity 無法在 Validator-local 滿足，均停止並交還 human。
+
+## Final PR Comment Rework Gates — Legal EOF Marker Coverage
+
+- `PR-12` 已獲獨立 Plan-Reviewer `approved`；`IM-11` 的 TDD red／green 與 `TE-11` 的 independent `pass` 為既有 factual evidence。`RV-16` 為 `needs-rework`，原因僅是少了 legal EOF marker 的兩個 positive regressions；不得視為 `DL-10` approval。
+- `PC-19` 只更新四份 artifacts，將 next route 鎖為 test-only。`PR-13` 必須由獨立 Plan-Reviewer 明示 `approved`，才可開始 `IM-12`；它只可在 internal Parser test module 新增：(a) exact marker 緊接單一 hunk data line 的 success；(b) 兩個 exact markers 分別緊接兩個、由資料行分隔的 hunk data lines 的 success。兩案都必須經 Parser 到 Renderer 的既定成功流。
+- `IM-12` 不得修改 production code；若新增 test 不在既有行為下通過，必須分類為 scope-expanding blocker，不得補做 Parser／Validator 變更。`TE-12` 獨立執行 frozen install、check、test、coverage、diff check，並保留 exact/nonexact EOF、CRLF、empty patch、unknown-prefix、malformed patch、renamed metadata-unavailable controls。
+- `RV-17` 必須 fresh independent review test-only diff、兩個 legal-positive regressions、既有 invalid-position／duplicate／nonexact negative controls 與 ReadOnly preservation。固定 route：`PC-19 → PR-13 approved → IM-12 → TE-12 → RV-17 approved → DL-10 → HC-10`。只有 `RV-17` 明示 `approved` 才可 delivery；`DL-10` 仍只可 commit、push 既有 PR branch，並 resolve 最後兩個 selected threads，隨即停止於 HC-10。
+
+## Final PR Comment Evidence Gate — Legal EOF Parser→Renderer Coverage
+
+- 已發生且必須如實保留的 evidence 為：PR-13 independent Plan-Reviewer `approved`、IM-12 TDD red／green、TE-12 independent Tester `pass`，以及 RV-17 `blocked`。RV-17 的 blocked 原因是原先 test-only scope 只表述 internal Parser test module，未明示允許既有 `diff-renderer.test.ts` 承載 Parser→Renderer legal EOF success regressions；它不得視為 delivery approval。
+- `PC-20` 僅更新四份 formal artifacts，明定 IM-12 的 test-only allowlist 含既有 `diff-parser.test.ts` 與既有 `diff-renderer.test.ts`。renderer test 的唯一用途是驗證 validated input 經 Parser→Renderer 的兩個 legal EOF metadata success cases；不得改 production code、contracts、ports、UseCase、docs、manifest、lockfile、dependencies 或 Git。
+- 固定 route：`PC-20 → RV-18 fresh independent review approved → DL-10 → HC-10`。RV-18 僅審查 evidence、scope allowlist、legal-positive／invalid-marker negative coverage 與 ReadOnly preservation。只有明示 `approved` 才可進入 DL-10；DL-10 仍只可 commit、push 既有 PR branch，並 resolve 最後兩個 selected threads，隨即停止於 HC-10。

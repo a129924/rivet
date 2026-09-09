@@ -187,6 +187,72 @@ describe("createDiffRenderer", () => {
     expect(entry.html).toContain("d2h-file-wrapper");
   });
 
+  test("renders an exact EOF marker immediately after its deleted data line", () => {
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [
+        {
+          ...snapshot.files[0],
+          patch:
+            "@@ -1,2 +1,2 @@\n context\n-old\n\\ No newline at end of file\n+new",
+        },
+      ],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const parseResult = createDiffParser().parse(validationResult.value);
+    if (parseResult.type === "error") {
+      throw new Error(parseResult.message);
+    }
+
+    const result = createDiffRenderer().createRenderPlan(parseResult.value);
+
+    expect(result.type).toBe("success");
+    if (result.type === "error") {
+      throw new Error(result.message);
+    }
+    const [entry] = readRenderPlan(result.value).entries;
+    if (entry?.kind !== "rendered") {
+      throw new Error("Expected the exact EOF-marker patch to be rendered.");
+    }
+    expect(entry.html).toContain("d2h-file-wrapper");
+  });
+
+  test("renders two legal EOF markers separated by distinct data lines", () => {
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [
+        {
+          ...snapshot.files[0],
+          patch:
+            "@@ -1,2 +1,2 @@\n context\n-old\n\\ No newline at end of file\n+new\n\\ No newline at end of file",
+        },
+      ],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const parseResult = createDiffParser().parse(validationResult.value);
+    if (parseResult.type === "error") {
+      throw new Error(parseResult.message);
+    }
+
+    const result = createDiffRenderer().createRenderPlan(parseResult.value);
+
+    expect(result.type).toBe("success");
+    if (result.type === "error") {
+      throw new Error(result.message);
+    }
+    const [entry] = readRenderPlan(result.value).entries;
+    if (entry?.kind !== "rendered") {
+      throw new Error("Expected the two-EOF-marker patch to be rendered.");
+    }
+    expect(entry.html).toContain("d2h-file-wrapper");
+  });
+
   test("uses line-by-line rendering without a file list", () => {
     let receivedConfiguration: unknown;
     const result = createDiffRenderer({

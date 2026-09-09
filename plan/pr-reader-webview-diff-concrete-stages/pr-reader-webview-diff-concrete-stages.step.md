@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-concrete-stages`
-- Current phase: PC-17 已記錄 Human 接受的 PR-11 pre-gate historical deviation；待 `RV-15` fresh independent review
+- Current phase: PC-20 已如實記錄 PR-13／IM-12／TE-12 evidence 與 RV-17 blocked；待 `RV-18` fresh independent review
 - Ledger rule: status 與 checklist 不構成 approval；只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Goal
@@ -19,6 +19,7 @@
 - Internal structural Validator、immutable per-file VO、unified Git diff template、Parser、Renderer 與 tests；Validator 只驗 raw `DiffSnapshot`，Parser 只接收 validated input 並處理 diff2html third-party-result defense。本輪第六個 PR thread #1 僅補強 Parser 將 template source 的 ordered hunk header tuples／marker-plus-body source-line expectations 與 parsed blocks／`DiffLine.content` 逐一比較。
 - concrete stage verified 後，最小 docs truth amendment；本輪只校正 architecture README 首段 implementation truth。
 - 本 topic 四份 formal artifacts。
+- 本輪最終兩個 selected threads：Parser 對 exact EOF marker 的資料行相鄰與每資料行單一 marker 限制，以及 Validator 對 identity non-whitespace 與 Git path raw-length 的分離規則。
 
 ## Out-Of-Scope
 
@@ -125,6 +126,20 @@
 | RV-15 | pending | Reviewer | PC-17 後，由 fresh independent Reviewer 審查 locked scope、PR-11 pending、IM-10 red／green evidence、TE-10 `pass` evidence、RV-14 `blocked` 與 DL-09 eligibility。 | 尚無 fresh independent Reviewer verdict；只有明示 `approved` 才可進入 DL-09。 |
 | DL-09 | pending | Implementer | 僅於 RV-15 `approved` 後，依已授權流程建立 correction commit、push 更新既有 PR branch，並只 resolve 此三個 selected threads。 | 尚無 delivery evidence；不得開新 PR、處理、resolve 或重開其他 thread。 |
 | HC-09 | pending | Human | DL-09 後，人類審閱此三個 selected-thread correction。 | DL-09 後停止自動前進。 |
+| PC-18 | completed | Plan-Creator | 僅更新同 topic 四份 artifacts，鎖定最後兩個 selected threads：exact EOF marker 的位置／每資料行單一 marker，以及 Validator identity trim 與 Git path raw-length validation 的責任分離。 | 未修改 TypeScript、tests、docs、dependencies 或 Git；不回填或改寫任何 prior status/evidence；不是 Plan-Reviewer approval。 |
+| PR-12 | approved | Plan-Reviewer | 獨立審查 PC-18：確認 marker 只緊接單一 hunk data line、不同 data lines 可各有一個 marker、identity/path predicates 不漂移，及 TDD／ReadOnly／兩 thread delivery scope。 | Independent Plan-Reviewer 明示 verdict：`approved`；此既有事實授權後續 IM-11。 |
+| IM-11 | completed | Implementer | PR-12 `approved` 後，建立 EOF placement/multiplicity 與 whitespace-path validation 的可歸因 failing tests，再以最小 Parser／Validator-local change 轉綠。 | Existing factual evidence：可歸因 TDD red／green 已完成；未改公開 contract、Port、UseCase、docs、dependencies 或 Git。 |
+| TE-11 | completed | Tester | IM-11 完成後，獨立執行 frozen install、check、test、coverage、diff check，並驗證 exact/nonexact EOF、CRLF、empty patch、unknown-prefix、malformed patch、renamed metadata-unavailable controls。 | Independent Tester 明示 verdict：`pass`。 |
+| RV-16 | needs-rework | Reviewer | TE-11 後獨立審查 Parser／Validator-only scope、stable/no-leak failures、TDD／Tester evidence、identity/path policy與 ReadOnly preservation。 | Independent Reviewer 明示 verdict：`needs-rework`；只需新增 exact legal marker 單一成功與兩個由 data line 分隔 marker 成功的 test coverage，不得改 production code。 |
+| DL-10 | pending | Implementer | 僅於 RV-18 `approved` 後，依已授權流程建立本最終 correction commit、push 更新既有 PR branch，並只 resolve 此兩個 selected threads。 | 尚無 delivery evidence；不得開新 PR、處理、resolve 或重開其他 thread。 |
+| HC-10 | pending | Human | DL-10 後，人類進行最終 PR review。 | DL-10 完成後停止自動前進。 |
+| PC-19 | completed | Plan-Creator | 僅更新四份 artifacts，如實記錄 PR-12／IM-11／TE-11 evidence 與 RV-16 needs-rework，並建立 legal EOF marker positive coverage 的 test-only route。 | 不改 TypeScript、docs、dependencies 或 Git；不回填或改寫 prior status/evidence；不是 Plan-Reviewer approval。 |
+| PR-13 | approved | Plan-Reviewer | 獨立審查 PC-19：確認兩個 legal-positive EOF marker cases、test-only file impact、既有 negative controls 與最終兩 thread delivery scope。 | Independent Plan-Reviewer 明示 verdict：`approved`；此既有事實授權後續 IM-12。 |
+| IM-12 | completed | Implementer | PR-13 `approved` 後，新增 exact marker 緊接單一 data line 與兩個 markers 由 data line 分隔的 Parser→Renderer success tests；不得修改 production code。 | Existing factual evidence：可歸因 TDD red／green 已完成；測試允許既有 internal `diff-parser.test.ts` 與 `diff-renderer.test.ts`，後者只承載 Parser→Renderer positive regressions。 |
+| TE-12 | completed | Tester | IM-12 完成後，獨立執行 frozen install、check、test、coverage、diff check，並保留既有 EOF／CRLF／malformed controls。 | Independent Tester 明示 verdict：`pass`。 |
+| RV-17 | blocked | Reviewer | TE-12 後，既有 test-only diff review。 | Independent Reviewer 明示 verdict：`blocked`；原 IM-12 scope 未明示允許既有 `diff-renderer.test.ts` 承載 Parser→Renderer legal-positive regressions，非 delivery approval。 |
+| PC-20 | completed | Plan-Creator | 僅更新四份 formal artifacts，如實記錄 PR-13／IM-12／TE-12 evidence 與 RV-17 blocked，並將既有 `diff-renderer.test.ts` 納入 IM-12 的 test-only Parser→Renderer positive-regression allowlist。 | 不改 TypeScript、tests、docs、dependencies 或 Git；不回填、偽造或改寫任何 approval/status；不是 Reviewer approval。 |
+| RV-18 | pending | Reviewer | PC-20 後，由 fresh independent Reviewer 審查 PR-13 approved、IM-12／TE-12 factual evidence、RV-17 blocked reason、test-only allowlist、兩個 legal EOF Parser→Renderer positives、invalid-marker negatives 與 ReadOnly preservation。 | 尚無 fresh independent Reviewer verdict；只有明示 `approved` 才可進入 DL-10。 |
 
 ## Blockers
 
@@ -158,6 +173,11 @@
 - Human 已接受本次 PR-11 pre-gate historical deviation：`PR-11` 維持 pending、沒有 approval；`IM-10` 的 TDD red／green 與 `TE-10` 的 independent Tester `pass` 僅為可歸因 historical evidence，不能回填 status、取代 gate 或授權 delivery。
 - `RV-14` 的既有結果是 `blocked`，不是 approval。既有 `PC-16 → PR-11 → IM-10 → TE-10 → RV-14 → DL-09` route 保留為歷史，不能依其前進。
 - 唯一可前進 route 是 `PC-17 → RV-15 fresh independent review approved → DL-09 → HC-09`。RV-15 前不得 commit、push 或 resolve；DL-09 仍只可 resolve 三個 selected threads。
+- 本輪唯一可前進 route 是 `PC-18 → PR-12 approved → IM-11 → TE-11 → RV-16 approved → DL-10 → HC-10`。PR-12 前不得修改 TypeScript、tests、docs、dependencies 或 Git；DL-10 只可 resolve 最終兩個 selected threads。任何 public contract、Port、UseCase orchestration、dependency、template source mutation 或 docs 變更都是 human boundary。
+- EOF marker 只有在緊接同 hunk 的未標記 context／delete／insert data line 時才是 metadata；在首個 data line 前、data 以外、另一 marker 後或無 intervening data line 的重複 marker 均為 stable/no-leak `parse-error`。identity 使用 non-whitespace 規則，Git path 使用 raw-length 規則；不得 trim、normalize 或重寫 accepted path。
+- `PR-12` approved、IM-11 TDD evidence 與 TE-11 Tester `pass` 是已發生 factual records；`RV-16` 明示 `needs-rework`，只要求 legal EOF marker 的兩個 positive regressions，不得進入 DL-10。
+- `PR-13` approved、IM-12 TDD evidence 與 TE-12 Tester `pass` 是已發生 factual records；RV-17 的明示 verdict 是 `blocked`，因原本 test-only scope 未明示既有 `diff-renderer.test.ts` 可承載 Parser→Renderer positive regressions。此 blocked verdict 不是 delivery approval，不得重寫為 approved。
+- 唯一可前進 route 是 `PC-20 → RV-18 fresh independent review approved → DL-10 → HC-10`。IM-12 的 test-only allowlist 僅為既有 internal `diff-parser.test.ts` 與 `diff-renderer.test.ts`；任何 production TypeScript、docs、dependencies、Git 或 public-surface 變更都是 human boundary。
 
 ## Human Check
 
@@ -173,9 +193,12 @@
 - `DL-08` 完成後停止於 `HC-08` human review；human 是唯一可決定此兩個 selected threads correction 是否接受或合併的人。
 - `PR-11` 只審查 preamble、internal identity 與 missing-rename metadata fallback；不得回填、取代或重新審查既有 route/status。PR-11 或 RV-14 的任何非 `approved` verdict 均不得進入 DL-09；DL-09 完成後停止於 HC-09 human review。
 - `RV-14` 的 `blocked` 是本次 deviation 的 human boundary；Human 已僅授權 Plan-Creator 如實記錄 evidence。只有 `RV-15` fresh independent review 明示 `approved` 才可進入 DL-09；DL-09 後停止於 HC-09 human review。
+- PC-18 只處理 EOF marker position/multiplicity 與 path-validation distinction；不得以此 route 修改 docs、dependencies、Git metadata、公開 contract、Port 或 UseCase orchestration。`PR-12` 或 `RV-16` 的任何非 `approved` verdict 均不得進入 DL-10。
+- `PR-12` 僅審查最終 EOF marker position/multiplicity 與 identity/path validation correction；不得回填、取代或重新審查既有 route/status。`DL-10` 完成後停止於 `HC-10` human review，並直接收斂本輪，不再自動展開其他修正。
+- `RV-16` 的 `needs-rework` 只建立 legal EOF marker positive-coverage 的 test-only corrective route；不得以此回填、取代或重新審查 PR-12、IM-11、TE-11 的歷史 evidence/status。PR-13 已 approved；RV-17 的 `blocked` 保留為歷史 non-approval。只有 RV-18 fresh independent review 明示 `approved` 才可進入 DL-10。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: Human 接受 PR-11 pre-gate historical deviation 後，如實記錄既有 evidence、RV-14 blocked 與 fresh review route；不改寫任何 prior status/history。
-- Update status: PC-17 completed；待 RV-15 fresh independent Reviewer review。唯一新 route 為 RV-15 approved → DL-09 → HC-09；prior routes/statuses 保留不變。
+- Update reason: 如實記錄 PR-13 approved、IM-12／TE-12 evidence 與 RV-17 blocked；明定既有 `diff-renderer.test.ts` 為 Parser→Renderer legal EOF positive regressions 的 test-only allowlist，建立 PC-20 fresh-review route，不改寫任何 prior status/history。
+- Update status: PC-20 completed；待 RV-18 fresh independent Reviewer review。唯一新 route 為 RV-18 approved → DL-10 → HC-10；prior routes/statuses 保留不變。
