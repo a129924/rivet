@@ -84,6 +84,22 @@
 - `RV-09` 的 historical verdict 為 `blocked`，不是 `approved`，不授權 `DL-07`。本次 record 不新增 Parser、test 或其他實作工作，特別是不加入 nonblocking type-only mismatch test。
 - `PC-12` 完成 evidence record 後，新的獨立 `RV-10` 必須審查 locked Parser-only boundary、PR-08 pending、IM-07 red／green、TE-07 `pass` 與 RV-09 `blocked`。只有 `RV-10` 的明示 `approved` 才可進入既有 `DL-07`；不新增或補造 PR-08 approval，且 prior route/status 保留為歷史。
 
+## Ninth Correction Record — EOF Marker and CRLF Completeness Comparison
+
+- 此 correction 只處理兩個 selected PR threads：合法 `\ No newline at end of file` metadata marker 與 CRLF hunk content 的 completeness comparison。它維持 Parser-only boundary，不改 Validator、UseCase、public contract、Port、template production behavior、docs、dependencies 或 Git。
+- `isCompleteDiff2HtmlParseResult` 必須將 source hunk body 的精確 EOF marker `\ No newline at end of file` 視為 metadata（可帶該 source line 的 line ending）：不建立 `DiffLine` expectation、不消耗或驗證 old/new counter，且不視為 unknown prefix。這個例外只適用於精確 marker；任何其他 unknown prefix 仍為既有 stable、no-leak `parse-error`。
+- completeness comparison 必須使用 Parser-private canonical representation，使 source expectation 的 line ending 與 diff2html parsed `DiffLine.content` 的 line-ending／EOF-marker removal semantics 一致。此 canonicalization 只供 expected/actual comparison；`GitDiffTemplate` 建立的 source 不得被改寫，傳給 `diff2html.parse` 的值必須仍是同一份未 canonicalize 的 source，且不得重新產生 source 或從 raw patch 建構第二條路徑。
+- `IM-08` 採 TDD：先以包含精確 EOF marker 的有效 patch 建立 failing regression，斷言 marker 不增加 expectation/count 且 Parser→Renderer 成功；最小 Parser/test correction 後轉 green。CRLF test 必須以 actual Parser/diff2html 結果做 truthful characterization；若檢查開始時已 green，只記錄 green、不可宣稱 red，若確有 failure 才保留該 failure 與 correction 的 red/green evidence。兩個 case 均不得放寬 malformed patch 或 strict unknown-prefix `parse-error`。
+- 新 route 是 `PC-13 → PR-09 approved → IM-08 → TE-08 → RV-11 approved → DL-08 → HC-08`；PR-09 approval 前沒有實作權限，DL-08 只可 resolve 這兩個 selected threads。
+
+## Tenth Correction Record — Nonexact Backslash EOF-Marker Regression
+
+- `PR-09` 已 `approved`；`IM-08` 的 exact EOF-marker／CRLF TDD work 與 `TE-08` 的 independent Tester `pass` 均為既有 factual evidence。`RV-11` 明示 `needs-rework`，因為尚無 regression 證明 metadata 例外不會接受近似的反斜線 marker；它不是 delivery approval。
+- EOF metadata exclusion 的唯一允許值是 source line content 精確等於 `\ No newline at end of file`（該 source line 的 line ending 可存在但不屬 content）。新 test fixture 使用 `\ No newline at end of file `，以尾端空白使其成為非精確 marker；在 otherwise-valid hunk 中，`isCompleteDiff2HtmlParseResult` 必須將它保留為 unknown prefix，令 Parser 回傳既有 stable、no-leak `parse-error`。
+- Existing independent Plan-Reviewer 已對 `PR-10` 明示 `approved`；`IM-09` 的實際影響僅為新增上述 single negative regression，production TypeScript、template source、Parser algorithm、Validator、UseCase、public contract、Port、docs、dependencies 與 Git 皆維持不變。
+- Existing independent Tester 的 `TE-09` evidence 已執行 frozen install、check、test、coverage、diff check，並驗證 nonexact marker 與既有 EOF／CRLF／unknown-prefix controls。`RV-12` 的既有 verdict 是 `blocked`，唯一原因為 ledger 當時漏記 PR-10 approval；它不是 `approved`，不得解鎖 `DL-08`。
+- `PC-15` 僅如實補記既有 PR-10／IM-09／TE-09／RV-12 evidence，不改寫 prior status/history。固定 route 更新為 `PC-15 → RV-13 fresh independent review approved → DL-08 → HC-08`；RV-13 必須重新確認 test-only scope、stable/no-leak `parse-error`、exact EOF／CRLF coverage、ReadOnly preservation 與 RV-12 blocked 原因，只有其明示 `approved` 可 delivery。
+
 ## Historical Deviation Record
 
 - Human 已接受一次 historical deviation：實作在 `PR-02` 仍為 pending 時開始。這項接受不回溯將 `PR-02` 視為 approved，也不將既有 red／green 或 technical review evidence 轉為 gate approval。

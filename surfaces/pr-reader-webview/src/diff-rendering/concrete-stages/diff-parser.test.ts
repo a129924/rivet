@@ -1,5 +1,6 @@
 // @ts-expect-error Bun's test module lacks a local type declaration in this package.
 import { describe, expect, test } from "bun:test";
+import { parse as parseDiff2Html } from "diff2html";
 import type { DiffSnapshot } from "../contracts/diff-snapshot";
 import type { DiffFile } from "diff2html/lib/types";
 import { createDiffViewModelValidator } from "./diff-view-model-validator";
@@ -347,11 +348,53 @@ describe("createDiffParser", () => {
     expect(result.message).not.toContain(unknownPrefixPatch);
   });
 
+  test("converts a non-exact no-newline marker to a stable parse-error without patch content", () => {
+    const malformedMarkerPatch =
+      "@@ -1 +1 @@\n-old\n\\ No newline at end of file \n+new";
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], patch: malformedMarkerPatch }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    const result = createDiffParser().parse(validationResult.value);
+
+    expect(result).toEqual(parseError());
+    if (result.type === "success") {
+      throw new Error("Expected parsing to fail.");
+    }
+    expect(result.message).not.toContain(malformedMarkerPatch);
+  });
+
   test("accepts a real trailing-LF blank context, delete, and insert hunk", () => {
     const result = createDiffParser().parse(
       validatedTrailingLineFeedSnapshot(),
     );
 
+    expect(result.type).toBe("success");
+  });
+
+  test("accepts CRLF hunk lines while passing the original template source to diff2html", () => {
+    const crlfPatch = "@@ -1 +1 @@\r\n-old\r\n+new\r\n";
+    const validationResult = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [{ ...snapshot.files[0], patch: crlfPatch }],
+    });
+    if (validationResult.type === "error") {
+      throw new Error(validationResult.message);
+    }
+
+    let receivedSource: string | undefined;
+    const result = createDiffParser({
+      parseDiff(source) {
+        receivedSource = source;
+        return parseDiff2Html(source);
+      },
+    }).parse(validationResult.value);
+
+    expect(receivedSource).toContain(crlfPatch);
     expect(result.type).toBe("success");
   });
 });

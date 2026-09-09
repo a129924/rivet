@@ -92,6 +92,23 @@
 - `PC-12` 只更新四份 formal artifacts，如實記錄上述 evidence/status；不改 TypeScript、docs、dependencies 或 Git，也不新增 nonblocking type-only mismatch test 或任何其他實作／測試工作。
 - 唯一可前進 route 是 `PC-12 → RV-10 fresh independent review approved → DL-07 → HC-07`。`RV-10` 必須獨立審查 locked scope、PR-08 pending、IM-07 red／green、TE-07 `pass` 與 RV-09 `blocked`；僅其明示 `approved` 可解鎖既有 `DL-07`，以 commit、push 並只 resolve thread #1。
 
+## Ninth PR Comment Correction Gates — EOF Marker and CRLF
+
+- `PC-13` 只更新同 topic 四份 artifacts，鎖定兩個 selected threads：合法 `\ No newline at end of file` source metadata marker 與 CRLF hunk content completeness comparison。不改 TypeScript、docs、dependencies 或 Git，且不回填或改寫任何 prior route/status/evidence。
+- Parser-local `isCompleteDiff2HtmlParseResult` 必須將精確 EOF marker 視為 metadata；它不建立 expected parsed line、不消耗 old/new count，也不視為 unknown prefix。此例外不適用於其他反斜線-prefixed hunk body；其他 unknown prefix 必須繼續回傳 stable/no-leak `parse-error`。
+- Parser 只在 private completeness-comparison representation canonicalize source expectation 與 diff2html parsed line 的 line-ending／marker-removal difference。template source 本身、傳入 `diff2html.parse` 的 input、raw snapshot 與既有 Validator/UseCase flow 均不得改動；parse input 必須保持同一份 original template source。
+- `IM-08` 先加入 exact EOF-marker failing regression，再以最小 Parser/test correction 轉 green，並保留 actual Parser→Renderer success。CRLF 測試必須先記錄 actual Parser/diff2html behavior：若已 green，保留 truthful green characterization，不能捏造 red；若初始為 red，才保留可歸因 red/green evidence。未知 prefix 與 malformed patch 的 strict stable/no-leak `parse-error` controls 必須持續通過。
+- `TE-08` 獨立執行 frozen install、check、test、coverage、diff check。`RV-11` 獨立確認 Parser-only scope、同一未改寫 source 的 parse input、EOF metadata exclusion、CRLF canonical comparison、TDD evidence 與 ReadOnly preservation。只有 `RV-11` 明示 `approved`，`DL-08` 才可 commit、push 並只 resolve 此兩個 selected threads；之後停在 `HC-08` human review。
+- 固定 route：`PC-13 → PR-09 approved → IM-08 → TE-08 → RV-11 approved → DL-08 → HC-08`。`PR-09` 前不得修改程式、docs、dependencies 或 Git。
+
+## Tenth PR Comment Correction Gates — Nonexact Backslash EOF Marker
+
+- 已發生 evidence 如實保留：`PR-09` 為 independent Plan-Reviewer `approved`，`IM-08` 有 exact EOF-marker／CRLF TDD evidence，`TE-08` 為 independent Tester `pass`；`RV-11` 的明示 verdict 是 `needs-rework`，不得進入 `DL-08`。
+- `PC-14` 只更新四份 artifacts，鎖定 metadata exception 的 exactness regression。test fixture 必須在 otherwise-valid hunk 放入 `\ No newline at end of file `（尾端一個空白）；它不同於唯一允許的 exact marker，故 Parser 必須回傳 stable/no-leak `parse-error`，不得把它視為 metadata 或略過。
+- Existing independent Plan-Reviewer 已對 `PR-10` 明示 `approved`；`IM-09` 僅新增上述 single negative test，並保留 production Parser、其他 TypeScript、Validator、UseCase、template、public surface、docs、dependencies 與 Git 不變的 factual evidence。
+- Existing independent Tester 的 `TE-09` evidence 已涵蓋 frozen install、check、test、coverage、diff check，以及 nonexact marker 與既有 EOF／CRLF／unknown-prefix controls。`RV-12` 的既有 verdict 為 `blocked`，因當時 ledger 漏記 PR-10 approval；它不是 delivery approval，且不得改寫為 `approved`。
+- `PC-15` 只如實補記上述 evidence 與 RV-12 blocked，保留所有既有 status/history。唯一可前進 route：`PC-15 → RV-13 fresh independent review approved → DL-08 → HC-08`。RV-13 必須重審 test-only scope、stable/no-leak result、exact EOF／CRLF coverage、ReadOnly preservation 與 RV-12 blocked 原因；只有其明示 `approved` 可解鎖 DL-08。
+
 ## Accepted Historical Deviation and Corrective Routing
 
 - Human 已接受：本 topic 的 implementation 在 `PR-02` 仍 pending 時開始。此接受僅允許如實保留既有工作結果，不會追溯核准 `PR-02`，也不會補造或重新標示 red／green evidence。

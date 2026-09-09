@@ -199,7 +199,7 @@ interface UnifiedDiffHunkRange {
 function readUnifiedDiffHunkTuples(
   patch: string,
 ): readonly UnifiedDiffHunk[] | undefined {
-  const sourceLines = patch.split(/\r?\n/);
+  const sourceLines = canonicalizeForDiff2HtmlComparison(patch).split("\n");
   if (sourceLines[sourceLines.length - 1] === "") {
     sourceLines.pop();
   }
@@ -220,6 +220,9 @@ function readUnifiedDiffHunkTuples(
     }
 
     if (currentHunk !== undefined) {
+      if (isNoNewlineAtEndOfFileMarker(sourceLine)) {
+        continue;
+      }
       const expectation = readUnifiedDiffLineExpectation(
         sourceLine,
         currentHunk,
@@ -232,6 +235,14 @@ function readUnifiedDiffHunkTuples(
   }
 
   return hunks;
+}
+
+function canonicalizeForDiff2HtmlComparison(source: string): string {
+  return source.replace(/\r\n/g, "\n");
+}
+
+function isNoNewlineAtEndOfFileMarker(sourceLine: string): boolean {
+  return sourceLine === "\\ No newline at end of file";
 }
 
 interface MutableUnifiedDiffHunk extends UnifiedDiffHunk {

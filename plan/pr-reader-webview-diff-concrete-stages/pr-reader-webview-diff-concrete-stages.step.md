@@ -3,7 +3,7 @@
 ## Topic and Current Phase
 
 - Topic: `pr-reader-webview-diff-concrete-stages`
-- Current phase: PC-12 PR-08 pre-gate historical-deviation evidence 已記錄；待 `RV-10` fresh independent Reviewer 審查
+- Current phase: PC-15 已如實補記既有 PR-10／IM-09／TE-09／RV-12 evidence；待 `RV-13` fresh independent Reviewer re-review
 - Ledger rule: status 與 checklist 不構成 approval；只有指定獨立角色的明示 verdict 可通過 gate。
 
 ## Goal
@@ -102,6 +102,20 @@
 | HC-07 | pending | Human | DL-07 後，人類審閱既有 PR 的第六個 thread #1 source-marker correction。 | DL-07 後停止自動前進。 |
 | PC-12 | completed | Plan-Creator | Human 接受 PR-08 pre-gate historical deviation 後，只更新四份 formal artifacts，如實記錄 PR-08 pending、IM-07 red／green、TE-07 `pass` 與 RV-09 `blocked`。 | 不改 TS、docs、dependencies 或 Git；不補造 PR-08 approval、不回填 IM-07／TE-07 status，且不新增 nonblocking type-only test work；不是 Reviewer approval。 |
 | RV-10 | pending | Reviewer | PC-12 後，由 fresh independent Reviewer 審查 locked scope、PR-08 pending、IM-07 red／green evidence、TE-07 `pass` evidence、RV-09 `blocked` result 與 DL-07 eligibility。 | 尚無獨立 Reviewer verdict；只有明示 `approved` 才可進入 DL-07。 |
+| PC-13 | completed | Plan-Creator | 僅更新四份 formal artifacts，鎖定兩個 selected PR threads：合法 EOF metadata marker 不建立 completeness expectation/count，與 CRLF hunk content 的 Parser-private canonical comparison。 | 不改 TS、docs、dependencies 或 Git；不回填或改寫任何 prior route/status/evidence；不是 Plan-Reviewer approval。 |
+| PR-09 | approved | Plan-Reviewer | 獨立審查 PC-13：確認精確 EOF marker metadata exclusion、strict unknown-prefix preservation、同一未改寫 template source 供 parse/comparison、CRLF truthful-test rule、TDD 與只 resolve 兩個 threads 的 route。 | Independent Plan-Reviewer 明示 verdict：`approved`。 |
+| IM-08 | completed | Implementer | 僅於 PR-09 `approved` 後，以新 TDD cycle 修正 internal Parser/tests 的 EOF marker／CRLF completeness comparison。 | exact EOF-marker red／green evidence 已完成；CRLF behavior 已如實 characterization；不構成 delivery approval。 |
+| TE-08 | completed | Tester | IM-08 明示完成後，獨立執行 frozen install、check、test、coverage、diff check。 | Independent Tester 明示 verdict：`pass`；涵蓋 EOF metadata、CRLF comparison 與 strict unknown-prefix/malformed controls。 |
+| RV-11 | needs-rework | Reviewer | TE-08 明示完成後，獨立審查 IM-08 的 Parser-only scope、same-source parse input、EOF metadata/count exclusion、CRLF canonical comparison、TDD／Tester evidence 與 ReadOnly preservation。 | Independent Reviewer 明示 verdict：`needs-rework`。Required rework 僅為 nonexact backslash EOF-marker negative regression，證明唯一 exact marker exception 不接受近似值。 |
+| PC-14 | completed | Plan-Creator | 僅更新四份 formal artifacts，如實記錄 PR-09／IM-08／TE-08 evidence 與 RV-11 needs-rework，並鎖定 single nonexact-marker negative regression 的 test-only route。 | 不改 TS、docs、dependencies 或 Git；不回填或改寫 prior status/evidence；不是 Plan-Reviewer approval。 |
+| PR-10 | approved | Plan-Reviewer | 獨立審查 PC-14：確認 fixture 非精確、exact metadata exception 仍受限、stable/no-leak `parse-error`、test-only file impact、scope-expanding blocker 與 delivery route。 | Existing independent Plan-Reviewer 明示 verdict：`approved`；此既有事實授權後續 IM-09。 |
+| IM-09 | completed | Implementer | 僅於 PR-10 `approved` 後，在 internal Parser test module 新增一個 nonexact `\ No newline at end of file ` negative regression。 | Existing factual evidence：僅新增該 regression，斷言 stable/no-leak `parse-error`；production code 與 ReadOnly surface 未變。 |
+| TE-09 | completed | Tester | IM-09 明示完成後，獨立執行 frozen install、check、test、coverage、diff check。 | Existing independent Tester factual evidence：新 regression 與既有 EOF／CRLF／unknown-prefix controls 通過指定驗證。 |
+| RV-12 | blocked | Reviewer | TE-09 明示完成後，審查 test-only diff、stable/no-leak `parse-error`、existing coverage preservation 與 ReadOnly preservation。 | Existing Reviewer verdict：`blocked`，原因是當時 ledger 漏記既有 PR-10 approval；這不是 `approved`，不得進入 DL-08。 |
+| PC-15 | completed | Plan-Creator | 只更新四份 formal artifacts，如實補記既有 PR-10 approved、IM-09／TE-09 factual evidence 與 RV-12 blocked，保留全部既有 status/history。 | 不改 TS、docs、dependencies 或 Git；不將 RV-12 重寫為 approval，且不構成 Reviewer delivery approval。 |
+| RV-13 | pending | Reviewer | PC-15 後，由 fresh independent Reviewer 重新審查 test-only diff、PR-10／IM-09／TE-09 factual evidence、RV-12 blocked 原因、stable/no-leak `parse-error`、coverage 與 ReadOnly preservation。 | 尚無 fresh independent Reviewer verdict；只有明示 `approved` 才可進入 DL-08。 |
+| DL-08 | pending | Implementer | 僅於 RV-13 `approved` 後，建立 correction commit、push 至既有 PR branch，並只 resolve 此兩個 selected PR threads。 | 尚無 delivery evidence；不得開新 PR、處理、resolve 或重開其他 thread。 |
+| HC-08 | pending | Human | DL-08 後，人類審閱既有 PR 的 EOF marker／CRLF correction。 | DL-08 後停止自動前進。 |
 
 ## Blockers
 
@@ -124,6 +138,13 @@
 - Human 已接受本次 PR-08 pre-gate historical deviation：`PR-08` 仍為 pending、沒有 approval；`IM-07` 的 red／green 與 `TE-07` 的 Tester `pass` 僅為可歸因 historical evidence。它們不可回填 step status、不能取代 gate，也不授權 delivery。
 - `RV-09` 的歷史結果是 `blocked`，不是 approval。既有 `PC-11 → PR-08 → IM-07 → TE-07 → RV-09 → DL-07` route 保留為歷史，不能依其前進；本次不新增 nonblocking type-only mismatch test 或其他 implementation/test scope。
 - 唯一可前進 route 是 `PC-12 → RV-10 fresh independent review approved → DL-07 → HC-07`。RV-10 前不得 commit、push 或 resolve thread #1，且不得補造 PR-08 approval。
+- `PC-13` 只新增兩個 selected PR threads 的 route：合法精確 `\ No newline at end of file` 是 metadata，不建立 expectation/count；CRLF canonicalization 僅限 Parser-private completeness comparison。它不得改 template source、parse input、raw snapshot、Validator、UseCase、公開 contract、docs、dependencies 或 Git。
+- strict unknown-prefix behavior 維持：除精確 EOF marker 外，所有未知 hunk-body prefix 都是 stable/no-leak `parse-error`。IM-08 的 exact EOF case 必須先有 failing evidence；CRLF 若 initial characterization 已 green，必須如實保留而非補造 red evidence。
+- 唯一可前進 route 是 `PC-13 → PR-09 approved → IM-08 → TE-08 → RV-11 approved → DL-08 → HC-08`。PR-09 前不得改程式、docs、dependencies 或 Git；DL-08 只可 resolve 這兩個 selected threads。
+- `PR-09` 的 `approved`、IM-08 TDD evidence 與 TE-08 independent `pass` 均為已發生的 factual record；`RV-11` 明示 `needs-rework`，故不得進入 DL-08。
+- `PC-14` 的唯一 rework 是 nonexact backslash EOF-marker negative regression：只有精確 `\ No newline at end of file` 可作 metadata；fixture `\ No newline at end of file ` 必須仍為 strict unknown prefix 並回傳 stable/no-leak `parse-error`。不得修改 production code；若 test 不 green，屬 scope-expanding blocker，交還 human。
+- `PR-10` 的 independent `approved`、IM-09 test-only factual evidence 與 TE-09 independent Tester evidence 均已發生；`RV-12` 的明示 verdict 是 `blocked`，因 ledger 當時漏記 PR-10 approval。此 blocked verdict 不得重寫為 approval，也不得進入 DL-08。
+- 唯一可前進 route 是 `PC-15 → RV-13 fresh independent review approved → DL-08 → HC-08`。RV-13 前不得 commit、push 或 resolve threads。
 
 ## Human Check
 
@@ -134,9 +155,12 @@
 - `PR-07` 只審查 source-line completeness correction；不得以它回填、取代或重新審查 PR-06、IM-05、TE-05、RV-06、PC-09 或 RV-07 的 historical evidence/status。PR-07 或 RV-08 任何非 `approved` verdict 均不得進入 DL-06。
 - `PR-08` 只審查 source-marker content correction；不得以它回填、取代或重新審查任何 prior route/status。PR-08 或 RV-09 任何非 `approved` verdict 均不得進入 DL-07。
 - `RV-09` 的 `blocked` 是本次 deviation 的 human boundary；Human 已僅授權 Plan-Creator 如實記錄 evidence。`RV-10` 的 fresh independent review 尚未明示 `approved` 前，不得進入 DL-07。
+- `PR-09` 只審查 EOF metadata／CRLF completeness-comparison correction；不得以它回填、取代或重新審查任何 prior route/status。PR-09 或 RV-11 任何非 `approved` verdict 均不得進入 DL-08。
+- `RV-11` 的 `needs-rework` 是本輪 test-only correction 的 boundary；既有 `PR-10` approved 後才新增 nonexact marker regression。`RV-12` 已明示 `blocked`，不得進入 DL-08；只有 `RV-13` fresh independent review 明示 `approved` 才可 delivery。
+- `DL-08` 完成後停止於 `HC-08` human review；human 是唯一可決定此兩個 selected threads correction 是否接受或合併的人。
 
 ## Last Updated
 
 - Updated by: Plan-Creator
-- Update reason: Human 接受 PR-08 pre-gate historical deviation；如實記錄 IM-07 red／green、TE-07 Tester `pass` 與 RV-09 `blocked`，且不補造 PR-08 approval。
-- Update status: PC-12 completed；PR-08、IM-07、TE-07 永久維持 pending historical entries，RV-09 is blocked，不是 approval。唯一可前進 route 為 RV-10 fresh independent Reviewer approved → DL-07 → HC-07；prior routes/statuses 保留不變，且不新增 nonblocking type-only test work。
+- Update reason: 如實補記既有 PR-10 approved、IM-09／TE-09 factual evidence 與 RV-12 blocked；不改寫任何 prior status/history。
+- Update status: PC-15 completed；RV-12 維持 blocked，等待 RV-13 fresh independent Reviewer re-review。唯一新 route 為 RV-13 approved → DL-08 → HC-08；prior routes/statuses 保留不變。
