@@ -1,6 +1,6 @@
 # GitHub PR API Catalog
 
-本目錄是 Rivet 各 Domain BC 未來進行 GitHub Infra REST／GraphQL 外部協定工作時的 API 參考。GitHub Integration 已退役；未來需要時，各 BC 的 Infra 各自處理所需的 REST／GraphQL 外部協定工作。本目錄不定義 Swift contract、BC data model 或 authentication 實作；那些決策必須留給對應的 implementation topic。
+本目錄是 Rivet 各 Domain BC 未來進行 GitHub Infra REST／GraphQL 外部協定工作時的 API 參考。`GithubIntegration` 是 BC 外、尚未實作的 shared GitHub-specific integration module，不是 Supporting BC；未來各 BC Infra 可透過它共用 GitHub technical mechanisms，但仍各自處理所需的 REST／GraphQL external-to-BC translation、failure mapping 與 business meaning。本目錄不定義 Swift contract、BC data model 或 authentication 實作；那些決策必須留給對應的 implementation topic。
 
 最後官方校驗：2026-09-03（GitHub.com）。
 

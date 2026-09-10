@@ -5,4 +5,4 @@
 - [PR Inbox](pr-inbox.md)
 - [PR Reader](pr-reader.md)
 
-GitHub Integration 已退役，不再是集中 GitHub adapter 的 Supporting BC。每個 Domain BC 未來在自己的 Infra 隔離所需 GitHub 外部協定；BC 之間不建立 compile-time dependency。
+`GithubIntegration` 是 BC 外、尚未實作的 shared GitHub-specific integration module，不是 Supporting BC。每個 Domain BC 未來在自己的 Infra 隔離所需 GitHub 外部協定，並可依賴此 shared module；translation、failure mapping 與 business meaning 仍屬該 BC Infra。`GithubIntegration` 不依賴任何 BC；BC 之間不建立 compile-time dependency。
