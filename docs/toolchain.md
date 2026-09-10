@@ -37,6 +37,8 @@ nvm use
 
 全域工具：Bun、pre-commit、SwiftLint 與 Rover。Swift formatter 使用 Xcode toolchain 內建的 `swift format`，不另外安裝 formatter。
 
+Xcode toolchain 內建的 Swift formatter（`swift format`）是 trailing-comma 格式的唯一權威。SwiftLint 的 `trailing_comma` rule 已停用，避免兩個工具對 multiline collection literal 的結尾逗號提出相互衝突的要求。
+
 ## GitHub GraphQL Schema Research
 
 根目錄的 `Brewfile` 宣告 Apollo Rover。執行 `brew bundle` 安裝後，以 `rover --version` 確認工具可用。
