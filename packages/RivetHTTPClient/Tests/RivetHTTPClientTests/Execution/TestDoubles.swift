@@ -3,7 +3,7 @@ import RivetHTTPClient
 
 let fixtureResponse = HTTPResponse(
   statusCode: 200,
-  headers: ["Content-Type": "application/json"],
+  headers: [.contentType: "application/json"],
   body: Data("{}".utf8)
 )
 

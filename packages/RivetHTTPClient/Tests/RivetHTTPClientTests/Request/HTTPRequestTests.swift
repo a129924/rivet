@@ -5,31 +5,31 @@ import Testing
 @Suite("HTTPRequest")
 struct HTTPRequestTests {
   @Test
-  func exposesStandardHeaderNameConstants() {
-    #expect(HTTPHeaderName.accept == "accept")
-    #expect(HTTPHeaderName.authorization == "authorization")
-    #expect(HTTPHeaderName.contentType == "content-type")
-    #expect(HTTPHeaderName.userAgent == "user-agent")
-    #expect(HTTPHeaderName.etag == "etag")
-    #expect(HTTPHeaderName.ifNoneMatch == "if-none-match")
-    #expect(HTTPHeaderName.location == "location")
-    #expect(HTTPHeaderName.link == "link")
-    #expect(HTTPHeaderName.retryAfter == "retry-after")
+  func exposesTypedStandardHeaderNamesWithCanonicalRawValues() {
+    #expect(HTTPHeaderName.accept.rawValue == "accept")
+    #expect(HTTPHeaderName.authorization.rawValue == "authorization")
+    #expect(HTTPHeaderName.contentType.rawValue == "content-type")
+    #expect(HTTPHeaderName.userAgent.rawValue == "user-agent")
+    #expect(HTTPHeaderName.etag.rawValue == "etag")
+    #expect(HTTPHeaderName.ifNoneMatch.rawValue == "if-none-match")
+    #expect(HTTPHeaderName.location.rawValue == "location")
+    #expect(HTTPHeaderName.link.rawValue == "link")
+    #expect(HTTPHeaderName.retryAfter.rawValue == "retry-after")
   }
 
   @Test
   func readsStandardHeadersUsingComputedProperties() {
-    let headers = HTTPHeaders(
-      dictionaryLiteral: ("aCcEpT", "application/json"),
-      ("AUTHORIZATION", "Bearer token"),
-      ("Content-Type", "application/json; charset=utf-8"),
-      ("USER-agent", "Rivet"),
-      ("ETag", "tag-value"),
-      ("If-None-Match", "prior-tag"),
-      ("LOCATION", "https://example.com/redirect"),
-      ("Link", "<https://example.com/page>; rel=next"),
-      ("Retry-After", "30")
-    )
+    let headers: HTTPHeaders = [
+      .accept: "application/json",
+      .authorization: "Bearer token",
+      .contentType: "application/json; charset=utf-8",
+      .userAgent: "Rivet",
+      .etag: "tag-value",
+      .ifNoneMatch: "prior-tag",
+      .location: "https://example.com/redirect",
+      .link: "<https://example.com/page>; rel=next",
+      .retryAfter: "30",
+    ]
 
     #expect(headers.accept == "application/json")
     #expect(headers.authorization == "Bearer token")
@@ -44,22 +44,23 @@ struct HTTPRequestTests {
 
   @Test
   func looksUpHeadersCaseInsensitivelyIncludingCustomNames() {
-    let headers = HTTPHeaders(
-      dictionaryLiteral: ("Content-Type", "application/json"),
-      ("X-Rivet-Trace", "trace-123")
-    )
+    let headers: HTTPHeaders = [
+      .contentType: "application/json",
+      .custom("X-Rivet-Trace"): "trace-123",
+    ]
 
     #expect(headers.value(for: "CONTENT-TYPE") == "application/json")
     #expect(headers.value(for: HTTPHeaderName.contentType) == "application/json")
     #expect(headers.value(for: "x-rivet-trace") == "trace-123")
+    #expect(headers.value(for: .custom("x-rivet-trace")) == "trace-123")
   }
 
   @Test
-  func computedPropertiesPreserveCanonicalImmutableValuesAndDuplicateResolution() {
-    let headers = HTTPHeaders(
-      dictionaryLiteral: ("Accept", "text/plain"),
-      ("ACCEPT", "application/json")
-    )
+  func typedDictionaryLiteralPreservesCanonicalValuesAndDuplicateResolution() {
+    let headers: HTTPHeaders = [
+      .accept: "text/plain",
+      .custom("ACCEPT"): "application/json",
+    ]
 
     let expectedValues = ["accept": "application/json"]
 
@@ -69,30 +70,94 @@ struct HTTPRequestTests {
   }
 
   @Test
-  func headersUseLaterValueForDuplicateDictionaryLiteralKey() {
-    let headers = HTTPHeaders(
-      dictionaryLiteral: ("Accept", "text/plain"),
-      ("Accept", "application/json")
-    )
+  func headersUseLaterValueForDuplicateTypedDictionaryLiteralKey() {
+    let headers: HTTPHeaders = [
+      .custom("Accept"): "text/plain",
+      .accept: "application/json",
+    ]
 
     #expect(headers.values == ["accept": "application/json"])
   }
 
   @Test
-  func headersTreatNamesCaseInsensitively() {
-    let headers = HTTPHeaders(
-      dictionaryLiteral: ("Authorization", "Basic credentials"),
-      ("authorization", "Bearer token")
-    )
+  func dynamicStringInitializerTreatsNamesCaseInsensitively() {
+    let headers = HTTPHeaders([
+      "Authorization": "Basic credentials",
+      "authorization": "Bearer token",
+    ])
 
     #expect(headers.values == ["authorization": "Bearer token"])
+  }
+
+  @Test
+  func typedSubscriptAndStandardPropertiesWriteAndRemoveHeaders() {
+    var headers: HTTPHeaders = [
+      .accept: "text/plain",
+      .custom("X-Rivet-Trace"): "trace-123",
+    ]
+
+    headers[.accept] = "application/json"
+    headers.authorization = "Bearer token"
+    headers[.custom("x-rivet-trace")] = "trace-456"
+
+    #expect(headers[.accept] == "application/json")
+    #expect(headers.authorization == "Bearer token")
+    #expect(headers[.custom("X-RIVET-TRACE")] == "trace-456")
+
+    headers.authorization = nil
+    headers[.custom("X-Rivet-Trace")] = nil
+
+    #expect(headers.authorization == nil)
+    #expect(headers[.custom("x-rivet-trace")] == nil)
+    #expect(headers.accept == "application/json")
+  }
+
+  @Test
+  func allStandardPropertiesWriteAndRemoveTheirHeaders() {
+    var headers = HTTPHeaders()
+
+    headers.accept = "application/json"
+    headers.authorization = "Bearer token"
+    headers.contentType = "application/json"
+    headers.userAgent = "Rivet"
+    headers.etag = "tag-value"
+    headers.ifNoneMatch = "prior-tag"
+    headers.location = "https://example.com/redirect"
+    headers.link = "<https://example.com/page>; rel=next"
+    headers.retryAfter = "30"
+
+    #expect(headers.values.count == 9)
+
+    headers.accept = nil
+    headers.authorization = nil
+    headers.contentType = nil
+    headers.userAgent = nil
+    headers.etag = nil
+    headers.ifNoneMatch = nil
+    headers.location = nil
+    headers.link = nil
+    headers.retryAfter = nil
+
+    #expect(headers.values.isEmpty)
+  }
+
+  @Test
+  func dynamicStringInitializerInteroperatesWithTypedMutationAndValueSemantics() {
+    var headers = HTTPHeaders(["Content-Type": "text/plain"])
+    var copy = headers
+
+    headers[.contentType] = "application/json"
+    copy.contentType = nil
+
+    #expect(headers.value(for: .contentType) == "application/json")
+    #expect(copy.value(for: "content-type") == nil)
   }
 
   @Test
   func retainsValidatedURLAndRequestMetadata() throws {
     let url = try HTTPURL(#require(URL(string: "https://example.com/issues")))
     let body = Data("payload".utf8)
-    let headers: HTTPHeaders = ["Accept": "application/json"]
+    let headers: HTTPHeaders = [.accept: "application/json"]
 
     let request = HTTPRequest(url: url, method: .post, headers: headers, body: body)
 
