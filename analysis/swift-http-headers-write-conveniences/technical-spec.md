@@ -49,13 +49,13 @@ public subscript(_ name: HTTPHeaderName) -> String? { get set }
 
 ## Authorized Modify Targets
 
-- `Packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPHeaderName.swift`
-- `Packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPHeaders.swift`
-- `Packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/HTTPClientTests.swift`
-- `Packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/RequesterTests.swift`
-- `Packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/TestDoubles.swift`
-- `Packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Request/HTTPRequestTests.swift`
-- `Packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Response/HTTPResponseTests.swift`
+- `packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPHeaderName.swift`
+- `packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPHeaders.swift`
+- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/HTTPClientTests.swift`
+- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/RequesterTests.swift`
+- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/TestDoubles.swift`
+- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Request/HTTPRequestTests.swift`
+- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Response/HTTPResponseTests.swift`
 - `docs/architecture/README.md`
 
 所有其他 product source、test files、manifest、BC 文件與 architecture diagrams 均為 read-only。不得新增 test surface；測試調整只可修改上述既有 files。

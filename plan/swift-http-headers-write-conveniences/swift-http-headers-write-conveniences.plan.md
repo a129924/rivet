@@ -43,10 +43,10 @@
 
 #### Modify
 
-- `Packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPHeaderName.swift`：typed header-name value、標準 members及 custom factory。
-- `Packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPHeaders.swift`：typed literal／lookup／subscript、標準 property setters與必要 internal mutability。
-- `Packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/HTTPClientTests.swift`、`Execution/RequesterTests.swift`、`Execution/TestDoubles.swift`：修正 dictionary-literal key 型別變更所影響的既有 header setup／test doubles。
-- `Packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Request/HTTPRequestTests.swift`、`Response/HTTPResponseTests.swift`：修正 dictionary-literal key 型別變更，並涵蓋 typed API、dynamic String initializer 與既有 regression。
+- `packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPHeaderName.swift`：typed header-name value、標準 members及 custom factory。
+- `packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPHeaders.swift`：typed literal／lookup／subscript、標準 property setters與必要 internal mutability。
+- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/HTTPClientTests.swift`、`Execution/RequesterTests.swift`、`Execution/TestDoubles.swift`：修正 dictionary-literal key 型別變更所影響的既有 header setup／test doubles。
+- `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Request/HTTPRequestTests.swift`、`Response/HTTPResponseTests.swift`：修正 dictionary-literal key 型別變更，並涵蓋 typed API、dynamic String initializer 與既有 regression。
 - `docs/architecture/README.md`：header convenience 的事實性 read-only description 更正。
 
 #### Written
