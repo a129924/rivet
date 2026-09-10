@@ -15,6 +15,7 @@
 - 建立本 topic 的 requirements、technical spec、plan 與 step ledger。
 - 盤點目前 GitHub-related assets、依賴方向與舊說法，並以 KEEP／MOVE／SPLIT／REMOVE 分類記錄。
 - 在通過 planning review 後，更正長期架構文件與保留的 Bounded Context Map，並退役舊 Supporting BC 主文件及其 authorization boundary canvas。
+- documentation delivery 可修改 `docs/github-api/README.md` 的 catalog introduction 與「共通規則」中 shared-module boundary wording；其餘 catalog capability content 維持 ReadOnly。
 - 將 GitHub REST／GraphQL raw transport、authentication mechanism、共通 request headers／API version、pagination、rate-limit、retry、GitHub error technical classification 與 shared configuration，記錄為 shared module 的責任類別；endpoint-specific media type、DTO translation 與 technical classification 到 BC failure contract 的 mapping 仍屬各 BC Infra，且不把這些類別誤記為既有 runtime API。
 
 ## Non-Goal

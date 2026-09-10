@@ -24,7 +24,7 @@
 ## ReadOnly
 
 - `RivetHTTPClient`、根 manifest、所有 runtime source、測試、build configuration 與 PR Reader GraphQL schema snapshot。
-- `docs/github-api/` 的 capability-reference content，惟 catalog introduction 例外。
+- `docs/github-api/` 的 capability-reference content，惟 catalog introduction 與「共通規則」中 shared-module boundary wording 例外。
 - PR #17／`github-integration-auth-boundary` 的既有 artifacts 與相關歷史資料；僅作 supersession traceability。
 
 ## Written
@@ -36,7 +36,7 @@
 
 ## Modify
 
-僅在 documentation delivery 時修改 active long-lived architecture documentation、PR Inbox／PR Reader BC boundary wording、`docs/github-api/README.md` 的 catalog introduction，以及 Bounded Context Map scene／generated artifact；`docs/github-api/` 其餘 catalog content 維持 ReadOnly。具體範圍依 technical spec 的 Documentation Delivery Contract。不得修改 runtime 或歷史 artifacts。
+僅在 documentation delivery 時修改 active long-lived architecture documentation、PR Inbox／PR Reader BC boundary wording、`docs/github-api/README.md` 的 catalog introduction 與「共通規則」中 shared-module boundary wording，以及 Bounded Context Map scene／generated artifact；`docs/github-api/` 其餘 catalog capability content 維持 ReadOnly。具體範圍依 technical spec 的 Documentation Delivery Contract。不得修改 runtime 或歷史 artifacts。
 
 ## Deleted
 
@@ -48,7 +48,7 @@
 ## Implementation
 
 1. 由 Plan-Creator 建立四份同 slug artifacts，並由獨立 Plan-Reviewer 檢查 scope 與 contract consistency。
-2. Implementer 僅進行 documentation 與 architecture-canvas boundary correction：`GithubIntegration` 只承擔 raw transport、authentication、共通 request headers／API version、GitHub error technical classification 與 shared configuration；各 BC Infrastructure Adapter 擁有 endpoint-specific media type、GitHub DTO／node translation、technical classification 到自己的 failure contract 的 mapping 與 business meaning；不得產生 shared BC failure contract，並退役舊 Supporting BC 主文件與 authorization boundary canvas。
+2. Implementer 僅進行 documentation 與 architecture-canvas boundary correction：`GithubIntegration` 未來只承擔 raw transport、authentication、共通 request headers／API version、pagination、rate limit、retry、GitHub error technical classification 與 shared configuration 等責任類別；各 BC Infrastructure Adapter 擁有 endpoint-specific media type、GitHub DTO／node translation、technical classification 到自己的 failure contract 的 mapping 與 business meaning；不得產生 shared BC failure contract，並退役舊 Supporting BC 主文件與 authorization boundary canvas。此清單不宣稱 runtime API 或 policy 已實作。
 3. Tester 執行受限驗證：確認 retired assets／active navigation 均已移除、architecture-canvas validate/build Bounded Context Map，並執行 `git diff --check`。
 4. Reviewer 驗證文件、canvas、dependency assertions 與 scope isolation；任何 scope／contract／workflow drift 均退回對應 owner。
 5. Human 在 Reviewer verdict 後進行終端交付 review；此 review 不以 PR #17 pending gates 為前置條件。
