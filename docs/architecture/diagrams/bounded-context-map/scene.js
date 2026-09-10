@@ -1,4 +1,4 @@
-const W = 1480, H = 2220;
+const W = 1480, H = 2240;
 
 // 虛線表示 Rivet 擁有的抽象；實線表示應用介面、技術機制與外部系統。
 const PLANES = {
@@ -52,11 +52,11 @@ const BOXES = [
   { id: 'reader-failure', plane: 'port', band: 'band-application', x: 1100, y: 1000, w: 250, h: 104, r: 10, dash: true,
     name: 'Reader 失敗契約', about: 'PR Reader 對呼叫端公開的語意失敗。', texts: [['bl', 1124, 1028, 'Reader 失敗契約'], ['bs', 1124, 1050, 'PR 內容不可讀'], ['bn', 1124, 1074, '不洩漏 GitHub 錯誤']] },
   { id: 'inbox-adapter', plane: 'adapter', band: 'band-adapter', x: 200, y: 1320, w: 540, h: 120, r: 10,
-    name: 'PR Inbox GitHub 轉接器', about: '僅為 Inbox Port 將 GitHub 外部資料與技術失敗轉換成 Inbox 詞彙。', texts: [['bl', 224, 1348, 'PR Inbox GitHub 轉接器'], ['bs', 224, 1370, '轉接器 · 端點 · DTO 轉換'], ['bs', 224, 1386, '技術失敗 → Inbox 失敗契約'], ['bn', 224, 1408, 'Inbox 業務意義留在此處']] },
+    name: 'PR Inbox GitHub 轉接器', about: '僅為 Inbox Port 將 GitHub 外部資料與技術分類轉換成 Inbox 詞彙。', texts: [['bl', 224, 1348, 'PR Inbox GitHub 轉接器'], ['bs', 224, 1370, '端點媒體型別 · DTO 轉換'], ['bs', 224, 1386, 'GitHub 技術分類 → Inbox 失敗契約'], ['bn', 224, 1408, 'Inbox 業務意義只留在此處']] },
   { id: 'reader-adapter', plane: 'adapter', band: 'band-adapter', x: 800, y: 1320, w: 540, h: 120, r: 10,
-    name: 'PR Reader GitHub 轉接器', about: '僅為 Reader Port 將 GitHub node 與技術失敗轉換成 Reader 詞彙。', texts: [['bl', 824, 1348, 'PR Reader GitHub 轉接器'], ['bs', 824, 1370, '轉接器 · 操作 · node 轉換'], ['bs', 824, 1386, '技術失敗 → Reader 失敗契約'], ['bn', 824, 1408, 'Reader 業務意義留在此處']] },
+    name: 'PR Reader GitHub 轉接器', about: '僅為 Reader Port 將 GitHub node 與技術分類轉換成 Reader 詞彙。', texts: [['bl', 824, 1348, 'PR Reader GitHub 轉接器'], ['bs', 824, 1370, '端點媒體型別 · node 轉換'], ['bs', 824, 1386, 'GitHub 技術分類 → Reader 失敗契約'], ['bn', 824, 1408, 'Reader 業務意義只留在此處']] },
   { id: 'github-integration', plane: 'integration', band: 'band-integration', x: 260, y: 1670, w: 1060, h: 104, r: 10,
-    name: 'GithubIntegration', about: '尚未實作的 GitHub 專用共享整合模組，只集中可跨 BC 共用的技術機制。', texts: [['bl', 284, 1698, 'GithubIntegration（未來邊界）'], ['bs', 284, 1720, 'REST／GraphQL 傳輸 · 認證機制 · 標頭'], ['bs', 284, 1736, '分頁 · 速率限制 · 重試 · 技術錯誤正規化'], ['bn', 284, 1758, '共享技術機制；不定義 BC 詞彙或 GithubService']] },
+    name: 'GithubIntegration', about: '尚未實作的 GitHub 專用共享整合模組，只集中可跨 BC 共用的 raw 技術機制。', texts: [['bl', 284, 1698, 'GithubIntegration（未來邊界）'], ['bs', 284, 1720, 'raw 傳輸 · 認證 · 共通標頭／API version'], ['bs', 284, 1736, '分頁 · 速率限制 · 重試 · GitHub 技術分類'], ['bn', 284, 1758, '不定義 BC 詞彙、失敗契約或 GithubService']] },
   { id: 'github-rest', plane: 'outside', band: 'band-outside', x: 190, y: 1950, w: 580, h: 68, r: 10,
     name: 'GitHub REST API', about: '各 BC 轉接器經由共享技術機制可使用的外部 REST 協定。', texts: [['bl', 214, 1978, 'GitHub REST API'], ['bs', 214, 2000, '外部端點 · 回應']] },
   { id: 'github-graphql', plane: 'outside', band: 'band-outside', x: 810, y: 1950, w: 580, h: 68, r: 10,
@@ -64,11 +64,9 @@ const BOXES = [
 ];
 
 const EDGES = [
-  { from: 'reviewer', to: 'inbox-view', pts: [[424,304],[444,304]] },
-  { from: 'inbox-view', to: 'session', pts: [[734,304],[754,304]] },
-  { from: 'reader-view', to: 'session', pts: [[1086,304],[1066,304]] },
-  { from: 'session', to: 'inbox-facade', pts: [[880,352],[880,414],[490,414],[490,524]], label: { s: 'al', x: 694, y: 406, t: '請求佇列', anchor: 'center' } },
-  { from: 'session', to: 'reader-facade', pts: [[1000,352],[1000,524]] },
+  // 本圖只表達編譯期依賴；不表達 Reviewer、View 或 Session 的 runtime navigation／request flow。
+  { from: 'inbox-view', to: 'inbox-facade', pts: [[590,352],[590,414],[490,414],[490,524]] },
+  { from: 'reader-view', to: 'reader-facade', pts: [[1230,352],[1230,414],[1090,414],[1090,524]] },
   { from: 'inbox-facade', to: 'inbox-usecase', pts: [[490,602],[490,789]] },
   { from: 'reader-facade', to: 'reader-usecase', pts: [[1090,602],[1090,789]] },
   { from: 'inbox-usecase', to: 'inbox-port', pts: [[470,887],[470,940],[330,940],[330,994]] },
@@ -84,7 +82,7 @@ const EDGES = [
 const TEXTS = [
   { s: 'title', x: 160, y: 86, t: 'Rivet — 限界上下文地圖' },
   { s: 'sub', x: 160, y: 118, t: '個人 GitHub PR 工作台：BC 轉接器 → 共享技術機制 → GitHub API' },
-  { s: 'tag', x: 160, y: 146, runs: [{ t: 'PR Inbox', fill: C.green }, { t: ' ║ ', fill: '#4A5462' }, { t: 'PR Reader', fill: C.green }, { t: ' → 各自的轉接器 → ', fill: '#4A5462' }, { t: 'GithubIntegration', fill: C.sky }] },
+  { s: 'tag', x: 160, y: 146, runs: [{ t: 'PR Inbox', fill: C.green }, { t: ' ║ ', fill: '#4A5462' }, { t: 'PR Reader', fill: C.green }, { t: ' → 各自的轉接器 → ', fill: '#4A5462' }, { t: 'GithubIntegration', fill: planeColor('integration') }] },
   { s: 'legend', x: 1082, y: 86, t: '虛線 — 內部擁有的抽象' },
   { s: 'legend', x: 1082, y: 110, t: '實線 — 應用介面、技術機制與外部系統' },
   { s: 'legend', x: 1143, y: 134, t: '顏色 — 所屬層級' },
@@ -92,8 +90,9 @@ const TEXTS = [
   { s: 'plane', x: 1070, y: 775, t: 'PR Reader', anchor: 'center', fill: planeColor('usecase') },
   { s: 'plane', x: 620, y: 985, t: '內部擁有的 Port 與失敗契約', anchor: 'center', fill: planeColor('port') },
   { s: 'bn', x: 160, y: 2144, t: '不變量：BC Domain、UseCase、Port 不依賴 GithubIntegration；BC 之間沒有編譯期相依' },
-  { s: 'bn', x: 160, y: 2164, t: '不變量：各 BC 轉接器擁有 GitHub DTO／GraphQL node 轉換、失敗映射與業務意義' },
-  { s: 'bn', x: 160, y: 2184, t: 'GithubIntegration 對所有 BC 無知、尚未實作；RivetHTTPClient 維持通用且不知 GitHub 的基礎' }
+  { s: 'bn', x: 160, y: 2164, t: '不變量：各 BC 轉接器擁有端點媒體型別、DTO／node 轉換、失敗映射與業務意義' },
+  { s: 'bn', x: 160, y: 2184, t: 'GithubIntegration 對所有 BC 無知、尚未實作；RivetHTTPClient 維持通用且不知 GitHub 的基礎' },
+  { s: 'bn', x: 160, y: 2204, t: '本圖只表達編譯期依賴；不表達 Reviewer、View 或 Session 的 runtime navigation／request flow' }
 ];
 
 const SWATCHES = [

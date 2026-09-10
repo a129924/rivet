@@ -48,7 +48,7 @@
 ## Implementation
 
 1. 由 Plan-Creator 建立四份同 slug artifacts，並由獨立 Plan-Reviewer 檢查 scope 與 contract consistency。
-2. Implementer 僅進行 documentation 與 architecture-canvas boundary correction：`GithubIntegration` 只承擔 shared GitHub technical mechanisms；各 BC Infrastructure Adapter 擁有 GitHub DTO／node translation、failure mapping 與 business meaning；退役舊 Supporting BC 主文件與 authorization boundary canvas。
+2. Implementer 僅進行 documentation 與 architecture-canvas boundary correction：`GithubIntegration` 只承擔 raw transport、authentication、共通 request headers／API version、GitHub error technical classification 與 shared configuration；各 BC Infrastructure Adapter 擁有 endpoint-specific media type、GitHub DTO／node translation、technical classification 到自己的 failure contract 的 mapping 與 business meaning；不得產生 shared BC failure contract，並退役舊 Supporting BC 主文件與 authorization boundary canvas。
 3. Tester 執行受限驗證：確認 retired assets／active navigation 均已移除、architecture-canvas validate/build Bounded Context Map，並執行 `git diff --check`。
 4. Reviewer 驗證文件、canvas、dependency assertions 與 scope isolation；任何 scope／contract／workflow drift 均退回對應 owner。
 5. Human 在 Reviewer verdict 後進行終端交付 review；此 review 不以 PR #17 pending gates 為前置條件。
@@ -57,10 +57,10 @@
 
 - TC-01：四份 artifacts 存在、使用 `github-integration-boundary-redefinition` slug，且 Goal、Non-Goal、scope matrix、inventory、分類與終端 human review 一致。
 - TC-02：active 文件與圖表不再將 `GithubIntegration` 表示為 Supporting BC，並對 PR #17／舊 topic 保有 explicit supersession traceability；舊 Supporting BC 主文件與 authorization boundary canvas 已退役，且無 active navigation。
-- TC-03：canvas 清楚呈現 BC Infrastructure Adapter → `GithubIntegration` → GitHub API；不呈現 `GithubIntegration` → BC 或 Domain／UseCase／Application Port → `GithubIntegration`。
+- TC-03：canvas 只表達 compile-time dependency，清楚呈現 BC Infrastructure Adapter → `GithubIntegration` → GitHub API；不呈現 `GithubIntegration` → BC、Domain／UseCase／Application Port → `GithubIntegration`，或 Reviewer／View／Session 的 runtime navigation/request flow。
 - TC-04：canvas 通過 architecture-canvas validate/build，作者內容為繁體中文，且未發布至 artifact.cafe。
 - TC-05：allowed-path review 確認沒有 runtime source、package／target、adapter、schema、authentication flow 或 REST／GraphQL policy 變更。
-- TC-06：`git diff --check` 通過；文件不將 `RivetHTTPClient` 表示為 `GithubIntegration` implementation，亦不宣稱未實作 API。
+- TC-06：`git diff --check` 通過；文件不將 `RivetHTTPClient` 表示為 `GithubIntegration` implementation，亦不宣稱未實作 API 或 shared BC failure contract。
 
 ## Assumptions
 

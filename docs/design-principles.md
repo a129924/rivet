@@ -10,10 +10,10 @@
 
 - 一次只處理一個 Bounded Context；未經 topic 授權，不因為未來可能需要而預先建立 package、module 或抽象層。
 - PR Inbox 與 PR Reader 的責任邊界優先於技術框架或目錄便利性；`GithubIntegration` 是 BC 外的 shared GitHub-specific integration module，不是 Bounded Context。
-- 每個 Domain BC 的 Core、UseCase 與 Port 不依賴 GitHub 外部協定或 transport；該 BC 未來自己的 Infra 負責 GitHub adapter、operation／endpoint、DTO 與 failure mapping。
+- 每個 Domain BC 的 Core、UseCase 與 Port 不依賴 GitHub 外部協定或 transport；該 BC 未來自己的 Infra 負責 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping。
 - 外部 GitHub DTO、HTTP status、OAuth／Keychain 細節與 infrastructure failure 不得洩漏到核心 BC，也不得形成 BC-to-BC compile-time dependency。
-- 每個 BC 擁有自己的 failure contract；技術層 failure 僅在各 BC Infra 邊界正規化並映射為該 BC 語意。
-- `GithubIntegration` 是尚未實作的 non-BC shared integration module 構想，只能由未來各 BC Infra 依賴，以集中 GitHub REST／GraphQL transport、authentication mechanism、headers／API version、pagination、rate limit、retry、technical error normalization 與 shared configuration；它不進入 Core、UseCase 或 Port，也不依賴任何 BC。
+- 每個 BC 擁有自己的 failure contract；即使 `GithubIntegration` 未來對 raw transport 或 GitHub error 作 technical classification，也只有各 BC Infra 可將它映射為該 BC 語意，絕不形成 shared BC failure contract。
+- `GithubIntegration` 是尚未實作的 non-BC shared integration module 構想，只能由未來各 BC Infra 依賴，以集中 GitHub REST／GraphQL raw transport、authentication mechanism、共通 request headers／API version、pagination、rate limit、retry、GitHub error technical classification 與 shared configuration；它不進入 Core、UseCase 或 Port，也不依賴任何 BC。endpoint-specific media type、DTO translation、BC failure mapping 與 business meaning 留在各 BC Infra。
 - Presentation Session 是 UI 狀態，不是假裝成 Bounded Context。
 
 ## 工作方法

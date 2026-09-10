@@ -31,8 +31,8 @@ Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validato
 
 - 所有正式 layer 與 Bounded Context 邊界使用 `Outcome` 作為成功／失敗契約。
 - 每個 Bounded Context 擁有自己的 failure contract；不得洩漏、重用或混入其他 Bounded Context 的 failure contract。
-- `InfraUnknownError` 用於標準化無法安全分類的外部 infrastructure failure。
-- `InfraUnknownError` 應在 Adapter 邊界產生或正規化；其他層只能傳遞，或補充自身語意。
+- `InfraUnknownError` 用於各 BC Adapter 無法安全分類外部 failure 時的 local normalization。
+- `InfraUnknownError` 應在該 BC 的 Adapter 邊界產生或正規化；其他層只能傳遞，或補充自身語意。未來 `GithubIntegration` 對 raw transport 或 GitHub error 的 technical classification 不得形成 shared BC failure contract；只有 consuming BC local Infra 可將它映射為自己的 failure contract。
 - 純資料轉換與保證不失敗的 private helper，未來不強制使用 `Outcome`。
 
 ## 已確認的 Bounded Context Map
@@ -40,8 +40,8 @@ Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validato
 - **PR Inbox**：定義目前明確要求使用者 review 的 open PR 與其排序；不負責單一 PR 的閱讀資料或 UI selection。
 - **PR Reader**：提供單一 PR 的背景、討論、checks、檔案與 diff 閱讀資料；不決定 Inbox membership。
 - **Presentation Session**：擁有目前選取的 PR 與切換狀態；它屬於 Presentation，不屬於任何 Bounded Context。
-- PR Inbox 與 PR Reader 不直接依賴彼此，也不建立 BC-to-BC compile-time dependency。各 BC 的 Core、UseCase 與 Port 不依賴 GitHub protocol 或 transport；未來各自的 Infra 隔離 GitHub adapter、operation／endpoint、DTO 與 failure mapping。
-- `GithubIntegration` 是未實作、位於 BC 外的 shared GitHub-specific integration module，不是 Supporting BC 或集中 adapter 邊界。未來只有各 BC Infra 可依賴它；它不依賴任何 BC。
+- PR Inbox 與 PR Reader 不直接依賴彼此，也不建立 BC-to-BC compile-time dependency。各 BC 的 Core、UseCase 與 Port 不依賴 GitHub protocol 或 transport；未來各自的 Infra 隔離 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping。
+- `GithubIntegration` 是未實作、位於 BC 外的 shared GitHub-specific integration module，不是 Supporting BC 或集中 adapter 邊界。未來只有各 BC Infra 可依賴其 raw transport、authentication、共通 request headers／API version、GitHub error technical classification 與 shared configuration；它不依賴任何 BC，也不產生 shared BC failure contract。各 BC Infra 仍各自擁有 DTO translation、technical classification 到其 failure contract 的 mapping 與 business meaning。
 - 此 boundary 決定 supersede `github-integration-auth-boundary`／PR #17 的 Supporting BC 敘述；該舊決定僅保留為歷史 traceability。
 
 ## PR Reader WebView Diff Pipeline
@@ -64,4 +64,4 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 
 ## 尚未定義的項目
 
-Rivet 仍是 architecture baseline。`RivetHTTPClient` 是 generic、GitHub-unaware 的 technical HTTP foundation，可由各 consuming Domain BC 的 local Infra 採用；它具備 Swift product、target、最小 HTTP 介面與 package-owned `URLSessionTransport`。`HTTPHeaders` 提供 case-insensitive lookup 與 read-only convenience，`HTTPResponse` 保留 canonical raw `Data` response，並提供由呼叫端傳入 `JSONDecoder` 的 opt-in `json(_:decoder:)` 與 `jsonSemantic(_:decoder:)` conveniences。前者直接傳遞 decoder 的原始 error；後者只將 decode failure 分類為有限 semantic kind，並保留完整 underlying error。它以 `HTTPClientError` 表達 cancellation、network failure、non-HTTP response 與無法分類的 underlying failure，並將所有 HTTP status 與 raw response data 原樣保留給呼叫端。package 不擁有 decoder configuration；它不是 `GithubIntegration` 的實作，也不提供 Endpoint、Base URL、Path 或 Query 的 URL 組裝 API，且不實作 status 或 `Content-Type` validation、retry、token refresh、default/shared JSON decoder 或其他 response decode policy；`jsonSemantic(_:decoder:)` 僅是 caller-invoked decode-failure classification，不改變 raw response dataflow。GitHub endpoint、DTO 與 infrastructure failure 至 Domain failure contract 的 mapping 都屬 consuming Domain BC local Infra。`GithubIntegration` 仍是未實作的 future non-BC shared GitHub-specific integration module：若未來建立，只有各 BC Infra 可依賴它，以共用 GitHub REST／GraphQL request execution、authentication mechanism、rate limit 與技術層 transport failure handling；它不依賴任何 BC，且不承擔 BC 的 DTO translation、failure mapping 或 business meaning。除這個受限切片與既定 PR Reader WebView diff pipeline contract 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package 或產品實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。
+Rivet 仍是 architecture baseline。`RivetHTTPClient` 是 generic、GitHub-unaware 的 technical HTTP foundation，可由各 consuming Domain BC 的 local Infra 採用；它具備 Swift product、target、最小 HTTP 介面與 package-owned `URLSessionTransport`。`HTTPHeaders` 提供 case-insensitive lookup 與 read-only convenience，`HTTPResponse` 保留 canonical raw `Data` response，並提供由呼叫端傳入 `JSONDecoder` 的 opt-in `json(_:decoder:)` 與 `jsonSemantic(_:decoder:)` conveniences。前者直接傳遞 decoder 的原始 error；後者只將 decode failure 分類為有限 semantic kind，並保留完整 underlying error。它以 `HTTPClientError` 表達 cancellation、network failure、non-HTTP response 與無法分類的 underlying failure，並將所有 HTTP status 與 raw response data 原樣保留給呼叫端。package 不擁有 decoder configuration；它不是 `GithubIntegration` 的實作，也不提供 Endpoint、Base URL、Path 或 Query 的 URL 組裝 API，且不實作 status 或 `Content-Type` validation、retry、token refresh、default/shared JSON decoder 或其他 response decode policy；`jsonSemantic(_:decoder:)` 僅是 caller-invoked decode-failure classification，不改變 raw response dataflow。GitHub endpoint、endpoint-specific media type、DTO 與 technical classification 至 Domain failure contract 的 mapping 都屬 consuming Domain BC local Infra。`GithubIntegration` 仍是未實作的 future non-BC shared GitHub-specific integration module：若未來建立，只有各 BC Infra 可依賴它，以共用 GitHub REST／GraphQL raw request execution、authentication mechanism、共通 request headers／API version、rate limit、retry、pagination、GitHub error technical classification 與 shared configuration；它不依賴任何 BC，且不承擔 BC 的 DTO translation、failure mapping 或 business meaning，也不產生 shared BC failure contract。除這個受限切片與既定 PR Reader WebView diff pipeline contract 外，本階段不定義 `Outcome` 的程式碼型別、泛型、case 名稱、payload schema，也不定義其餘 module、package 或產品實作細節。這些決策將隨著一次一個 Bounded Context 的實作 topic 處理。
