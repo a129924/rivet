@@ -55,7 +55,7 @@
 
 #### Deleted
 
-無。不得刪除、搬移或更名任何檔案、API 或 test。
+不得刪除、搬移或更名任何檔案。已授權的 source-breaking API replacement 僅有兩項：移除 String-keyed dictionary-literal initializer／key surface；standard header-name members 由 `String` 更換為 `HTTPHeaderName`。`value(for: String)` 保留為唯讀相容查詢；其他無關 API 或 test 不得刪除。
 
 #### TestCase
 
