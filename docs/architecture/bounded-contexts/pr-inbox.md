@@ -23,7 +23,7 @@
 
 ## Failure Contract
 
-PR Inbox 只對外表達自身語意，例如待審閱佇列暫時不可取得；其 Infra 必須將 GitHub DTO、HTTP status 與技術層 failure 映射為 Inbox failure contract，不得洩漏至核心。
+PR Inbox 只對外表達自身語意，例如待審閱佇列暫時不可取得；其 local Infra GitHub adapter 不得將 GitHub DTO、HTTP status、token 或技術層 failure 洩漏至 Inbox core Port，跨越 Port 前必須映射為 Inbox failure contract。
 
 ## 延後能力
 

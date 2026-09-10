@@ -14,7 +14,7 @@
 
 - 建立本 topic 的 requirements、technical spec、plan 與 step ledger。
 - 盤點目前 GitHub-related assets、依賴方向與舊說法，並以 KEEP／MOVE／SPLIT／REMOVE 分類記錄。
-- 在通過 planning review 後，更正長期架構文件並建立／更新 architecture-canvas boundary correction。
+- 在通過 planning review 後，更正長期架構文件與保留的 Bounded Context Map，並退役舊 Supporting BC 主文件及其 authorization boundary canvas。
 - 將 GitHub REST／GraphQL transport、authentication mechanism、headers／API version、pagination、rate-limit、retry、technical error normalization 與 shared configuration，記錄為 shared module 的責任類別；不把這些類別誤記為既有 runtime API。
 
 ## Non-Goal
@@ -26,7 +26,7 @@
 ## 成功條件
 
 - 四份 artifacts 使用一致 slug，且完整記錄目標、非目標、inventory、分類、風險、驗收與 human boundary。
-- 長期架構文件與圖表（在後續 documentation delivery）明確表達：BC Infrastructure Adapter 可以依賴 `GithubIntegration`；Domain、UseCase、Application Port 不得依賴它；它也不得依賴任何 BC。
+- active 長期架構文件與保留圖表明確表達：BC Infrastructure Adapter 可以依賴 `GithubIntegration`；Domain、UseCase、Application Port 不得依賴它；它也不得依賴任何 BC。舊 Supporting BC 主文件與 authorization boundary canvas 不再作為 active architecture truth。
 - GitHub DTO／GraphQL node 的 translation、failure mapping 與 BC business meaning 仍屬各 BC Infrastructure Adapter。
 - 圖表以繁體中文、architecture-canvas 驗證後交付，且不發布至 artifact.cafe。
 

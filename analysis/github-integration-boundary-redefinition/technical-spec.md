@@ -41,7 +41,7 @@ GitHub REST / GraphQL API
 | KEEP | 沒有可搬移的現有 `GithubIntegration` runtime component。`RivetHTTPClient` 維持既有 generic foundation。 | future module 僅可收納 GitHub transport、auth mechanism、headers／API version、pagination、rate-limit、retry、technical error normalization、shared configuration。 |
 | MOVE | 未發現集中 module 中含 BC semantics 的 component。PR Reader GraphQL SDL 已在 BC Infra，維持原位。 | 任何 Pull Request、Review、Repository、Workflow 的 business interpretation 留在 owning BC adapter。 |
 | SPLIT | 未發現混合 technical mechanism 與 BC semantics 的既有 component。 | 若未來 component 同時執行 transport 並解釋 BC meaning，拆為 shared mechanism 與 BC-local adapter。 |
-| REMOVE | 未發現 centralized `GithubService`、GitHub DTO shared domain model 或 retired module runtime code。 | 不刪除歷史 artifacts；舊 Supporting BC 決定保留為 superseded traceability。 |
+| REMOVE | 無 retired runtime code；但舊 Supporting BC 主文件與 authorization boundary canvas 會錯誤地維持 superseded auth/API 方向為 active architecture truth。 | 退役 `docs/architecture/bounded-contexts/github-integration.md` 與 `docs/architecture/diagrams/github-integration-http-client-boundary/`；git history 保留 supersession traceability。 |
 
 ## Target Boundary
 
@@ -49,7 +49,7 @@ GitHub REST / GraphQL API
 
 ## Documentation Delivery Contract
 
-在 planning review 後，僅可修改下列長期真相與 boundary canvas：
+在 planning review 後，僅可修改下列長期真相與保留的 Bounded Context Map：
 
 - `docs/design-principles.md`
 - `docs/architecture/README.md`
@@ -59,10 +59,15 @@ GitHub REST / GraphQL API
 - `docs/github-api/README.md` 的 catalog introduction（其他 catalog content 維持 ReadOnly）
 - `docs/architecture/diagrams/bounded-context-map/scene.js` 與其 generated `index.html`
 
+同一受限 delivery 必須退役下列 superseded active assets，並移除所有 active navigation：
+
+- `docs/architecture/bounded-contexts/github-integration.md`
+- `docs/architecture/diagrams/github-integration-http-client-boundary/`
+
 圖表必須用繁體中文表達 ownership 與 compile-time dependency boundary，經 architecture-canvas validate/build 驗證；不表達 runtime sequence，不發布 artifact.cafe，也不得將 future module 寫成已實作 API。
 
 ## Risks 與 Deferred Decisions
 
 - 名稱差異風險：現有長期文件以 future `GitHubTransport` 稱呼非 BC technical boundary；documentation delivery 必須以已鎖定的 `GithubIntegration` shared-module boundary 校正詞彙，且不改變 `RivetHTTPClient` 的 generic position。
-- 歷史 traceability：PR #17 與舊 topic 不刪除、不就地改寫；其 pending gates 不構成本 topic 的前置條件、blocker 或 human gate。
+- 歷史 traceability：PR #17 與舊 topic 不刪除、不就地改寫；退役的 active Supporting BC 文件與 canvas 由 git history 保留。其 pending gates 不構成本 topic 的前置條件、blocker 或 human gate。
 - 延後：module path、Swift API、credential lifecycle、REST／GraphQL client strategy、retry／rate-limit／pagination policy、error type、schema relocation、BC adapter implementation、dependency rewiring 與 compatibility strategy。

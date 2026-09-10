@@ -12,7 +12,7 @@
 
 - 產出本 topic 四份 planning artifacts，記錄 inventory、分類、target boundary、風險與驗收。
 - 將 PR #17／`github-integration-auth-boundary` 的 Supporting BC 架構決定標示為 superseded，僅保留為 traceability；其 pending gates 不構成本 topic 前置條件或 blocker。
-- 在 planning review 通過後，修正 active architecture documentation 與 Bounded Context Map，使其表達 BC-local adapter → `GithubIntegration` → GitHub API 的方向。
+- 在 planning review 通過後，修正 active architecture documentation 與 Bounded Context Map，使其表達 BC-local adapter → `GithubIntegration` → GitHub API 的方向；退役舊 Supporting BC 主文件與 authorization boundary canvas，並移除其 active navigation。
 - 圖表以 architecture-canvas 製作、繁體中文作者內容、validate/build 驗證，且不得發布 artifact.cafe。
 
 ## Out-Of-Scope
@@ -40,20 +40,23 @@
 
 ## Deleted
 
-無。舊 Supporting BC 決定與 PR #17 保留可追溯紀錄；本 topic 不對其 pending gates 或其他歷史狀態執行操作。
+- `docs/architecture/bounded-contexts/github-integration.md`
+- `docs/architecture/diagrams/github-integration-http-client-boundary/`
+
+上述 active assets 承載已 supersede 的 Supporting BC／authorization semantics，必須退役。PR #17、舊 topic 與 git history 繼續提供 traceability；本 topic 不對其 pending gates 或其他歷史狀態執行操作。
 
 ## Implementation
 
 1. 由 Plan-Creator 建立四份同 slug artifacts，並由獨立 Plan-Reviewer 檢查 scope 與 contract consistency。
-2. Implementer 僅進行 documentation 與 architecture-canvas boundary correction：`GithubIntegration` 只承擔 shared GitHub technical mechanisms；各 BC Infrastructure Adapter 擁有 GitHub DTO／node translation、failure mapping 與 business meaning。
-3. Tester 執行受限驗證：architecture-canvas validate/build 與 `git diff --check`。
+2. Implementer 僅進行 documentation 與 architecture-canvas boundary correction：`GithubIntegration` 只承擔 shared GitHub technical mechanisms；各 BC Infrastructure Adapter 擁有 GitHub DTO／node translation、failure mapping 與 business meaning；退役舊 Supporting BC 主文件與 authorization boundary canvas。
+3. Tester 執行受限驗證：確認 retired assets／active navigation 均已移除、architecture-canvas validate/build Bounded Context Map，並執行 `git diff --check`。
 4. Reviewer 驗證文件、canvas、dependency assertions 與 scope isolation；任何 scope／contract／workflow drift 均退回對應 owner。
 5. Human 在 Reviewer verdict 後進行終端交付 review；此 review 不以 PR #17 pending gates 為前置條件。
 
 ## TestCase
 
 - TC-01：四份 artifacts 存在、使用 `github-integration-boundary-redefinition` slug，且 Goal、Non-Goal、scope matrix、inventory、分類與終端 human review 一致。
-- TC-02：文件不再將 `GithubIntegration` 表示為 Supporting BC，並對 PR #17／舊 topic 保有 explicit supersession traceability。
+- TC-02：active 文件與圖表不再將 `GithubIntegration` 表示為 Supporting BC，並對 PR #17／舊 topic 保有 explicit supersession traceability；舊 Supporting BC 主文件與 authorization boundary canvas 已退役，且無 active navigation。
 - TC-03：canvas 清楚呈現 BC Infrastructure Adapter → `GithubIntegration` → GitHub API；不呈現 `GithubIntegration` → BC 或 Domain／UseCase／Application Port → `GithubIntegration`。
 - TC-04：canvas 通過 architecture-canvas validate/build，作者內容為繁體中文，且未發布至 artifact.cafe。
 - TC-05：allowed-path review 確認沒有 runtime source、package／target、adapter、schema、authentication flow 或 REST／GraphQL policy 變更。

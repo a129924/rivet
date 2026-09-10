@@ -1,39 +1,38 @@
-# PR Reader GitHub GraphQL SDL Schema Snapshot — Execution Plan
+# GitHub GraphQL Schema Future Material — Execution Plan
 
 ## Summary
 
-退休 GitHub Integration BC，並交付一份供 PR Reader future GitHub Infra 使用的 repository-managed GitHub GraphQL SDL schema snapshot。此 Mission 是 schema-only：沒有 operation、codegen、runtime、transport、REST 或 PR Reader application contract 的實作。
+本計畫只重新分類既有 GitHub GraphQL SDL candidate，供未來 consuming Domain BC 的 local GitHub GraphQL adapter／schema topic 評估。它不交付 schema、不建立 GraphQL capability，也不改變 GitHub Integration 作為 lower shared capability 的邊界。
 
-## Implementation Changes
+## In Scope
 
-- 建立 `Schema.graphqls`，路徑固定為 `Sources/BoundedContexts/PRReader/Infra/GitHub/GraphQL/Schema.graphqls`；只允許它作為本 topic 新增 source asset。
-- schema 必須以前述技術規格的三行 exact provenance comments 開頭，然後是未轉換 Rover default SDL output。human 以 Rover `v0.41.0`、固定 endpoint `https://api.github.com/graphql`、固定 `Accept`／`X-GitHub-Api-Version: 2022-11-28`／`User-Agent` headers與外部 Bearer token 在受控終端執行；agent 不執行下載，且沒有安全環境即停在 human boundary。
-- 移除 GitHub Integration BC doc、空 placeholder source directory 與完整 dedicated GitHub Integration／HTTP Client boundary diagram artifact。
-- 只在授權文件與 BC map 回寫：各 BC future local GitHub Infra ownership、BC-local failure isolation、future non-BC/unimplemented `GitHubTransport`、generic `RivetHTTPClient`，以及不建立 BC-to-BC dependency。
-- 不建立 `PRReader/Infra/GitHub/REST/`。PR Inbox future REST path 僅作架構說明，不新增檔案或目錄。
+- 以此同 slug 四份 artifacts 記錄 candidate material 與後續 topic 的必要決策。
+- 保留 GraphQL Apollo-only route 與 REST-only authorizer boundary；GitHub Integration 僅提供 lower shared capability，不擁有 GraphQL adapter／schema；不預選 Apollo token interceptor 或 token／failure contract。
+- 如實撤回與目前 human architecture decision 相衝突的 retirement／delete／invalidate contract 與 delivery status。
+- 鎖定 ownership direction：Domain BC owns Port 與 local Infra/GitHub adapter；GitHub Integration 只提供 lower shared capability，不擁有 candidate 或 Domain Port。PR-02 pending 時 candidate 維持 read-only；PR-02 approved 也只放行 reclassification，不放行 move。
 
-### Write Boundary
+## Non-Goal
+
+- 不建立、搬移、驗證、下載、刪除或接受 `Schema.graphqls`。
+- 不更動 GitHub Integration BC、canonical diagrams、bounded-context map、active architecture docs、Swift source、package、module、target、operation、codegen、Apollo runtime 或 `RivetHTTPClient`。
+- 不執行 Rover、接觸 GitHub token，或將 candidate 的 staged presence 當成 human gate、Implementer delivery、Tester pass 或 Reviewer approval。
+- 不將現有 `PRReader/Infra/GitHub` path 誤稱為 accepted ownership，或在 future consuming Domain topic 未鎖定 exact path、provenance 與 verification 前移動／刪除／materialize candidate。
+
+## Write Boundary
 
 | Category | Paths |
 | --- | --- |
-| Create | `analysis/graphql-schema-draft-plan/{requirements.md,technical-spec.md}`；`plan/graphql-schema-draft-plan/{graphql-schema-draft-plan.plan.md,graphql-schema-draft-plan.step.md}`；唯一 source asset `Sources/BoundedContexts/PRReader/Infra/GitHub/GraphQL/Schema.graphqls` |
-| Modify | `docs/design-principles.md`；`docs/architecture/README.md`；`docs/architecture/bounded-contexts/{README.md,pr-inbox.md,pr-reader.md}`；`docs/github-api/README.md`；`docs/architecture/diagrams/bounded-context-map/{scene.js,index.html}` |
-| Delete | `docs/architecture/bounded-contexts/github-integration.md`；`Sources/BoundedContexts/GitHubIntegration/.gitkeep` and empty directory；`docs/architecture/diagrams/github-integration-http-client-boundary/` |
-| Read-only | all other repository paths, including historical artifacts, `RivetHTTPClient`, HTTP client diagram, BC product source, manifests, targets, modules, packages, operations and generated source |
+| Modify | `analysis/graphql-schema-draft-plan/{requirements.md,technical-spec.md}`；`plan/graphql-schema-draft-plan/{graphql-schema-draft-plan.plan.md,graphql-schema-draft-plan.step.md}` |
+| Read-only candidate | `Sources/BoundedContexts/PRReader/Infra/GitHub/GraphQL/Schema.graphqls` |
+| Read-only retained architecture | `docs/architecture/bounded-contexts/github-integration.md`；`docs/architecture/diagrams/github-integration-http-client-boundary/` |
 
 ## Test Plan
 
-- Human-only: validate Rover `v0.41.0` default SDL stdout, fixed endpoint and four required headers, zero exit, non-empty SDL, mode `0600` same-parent temporary/staging files, cleanup trap, same-parent `mv`, fixed three provenance comment lines and no token-like secret in the resulting schema. `0600` is not a repository-managed schema mode or verification condition. Do not print matched secret content.
-- Static schema presence: read-only search confirms `PullRequestReviewThread`, `PullRequestReviewComment`, `reviewThreads(`, `isResolved:`, `isOutdated:` and `comments(`. This is presence evidence only, not GraphQL validation.
-- Architecture: validate and build the bounded-context map using `architecture-canvas`; inspect a temporary nonpublished render to confirm no central GitHub Integration and only the two local Infra boundaries plus a dashed future `GitHubTransport` box.
-- Repository hygiene: retired BC doc, placeholder source directory and dedicated boundary diagram root are absent; map scene has no former central box／edge identifiers, and each remaining active-doc `GitHub Integration` mention is explicit retirement or nonownership wording rather than a BC／owner／adapter claim. `git diff --check` passes, and changed/deleted paths match this plan exactly.
+- Plan-Reviewer 確認 candidate material、not-delivered status、retained Integration BC、REST-only／Apollo-only boundary，以及 deferred adapter／interceptor／token／failure contract 互不矛盾。
+- Reviewer 確認不存在 retirement、delete、invalidate、已完成 acquisition 或 completed implementation 的 current claim。
+- Plan-Reviewer 確認 local Infra ownership 不會讓 GitHub Integration 實作／依賴 Domain Port；current candidate path 在 PR-02 pending 時仍為 read-only。
+- 不執行 schema、Rover、secret、renderer 或 source validation；那些檢查只有在 future topic 鎖定 exact asset path、acquisition 與 verification contract 後才能開始。
 
-## Human Gate
+## Human Boundary
 
-The Rover download requires a repository-external token and controlled terminal. The human accepts the Authorization header argv exposure risk and must keep its value out of shell history, terminal/log capture, shared hosts, repository files and configuration. Absence of that environment yields `human-check`; it does not authorize a substitute source or agent credential handling.
-
-## Assumptions
-
-- GitHub API version is locked to `2022-11-28` and recorded only in the third provenance comment.
-- The schema snapshot is a source asset for a later topic, not evidence that any GraphQL client or PR Reader capability exists.
-- Any need for a REST directory, operation, codegen, API mapping, transport behavior, failure contract, target/module/package change or change outside the write boundary is scope drift and must stop for human direction.
+PR-02 approved 後，這份草案只成為 future material；未來 consuming Domain BC topic 若欲採用 candidate、選定 local Infra/GitHub asset path、接觸 credential、取得 SDL、建立 Apollo adapter／interceptor、operation／codegen 或任何 token／failure contract，均需新的 human decision 與正式 planning chain。此計畫不授權任何一項。
