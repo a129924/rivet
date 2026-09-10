@@ -18,7 +18,7 @@
 - 對 Presentation 提供穩定的 Reader Facade。
 - 透過自己擁有的 PR Content Source Port 取得資料；不直接依賴 PR Inbox。
 - Presentation 可用目前選取的 PR 向 Reader 請求閱讀快照。
-- 未來若需 GitHub 資料，GitHub Integration 在其 Supporting BC 邊界隔離外部協定、身分、DTO 與 infrastructure failure，並為 Reader 自己擁有的 Port 提供轉換後資料；PR Reader 不直接依賴 PR Inbox 或 GitHub 外部協定。
+- 未來若需 GitHub 資料，PR Reader 自己的 local Infra GitHub adapter 實作 Reader Port，並擁有 endpoint、DTO、外部 failure 正規化與 Reader failure mapping；示意位置可為 `<BC>/Infra/GitHub`，但這不是 source-path 或 target 決定。local REST adapter 可採用 GitHub Integration 的 lower shared authorization capability；local GraphQL adapter 維持 Apollo-only route。PR Reader Core、UseCase 與 Port 不依賴 GitHub Integration、PR Inbox 或 GitHub 外部協定。
 
 ## WebView Diff Rendering Boundary
 
@@ -31,7 +31,7 @@
 
 ## Failure Contract
 
-PR Reader 僅表達「PR 無法閱讀／無權存取」或「內容暫時不可取得」等閱讀語意；GitHub Integration 不得將 GitHub 外部失敗洩漏至 Reader core Port，跨越 Port 前必須映射為 Reader failure contract。
+PR Reader 僅表達「PR 無法閱讀／無權存取」或「內容暫時不可取得」等閱讀語意；其 local Infra GitHub adapter 不得將 GitHub DTO、HTTP status、token 或技術層 failure 洩漏至 Reader core Port，跨越 Port 前必須映射為 Reader failure contract。
 
 ## 延後能力
 

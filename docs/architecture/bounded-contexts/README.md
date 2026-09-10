@@ -6,4 +6,4 @@
 - [PR Reader](pr-reader.md)
 - [GitHub Integration](github-integration.md)
 
-GitHub Integration 是隔離 GitHub 外部協定、身分、DTO 與 infrastructure failure 的 Supporting BC。PR Inbox 與 PR Reader 保有各自的 Core、UseCase、Port 與 failure contract；BC 之間不建立 compile-time dependency。
+PR Inbox 與 PR Reader 保有各自的 Core、UseCase、Port 與 failure contract；BC 之間不建立 compile-time dependency。未來 GitHub REST／GraphQL adapter 屬 consuming Domain BC 的 local Infra，並各自擁有 endpoint、DTO、外部 failure 正規化與 Domain failure mapping。GitHub Integration 是只提供 lower shared authorization capability 的 Supporting BC；它不擁有、引用或符合任何 Domain Port，也不擁有 Domain adapter。

@@ -18,11 +18,11 @@
 - 空佇列是成功結果，不是 failure。
 - PR Inbox 透過自己擁有的 Port 取得資料；它不直接依賴 PR Reader。
 - 對 Presentation 提供穩定的 Inbox Facade；Presentation Session 可在重新整理後保留目前選取狀態。
-- 未來若需 GitHub 資料，GitHub Integration 在其 Supporting BC 邊界隔離外部協定、身分、DTO 與 infrastructure failure，並為 Inbox 自己擁有的 Port 提供轉換後資料；PR Inbox 不直接依賴 PR Reader 或 GitHub 外部協定。
+- 未來若需 GitHub 資料，PR Inbox 自己的 local Infra GitHub adapter 實作 Inbox Port，並擁有 endpoint、DTO、外部 failure 正規化與 Inbox failure mapping；示意位置可為 `<BC>/Infra/GitHub`，但這不是 source-path 或 target 決定。local REST adapter 可採用 GitHub Integration 的 lower shared authorization capability；local GraphQL adapter 維持 Apollo-only route。PR Inbox Core、UseCase 與 Port 不依賴 GitHub Integration、PR Reader 或 GitHub 外部協定。
 
 ## Failure Contract
 
-PR Inbox 只對外表達自身語意，例如待審閱佇列暫時不可取得；GitHub Integration 不得將 GitHub DTO、HTTP status 或技術層 failure 洩漏至 Inbox core Port，跨越 Port 前必須映射為 Inbox failure contract。
+PR Inbox 只對外表達自身語意，例如待審閱佇列暫時不可取得；其 local Infra GitHub adapter 不得將 GitHub DTO、HTTP status、token 或技術層 failure 洩漏至 Inbox core Port，跨越 Port 前必須映射為 Inbox failure contract。
 
 ## 延後能力
 

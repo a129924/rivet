@@ -1,8 +1,8 @@
-# GitHub Integration GraphQL Schema Future Material：Step Ledger
+# GitHub GraphQL Schema Future Material：Step Ledger
 
 ## Current Phase
 
-`PC-02` 已完成本次 planning reclassification；**current step 是 `PR-02` 的獨立 Plan-Reviewer**。沒有 schema、docs、map、source 或 generated output 的實作被本 ledger 放行。GitHub Integration BC 與 canonical diagrams 維持 retained。
+`PC-02` 已完成本次 planning reclassification；**current step 是 `PR-02` 的獨立 Plan-Reviewer**。candidate 在 PR-02 pending 時維持 read-only；即使 PR-02 approved，也只接受 reclassification，不放行 move。沒有 schema、docs、map、source 或 generated output 的實作被本 ledger 放行。GitHub Integration 維持 lower shared capability，Domain BC 保有 Port 與 local adapter ownership。
 
 ## Ledger
 
@@ -16,13 +16,13 @@
 | TE-01 | Tester | superseded / not accepted | 原 schema／map verification claim。 | 不可作為 current pass evidence。 | 其驗收以前述 retirement architecture 為前提，與 retained Integration boundary 不相容。 |
 | RV-01 | Reviewer | not-started | 原 delivery review。 | 不可開始；沒有有效的 implementation 前提。 | 被 PC-02／PR-02 reclassification 取代。 |
 | HC-02 | Human | not-started | 原 final delivery human gate。 | 不可開始。 | 無有效 delivery 可供接受。 |
-| PC-02 | Plan-Creator | completed | 將 schema 與原 draft 重新分類為 future GitHub Integration topic material，並撤回不實的 retirement／delivery claims。 | 四份 artifacts 一致保留 Integration BC／canonical diagrams、candidate status 與 deferred contracts。 | 僅修改本 topic 四份 artifacts；未改 schema、docs、map、source、generated output，未接觸 token、commit、push、PR 或 resolve thread。 |
-| PR-02 | Plan-Reviewer | pending | 獨立審查 PC-02 的 reclassification、gate reset 與 retained architecture consistency。 | 明示 verdict 為 approved、needs-rework 或 blocked；只有 approved 才能接受此草案作 future-topic material。 | 待獨立 Plan-Reviewer verdict；不授權實作。 |
+| PC-02 | Plan-Creator | completed | 將 schema 與原 draft 重新分類為 future Domain-local GitHub adapter／schema topic material，並撤回不實的 retirement／delivery claims。 | 四份 artifacts 一致保留 GitHub Integration lower shared capability、Domain-owned Port／local adapter direction、candidate status 與 deferred contracts。 | 僅修改本 topic 四份 artifacts；未改 schema、docs、map、source、generated output，未接觸 token、commit、push、PR 或 resolve thread。 |
+| PR-02 | Plan-Reviewer | pending | 獨立審查 PC-02 的 reclassification、local Infra ownership、gate reset 與 retained architecture consistency。 | 明示 verdict 為 approved、needs-rework 或 blocked；approved 只接受此草案作 future-topic material，不能放行 asset move。 | 待獨立 Plan-Reviewer verdict；candidate 保持 read-only，不授權實作或 move。 |
 
 ## Blockers
 
-- `PR-02` 是唯一 current gate。它只審查 planning reclassification，不能放行 schema asset、architecture writeback 或 GraphQL implementation。
-- candidate SDL 的正式位置、是否採用、provenance、secret hygiene、Rover acquisition、schema verification、Apollo adapter／interceptor、operation／codegen 與 token／failure contract 全部未鎖定，必須由 future GitHub Integration topic 處理。
+- `PR-02` 是唯一 current gate。它只審查 planning reclassification，不能放行 schema asset、architecture writeback、GraphQL implementation 或 asset move。
+- candidate SDL 的 consuming Domain BC、exact local Infra/GitHub path、是否採用、provenance、secret hygiene、Rover acquisition、schema verification、Apollo adapter／interceptor、operation／codegen 與 token／failure contract 全部未鎖定，必須由 future Domain-local topic 處理；GitHub Integration 不取得 candidate 或 Domain Port ownership。
 
 ## Handoff
 
@@ -30,4 +30,4 @@
 
 ## Last Updated
 
-2026-09-09（Plan-Creator 依 human「保留 GitHub Integration BC／canonical diagrams；GraphQL draft／schema asset 改為未來 Integration topic 素材」決定完成 PC-02；未宣稱任何 schema delivery、thread resolve 或 human approval。）
+2026-09-09（Plan-Creator 依 human「保留 GitHub Integration BC／canonical diagrams；GraphQL draft／schema asset 改為未來 Domain-local topic 素材」決定完成 PC-02；未宣稱任何 schema delivery、thread resolve 或 human approval。）
