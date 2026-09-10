@@ -1,39 +1,30 @@
-# PR Reader GitHub GraphQL SDL Schema Snapshot：需求
+# GitHub GraphQL Schema Future Material：需求
 
 ## Goal
 
-為 PR Reader 的 future GitHub Infra 建立 repository-managed GitHub GraphQL SDL schema snapshot，唯一交付檔案是：
+將目前衝突樹中的 GitHub GraphQL SDL 與其草案，重新界定為未來 **Domain-local GitHub GraphQL adapter／schema topic** 可評估的素材；它不是 PR Reader local Infra 的已交付 schema，也不構成任何 GraphQL runtime、adapter 或 authentication capability。
 
-`Sources/BoundedContexts/PRReader/Infra/GitHub/GraphQL/Schema.graphqls`
-
-此 snapshot 是後續 GraphQL operation 與 codegen topic 的輸入，不代表那些能力已被授權或實作。
-
-## Architecture Intent
-
-- 每個 Domain BC 在自身 Infra 擁有 GitHub REST／GraphQL adapter、operation／endpoint、DTO mapping 與 failure mapping；不建立 GitHub Integration BC，也不建立 BC-to-BC compile-time dependency。
-- PR Reader 的 GitHub GraphQL asset 屬於 `PRReader/Infra/GitHub/GraphQL/`。若未來 PR Reader 需要 REST，位置是 sibling `PRReader/Infra/GitHub/REST/`；本 topic 不得預先建立該空目錄。
-- PR Inbox 未來自行在 `PRInbox/Infra/GitHub/REST/` 維護其協定資產；本 topic 不改動 PR Inbox source assets。
-- 未來的 `GitHubTransport` 是 non-BC technical package，統一處理 request execution、authorization injection、rate limit 與 technical transport failure。只有各 BC 的 Infra 未來可依賴它；Domain Core、UseCase 與 Port 不得依賴它。
-- `RivetHTTPClient` 保持 generic technical HTTP foundation；它不是 GitHub Integration 或 `GitHubTransport` 的實作。
+GitHub Integration 仍是 Supporting BC，並保留其既有 Bounded Context 文件與 canonical diagrams。此草案不得以 retirement、delete 或 invalidate 的語言推翻已鎖定的 BC／boundary 決定。
 
 ## In Scope
 
-- 以 human-controlled Rover `v0.41.0` 的 default SDL stdout、repository 外安全提供的 GitHub token，以及固定 GitHub endpoint／headers 下載 GitHub GraphQL SDL。
-- 將下載的 SDL 加上固定三行、且不含秘密的 provenance comments 後，管理為上述單一 schema path。
-- 退休 GitHub Integration BC 的長期文件、placeholder source directory 與專用 boundary diagram，並將 PR Inbox／PR Reader 的 local Infra ownership 與 future `GitHubTransport` boundary 回寫到已授權文件與 BC map。
-- 建立本 topic 同 slug 的四份正式 artifacts。
+- 將 `Sources/BoundedContexts/PRReader/Infra/GitHub/GraphQL/Schema.graphqls` 視為待未來 topic 接受、搬移或重新取得的 **candidate material**；在 PR-02 pending 時它維持 read-only，且目前不宣稱其 provenance、完整性、路徑或 repository delivery 已被接受。
+- 記錄 future topic 必須先鎖定 consuming Domain BC、該 BC local Infra/GitHub boundary 的 exact asset path、取得／provenance、Apollo adapter、operation／codegen 與 failure contract，才可將 candidate material 轉為交付。`<BC>/Infra/GitHub` 只是 ownership direction，不是本草案選定的 source path。
+- GitHub Integration 僅可作 lower shared capability；它不擁有 schema asset、Domain-owned Port 或 local adapter，也不形成 Integration → Domain Port dependency。
+- 保留 Integration-owned authorization boundary：REST authorizer 與 `RivetHTTPClient` 的關係不延伸至 GraphQL；Apollo token interceptor、token delivery 與 failure／refresh／re-auth contract 均維持 deferred。
+- 建立與本草案同 slug 的 analysis／plan artifacts，讓後續 Planner 取得不把現有 staged material 誤當完成交付的起點。
 
 ## Out of Scope
 
-- `.graphql` operation、fragment、GraphQL codegen、Apollo runtime/configuration、generated source。
-- `GitHubTransport`、REST／GraphQL transport、credential store、token injection、rate-limit handling 的任何實作。
-- REST endpoint、OpenAPI snapshot、REST DTO／adapter，及任何空 REST directory。
-- PR Reader Port、UseCase、adapter、DTO、failure mapping，或其他 BC 的產品／source 改動。
-- target、module、package 結構調整；任何 GitHub schema operation type validation 的宣稱。
+- 將 candidate SDL 視為目前正式 source asset、驗證其內容、重跑 Rover、接觸 token，或宣稱 schema acquisition 已完成。
+- 刪除、退休或否定 GitHub Integration BC、其 placeholder source location、BC 文件或 canonical diagrams。
+- 建立 `GitHubTransport`、BC-local exclusive GitHub Infra、REST／GraphQL adapter、Apollo client／interceptor、operation、codegen、runtime、DTO、Core Port mapping 或 failure implementation。
+- 在 PR-02 approved 前移動、刪除、複製、驗證或 materialize candidate；PR-02 approved 後也不得視為已授權 move，仍需 consuming Domain BC 的新 implementation topic。
+- 改變既定 REST-only authorizer／Apollo-only route、PAT-only、deferred concrete signature、failure、refresh、re-auth 或 human-gate 決定。
 
 ## Success Criteria
 
-- schema 只存在於 PR Reader 指定 GraphQL path，且內容是未轉換的 Rover SDL output，前置固定三行 provenance comments。
-- schema provenance 記錄 GitHub endpoint、實際下載 UTC 時間與固定 API version `2022-11-28`，且不含 token、Authorization、帳號或 repository identity。
-- human 未提供安全外部 token／環境時停止於 human boundary；agent 不要求貼出、接收或執行 token。
-- retirement 與 architecture writeback 明確表達 local BC Infra ownership、non-BC future `GitHubTransport`，以及 generic `RivetHTTPClient`；不將 deferred implementation 寫成既有能力。
+- 所有本草案文件都將 SDL 明確稱為 future-topic candidate material，而非已接受或已交付的 PR Reader asset。
+- 不再存在把 GitHub Integration 表述為 retired、deleted 或 invalidated 的本草案 contract。
+- 任何後續實作均以獨立 human-approved topic 鎖定 exact path、schema acquisition、adapter／interceptor 與 token／failure contract；在此之前沒有 implementation gate 可視為完成。
+- future move 只能進入 consuming Domain BC 的 local Infra/GitHub boundary；GitHub Integration lower shared capability 不取得 Domain Port 或 schema ownership。

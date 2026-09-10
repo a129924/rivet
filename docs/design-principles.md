@@ -9,11 +9,10 @@
 ## 架構取捨
 
 - 一次只處理一個 Bounded Context；未經 topic 授權，不因為未來可能需要而預先建立 package、module 或抽象層。
-- PR Inbox 與 PR Reader 的責任邊界優先於技術框架或目錄便利性；已退役的 GitHub Integration 不是 Bounded Context。
-- 每個 Domain BC 的 Core、UseCase 與 Port 不依賴 GitHub 外部協定或 transport；該 BC 未來自己的 Infra 負責 GitHub adapter、operation／endpoint、DTO 與 failure mapping。
+- PR Inbox、PR Reader 與 GitHub Integration 的責任邊界優先於技術框架或目錄便利性；GitHub Integration 只提供 lower shared authorization capability。
+- 每個 Domain BC 的 Core、UseCase 與 Port 不依賴 GitHub 外部協定或 transport。concrete GitHub adapter、operation／endpoint、DTO 與外部 infrastructure-failure 正規化均屬於 consuming Domain BC 的 local Infra；GitHub Integration 不擁有、引用或符合任何 Domain Port，也不擁有 adapter 或 DTO。
 - 外部 GitHub DTO、HTTP status、OAuth／Keychain 細節與 infrastructure failure 不得洩漏到核心 BC，也不得形成 BC-to-BC compile-time dependency。
-- 每個 BC 擁有自己的 failure contract；技術層 failure 僅在各 BC Infra 邊界正規化並映射為該 BC 語意。
-- `GitHubTransport` 是尚未實作的 non-BC technical package 構想，只能由未來各 BC Infra 依賴，以統一 request execution、authorization injection、rate limit 與技術層 transport failure；它不進入 Core、UseCase 或 Port。
+- 每個 BC 擁有自己的 failure contract；consuming Domain BC 的 local Infra 在自己的 adapter 邊界正規化外部 infrastructure failure，並在跨越 own Port 前映射為該 BC 的語意。GitHub Integration 不擁有 infrastructure-failure 正規化或 Domain failure mapping。
 - Presentation Session 是 UI 狀態，不是假裝成 Bounded Context。
 
 ## 工作方法
