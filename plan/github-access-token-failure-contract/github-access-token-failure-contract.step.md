@@ -2,11 +2,11 @@
 
 ## Current Phase
 
-PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02 與 RV-03 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。TE-06 發現 default consumer `.build` 被 SwiftLint 掃描，PR-10 判定 AM-07 的 combined command 不可執行；human 已授權 AM-09 minimal exact-path cleanup amendment，新的 revalidation route 為 `AM-09 → PR-12 → TE-09 → RV-06 → DL-03`，不能援引 historic route。
+PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。PR-14 已 pass；current route 為 `IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04`。IN-02 的前置條件是 feature worktree clean，不能援引 historic route。
 
 ## Goal
 
-交付單一 `GitHubIntegration` target 的 typed-throws token store/provider contract，並保留既有 shared-module boundary。
+交付單一 `GitHubIntegration` target 的 typed-throws token store/provider contract，保留既有 shared-module boundary，並將其 existing external consumer fixture 納入 routine local validation。
 
 ## Non-Goal
 
@@ -14,7 +14,7 @@ PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a 
 
 ## In-Scope
 
-四個 credential/store type、兩個 protocol、store-backed provider、single target/product/test target、指定 Contracts/Providers layout、contract tests、`TokenStoreOperation: Sendable`，以及指定 canonical document/map 的最小 factual writeback；另含只驗證 public surface 的獨立 consumer fixture package。
+四個 credential/store type、兩個 protocol、store-backed provider、single target/product/test target、指定 Contracts/Providers layout、contract tests、`TokenStoreOperation: Sendable`，以及指定 canonical document/map 的最小 factual writeback；另含只驗證 public surface 的獨立 consumer fixture package、routine wrapper、pre-commit local hook 與 toolchain docs。
 
 ## Out-Of-Scope
 
@@ -26,19 +26,19 @@ PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a 
 
 ## Written
 
-實作階段新增 `Sources/BoundedContexts/GitHubIntegration/Contracts/CredentialTypes.swift`、`GitHubTokenStore.swift`、`GitHubTokenProvider.swift`、`Providers/TokenStoreGitHubTokenProvider.swift`，以及 `Tests/GitHubIntegrationTests/GitHubTokenProviderTests.swift`、`StaticIsolationTests.swift`；fresh PR-comment route 另新增 `Tests/GitHubIntegrationConsumer/Package.swift` 與 `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift`。consumer manifest 固定 `../..` local-path dependency、macOS 15、Swift 6、單一 test target，僅依 package `Rivet` 的 `GitHubIntegration` product；public test 僅 `import GitHubIntegration`。planning phase 已寫入四份同 slug artifacts；AM-09 只寫入這四份 artifacts，不寫入 Swift source、consumer fixture 或 `.swiftlint.yml`。
+實作階段新增 `Sources/BoundedContexts/GitHubIntegration/Contracts/CredentialTypes.swift`、`GitHubTokenStore.swift`、`GitHubTokenProvider.swift`、`Providers/TokenStoreGitHubTokenProvider.swift`，以及 `Tests/GitHubIntegrationTests/GitHubTokenProviderTests.swift`、`StaticIsolationTests.swift`；fresh PR-comment route 另新增 `Tests/GitHubIntegrationConsumer/Package.swift` 與 `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift`、`scripts/check-github-integration-consumer.sh`。consumer manifest 固定 `../..` local-path dependency、macOS 15、Swift 6、單一 test target，僅依 package `Rivet` 的 `GitHubIntegration` product；public test 僅 `import GitHubIntegration`。planning phase 已寫入四份同 slug artifacts；AM-10 不改 fixture public tests、Swift production source 或 `.swiftlint.yml`。
 
 ## Modify
 
-fresh PR-comment route 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`，補 multiline-attribute import parser edge case；既有 structured graph/source/import assertions、root manifest、target/product 與 production source set 維持不變。AM-09 verification workflow 不修改 tracked source、fixture 或 config；只在 safety checks 通過時處理 ignored generated output 的 exact path。其餘 Modify allowlist 與 historic integration record 不因本 amendment 改寫。
+AM-10 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`（僅 Swift `#/…/#` raw-regex mask，保留 newline、delimiter-aware close；`Apollo`／`ApolloAPI` forbidden roots）、`.pre-commit-config.yaml`（swift-format 後／swiftlint 前 wrapper hook）、`docs/toolchain.md`，並在 non-force merge `origin/dev` 時只 resolve `docs/architecture/bounded-contexts/README.md` 的 single semantic hunk。wrapper 必須使用 exact `mktemp`/`trap` scratch、`git check-ignore --no-index` eligibility probe 與 exact fixture `.build` cleanup/absence verification。root manifest、target/product、production source/API、fixture public tests、CI、`.swiftlint.yml`、existing graph/source assertions 與 boundary decision 維持不變。
 
 ## Deleted
 
-不得刪除、搬移或更名任何 tracked file。AM-09 唯一許可的 deletion 是 safety checks 通過後的 ignored generated output `Tests/GitHubIntegrationConsumer/.build`；不得刪除其他 target 或 path。
+不得刪除、搬移或更名任何 tracked file。AM-10 唯一許可的 deletion 是 safety checks 通過後的 exact ignored generated output `Tests/GitHubIntegrationConsumer/.build`，以及由 `mktemp -d` 建立並經 `trap` 清理的 exact task scratch directory；不得刪除其他 target 或 path。
 
 ## TestCase
 
-原樣 token return、`nil` 至 `.missingCredential`、`load()` store error 至保留 operation/underlying error 的 `.tokenStore`、external mock conformance、provider injection/conformance、`TokenStoreOperation: Sendable` explicit conformance compile check（不新增其他 explicit conformance 或 concurrency behavior，並保留 error types 的 Swift 隱含關係）、structured package/target graph assertion、four-source exact-set、actual target source enumeration、forbidden-import checks、multiline-attribute import parser edge case、consumer fixture 的 two-step same-shell public API verification：先 `RIVET_CONSUMER_BUILD_PATH="$(mktemp -d)"`，再 `swift test --package-path Tests/GitHubIntegrationConsumer --scratch-path "$RIVET_CONSUMER_BUILD_PATH"`（task-scoped temporary scratch，無 `@testable`、public token/error property/initializer/case surface、Sendable、private external typed-throws mock、provider existential injection、success/missing/store-error mapping）。其後只可清理 exact `Tests/GitHubIntegrationConsumer/.build`：若不存在（亦非 symlink），不執行 cleanup，直接驗證 absence；若存在或為 symlink，必須為 non-symlink directory，且通過 `git check-ignore -q -- Tests/GitHubIntegrationConsumer/.build`，才可執行 `rm -rf -- Tests/GitHubIntegrationConsumer/.build`。禁止 broad target、glob 或其他 path；non-directory、symlink、non-ignored、cleanup 或清理後 `test ! -e Tests/GitHubIntegrationConsumer/.build && test ! -L Tests/GitHubIntegrationConsumer/.build` 失敗即為 workflow blocker 並停止。absence verification 通過後才執行完整 `swiftlint lint --strict` 與 diff checks。consumer route 不得修改 `.swiftlint.yml`、root manifest、target/product、production source 或 public API；historic route 不再是後續 comment 的驗收 gate。
+原樣 token return、`nil` 至 `.missingCredential`、`load()` store error 至保留 operation/underlying error 的 `.tokenStore`、external mock conformance、provider injection/conformance、`TokenStoreOperation: Sendable` explicit conformance compile check（不新增其他 explicit conformance 或 concurrency behavior，並保留 error types 的 Swift 隱含關係）、structured package/target graph assertion、four-source exact-set、actual target source enumeration、forbidden-import checks。parser 只 mask Swift `#/…/#` raw-regex literals，保留 newline 並以 delimiter-aware close 判定結尾；negative fixture 的 fake `; import Apollo` 與 `; import ApolloAPI` 必須忽略，real multiline attribute import 必須正確取出 module root，實際 `Apollo`、`ApolloAPI` imports 都 forbidden。wrapper 使用 `RIVET_CONSUMER_BUILD_PATH="$(mktemp -d)"` 與 `trap` 僅清理 exact scratch，並以 `--scratch-path` 執行 fixture；fixture `.build` 若是 symlink/non-directory 即 blocker，若存在則僅在 `git check-ignore --no-index -q -- Tests/GitHubIntegrationConsumer/.build` 成功後才可 `rm -rf --` exact path，否則直接 absence verification。禁止 broad target、glob、其他 delete 或 lint config change；cleanup/trap/absence 任一步失敗即停止。wrapper、root `swift test`、完整 `swiftlint lint --strict` 與 diff checks 必須通過，pre-commit 順序固定 swift-format → wrapper → swiftlint。non-force merge hunk 必須同時保留 GitHubIntegration implemented/deferred wording 與 generic Auth/AuthFlow／HTTP client 不 drive flow wording。
 
 ## PR Comment Triage
 
@@ -106,18 +106,30 @@ fresh PR-comment route 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTe
 | AM-09 | completed | Plan-Creator | 依 human 對 exact fixture cleanup 的明確授權修正 consumer verification workflow。 | 四份 artifacts 一致只允許安全處理 `Tests/GitHubIntegrationConsumer/.build`：存在時先確認 non-symlink directory 與 ignored generated output，才可精確刪除，並驗證不存在；不改 source、fixture、config、API 或 scope。 | Plan-Creator 僅修改四份 topic planning artifacts；未改 source、fixture、config、Git 或 PR。AM-09 取代 AM-08 的 operational revalidation branch，但不改寫 AM-08／PR-11／TE-08 historical records。 |
 | PR-12 | pending | Plan-Reviewer | 獨立審查 AM-09。 | 明示 verdict；確認 temporary scratch、exact-path-only cleanup eligibility、absence verification、blocker stop rule、禁止 `.swiftlint.yml` 變更與 fresh route 一致。 | 等待獨立 Plan-Reviewer。 |
 | TE-09 | pending | Tester | 依 PR-12 approved 執行 fresh consumer verification。 | 同一 shell 以 task-scoped scratch 執行 consumer test；若 exact fixture `.build` 存在，確認 non-symlink directory 與 ignored generated output 後只刪除該 path；驗證不存在後才完整 SwiftLint/diff checks。eligibility、cleanup 或 absence verification failure 一律 blocker/stop。 | 等待 PR-12。 |
+| AM-10 | completed | Plan-Creator | 依 human 授權將 consumer fixture 納入 routine validation、更新 toolchain docs，並規劃 bounded-context index conflict resolution。 | 四份 artifacts 一致限制 AM-10 的 parser 為僅 Swift `#/…/#` raw-regex mask（preserve newline、delimiter-aware close）、`Apollo`／`ApolloAPI` forbidden roots，且具 fake-import negative／real multiline-attribute positive fixtures；另含 consumer wrapper、pre-commit hook、toolchain docs與 single bounded-context index semantic hunk；不改 API/scope/CI。 | Plan-Creator 僅修改四份指定 planning artifacts；未實作、測試、Git、PR 或 thread 操作。 |
+| PR-13 | needs-rework | Plan-Reviewer | 獨立審查 AM-10。 | 明示 verdict；確認 exact wrapper safety、hook ordering、toolchain scope、static-isolation change、single merge hunk 與 fresh route。 | parser contract 未限定 Swift `#/…/#`、newline preservation、delimiter-aware close，以及 fake-import negative/real multiline-attribute positive fixtures；需 planning amendment。 |
+| AM-11 | completed | Plan-Creator | 依 PR-13 needs-rework 收斂 AM-10 parser contract。 | 四份 artifacts 一致限定為 Swift `#/…/#` raw-regex only、preserve newline、delimiter-aware close；fake `; import Apollo`／`; import ApolloAPI` negative 與 real multiline-attribute import positive fixture；不擴張 literal/lexer scope。 | Plan-Creator 僅修改四份指定 planning artifacts；未實作、測試、Git、PR 或 thread 操作。 |
+| PR-14 | completed | Plan-Reviewer | 獨立審查 AM-11。 | 明示 verdict；確認 parser precision、fixtures、Modify/TestCase/handoff 與 AM-10 scope 未擴張。 | Plan-Reviewer verdict `pass`；無 finding。 |
+| IM-06 | completed | Implementer | 依 PR-14 approved 執行 AM-10 bounded corrective work。 | 僅修改 StaticIsolationTests（Swift `#/…/#` mask、newline preservation、delimiter-aware close、negative/positive fixtures、Apollo roots）、wrapper、pre-commit config、toolchain doc；保留 all locked contracts/scope。 | red：raw-regex fixture 的 fake `Apollo`／`ApolloAPI` imports 被錯誤擷取；green：raw-regex mask 與 real multiline-attribute import fixture 通過，且實際 `Apollo`／`ApolloAPI` roots 均被偵測。新增 wrapper 使用 exact `mktemp -d` scratch／trap cleanup、fixture `.build` eligibility cleanup／absence verification；hook 順序為 swift-format → wrapper → swiftlint。`swift test` 30 tests／5 suites、consumer wrapper 4 tests、`scripts/check-swift-format.sh`、`swiftlint lint --strict`、`pre-commit run --all-files` 與 `git diff --check` 均通過；fixture `.build` 不存在。 |
+| TE-10 | completed | Tester | 獨立驗證 IM-06。 | wrapper exact-path safety、routine invocation、pre-commit ordering、root tests、SwiftLint、diff checks 與 merge hunk combined truth 均通過。 | External Tester verdict `pass`：root `swift test` 30 tests／5 suites、consumer wrapper 4 tests、`scripts/check-swift-format.sh`、full `swiftlint lint --strict`（0 violations）、`pre-commit run --all-files`、`git diff --check` 均通過；fixture `.build` cache absent。 |
+| RV-07 | completed | Code-Reviewer | 獨立 pre-integration review AM-10 implementation/evidence。 | 明示 verdict；只確認 reviewed fixes/artifacts 是否可進入 CF-02，不構成 merge/delivery approval；確認 API/scope/contract/no-CI drift。 | External Code-Reviewer re-review verdict `pass`；reviewed fixes/artifacts 可進入 CF-02，非 merge/delivery approval。 |
+| CF-02 | pending (eligible) | Implementer | 只在 RV-07 approved 後建立 authorized non-delivery commit。 | commit 僅含 RV-07 reviewed fixes/artifacts；不得 push、resolve threads、rebase 或 force push。 | RV-07 pass；CF-02 eligible，等待 Implementer 建立 non-delivery commit。 |
+| IN-02 | pending | Implementer | 在 CF-02 後 non-force merge `origin/dev`。 | 先確認 feature worktree clean；只 resolve `docs/architecture/bounded-contexts/README.md` 的 exact semantic hunk，保留 GitHubIntegration implemented/deferred 與 generic Auth/AuthFlow／HTTP client 不 drive flow combined truth；不得 rebase、force push 或單方覆寫。 | 等待 CF-02。 |
+| TE-11 | pending | Tester | 獨立驗證 IN-02 merge snapshot。 | 確認 exact combined hunk、scope、root tests、SwiftLint 與 diff hygiene；如實分類 blocker。 | 等待 IN-02。 |
+| RV-08 | pending | Code-Reviewer | 獨立審查 TE-11 後的 merge snapshot。 | 明示 fresh merge-review verdict；不得使用 RV-07 取代此 verdict。 | 等待 TE-11。 |
+| DL-04 | pending | Implementer | 在 RV-08 approved、無 blocker 與 human delivery authority 存在時 push 並 resolve completed threads。 | push 已驗證 merge head；只 resolve completed threads；不再新增 code、commit、rebase、force push、merge PR 或 release。 | 等待 RV-08。 |
 
 ## Blockers
 
-- AM-09 revalidation route 尚未取得 PR-12 independent planning verdict；在此之前不得重新驗證、commit、push 或 resolve 新 threads。
+- CF-02 尚未完成；在 IN-02、TE-11 與 RV-08 前不得 push 或 resolve 新 threads。IN-02 前 feature worktree 不 clean 即為 blocker。
 
 ## Human Check
 
 - PR #26 維持 human review boundary；不得自動 merge、release、delete branch 或進行其他整合動作。
-- historic DL-02 route 不構成後續 thread-resolution authority。multiline parser 與 consumer threads 只能依 AM-09 revalidation route，在 RV-06 approved 與 human delivery authority 後 resolve。
-- 不得 rebase 或 force push；IN-01 只可 non-force merge `origin/dev`，並只 resolve README 的指定 semantic hunk。
+- historic DL-02 route 不構成後續 thread-resolution authority。AM-10 threads 只能依 `IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04`，在 RV-08 approved 與 human delivery authority 後 resolve。
+- 不得 rebase 或 force push；AM-10 只可在 CF-02 後、feature worktree clean 時 non-force merge `origin/dev`，並只 resolve bounded-context index 的指定 semantic hunk。
 - 若任一獨立 reviewer verdict 為 `blocked` 或 `human-check`，停止自動前進並交還 human。
 
 ## Last Updated
 
-2026-09-12 — human 授權 AM-09 minimal cleanup：consumer temporary-scratch test 後只可處理 exact ignored generated path `Tests/GitHubIntegrationConsumer/.build`，並須驗證不存在後才執行完整 SwiftLint/diff checks。新的 route 為 `AM-09 → PR-12 → TE-09 → RV-06 → DL-03`；historic verdicts 維持原狀，RV-05 verdict 未記錄，不予推論。
+2026-09-12 — PR-14 pass 後，實際 `origin/dev` conflict route 調整為 `IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04`。CF-02 是 reviewed fixes/artifacts 的 authorized non-delivery commit；IN-02 只在 feature worktree clean 時 non-force merge，並僅處理 bounded-context index exact hunk。其餘 AM-10 scope 與 historic verdicts 維持不變，RV-05 verdict 未記錄，不予推論。

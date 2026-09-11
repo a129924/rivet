@@ -2,7 +2,7 @@
 
 ## Goal
 
-在不改變既有 GitHub Integration shared-module boundary 的前提下，鎖定可注入、同步、typed-throws 的 access-token store/provider contract 及其唯一 failure mapping。
+在不改變既有 GitHub Integration shared-module boundary 的前提下，鎖定可注入、同步、typed-throws 的 access-token store/provider contract 及其唯一 failure mapping，並以 routine consumer validation 持續驗證其 target 外 public surface。
 
 ## Non-Goal
 
@@ -14,6 +14,7 @@
 - 四個 public credential/store value/error types、兩個 typed-throws protocols 與一個 public store-backed provider。
 - 固定的 physical layout、target dependency isolation、minimal factual architecture writeback 及 contract tests。
 - 一個只作 target 外 public API verification 的獨立 consumer fixture package；它不新增 root target/module。
+- fixture 的 routine validation wrapper、local pre-commit hook 與 toolchain documentation；它們只包裝既有 public-consumer verification，不新增 CI 或 module。
 
 ## Out-Of-Scope
 
@@ -120,6 +121,7 @@ Tests/GitHubIntegrationConsumer/
 - `Sources/BoundedContexts/GitHubIntegration/Providers/TokenStoreGitHubTokenProvider.swift`
 - `Tests/GitHubIntegrationTests/GitHubTokenProviderTests.swift` 的 contract/provider verification 與 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 的 static-isolation verification。
 - `Tests/GitHubIntegrationConsumer/Package.swift` 與 `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift` 的 external public-consumer verification。
+- `scripts/check-github-integration-consumer.sh` 的 routine consumer-validation wrapper。
 - `docs/architecture/bounded-contexts/pr-reader.md` 與 `docs/github-api/README.md` 的 canonical factual writeback：只將 `GitHubIntegration` access-token contract 更新為已實作，並保留 Keychain、authorizer、REST 與 OAuth lifecycle deferred。
 - AM-09 只寫入四份 planning artifacts；不寫入 Swift source、consumer fixture 或 `.swiftlint.yml`。
 
@@ -129,15 +131,20 @@ Tests/GitHubIntegrationConsumer/
 - `Sources/BoundedContexts/GitHubIntegration/Contracts/CredentialTypes.swift`：唯一許可的新增 explicit source conformance 是 `TokenStoreOperation: Sendable`；`TokenStoreError` 與 `GitHubCredentialError` 僅維持因 `Error` 而有的 Swift 隱含 `Sendable` 關係，不額外宣告 conformance；不得改變其他 public API、token behavior 或 failure mapping。
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：以 structured package/target graph assertion 取代 substring checks，驗證四個 production source paths 的 exact set、枚舉 actual target sources 並檢查禁止 imports，並驗收 `TokenStoreOperation: Sendable` compile contract；不得新增其他 test source 或 test scope。
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：只新增 multiline-attribute import parser edge case，維持既有 structured graph/source/import assertions 與 package graph；不得改動 production source set。
-- `docs/design-principles.md`、`docs/architecture/README.md`、`docs/architecture/bounded-contexts/README.md`、`docs/architecture/bounded-contexts/pr-inbox.md` 的 minimal factual writeback；不得宣稱 Keychain、authorizer 或 raw transport 等 deferred capability 已實作。
+- `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：僅 Swift `#/…/#` raw-regex literal content 必須在 import extraction 前 mask；mask 保留 newline，並以 delimiter-aware close 判定結尾。forbidden roots 固定涵蓋 `Apollo` 與 `ApolloAPI`；不擴張至其他 literal/lexer scope，也不變更 graph/source assertions 或 production source set。
+- `scripts/check-github-integration-consumer.sh`：以 `mktemp -d` task scratch 與 `trap` 做 routine fixture validation；對 fixture `.build` 只允許 exact-path safety cleanup，不能操作其他 path。
+- `.pre-commit-config.yaml`：local wrapper hook 固定置於 `swift-format` 後、`swiftlint` 前；不得改動 SwiftLint config/rules、CI 或其他 hook policy。
+- `docs/toolchain.md`：只記錄 wrapper 的 routine invocation、pre-commit ordering、scratch/trap 與 exact cleanup safety contract。
+- pre-integration merge 只允許 non-force merge `origin/dev`；只 resolve `docs/architecture/bounded-contexts/README.md` 的單一 semantic hunk，保留本 topic 的 `GitHubIntegration` implemented/deferred wording，並保留 `dev` 的 generic `Auth`／`AuthFlow` contract 與 HTTP client 不 drive flow 說明。
+- `docs/design-principles.md`、`docs/architecture/README.md`、`docs/architecture/bounded-contexts/README.md`、`docs/architecture/bounded-contexts/pr-inbox.md` 的 minimal factual writeback 是 historical record；AM-10 對 bounded-context index 的唯一新權限是指定 merge hunk，且不得宣稱 Keychain、authorizer 或 raw transport 等 deferred capability 已實作。
 - `docs/architecture/bounded-contexts/pr-reader.md`、`docs/github-api/README.md` 的 minimal factual writeback：不得再將已實作的 token contract 表示為「若建立／未來／尚未實作」，並必須保留 Keychain、authorizer、REST 與 OAuth lifecycle deferred；不得新增 API、scope 或 architecture decision。
 - `docs/architecture/diagrams/bounded-context-map/scene.js` 與生成 `index.html`：以 `architecture-canvas` validation/build 同步；只將 `GitHubIntegration` 的已實作 token contract 與 deferred capability 如實呈現，不新增 BC、module、target、dependency 或 policy，且不得發布 artifact.cafe。
 - pre-integration merge 僅允許 non-force merge `origin/dev`；`docs/architecture/README.md` 的 conflict 只可 resolve 單一 semantic hunk，並保留 `GitHubIntegration` implemented/deferred wording 與 `dev` 的 HTTP decoded payload `Decodable & Sendable` sentence。
-- AM-09 verification workflow 不修改 tracked source、fixture 或 config；只在 safety checks 通過時處理 ignored generated output 的 exact path。
+- AM-10 除指定 static-isolation test、wrapper、pre-commit config、toolchain doc 與 bounded-context index merge hunk 外，不修改 tracked source、fixture、root manifest、API、CI 或 `.swiftlint.yml`。
 
 ## Deleted
 
-不得刪除 tracked file。AM-09 僅允許在 safety checks 通過後刪除 ignored generated output `Tests/GitHubIntegrationConsumer/.build`；不得操作其他 target 或 path。
+不得刪除 tracked file。AM-10 wrapper 僅能刪除 safety checks 通過後的 exact ignored output `Tests/GitHubIntegrationConsumer/.build`，及由 wrapper 的 `mktemp -d` 建立並由 `trap` 清理的 exact task scratch directory；不得操作其他 target 或 path。
 
 ## TestCase
 
@@ -146,14 +153,14 @@ Tests/GitHubIntegrationConsumer/
 - `.tokenStore` 保存 error identity、operation 與 underlying error。
 - 編譯期確認 `TokenStoreOperation` 符合 `Sendable`；不以此推論或要求其他 public contract 具備 concurrency conformance。
 - static-isolation test 以 structured package/target graph assertion 驗證 package manifest 的 single target、四個 production source paths 的 exact set、實際 target source enumeration 與禁止 imports；不得使用 substring check 取代 graph/source validation。
-- multiline-attribute import parser edge case 仍正確萃取 imported module root，並進入 forbidden-import 驗證。
-- external consumer fixture 固定在同一 shell 先執行 `RIVET_CONSUMER_BUILD_PATH="$(mktemp -d)"`，再執行 `swift test --package-path Tests/GitHubIntegrationConsumer --scratch-path "$RIVET_CONSUMER_BUILD_PATH"`；scratch directory 為 task-scoped temporary path。其後的唯一許可 cleanup target 是 `Tests/GitHubIntegrationConsumer/.build`：若不存在（亦非 symlink），不執行 cleanup，直接驗證 absence；若存在或為 symlink，只有它是非 symlink directory，且 `git check-ignore -q -- Tests/GitHubIntegrationConsumer/.build` 證明它是 ignored generated build output 時，才執行 `rm -rf -- Tests/GitHubIntegrationConsumer/.build`。禁止 broad target、glob 與其他 path；non-directory、symlink、non-ignored、cleanup 或清理後 `test ! -e Tests/GitHubIntegrationConsumer/.build && test ! -L Tests/GitHubIntegrationConsumer/.build` 任一步失敗均為 workflow blocker 並停止。不使用 `@testable`，並驗證 `GitHubAccessToken` 與 error types 的 public property/initializer/case surface、`TokenStoreOperation: Sendable`、private external typed-throws store mock、provider existential injection，及 success／missing／store-error mapping；只有 absence verification 通過後，完整 `swiftlint lint --strict` 與 diff checks 必須通過。
+- import parser 僅 mask Swift `#/…/#` raw-regex literal，保留 newline 並以 delimiter-aware close 結束；negative fixture 中 fake `; import Apollo` 與 `; import ApolloAPI` 必須被忽略，real multiline attribute import 必須正確萃取 module root。實際 `Apollo` 與 `ApolloAPI` imports 都進入 forbidden-import failure。
+- `scripts/check-github-integration-consumer.sh` 建立 `RIVET_CONSUMER_BUILD_PATH="$(mktemp -d)"`，以 `trap` 清理該 exact scratch directory，並以 `--scratch-path "$RIVET_CONSUMER_BUILD_PATH"` 執行 fixture。fixture `.build` 若是 symlink 或 non-directory 即 blocker；若存在，僅在 `git check-ignore --no-index -q -- Tests/GitHubIntegrationConsumer/.build` 證實 ignored 後，才可 `rm -rf --` 該 exact path；若不存在直接做 absence verification。禁止 broad target、glob、其他 deletion 或 lint config 修改。cleanup/trap/absence 任一步失敗皆 blocker；成功後 root `swift test`、完整 `swiftlint lint --strict` 與 diff checks 必須通過。pre-commit 順序固定 swift-format → wrapper → swiftlint。
 - fixture 不得要求 root manifest、target/product、production source 或已鎖定 public API 有任何變更。
 - package manifest 將 source/test path 納入單一 `GitHubIntegration` target，且無不允許 dependency/import。
 - root test suite 與 whitespace diff check 通過。
 - bounded-context map 的 authored source 與 generated artifact 經 `architecture-canvas` validation/build 同步，且不再將此受限 module 標示為未實作。
 - `pr-reader.md` 與 GitHub API README 如實表達已實作的 token contract，並維持 Keychain、authorizer、REST 與 OAuth lifecycle 為 deferred。
-- pre-integration merge 後驗證 README resolved hunk 同時保留上述兩方 wording，且沒有 rebase、force push 或單方覆寫。
+- pre-integration merge 後驗證 bounded-context index resolved hunk 同時保留上述兩方 wording，且沒有 rebase、force push 或單方覆寫。
 
 ## PR Comment Triage
 
@@ -168,4 +175,4 @@ Tests/GitHubIntegrationConsumer/
 
 ## Implementation Handoff and Gate
 
-本次 fresh amendment 由 human 明確授權，僅允許 `StaticIsolationTests.swift` 的 multiline-attribute import parser edge case，以及 `Tests/GitHubIntegrationConsumer/Package.swift`、`Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift`。fixture manifest 固定為 `../..` local-path dependency、macOS 15、Swift 6、唯一 test target，並以 package `Rivet` 的 `GitHubIntegration` product 為唯一 dependency。public test 固定 `import GitHubIntegration` 而非 `@testable`，以 private external typed-throws mock 驗證 public value/error surface、`TokenStoreOperation: Sendable`、provider existential injection 與三條既定 mapping。consumer verification 必須在同一 shell 先執行 `RIVET_CONSUMER_BUILD_PATH="$(mktemp -d)"`，再執行 `swift test --package-path Tests/GitHubIntegrationConsumer --scratch-path "$RIVET_CONSUMER_BUILD_PATH"`；該 scratch directory 為 task-scoped temporary path。其後 human-authorized cleanup 僅限 `Tests/GitHubIntegrationConsumer/.build`：若 exact path 不存在且非 symlink，跳過 cleanup；否則它必須是 non-symlink directory，且 `git check-ignore -q -- Tests/GitHubIntegrationConsumer/.build` 證明為 ignored generated build output，才執行 `rm -rf -- Tests/GitHubIntegrationConsumer/.build`。禁止 broad target、glob 或其他 path；non-directory、symlink、non-ignored、cleanup 或清理後 `test ! -e Tests/GitHubIntegrationConsumer/.build && test ! -L Tests/GitHubIntegrationConsumer/.build` 任一步失敗，即分類為 workflow blocker 並停止。只有 absence verification 通過後才能執行完整 `swiftlint lint --strict` 與 diff checks，不得修改 `.swiftlint.yml`。不得修改 root manifest、target/product、production source、public API、failure contract、scope、Non-Goal 或 architecture decision。PR-10 為 needs-rework；AM-09 的 fresh revalidation route 是 Plan-Reviewer → Tester（two-step same-shell temporary-scratch consumer test，exact ignored `.build` cleanup 與 absence verification，再完整 SwiftLint/diff checks）→ Code-Reviewer → human-authorized delivery，不重新實作 consumer files。只有 fresh reviewer verdict 為 approved 且 human authority 存在時，Implementer 才可 commit、push 並 resolve 已完成 threads。不得 rebase、force push、merge 或 release；PR 維持 human review boundary。
+PR-14 已 approved。AM-10/AM-11 fresh route 是 `PR-14 → IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04`。IM-06 只可修改既定 allowlist；TE-10 驗證 wrapper、root tests、SwiftLint 與 diff checks；RV-07 只作 pre-integration review。僅 RV-07 approved 後，CF-02 才可建立包含 reviewed fixes/artifacts 的 authorized non-delivery commit，且不得 push、resolve threads、rebase 或 force push。IN-02 前 feature worktree 必須 clean；之後才可 non-force merge `origin/dev` 並只處理 bounded-context index 的 single semantic hunk。TE-11 驗證 merge snapshot，RV-08 產生 fresh merge-review verdict；僅 RV-08 approved、無 blocker 與既有 human delivery authority 同時存在時，DL-04 可 push 並 resolve completed threads。wrapper 必須以 exact `mktemp`/`trap` scratch、`git check-ignore --no-index` fixture eligibility、exact-path-only delete 與 final absence verification 實作；無 eligibility 不得 delete。不得修改 fixture public tests、root manifest、target/product、production source/API、CI 或 `.swiftlint.yml`，不得 rebase、force push、merge PR 或 release。

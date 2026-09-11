@@ -103,6 +103,40 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func rawRegexLiteralsMaskImportsAndKeepMultilineAttributes() throws {
+    let source = """
+      let ignored = #/
+      ; import Apollo
+      ; import ApolloAPI
+      /#
+      @_implementationOnly(
+        "SPI"
+      ) import Security
+      @preconcurrency(
+        "strict"
+      ) import struct Foundation.NSObject
+      """
+
+    #expect(
+      try importedModuleRoots(in: source)
+        == ["Security", "Foundation"]
+    )
+  }
+
+  @Test
+  func forbiddenApolloImportRootsAreDetected() throws {
+    let source = """
+      import Apollo
+      @preconcurrency import struct ApolloAPI.Selection
+      """
+    let forbiddenImports: Set = ["Apollo", "ApolloAPI"]
+
+    #expect(
+      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
+    )
+  }
+
+  @Test
   func importRootExtractionRecognizesEscapedModuleIdentifiers() throws {
     let source = """
       @_implementationOnly import `Security`.Cryptography
@@ -230,7 +264,13 @@ struct StaticIsolationTests {
       let sourceFile = sourceDirectory.appendingPathComponent(path)
       let source = try String(contentsOf: sourceFile, encoding: .utf8)
 
-      let forbiddenImports: Set = ["RivetHTTPClient", "Security", "Keychain", "ApolloAPI"]
+      let forbiddenImports: Set = [
+        "RivetHTTPClient",
+        "Security",
+        "Keychain",
+        "Apollo",
+        "ApolloAPI",
+      ]
       #expect(try importedModuleRoots(in: source).isDisjoint(with: forbiddenImports))
     }
   }
@@ -366,6 +406,17 @@ private func sourceWithCommentsAndStringLiteralsReplaced(in source: String) -> S
       continue
     }
 
+    if let hashCount = rawRegexHashCount(in: source, at: index) {
+      let (replacement, nextIndex) = rawRegexLiteralReplacement(
+        in: source,
+        startingAt: index,
+        hashCount: hashCount
+      )
+      sanitized += replacement
+      index = nextIndex
+      continue
+    }
+
     if let hashCount = rawStringHashCount(in: source, at: index) {
       let (replacement, nextIndex) = stringLiteralReplacement(
         in: source,
@@ -408,6 +459,18 @@ private func rawStringHashCount(in source: String, at candidate: String.Index) -
   return probe < source.endIndex && source[probe] == "\"" ? hashCount : nil
 }
 
+private func rawRegexHashCount(in source: String, at candidate: String.Index) -> Int? {
+  var probe = candidate
+  var hashCount = 0
+
+  while probe < source.endIndex, source[probe] == "#" {
+    hashCount += 1
+    probe = source.index(after: probe)
+  }
+
+  return probe < source.endIndex && source[probe] == "/" ? hashCount : nil
+}
+
 private func stringLiteralReplacement(
   in source: String,
   startingAt start: String.Index,
@@ -426,6 +489,35 @@ private func stringLiteralReplacement(
     let isClosingDelimiter =
       sourceContains(closingDelimiter, in: source, at: probe)
       && (hashCount > 0 || precedingBackslashCount.isMultiple(of: 2))
+    if isClosingDelimiter {
+      replacement += String(repeating: " ", count: closingDelimiter.count)
+      return (replacement, source.index(probe, offsetBy: closingDelimiter.count))
+    }
+
+    let character = source[probe]
+    replacement.append(sanitizedPlaceholder(for: character))
+    precedingBackslashCount = character == "\\" ? precedingBackslashCount + 1 : 0
+    probe = source.index(after: probe)
+  }
+
+  return (replacement, probe)
+}
+
+private func rawRegexLiteralReplacement(
+  in source: String,
+  startingAt start: String.Index,
+  hashCount: Int
+) -> (String, String.Index) {
+  let openingDelimiter = String(repeating: "#", count: hashCount) + "/"
+  let closingDelimiter = "/" + String(repeating: "#", count: hashCount)
+  var replacement = String(repeating: " ", count: openingDelimiter.count)
+  var probe = source.index(start, offsetBy: openingDelimiter.count)
+  var precedingBackslashCount = 0
+
+  while probe < source.endIndex {
+    let isClosingDelimiter =
+      sourceContains(closingDelimiter, in: source, at: probe)
+      && precedingBackslashCount.isMultiple(of: 2)
     if isClosingDelimiter {
       replacement += String(repeating: " ", count: closingDelimiter.count)
       return (replacement, source.index(probe, offsetBy: closingDelimiter.count))

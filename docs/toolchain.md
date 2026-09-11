@@ -61,11 +61,14 @@ Swift CLI 檢查：
 
 ```sh
 scripts/check-swift-format.sh
+scripts/check-github-integration-consumer.sh
 swiftlint lint --strict
 swift test
 ```
 
-`.pre-commit-config.yaml` 會執行 whitespace、Swift format、SwiftLint 與 renderer `bun run check`；coverage 不放入 pre-commit。
+`scripts/check-github-integration-consumer.sh` 以 `mktemp -d` 建立單次 consumer build scratch，透過 `trap` 僅清理該 exact scratch path，並以 `--scratch-path` 執行 `Tests/GitHubIntegrationConsumer`。它在執行前僅接受 absent，或已確認為非 symlink、directory 且被 Git ignore 的 fixture `.build`；符合後才精確移除該 generated output，並在完成後確認 fixture `.build` 仍不存在。任何 eligibility、cleanup 或 absence 驗證失敗都會停止檢查。
+
+`.pre-commit-config.yaml` 會依序執行 whitespace、Swift format、GitHubIntegration consumer contract、SwiftLint 與 renderer `bun run check`；coverage 不放入 pre-commit。
 
 ## Coverage
 
