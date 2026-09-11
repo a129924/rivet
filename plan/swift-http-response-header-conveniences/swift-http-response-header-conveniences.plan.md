@@ -44,7 +44,7 @@
 - `Request/HTTPHeaders.swift`：新增既定 lookup API 與九個 read-only computed properties。
 - `Response/HTTPResponse.swift`：新增既定 text API。
 - 既有 request/header 與 response test surface：新增本 topic contract tests。
-- 無 architecture documentation writeback。原本的 `docs/architecture/bounded-contexts/github-integration.md` 唯一 writeback target 已退役，並由 `github-integration-boundary-redefinition` topic supersede；本 topic 不指定 replacement target，亦不改寫新 shared-module boundary。
+- 無 architecture documentation writeback。原本的 `docs/architecture/bounded-contexts/github-integration.md` 唯一 writeback target 已退役，並由 `github-integration-boundary-redefinition` topic 的明示 cross-topic artifact allowlist supersede；本 topic 不指定 replacement target，亦不改寫新 shared-module boundary。
 
 **Written**
 

@@ -13,6 +13,7 @@
 - 產出本 topic 四份 planning artifacts，記錄 inventory、分類、target boundary、風險與驗收。
 - 將 PR #17／`github-integration-auth-boundary` 的 Supporting BC 架構決定標示為 superseded，僅保留為 traceability；其 pending gates 不構成本 topic 前置條件或 blocker。
 - 在 planning review 通過後，修正 active architecture documentation 與 Bounded Context Map，使其表達 BC-local adapter → `GithubIntegration` → GitHub API 的方向；退役舊 Supporting BC 主文件與 authorization boundary canvas，並移除其 active navigation。
+- 只為退役失效 writeback，修正 `swift-http-response-header-conveniences` 與 `swift-http-response-json-decoding` 各自四份既有 planning artifacts 對 `github-integration.md` 或舊 authorization boundary asset 的引用；不指定 replacement target，且不改變其 HTTP 功能、API、tests、scope 或 gates。
 - 圖表以 architecture-canvas 製作、繁體中文作者內容、validate/build 驗證，且不得發布 artifact.cafe。
 
 ## Out-Of-Scope
@@ -26,6 +27,7 @@
 - `RivetHTTPClient`、根 manifest、所有 runtime source、測試、build configuration 與 PR Reader GraphQL schema snapshot。
 - `docs/github-api/` 的 capability-reference content，惟 catalog introduction 與「共通規則」中 shared-module boundary wording 例外。
 - PR #17／`github-integration-auth-boundary` 的既有 artifacts 與相關歷史資料；僅作 supersession traceability。
+- 除 `swift-http-response-header-conveniences` 與 `swift-http-response-json-decoding` 各自四份明列於 Modify 的 planning artifacts 外，所有其他 cross-topic artifacts 均為 ReadOnly。
 
 ## Written
 
@@ -36,7 +38,7 @@
 
 ## Modify
 
-僅在 documentation delivery 時修改 active long-lived architecture documentation、PR Inbox／PR Reader BC boundary wording、`docs/github-api/README.md` 的 catalog introduction 與「共通規則」中 shared-module boundary wording，以及 Bounded Context Map scene／generated artifact；`docs/github-api/` 其餘 catalog capability content 維持 ReadOnly。具體範圍依 technical spec 的 Documentation Delivery Contract。不得修改 runtime 或歷史 artifacts。
+僅在 documentation delivery 時修改 active long-lived architecture documentation、PR Inbox／PR Reader BC boundary wording、`docs/github-api/README.md` 的 catalog introduction 與「共通規則」中 shared-module boundary wording，以及 Bounded Context Map scene／generated artifact；`docs/github-api/` 其餘 catalog capability content 維持 ReadOnly。另可修改 `swift-http-response-header-conveniences` 與 `swift-http-response-json-decoding` 各自的 requirements、technical spec、plan、step artifacts，但唯一操作是退役指向已刪除 `github-integration.md` 或舊 authorization boundary asset 的失效 writeback；不得指定 replacement target 或變更這兩個 topic 的 HTTP behavior、API、tests、scope 或 gates。具體範圍依 technical spec 的 Documentation Delivery Contract。不得修改 runtime 或其他歷史 artifacts。
 
 ## Deleted
 
@@ -44,6 +46,8 @@
 - `docs/architecture/diagrams/github-integration-http-client-boundary/`
 
 上述 active assets 承載已 supersede 的 Supporting BC／authorization semantics，必須退役。PR #17、舊 topic 與 git history 繼續提供 traceability；本 topic 不對其 pending gates 或其他歷史狀態執行操作。
+
+不得刪除任何 cross-topic planning artifact；allowlist 內的 correction 只退役其失效 writeback 引用。
 
 ## Implementation
 
@@ -61,6 +65,7 @@
 - TC-04：canvas 通過 architecture-canvas validate/build，作者內容為繁體中文，且未發布至 artifact.cafe。
 - TC-05：allowed-path review 確認沒有 runtime source、package／target、adapter、schema、authentication flow 或 REST／GraphQL policy 變更。
 - TC-06：`git diff --check` 通過；文件不將 `RivetHTTPClient` 表示為 `GithubIntegration` implementation，亦不宣稱未實作 API 或 shared BC failure contract。
+- TC-07：allowlist review 確認僅修正兩個 HTTP topic 各自四份 planning artifacts 的 retired writeback 引用；不指定 replacement target，且其 HTTP behavior、API、tests、scope 與 gates 不變。
 
 ## Assumptions
 

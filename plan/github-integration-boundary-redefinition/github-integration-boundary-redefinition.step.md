@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-RV-04 已對 TS-04 驗證的 HEAD `c34a7a23` current tree 完成獨立審查並給予 `approved`；現等待 HC-01 human review。TS-03 與更早 evidence 只適用於 prior tree，不得用作目前 tree 的 Reviewer 或 human completion。
+PR comment threads 1–5 的最終 tree 尚待新的獨立 Tester／Reviewer verification。PL-03 的 cross-topic artifact correction 只退役失效 writeback 引用；它不改變 HTTP 功能、API、tests、scope 或 gates。TS-04、RV-04 與更早 evidence 只適用於 prior tree，不得用作目前 tree 的 Reviewer 或 human completion。
 
 ## Ledger
 
@@ -22,18 +22,22 @@ RV-04 已對 TS-04 驗證的 HEAD `c34a7a23` current tree 完成獨立審查並�
 | IM-04 | completed | Implementer | 修正 PR comment threads 1–2：補全 plan 的 future shared-mechanism responsibility categories，並將 GitHub API catalog introduction／「共通規則」的 shared-module boundary wording 納入 delivery contract。 | 僅修改本 topic requirements、technical spec、plan 與 ledger；未修改 runtime、API、auth lifecycle、catalog capability content 或 thread 3 的 old-topic artifacts。不得將此完成視為 Tester、Reviewer 或 human 核可。 |
 | TS-04 | completed | Tester | 獨立驗證 HEAD `c34a7a23` current tree 的 PR comment threads 1–3 acceptance、delivery allowlist／ReadOnly contract 一致性與 `git diff --check`，verdict：`approved`。 | 已驗證 8 個未提交 planning artifact edits：#1 plan 明載 future shared mechanisms 為 pagination、rate limit 與 retry；#2 GitHub API catalog introduction／共通規則的 shared-module boundary wording 已納入 Modify contract 並與 README 實際內容一致；#3 `swift-http-response-header-conveniences` 的四份 artifacts 將 GitHub Integration writeback 標為 superseded、未指定 replacement target，且其餘 HTTP header scope 不變。所有允許路徑均為 planning/documentation artifacts，無 runtime 變更；`git diff --check` 通過。不得沿用 TS-03 或更早 evidence。 |
 | RV-04 | completed | Reviewer | 在 TS-04 `approved` 後，獨立審查 HEAD `c34a7a23` current tree 的 comment resolution、scope isolation 與 evidence，verdict：`approved`。 | 獨立 Reviewer `approved`，無 findings；確認 threads 1–3、TS-04 evidence、scope isolation 與 canvas contract 均通過。不得將此 approval 延伸為 human review、merge 或 release 授權。 |
-| HC-01 | pending | Human | 僅在 RV-04 `approved` 後進行終端交付 review。 | RV-04 已 approved；等待 human review，不得將 prior-tree approvals、TS-04 或 RV-04 視為 merge 或 release 授權。 |
+| PL-03 | completed | Plan-Creator | 依 human 對 PR comment threads 1–5 的限縮授權，將兩個 HTTP topic 各自四份 planning artifacts 納入 allowlist，並只退役指向已刪除 `github-integration.md` 或舊 authorization boundary asset 的失效 writeback。 | 不指定 replacement target；不改變 HTTP header／JSON decoding 的 behavior、API、tests、scope 或 gates。 |
+| IM-05 | completed | Implementer | 依 human 對 threads 3、5 的限縮授權，補齊 catalog 的 future shared-mechanism boundary wording，並將 PR Reader GraphQL SDL 還原為未驗證 candidate／暫存 asset。 | 僅修改 `docs/github-api/README.md`、`docs/architecture/bounded-contexts/pr-reader.md` 與本 ledger；不宣稱 runtime policy、正式 schema ownership、API 或實作已改變。TS-05 仍須獨立驗證最終 tree。 |
+| TS-05 | pending | Tester | 獨立驗證 threads 1–5 最終 tree，記錄實際 HEAD/tree SHA、命令結果、allowlist scope isolation 與各 thread acceptance。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check` verdict；不得沿用 TS-04 或更早 evidence。 |
+| RV-05 | pending | Reviewer | 僅在 TS-05 明示 `approved` 後，獨立審查最終 tree 的 comment resolution、scope isolation 與 evidence。 | 明示 verdict；不得以 prior-tree approval 或 artifact status 取代 current-tree review。 |
+| HC-01 | pending | Human | 僅在 RV-05 明示 `approved` 後進行終端交付 review。 | 不得將 prior-tree approvals、TS-05 或 RV-05 視為 merge 或 release 授權。 |
 
 ## Blockers
 
-- 無已知實作 blocker；TS-04 與 RV-04 已對 HEAD `c34a7a23` current tree approved。現行 gate 是 HC-01 human review。
+- 無已知實作 blocker；TS-05 與 RV-05 對 threads 1–5 最終 tree 的獨立驗證尚未完成。現行 gate 是 TS-05。
 
 ## Human Check
 
-PR #17／`github-integration-auth-boundary` 僅作 supersession traceability；其 pending gates 不構成本 topic 的前置條件、blocker 或 human gate。TS-04 與 RV-04 已對 HEAD `c34a7a23` current tree approved；HC-01 等待 human 確認受限交付結果，不得將其視為 merge 或 release 授權。
+PR #17／`github-integration-auth-boundary` 僅作 supersession traceability；其 pending gates 不構成本 topic 的前置條件、blocker 或 human gate。HC-01 須等待 TS-05 與 RV-05 對最終 tree 的明示 approved；不得將其視為 merge 或 release 授權。
 
 ## Last Updated
 
 - Topic：`github-integration-boundary-redefinition`
-- 更新者：Implementer（回寫 RV-04 Reviewer approved evidence）
-- 狀態：TS-01 needs-rework 已由 IM-02 回修；TS-02、RV-02 與 TS-03 保留為 prior-tree 歷史證據。TS-04 與 RV-04 已對 HEAD `c34a7a23` approved；current-tree 路由為 human review，HC-01 pending。
+- 更新者：Plan-Creator（依 human threads 1–5 限縮授權更新 allowlist 與 verification routing）
+- 狀態：TS-01 needs-rework 已由 IM-02 回修；TS-02、RV-02、TS-03、TS-04 與 RV-04 保留為 prior-tree 歷史證據。current-tree 路由為 TS-05 → RV-05 → HC-01。

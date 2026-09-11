@@ -67,10 +67,22 @@ GitHub REST / GraphQL API
 - `docs/architecture/bounded-contexts/github-integration.md`
 - `docs/architecture/diagrams/github-integration-http-client-boundary/`
 
+delivery allowlist 亦包含下列既有 planning artifacts，且只可刪除或標記其指向上述 retired asset 的失效 writeback；不得建立 replacement target 或修改任何 HTTP behavior、API、test、scope 或 gate：
+
+- `analysis/swift-http-response-header-conveniences/requirements.md`
+- `analysis/swift-http-response-header-conveniences/technical-spec.md`
+- `plan/swift-http-response-header-conveniences/swift-http-response-header-conveniences.plan.md`
+- `plan/swift-http-response-header-conveniences/swift-http-response-header-conveniences.step.md`
+- `analysis/swift-http-response-json-decoding/requirements.md`
+- `analysis/swift-http-response-json-decoding/technical-spec.md`
+- `plan/swift-http-response-json-decoding/swift-http-response-json-decoding.plan.md`
+- `plan/swift-http-response-json-decoding/swift-http-response-json-decoding.step.md`
+
 圖表必須用繁體中文表達 ownership 與 compile-time dependency boundary，經 architecture-canvas validate/build 驗證；不表達 runtime sequence，不發布 artifact.cafe，也不得將 future module 寫成已實作 API。
 
 ## Risks 與 Deferred Decisions
 
 - baseline 差異風險：parent `dev` baseline 實際把 GitHub Integration 定義為 Supporting BC，且以 lower shared authorization capability、主文件與 authorization canvas 表達；documentation delivery 必須 supersede 這些 active sources，以已鎖定的 `GithubIntegration` shared-module boundary 校正詞彙，且不改變 `RivetHTTPClient` 的 generic position。
 - 歷史 traceability：PR #17 與舊 topic 不刪除、不就地改寫；退役的 active Supporting BC 文件與 canvas 由 git history 保留。其 pending gates 不構成本 topic 的前置條件、blocker 或 human gate。
+- 跨 topic correction 風險：allowlist 僅校正已退役 asset 的 writeback 引用；不得藉此重開 HTTP header 或 JSON decoding 的功能、API、tests、scope、gate、schema ownership 或 implementation。
 - 延後：module path、Swift API、credential lifecycle、REST／GraphQL client strategy、retry／rate-limit／pagination policy、error type、schema relocation、BC adapter implementation、dependency rewiring 與 compatibility strategy。

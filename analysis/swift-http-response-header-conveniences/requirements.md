@@ -12,7 +12,7 @@
 - 為 `HTTPHeaders` 新增 `value(for: String) -> String?` case-insensitive lookup，並持續接受任意自訂 header name；同時新增九個對應常見 header 的 read-only computed properties：`accept`、`authorization`、`contentType`、`userAgent`、`etag`、`ifNoneMatch`、`location`、`link`、`retryAfter`。
 - 為 `HTTPResponse` 新增 `text(encoding: String.Encoding = .utf8) -> String?`，只依呼叫端指定的 encoding 解碼 raw `body`。
 - 擴充既有 request/header 與 response test surface，驗證 constants、lookup 與文字解碼的成功／失敗行為。
-- 已退役的 `docs/architecture/bounded-contexts/github-integration.md` writeback 不再屬於本 topic；此決定由 `github-integration-boundary-redefinition` topic supersede，且不指定 replacement writeback target。
+- 已退役的 `docs/architecture/bounded-contexts/github-integration.md` writeback 不再屬於本 topic；此 correction 位於 `github-integration-boundary-redefinition` topic 明示授權的 cross-topic artifact allowlist，且不指定 replacement writeback target。
 
 ## Out of Scope
 
