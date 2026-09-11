@@ -13,6 +13,7 @@
 - 保留 decoder 的原始錯誤，包含 `DecodingError`。
 - 對 HTTP response、decoder ownership 與既有 HTTP client architecture facts 的最小長期文件回寫；依既有 workflow 更新兩張 HTTP client diagram。
 - 針對有效解碼、caller-supplied decoder configuration、原始錯誤、status／`Content-Type` 不參與解碼與 raw response regression 的測試。
+- 已刪除的 `docs/architecture/bounded-contexts/github-integration.md` 與舊 authorization boundary asset 不再是本 topic writeback target；此失效引用由 `github-integration-boundary-redefinition` topic supersede，不指定 replacement writeback target。
 
 ## Out of Scope
 
@@ -21,6 +22,7 @@
 - 預設、共享、儲存或由 library 設定的 `JSONDecoder`。
 - package decoding error、optional decode API、`JSONSerialization` 或動態 JSON API。
 - HTTP status 或 `Content-Type` validation、retry、concrete transport、實際網路、token refresh、Endpoint／URL 組裝與統一 package error。
+- 對本 topic JSON decode behavior、API、tests、scope 或 gates 的任何改變；本次只校正 retired writeback reference。
 
 ## Success Criteria
 
