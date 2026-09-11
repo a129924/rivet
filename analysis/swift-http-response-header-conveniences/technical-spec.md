@@ -55,7 +55,7 @@ public func text(
 - `HTTPResponse` 維持 `statusCode`、`headers` 與 raw `body: Data` 的既有 initializer 與 canonical contract。`text(encoding:)` 是 opt-in convenience，不讀取 `Content-Type`，不推論 charset，亦不執行 JSON decode。
 - 不改變 `HTTPClient → Requester → Transport` chain、URL ownership、transport error passthrough、status validation 或 retry policy。
 - 不新增 error type、decoder、concrete transport、URLSession、manifest dependency 或 architecture diagram 變更。
-- 唯一授權的長期真相 writeback 是修改 `docs/architecture/bounded-contexts/github-integration.md`；不得修改 package-structure diagram 或其他 BC 文件。該文件僅能如實將下列已完成 public surface 納入 GitHub Integration boundary：`HTTPURL`、`HTTPRequest`、`HTTPHeaders`（nine `HTTPHeaderName` constants、case-insensitive `value(for:)`、九個 read-only getters）、raw `HTTPResponse`（explicit `text(encoding:)` helper），以及 `HTTPClient → Requester → injected Transport`。文件必須同時保留 endpoint/base URL/path/query、concrete transport、retry/token refresh/status validation/response decode policy 不由 package 提供，且不得讓外部 detail 跨越 BC Port。
+- 原本唯一授權的 `docs/architecture/bounded-contexts/github-integration.md` writeback 已因文件退役而失效，並由 `github-integration-boundary-redefinition` topic 的明示 cross-topic artifact allowlist supersede。本 topic 不改寫其 shared-module boundary、不指定 replacement writeback target，且不得修改任何 architecture diagram 或 BC 文件。
 
 ## Required Verification
 

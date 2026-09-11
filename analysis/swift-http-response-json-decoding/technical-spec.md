@@ -23,8 +23,9 @@ public func json<T: Decodable>(
 ## Architecture and Writeback
 
 - `HTTPResponse` 保持 canonical raw response contract；`json(_:decoder:)` 是 caller-invoked convenience，不加入 `HTTPClient → Requester → Transport` 的 raw response 傳遞資料流。
-- `docs/architecture/README.md`、GitHub Integration BC 文件與兩張既有 HTTP client diagram 必須改為記錄：package 提供 caller-owned decoder 的 response convenience，但不擁有 decoder configuration、status validation 或 `Content-Type` validation policy。
-- diagram 僅修改各 artifact 的 `scene.js`，並依其既定 artifact-local workflow rebuild generated `index.html`；不得直接手改生成檔或發布 artifact.cafe。
+- `docs/architecture/README.md` 與既有 HTTP client package-structure diagram 必須記錄：package 提供 caller-owned decoder 的 response convenience，但不擁有 decoder configuration、status validation 或 `Content-Type` validation policy。
+- 已刪除的 `docs/architecture/bounded-contexts/github-integration.md` 與舊 GitHub Integration authorization boundary canvas 均不是 writeback target；此失效引用由 `github-integration-boundary-redefinition` topic supersede，且不指定 replacement target。
+- package-structure diagram 僅修改其 `scene.js`，並依既定 artifact-local workflow rebuild generated `index.html`；不得直接手改生成檔或發布 artifact.cafe。
 
 ## Required Verification
 

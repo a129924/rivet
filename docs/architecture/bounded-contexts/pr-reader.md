@@ -18,7 +18,8 @@
 - 對 Presentation 提供穩定的 Reader Facade。
 - 透過自己擁有的 PR Content Source Port 取得資料；不直接依賴 PR Inbox。
 - Presentation 可用目前選取的 PR 向 Reader 請求閱讀快照。
-- 未來若需 GitHub 資料，PR Reader 自己的 local Infra GitHub adapter 實作 Reader Port，並擁有 endpoint、DTO、外部 failure 正規化與 Reader failure mapping；示意位置可為 `<BC>/Infra/GitHub`，但這不是 source-path 或 target 決定。local REST adapter 可採用 GitHub Integration 的 lower shared authorization capability；local GraphQL adapter 維持 Apollo-only route。PR Reader Core、UseCase 與 Port 不依賴 GitHub Integration、PR Inbox 或 GitHub 外部協定。
+- 未來若需 GitHub 資料，僅 PR Reader 自己的 Infra 可擁有 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping；現有 GraphQL SDL 僅是未驗證的 candidate／暫存 asset，本文件不將它定義為正式 BC-local ownership，也不據此搬移 schema、指定 target 或改變任何 API／實作。
+- 未來的 non-BC `GithubIntegration` 若被建立，只有此 Infra 可依賴其 raw transport、authentication、共通 request headers／API version、pagination、rate-limit、retry、GitHub error technical classification 與 shared configuration；它不依賴任何 BC。GitHub DTO／GraphQL node translation、technical classification 到 Reader failure contract 的 mapping 與 Reader business meaning 仍只留在此 Infra；它們不會進入 Core、UseCase 或 Port，且不形成 shared BC failure contract。
 
 ## WebView Diff Rendering Boundary
 
