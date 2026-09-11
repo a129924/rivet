@@ -100,6 +100,7 @@ Tests/GitHubIntegrationTests/
 - bounded-context map source/generated artifact 通過 `architecture-canvas` validation/build，並如實呈現已實作的受限 shared module。
 - PR Reader BC 文件與 GitHub API README 如實呈現已實作的 token contract，並保留 Keychain、authorizer、REST 與 OAuth lifecycle deferred。
 - pre-integration merge 後確認 README resolved hunk 同時保留兩方指定 wording；不得 rebase、force push 或以單方版本覆寫 conflict。
+- historical delivery route `DL-02a → RV-05 → DL-02b` 已不再是 current gate：其後 feature branch、remote branch 與 PR head 已同步至 `67a2cb7`，`origin/dev` 已在 history，README conflict 已以 non-force merge 解決，PR 為 mergeable clean。此事實不補造 RV-05 verdict；任何新 PR comment 依當前 evidence 獨立 triage。
 
 ## PR Comment Triage
 
@@ -108,12 +109,12 @@ Tests/GitHubIntegrationTests/
 - PC-01：`TokenStoreOperation: Sendable` 是唯一新增 explicit public conformance。
 - PC-02：`TokenStoreError`、`GitHubCredentialError` 因 `Error` 有 Swift 隱含 `Sendable` 關係；不新增 explicit conformance 或 concurrency behavior。
 - PC-03：RV-03 歷史 `needs-rework` verdict 保持不變。
-- PC-04：DL-02 撤除 `eligible`，回復 `pending`。
-- PC-05：既有 `PR-06 → IM-04 → TE-04` 已完成；TE-04 pass 後的 README conflict 使 delivery route 改為 `RV-04 → CF-01 → IN-01 → TE-05 → RV-05`，delivery 只依 RV-05 明示 `approved`。
+- PC-04：amendment 當時的 final thread-resolution gate 維持 `pending`，不得以歷史 evidence 取代 RV-05 remote approval。後續 delivery 已關閉該 historical route；它不提供新 comment 的 resolution authority。
+- PC-05：`DL-02a → RV-05 → DL-02b` 是當時 remote 尚未承載已驗證 head 時的 corrective route。其後 delivery 已使 feature branch、remote branch 與 PR head 同步至 `67a2cb7`；`origin/dev` 已在 history，README conflict 已以 non-force merge 解決，PR 為 mergeable clean。此記錄不補造 RV-05 verdict，也不是後續 PR comment 的 gate。
 
 ## Implementation Handoff
 
 1. 取得獨立 Plan-Reviewer 對本 topic 四份 artifacts 的明示 `approved` verdict。
 2. Implementer 只在 feature worktree 依上述 layout 寫入 Written/Modify targets；human 授權的 amendment 限於 `CredentialTypes.swift` 的唯一新增 explicit `TokenStoreOperation: Sendable`、`StaticIsolationTests.swift` 的 graph/source/import/Sendable checks，以及列出的 canonical truth/map writeback。`TokenStoreError` 與 `GitHubCredentialError` 的 Swift 隱含 `Sendable` 關係不得成為新增 explicit conformance 或 concurrency behavior 的理由。`pr-reader.md` 與 GitHub API README 只能改為已實作 token contract、Keychain/authorizer/REST/OAuth lifecycle deferred。bounded-context map 必須透過 `architecture-canvas` validation/build 更新，且不得發布 artifact.cafe；不得新增其他 source/test，或重開其餘 locked API、failure mapping、target dependency、scope、Non-Goal 或 architecture decision。
-3. RV-03 的 historical `needs-rework` verdict 不得重寫為 `approved`；DL-02 維持 `pending` 且不得標記 eligible。TE-04 已 pass，但 README base conflict 與未提交 comment fixes 使 merge/delivery 不安全。fresh corrective route 固定為 RV-04（獨立 Code-Reviewer，僅 review IM-04 snapshot）→ CF-01（authorized single comment-fix commit，非 delivery completion）→ IN-01（Code-Implementer non-force merge `origin/dev`，只 resolve README semantic hunk 並保留兩方指定 wording）→ TE-05（獨立 Tester）→ RV-05（獨立 Code-Reviewer fresh verdict）。
-4. DL-02 僅當 RV-05 明示 `approved` 且既有 human delivery authority 存在時，才可進入；屆時 Implementer 才可 push，並只 resolve 已完成的 PR threads。不得 rebase、force push、自動 merge 或 release；PR 維持 human review boundary。
+3. RV-03 的 historical `needs-rework` verdict 不得重寫為 `approved`。historic `DL-02a → RV-05 → DL-02b` route 已在後續 delivery 後失去 current-gate 身分：feature branch、remote branch 與 PR head 已同步至 `67a2cb7`，`origin/dev` 已在 history，README conflict 已以 non-force merge 解決，PR 為 mergeable clean。此記錄不回填或推論 RV-05 verdict。
+4. 後續 PR comment 僅能依其當前 evidence 獨立 triage、review 與修正；不得援引 historic route 作為 approval。不得 rebase、force push、新增 code、自動 merge 或 release；PR 維持 human review boundary。

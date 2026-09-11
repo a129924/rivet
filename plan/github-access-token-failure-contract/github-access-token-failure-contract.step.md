@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-CF-01 已完成 local-only non-delivery commit `ed6a957`，所有 hooks pass，且未 push。IN-01 為 `pending / eligible` 的下一 gate，只可 non-force merge `origin/dev` 並處理指定 README semantic hunk。TE-04 已 pass，但 `docs/architecture/README.md` 的 `origin/dev` base conflict 仍使 delivery 不安全。DL-01 已完成且 PR 已進入 human review；RV-02 與 RV-03 的歷史 verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。TE-05、RV-05、DL-02 維持 `pending`。唯一可前進的 corrective route 為 IN-01 → TE-05 → RV-05；只有 RV-05 明示 `approved` 後，才可進入 DL-02。
+PR #26 處於 human review／PR-comment review-and-fix phase。feature branch、remote branch 與 PR head 已同步至 `67a2cb7`；`origin/dev` 已在 history，README conflict 已以 non-force merge 解決，PR 為 mergeable clean。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02 與 RV-03 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。新 comment 必須依當前 evidence 獨立 triage。
 
 ## Goal
 
@@ -38,7 +38,7 @@ CF-01 已完成 local-only non-delivery commit `ed6a957`，所有 hooks pass，�
 
 ## TestCase
 
-原樣 token return、`nil` 至 `.missingCredential`、`load()` store error 至保留 operation/underlying error 的 `.tokenStore`、external mock conformance、provider injection/conformance、`TokenStoreOperation: Sendable` explicit conformance compile check（不新增其他 explicit conformance 或 concurrency behavior，並保留 error types 的 Swift 隱含關係）、structured package/target graph assertion、four-source exact-set、actual target source enumeration、forbidden-import checks、bounded-context map `architecture-canvas` validation/build、`pr-reader.md`／GitHub API README factual wording、README conflict hunk 同時保留 `GitHubIntegration` implemented/deferred wording 與 HTTP decoded payload `Decodable & Sendable` sentence、root `swift test` 與 `git diff --check`。
+原樣 token return、`nil` 至 `.missingCredential`、`load()` store error 至保留 operation/underlying error 的 `.tokenStore`、external mock conformance、provider injection/conformance、`TokenStoreOperation: Sendable` explicit conformance compile check（不新增其他 explicit conformance 或 concurrency behavior，並保留 error types 的 Swift 隱含關係）、structured package/target graph assertion、four-source exact-set、actual target source enumeration、forbidden-import checks、bounded-context map `architecture-canvas` validation/build、`pr-reader.md`／GitHub API README factual wording、README conflict hunk 同時保留 `GitHubIntegration` implemented/deferred wording 與 HTTP decoded payload `Decodable & Sendable` sentence、root `swift test` 與 `git diff --check`。historic `DL-02a → RV-05 → DL-02b` route 不再是後續 comment 的驗收 gate；任何新 comment 必須以其當前 diff 與 review evidence 驗證。
 
 ## PR Comment Triage
 
@@ -49,8 +49,8 @@ CF-01 已完成 local-only non-delivery commit `ed6a957`，所有 hooks pass，�
 | PC-01 | accepted | `TokenStoreOperation: Sendable` 是唯一新增的 explicit public conformance。 |
 | PC-02 | accepted | `TokenStoreError` 與 `GitHubCredentialError` 因 `Error` 有 Swift 隱含 `Sendable` 關係；不額外宣告 conformance 或 concurrency behavior。 |
 | PC-03 | accepted | RV-03 歷史 verdict 保持 `needs-rework`，不得回寫為 `approved`。 |
-| PC-04 | accepted | DL-02 撤除 `eligible` 並恢復 `pending`。 |
-| PC-05 | accepted | `PR-06 → IM-04 → TE-04` 已完成；README conflict 後僅 `RV-04 → CF-01 → IN-01 → TE-05 → RV-05` 可產生新的 delivery gate truth，delivery 只依 RV-05 明示 `approved`。 |
+| PC-04 | accepted | amendment 當時的 final thread-resolution gate 維持 pending，歷史 evidence 不取代 RV-05 remote approval。後續 delivery 已關閉該 historical route；它不提供新 comment 的 resolution authority。 |
+| PC-05 | accepted | `DL-02a → RV-05 → DL-02b` 是當時 remote 尚未承載已驗證 head 時的 corrective route。其後 feature branch、remote branch 與 PR head 已同步至 `67a2cb7`；`origin/dev` 已在 history，README conflict 已以 non-force merge 解決，PR 為 mergeable clean。此記錄不補造 RV-05 verdict，也不是後續 PR comment 的 gate。 |
 
 ## Ledger
 
@@ -84,22 +84,24 @@ CF-01 已完成 local-only non-delivery commit `ed6a957`，所有 hooks pass，�
 | PR-07 | completed | Plan-Reviewer | 獨立審查 AM-05 corrective route。 | 發出明示 verdict；確認 pre-integration review、non-delivery commit、non-force merge、README semantic hunk、TE-05/RV-05/DL-02 gate 與既定 contract/scope 一致。 | External Plan-Reviewer verdict `approved`／`pass`；findings：none。 |
 | RV-04 | completed | Code-Reviewer | 獨立 pre-integration review，且只 review IM-04 snapshot。 | 明示 verdict；只確認 IM-04 snapshot 是否可進入 authorized comment-fix commit，不得產生 delivery approval 或重寫歷史 verdict。 | External Code-Reviewer verdict `approved`／`pass`；IM-04 snapshot 可進入 CF-01；非 delivery approval。 |
 | CF-01 | completed | Code-Implementer | 在 RV-04 `approved` 後建立 single authorized comment-fix commit。 | commit 只包含既有 comment fixes；明確標示非 delivery completion，且不得 push、resolve thread、rebase 或 force push。 | Local-only commit `ed6a957`；all hooks pass；non-delivery、未 push。 |
-| IN-01 | pending / eligible | Code-Implementer | 在 CF-01 後 non-force merge `origin/dev`。 | 只 resolve `docs/architecture/README.md` 的單一 semantic hunk；同時保留 `GitHubIntegration` implemented/deferred wording 與 HTTP decoded payload `Decodable & Sendable` sentence；不得 rebase、force push 或單方覆寫。 | CF-01 completed；IN-01 eligible，等待 Code-Implementer。 |
-| TE-05 | pending | Tester | 獨立驗證 IN-01 merge 結果與既有 TestCase。 | 如實回報 README hunk preservation、scope、verification evidence 與 blocker；不得發布 delivery verdict。 | 等待 IN-01 completion。 |
-| RV-05 | pending | Code-Reviewer | 獨立審查 IN-01 與 TE-05 evidence，產生 fresh delivery verdict。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check`；不得借用 RV-03、LR-01 或 RV-04 作為 delivery approval。 | 等待 TE-05 completion。 |
-| DL-02 | pending | Code-Implementer | 依 human authority push fix，並只 resolve 已完成 threads。 | RV-05 明示 `approved`、無 unresolved blocker、human delivery authority 存在；PR 維持 human review boundary。 | 等待 RV-05 fresh `approved`。 |
+| IN-01 | completed | Code-Implementer | 在 CF-01 後 non-force merge `origin/dev`。 | 只 resolve `docs/architecture/README.md` 的單一 semantic hunk；同時保留 `GitHubIntegration` implemented/deferred wording 與 HTTP decoded payload `Decodable & Sendable` sentence；不得 rebase、force push 或單方覆寫。 | 已完成，結果交由 TE-05 內容驗證。 |
+| TE-05 | completed | Tester | 獨立驗證 IN-01 merge 結果與既有 TestCase。 | 如實回報 README hunk preservation、scope、verification evidence 與 blocker；不得發布 delivery verdict。 | Content verification verdict `pass`。當時 remote-head verification 尚未記錄；後續 delivery 已將 feature branch、remote branch 與 PR head 同步至 `67a2cb7`。 |
+| PR-08 | completed | Plan-Reviewer | 獨立審查 `DL-02a → RV-05 → DL-02b` remote-first delivery route。 | 發出明示 verdict；確認 DL-02a 非 approval／不 resolve threads、RV-05 remote review 與 DL-02b completed-thread-only gate 不重寫歷史 verdict 或擴張 scope。 | Latest external Plan-Reviewer verdict `pass`／`approved`；findings：none。 |
+| DL-02a | completed | Code-Implementer | push already-tested local HEAD 至 remote branch。 | push 的 HEAD 必須是 TE-05 已驗證的 local HEAD；不得 resolve threads，且此操作不構成 approval、delivery completion 或 human-review exit。 | Subsequent delivery synchronized feature branch, remote branch and PR head at `67a2cb7`; `origin/dev` is in history and PR is mergeable clean. |
+| RV-05 | not-recorded | Code-Reviewer | 獨立 review DL-02a 後的 remote PR/head，產生 fresh remote verdict。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check`；不得借用 RV-03、LR-01、RV-04 或 TE-05 作為 remote delivery approval。 | 本 artifact 沒有可驗證的 RV-05 verdict；不得根據後續 delivery 或 thread action 回填 verdict。 |
+| DL-02b | completed (historical) | Code-Implementer | 僅 resolve 已完成的 PR threads。 | RV-05 明示 `approved`、無 unresolved blocker、human delivery authority 存在；不得新增 code、push、rebase 或 force push；PR 維持 human review boundary。 | 後續 PR-comment delivery 已完成當時已完成 threads 的 resolution；此 historical completion 不授權或預先 resolve 新 threads。 |
 
 ## Blockers
 
-- delivery blocker：`docs/architecture/README.md` 的 `origin/dev` base conflict。流程 blocker 為 IN-01、TE-05、RV-05 尚未完成。DL-02 是 `pending`，不得以 RV-03、LR-01、RV-04 或既有 human delivery authority 單獨前進。
+- 無既有 remote-delivery blocker：feature branch、remote branch 與 PR head 已同步至 `67a2cb7`，`origin/dev` 已在 history，README conflict 已以 non-force merge 解決，PR 為 mergeable clean。若有新 PR comment，其 blocker 必須由當前 triage evidence 個別記錄；不得援引 historic DL-02 route 或補造 RV-05 verdict。
 
 ## Human Check
 
 - PR #26 維持 human review boundary；不得自動 merge、release、delete branch 或進行其他整合動作。
-- 僅在 RV-05 明示 `approved` 後，才可依既有 human authority push 並 resolve 已完成的 threads；未完成或需 human decision 的 thread 必須保留。
+- historic DL-02 route 不構成後續 thread-resolution authority。未完成或需 human decision 的新 thread 必須保留；已完成的新 comment 仍須經其當前 review/fix workflow。
 - 不得 rebase 或 force push；IN-01 只可 non-force merge `origin/dev`，並只 resolve README 的指定 semantic hunk。
 - 若任一獨立 reviewer verdict 為 `blocked` 或 `human-check`，停止自動前進並交還 human。
 
 ## Last Updated
 
-2026-09-11 — CF-01 local-only non-delivery commit `ed6a957`，all hooks pass、未 push；IN-01 `pending / eligible`，TE-05、RV-05、DL-02 維持 pending。
+2026-09-11 — Reconciled stale delivery evidence: feature branch、remote branch 與 PR head 為 `67a2cb7`，`origin/dev` 已在 history，README conflict 已由 non-force merge 解決，PR 為 mergeable clean。Historic verdicts 維持原狀；RV-05 verdict 未記錄，不予推論。Current phase 為 human review／PR-comment review-and-fix。
