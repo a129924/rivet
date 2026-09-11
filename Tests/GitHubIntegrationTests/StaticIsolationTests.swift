@@ -86,6 +86,23 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func importRootExtractionRecognizesMultilineBalancedAttributeArguments() throws {
+    let source = """
+      @_implementationOnly(
+        "SPI"
+      ) import Security
+      @preconcurrency(
+        "strict"
+      ) import struct ApolloAPI.Selection
+      """
+
+    #expect(
+      try importedModuleRoots(in: source)
+        == ["Security", "ApolloAPI"]
+    )
+  }
+
+  @Test
   func importRootExtractionRecognizesEscapedModuleIdentifiers() throws {
     let source = """
       @_implementationOnly import `Security`.Cryptography
@@ -293,7 +310,7 @@ private func importedModuleRoots(in source: String) throws -> Set<String> {
   let expression =
     #"(?m)(?:^|;)"#
     + trivia + #"*"#
-    + #"(?:@[_A-Za-z][_A-Za-z0-9]*(?:\([^\r\n)]*\))?"#
+    + #"(?:@[_A-Za-z][_A-Za-z0-9]*(?:\((?:[^()]|\([^()]*\))*\))?"#
     + trivia + #"+)*"#
     + #"(?:(?:private|fileprivate|internal|package|public)"#
     + trivia + #"+)?"#
