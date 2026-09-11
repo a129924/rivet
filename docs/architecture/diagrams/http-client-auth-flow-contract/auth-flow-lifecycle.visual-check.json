@@ -6,8 +6,8 @@
   "visualReview": "pending",
   "artifact": {
     "path": "docs/architecture/diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.html",
-    "sha256": "bdce4482ffcacf936bb3d988284177d600998bc024f4bc6d60bdb5c67170f1f7",
-    "bytes": 707322
+    "sha256": "0779219ae0a7b3acd5e9e5724281b56baee84cd5936ed0b85d49943ca8a56e16",
+    "bytes": 707334
   },
   "state": {
     "detail": "read",
