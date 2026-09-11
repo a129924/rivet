@@ -4,19 +4,19 @@ import Testing
 
 @Suite("HTTPResponse")
 struct HTTPResponseTests {
-  private struct MessagePayload: Decodable, Equatable {
+  private struct MessagePayload: Decodable, Equatable, Sendable {
     let message: String
   }
 
-  private struct UserPayload: Decodable, Equatable {
+  private struct UserPayload: Decodable, Equatable, Sendable {
     let displayName: String
   }
 
-  private struct CountPayload: Decodable {
+  private struct CountPayload: Decodable, Sendable {
     let count: Int
   }
 
-  private struct CustomFailurePayload: Decodable {
+  private struct CustomFailurePayload: Decodable, Sendable {
     init(from decoder: any Decoder) throws {
       throw CustomDecodingFailure.expected
     }
