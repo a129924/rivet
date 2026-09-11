@@ -2,9 +2,19 @@
   "schema_version": 1,
   "diagram_type": "lifecycle",
   "meta": {
-    "title": "RivetHTTPClient Auth Flow 合約生命週期",
+    "title": "RivetHTTPClient AuthFlow 合約生命週期",
     "quality_profile": "showcase",
-    "viewBox": [1040, 640]
+    "viewBox": [1040, 640],
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "start": { "label": "起始" },
+        "active": { "label": "進行中" },
+        "decision": { "label": "決策" },
+        "success": { "label": "成功終態" },
+        "external": { "label": "外部" }
+      }
+    }
   },
   "lanes": [
     { "id": "main", "label": "建立與初始轉換" },
@@ -27,7 +37,7 @@
       "id": "auth-flow",
       "type": "active",
       "label": "AuthFlow",
-      "sublabel": "HTTPClient 不 drive flow",
+      "sublabel": "HTTPClient 不驅動流程",
       "lane": "main",
       "col": 1,
       "width": 110,
@@ -59,7 +69,7 @@
     {
       "id": "client-send",
       "type": "external",
-      "label": "client sends request",
+      "label": "用戶端送出請求",
       "sublabel": "依 .send(HTTPRequest)",
       "lane": "main",
       "col": 4,
@@ -70,8 +80,8 @@
     {
       "id": "response",
       "type": "active",
-      "label": "response",
-      "sublabel": "client receives HTTPResponse",
+      "label": "回應",
+      "sublabel": "用戶端收到 HTTPResponse",
       "lane": "response",
       "col": 2,
       "width": 125,
@@ -177,10 +187,10 @@
       "dot": "slate",
       "title": "合約邊界",
       "items": [
-        "RivetHTTPClient 僅宣告 generic Auth flow contract；HTTPClient 不 drive AuthFlow",
-        "client 僅依 ClientAction 執行 request 與交付 response；不解讀或驅動 AuthFlow",
-        ".send 攜帶既有 immutable HTTPRequest；.finish 是不攜帶 payload 的 terminal action",
-        "不包含 runtime、retry、credential、parser 或 GitHub-specific behavior"
+        "RivetHTTPClient 僅宣告通用 AuthFlow 合約；HTTPClient 不驅動 AuthFlow",
+        "用戶端僅依 ClientAction 執行請求與交付回應；不解讀或驅動 AuthFlow",
+        ".send 攜帶既有不可變 HTTPRequest；.finish 是不攜帶資料的終止動作",
+        "不包含執行期、重送、憑證、剖析器或 GitHub 特定行為"
       ]
     }
   ]
