@@ -60,7 +60,7 @@ struct HTTPClientTests {
   func requestForwardsAnArbitraryMethodAndMatchesExecuteSemantics() async throws {
     let url = try HTTPURL(#require(URL(string: "https://example.com/issues?state=open")))
     let method = HTTPMethod(rawValue: "REPORT")
-    let headers: HTTPHeaders = ["Accept": "application/json", "X-Request-ID": "123"]
+    let headers: HTTPHeaders = [.accept: "application/json", .custom("X-Request-ID"): "123"]
     let body = Data("payload".utf8)
     let expected = HTTPResponse.fixture
     let requestCapture = LockedBox<URLRequest?>(nil)
@@ -138,7 +138,7 @@ private func assertFacade(
   let expected = HTTPResponse.fixture
   let client = HTTPClient(transport: CapturingTransport(captured: captured, response: expected))
   let url = try HTTPURL(#require(URL(string: "https://example.com/issues?state=open")))
-  let headers: HTTPHeaders = ["Accept": "application/json", "X-Request-ID": "123"]
+  let headers: HTTPHeaders = [.accept: "application/json", .custom("X-Request-ID"): "123"]
   let body = Data("payload".utf8)
 
   let response = try await invoke(client, url, headers, body)

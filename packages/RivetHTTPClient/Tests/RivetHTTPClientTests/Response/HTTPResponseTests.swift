@@ -36,13 +36,13 @@ struct HTTPResponseTests {
       case .nonSuccessStatus:
         HTTPResponse(
           statusCode: 404,
-          headers: ["Content-Type": "application/json"],
+          headers: [.contentType: "application/json"],
           body: Data(#"{"message":"hello"}"#.utf8)
         )
       case .plainTextContentType:
         HTTPResponse(
           statusCode: 200,
-          headers: ["Content-Type": "text/plain"],
+          headers: [.contentType: "text/plain"],
           body: Data(#"{"message":"hello"}"#.utf8)
         )
       case .missingContentType:
@@ -59,7 +59,7 @@ struct HTTPResponseTests {
   func decodesUTF8BodyUsingDefaultEncoding() {
     let response = HTTPResponse(
       statusCode: 200,
-      headers: ["Content-Type": "text/plain"],
+      headers: [.contentType: "text/plain"],
       body: Data("Rivet".utf8)
     )
 
@@ -79,7 +79,7 @@ struct HTTPResponseTests {
 
   @Test
   func returnsNilForBodyIncompatibleWithRequestedEncodingWithoutMutatingResponse() {
-    let headers: HTTPHeaders = ["Content-Type": "application/octet-stream"]
+    let headers: HTTPHeaders = [.contentType: "application/octet-stream"]
     let body = Data([0xFF])
     let response = HTTPResponse(statusCode: 418, headers: headers, body: body)
 
@@ -94,7 +94,7 @@ struct HTTPResponseTests {
     let response = HTTPResponse.fixture
 
     #expect(response.statusCode == 200)
-    #expect(response.headers == ["Content-Type": "application/json"])
+    #expect(response.headers == [.contentType: "application/json"])
     #expect(response.body == Data("{}".utf8))
   }
 
@@ -102,7 +102,7 @@ struct HTTPResponseTests {
   func decodesBodyWithCallerProvidedDecoder() throws {
     let response = HTTPResponse(
       statusCode: 200,
-      headers: ["Content-Type": "application/json"],
+      headers: [.contentType: "application/json"],
       body: Data(#"{"message":"hello"}"#.utf8)
     )
 
@@ -115,7 +115,7 @@ struct HTTPResponseTests {
   func usesCallerProvidedDecoderConfiguration() throws {
     let response = HTTPResponse(
       statusCode: 200,
-      headers: ["Content-Type": "application/json"],
+      headers: [.contentType: "application/json"],
       body: Data(#"{"display_name":"Ada"}"#.utf8)
     )
     let decoder = JSONDecoder()
@@ -152,7 +152,7 @@ struct HTTPResponseTests {
   func semanticallyDecodesBodyWithCallerProvidedDecoder() throws {
     let response = HTTPResponse(
       statusCode: 200,
-      headers: ["Content-Type": "application/json"],
+      headers: [.contentType: "application/json"],
       body: Data(#"{"message":"hello"}"#.utf8)
     )
 
@@ -165,7 +165,7 @@ struct HTTPResponseTests {
   func semanticallyUsesCallerProvidedDecoderConfiguration() throws {
     let response = HTTPResponse(
       statusCode: 200,
-      headers: ["Content-Type": "application/json"],
+      headers: [.contentType: "application/json"],
       body: Data(#"{"display_name":"Ada"}"#.utf8)
     )
     let decoder = JSONDecoder()

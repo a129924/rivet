@@ -14,7 +14,7 @@ struct RequesterTests {
     let request = HTTPRequest(
       url: url,
       method: .post,
-      headers: ["Accept": "application/json", "X-Request-ID": "123"],
+      headers: [.accept: "application/json", .custom("X-Request-ID"): "123"],
       body: body
     )
 
