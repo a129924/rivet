@@ -70,6 +70,19 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func importRootExtractionRecognizesImportsAfterSemicolons() throws {
+    let source = """
+      import Foundation; import Security
+      @_implementationOnly import struct ApolloAPI.Selection; import RivetHTTPClient
+      """
+
+    #expect(
+      try importedModuleRoots(in: source)
+        == ["Foundation", "Security", "ApolloAPI", "RivetHTTPClient"]
+    )
+  }
+
+  @Test
   func targetContainsOnlyTheLockedSourceFilesAndNoForbiddenImports() throws {
     let sourceDirectory =
       repositoryRoot
@@ -166,7 +179,7 @@ private func rawDependencies(in target: [String: Any]) -> [[String: Any]] {
 
 private func importedModuleRoots(in source: String) throws -> Set<String> {
   let expression =
-    #"(?m)^[\t ]*(?:@[_A-Za-z][_A-Za-z0-9]*(?:\([^\r\n)]*\))?[\t ]+)*"#
+    #"(?m)(?:^|;)[\t ]*(?:@[_A-Za-z][_A-Za-z0-9]*(?:\([^\r\n)]*\))?[\t ]+)*"#
     + #"import[\t ]+(?:(?:typealias|struct|class|enum|protocol|let|var|func)[\t ]+)?"#
     + #"([_A-Za-z][_A-Za-z0-9]*)(?:\.[_A-Za-z][_A-Za-z0-9]*)*"#
   let expressionMatcher = try NSRegularExpression(pattern: expression)
