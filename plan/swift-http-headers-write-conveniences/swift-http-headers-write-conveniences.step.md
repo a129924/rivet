@@ -19,7 +19,7 @@ PR comment review and fix。feature branch 已 rebase 到 `origin/dev` 的 `599d
 
 ## Blockers
 
-- 無已知技術 blocker；`DL-01` 尚未開始。
+- 無已知技術 blocker；等待 `CR-01` comment-review and fix completion。
 
 ## Human Check
 
