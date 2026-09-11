@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-RV-04 external Code-Reviewer 已 `approved`／`pass`，且只完成 IM-04 snapshot 的 pre-integration review，不構成 delivery approval。CF-01 為 `pending / eligible` 的下一 gate，且只能建立 non-delivery comment-fix commit。TE-04 已 pass，但 `docs/architecture/README.md` 的 `origin/dev` base conflict 與未提交 comment fixes 使 merge/delivery 不安全。DL-01 已完成且 PR 已進入 human review；RV-02 與 RV-03 的歷史 verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。IN-01、TE-05、RV-05、DL-02 維持 `pending`。唯一可前進的 corrective route 為 CF-01 → IN-01 → TE-05 → RV-05；只有 RV-05 明示 `approved` 後，才可進入 DL-02。
+CF-01 已完成 local-only non-delivery commit `ed6a957`，所有 hooks pass，且未 push。IN-01 為 `pending / eligible` 的下一 gate，只可 non-force merge `origin/dev` 並處理指定 README semantic hunk。TE-04 已 pass，但 `docs/architecture/README.md` 的 `origin/dev` base conflict 仍使 delivery 不安全。DL-01 已完成且 PR 已進入 human review；RV-02 與 RV-03 的歷史 verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。TE-05、RV-05、DL-02 維持 `pending`。唯一可前進的 corrective route 為 IN-01 → TE-05 → RV-05；只有 RV-05 明示 `approved` 後，才可進入 DL-02。
 
 ## Goal
 
@@ -83,15 +83,15 @@ RV-04 external Code-Reviewer 已 `approved`／`pass`，且只完成 IM-04 snapsh
 | AM-05 | completed | Plan-Creator | 依 TE-04 delivery blocker 修正 corrective route。 | 四份 artifacts 一致記錄 pre-integration review、single comment-fix commit、non-force merge、README semantic hunk、TE-05/RV-05 與 DL-02 fresh gate；不改 API/scope。 | Plan-Creator 僅修改四份 topic planning artifacts；未修改產品/docs/tests，未執行 Git 或 delivery。 |
 | PR-07 | completed | Plan-Reviewer | 獨立審查 AM-05 corrective route。 | 發出明示 verdict；確認 pre-integration review、non-delivery commit、non-force merge、README semantic hunk、TE-05/RV-05/DL-02 gate 與既定 contract/scope 一致。 | External Plan-Reviewer verdict `approved`／`pass`；findings：none。 |
 | RV-04 | completed | Code-Reviewer | 獨立 pre-integration review，且只 review IM-04 snapshot。 | 明示 verdict；只確認 IM-04 snapshot 是否可進入 authorized comment-fix commit，不得產生 delivery approval 或重寫歷史 verdict。 | External Code-Reviewer verdict `approved`／`pass`；IM-04 snapshot 可進入 CF-01；非 delivery approval。 |
-| CF-01 | pending / eligible | Code-Implementer | 在 RV-04 `approved` 後建立 single authorized comment-fix commit。 | commit 只包含既有 comment fixes；明確標示非 delivery completion，且不得 push、resolve thread、rebase 或 force push。 | RV-04 `approved`／`pass`；CF-01 eligible，等待 Code-Implementer。 |
-| IN-01 | pending | Code-Implementer | 在 CF-01 後 non-force merge `origin/dev`。 | 只 resolve `docs/architecture/README.md` 的單一 semantic hunk；同時保留 `GitHubIntegration` implemented/deferred wording 與 HTTP decoded payload `Decodable & Sendable` sentence；不得 rebase、force push 或單方覆寫。 | 等待 CF-01 completion。 |
+| CF-01 | completed | Code-Implementer | 在 RV-04 `approved` 後建立 single authorized comment-fix commit。 | commit 只包含既有 comment fixes；明確標示非 delivery completion，且不得 push、resolve thread、rebase 或 force push。 | Local-only commit `ed6a957`；all hooks pass；non-delivery、未 push。 |
+| IN-01 | pending / eligible | Code-Implementer | 在 CF-01 後 non-force merge `origin/dev`。 | 只 resolve `docs/architecture/README.md` 的單一 semantic hunk；同時保留 `GitHubIntegration` implemented/deferred wording 與 HTTP decoded payload `Decodable & Sendable` sentence；不得 rebase、force push 或單方覆寫。 | CF-01 completed；IN-01 eligible，等待 Code-Implementer。 |
 | TE-05 | pending | Tester | 獨立驗證 IN-01 merge 結果與既有 TestCase。 | 如實回報 README hunk preservation、scope、verification evidence 與 blocker；不得發布 delivery verdict。 | 等待 IN-01 completion。 |
 | RV-05 | pending | Code-Reviewer | 獨立審查 IN-01 與 TE-05 evidence，產生 fresh delivery verdict。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check`；不得借用 RV-03、LR-01 或 RV-04 作為 delivery approval。 | 等待 TE-05 completion。 |
 | DL-02 | pending | Code-Implementer | 依 human authority push fix，並只 resolve 已完成 threads。 | RV-05 明示 `approved`、無 unresolved blocker、human delivery authority 存在；PR 維持 human review boundary。 | 等待 RV-05 fresh `approved`。 |
 
 ## Blockers
 
-- delivery blocker：`docs/architecture/README.md` 的 `origin/dev` base conflict 與未提交 comment fixes。流程 blocker 為 CF-01、IN-01、TE-05、RV-05 尚未完成。DL-02 是 `pending`，不得以 RV-03、LR-01、RV-04 或既有 human delivery authority 單獨前進。
+- delivery blocker：`docs/architecture/README.md` 的 `origin/dev` base conflict。流程 blocker 為 IN-01、TE-05、RV-05 尚未完成。DL-02 是 `pending`，不得以 RV-03、LR-01、RV-04 或既有 human delivery authority 單獨前進。
 
 ## Human Check
 
@@ -102,4 +102,4 @@ RV-04 external Code-Reviewer 已 `approved`／`pass`，且只完成 IM-04 snapsh
 
 ## Last Updated
 
-2026-09-11 — RV-04 external Code-Reviewer `approved`／`pass`，只為 pre-integration snapshot review，非 delivery approval；CF-01 `pending / eligible`，IN-01、TE-05、RV-05、DL-02 維持 pending。
+2026-09-11 — CF-01 local-only non-delivery commit `ed6a957`，all hooks pass、未 push；IN-01 `pending / eligible`，TE-05、RV-05、DL-02 維持 pending。
