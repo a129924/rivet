@@ -10,20 +10,22 @@
 
 ## Non-Goal
 
-不實作 Keychain、設定 UI、REST authorizer/API adapter、OAuth、refresh、re-auth、401 retry、多帳號、GitHub Enterprise、GraphQL、Apollo、HTTP/transport policy、Domain failure mapping、`async`、cancellation 或 `Sendable`。
+不實作 Keychain、設定 UI、REST authorizer/API adapter、OAuth、refresh、re-auth、401 retry、多帳號、GitHub Enterprise、GraphQL、Apollo、HTTP/transport policy、Domain failure mapping、`async`、cancellation，或除 `TokenStoreOperation: Sendable` 外的 concurrency contract。
 
 ## In-Scope
 
 - 新增 root `Package.swift` 的單一 `GitHubIntegration` product、target 與 test target；source path 為 `Sources/BoundedContexts/GitHubIntegration`，tests 為 `Tests/GitHubIntegrationTests/`。
 - 新增 `GitHubAccessToken`、`TokenStoreOperation`、`TokenStoreError`、`GitHubCredentialError`。
+- `TokenStoreOperation` 唯一新增 public `Sendable` conformance，作為 Swift 6 warnings-as-errors remediation；不擴大其他 public API 的 concurrency contract。
 - 新增 typed-throws `GitHubTokenStore` 與 `GitHubTokenProvider` protocols。
 - 新增 public `TokenStoreGitHubTokenProvider`，以 `init(store: any GitHubTokenStore)` 注入 store，並實作指定 failure mapping。
-- 最小更新 architecture README 與 bounded-contexts index，記錄已實作的 shared-module token contract，且維持其餘 GitHub integration capability deferred。
+- 最小更新 `docs/design-principles.md`、architecture README、bounded-contexts index 與 PR Inbox BC 文件，記錄已實作的 shared-module token contract，且維持其餘 GitHub integration capability deferred。
+- 以 `architecture-canvas` validation/build 更新 bounded-context map 的 `scene.js` 與生成 `index.html`，不再將此受限 module 標示為未實作；不得發布 artifact.cafe。
 
 ## Out-Of-Scope
 
 - 新增 module/target，或將 folder organization 解讀為 architecture boundary。
-- `RivetHTTPClient`、PR Inbox、PR Reader 或任何 Domain target 的依賴、source、tests 或 manifests 變更。
+- `RivetHTTPClient`、PR Inbox、PR Reader 或任何 Domain target 的依賴、source、tests 或 manifests 變更；唯一允許的是 PR Inbox BC 文件的 factual architecture writeback。
 - Keychain、Security、REST、GraphQL/Apollo、OAuth、token lifecycle 或 HTTP status policy。
 
 ## Swift Physical Layout
@@ -47,7 +49,7 @@ Tests/GitHubIntegrationTests/
 ## Public Contract
 
 - `GitHubAccessToken` 公開 `rawValue` 與 `init(rawValue:)`；不驗證、正規化、輸出或記錄 token。
-- `TokenStoreOperation` 為 `.load`、`.save`、`.delete`。
+- `TokenStoreOperation: Sendable` 為 `.load`、`.save`、`.delete`；此為唯一新增的 public concurrency conformance。
 - `TokenStoreError` 公開保存 `operation`、`underlyingError`，並有 `init(operation:underlyingError:)`。
 - `GitHubCredentialError` 為 `.missingCredential`、`.tokenStore(TokenStoreError)`。
 - `GitHubTokenStore` 的 `load()`、`save(_:)`、`delete()` 都是 `throws(TokenStoreError)`；`load()` 回傳 optional token。
@@ -58,7 +60,7 @@ Tests/GitHubIntegrationTests/
 
 ### ReadOnly
 
-`RivetHTTPClient`、PR Inbox、PR Reader、所有 other Domain target/source/tests、既有 HTTP/GraphQL source/tests、architecture diagrams 與既有 BC boundary decisions。
+`RivetHTTPClient`、PR Inbox、PR Reader、所有 other Domain target/source/tests、既有 HTTP/GraphQL source/tests、除 bounded-context map 外的 architecture diagrams，以及既有 BC boundary decisions。
 
 ### Written
 
@@ -66,13 +68,18 @@ Tests/GitHubIntegrationTests/
 - `Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubTokenStore.swift`
 - `Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubTokenProvider.swift`
 - `Sources/BoundedContexts/GitHubIntegration/Providers/TokenStoreGitHubTokenProvider.swift`
-- `Tests/GitHubIntegrationTests/` 的 contract/provider tests。
+- `Tests/GitHubIntegrationTests/GitHubTokenProviderTests.swift` 的 contract/provider tests 與 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 的 static-isolation test。
+- `docs/architecture/bounded-contexts/pr-reader.md` 與 `docs/github-api/README.md` 的 canonical factual writeback：只更新為已實作的 `GitHubIntegration` token contract，並保留 Keychain、authorizer、REST 與 OAuth lifecycle deferred。
 - 四份同 slug planning artifacts。
 
 ### Modify
 
 - Root `Package.swift`：只加入 `GitHubIntegration` product、target、test target 與 source/test paths。
-- `docs/architecture/README.md`、`docs/architecture/bounded-contexts/README.md`：僅回寫本 topic 已鎖定的 contract 事實；不改變 BC boundary 或 deferred responsibility。
+- `Sources/BoundedContexts/GitHubIntegration/Contracts/CredentialTypes.swift`：只新增 `TokenStoreOperation: Sendable`；不改變其他 API 或 failure mapping。
+- `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：以 structured package/target graph assertion 取代 substring checks，驗證四個 production source paths 的 exact set、枚舉實際 target sources、檢查禁止 imports，並驗收 `TokenStoreOperation: Sendable` compile contract；不得新增其他 test source 或 scope。
+- `docs/design-principles.md`、`docs/architecture/README.md`、`docs/architecture/bounded-contexts/README.md`、`docs/architecture/bounded-contexts/pr-inbox.md`：僅回寫本 topic 已鎖定的 contract 事實；不改變 BC boundary 或 deferred responsibility。
+- `docs/architecture/bounded-contexts/pr-reader.md`、`docs/github-api/README.md`：只將「若建立／未來／尚未實作」的 `GitHubIntegration` token-contract 描述更新為已實作，並保留 Keychain、authorizer、REST 與 OAuth lifecycle deferred；不得新增 API、scope 或 architecture decision。
+- `docs/architecture/diagrams/bounded-context-map/scene.js` 與生成 `index.html`：只同步已實作的 access-token contract 與 deferred capability，必須以 `architecture-canvas` validation/build 產生；不得發布 artifact.cafe。
 
 ### Deleted
 
@@ -86,12 +93,15 @@ Tests/GitHubIntegrationTests/
 - mock store 的 `load()` typed-throw `TokenStoreError` 時，provider 拋出 `.tokenStore`，保留 `.load` 與 original underlying error。
 - 外部 mock store 可符合三個 typed-throws methods，並使用 public `TokenStoreError` initializer。
 - provider 可由 `init(store:)` 注入 mock store，並符合 `GitHubTokenProvider`。
+- `TokenStoreOperation` 的 public `Sendable` conformance 可通過編譯期驗證，且其他 public token/store/provider contract 不新增 concurrency conformance。
+- static-isolation test 必須以 structured package/target graph assertion 驗證 single target、四個 production source paths 的 exact set、actual target source enumeration 與禁止 imports；不得用 substring check 取代此驗證。
 - package target/test-target layout、target dependency 與 imports 維持 isolation；執行 root `swift test` 及 `git diff --check`。
+- bounded-context map source/generated artifact 通過 `architecture-canvas` validation/build，並如實呈現已實作的受限 shared module。
+- PR Reader BC 文件與 GitHub API README 如實呈現已實作的 token contract，並保留 Keychain、authorizer、REST 與 OAuth lifecycle deferred。
 
 ## Implementation Handoff
 
 1. 取得獨立 Plan-Reviewer 對本 topic 四份 artifacts 的明示 `approved` verdict。
-2. Implementer 只在 feature worktree 依上述 layout 寫入 Written/Modify targets；不得重開 locked API、failure mapping、target dependency、scope 或 Non-Goal。
-3. Tester 獨立執行 contract/isolation checks、root `swift test` 與 `git diff --check`，如實回報結果。
-4. Reviewer 獨立審查 implementation、evidence、scope 與 workflow drift，發出明示 verdict。
-5. 僅當 Reviewer 為 `approved` 且 human delivery authority 已存在時，Implementer 可進行 topic commit、push、draft PR。draft PR 開啟後停止並交還 human review；不得自動 merge 或 release。
+2. Implementer 只在 feature worktree 依上述 layout 寫入 Written/Modify targets；human 授權的 amendment 限於 `CredentialTypes.swift` 的 `TokenStoreOperation: Sendable`、`StaticIsolationTests.swift` 的 graph/source/import/Sendable checks，以及列出的 canonical truth/map writeback。`pr-reader.md` 與 GitHub API README 只能改為已實作 token contract、Keychain/authorizer/REST/OAuth lifecycle deferred。bounded-context map 必須透過 `architecture-canvas` validation/build 更新，且不得發布 artifact.cafe；不得新增其他 source/test，或重開其餘 locked API、failure mapping、target dependency、scope、Non-Goal 或 architecture decision。
+3. PR-04 approved 後，fresh corrective route 只允許 IM-03 修改 `pr-reader.md` 與 GitHub API README 的 factual status；TE-03 由獨立 Tester 驗證兩份文件，RV-03 由獨立 Code-Reviewer 審查並發出明示 verdict。
+4. DL-02 僅當 RV-03 為 `approved` 且既有 human delivery authority 存在時，Implementer 可 commit、push，並只 resolve 已完成的 PR threads。PR 維持 human review boundary；不得自動 merge 或 release。

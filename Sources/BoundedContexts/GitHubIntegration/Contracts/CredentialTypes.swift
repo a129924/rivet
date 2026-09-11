@@ -6,7 +6,7 @@ public struct GitHubAccessToken {
   }
 }
 
-public enum TokenStoreOperation {
+public enum TokenStoreOperation: Sendable {
   case load
   case save
   case delete

@@ -304,7 +304,7 @@ const BANDS = [
   { id: 'band-adapter', plane: 'adapter', x: 160, y: 1260, w: 1260, h: 250, alpha: 0.48,
     hdr: { x: 184, y: 1290, t: '各 BC 的 GitHub 轉接器 — BC 內部的外部轉換邊界' }, tagr: { x: 1396, y: 1290, t: '轉接器可依賴共享模組', alpha: 0.6 } },
   { id: 'band-integration', plane: 'integration', x: 160, y: 1600, w: 1260, h: 200, alpha: 0.5,
-    hdr: { x: 184, y: 1630, t: 'GitHub 專用共享整合模組' }, tagr: { x: 1396, y: 1630, t: '非 BC · 尚未實作 · 對 BC 無知', alpha: 0.6 } },
+    hdr: { x: 184, y: 1630, t: 'GitHub 專用共享整合模組' }, tagr: { x: 1396, y: 1630, t: '非 BC · token contract 已實作 · 對 BC 無知', alpha: 0.6 } },
   { id: 'band-outside', plane: 'outside', x: 160, y: 1890, w: 1260, h: 166, alpha: 0.48,
     hdr: { x: 184, y: 1920, t: '外部世界 — GitHub.com' }, tagr: { x: 1396, y: 1920, t: '外部系統', alpha: 0.6 } }
 ];
@@ -339,7 +339,7 @@ const BOXES = [
   { id: 'reader-adapter', plane: 'adapter', band: 'band-adapter', x: 800, y: 1320, w: 540, h: 120, r: 10,
     name: 'PR Reader GitHub 轉接器', about: '僅為 Reader Port 將 GitHub node 與技術分類轉換成 Reader 詞彙。', texts: [['bl', 824, 1348, 'PR Reader GitHub 轉接器'], ['bs', 824, 1370, '端點媒體型別 · node 轉換'], ['bs', 824, 1386, 'GitHub 技術分類 → Reader 失敗契約'], ['bn', 824, 1408, 'Reader 業務意義只留在此處']] },
   { id: 'github-integration', plane: 'integration', band: 'band-integration', x: 260, y: 1670, w: 1060, h: 104, r: 10,
-    name: 'GithubIntegration', about: '尚未實作的 GitHub 專用共享整合模組，只集中可跨 BC 共用的 raw 技術機制。', texts: [['bl', 284, 1698, 'GithubIntegration（未來邊界）'], ['bs', 284, 1720, 'raw 傳輸 · 認證 · 共通標頭／API version'], ['bs', 284, 1736, '分頁 · 速率限制 · 重試 · GitHub 技術分類'], ['bn', 284, 1758, '不定義 BC 詞彙、失敗契約或 GithubService']] },
+    name: 'GitHubIntegration', about: '已實作的 GitHub 專用共享 lower capability，目前只提供 access-token store/provider contract。', texts: [['bl', 284, 1698, 'GitHubIntegration（已實作受限能力）'], ['bs', 284, 1720, 'access-token store/provider contract'], ['bs', 284, 1736, '延後：raw 傳輸 · 認證 · 共通標頭／API version · 分頁 · 重試'], ['bn', 284, 1758, '不定義 BC 詞彙、失敗契約或 GitHubService']] },
   { id: 'github-rest', plane: 'outside', band: 'band-outside', x: 190, y: 1950, w: 580, h: 68, r: 10,
     name: 'GitHub REST API', about: '各 BC 轉接器經由共享技術機制可使用的外部 REST 協定。', texts: [['bl', 214, 1978, 'GitHub REST API'], ['bs', 214, 2000, '外部端點 · 回應']] },
   { id: 'github-graphql', plane: 'outside', band: 'band-outside', x: 810, y: 1950, w: 580, h: 68, r: 10,
@@ -365,16 +365,16 @@ const EDGES = [
 const TEXTS = [
   { s: 'title', x: 160, y: 86, t: 'Rivet — 限界上下文地圖' },
   { s: 'sub', x: 160, y: 118, t: '個人 GitHub PR 工作台：BC 轉接器 → 共享技術機制 → GitHub API' },
-  { s: 'tag', x: 160, y: 146, runs: [{ t: 'PR Inbox', fill: C.green }, { t: ' ║ ', fill: '#4A5462' }, { t: 'PR Reader', fill: C.green }, { t: ' → 各自的轉接器 → ', fill: '#4A5462' }, { t: 'GithubIntegration', fill: planeColor('integration') }] },
+  { s: 'tag', x: 160, y: 146, runs: [{ t: 'PR Inbox', fill: C.green }, { t: ' ║ ', fill: '#4A5462' }, { t: 'PR Reader', fill: C.green }, { t: ' → 各自的轉接器 → ', fill: '#4A5462' }, { t: 'GitHubIntegration', fill: planeColor('integration') }] },
   { s: 'legend', x: 1082, y: 86, t: '虛線 — 內部擁有的抽象' },
   { s: 'legend', x: 1082, y: 110, t: '實線 — 應用介面、技術機制與外部系統' },
   { s: 'legend', x: 1143, y: 134, t: '顏色 — 所屬層級' },
   { s: 'plane', x: 470, y: 775, t: 'PR Inbox', anchor: 'center', fill: planeColor('usecase') },
   { s: 'plane', x: 1070, y: 775, t: 'PR Reader', anchor: 'center', fill: planeColor('usecase') },
   { s: 'plane', x: 620, y: 985, t: '內部擁有的 Port 與失敗契約', anchor: 'center', fill: planeColor('port') },
-  { s: 'bn', x: 160, y: 2144, t: '不變量：BC Domain、UseCase、Port 不依賴 GithubIntegration；BC 之間沒有編譯期相依' },
+  { s: 'bn', x: 160, y: 2144, t: '不變量：BC Domain、UseCase、Port 不依賴 GitHubIntegration；BC 之間沒有編譯期相依' },
   { s: 'bn', x: 160, y: 2164, t: '不變量：各 BC 轉接器擁有端點媒體型別、DTO／node 轉換、失敗映射與業務意義' },
-  { s: 'bn', x: 160, y: 2184, t: 'GithubIntegration 對所有 BC 無知、尚未實作；RivetHTTPClient 維持通用且不知 GitHub 的基礎' },
+  { s: 'bn', x: 160, y: 2184, t: 'GitHubIntegration 對所有 BC 無知；僅 token contract 已實作，其他能力延後；RivetHTTPClient 維持通用且不知 GitHub 的基礎' },
   { s: 'bn', x: 160, y: 2204, t: '本圖只表達編譯期依賴；不表達 Reviewer、View 或 Session 的 runtime navigation／request flow' }
 ];
 

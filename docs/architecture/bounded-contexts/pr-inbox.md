@@ -19,7 +19,7 @@
 - PR Inbox 透過自己擁有的 Port 取得資料；它不直接依賴 PR Reader。
 - 對 Presentation 提供穩定的 Inbox Facade；Presentation Session 可在重新整理後保留目前選取狀態。
 - 未來若需 GitHub 資料，僅 PR Inbox 自己的 Infra 可擁有 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping；它不與 PR Reader 或其他 BC 共用 adapter。
-- 未來的 non-BC `GithubIntegration` 若被建立，只有此 Infra 可依賴其 raw transport、authentication、共通 request headers／API version、pagination、rate-limit、retry、GitHub error technical classification 與 shared configuration；它不依賴任何 BC。GitHub DTO translation、technical classification 到 Inbox failure contract 的 mapping 與 Inbox business meaning 仍只留在此 Infra；它們不會進入 Core、UseCase 或 Port，且不形成 shared BC failure contract。
+- 已實作的 non-BC `GitHubIntegration` 目前只提供 access-token store/provider contract；未來只有此 Infra 可依賴其 deferred raw transport、authentication、共通 request headers／API version、pagination、rate-limit、retry、GitHub error technical classification 與 shared configuration。它不依賴任何 BC。GitHub DTO translation、technical classification 到 Inbox failure contract 的 mapping 與 Inbox business meaning 仍只留在此 Infra；它們不會進入 Core、UseCase 或 Port，且不形成 shared BC failure contract。
 
 ## Failure Contract
 
