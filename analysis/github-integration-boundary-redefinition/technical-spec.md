@@ -35,7 +35,7 @@ GitHub REST / GraphQL API
 
 - 允許：BC Infrastructure GitHub Adapter → `GithubIntegration`。
 - 禁止：`GithubIntegration` → 任一 BC；BC Domain／UseCase／Application Port → `GithubIntegration`；BC Domain → 其他 BC Domain。
-- `GithubIntegration` 僅提供 raw transport 與 GitHub error technical classification；它不得產生 shared BC failure contract。Adapter 擁有 endpoint-specific media type、外部 GitHub DTO／GraphQL node 到 BC vocabulary 的 translation、該 classification 到 BC failure contract 的 mapping，以及 BC business meaning。
+- `GithubIntegration` 若未來建立，僅提供 raw transport、authentication mechanism、共通 request headers／API version、pagination、rate-limit、retry、GitHub error technical classification 與 shared configuration 等 technical mechanisms；這些均非已實作 policy，且它不得產生 shared BC failure contract。Adapter 擁有 endpoint-specific media type、外部 GitHub DTO／GraphQL node 到 BC vocabulary 的 translation、該 classification 到 BC failure contract 的 mapping，以及 BC business meaning。
 
 ## KEEP／MOVE／SPLIT／REMOVE
 

@@ -41,7 +41,7 @@ Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validato
 - **PR Reader**：提供單一 PR 的背景、討論、checks、檔案與 diff 閱讀資料；不決定 Inbox membership。
 - **Presentation Session**：擁有目前選取的 PR 與切換狀態；它屬於 Presentation，不屬於任何 Bounded Context。
 - PR Inbox 與 PR Reader 不直接依賴彼此，也不建立 BC-to-BC compile-time dependency。各 BC 的 Core、UseCase 與 Port 不依賴 GitHub protocol 或 transport；未來各自的 Infra 隔離 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping。
-- `GithubIntegration` 是未實作、位於 BC 外的 shared GitHub-specific integration module，不是 Supporting BC 或集中 adapter 邊界。未來只有各 BC Infra 可依賴其 raw transport、authentication、共通 request headers／API version、GitHub error technical classification 與 shared configuration；它不依賴任何 BC，也不產生 shared BC failure contract。各 BC Infra 仍各自擁有 DTO translation、technical classification 到其 failure contract 的 mapping 與 business meaning。
+- `GithubIntegration` 是未實作、位於 BC 外的 shared GitHub-specific integration module，不是 Supporting BC 或集中 adapter 邊界。未來只有各 BC Infra 可依賴其 raw transport、authentication mechanism、共通 request headers／API version、pagination、rate limit、retry、GitHub error technical classification 與 shared configuration；上述均為 future mechanism，並非已實作 policy。它不依賴任何 BC，也不產生 shared BC failure contract。各 BC Infra 仍各自擁有 DTO translation、technical classification 到其 failure contract 的 mapping 與 business meaning。
 - 此 boundary 決定 supersede `github-integration-auth-boundary`／PR #17 的 Supporting BC 敘述；該舊決定僅保留為歷史 traceability。
 
 ## PR Reader WebView Diff Pipeline
