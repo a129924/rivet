@@ -55,7 +55,17 @@
   PRInbox target 的 `.swift` source，並保留既有 banned import／network token checks。
   此輸入不重開既有 contract；PC-04 只更新 artifacts。PR-04 已由獨立 Plan-Reviewer 明示
   `approved`；IM-03 已在下列三個 locked paths 完成 selected review fixes；TE-03 已對六個
-  指定 validation commands 與 8 個 tests 明示 `approved`。RV-04 是唯一 current pending gate：
+  指定 validation commands 與 8 個 tests 明示 `approved`。RV-04 未收到 Reviewer 明示
+  verdict，現保留為 historical／no-verdict 紀錄；不得將後續 merge 或 human decision
+  解讀為 RV-04 approval：
   `Sources/BoundedContexts/PRInbox/ReviewRequestCandidate.swift`、
   `Tests/RivetPRInboxTests/ContractTests.swift`、
   `Tests/RivetPRInboxTests/StaticIsolationTests.swift`。不得修改其他 source 或 test path。
+- 2026-09-11 Human 明示 PR #12 的合併是 HC-03 的最終處置。merge evidence 為 commit
+  `52937bfb1bb275771705a1a4f7e9511abfe67238`（`Merge pull request #12`），已包含於
+  `origin/dev` 與目前 feature HEAD lineage。HC-03 已完成，topic 已結案且不再有 pending
+  gate；此最終處置不補造或取代缺少的 RV-04 Reviewer verdict。
+
+## Last Updated
+
+2026-09-11

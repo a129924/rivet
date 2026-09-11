@@ -76,8 +76,8 @@ validation commands 明示 `approved`。RV-02 的 code review verdict 是
 declaration，並使 ledger 如實反映上述 evidence。PC-03 不授權任何 source、test 或
 其他非-artifact path 變更。獨立 Plan-Reviewer 已對 PR-03 明示 `approved`。RV-03 曾被指定為
 review gate，但未記錄任何 verdict、delivery 或 review-thread resolution 結果；本次
-human-authorized PR comment amendment 已將它取代為 historical／superseded 紀錄。PR-04 是唯一
-current pending gate。
+human-authorized PR comment amendment 已將它取代為 historical／superseded 紀錄。PR-04 已完成，
+且不再有 current pending planning gate。
 
 ### Selected PR Comment Amendment
 
@@ -88,7 +88,8 @@ semantics。
 
 PR-04 已由獨立 Plan-Reviewer 明示 `approved`。IM-03 已在下列三個 locked paths 完成
 selected review fixes；TE-03 已對六個指定 validation commands 與 8 個 tests 明示
-`approved`。RV-04 是唯一 current pending gate。實作範圍只可修改：
+`approved`。RV-04 未收到 Reviewer 明示 verdict，現只保留為 historical／no-verdict
+紀錄，不是 current gate。實作範圍只可修改：
 
 - `Sources/BoundedContexts/PRInbox/ReviewRequestCandidate.swift`
 - `Tests/RivetPRInboxTests/ContractTests.swift`
@@ -103,3 +104,15 @@ checks。不得修改 manifest、dependency、GitHub／HTTP／adapter／network�
 Tester 已執行 `swift package dump-package`、`swift test`、`scripts/check-swift-format.sh`、
 `scripts/check-swiftlint.sh`、`scripts/check-swift-coverage.sh` 與 `git diff --check`；這些
 evidence 不等同 approval。
+
+### Final Disposition
+
+2026-09-11 Human 明示 PR #12 的合併是 HC-03 的最終處置。merge evidence 為 commit
+`52937bfb1bb275771705a1a4f7e9511abfe67238`（`Merge pull request #12`），已包含於
+`origin/dev` 與目前 feature HEAD lineage。HC-03 已完成，topic 已結案且不再有 pending
+gate。RV-04 沒有收到任何 Reviewer 明示 verdict；merge 與 human decision 均不得被推導為
+RV-04 approval，也不改寫既有品質紀錄。
+
+## Last Updated
+
+2026-09-11
