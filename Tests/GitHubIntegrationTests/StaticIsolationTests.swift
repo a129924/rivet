@@ -83,6 +83,77 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func importRootExtractionRecognizesBlockCommentsAtImportBoundaries() throws {
+    let source = """
+      /* detail */ import Security
+      import /* reason */ ApolloAPI
+      // import RivetHTTPClient
+      /* import Keychain */
+      """
+
+    #expect(
+      try importedModuleRoots(in: source)
+        == ["Security", "ApolloAPI"]
+    )
+  }
+
+  @Test
+  func importRootExtractionIgnoresSemicolonDelimitedImportsInsideComments() throws {
+    let source = """
+      // ; import RivetHTTPClient
+      /* ; import Keychain */
+      /*
+       * ; import Security
+       */
+      import Foundation
+      """
+
+    #expect(try importedModuleRoots(in: source) == ["Foundation"])
+  }
+
+  @Test
+  func importRootExtractionIgnoresSemicolonDelimitedImportsInsideStringLiterals() throws {
+    let source = """
+      let example = \"; import RivetHTTPClient\"
+      import Foundation
+      """
+
+    #expect(try importedModuleRoots(in: source) == ["Foundation"])
+  }
+
+  @Test
+  func importRootExtractionIgnoresSemicolonDelimitedImportsInsideNestedBlockComments() throws {
+    let source = """
+      /* outer /* ; import RivetHTTPClient */ still outer */
+      import Foundation
+      """
+
+    #expect(try importedModuleRoots(in: source) == ["Foundation"])
+  }
+
+  @Test
+  func importRootExtractionRecognizesImportsAfterMultilineBlockComments() throws {
+    let source = """
+      import /*
+        multiline detail
+      */ Security
+      """
+
+    #expect(try importedModuleRoots(in: source) == ["Security"])
+  }
+
+  @Test
+  func importRootExtractionRecognizesImportsAfterStarPrefixedBlockComments() throws {
+    let source = """
+      import /*
+       * reason
+       */ ApolloAPI
+      """
+
+    #expect(try importedModuleRoots(in: source) == ["ApolloAPI"])
+  }
+
+  @Test
   func targetContainsOnlyTheLockedSourceFilesAndNoForbiddenImports() throws {
     let sourceDirectory =
       repositoryRoot
@@ -178,21 +249,136 @@ private func rawDependencies(in target: [String: Any]) -> [[String: Any]] {
 }
 
 private func importedModuleRoots(in source: String) throws -> Set<String> {
+  let trivia = #"[\t \r\n]"#
   let expression =
-    #"(?m)(?:^|;)[\t ]*(?:@[_A-Za-z][_A-Za-z0-9]*(?:\([^\r\n)]*\))?[\t ]+)*"#
-    + #"import[\t ]+(?:(?:typealias|struct|class|enum|protocol|let|var|func)[\t ]+)?"#
+    #"(?m)(?:^|;)"#
+    + trivia + #"*"#
+    + #"(?:@[_A-Za-z][_A-Za-z0-9]*(?:\([^\r\n)]*\))?"#
+    + trivia + #"+)*"#
+    + #"import"#
+    + trivia + #"+"#
+    + #"(?:(?:typealias|struct|class|enum|protocol|let|var|func)"#
+    + trivia + #"+)?"#
     + #"([_A-Za-z][_A-Za-z0-9]*)(?:\.[_A-Za-z][_A-Za-z0-9]*)*"#
   let expressionMatcher = try NSRegularExpression(pattern: expression)
-  let sourceRange = NSRange(source.startIndex..., in: source)
+  let sourceWithoutTrivia = sourceWithCommentsAndStringLiteralsReplaced(in: source)
+  let sourceRange = NSRange(sourceWithoutTrivia.startIndex..., in: sourceWithoutTrivia)
 
   return Set(
-    expressionMatcher.matches(in: source, range: sourceRange).compactMap { match in
-      guard let moduleRange = Range(match.range(at: 1), in: source) else {
+    expressionMatcher.matches(in: sourceWithoutTrivia, range: sourceRange).compactMap { match in
+      guard let moduleRange = Range(match.range(at: 1), in: sourceWithoutTrivia) else {
         return nil
       }
-      return String(source[moduleRange])
+      return String(sourceWithoutTrivia[moduleRange])
     }
   )
+}
+
+private func sourceWithCommentsAndStringLiteralsReplaced(in source: String) -> String {
+  var sanitized = ""
+  var index = source.startIndex
+
+  while index < source.endIndex {
+    if sourceContains("//", in: source, at: index) {
+      repeat {
+        sanitized.append(sanitizedPlaceholder(for: source[index]))
+        index = source.index(after: index)
+      } while index < source.endIndex && !source[index].isNewline
+      continue
+    }
+
+    if sourceContains("/*", in: source, at: index) {
+      var depth = 0
+
+      repeat {
+        if sourceContains("/*", in: source, at: index) {
+          depth += 1
+          sanitized += "  "
+          index = source.index(index, offsetBy: 2)
+        } else if sourceContains("*/", in: source, at: index) {
+          depth -= 1
+          sanitized += "  "
+          index = source.index(index, offsetBy: 2)
+        } else {
+          sanitized.append(sanitizedPlaceholder(for: source[index]))
+          index = source.index(after: index)
+        }
+      } while index < source.endIndex && depth > 0
+      continue
+    }
+
+    if let hashCount = rawStringHashCount(in: source, at: index) {
+      let (replacement, nextIndex) = stringLiteralReplacement(
+        in: source,
+        startingAt: index,
+        hashCount: hashCount
+      )
+      sanitized += replacement
+      index = nextIndex
+      continue
+    }
+
+    sanitized.append(source[index])
+    index = source.index(after: index)
+  }
+
+  return sanitized
+}
+
+private func sourceContains(
+  _ literal: String,
+  in source: String,
+  at candidate: String.Index
+) -> Bool {
+  source[candidate...].hasPrefix(literal)
+}
+
+private func sanitizedPlaceholder(for character: Character) -> Character {
+  character.isNewline ? character : " "
+}
+
+private func rawStringHashCount(in source: String, at candidate: String.Index) -> Int? {
+  var probe = candidate
+  var hashCount = 0
+
+  while probe < source.endIndex, source[probe] == "#" {
+    hashCount += 1
+    probe = source.index(after: probe)
+  }
+
+  return probe < source.endIndex && source[probe] == "\"" ? hashCount : nil
+}
+
+private func stringLiteralReplacement(
+  in source: String,
+  startingAt start: String.Index,
+  hashCount: Int
+) -> (String, String.Index) {
+  let quoteStart = source.index(start, offsetBy: hashCount)
+  let isMultiline = sourceContains("\"\"\"", in: source, at: quoteStart)
+  let openingLength = hashCount + (isMultiline ? 3 : 1)
+  var replacement = String(repeating: " ", count: openingLength)
+  var probe = source.index(start, offsetBy: openingLength)
+  let closingQuotes = isMultiline ? "\"\"\"" : "\""
+  let closingDelimiter = closingQuotes + String(repeating: "#", count: hashCount)
+  var precedingBackslashCount = 0
+
+  while probe < source.endIndex {
+    let isClosingDelimiter =
+      sourceContains(closingDelimiter, in: source, at: probe)
+      && (hashCount > 0 || precedingBackslashCount.isMultiple(of: 2))
+    if isClosingDelimiter {
+      replacement += String(repeating: " ", count: closingDelimiter.count)
+      return (replacement, source.index(probe, offsetBy: closingDelimiter.count))
+    }
+
+    let character = source[probe]
+    replacement.append(sanitizedPlaceholder(for: character))
+    precedingBackslashCount = character == "\\" ? precedingBackslashCount + 1 : 0
+    probe = source.index(after: probe)
+  }
+
+  return (replacement, probe)
 }
 
 private func sourcePaths(in directory: URL) throws -> Set<String> {
