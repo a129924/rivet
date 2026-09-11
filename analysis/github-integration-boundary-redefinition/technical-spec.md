@@ -9,7 +9,7 @@
 | GitHub authentication、retry、rate-limit 實作 | 不存在。 | 不實作；僅列為 future technical-mechanism 類別。 |
 | `RivetHTTPClient` | 已存在 generic、GitHub-unaware HTTP foundation。 | ReadOnly；不宣稱它是 `GithubIntegration` 的實作。 |
 | PR Inbox | Core／UseCase／Port 不依賴 GitHub 或 HTTP。 | 維持 isolation。 |
-| PR Reader | 僅 Infra 下存在 GitHub GraphQL SDL schema snapshot。 | 維持為 BC-local integration-facing asset，不搬移。 |
+| PR Reader | 僅 Infra 下存在 GitHub GraphQL SDL schema snapshot，定位仍為未驗證 candidate／暫存 asset。 | 本 topic 不判定正式 ownership；不搬移 schema、不指定 replacement target。 |
 | `docs/github-api/README.md` | GitHub capability catalog introduction 與「共通規則」。 | 後續 documentation delivery 可修改 introduction，以及「共通規則」中 shared-module boundary wording；不定義 BC contract、model 或 authentication 實作。 |
 | `docs/github-api/` 其餘 catalog 文件 | GitHub capability reference。 | ReadOnly inventory 依據；不修改 capability content。 |
 | parent `dev` baseline 的 `docs/architecture/README.md` | 將 GitHub Integration 列為 Supporting BC，並導航至 authorization boundary canvas。 | supersede 該 active architecture claim；移除 navigation，保留 PR #17／舊 topic traceability。 |
@@ -42,7 +42,7 @@ GitHub REST / GraphQL API
 | 分類 | 現況結論 | 後續準則 |
 | --- | --- | --- |
 | KEEP | 沒有可搬移的現有 `GithubIntegration` runtime component。`RivetHTTPClient` 維持既有 generic foundation。 | future module 僅可收納 GitHub raw transport、auth mechanism、共通 headers／API version、pagination、rate-limit、retry、GitHub error technical classification、shared configuration；不得收納 shared BC failure contract。 |
-| MOVE | 未發現集中 module 中含 BC semantics 的 component。PR Reader GraphQL SDL 已在 BC Infra，維持原位。 | 任何 Pull Request、Review、Repository、Workflow 的 business interpretation 留在 owning BC adapter。 |
+| MOVE | 未發現集中 module 中含 BC semantics 的 component。PR Reader GraphQL SDL 僅是未驗證 candidate／暫存 asset；本 topic 不據此認定正式 BC-local ownership。 | 任何 Pull Request、Review、Repository、Workflow 的 business interpretation 留在 owning BC adapter。 |
 | SPLIT | 未發現混合 technical mechanism 與 BC semantics 的既有 component。 | 若未來 component 同時執行 transport 並解釋 BC meaning，拆為 shared mechanism 與 BC-local adapter。 |
 | REMOVE | 無 retired runtime code；但舊 Supporting BC 主文件與 authorization boundary canvas 會錯誤地維持 superseded auth/API 方向為 active architecture truth。 | 退役 `docs/architecture/bounded-contexts/github-integration.md` 與 `docs/architecture/diagrams/github-integration-http-client-boundary/`；git history 保留 supersession traceability。 |
 
