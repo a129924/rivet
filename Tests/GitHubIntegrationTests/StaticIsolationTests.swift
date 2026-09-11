@@ -86,6 +86,30 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func importRootExtractionRecognizesEscapedModuleIdentifiers() throws {
+    let source = """
+      @_implementationOnly import `Security`.Cryptography
+      @preconcurrency import struct `ApolloAPI`.Selection
+      public import /* reason */ `Foundation`
+      """
+
+    #expect(
+      try importedModuleRoots(in: source)
+        == ["Security", "ApolloAPI", "Foundation"]
+    )
+  }
+
+  @Test
+  func escapedForbiddenModuleImportsAreDetected() throws {
+    let source = "@_implementationOnly import `ApolloAPI`"
+    let forbiddenImports: Set = ["ApolloAPI"]
+
+    #expect(
+      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
+    )
+  }
+
+  @Test
   func importRootExtractionRecognizesImportsAfterSemicolons() throws {
     let source = """
       import Foundation; import Security
@@ -189,7 +213,7 @@ struct StaticIsolationTests {
       let sourceFile = sourceDirectory.appendingPathComponent(path)
       let source = try String(contentsOf: sourceFile, encoding: .utf8)
 
-      let forbiddenImports: Set = ["RivetHTTPClient", "Security", "Keychain", "Apollo"]
+      let forbiddenImports: Set = ["RivetHTTPClient", "Security", "Keychain", "ApolloAPI"]
       #expect(try importedModuleRoots(in: source).isDisjoint(with: forbiddenImports))
     }
   }
@@ -277,7 +301,7 @@ private func importedModuleRoots(in source: String) throws -> Set<String> {
     + trivia + #"+"#
     + #"(?:(?:typealias|struct|class|enum|protocol|let|var|func)"#
     + trivia + #"+)?"#
-    + #"([_A-Za-z][_A-Za-z0-9]*)(?:\.[_A-Za-z][_A-Za-z0-9]*)*"#
+    + #"`?([_A-Za-z][_A-Za-z0-9]*)`?(?:\.`?[_A-Za-z][_A-Za-z0-9]*`?)*"#
   let expressionMatcher = try NSRegularExpression(pattern: expression)
   let sourceWithoutTrivia = sourceWithCommentsAndStringLiteralsReplaced(in: source)
   let sourceRange = NSRange(sourceWithoutTrivia.startIndex..., in: sourceWithoutTrivia)
