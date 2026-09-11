@@ -70,6 +70,22 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func importRootExtractionRecognizesAccessLevelImports() throws {
+    let source = """
+      private import Security
+      fileprivate import Keychain
+      internal import ApolloAPI
+      package import RivetHTTPClient
+      public import Foundation
+      """
+
+    #expect(
+      try importedModuleRoots(in: source)
+        == ["Security", "Keychain", "ApolloAPI", "RivetHTTPClient", "Foundation"]
+    )
+  }
+
+  @Test
   func importRootExtractionRecognizesImportsAfterSemicolons() throws {
     let source = """
       import Foundation; import Security
@@ -255,6 +271,8 @@ private func importedModuleRoots(in source: String) throws -> Set<String> {
     + trivia + #"*"#
     + #"(?:@[_A-Za-z][_A-Za-z0-9]*(?:\([^\r\n)]*\))?"#
     + trivia + #"+)*"#
+    + #"(?:(?:private|fileprivate|internal|package|public)"#
+    + trivia + #"+)?"#
     + #"import"#
     + trivia + #"+"#
     + #"(?:(?:typealias|struct|class|enum|protocol|let|var|func)"#
