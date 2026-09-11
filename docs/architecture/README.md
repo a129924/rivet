@@ -39,6 +39,7 @@ Swift snapshot → DiffFacade.present → DiffRenderUseCase.execute → Validato
 
 - **PR Inbox**：定義目前明確要求使用者 review 的 open PR 與其排序；不負責單一 PR 的閱讀資料或 UI selection。
 - **PR Reader**：提供單一 PR 的背景、討論、checks、檔案與 diff 閱讀資料；不決定 Inbox membership。
+- **RivetHTTPClient**：BC 外的 generic technical foundation，為 GitHub-unaware internal package，擁有 declarations-only 的 `ClientAction`、`Auth` 與 `AuthFlow` contract；`HTTPClient` 不建立、驅動或解讀 AuthFlow。
 - **Presentation Session**：擁有目前選取的 PR 與切換狀態；它屬於 Presentation，不屬於任何 Bounded Context。
 - PR Inbox 與 PR Reader 不直接依賴彼此，也不建立 BC-to-BC compile-time dependency。各 BC 的 Core、UseCase 與 Port 不依賴 GitHub protocol 或 transport；未來各自的 Infra 隔離 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping。
 - `GitHubIntegration` 是位於 BC 外的 shared GitHub-specific integration module，不是 Supporting BC 或集中 adapter 邊界。目前 root Swift package target 只提供可注入、同步、typed-throws 的 access-token store/provider contract：未保存 token 映射為 missing credential，store load failure 保留為 token-store error；它不實作 persistence 或 authorization。未來只有各 BC Infra 可依賴其 raw transport、authentication mechanism、共通 request headers／API version、pagination、rate limit、retry、GitHub error technical classification 與 shared configuration；上述均為 deferred mechanism，並非已實作 policy。它不依賴任何 BC，也不產生 shared BC failure contract。各 BC Infra 仍各自擁有 DTO translation、technical classification 到其 failure contract 的 mapping 與 business meaning。
@@ -58,6 +59,7 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 - [設計原則](../design-principles.md)：Rivet 的產品取捨與工作方法。
 - [Bounded Context](bounded-contexts/)：每個 BC 的長期責任與邊界。
 - [Bounded Context Map](diagrams/bounded-context-map/index.html)：BC、Presentation Session 與外部邊界的互動式全景圖。
+- [HTTP Client Auth Flow 合約生命週期](diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.html)：RivetHTTPClient 的 generic declarations-only `Auth`／`AuthFlow` state-machine contract；`start()` 與 `receive(response)` 可產出 `.send(HTTPRequest)` 或不攜帶 payload 的 `.finish`，但 HTTPClient 不 drive flow，也不包含 runtime、credential 或 GitHub-specific behavior。
 - [HTTP Client package 結構](diagrams/http-client-package-structure/index.html)：`HTTPClient` 已提供 `request(...)` 與常見 HTTP method facade，並經 `execute → Requester → Transport` 形成 `HTTPURL → HTTPRequest → HTTPResponse` 的最小介面鏈；包含 `URLSessionTransport`、caller-owned JSON convenience 與 header convenience，但不包含 Endpoint 組裝。
 - [Repository Knowledge Map](diagrams/repository-knowledge-map/index.html)：公開讀者與 agent 如何從入口、文件、analysis、plan 走向下一個 BC 切片。
 - [Topic Lifecycle](diagrams/topic-lifecycle/index.html)：正式 topic 從分析、計畫、受限實作到回寫與 human review 的可互動流程圖。

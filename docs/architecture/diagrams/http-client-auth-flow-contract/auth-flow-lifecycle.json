@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "RivetHTTPClient AuthFlow 合約生命週期",
+    "quality_profile": "showcase",
+    "viewBox": [1040, 640],
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "start": { "label": "起始" },
+        "active": { "label": "進行中" },
+        "decision": { "label": "決策" },
+        "neutral": { "label": "中性終態" },
+        "external": { "label": "外部" }
+      }
+    }
+  },
+  "lanes": [
+    { "id": "main", "label": "建立與初始轉換" },
+    { "id": "response", "label": "回應、後續轉換與重送" },
+    { "id": "terminal", "label": "ClientAction 結果" }
+  ],
+  "states": [
+    {
+      "id": "make-flow",
+      "type": "start",
+      "label": "建立流程",
+      "sublabel": "Auth.makeFlow(for:)",
+      "lane": "main",
+      "col": 0,
+      "width": 110,
+      "step": "01",
+      "tag": "入口"
+    },
+    {
+      "id": "auth-flow",
+      "type": "active",
+      "label": "AuthFlow",
+      "sublabel": "HTTPClient 不驅動流程",
+      "lane": "main",
+      "col": 1,
+      "width": 110,
+      "step": "02",
+      "tag": "合約"
+    },
+    {
+      "id": "start",
+      "type": "decision",
+      "label": "start()",
+      "sublabel": "→ .send / .finish",
+      "lane": "main",
+      "col": 2,
+      "width": 115,
+      "step": "03",
+      "tag": "轉換"
+    },
+    {
+      "id": "initial-send",
+      "type": "active",
+      "label": ".send(HTTPRequest)",
+      "sublabel": "start() 的 .send",
+      "lane": "main",
+      "col": 3,
+      "width": 118,
+      "step": "04",
+      "tag": "start() 輸出"
+    },
+    {
+      "id": "client-send",
+      "type": "external",
+      "label": "用戶端送出請求",
+      "sublabel": "依 .send(HTTPRequest)",
+      "lane": "main",
+      "col": 4,
+      "width": 118,
+      "step": "05",
+      "tag": "外部執行"
+    },
+    {
+      "id": "response",
+      "type": "active",
+      "label": "回應",
+      "sublabel": "用戶端收到 HTTPResponse",
+      "lane": "response",
+      "col": 2,
+      "width": 125,
+      "yOffset": -40,
+      "tag": "回應"
+    },
+    {
+      "id": "receive",
+      "type": "decision",
+      "label": "receive(response)",
+      "sublabel": "可產出 .send 或 .finish",
+      "lane": "response",
+      "col": 1,
+      "width": 130,
+      "yOffset": 30,
+      "tag": "轉換"
+    },
+    {
+      "id": "resend",
+      "type": "active",
+      "label": ".send(HTTPRequest)",
+      "sublabel": "receive() 的 .send（重送）",
+      "lane": "response",
+      "col": 1,
+      "width": 130,
+      "yOffset": 120,
+      "tag": "receive() 輸出"
+    },
+    {
+      "id": "start-finish",
+      "type": "neutral",
+      "label": ".finish",
+      "sublabel": "start() 的 .finish",
+      "lane": "terminal",
+      "col": 0,
+      "width": 110,
+      "tag": "start() 輸出"
+    },
+    {
+      "id": "receive-finish",
+      "type": "neutral",
+      "label": ".finish",
+      "sublabel": "receive() 的 .finish",
+      "lane": "terminal",
+      "col": 2,
+      "width": 110,
+      "tag": "receive() 輸出"
+    }
+  ],
+  "transitions": [
+    { "id": "creates", "from": "make-flow", "to": "auth-flow" },
+    { "id": "starts", "from": "auth-flow", "to": "start" },
+    {
+      "id": "start-send",
+      "from": "start",
+      "to": "initial-send",
+      "route": "straight",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "start-finishes",
+      "from": "start",
+      "to": "start-finish",
+      "route": "left-channel"
+    },
+    {
+      "id": "client-sends-initial-request",
+      "from": "initial-send",
+      "to": "client-send"
+    },
+    {
+      "id": "client-receives-response",
+      "from": "client-send",
+      "to": "response"
+    },
+    {
+      "id": "receives-response",
+      "from": "response",
+      "to": "receive"
+    },
+    {
+      "id": "receive-finishes",
+      "from": "receive",
+      "to": "receive-finish",
+      "route": "bottom-channel",
+      "fromSide": "left",
+      "toSide": "bottom",
+      "via": [[480, 337], [480, 540], [710, 540]]
+    },
+    { "id": "receive-resends", "from": "receive", "to": "resend" },
+    {
+      "id": "client-sends-retry",
+      "from": "resend",
+      "to": "client-send",
+      "route": "right-channel",
+      "fromSide": "right",
+      "toSide": "right"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "slate",
+      "title": "合約邊界",
+      "items": [
+        "RivetHTTPClient 僅宣告通用 AuthFlow 合約；HTTPClient 不驅動 AuthFlow",
+        "用戶端僅依 ClientAction 執行請求與交付回應；不解讀或驅動 AuthFlow",
+        ".send 攜帶既有不可變 HTTPRequest；.finish 是不攜帶資料的終止動作",
+        "不包含執行期重送策略／實作、憑證、剖析器或 GitHub 特定行為"
+      ]
+    }
+  ]
+}
