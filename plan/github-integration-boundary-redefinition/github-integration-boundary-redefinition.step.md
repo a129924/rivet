@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PR comment threads 1–5 的最終 tree 尚待新的獨立 Tester／Reviewer verification。PL-03 的 cross-topic artifact correction 只退役失效 writeback 引用；它不改變 HTTP 功能、API、tests、scope 或 gates。TS-04、RV-04 與更早 evidence 只適用於 prior tree，不得用作目前 tree 的 Reviewer 或 human completion。
+TS-05 與 RV-05 已在 delivery tree `f27890a0e2d45b7ff01d6253023fa30c8dd87a3f`／`212f8c165442f3fdab5c26353cff2538ef0b2370` 明示 approved。現行僅進行 ledger audit commit／push，之後交由 HC-01；audit commit 不需重跑 delivery scope gate，且未獲 merge 或 release 授權。
 
 ## Ledger
 
@@ -24,20 +24,20 @@ PR comment threads 1–5 的最終 tree 尚待新的獨立 Tester／Reviewer ver
 | RV-04 | completed | Reviewer | 在 TS-04 `approved` 後，獨立審查 HEAD `c34a7a23` current tree 的 comment resolution、scope isolation 與 evidence，verdict：`approved`。 | 獨立 Reviewer `approved`，無 findings；確認 threads 1–3、TS-04 evidence、scope isolation 與 canvas contract 均通過。不得將此 approval 延伸為 human review、merge 或 release 授權。 |
 | PL-03 | completed | Plan-Creator | 依 human 對 PR comment threads 1–5 的限縮授權，將兩個 HTTP topic 各自四份 planning artifacts 納入 allowlist，並只退役指向已刪除 `github-integration.md` 或舊 authorization boundary asset 的失效 writeback。 | 不指定 replacement target；不改變 HTTP header／JSON decoding 的 behavior、API、tests、scope 或 gates。 |
 | IM-05 | completed | Implementer | 依 human 對 threads 3、5 的限縮授權，補齊 catalog 的 future shared-mechanism boundary wording，並將 PR Reader GraphQL SDL 還原為未驗證 candidate／暫存 asset。 | 僅修改 `docs/github-api/README.md`、`docs/architecture/bounded-contexts/pr-reader.md` 與本 ledger；不宣稱 runtime policy、正式 schema ownership、API 或實作已改變。TS-05 仍須獨立驗證最終 tree。 |
-| TS-05 | completed | Tester | 獨立驗證 threads 1–5 最終 tree，verdict：`approved`。 | 實際 final HEAD／upstream 為 `2b6eac01d6ff23d9190376a7cbaed6659977c3b8`，tree 為 `c9d33368870169be6fdc276545cb43024b3bc195`；`git status --short` 為空、`git diff --check` 通過。architecture-canvas validate 結果為 6 bands／17 boxes／12 edges／0 errors／0 warnings；rebuild 後 `index.html` 與 committed artifact byte-identical，SHA256 為 `f4a1f9ce17692bf5304f78f0c0ceed7c2df8072c1965657449645ec35cd77103`。allowlist 檢查未發現 `packages/`、`Sources/`、`Tests/` 或 `Package.swift` 變更；threads 1–5 的限縮 acceptance 均通過。不得沿用 TS-04 或更早 evidence。 |
-| RV-05 | completed | Reviewer | 在 TS-05 `approved` 後，獨立審查 final delivery tree，verdict：`approved`。 | Reviewer 已驗證 reviewed delivery HEAD／upstream `2b6eac01d6ff23d9190376a7cbaed6659977c3b8`、tree `c9d33368870169be6fdc276545cb43024b3bc195`；`git diff --check` 通過；architecture-canvas 為 6 bands／17 boxes／12 edges／0 errors／0 warnings；threads 1–5 acceptance 與 allowlist isolation 均通過。此 evidence 僅適用於上述 reviewed delivery tree，不延伸至本 audit-evidence commit 或未來 commit。 |
+| TS-05 | completed | Tester | 獨立驗證 threads 1–5 delivery tree，verdict：`approved`。 | 實際 delivery HEAD／upstream 為 `f27890a0e2d45b7ff01d6253023fa30c8dd87a3f`，tree 為 `212f8c165442f3fdab5c26353cff2538ef0b2370`；`git status --short` 為空、`git diff --check` 通過。architecture-canvas validate 結果為 6 bands／17 boxes／12 edges／0 errors／0 warnings；rebuild 後 `index.html` 與 committed artifact byte-identical，SHA256 為 `f4a1f9ce17692bf5304f78f0c0ceed7c2df8072c1965657449645ec35cd77103`。allowlist 檢查未發現 runtime 變更；threads 1–5 的限縮 acceptance 均通過。不得沿用 TS-04 或更早 evidence。 |
+| RV-05 | completed | Reviewer | 在 TS-05 `approved` 後，獨立審查 delivery tree，verdict：`approved`。 | Reviewer 已驗證 reviewed delivery HEAD／upstream `f27890a0e2d45b7ff01d6253023fa30c8dd87a3f`、tree `212f8c165442f3fdab5c26353cff2538ef0b2370`；`git status --short` 為空，`git diff --check 60ca63ed5f666ac2dcc82432c99f359354733995..HEAD` 通過；architecture-canvas 為 6 bands／17 boxes／12 edges／0 errors／0 warnings。`f27890a` 僅包含允許的文件變更；threads 1–5 acceptance 均通過，且無 runtime、API 或 schema drift。此 approval 僅適用於上述 delivery tree，不延伸至本 audit-evidence commit、未來 commit、merge 或 release。 |
 | HC-01 | pending | Human | 僅在 RV-05 明示 `approved` 後進行終端交付 review。 | 不得將 prior-tree approvals、TS-05 或 RV-05 視為 merge 或 release 授權。 |
 
 ## Blockers
 
-- 無已知實作 blocker；TS-05 與 RV-05 對 threads 1–5 最終 tree 的獨立驗證尚未完成。現行 gate 是 TS-05。
+- 無已知實作 blocker；TS-05 與 RV-05 已在 delivery tree 明示 approved。現行僅剩 ledger audit commit／push，完成後進入 HC-01；audit commit 不需重跑 delivery scope gate，且未獲 merge 或 release 授權。
 
 ## Human Check
 
-PR #17／`github-integration-auth-boundary` 僅作 supersession traceability；其 pending gates 不構成本 topic 的前置條件、blocker 或 human gate。HC-01 須等待 TS-05 與 RV-05 對最終 tree 的明示 approved；不得將其視為 merge 或 release 授權。
+PR #17／`github-integration-auth-boundary` 僅作 supersession traceability；其 pending gates 不構成本 topic 的前置條件、blocker 或 human gate。ledger audit commit／push 完成後進入 HC-01；TS-05 與 RV-05 approval 僅適用於 delivery tree，不構成 merge 或 release 授權。
 
 ## Last Updated
 
 - Topic：`github-integration-boundary-redefinition`
-- 更新者：Plan-Creator（依 human threads 1–5 限縮授權更新 allowlist 與 verification routing）
-- 狀態：TS-01 needs-rework 已由 IM-02 回修；TS-02、RV-02、TS-03、TS-04 與 RV-04 保留為 prior-tree 歷史證據。current-tree 路由為 TS-05 → RV-05 → HC-01。
+- 更新者：Implementer（依 Reviewer 指定的 delivery-tree audit correction 回寫 TS-05 與 RV-05 evidence）
+- 狀態：TS-01 needs-rework 已由 IM-02 回修；TS-02、RV-02、TS-03、TS-04 與 RV-04 保留為 prior-tree 歷史證據。TS-05 與 RV-05 已僅就 delivery tree approved；ledger audit commit／push 後進入 HC-01，無 merge 或 release 授權。
