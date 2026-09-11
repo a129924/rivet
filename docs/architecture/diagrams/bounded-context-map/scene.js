@@ -91,7 +91,7 @@ const TEXTS = [
   { s: 'plane', x: 620, y: 985, t: '內部擁有的 Port 與失敗契約', anchor: 'center', fill: planeColor('port') },
   { s: 'bn', x: 160, y: 2144, t: '不變量：BC Domain、UseCase、Port 不依賴 GithubIntegration；BC 之間沒有編譯期相依' },
   { s: 'bn', x: 160, y: 2164, t: '不變量：各 BC 轉接器擁有端點媒體型別、DTO／node 轉換、失敗映射與業務意義' },
-  { s: 'bn', x: 160, y: 2184, t: 'GithubIntegration 對所有 BC 無知、尚未實作；RivetHTTPClient 是 BC 外的通用技術基礎，不知 GitHub' },
+  { s: 'bn', x: 160, y: 2184, t: 'GithubIntegration 對所有 BC 無知、尚未實作；RivetHTTPClient 維持通用且不知 GitHub 的基礎' },
   { s: 'bn', x: 160, y: 2204, t: '本圖只表達編譯期依賴；不表達 Reviewer、View 或 Session 的 runtime navigation／request flow' }
 ];
 
