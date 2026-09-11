@@ -56,7 +56,7 @@ const BOXES = [
   { id: 'reader-adapter', plane: 'adapter', band: 'band-adapter', x: 800, y: 1320, w: 540, h: 120, r: 10,
     name: 'PR Reader GitHub 轉接器', about: '僅為 Reader Port 將 GitHub node 與技術分類轉換成 Reader 詞彙。', texts: [['bl', 824, 1348, 'PR Reader GitHub 轉接器'], ['bs', 824, 1370, '端點媒體型別 · node 轉換'], ['bs', 824, 1386, 'GitHub 技術分類 → Reader 失敗契約'], ['bn', 824, 1408, 'Reader 業務意義只留在此處']] },
   { id: 'github-integration', plane: 'integration', band: 'band-integration', x: 260, y: 1670, w: 1060, h: 104, r: 10,
-    name: 'GitHubIntegration', about: '已實作的 GitHub 專用共享 lower capability，目前只提供 access-token store/provider contract。', texts: [['bl', 284, 1698, 'GitHubIntegration（已實作受限能力）'], ['bs', 284, 1720, 'access-token store/provider contract'], ['bs', 284, 1736, '延後：raw 傳輸 · 認證 · 共通標頭／API version · 分頁 · 重試'], ['bn', 284, 1758, '不定義 BC 詞彙、失敗契約或 GitHubService']] },
+    name: 'GitHubIntegration', about: '已實作的 GitHub 專用共享 lower capability，交付 access-token store/provider 與 shared technical credential errors；不定義 BC failure contract。', texts: [['bl', 284, 1698, 'GitHubIntegration（已實作受限能力）'], ['bs', 284, 1720, 'access-token store/provider · shared technical credential errors'], ['bs', 284, 1736, '延後：raw 傳輸 · 認證 · 共通標頭／API version · 分頁 · 重試'], ['bn', 284, 1758, '不定義 BC failure contract']] },
   { id: 'github-rest', plane: 'outside', band: 'band-outside', x: 190, y: 1950, w: 580, h: 68, r: 10,
     name: 'GitHub REST API', about: '各 BC 轉接器經由共享技術機制可使用的外部 REST 協定。', texts: [['bl', 214, 1978, 'GitHub REST API'], ['bs', 214, 2000, '外部端點 · 回應']] },
   { id: 'github-graphql', plane: 'outside', band: 'band-outside', x: 810, y: 1950, w: 580, h: 68, r: 10,

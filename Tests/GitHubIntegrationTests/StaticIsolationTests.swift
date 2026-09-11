@@ -30,11 +30,43 @@ struct StaticIsolationTests {
       integrationTarget["path"] as? String
         == "Sources/BoundedContexts/GitHubIntegration"
     )
-    #expect(dependencyNames(in: integrationTarget).isEmpty)
+    #expect(rawDependencies(in: integrationTarget).isEmpty)
 
     let integrationTests = try #require(targets["GitHubIntegrationTests"])
     #expect(integrationTests["type"] as? String == "test")
     #expect(dependencyNames(in: integrationTests) == ["GitHubIntegration"])
+  }
+
+  @Test
+  func dependencyExtractionRecognizesAllPackageDescriptionDependencyForms() {
+    let target =
+      [
+        "dependencies": [
+          ["byName": ["ByNameDependency", NSNull()]],
+          ["target": ["TargetDependency", NSNull()]],
+          ["product": ["ProductDependency", "Package", NSNull(), NSNull()]],
+        ]
+      ] as [String: Any]
+
+    #expect(
+      Set(dependencyNames(in: target))
+        == ["ByNameDependency", "TargetDependency", "ProductDependency"]
+    )
+  }
+
+  @Test
+  func importRootExtractionRecognizesAttributesAndScopedImports() throws {
+    let source = """
+      import Foundation
+      @_implementationOnly import Security.Cryptography
+      @preconcurrency import struct ApolloAPI.Selection
+      @_exported import class RivetHTTPClient.HTTPClient
+      """
+
+    #expect(
+      try importedModuleRoots(in: source)
+        == ["Foundation", "Security", "ApolloAPI", "RivetHTTPClient"]
+    )
   }
 
   @Test
@@ -57,9 +89,8 @@ struct StaticIsolationTests {
       let sourceFile = sourceDirectory.appendingPathComponent(path)
       let source = try String(contentsOf: sourceFile, encoding: .utf8)
 
-      for forbiddenImport in ["RivetHTTPClient", "Security", "Keychain", "Apollo"] {
-        #expect(!source.contains("import \(forbiddenImport)"))
-      }
+      let forbiddenImports: Set = ["RivetHTTPClient", "Security", "Keychain", "Apollo"]
+      #expect(try importedModuleRoots(in: source).isDisjoint(with: forbiddenImports))
     }
   }
 
@@ -122,10 +153,33 @@ private func targetNames(in product: [String: Any]) -> [String] {
 }
 
 private func dependencyNames(in target: [String: Any]) -> [String] {
-  let dependencies = target["dependencies"] as? [[String: Any]] ?? []
-  return dependencies.compactMap { dependency in
-    (dependency["byName"] as? [Any])?.first as? String
+  rawDependencies(in: target).compactMap { dependency in
+    ["byName", "target", "product"].lazy.compactMap { representation in
+      (dependency[representation] as? [Any])?.first as? String
+    }.first
   }
+}
+
+private func rawDependencies(in target: [String: Any]) -> [[String: Any]] {
+  target["dependencies"] as? [[String: Any]] ?? []
+}
+
+private func importedModuleRoots(in source: String) throws -> Set<String> {
+  let expression =
+    #"(?m)^[\t ]*(?:@[_A-Za-z][_A-Za-z0-9]*(?:\([^\r\n)]*\))?[\t ]+)*"#
+    + #"import[\t ]+(?:(?:typealias|struct|class|enum|protocol|let|var|func)[\t ]+)?"#
+    + #"([_A-Za-z][_A-Za-z0-9]*)(?:\.[_A-Za-z][_A-Za-z0-9]*)*"#
+  let expressionMatcher = try NSRegularExpression(pattern: expression)
+  let sourceRange = NSRange(source.startIndex..., in: source)
+
+  return Set(
+    expressionMatcher.matches(in: source, range: sourceRange).compactMap { match in
+      guard let moduleRange = Range(match.range(at: 1), in: source) else {
+        return nil
+      }
+      return String(source[moduleRange])
+    }
+  )
 }
 
 private func sourcePaths(in directory: URL) throws -> Set<String> {
