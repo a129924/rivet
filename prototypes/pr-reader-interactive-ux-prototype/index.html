@@ -1,0 +1,1971 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rivet PR Reader — Interactive Mockup</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #090c11;
+      --sidebar: #0d1117;
+      --surface: #11161e;
+      --surface-raised: #171d27;
+      --surface-selected: #1a2635;
+      --line: #272e38;
+      --line-strong: #36404d;
+      --text: #eef2f7;
+      --text-secondary: #b4beca;
+      --text-muted: #7f8a98;
+      --blue: #62a9f6;
+      --blue-soft: rgba(98, 169, 246, 0.14);
+      --green: #6fd396;
+      --red: #eb8585;
+      --amber: #d8b96c;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--page);
+      color: var(--text);
+    }
+
+    body {
+      min-width: 1024px;
+      font-size: 14px;
+      line-height: 1.4;
+      letter-spacing: -0.005em;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: -2px;
+    }
+
+    .app-shell {
+      width: 100vw;
+      height: 100vh;
+      min-width: 0;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .inbox-workspace,
+    .reader-workspace {
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+    }
+
+    .inbox-workspace {
+      display: grid;
+      grid-template-columns: 222px minmax(0, 1fr);
+    }
+
+    .inbox-sidebar {
+      min-width: 0;
+      padding: 22px 14px;
+      border-right: 1px solid var(--line);
+      background: var(--sidebar);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 8px 25px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border: 1px solid rgba(98, 169, 246, 0.45);
+      border-radius: 7px;
+      background: #182536;
+      color: #bedcff;
+      font-size: 13px;
+    }
+
+    .sidebar-heading {
+      margin: 22px 9px 7px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      height: 34px;
+      gap: 9px;
+      padding: 0 9px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-item.active {
+      border: 1px solid rgba(98, 169, 246, 0.2);
+      background: var(--blue-soft);
+      color: #ddecff;
+      font-weight: 600;
+    }
+
+    .sidebar-icon {
+      width: 9px;
+      height: 9px;
+      flex: 0 0 auto;
+      border: 1.5px solid currentColor;
+      border-radius: 2px;
+      opacity: 0.78;
+    }
+
+    .sidebar-count {
+      margin-left: auto;
+      color: #bcd9fa;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .inbox-main {
+      min-width: 0;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .inbox-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      min-height: 142px;
+      gap: 24px;
+      padding: 28px 34px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .eyebrow {
+      padding: 3px 7px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow.primary {
+      border-color: rgba(98, 169, 246, 0.38);
+      background: var(--blue-soft);
+      color: #badbff;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 4px;
+      font-size: 28px;
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--text-secondary);
+    }
+
+    .filter-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 2px;
+    }
+
+    .filters {
+      display: inline-flex;
+      height: 32px;
+      align-items: center;
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #0d1219;
+    }
+
+    .filter {
+      display: inline-flex;
+      height: 26px;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-size: 12px;
+      user-select: none;
+    }
+
+    .filter.active {
+      background: #222a35;
+      color: var(--text);
+    }
+
+    .static-label {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .inbox-table {
+      height: calc(100vh - 142px);
+      min-width: 0;
+      overflow: auto;
+      padding: 10px 22px 22px;
+    }
+
+    .inbox-columns,
+    .pr-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.85fr) minmax(320px, 2.1fr) minmax(160px, 0.9fr) minmax(190px, 1fr);
+      align-items: center;
+      min-width: 0;
+      gap: 18px;
+    }
+
+    .inbox-columns {
+      height: 33px;
+      padding: 0 15px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pr-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .pr-row {
+      position: relative;
+      min-height: 76px;
+      padding: 10px 15px;
+      border-bottom: 1px solid var(--line);
+      cursor: default;
+      transition: background-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .pr-row:hover {
+      background: rgba(255, 255, 255, 0.018);
+    }
+
+    .pr-row.selected {
+      background: var(--surface-selected);
+      box-shadow: inset 3px 0 var(--blue);
+    }
+
+    .cell {
+      min-width: 0;
+    }
+
+    .repo-line,
+    .author-line,
+    .context-line {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .repo-line {
+      color: #c8d2df;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .pr-title {
+      margin: 0;
+      overflow: hidden;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.35;
+      text-overflow: ellipsis;
+    }
+
+    .author-line {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .context-line {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .inbox-hint {
+      margin: 14px 15px 0;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .reader-workspace {
+      display: grid;
+      grid-template-rows: 48px 42px minmax(0, 1fr);
+      background: var(--surface);
+    }
+
+    .reader-toolbar {
+      display: grid;
+      grid-template-columns: minmax(150px, 1fr) auto minmax(150px, 1fr);
+      align-items: center;
+      min-width: 0;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: #0e131a;
+    }
+
+    .toolbar-button,
+    .primary-button,
+    .quiet-button,
+    .done-button {
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: #1b222c;
+      cursor: default;
+      transition: background-color 140ms ease, border-color 140ms ease;
+    }
+
+    .toolbar-button {
+      justify-self: start;
+      height: 29px;
+      padding: 0 10px;
+      color: var(--text-secondary);
+    }
+
+    .toolbar-button:hover,
+    .quiet-button:hover,
+    .done-button:hover {
+      border-color: #4a5664;
+      background: #222b36;
+    }
+
+    .toolbar-button[disabled] {
+      justify-self: end;
+      color: #596370;
+      opacity: 0.72;
+      pointer-events: none;
+    }
+
+    .reader-identity {
+      min-width: 0;
+      color: #d9e0e9;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .reader-center {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .toolbar-tag {
+      padding: 2px 5px;
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      color: var(--text-muted);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .reader-tabs {
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 3px;
+      border-bottom: 1px solid var(--line);
+      background: #10151d;
+    }
+
+    .reader-tab {
+      position: relative;
+      height: 41px;
+      padding: 0 17px;
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: default;
+      transition: color 140ms ease, background-color 140ms ease;
+    }
+
+    .reader-tab:hover {
+      color: var(--text-secondary);
+    }
+
+    .reader-tab[aria-selected="true"] {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.018);
+    }
+
+    .reader-tab[aria-selected="true"]::after {
+      position: absolute;
+      right: 12px;
+      bottom: -1px;
+      left: 12px;
+      height: 2px;
+      background: var(--blue);
+      content: "";
+    }
+
+    .reader-content {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .overview-scroll,
+    .simple-scroll {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .overview {
+      width: min(940px, calc(100% - 72px));
+      margin: 0 auto;
+      padding: 42px 0 54px;
+    }
+
+    .overview-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 22px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .overview h1 {
+      font-size: 30px;
+    }
+
+    .byline {
+      margin: 0;
+      color: var(--text-secondary);
+    }
+
+    .status-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 0 3px rgba(111, 211, 150, 0.09);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(240px, 0.8fr);
+      gap: 42px;
+      padding-top: 26px;
+    }
+
+    .section-label {
+      margin: 0 0 10px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .summary-copy {
+      max-width: 620px;
+      margin-bottom: 27px;
+      color: #d8dee7;
+      font-size: 15px;
+      line-height: 1.58;
+    }
+
+    .changed-list {
+      margin: 0 0 30px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .changed-list li {
+      position: relative;
+      margin: 8px 0;
+      padding-left: 17px;
+      color: var(--text-secondary);
+    }
+
+    .changed-list li::before {
+      position: absolute;
+      top: 8px;
+      left: 1px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--blue);
+      content: "";
+    }
+
+    .primary-button {
+      min-height: 34px;
+      padding: 0 14px;
+      border-color: #3979bc;
+      background: #2264a8;
+      color: white;
+      font-weight: 650;
+    }
+
+    .primary-button:hover {
+      background: #2b72ba;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin: 0 0 27px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .stat {
+      min-width: 0;
+      padding: 12px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--text);
+      font-size: 15px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat .positive {
+      color: var(--green);
+    }
+
+    .stat .negative {
+      color: var(--red);
+    }
+
+    .check-list,
+    .commit-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .check-list li {
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--green);
+      font-size: 13px;
+    }
+
+    .files-workspace {
+      display: grid;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      grid-template-columns: 292px minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr) 44px;
+    }
+
+    .file-panel {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border-right: 1px solid var(--line);
+      background: var(--sidebar);
+    }
+
+    .panel-heading,
+    .diff-heading {
+      display: flex;
+      height: 44px;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-heading h2,
+    .diff-heading h2 {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: -0.01em;
+    }
+
+    .file-total {
+      margin-left: auto;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .file-list-scroll {
+      height: calc(100% - 44px);
+      overflow: auto;
+      padding: 8px 7px 14px;
+    }
+
+    .file-group-title {
+      margin: 11px 8px 5px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 750;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .file-row {
+      display: grid;
+      grid-template-columns: 17px minmax(0, 1fr) auto;
+      align-items: center;
+      width: 100%;
+      min-width: 0;
+      min-height: 38px;
+      gap: 7px;
+      padding: 5px 7px;
+      border-radius: 5px;
+      color: var(--text-secondary);
+      cursor: default;
+      transition: background-color 140ms ease, color 140ms ease;
+    }
+
+    .file-row:hover {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .file-row.selected {
+      background: var(--surface-selected);
+      color: var(--text);
+      box-shadow: inset 2px 0 var(--blue);
+    }
+
+    .file-ordinal {
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .file-name {
+      min-width: 0;
+      overflow: hidden;
+      font-size: 12px;
+      font-weight: 550;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-meta {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--mono);
+      font-size: 9px;
+      white-space: nowrap;
+    }
+
+    .visited-mark {
+      color: var(--blue);
+      font-size: 10px;
+    }
+
+    .file-status {
+      color: var(--amber);
+      font-weight: 750;
+    }
+
+    .file-delta .additions {
+      color: var(--green);
+    }
+
+    .file-delta .deletions {
+      color: var(--red);
+    }
+
+    .diff-panel {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background: #10151c;
+    }
+
+    .diff-heading {
+      min-width: 0;
+      justify-content: space-between;
+    }
+
+    .diff-file-title {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--text-secondary);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .diff-disclaimer {
+      flex: 0 0 auto;
+      color: var(--text-muted);
+      font-size: 10px;
+    }
+
+    .diff-scroll {
+      height: calc(100% - 44px);
+      overflow: auto;
+      padding: 13px 16px 30px;
+      scroll-behavior: smooth;
+    }
+
+    .change-block {
+      min-width: 620px;
+      margin-bottom: 13px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #0c1117;
+      cursor: default;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .change-block.selected {
+      border-color: rgba(98, 169, 246, 0.7);
+      box-shadow: 0 0 0 1px rgba(98, 169, 246, 0.14);
+    }
+
+    .hunk-header {
+      display: flex;
+      min-height: 31px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 10px;
+      background: #172238;
+      color: #a8c8ee;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .change-anchor {
+      overflow: hidden;
+      color: #c7d5e6;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .diff-lines {
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.48;
+    }
+
+    .diff-line {
+      display: grid;
+      grid-template-columns: 42px 42px minmax(0, 1fr);
+      min-width: 0;
+    }
+
+    .diff-line.context {
+      background: #0c1117;
+    }
+
+    .diff-line.add {
+      background: rgba(67, 151, 97, 0.14);
+    }
+
+    .diff-line.remove {
+      background: rgba(180, 69, 69, 0.15);
+    }
+
+    .line-number {
+      padding: 1px 7px;
+      border-right: 1px solid rgba(54, 64, 77, 0.52);
+      color: #647080;
+      text-align: right;
+      user-select: none;
+    }
+
+    .line-code {
+      min-width: 0;
+      padding: 1px 10px;
+      overflow-wrap: normal;
+      color: #c8d0db;
+      white-space: pre;
+    }
+
+    .diff-line.add .line-code {
+      color: #bde6ca;
+    }
+
+    .diff-line.remove .line-code {
+      color: #efb7b7;
+    }
+
+    .review-thread {
+      margin: 11px 12px 13px 96px;
+      border: 1px solid #374456;
+      border-left: 3px solid var(--blue);
+      border-radius: 5px;
+      background: #151c26;
+    }
+
+    .review-message {
+      padding: 10px 12px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .review-message + .review-message {
+      border-top: 1px solid var(--line);
+      background: #121820;
+    }
+
+    .review-author {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .draft-marker {
+      display: inline-flex;
+      margin: 9px 12px 11px 96px;
+      padding: 3px 7px;
+      border: 1px solid rgba(216, 185, 108, 0.35);
+      border-radius: 4px;
+      background: rgba(216, 185, 108, 0.08);
+      color: var(--amber);
+      font-size: 10px;
+      font-weight: 650;
+    }
+
+    .files-action-bar {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      min-width: 0;
+      gap: 18px;
+      padding: 0 10px 0 14px;
+      border-top: 1px solid var(--line-strong);
+      background: #0d1219;
+    }
+
+    .progress-text {
+      color: var(--text-secondary);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .shortcut-legends {
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .shortcut-legends kbd {
+      padding: 1px 4px;
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      background: #151b23;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 10px;
+      box-shadow: none;
+    }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .quiet-button,
+    .done-button {
+      height: 29px;
+      padding: 0 10px;
+      font-size: 12px;
+    }
+
+    .done-button {
+      border-color: rgba(98, 169, 246, 0.48);
+      background: rgba(98, 169, 246, 0.13);
+      color: #c9e3ff;
+      font-weight: 650;
+    }
+
+    .simple-content {
+      width: min(820px, calc(100% - 72px));
+      margin: 0 auto;
+      padding: 38px 0 50px;
+    }
+
+    .simple-header {
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .simple-header h1 {
+      font-size: 25px;
+    }
+
+    .simple-header p {
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    .commit-item {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 17px;
+      padding: 15px 3px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .commit-sha {
+      color: #a9caf0;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .commit-message {
+      color: #d7dee8;
+    }
+
+    .large-check-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .large-check-list li {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 51px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text-secondary);
+    }
+
+    .check-glyph {
+      display: grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      border: 1px solid rgba(111, 211, 150, 0.45);
+      border-radius: 50%;
+      color: var(--green);
+      font-size: 11px;
+    }
+
+    dialog {
+      width: 520px;
+      max-width: calc(100vw - 60px);
+      margin: auto;
+      padding: 0;
+      border: 1px solid #455264;
+      border-radius: 8px;
+      background: #171d26;
+      color: var(--text);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58);
+      opacity: 0;
+      transform: translateY(5px) scale(0.99);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    dialog[open] {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    dialog::backdrop {
+      background: rgba(3, 6, 10, 0.72);
+    }
+
+    .dialog-header {
+      padding: 17px 19px 13px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dialog-header h2 {
+      margin: 0 0 4px;
+      font-size: 17px;
+    }
+
+    .dialog-anchor {
+      margin: 0;
+      overflow: hidden;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dialog-body {
+      padding: 16px 19px 17px;
+    }
+
+    .dialog-body label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .dialog-body textarea {
+      width: 100%;
+      min-height: 138px;
+      resize: vertical;
+      padding: 10px 11px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      background: #0c1117;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .dialog-note {
+      margin: 7px 0 0;
+      color: var(--text-muted);
+      font-size: 10px;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 19px;
+      border-top: 1px solid var(--line);
+      background: #131922;
+    }
+
+    .dialog-actions button {
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 5px;
+      background: #202833;
+    }
+
+    .dialog-actions .save-button {
+      border-color: #3979bc;
+      background: #2264a8;
+      color: white;
+      font-weight: 650;
+    }
+
+    .dialog-actions .save-button[disabled] {
+      border-color: var(--line-strong);
+      background: #242b34;
+      color: #69737f;
+      opacity: 0.72;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="app" class="app-shell" aria-live="polite"></main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CHECKS = ["✓ Build", "✓ Tests", "✓ Lint"];
+      const TABS = [
+        { key: "overview", label: "Overview" },
+        { key: "files", label: "Files (8)" },
+        { key: "commits", label: "Commits (3)" },
+        { key: "checks", label: "Checks" }
+      ];
+
+      const line = (type, oldNumber, newNumber, code) => ({ type, oldNumber, newNumber, code });
+      const change = (header, anchor, lines, conversation = null) => ({ header, anchor, lines, conversation });
+
+      const canonicalFiles = [
+        {
+          path: "Sources/ProjectHeader.swift", name: "ProjectHeader.swift", group: "Sources", additions: 38, deletions: 12,
+          changes: [
+            change("@@ -42,7 +42,12 @@ struct ProjectHeader: View {", "case .offline(let lastSuccessfulSync):", [
+              line("context", 42, 42, "     switch workspace.state {"),
+              line("remove", 43, null, "-    case .offline:"),
+              line("remove", 44, null, "-        StatusLabel(\"Offline\")"),
+              line("add", null, 43, "+    case .offline(let lastSuccessfulSync):"),
+              line("add", null, 44, "+        OfflineStatusLabel("),
+              line("add", null, 45, "+            lastSuccessfulSync: lastSuccessfulSync"),
+              line("add", null, 46, "+        )"),
+              line("context", 45, 47, "     case .connected:"),
+              line("context", 46, 48, "         StatusLabel(\"Connected\")")
+            ]),
+            change("@@ -78,5 +83,11 @@ private struct OfflineStatusLabel: View {", "Text(stalenessDescription)", [
+              line("context", 78, 83, " private var stalenessDescription: String {"),
+              line("remove", 79, null, "-    return \"Workspace is offline\""),
+              line("add", null, 84, "+    guard let lastSuccessfulSync else {"),
+              line("add", null, 85, "+        return \"Offline · Last sync unknown\""),
+              line("add", null, 86, "+    }"),
+              line("add", null, 87, "+    return \"Offline · Synced \\(relativeDate(lastSuccessfulSync))\""),
+              line("context", 80, 88, " }")
+            ])
+          ]
+        },
+        {
+          path: "Sources/WorkspaceState.swift", name: "WorkspaceState.swift", group: "Sources", additions: 27, deletions: 8,
+          changes: [
+            change("@@ -8,7 +8,7 @@ enum WorkspaceState: Equatable {", "case offline(lastSuccessfulSync: Date?)", [
+              line("context", 8, 8, " enum WorkspaceState: Equatable {"),
+              line("context", 9, 9, "     case connecting"),
+              line("remove", 10, null, "-    case offline"),
+              line("add", null, 10, "+    case offline(lastSuccessfulSync: Date?)"),
+              line("context", 11, 11, "     case connected(WorkspaceConnection)"),
+              line("context", 12, 12, " }")
+            ], {
+              author: "Mira Vale",
+              body: "Could this state keep the last successful sync time so the header can explain how stale the workspace is?",
+              reply: "Yes — this fixture keeps it in memory and the header renders a relative value."
+            }),
+            change("@@ -26,6 +26,10 @@ extension WorkspaceState {", "var lastSuccessfulSync: Date?", [
+              line("context", 26, 26, " extension WorkspaceState {"),
+              line("add", null, 27, "+    var lastSuccessfulSync: Date? {"),
+              line("add", null, 28, "+        guard case .offline(let date) = self else { return nil }"),
+              line("add", null, 29, "+        return date"),
+              line("add", null, 30, "+    }"),
+              line("context", 27, 31, " }")
+            ])
+          ]
+        },
+        {
+          path: "Tests/WorkspaceTests.swift", name: "WorkspaceTests.swift", group: "Tests", additions: 18, deletions: 4,
+          changes: [
+            change("@@ -31,8 +31,13 @@ final class WorkspaceTests: XCTestCase {", "func testDisconnectKeepsLastSuccessfulSync()", [
+              line("context", 31, 31, " func testDisconnectKeepsLastSuccessfulSync() {"),
+              line("context", 32, 32, "     let syncDate = Date(timeIntervalSince1970: 1_725_000_000)"),
+              line("remove", 33, null, "-    let workspace = Workspace(state: .offline)"),
+              line("remove", 34, null, "-    XCTAssertEqual(workspace.state, .offline)"),
+              line("add", null, 33, "+    var workspace = Workspace(state: .connected(.fixture))"),
+              line("add", null, 34, "+    workspace.recordSuccessfulSync(at: syncDate)"),
+              line("add", null, 35, "+    workspace.disconnect()"),
+              line("add", null, 36, "+    XCTAssertEqual("),
+              line("add", null, 37, "+        workspace.state, .offline(lastSuccessfulSync: syncDate)"),
+              line("add", null, 38, "+    )"),
+              line("context", 35, 39, " }")
+            ])
+          ]
+        },
+        {
+          path: "Tests/OfflineTests.swift", name: "OfflineTests.swift", group: "Tests", additions: 20, deletions: 3,
+          changes: [
+            change("@@ -18,7 +18,10 @@ final class OfflineTests: XCTestCase {", "func testOfflineStateWithoutSyncHistory()", [
+              line("context", 18, 18, " func testOfflineStateWithoutSyncHistory() {"),
+              line("remove", 19, null, "-    XCTAssertEqual(subject.state, .offline)"),
+              line("add", null, 19, "+    subject.disconnect()"),
+              line("add", null, 20, "+    XCTAssertEqual("),
+              line("add", null, 21, "+        subject.state, .offline(lastSuccessfulSync: nil)"),
+              line("add", null, 22, "+    )"),
+              line("context", 20, 23, " }")
+            ]),
+            change("@@ -44,6 +47,9 @@ final class OfflineTests: XCTestCase {", "func testReconnectClearsOfflinePresentation()", [
+              line("context", 44, 47, " subject.disconnect()"),
+              line("remove", 45, null, "-XCTAssertTrue(subject.isOffline)"),
+              line("add", null, 48, "+subject.connect(using: .fixture)"),
+              line("add", null, 49, "+XCTAssertFalse(subject.isOffline)"),
+              line("add", null, 50, "+XCTAssertEqual(subject.state, .connected(.fixture))")
+            ])
+          ]
+        },
+        {
+          path: "Tests/OfflineStatusViewTests.swift", name: "OfflineStatusViewTests.swift", group: "Tests", additions: 31, deletions: 4,
+          changes: [
+            change("@@ -23,7 +23,11 @@ final class OfflineStatusViewTests: XCTestCase {", "func testUnknownSyncCopy()", [
+              line("context", 23, 23, " func testUnknownSyncCopy() {"),
+              line("remove", 24, null, "-    XCTAssertEqual(subject.label, \"Offline\")"),
+              line("add", null, 24, "+    subject.state = .offline(lastSuccessfulSync: nil)"),
+              line("add", null, 25, "+    XCTAssertEqual("),
+              line("add", null, 26, "+        subject.label, \"Offline · Last sync unknown\""),
+              line("add", null, 27, "+    )"),
+              line("context", 25, 28, " }")
+            ]),
+            change("@@ -39,6 +43,11 @@ final class OfflineStatusViewTests: XCTestCase {", "func testRecentSyncCopy()", [
+              line("context", 39, 43, " let date = now.addingTimeInterval(-300)"),
+              line("remove", 40, null, "-subject.state = .offline"),
+              line("add", null, 44, "+subject.state = .offline(lastSuccessfulSync: date)"),
+              line("add", null, 45, "+XCTAssertEqual("),
+              line("add", null, 46, "+    subject.label,"),
+              line("add", null, 47, "+    \"Offline · Synced 5 minutes ago\""),
+              line("add", null, 48, "+)")
+            ])
+          ]
+        },
+        {
+          path: "Tests/WorkspaceHeaderSnapshotTests.swift", name: "WorkspaceHeaderSnapshotTests.swift", group: "Tests", additions: 22, deletions: 7,
+          changes: [
+            change("@@ -52,7 +52,10 @@ final class WorkspaceHeaderSnapshotTests: XCTestCase {", "func testOfflineHeaderWithKnownSync()", [
+              line("context", 52, 52, " func testOfflineHeaderWithKnownSync() {"),
+              line("remove", 53, null, "-    let state = WorkspaceState.offline"),
+              line("add", null, 53, "+    let state = WorkspaceState.offline("),
+              line("add", null, 54, "+        lastSuccessfulSync: referenceDate.addingTimeInterval(-900)"),
+              line("add", null, 55, "+    )"),
+              line("context", 54, 56, "     assertSnapshot(of: header(state: state))"),
+              line("context", 55, 57, " }")
+            ]),
+            change("@@ -70,5 +73,8 @@ final class WorkspaceHeaderSnapshotTests: XCTestCase {", "func testOfflineHeaderWithoutHistory()", [
+              line("remove", 70, null, "-assertSnapshot(of: header(state: .offline))"),
+              line("add", null, 73, "+assertSnapshot("),
+              line("add", null, 74, "+    of: header(state: .offline(lastSuccessfulSync: nil))"),
+              line("add", null, 75, "+)")
+            ])
+          ]
+        },
+        {
+          path: "Tests/ProjectHeaderTests.swift", name: "ProjectHeaderTests.swift", group: "Tests", additions: 14, deletions: 3,
+          changes: [
+            change("@@ -61,7 +61,12 @@ final class ProjectHeaderTests: XCTestCase {", "func testHeaderExplainsOfflineStaleness()", [
+              line("context", 61, 61, " func testHeaderExplainsOfflineStaleness() {"),
+              line("remove", 62, null, "-    subject.state = .offline"),
+              line("remove", 63, null, "-    XCTAssertEqual(subject.status, \"Offline\")"),
+              line("add", null, 62, "+    subject.state = .offline(lastSuccessfulSync: syncDate)"),
+              line("add", null, 63, "+    XCTAssertEqual("),
+              line("add", null, 64, "+        subject.status,"),
+              line("add", null, 65, "+        \"Offline · Synced 12 minutes ago\""),
+              line("add", null, 66, "+    )"),
+              line("context", 64, 67, " }")
+            ])
+          ]
+        },
+        {
+          path: "Tests/WorkspaceStateTests.swift", name: "WorkspaceStateTests.swift", group: "Tests", additions: 12, deletions: 2,
+          changes: [
+            change("@@ -15,6 +15,12 @@ final class WorkspaceStateTests: XCTestCase {", "func testOfflineEqualityIncludesSyncDate()", [
+              line("context", 15, 15, " func testOfflineEqualityIncludesSyncDate() {"),
+              line("remove", 16, null, "-    XCTAssertEqual(.offline, .offline)"),
+              line("add", null, 16, "+    let date = Date(timeIntervalSince1970: 1_725_000_000)"),
+              line("add", null, 17, "+    XCTAssertEqual("),
+              line("add", null, 18, "+        WorkspaceState.offline(lastSuccessfulSync: date),"),
+              line("add", null, 19, "+        WorkspaceState.offline(lastSuccessfulSync: date)"),
+              line("add", null, 20, "+    )"),
+              line("context", 17, 21, " }")
+            ])
+          ]
+        }
+      ];
+
+      const otherFileSets = {
+        "example-labs/nebula-ui#142": [
+          "Sources/CommandResultsView.swift", "Sources/KeyboardMovement.swift", "Sources/SelectionAnchor.swift", "Sources/CommandKeyHandler.swift",
+          "Tests/CommandResultsViewTests.swift", "Tests/KeyboardMovementTests.swift", "Tests/SelectionAnchorTests.swift", "Tests/CommandKeyHandlerTests.swift"
+        ],
+        "demo-works/orbit-api#315": [
+          "Sources/ActivityCursor.swift", "Sources/ActivityPage.swift", "Sources/CursorBoundary.swift", "Sources/PageRequest.swift",
+          "Tests/ActivityCursorTests.swift", "Tests/ActivityPageTests.swift", "Tests/CursorBoundaryTests.swift", "Tests/PageRequestTests.swift"
+        ],
+        "fictional-inc/harbor-kit#54": [
+          "Sources/LayeredPanel.swift", "Sources/PanelTransition.swift", "Sources/MotionPreference.swift", "Sources/PanelAnimator.swift",
+          "Tests/LayeredPanelTests.swift", "Tests/PanelTransitionTests.swift", "Tests/MotionPreferenceTests.swift", "Tests/PanelAnimatorTests.swift"
+        ],
+        "sample-studio/atlas-desktop#91": [
+          "Sources/EnvironmentGroup.swift", "Sources/RecentEnvironment.swift", "Sources/WorkspaceGrouping.swift", "Sources/EnvironmentList.swift",
+          "Tests/EnvironmentGroupTests.swift", "Tests/RecentEnvironmentTests.swift", "Tests/WorkspaceGroupingTests.swift", "Tests/EnvironmentListTests.swift"
+        ],
+        "example-labs/nebula-ui#156": [
+          "Sources/EmptyWorkspaceView.swift", "Sources/EmptyWorkspaceCopy.swift", "Sources/WorkspaceFirstRun.swift", "Sources/NextStepAction.swift",
+          "Tests/EmptyWorkspaceViewTests.swift", "Tests/EmptyWorkspaceCopyTests.swift", "Tests/WorkspaceFirstRunTests.swift", "Tests/NextStepActionTests.swift"
+        ]
+      };
+
+      const otherThemes = {
+        "example-labs/nebula-ui#142": "bounded keyboard movement",
+        "demo-works/orbit-api#315": "normalized cursor boundary",
+        "fictional-inc/harbor-kit#54": "reduced motion transition",
+        "sample-studio/atlas-desktop#91": "workspace grouping",
+        "example-labs/nebula-ui#156": "clear first-run copy"
+      };
+
+      function makeOtherFiles(prKey) {
+        return otherFileSets[prKey].map((path, index) => {
+          const name = path.split("/").pop();
+          const typeName = name.replace(".swift", "");
+          const isTest = path.startsWith("Tests/");
+          const additions = 12 + index * 3;
+          const deletions = 2 + (index % 4);
+          const theme = otherThemes[prKey];
+          const lines = isTest ? [
+            line("context", 20 + index, 20 + index, ` final class ${typeName}: XCTestCase {`),
+            line("remove", 21 + index, null, "-    XCTAssertFalse(subject.isConfigured)"),
+            line("add", null, 21 + index, `+    subject.configure(for: \"${theme}\")`),
+            line("add", null, 22 + index, "+    XCTAssertTrue(subject.isConfigured)"),
+            line("context", 22 + index, 23 + index, " }")
+          ] : [
+            line("context", 14 + index, 14 + index, ` struct ${typeName} {`),
+            line("remove", 15 + index, null, "-    let behavior = \"legacy\""),
+            line("add", null, 15 + index, `+    let behavior = \"${theme}\"`),
+            line("add", null, 16 + index, "+    let preservesCurrentSelection = true"),
+            line("context", 16 + index, 17 + index, " }")
+          ];
+          return {
+            path,
+            name,
+            group: isTest ? "Tests" : "Sources",
+            additions,
+            deletions,
+            changes: [change(`@@ -${14 + index},4 +${14 + index},5 @@ ${typeName}`, isTest ? `test${typeName}Behavior()` : `struct ${typeName}`, lines)]
+          };
+        });
+      }
+
+      const prs = [
+        {
+          key: "sample-studio/atlas-desktop#87", repositoryShort: "atlas-desktop", number: 87,
+          title: "Clarify offline workspace state", author: "Theo North", inboxTime: "38m", readerTime: "38m ago",
+          context: "Context prepared · priority", status: "Ready for review",
+          summary: "This PR clarifies how disconnected workspaces are represented in the project header and removes ambiguous offline state.",
+          whatChanged: ["Adds explicit disconnected workspace state", "Updates project header rendering", "Adds coverage for offline transitions"],
+          files: canonicalFiles,
+          commits: [
+            ["a17c2d1", "Model offline workspace header state"],
+            ["c84e6af", "Refine project header copy"],
+            ["e3b4902", "Add offline workspace coverage"]
+          ],
+          initialFileOrdinal: 3
+        },
+        {
+          key: "example-labs/nebula-ui#142", repositoryShort: "nebula-ui", number: 142,
+          title: "Tighten keyboard movement across command results", author: "Mira Vale", inboxTime: "12m", readerTime: "12m",
+          context: "Keyboard flow · mentioned", status: "Ready for review",
+          summary: "This PR tightens keyboard selection movement across command results.",
+          whatChanged: ["Keeps selection inside visible results", "Preserves the active anchor during movement", "Adds keyboard boundary coverage"],
+          commits: [["b142a01", "Bound command result movement"], ["b142c42", "Preserve the selection anchor"], ["b142e83", "Cover keyboard result edges"]],
+          initialFileOrdinal: 1
+        },
+        {
+          key: "demo-works/orbit-api#315", repositoryShort: "orbit-api", number: 315,
+          title: "Normalize cursor boundaries for activity pages", author: "Jun Park", inboxTime: "2h", readerTime: "2h",
+          context: "Pagination scope · needs review", status: "Ready for review",
+          summary: "This PR normalizes cursor boundaries for paginated activity responses.",
+          whatChanged: ["Defines empty-page cursor behavior", "Keeps page requests deterministic", "Adds pagination boundary coverage"],
+          commits: [["c315a11", "Define empty activity cursors"], ["c315b52", "Stabilize activity page requests"], ["c315d93", "Cover cursor boundary cases"]],
+          initialFileOrdinal: 1
+        },
+        {
+          key: "fictional-inc/harbor-kit#54", repositoryShort: "harbor-kit", number: 54,
+          title: "Reduce motion in layered panel transitions", author: "Ari Linden", inboxTime: "5h", readerTime: "5h",
+          context: "Motion polish · ready", status: "Ready for review",
+          summary: "This PR reduces motion in layered panel transitions without changing panel structure.",
+          whatChanged: ["Shortens layered panel transitions", "Respects reduced-motion preference", "Adds transition timing coverage"],
+          commits: [["d054a21", "Shorten layered panel motion"], ["d054b62", "Honor motion preferences"], ["d054f03", "Cover panel transition timing"]],
+          initialFileOrdinal: 1
+        },
+        {
+          key: "sample-studio/atlas-desktop#91", repositoryShort: "atlas-desktop", number: 91,
+          title: "Group recent environments by workspace", author: "Nadia Stone", inboxTime: "Yesterday", readerTime: "Yesterday",
+          context: "Workspace grouping · follow-up", status: "Ready for review",
+          summary: "This PR groups recent environments by their owning workspace.",
+          whatChanged: ["Introduces workspace environment groups", "Keeps recent ordering within each group", "Adds grouping coverage"],
+          commits: [["e091a31", "Introduce environment groups"], ["e091c72", "Keep recent environment order"], ["e091e13", "Cover workspace grouping"]],
+          initialFileOrdinal: 1
+        },
+        {
+          key: "example-labs/nebula-ui#156", repositoryShort: "nebula-ui", number: 156,
+          title: "Refine empty copy for newly created workspaces", author: "Rowan Lake", inboxTime: "2d", readerTime: "2d",
+          context: "Empty state copy · mentioned", status: "Ready for review",
+          summary: "This PR refines the empty message shown for a newly created workspace.",
+          whatChanged: ["Shortens first-run workspace copy", "Clarifies the next available action", "Adds empty-state copy coverage"],
+          commits: [["f156a41", "Shorten new workspace copy"], ["f156b82", "Clarify the next-step action"], ["f156d23", "Cover first-run empty state"]],
+          initialFileOrdinal: 1
+        }
+      ];
+
+      prs.forEach((pr) => {
+        if (!pr.files) pr.files = makeOtherFiles(pr.key);
+        pr.checks = CHECKS.slice();
+      });
+
+      const prByKey = new Map(prs.map((pr) => [pr.key, pr]));
+      const initialKey = prs[0].key;
+      const state = {
+        workspace: "inbox",
+        inboxSelectionKey: initialKey,
+        activePRKey: null,
+        readerStateByPR: Object.fromEntries(prs.map((pr) => [pr.key, {
+          activeTab: "overview",
+          selectedFileOrdinal: pr.initialFileOrdinal,
+          selectedChangeIndex: 0,
+          visitedFileOrdinals: new Set(),
+          savedDraft: null
+        }])),
+        composer: null
+      };
+
+      const app = document.getElementById("app");
+
+      function escapeHTML(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function activePR() {
+        return state.activePRKey ? prByKey.get(state.activePRKey) : null;
+      }
+
+      function activeReaderState() {
+        return state.activePRKey ? state.readerStateByPR[state.activePRKey] : null;
+      }
+
+      function render() {
+        app.innerHTML = state.workspace === "inbox" ? renderInbox() : renderReader();
+        bindRenderedEvents();
+        if (state.composer?.isOpen) showComposer();
+      }
+
+      function renderInbox() {
+        const rows = prs.map((pr) => {
+          const selected = state.inboxSelectionKey === pr.key;
+          return `
+            <li class="pr-row${selected ? " selected" : ""}" role="option" aria-selected="${selected}" data-pr-key="${escapeHTML(pr.key)}">
+              <div class="cell repo-line">${escapeHTML(pr.repositoryShort)} #${pr.number}</div>
+              <div class="cell"><p class="pr-title">${escapeHTML(pr.title)}</p></div>
+              <div class="cell author-line">${escapeHTML(pr.author)} · ${escapeHTML(pr.inboxTime)}</div>
+              <div class="cell context-line">${escapeHTML(pr.context)}</div>
+            </li>`;
+        }).join("");
+
+        return `
+          <section class="inbox-workspace" aria-label="PR Inbox workspace">
+            <aside class="inbox-sidebar" aria-label="Inbox navigation">
+              <div class="brand"><span class="brand-mark" aria-hidden="true">R</span><span>Rivet</span></div>
+              <ul class="sidebar-list">
+                <li class="sidebar-item active"><span class="sidebar-icon" aria-hidden="true"></span><span>Inbox (6)</span></li>
+              </ul>
+              <h2 class="sidebar-heading">Repositories</h2>
+              <ul class="sidebar-list">
+                <li class="sidebar-item"><span class="sidebar-icon" aria-hidden="true"></span>atlas-desktop</li>
+                <li class="sidebar-item"><span class="sidebar-icon" aria-hidden="true"></span>nebula-ui</li>
+                <li class="sidebar-item"><span class="sidebar-icon" aria-hidden="true"></span>orbit-api</li>
+                <li class="sidebar-item"><span class="sidebar-icon" aria-hidden="true"></span>harbor-kit</li>
+              </ul>
+            </aside>
+            <section class="inbox-main">
+              <header class="inbox-header">
+                <div>
+                  <div class="eyebrow-row"><span class="eyebrow primary">Interactive mockup</span><span class="eyebrow">Fictional data</span></div>
+                  <h1>PR Inbox</h1>
+                  <p class="subtitle">Pull requests waiting for your attention.</p>
+                </div>
+                <div class="filter-area" aria-label="Static sample filters">
+                  <div class="filters" aria-hidden="true">
+                    <span class="filter active">Needs Review</span><span class="filter">Mentioned</span><span class="filter">All</span>
+                  </div>
+                  <span class="static-label">Static sample</span>
+                </div>
+              </header>
+              <div class="inbox-table">
+                <div class="inbox-columns" aria-hidden="true"><span>Pull request</span><span>Title</span><span>Author</span><span>Context</span></div>
+                <ul id="pr-list" class="pr-list" role="listbox" tabindex="0" aria-label="Pull requests">${rows}</ul>
+                <p class="inbox-hint">↑↓ Select · Home/End Jump · Enter Open</p>
+              </div>
+            </section>
+          </section>`;
+      }
+
+      function renderReader() {
+        const pr = activePR();
+        const readerState = activeReaderState();
+        const tabs = TABS.map((tab) => {
+          const selected = readerState.activeTab === tab.key;
+          return `<button class="reader-tab" type="button" role="tab" aria-selected="${selected}" tabindex="${selected ? 0 : -1}" data-tab="${tab.key}">${tab.label}</button>`;
+        }).join("");
+
+        let content = "";
+        if (readerState.activeTab === "overview") content = renderOverview(pr);
+        if (readerState.activeTab === "files") content = renderFiles(pr, readerState);
+        if (readerState.activeTab === "commits") content = renderCommits(pr);
+        if (readerState.activeTab === "checks") content = renderChecks(pr);
+
+        return `
+          <section class="reader-workspace" aria-label="PR Reader workspace">
+            <header class="reader-toolbar">
+              <button id="back-inbox" class="toolbar-button" type="button">← Inbox</button>
+              <div class="reader-center"><span class="reader-identity">${escapeHTML(pr.repositoryShort)} / #${pr.number}</span><span class="toolbar-tag">Interactive mockup</span><span class="toolbar-tag">Fictional data</span></div>
+              <button class="toolbar-button" type="button" disabled>Open on GitHub</button>
+            </header>
+            <nav class="reader-tabs" role="tablist" aria-label="Pull request reader">${tabs}</nav>
+            <section class="reader-content" role="tabpanel">${content}</section>
+          </section>
+          ${state.composer?.isOpen ? renderComposer(pr, readerState) : ""}`;
+      }
+
+      function renderOverview(pr) {
+        const additions = pr.files.reduce((total, file) => total + file.additions, 0);
+        const deletions = pr.files.reduce((total, file) => total + file.deletions, 0);
+        return `
+          <div class="overview-scroll">
+            <article class="overview">
+              <header class="overview-header">
+                <div><h1>${escapeHTML(pr.title)}</h1><p class="byline">${escapeHTML(pr.author)} · ${escapeHTML(pr.readerTime)}</p></div>
+                <span class="status-text"><span class="status-dot" aria-hidden="true"></span>${escapeHTML(pr.status)}</span>
+              </header>
+              <div class="overview-grid">
+                <div>
+                  <h2 class="section-label">Summary</h2>
+                  <p class="summary-copy">${escapeHTML(pr.summary)}</p>
+                  <h2 class="section-label">What Changed</h2>
+                  <ul class="changed-list">${pr.whatChanged.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}</ul>
+                  <button id="review-changes" class="primary-button" type="button">Review Changes →</button>
+                </div>
+                <aside>
+                  <h2 class="section-label">Stats</h2>
+                  <div class="stats">
+                    <div class="stat"><strong>8 files changed</strong></div>
+                    <div class="stat"><strong class="positive">+${additions}</strong></div>
+                    <div class="stat"><strong class="negative">−${deletions}</strong></div>
+                    <div class="stat"><strong>3 commits</strong></div>
+                  </div>
+                  <h2 class="section-label">Checks</h2>
+                  <ul class="check-list">${pr.checks.map((check) => `<li>${escapeHTML(check)}</li>`).join("")}</ul>
+                </aside>
+              </div>
+            </article>
+          </div>`;
+      }
+
+      function renderFiles(pr, readerState) {
+        const selectedFile = pr.files[readerState.selectedFileOrdinal - 1];
+        const groups = ["Sources", "Tests"].map((group) => `
+          <section aria-labelledby="group-${group.toLowerCase()}">
+            <h3 id="group-${group.toLowerCase()}" class="file-group-title">${group}</h3>
+            ${pr.files.map((file, index) => ({ file, index })).filter((entry) => entry.file.group === group).map(({ file, index }) => renderFileRow(file, index, readerState)).join("")}
+          </section>`).join("");
+
+        return `
+          <div class="files-workspace">
+            <aside class="file-panel" aria-label="Changed files">
+              <header class="panel-heading"><h2>Changed Files</h2><span class="file-total">+${pr.files.reduce((sum, file) => sum + file.additions, 0)} −${pr.files.reduce((sum, file) => sum + file.deletions, 0)}</span></header>
+              <div class="file-list-scroll" role="listbox" aria-label="Changed files">${groups}</div>
+            </aside>
+            <section class="diff-panel" aria-label="Code diff">
+              <header class="diff-heading"><h2>Code Diff</h2><span class="diff-file-title">${escapeHTML(selectedFile.path)}</span><span class="diff-disclaimer">Fictional excerpt · not a complete PR diff</span></header>
+              <div id="diff-scroll" class="diff-scroll" tabindex="0" aria-label="Diff for ${escapeHTML(selectedFile.path)}">
+                ${selectedFile.changes.map((item, index) => renderChange(item, index, readerState, selectedFile)).join("")}
+              </div>
+            </section>
+            <footer class="files-action-bar">
+              <span class="progress-text">${readerState.selectedFileOrdinal} / 8 files</span>
+              <div class="shortcut-legends" aria-label="Keyboard shortcuts">
+                <span><kbd>↑↓</kbd> Change</span><span><kbd>⌥↑↓</kbd> File</span>
+              </div>
+              <div class="action-buttons"><button id="comment-button" class="quiet-button" type="button">C Comment</button><button id="done-button" class="done-button" type="button">Done</button></div>
+            </footer>
+          </div>`;
+      }
+
+      function renderFileRow(file, index, readerState) {
+        const ordinal = index + 1;
+        const selected = ordinal === readerState.selectedFileOrdinal;
+        const visited = readerState.visitedFileOrdinals.has(ordinal);
+        return `
+          <div class="file-row${selected ? " selected" : ""}" role="option" aria-selected="${selected}" tabindex="-1" data-file-ordinal="${ordinal}" title="${escapeHTML(file.path)}" aria-label="${escapeHTML(file.path)}, ${file.additions} additions, ${file.deletions} deletions, ${file.changes.length} changes">
+            <span class="file-ordinal">${ordinal}</span>
+            <span class="file-name">${escapeHTML(file.name)}</span>
+            <span class="file-meta"><span class="visited-mark" aria-label="${visited ? "Visited" : "Not visited"}">${visited ? "●" : "○"}</span><span class="file-status">M</span><span class="file-delta"><span class="additions">+${file.additions}</span> <span class="deletions">−${file.deletions}</span></span><span>${file.changes.length}c</span></span>
+          </div>`;
+      }
+
+      function renderChange(item, index, readerState, file) {
+        const selected = index === readerState.selectedChangeIndex;
+        const draft = readerState.savedDraft;
+        const hasDraft = draft && draft.fileOrdinal === readerState.selectedFileOrdinal && draft.changeIndex === index;
+        return `
+          <article class="change-block${selected ? " selected" : ""}" role="button" aria-pressed="${selected}" tabindex="-1" data-change-index="${index}" aria-label="Change ${index + 1}: ${escapeHTML(item.anchor)}">
+            <header class="hunk-header"><span>${escapeHTML(item.header)}</span><span class="change-anchor">${escapeHTML(item.anchor)}</span></header>
+            <div class="diff-lines">${item.lines.map(renderDiffLine).join("")}</div>
+            ${item.conversation ? renderConversation(item.conversation) : ""}
+            ${hasDraft ? `<span class="draft-marker" title="${escapeHTML(draft.body)}">Draft · not submitted</span>` : ""}
+          </article>`;
+      }
+
+      function renderDiffLine(item) {
+        const prefix = item.type === "add" ? "+" : item.type === "remove" ? "-" : " ";
+        return `<div class="diff-line ${item.type}"><span class="line-number">${item.oldNumber ?? ""}</span><span class="line-number">${item.newNumber ?? ""}</span><span class="line-code">${escapeHTML(prefix + item.code.slice(1))}</span></div>`;
+      }
+
+      function renderConversation(conversation) {
+        return `
+          <aside class="review-thread" aria-label="Inline review conversation">
+            <div class="review-message"><span class="review-author">${escapeHTML(conversation.author)}</span>${escapeHTML(conversation.body)}</div>
+            <div class="review-message"><span class="review-author">Reply</span>${escapeHTML(conversation.reply)}</div>
+          </aside>`;
+      }
+
+      function renderCommits(pr) {
+        return `
+          <div class="simple-scroll"><section class="simple-content">
+            <header class="simple-header"><h1>Commits (3)</h1><p>Three fictional commits included in this reading fixture.</p></header>
+            <ol class="commit-list">${pr.commits.map(([sha, message]) => `<li class="commit-item"><span class="commit-sha">${escapeHTML(sha)}</span><span class="commit-message">${escapeHTML(message)}</span></li>`).join("")}</ol>
+          </section></div>`;
+      }
+
+      function renderChecks(pr) {
+        return `
+          <div class="simple-scroll"><section class="simple-content">
+            <header class="simple-header"><h1>Checks</h1><p>Fixed results for this fictional reader fixture.</p></header>
+            <ul class="large-check-list">${pr.checks.map((check) => `<li><span class="check-glyph" aria-hidden="true">✓</span><span>${escapeHTML(check.slice(2))}</span></li>`).join("")}</ul>
+          </section></div>`;
+      }
+
+      function renderComposer(pr, readerState) {
+        const file = pr.files[readerState.selectedFileOrdinal - 1];
+        const selectedChange = file.changes[readerState.selectedChangeIndex];
+        return `
+          <dialog id="composer-dialog" aria-labelledby="composer-title" aria-describedby="composer-context">
+            <header class="dialog-header"><h2 id="composer-title">Add comment draft</h2><p id="composer-context" class="dialog-anchor">${escapeHTML(file.path)} · ${escapeHTML(selectedChange.anchor)}</p></header>
+            <div class="dialog-body">
+              <label for="draft-body">Draft comment</label>
+              <textarea id="draft-body" spellcheck="true" placeholder="Write a review note…">${escapeHTML(state.composer.workingBody)}</textarea>
+              <p class="dialog-note">Saved only in this page session. This draft cannot be submitted.</p>
+            </div>
+            <footer class="dialog-actions"><button id="cancel-draft" type="button">Cancel</button><button id="save-draft" class="save-button" type="button" ${state.composer.workingBody.trim() ? "" : "disabled"}>Save Draft</button></footer>
+          </dialog>`;
+      }
+
+      function bindRenderedEvents() {
+        document.getElementById("pr-list")?.addEventListener("click", handleRowClick);
+        document.getElementById("pr-list")?.addEventListener("dblclick", handleRowDoubleClick);
+        document.getElementById("back-inbox")?.addEventListener("click", returnToInbox);
+        document.querySelector(".reader-tabs")?.addEventListener("click", handleTabClick);
+        document.querySelector(".reader-tabs")?.addEventListener("keydown", handleTabKeydown);
+        document.getElementById("review-changes")?.addEventListener("click", () => activateTab("files"));
+        document.querySelectorAll(".file-row").forEach((row) => row.addEventListener("click", handleFileClick));
+        document.querySelectorAll(".change-block").forEach((block) => block.addEventListener("click", handleChangeClick));
+        document.getElementById("comment-button")?.addEventListener("click", () => openComposer("comment"));
+        document.getElementById("done-button")?.addEventListener("click", returnToInbox);
+      }
+
+      function handleRowClick(event) {
+        const row = event.target.closest("[data-pr-key]");
+        if (!row) return;
+        state.inboxSelectionKey = row.dataset.prKey;
+        document.querySelectorAll("[data-pr-key]").forEach((candidate) => {
+          const selected = candidate.dataset.prKey === state.inboxSelectionKey;
+          candidate.classList.toggle("selected", selected);
+          candidate.setAttribute("aria-selected", String(selected));
+        });
+        document.getElementById("pr-list")?.focus({ preventScroll: true });
+      }
+
+      function handleRowDoubleClick(event) {
+        const row = event.target.closest("[data-pr-key]");
+        if (!row) return;
+        state.inboxSelectionKey = row.dataset.prKey;
+        openSelectedPR();
+      }
+
+      function openSelectedPR() {
+        if (state.workspace === "reader") return;
+        state.activePRKey = state.inboxSelectionKey;
+        state.workspace = "reader";
+        const readerState = activeReaderState();
+        if (readerState.activeTab === "files") enterFiles(readerState);
+        render();
+      }
+
+      function returnToInbox() {
+        if (state.workspace !== "reader") return;
+        state.workspace = "inbox";
+        state.activePRKey = null;
+        state.composer = null;
+        render();
+        document.getElementById("pr-list")?.focus({ preventScroll: true });
+      }
+
+      function handleTabClick(event) {
+        const tab = event.target.closest("[data-tab]");
+        if (tab) activateTab(tab.dataset.tab);
+      }
+
+      function handleTabKeydown(event) {
+        const tab = event.target.closest("[data-tab]");
+        if (!tab) return;
+        const current = TABS.findIndex((item) => item.key === tab.dataset.tab);
+        let next = current;
+        if (event.key === "ArrowLeft") next = Math.max(0, current - 1);
+        else if (event.key === "ArrowRight") next = Math.min(TABS.length - 1, current + 1);
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = TABS.length - 1;
+        else if (event.key === "Enter" || event.key === " ") next = current;
+        else return;
+        event.preventDefault();
+        activateTab(TABS[next].key, true);
+      }
+
+      function activateTab(tabKey, restoreTabFocus = false) {
+        const readerState = activeReaderState();
+        if (!readerState || !TABS.some((tab) => tab.key === tabKey)) return;
+        readerState.activeTab = tabKey;
+        if (tabKey === "files") enterFiles(readerState);
+        render();
+        if (restoreTabFocus) document.querySelector(`[data-tab="${tabKey}"]`)?.focus({ preventScroll: true });
+      }
+
+      function enterFiles(readerState) {
+        readerState.visitedFileOrdinals.add(readerState.selectedFileOrdinal);
+        const file = activePR().files[readerState.selectedFileOrdinal - 1];
+        readerState.selectedChangeIndex = Math.min(readerState.selectedChangeIndex, file.changes.length - 1);
+      }
+
+      function handleFileClick(event) {
+        const row = event.currentTarget;
+        selectFile(Number(row.dataset.fileOrdinal));
+      }
+
+      function selectFile(ordinal) {
+        const pr = activePR();
+        const readerState = activeReaderState();
+        if (!pr || !readerState || ordinal < 1 || ordinal > pr.files.length) return;
+        readerState.selectedFileOrdinal = ordinal;
+        readerState.selectedChangeIndex = 0;
+        readerState.visitedFileOrdinals.add(ordinal);
+        render();
+        focusSelectedChange();
+      }
+
+      function handleChangeClick(event) {
+        const readerState = activeReaderState();
+        readerState.selectedChangeIndex = Number(event.currentTarget.dataset.changeIndex);
+        render();
+        focusSelectedChange();
+      }
+
+      function moveChange(delta) {
+        const pr = activePR();
+        const readerState = activeReaderState();
+        const file = pr.files[readerState.selectedFileOrdinal - 1];
+        const next = Math.max(0, Math.min(file.changes.length - 1, readerState.selectedChangeIndex + delta));
+        if (next === readerState.selectedChangeIndex) return;
+        readerState.selectedChangeIndex = next;
+        render();
+        focusSelectedChange();
+      }
+
+      function moveFile(delta) {
+        const readerState = activeReaderState();
+        const next = Math.max(1, Math.min(8, readerState.selectedFileOrdinal + delta));
+        if (next === readerState.selectedFileOrdinal) return;
+        selectFile(next);
+      }
+
+      function focusSelectedChange() {
+        const scroller = document.getElementById("diff-scroll");
+        scroller?.focus({ preventScroll: true });
+        document.querySelector(".change-block.selected")?.scrollIntoView({ block: "center" });
+      }
+
+      function openComposer(focusReturn = "diff") {
+        const pr = activePR();
+        const readerState = activeReaderState();
+        if (!pr || !readerState || readerState.activeTab !== "files" || state.composer) return;
+        const saved = readerState.savedDraft;
+        const sameAnchor = saved && saved.fileOrdinal === readerState.selectedFileOrdinal && saved.changeIndex === readerState.selectedChangeIndex;
+        state.composer = { isOpen: true, workingBody: sameAnchor ? saved.body : "", focusReturn };
+        render();
+      }
+
+      function showComposer() {
+        const dialog = document.getElementById("composer-dialog");
+        if (!dialog || dialog.open) return;
+        dialog.addEventListener("cancel", (event) => {
+          event.preventDefault();
+          closeComposer();
+        });
+        dialog.showModal();
+        const textarea = document.getElementById("draft-body");
+        textarea.addEventListener("input", () => {
+          if (!state.composer) return;
+          state.composer.workingBody = textarea.value;
+          document.getElementById("save-draft").disabled = !textarea.value.trim();
+        });
+        document.getElementById("cancel-draft").addEventListener("click", closeComposer);
+        document.getElementById("save-draft").addEventListener("click", saveDraft);
+        textarea.focus();
+      }
+
+      function closeComposer() {
+        if (!state.composer) return;
+        const focusReturn = state.composer.focusReturn;
+        state.composer = null;
+        render();
+        const target = focusReturn === "comment" ? document.getElementById("comment-button") : document.getElementById("diff-scroll");
+        target?.focus({ preventScroll: true });
+      }
+
+      function saveDraft() {
+        const readerState = activeReaderState();
+        const body = state.composer?.workingBody ?? "";
+        if (!readerState || !body.trim()) return;
+        readerState.savedDraft = {
+          body,
+          fileOrdinal: readerState.selectedFileOrdinal,
+          changeIndex: readerState.selectedChangeIndex
+        };
+        closeComposer();
+      }
+
+      function isEditableOrControl(target) {
+        if (!(target instanceof Element)) return false;
+        return Boolean(target.closest("input, textarea, select, button, [contenteditable]:not([contenteditable='false']), [role='button']"));
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (state.composer?.isOpen) return;
+
+        if (state.workspace === "inbox") {
+          if (isEditableOrControl(event.target)) return;
+          const current = prs.findIndex((pr) => pr.key === state.inboxSelectionKey);
+          let next = current;
+          if (event.key === "ArrowUp") next = Math.max(0, current - 1);
+          else if (event.key === "ArrowDown") next = Math.min(prs.length - 1, current + 1);
+          else if (event.key === "Home") next = 0;
+          else if (event.key === "End") next = prs.length - 1;
+          else if (event.key === "Enter") {
+            event.preventDefault();
+            openSelectedPR();
+            return;
+          } else if (event.key === " ") {
+            event.preventDefault();
+            return;
+          } else return;
+          event.preventDefault();
+          if (next !== current) {
+            state.inboxSelectionKey = prs[next].key;
+            render();
+            document.getElementById("pr-list")?.focus({ preventScroll: true });
+          }
+          return;
+        }
+
+        const readerState = activeReaderState();
+        if (!readerState || readerState.activeTab !== "files" || isEditableOrControl(event.target)) return;
+
+        if (event.altKey && !event.metaKey && !event.ctrlKey && event.key === "ArrowUp") {
+          event.preventDefault();
+          moveFile(-1);
+        } else if (event.altKey && !event.metaKey && !event.ctrlKey && event.key === "ArrowDown") {
+          event.preventDefault();
+          moveFile(1);
+        } else if (!event.altKey && !event.metaKey && !event.ctrlKey && event.key === "ArrowUp") {
+          event.preventDefault();
+          moveChange(-1);
+        } else if (!event.altKey && !event.metaKey && !event.ctrlKey && event.key === "ArrowDown") {
+          event.preventDefault();
+          moveChange(1);
+        } else if (!event.altKey && !event.metaKey && !event.ctrlKey && (event.key === "c" || event.key === "C")) {
+          event.preventDefault();
+          openComposer("diff");
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
