@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。`IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04` 是 historical delivery route；PC-11 在 DL-07 後的 current route 固定為 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`，不得援引其他 route 取代其 gate。
+PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。`IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04` 是已完成的 historical delivery route；其 unresolved-thread wording 已過期，不能作為 current gate 或後續 resolution authority。PC-11 的 current route 為 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`，不得援引其他 route 取代其 gate。
 
 ## Goal
 
@@ -145,7 +145,7 @@ PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` �
 | IN-02 | completed | Implementer | 在 CF-02 後 non-force merge `origin/dev`。 | 先確認 feature worktree clean；只 resolve `docs/architecture/bounded-contexts/README.md` 的 exact semantic hunk，保留 GitHubIntegration implemented/deferred 與 generic Auth/AuthFlow／HTTP client 不 drive flow combined truth；不得 rebase、force push 或單方覆寫。 | Non-force merge commit `f17621c`；只解決 bounded-context index exact README hunk，hooks pass。 |
 | TE-11 | completed | Tester | 獨立驗證 IN-02 merge snapshot。 | 確認 exact combined hunk、scope、root tests、SwiftLint 與 diff hygiene；如實分類 blocker。 | External Tester verdict `pass`：root `swift test` 30 tests／5 suites、consumer wrapper 4 tests、full format、full SwiftLint、pre-commit all-files、diff checks 均通過；fixture `.build` cache absent。 |
 | RV-08 | completed | Code-Reviewer | 獨立審查 TE-11 後的 merge snapshot。 | 明示 fresh merge-review verdict；不得使用 RV-07 取代此 verdict。 | External Code-Reviewer verdict `approved`／`pass`；merge snapshot 可進入 DL-04。 |
-| DL-04 | pending (eligible) | Implementer | 在 RV-08 approved、無 blocker 與 human delivery authority 存在時 push 並 resolve completed threads。 | push 已驗證 merge head；只 resolve completed threads；不再新增 code、commit、rebase、force push、merge PR 或 release。 | RV-08 approved；DL-04 eligible，等待 existing human delivery authority。 |
+| DL-04 | completed | Implementer | 在 RV-08 approved、無 blocker 與 human delivery authority 存在時 push 並 resolve completed threads。 | push 已驗證 merge head；只 resolve completed threads；不再新增 code、commit、rebase、force push、merge PR 或 release。 | Merge head `f17621c` 已 non-force push 至 PR #26；只 resolve `PRRT_kwDOUFu0Cc6hkRKK`、`PRRT_kwDOUFu0Cc6hkRKU`、`PRRT_kwDOUFu0Cc6hkRKa`。其 historical unresolved-thread wording 已過期，不是 current gate 或後續 resolution authority。 |
 | AM-12 | completed | Plan-Creator | 依 PR thread `PRRT_kwDOUFu0Cc6hmEoT` 建立 raw-regex ordinary-division regression amendment。 | 四份 artifacts 一致限制 `rawRegexHashCount` 只辨識至少一個 `#` 開頭的 raw-regex literal，ordinary `/` 不得被 mask；只允許 `StaticIsolationTests.swift` 的 ordinary division 後接 `import Security` regression fixture。不得新增 generic Swift lexer、改 API、target/module、BC boundary 或既有 contract。 | Plan-Creator 僅修改四份 topic planning artifacts；未實作、測試、Git、commit/push 或 resolve thread。 |
 | PR-15 | completed | Plan-Reviewer | 獨立審查 AM-12。 | 明示 verdict；確認 raw-regex hash precondition、ordinary-division/Security fixture、ReadOnly/Modify/TestCase 與 fresh route 一致，且無 lexer/API/scope drift。 | External Plan-Reviewer re-review verdict `approved`／`pass`；PC-07 route、Current Phase、Modify 與 TestCase contract 均確認一致。 |
 | IM-07 | completed | Implementer | 僅在 PR-15 approved 後修正 PC-07。 | 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：`rawRegexHashCount` 只辨識至少一個 `#` 開頭的 raw-regex literal，並加入 ordinary division 後接 `import Security` regression fixture。不得改其他 source、API、target/module、BC boundary、CI 或 contract。 | External Implementer completed：僅修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`；red 為 ordinary division 導致 `hashCount = 0` 而 mask 後續 `import Security`，green 固定為只在 `hashCount > 0` 時進入 raw-regex masking。未執行 Git 或 delivery。 |
@@ -173,7 +173,7 @@ PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` �
 
 ## Blockers
 
-- DL-04 delivery 尚未執行；在 existing human delivery authority 下才可 push 或 resolve completed threads。
+- DL-04 已完成；其 historical unresolved-thread wording 不構成 current blocker，也不授權後續 thread 的 push 或 resolution。
 - PC-07 在 PR-15、IM-07、TE-12、RV-09 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6hmEoT`。
 - PC-08 在 DL-05、PR-16、IM-08、TE-13、RV-10 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h-iXj`。
 - PC-09／PC-10 在 DL-06、PR-17、IM-09、TE-14、RV-11 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`。
@@ -183,6 +183,7 @@ PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` �
 
 - PR #26 維持 human review boundary；不得自動 merge、release、delete branch 或進行其他整合動作。
 - historic DL-02 route 不構成後續 thread-resolution authority。AM-10 threads 只能依 `IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04`，在 RV-08 approved 與 human delivery authority 後 resolve。
+- DL-04 已完成 historical delivery；僅其當時三個 completed AM-10 threads 被 resolve，該 route 不得用於後續 thread。
 - 不得 rebase 或 force push；AM-10 只可在 CF-02 後、feature worktree clean 時 non-force merge `origin/dev`，並只 resolve bounded-context index 的指定 semantic hunk。
 - 若任一獨立 reviewer verdict 為 `blocked` 或 `human-check`，停止自動前進並交還 human。
 - PC-07 delivery 只可 resolve `PRRT_kwDOUFu0Cc6hmEoT`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-09。
@@ -201,3 +202,5 @@ PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` �
 2026-09-14 — AM-14 處置 `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`：只新增 U+00A0 NBSP trivia 與 hash-escape-aware raw-string close（`\#"` 不 premature close）；兩個 focused fixtures 都必須維持後續 `Security` import 可偵測。新 route 為 `AM-14 → PR-17 → IM-09 → TE-14 → RV-11 → DL-07`，且只可在 DL-06 後開始；不重開 general whitespace、structured parser、generic lexer、raw-regex semantics、API、scope、target/module、BC/toolchain/fixture 或 historic routes。
 
 2026-09-14 — AM-15 處置 `PRRT_kwDOUFu0Cc6h_Tcg`：只補 adjacent legal attributes traversal 至 import/access modifier/next attribute；`@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` 並觸發既有 forbidden-import assertion。新 route 為 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`，且只可在 DL-07 後開始；不重開 production/API/target/module/BC/toolchain/fixture、generic lexer、raw string／raw-regex semantics 或 historic routes。
+
+2026-09-14 — planning-truth amendment：DL-04 的 merge head `f17621c` 已 non-force push 至 PR #26，且只 resolve 三個當時已完成的 AM-10 threads；其 unresolved-thread wording 為 historical/expired，不構成 current blocker 或後續 thread-resolution authority。
