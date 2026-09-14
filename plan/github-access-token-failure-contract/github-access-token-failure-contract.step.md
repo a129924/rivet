@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。`IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04` 是已完成的 historical delivery route；其 unresolved-thread wording 已過期，不能作為 current gate 或後續 resolution authority。PC-11 的 current route 為 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`，不得援引其他 route 取代其 gate。
+PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。`IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04` 是已完成的 historical delivery route；其 unresolved-thread wording 已過期，不能作為 current gate 或後續 resolution authority。DL-08 亦已完成：commit `80ca584` 已建立、已 non-force push 至 PR #26 feature branch，且其後只 resolve `PRRT_kwDOUFu0Cc6h_Tcg`；三項事實彼此獨立。PC-12／PC-13 的 current planning-only route 為 `AM-16 → PR-19 → DL-09`，不得援引任何 historical route 取代其 gate。
 
 ## Goal
 
@@ -28,6 +28,8 @@ AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有
 
 AM-15 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有 implementation、production API、target/module、BC、toolchain 與 consumer fixture 都維持 ReadOnly。
 
+Initial implementation 的 root `Package.swift`、`GitHubIntegration` product/target、production source 與 public API modify authority 已完成，僅保留為歷史 traceability。AM-06 至 AM-15 的 corrective work 不重開這些 path；除其各自明列的 `StaticIsolationTests.swift` test-private exception 外，均為 ReadOnly 與 Out-Of-Scope。
+
 ## Written
 
 實作階段新增 `Sources/BoundedContexts/GitHubIntegration/Contracts/CredentialTypes.swift`、`GitHubTokenStore.swift`、`GitHubTokenProvider.swift`、`Providers/TokenStoreGitHubTokenProvider.swift`，以及 `Tests/GitHubIntegrationTests/GitHubTokenProviderTests.swift`、`StaticIsolationTests.swift`；fresh PR-comment route 另新增 `Tests/GitHubIntegrationConsumer/Package.swift` 與 `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift`、`scripts/check-github-integration-consumer.sh`。consumer manifest 固定 `../..` local-path dependency、macOS 15、Swift 6、單一 test target，僅依 package `Rivet` 的 `GitHubIntegration` product；public test 僅 `import GitHubIntegration`。planning phase 已寫入四份同 slug artifacts；AM-10 不改 fixture public tests、Swift production source 或 `.swiftlint.yml`。
@@ -35,6 +37,8 @@ AM-15 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有
 AM-14 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file，IM-09 只修改既有 `StaticIsolationTests.swift`。
 
 AM-15 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file，IM-10 只修改既有 `StaticIsolationTests.swift`。
+
+AM-16 只寫入四份 planning artifacts；不新增 implementation、production、manifest、target/module、public API、toolchain 或 fixture file。
 
 ## Modify
 
@@ -47,6 +51,8 @@ PC-08 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIso
 PC-09／PC-10 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：只新增 U+00A0 NBSP trivia 與 `import<NBSP>Security` independent extraction/forbidden fixture；raw string masking只新增 hash-escape-aware close 判定，使 `\#"` 不 prematurely close，並以 literal 後 real `import Security` 的 focused fixture 驗證既有 forbidden-import failure。不得 general whitespace sweep、structured parser、generic lexer、raw-regex semantic 或改動任何其他 implementation file、production API、target/module、BC/toolchain/fixture 或既有 contract。
 
 PC-11 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：只補 adjacent legal attributes traversal 至 import/access modifier/next attribute，並加入 `@_spi(Foo)@preconcurrency import Security` focused fixture，使 `Security` 觸發既有 forbidden-import assertion。不得改動其他 implementation file、production API、target/module、BC/toolchain/fixture、generic lexer、raw string／raw-regex semantics 或既有 contract。
+
+AM-16 無 implementation Modify allowlist：initial implementation 的 file/API/module/manifest scope 已完成，不得被本次 planning-truth correction 或任何後續 corrective route 重新解讀為寫入權限。
 
 ## Deleted
 
@@ -169,7 +175,10 @@ PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` �
 | IM-10 | completed | Implementer | 僅在 PR-18 approved 後修正 PC-11。 | 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：adjacent legal attributes traverse 至 import/access modifier/next attribute，並加入 Security extraction/forbidden fixture。 | External Implementer completed：僅修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`；adjacent-attributes fixture red 後 green，`Security` extraction 與既有 forbidden assertion 通過；未執行 delivery。 |
 | TE-15 | completed | Tester | 獨立驗證 IM-10。 | 驗證 focused adjacent-attributes regression 與既有 extraction coverage；如實回報 blocker。 | External Tester verdict `pass`：`swift test` 39 tests／5 suites、consumer 4 tests且 cache absent、format、strict SwiftLint 42 files／0 violations、pre-commit all-files 與 `git diff --check` 均通過；scope exact five files。 |
 | RV-12 | completed | Code-Reviewer | 獨立審查 TE-15 後的 PC-11 snapshot。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check`；確認 no forbidden scope drift。 | External Code-Reviewer fresh verdict `approved`；PC-11 snapshot 無 scope、contract、workflow 或 delivery blocker。 |
-| DL-08 | pending (eligible) | Implementer | 僅在 RV-12 approved、無 blocker 與 human 明示 delivery authority 後 commit、non-force push，並 resolve PC-11。 | 只交付 reviewed PC-11 fix；只 resolve `PRRT_kwDOUFu0Cc6h_Tcg`，不得處理其他 thread、rebase、force push、merge PR 或 release。 | RV-12 approved；existing human delivery authority 下可進行。 |
+| DL-08 | completed | Implementer | 在 RV-12 approved、無 blocker 與 human delivery authority 後交付 PC-11。 | commit、push 與 thread resolution 分別記錄；只交付 reviewed PC-11 fix、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6h_Tcg`；不得處理其他 thread、rebase、force push、merge PR 或 release。 | Commit `80ca584` 已建立；該 commit 已 non-force push 至 PR #26 feature branch；其後 `PRRT_kwDOUFu0Cc6h_Tcg` 經 precheck resolve。三項為獨立事實。 |
+| AM-16 | completed | Plan-Creator | 依 PR threads `PRRT_kwDOUFu0Cc6iArqM`、`PRRT_kwDOUFu0Cc6iArqQ` 修正 DL-08 historical delivery 與 initial implementation scope truth。 | 只改四份 planning artifacts；分別記錄 `80ca584` commit、non-force push 與 PC-11 thread resolution；確認 initial implementation scope 只屬 historical completed work，後續 corrective amendments 的未明列 path 一律 ReadOnly／Out-Of-Scope。 | Plan-Creator 僅修改四份 topic planning artifacts；未實作、測試、Git、commit/push 或 PR/thread 操作。 |
+| PR-19 | pending | Plan-Reviewer | 獨立審查 AM-16。 | 確認 DL-08 commit/push/resolution 事實未互相推論，且 initial implementation historical scope 與後續 corrective ReadOnly／Out-Of-Scope 邊界一致；不實作或測試。 | 等待獨立 Plan-Reviewer verdict。 |
+| DL-09 | pending | Implementer | 僅在 PR-19 approved、無 blocker 與 human delivery authority 後交付 AM-16 planning-only amendment。 | 只提交並 non-force push 四份 planning artifacts；只 resolve `PRRT_kwDOUFu0Cc6iArqM`、`PRRT_kwDOUFu0Cc6iArqQ`；不得改 Swift、manifest、target/module、API、tests、toolchain、rebase、force push、merge PR 或 release。 | 等待 PR-19。 |
 
 ## Blockers
 
@@ -177,7 +186,7 @@ PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` �
 - PC-07 在 PR-15、IM-07、TE-12、RV-09 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6hmEoT`。
 - PC-08 在 DL-05、PR-16、IM-08、TE-13、RV-10 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h-iXj`。
 - PC-09／PC-10 在 DL-06、PR-17、IM-09、TE-14、RV-11 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`。
-- PC-11 在 DL-07、PR-18、IM-10、TE-15、RV-12 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h_Tcg`。
+- PC-12／PC-13 在 AM-16、PR-19 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6iArqM`、`PRRT_kwDOUFu0Cc6iArqQ`。
 
 ## Human Check
 
@@ -189,7 +198,8 @@ PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` �
 - PC-07 delivery 只可 resolve `PRRT_kwDOUFu0Cc6hmEoT`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-09。
 - PC-08 delivery 只可 resolve `PRRT_kwDOUFu0Cc6h-iXj`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-10。
 - PC-09／PC-10 delivery 只可 resolve `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-11。
-- PC-11 delivery 只可 resolve `PRRT_kwDOUFu0Cc6h_Tcg`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-12。
+- DL-08 已完成；其 commit、push、`PRRT_kwDOUFu0Cc6h_Tcg` resolution 均不構成 PC-12／PC-13 的 authority。
+- PC-12／PC-13 delivery 只可 resolve `PRRT_kwDOUFu0Cc6iArqM`、`PRRT_kwDOUFu0Cc6iArqQ`；不得以 historic route 取代 PR-19。
 
 ## Last Updated
 
@@ -204,3 +214,5 @@ PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` �
 2026-09-14 — AM-15 處置 `PRRT_kwDOUFu0Cc6h_Tcg`：只補 adjacent legal attributes traversal 至 import/access modifier/next attribute；`@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` 並觸發既有 forbidden-import assertion。新 route 為 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`，且只可在 DL-07 後開始；不重開 production/API/target/module/BC/toolchain/fixture、generic lexer、raw string／raw-regex semantics 或 historic routes。
 
 2026-09-14 — planning-truth amendment：DL-04 的 merge head `f17621c` 已 non-force push 至 PR #26，且只 resolve 三個當時已完成的 AM-10 threads；其 unresolved-thread wording 為 historical/expired，不構成 current blocker 或後續 thread-resolution authority。
+
+2026-09-14 — AM-16 處置 `PRRT_kwDOUFu0Cc6iArqM`、`PRRT_kwDOUFu0Cc6iArqQ`：DL-08 的 `80ca584` commit、non-force push 與 PC-11 thread resolution 分別記錄；initial implementation 的 file/API/module/manifest scope 是 completed historical work，後續 corrective amendment 的未明列 path 維持 ReadOnly／Out-Of-Scope。新 route 為 `AM-16 → PR-19 → DL-09`，不實作、不測試。

@@ -27,6 +27,7 @@
 - HTTP status、transport、Domain failure mapping、endpoint、DTO 或 business meaning。
 - `async`、cancellation，以及除 `TokenStoreOperation: Sendable` 外的任何新增 explicit `Sendable` conformance 或 concurrency behavior。
 - root `Package.swift`、`GitHubIntegration` product/target、production source 與既有 public API；consumer fixture 不得以 `@testable` 或 internal API 驗證取代 public consumer 驗證。
+- AM-16 不重開 initial implementation 的 root manifest、target/module、production source 或 public API；這些 completed historical paths 對後續 corrective amendment 均為 Out-Of-Scope。
 
 ## Success Criteria
 
@@ -44,6 +45,7 @@
 - 既有 HTTP、GraphQL、未列於 Modify 的 architecture diagrams 與 Bounded Context boundary decisions。
 - AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有 implementation、production API、target/module、BC、toolchain 與 consumer fixture 都維持 ReadOnly。
 - AM-15 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有 implementation、production API、target/module、BC、toolchain 與 consumer fixture 都維持 ReadOnly。
+- AM-16 的 planning-truth correction 不開放任何 implementation path；initial implementation 的 root `Package.swift`、`GitHubIntegration` product/target、production source 與 public API 是 completed historical work，後續 corrective amendment 均 ReadOnly。
 
 ## Written
 
@@ -60,6 +62,7 @@
 - AM-10 新增 routine validation wrapper `scripts/check-github-integration-consumer.sh`；不改動 fixture public test、Swift production source 或 lint configuration。
 - AM-14 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file。
 - AM-15 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file。
+- AM-16 只寫入四份 planning artifacts；不新增 implementation、production、manifest、target/module、public API、toolchain 或 fixture file。
 
 ## Modify
 
@@ -81,6 +84,7 @@
 - `docs/architecture/diagrams/bounded-context-map/scene.js` 與其生成的 `index.html`：將 `GitHubIntegration` 由「尚未實作」更正為已實作的 lower shared GitHub-specific module，並僅表達本 topic 的 access-token contract 與既有 deferred capabilities；不改變 BC、dependency 或 responsibility boundary。圖的更新必須依 `architecture-canvas` 完成 validation/build，且不得發布 artifact.cafe。
 - pre-integration merge 僅允許以 non-force merge 整合 `origin/dev`；`docs/architecture/README.md` 的 conflict 只可處理單一 semantic hunk，並同時保留本 topic 的 `GitHubIntegration` implemented/deferred wording 與 `dev` 的 HTTP decoded payload `Decodable & Sendable` sentence。
 - AM-10 只允許上述 wrapper、pre-commit hook、toolchain doc、static-isolation test 與 bounded-context index merge hunk；不得修改 `.swiftlint.yml`、root manifest、target/product、production API 或 CI。
+- AM-16 沒有 implementation Modify allowlist；initial implementation file/API/module/manifest scope 不得被重新解讀為後續 corrective write authority。
 
 ## Deleted
 
@@ -108,6 +112,7 @@
 - architecture map source 與生成 artifact 經 `architecture-canvas` validation/build 同步，並明確呈現「已實作的受限 token contract」與 deferred capability。
 - `pr-reader.md` 與 GitHub API README 不再將已實作的 token contract 表示為「若建立／未來／尚未實作」，並仍明確保留 Keychain、authorizer、REST 與 OAuth lifecycle deferred。
 - pre-integration merge 後確認 `docs/architecture/README.md` 的 resolved semantic hunk 同時保留 `GitHubIntegration` 已實作／deferred wording 與 HTTP decoded payload `Decodable & Sendable` sentence；不得用單方覆寫消除 conflict。
+- AM-16 為 planning-only correction，沒有新增 TestCase 或 verification work。
 
 ## PR Comment Triage
 
@@ -124,6 +129,12 @@
 - PC-09（`PRRT_kwDOUFu0Cc6h-yNS`）：test-private import-parser trivia 只新增 U+00A0 NBSP，並以 `import<NBSP>Security` 的 independent extraction／forbidden-import regression 驗證；不得 general whitespace sweep、structured parser 或改動 production/API/target/module/BC/toolchain/fixture。
 - PC-10（`PRRT_kwDOUFu0Cc6h-yNU`）：test-private raw string masking 只新增 hash-escape-aware close 判定，使 `\#"` 不會 prematurely close raw string 並 hide 後接 real `import Security`；不得擴張 raw-regex semantics、建立 generic Swift lexer 或改動 production/API/target/module/BC/toolchain/fixture。
 - PC-11（`PRRT_kwDOUFu0Cc6h_Tcg`）：test-private import extraction 只補 adjacent legal attributes traversal，並以 `@_spi(Foo)@preconcurrency import Security` regression 驗證 `Security` 被萃取及觸發既有 forbidden-import assertion；不得改 production/API/target/module/BC/toolchain/fixture，或擴張 generic lexer、raw string／raw-regex semantics。
+- PC-12（`PRRT_kwDOUFu0Cc6iArqM`）：DL-08 的 delivery truth 必須分別記錄：commit `80ca584` 已建立、該 commit 已 non-force push 至 PR #26 的 feature branch，以及 `PRRT_kwDOUFu0Cc6h_Tcg` 已在 push 後經 precheck resolve。三項事實不得互相推論；push 本身不構成 thread resolution，亦不為新 thread 提供 resolution authority。
+- PC-13（`PRRT_kwDOUFu0Cc6iArqQ`）：initial implementation 對 root manifest、`GitHubIntegration` target/module、production source 與 public API 的 write/modify authority 是已完成的歷史範圍；AM-06 至 AM-15 的後續 corrective work 不重開該 authority，除各 amendment 明列的 `StaticIsolationTests.swift` test-private 例外外，均為 ReadOnly 與 Out-Of-Scope。
+
+## Final Planning Amendment
+
+本 amendment 僅修正四份 topic planning artifacts 的 historical delivery 與 scope truth；不新增 Swift source、manifest、module、API、測試、toolchain、Git 或 PR 操作。initial implementation 已完成後，root `Package.swift`、`GitHubIntegration` product/target、全部 production source 與 public API 僅作歷史 traceability，不得被後續 corrective route 視為可修改範圍。後續 amendment 的唯一 implementation exception 必須明列於該 amendment；未明列者一律 ReadOnly 且 Out-Of-Scope。
 
 ## Implementation Handoff
 
@@ -138,3 +149,5 @@ PC-08 在 DL-05 後必走 `AM-13 → PR-16 → IM-08 → TE-13 → RV-10 → DL-
 PC-09／PC-10 在 DL-06 後必走 `AM-14 → PR-17 → IM-09 → TE-14 → RV-11 → DL-07`。IM-09 只可修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：一個 independent fixture 驗證 `import<NBSP>Security` 的 extraction 與既有 forbidden-import failure；另一個 focused fixture 驗證 raw string body 的 `\#"` 不會 prematurely close 並 hide literal 後的 real `import Security`。Tester 獨立驗證兩個 regression 與既有 parser/raw-regex coverage；Code Reviewer 獨立確認無 general whitespace sweep、structured parser、generic lexer、raw-regex semantic、production/API/target/module/BC/toolchain/fixture drift。僅 RV-11 approved、無 blocker 且 human 明示 delivery authority 後，DL-07 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6h-yNS` 與 `PRRT_kwDOUFu0Cc6h-yNU`，不得處理其他 thread、rebase、force push、merge PR 或 release。
 
 PC-11 在 DL-07 後必走 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`。IM-10 只可修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`，只令 adjacent legal attributes 依序 traverse 至 import/access modifier/next attribute，並以 `@_spi(Foo)@preconcurrency import Security` focused fixture 驗證 `Security` 萃取及既有 forbidden-import assertion。Tester 獨立驗證該 regression 與既有 extraction coverage；Code Reviewer 獨立確認 no production/API/target/module/BC/toolchain/fixture、generic lexer、raw string 或 raw-regex semantic drift。僅 RV-12 approved、無 blocker 且 human 明示 delivery authority 後，DL-08 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6h_Tcg`，不得處理其他 thread、rebase、force push、merge PR 或 release。
+
+DL-08 已完成：commit `80ca584` 已建立並 non-force push 至 PR #26 的 feature branch；其後只 resolve `PRRT_kwDOUFu0Cc6h_Tcg`。commit、push 與 thread resolution 是三個獨立交付事實；它們不授權或預先 resolve PC-12、PC-13 或任何後續 thread。PC-12／PC-13 的 planning-only route 為 `AM-16 → PR-19 → DL-09`：AM-16 與 PR-19 不得實作或測試；僅 PR-19 approved、無 blocker 且 human delivery authority 後，DL-09 才可提交並 non-force push 四份 planning artifacts，且只 resolve `PRRT_kwDOUFu0Cc6iArqM`、`PRRT_kwDOUFu0Cc6iArqQ`。
