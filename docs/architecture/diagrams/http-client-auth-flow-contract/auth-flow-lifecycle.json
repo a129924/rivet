@@ -5,16 +5,7 @@
     "title": "RivetHTTPClient AuthFlow 合約生命週期",
     "quality_profile": "showcase",
     "viewBox": [1040, 640],
-    "legend": {
-      "mode": "auto",
-      "entries": {
-        "start": { "label": "起始" },
-        "active": { "label": "進行中" },
-        "decision": { "label": "決策" },
-        "neutral": { "label": "中性終態" },
-        "external": { "label": "外部" }
-      }
-    }
+    "legend": { "mode": "hidden" }
   },
   "lanes": [
     { "id": "main", "label": "建立與初始轉換" },
@@ -68,9 +59,9 @@
     },
     {
       "id": "client-send",
-      "type": "external",
-      "label": "HTTPClient",
-      "sublabel": "經 Requester 送出請求",
+      "type": "active",
+      "label": "AuthRequester",
+      "sublabel": "經 Requester 發送",
       "lane": "main",
       "col": 4,
       "width": 118,
@@ -114,7 +105,7 @@
       "id": "start-finish",
       "type": "failure",
       "label": ".finish",
-      "sublabel": "無 response → typed error",
+      "sublabel": "無 response → error",
       "lane": "terminal",
       "col": 0,
       "width": 110,
@@ -180,18 +171,6 @@
       "route": "right-channel",
       "fromSide": "right",
       "toSide": "right"
-    }
-  ],
-  "cards": [
-    {
-      "dot": "violet",
-      "title": "合約邊界",
-      "items": [
-        "caller opt-in 時，HTTPClient 建立一次 flow，呼叫一次 start()，並 generic 地驅動 action",
-        "HTTPClient 只依 .send 經 Requester 發送，將 exact raw response 回灌一次；不解讀認證決策",
-        ".send 攜帶既有不可變 HTTPRequest；.finish 是不攜帶資料的終止動作",
-        "不包含 retry 策略、憑證、剖析器或 GitHub 特定行為；transport error 立即傳遞"
-      ]
     }
   ]
 }

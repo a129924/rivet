@@ -171,7 +171,7 @@
 
 <div id="plate">
   <div class="k">RIVETHTTPCLIENT — MINIMAL INTERFACE</div>
-  <div class="n"><b>HTTPURL</b> → <b>HTTPRequest</b> → <b>Auth</b>／<b>AuthFlow</b> → <b>execute(_:auth:)</b> → <b>Requester</b> → <b>Transport</b> → <b>HTTPResponse</b></div>
+  <div class="n">bare <b>HTTPClient</b> → <b>Requester</b>；internal <b>AuthRequester</b> → <b>AuthFlow</b> → <b>Requester</b> → <b>Transport</b> → <b>HTTPResponse</b></div>
 </div>
 
 <div id="hint">
@@ -348,12 +348,15 @@ const BOXES = [
   { id:'method-headers', plane:'contracts', band:'band-contracts', x:706,y:495,w:613,h:42,r:10,dash:true,
     name:'HTTPMethod 與 HTTPHeaders',about:'HTTPRequest 使用的 package-owned method 與 header value types。',
     texts:[['bs',730,522,'HTTPMethod 與 HTTPHeaders — package-owned request metadata']] },
-  { id:'http-client', plane:'client', band:'band-client', x:140,y:620,w:545,h:68,r:10,dash:true,
-    name:'HTTPClient',about:'公開 facade 與 execute 入口；auth overload generic 地驅動 AuthFlow，其餘 facade 經 execute 委派給 Requester。',
-    texts:[['bl',164,648,'HTTPClient'],['bs',164,670,'facade → execute(_:)；auth overload 驅動 flow']] },
-  { id:'requester', plane:'client', band:'band-client', x:727,y:620,w:592,h:68,r:10,dash:true,
+  { id:'http-client', plane:'client', band:'band-client', x:140,y:620,w:360,h:68,r:10,dash:true,
+    name:'HTTPClient',about:'公開 bare HTTP facade；所有 method facade 經 execute 委派給 Requester。',
+    texts:[['bl',164,648,'HTTPClient'],['bs',164,670,'bare facade → execute(_:)']] },
+  { id:'auth-requester', plane:'client', band:'band-client', x:540,y:620,w:360,h:68,r:10,dash:true,
+    name:'AuthRequester',about:'internal decorator；注入 Requester 與 Auth，generic 地驅動 AuthFlow。',
+    texts:[['bl',564,648,'AuthRequester'],['bs',564,670,'internal：Requester + Auth']] },
+  { id:'requester', plane:'client', band:'band-client', x:940,y:620,w:379,h:68,r:10,dash:true,
     name:'Requester',about:'把已驗證 HTTPRequest 映射為 Foundation URLRequest；不重驗 URL。',
-    texts:[['bl',751,648,'Requester'],['bs',751,670,'HTTPRequest → URLRequest']] },
+    texts:[['bl',964,648,'Requester'],['bs',964,670,'HTTPRequest → URLRequest']] },
   { id:'transport', plane:'transport', band:'band-transport', x:140,y:780,w:1179,h:68,r:10,dash:true,
     name:'Transport／URLSessionTransport',about:'注入式 typed-throws contract 與 package-owned production URLSession transport。',
     texts:[['bl',164,808,'Transport／URLSessionTransport'],['bs',164,830,'HTTPClientError；raw HTTP status']] },
@@ -374,15 +377,16 @@ const EDGES = [
   { from:'request',to:'http-url',pts:[[837,479],[837,482],[271,482],[271,479]],label:{s:'al',x:554,y:480,t:'依賴',anchor:'center'} },
   { from:'request',to:'method-headers',pts:[[973,429],[978,429],[978,516],[963,516]],label:{s:'al',x:971,y:466,t:'依賴',rot:-90,anchor:'center'} },
   { from:'auth',to:'auth-flow',pts:[[407,516],[417,516]],label:{s:'al',x:412,y:504,t:'建立',anchor:'center'} },
-  { from:'http-client',to:'requester',pts:[[690,654],[719,654]],label:{s:'al',x:705,y:642,t:'依賴',anchor:'center'} },
-  { from:'http-client',to:'auth-flow',pts:[[620,614],[620,555],[554,555],[554,543]],label:{s:'al',x:637,y:580,t:'驅動',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'request',pts:[[420,614],[420,555],[837,555],[837,479]],label:{s:'al',x:854,y:568,t:'使用',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'response',pts:[[465,614],[465,557],[1154,557],[1154,479]],label:{s:'al',x:1171,y:568,t:'回傳型別',rot:-90,anchor:'center'} },
-  { from:'requester',to:'request',pts:[[887,614],[887,550],[837,550],[837,479]],label:{s:'al',x:904,y:575,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'http-client',to:'requester',pts:[[505,640],[925,640],[925,642],[934,642]],label:{s:'al',x:722,y:628,t:'bare execute',anchor:'center'} },
+  { from:'auth-requester',to:'requester',pts:[[905,670],[925,670],[925,666],[934,666]],label:{s:'al',x:915,y:690,t:'injected',rot:-90,anchor:'center'} },
+  { from:'auth-requester',to:'auth-flow',pts:[[720,614],[720,555],[554,555],[554,543]],label:{s:'al',x:737,y:580,t:'驅動',rot:-90,anchor:'center'} },
+  { from:'http-client',to:'request',pts:[[320,614],[320,555],[837,555],[837,479]],label:{s:'al',x:854,y:568,t:'使用',rot:-90,anchor:'center'} },
+  { from:'http-client',to:'response',pts:[[360,614],[360,557],[1154,557],[1154,479]],label:{s:'al',x:1171,y:568,t:'回傳型別',rot:-90,anchor:'center'} },
+  { from:'requester',to:'request',pts:[[1075,614],[1075,550],[837,550],[837,479]],label:{s:'al',x:1092,y:575,t:'依賴',rot:-90,anchor:'center'} },
   { from:'requester',to:'response',pts:[[1244,614],[1244,550],[1154,550],[1154,479]],label:{s:'al',x:1261,y:575,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'transport',pts:[[1023,694],[1023,770],[730,770],[730,774]],label:{s:'al',x:747,y:735,t:'注入依賴',rot:-90,anchor:'center'} },
+  { from:'requester',to:'transport',pts:[[1129,694],[1129,770],[730,770],[730,774]],label:{s:'al',x:747,y:735,t:'注入依賴',rot:-90,anchor:'center'} },
   { from:'transport',to:'response',pts:[[730,774],[730,715],[1154,715],[1154,479]],label:{s:'al',x:1171,y:652,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'url-request',pts:[[1023,694],[1023,870],[315,870],[315,929]],label:{s:'al',x:332,y:841,t:'Foundation mapping',rot:-90,anchor:'center'} },
+  { from:'requester',to:'url-request',pts:[[1129,694],[1129,870],[315,870],[315,929]],label:{s:'al',x:332,y:841,t:'Foundation mapping',rot:-90,anchor:'center'} },
   { from:'transport',to:'url-request',pts:[[315,854],[315,929]],label:{s:'al',x:332,y:891,t:'依賴',rot:-90,anchor:'center'} },
   { from:'http-url',to:'foundation-url-data',pts:[[271,479],[271,557],[705,557],[705,929]],label:{s:'al',x:722,y:727,t:'URL value',rot:-90,anchor:'center'} },
   { from:'request',to:'foundation-url-data',pts:[[837,479],[837,562],[705,562],[705,929]],label:{s:'al',x:854,y:538,t:'body Data',rot:-90,anchor:'center'} },
@@ -392,13 +396,13 @@ const EDGES = [
 
 const TEXTS = [
   {s:'title',x:110,y:86,t:'RivetHTTPClient — 最小介面結構'},
-  {s:'sub',x:110,y:118,t:'auth opt-in：HTTPClient.execute(_:auth:) 驅動 AuthFlow → Requester → injected Transport → raw HTTPResponse'},
-  {s:'tag',x:110,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'Auth／AuthFlow',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPClient',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
+  {s:'sub',x:110,y:118,t:'bare HTTPClient → Requester；internal AuthRequester 驅動 AuthFlow → injected Requester → Transport → raw HTTPResponse'},
+  {s:'tag',x:110,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'Auth／AuthFlow',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'AuthRequester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部 surface'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:110,y:1040,t:'不變量：Endpoint、Base URL、Path 與 Query 由呼叫端／domain layer 組裝，不是 package API'},
-  {s:'bn',x:110,y:1060,t:'不變量：auth overload generic 地送出 flow action 並回灌 raw response；flow 保有認證決策，HTTP status 維持 raw response'},
+  {s:'bn',x:110,y:1060,t:'不變量：internal AuthRequester generic 地送出 flow action 並回灌 raw response；flow 保有認證決策，HTTP status 維持 raw response'},
   {s:'bn',x:110,y:1080,t:'延後：Endpoint、status／Content-Type validation、retry、token refresh 與 package-owned decoder'}
 ];
 const SWATCHES = [
