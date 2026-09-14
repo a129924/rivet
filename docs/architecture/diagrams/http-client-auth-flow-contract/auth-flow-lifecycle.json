@@ -18,8 +18,8 @@
   },
   "lanes": [
     { "id": "main", "label": "建立與初始轉換" },
-    { "id": "response", "label": "回應、後續轉換與重送" },
-    { "id": "terminal", "label": "ClientAction 結果" }
+    { "id": "response", "label": "送出、raw 回應與後續轉換" },
+    { "id": "terminal", "label": "終態結果" }
   ],
   "states": [
     {
@@ -37,7 +37,7 @@
       "id": "auth-flow",
       "type": "active",
       "label": "AuthFlow",
-      "sublabel": "HTTPClient 不驅動流程",
+      "sublabel": "flow 保有認證決策",
       "lane": "main",
       "col": 1,
       "width": 110,
@@ -69,8 +69,8 @@
     {
       "id": "client-send",
       "type": "external",
-      "label": "用戶端送出請求",
-      "sublabel": "依 .send(HTTPRequest)",
+      "label": "HTTPClient",
+      "sublabel": "經 Requester 送出請求",
       "lane": "main",
       "col": 4,
       "width": 118,
@@ -80,8 +80,8 @@
     {
       "id": "response",
       "type": "active",
-      "label": "回應",
-      "sublabel": "用戶端收到 HTTPResponse",
+      "label": "raw HTTPResponse",
+      "sublabel": "所有 HTTP status 原樣保留",
       "lane": "response",
       "col": 2,
       "width": 125,
@@ -103,7 +103,7 @@
       "id": "resend",
       "type": "active",
       "label": ".send(HTTPRequest)",
-      "sublabel": "receive() 的 .send（重送）",
+      "sublabel": "receive() 的下一個 .send",
       "lane": "response",
       "col": 1,
       "width": 130,
@@ -112,9 +112,9 @@
     },
     {
       "id": "start-finish",
-      "type": "neutral",
+      "type": "failure",
       "label": ".finish",
-      "sublabel": "start() 的 .finish",
+      "sublabel": "無 response → typed error",
       "lane": "terminal",
       "col": 0,
       "width": 110,
@@ -122,9 +122,9 @@
     },
     {
       "id": "receive-finish",
-      "type": "neutral",
+      "type": "success",
       "label": ".finish",
-      "sublabel": "receive() 的 .finish",
+      "sublabel": "回傳最後 response",
       "lane": "terminal",
       "col": 2,
       "width": 110,
@@ -184,13 +184,13 @@
   ],
   "cards": [
     {
-      "dot": "slate",
+      "dot": "violet",
       "title": "合約邊界",
       "items": [
-        "RivetHTTPClient 僅宣告通用 AuthFlow 合約；HTTPClient 不驅動 AuthFlow",
-        "用戶端僅依 ClientAction 執行請求與交付回應；不解讀或驅動 AuthFlow",
+        "caller opt-in 時，HTTPClient 建立一次 flow，呼叫一次 start()，並 generic 地驅動 action",
+        "HTTPClient 只依 .send 經 Requester 發送，將 exact raw response 回灌一次；不解讀認證決策",
         ".send 攜帶既有不可變 HTTPRequest；.finish 是不攜帶資料的終止動作",
-        "不包含執行期重送策略／實作、憑證、剖析器或 GitHub 特定行為"
+        "不包含 retry 策略、憑證、剖析器或 GitHub 特定行為；transport error 立即傳遞"
       ]
     }
   ]

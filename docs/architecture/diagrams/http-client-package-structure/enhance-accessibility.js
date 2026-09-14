@@ -165,6 +165,92 @@ function enhance(source, label) {
   html = once(html, "    themeButton.title = (t === 'dark' ? 'Light' : 'Dark') + ' theme (t)';", "    const nextThemeLabel = t === 'dark' ? '切換為淺色主題（T）' : '切換為深色主題（T）';\n    themeButton.title = nextThemeLabel;\n    themeButton.setAttribute('aria-label', nextThemeLabel);", '主題文字');
   html = once(html, "  if (embedded) pngButton.title = 'Open PNG @2× in a new tab';", "  if (embedded) { pngButton.title = '在新分頁開啟 PNG（2 倍）'; pngButton.setAttribute('aria-label', '在新分頁開啟 PNG（2 倍）'); }", '內嵌 PNG 文字');
   html = once(html, '  // ---- toolbar\n', '  createTextFallback();\n\n  // ---- toolbar\n', 'fallback 初始化');
+  html = once(html, `  const view = { k: 1, x: 0, y: 0 };   // world → screen: p * k + (x, y)
+  let vw = 0, vh = 0, dpr = 1;
+  let hovered = null;                  // box id under the cursor
+  let focused = null;                  // box id locked by a click
+  let raf = 0;`, `  const view = { k: 1, x: 0, y: 0 };   // world → screen: p * k + (x, y)
+  let vw = 0, vh = 0, dpr = 1;
+  let hovered = null;                  // box id under the cursor
+  let focused = null;                  // box id locked by a click
+  let raf = 0;
+  // A freshly opened diagram should always fit the viewport, including a
+  // larger viewport reached after initial load. Once the reader has supplied
+  // a view (by hash) or adjusted it, resize must keep that chosen framing.
+  let preserveViewOnResize = false;`, '初始視圖狀態');
+  html = once(html, `  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    vw = canvas.clientWidth;
+    vh = canvas.clientHeight;
+    canvas.width = Math.round(vw * dpr);
+    canvas.height = Math.round(vh * dpr);
+    schedule();
+  }`, `  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    vw = canvas.clientWidth;
+    vh = canvas.clientHeight;
+    canvas.width = Math.round(vw * dpr);
+    canvas.height = Math.round(vh * dpr);
+    if (!preserveViewOnResize) fit(false);
+    schedule();
+  }`, '初始視圖 resize 行為');
+  html = once(html, `  function fitScale(pad) {`, `  function preserveView() {
+    preserveViewOnResize = true;
+  }
+
+  function fitScale(pad) {`, '視圖保留函式');
+  html = once(html, `    view.k = k; view.x = +m[2]; view.y = +m[3];
+    return true;`, `    view.k = k; view.x = +m[2]; view.y = +m[3];
+    preserveView();
+    return true;`, '分享視圖行為');
+  html = once(html, `      view.x += dx; view.y += dy;
+      lastX = e.clientX; lastY = e.clientY;`, `      view.x += dx; view.y += dy;
+      if (moved) preserveView();
+      lastX = e.clientX; lastY = e.clientY;`, '使用者平移行為');
+  html = once(html, `        zoomAt(pinchK * (d / pinchDist), (a[0] + b[0]) / 2 - r.left, (a[1] + b[1]) / 2 - r.top, false);`, `        zoomAt(pinchK * (d / pinchDist), (a[0] + b[0]) / 2 - r.left, (a[1] + b[1]) / 2 - r.top, false);
+        preserveView();`, '雙指縮放行為');
+  html = once(html, `      zoomAt(view.k * Math.exp(-e.deltaY * 0.01), sx, sy, false);`, `      zoomAt(view.k * Math.exp(-e.deltaY * 0.01), sx, sy, false);
+      preserveView();`, '觸控板縮放行為');
+  html = once(html, `      view.x -= shiftWheel ? rawY : rawX;
+      view.y -= shiftWheel ? 0 : rawY;
+      anim = null;
+      schedule();`, `      view.x -= shiftWheel ? rawY : rawX;
+      view.y -= shiftWheel ? 0 : rawY;
+      anim = null;
+      preserveView();
+      schedule();`, '捲動平移行為');
+  html = once(html, `    zoomAt(gestureK * e.scale, sx, sy, false);`, `    zoomAt(gestureK * e.scale, sx, sy, false);
+    preserveView();`, 'Safari 縮放行為');
+  html = once(html, `    zoomAt(view.k * 1.7, e.clientX - r.left, e.clientY - r.top, true);`, `    zoomAt(view.k * 1.7, e.clientX - r.left, e.clientY - r.top, true);
+    preserveView();`, '雙擊縮放行為');
+  html = once(html, `      case '0': fit(true); break;
+      case '1': actualSize(); break;
+      case 't': case 'T': toggleTheme(); break;
+      case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
+      case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;`, `      case '0': preserveView(); fit(true); break;
+      case '1': preserveView(); actualSize(); break;
+      case 't': case 'T': toggleTheme(); break;
+      case '+': case '=': preserveView(); zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
+      case '-': case '_': preserveView(); zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;`, '鍵盤縮放行為');
+  html = once(html, `      case 'ArrowLeft': view.x += pan; schedule(); break;
+      case 'ArrowRight': view.x -= pan; schedule(); break;
+      case 'ArrowUp': view.y += pan; schedule(); break;
+      case 'ArrowDown': view.y -= pan; schedule(); break;`, `      case 'ArrowLeft': preserveView(); view.x += pan; schedule(); break;
+      case 'ArrowRight': preserveView(); view.x -= pan; schedule(); break;
+      case 'ArrowUp': preserveView(); view.y += pan; schedule(); break;
+      case 'ArrowDown': preserveView(); view.y -= pan; schedule(); break;`, '鍵盤平移行為');
+  html = once(html, `  document.getElementById('bIn').onclick  = () => zoomAt(view.k * 1.3, vw / 2, vh / 2, true);
+  document.getElementById('bOut').onclick = () => zoomAt(view.k / 1.3, vw / 2, vh / 2, true);
+  document.getElementById('bFit').onclick = () => fit(true);
+  document.getElementById('bOne').onclick = () => actualSize();`, `  document.getElementById('bIn').onclick  = () => { preserveView(); zoomAt(view.k * 1.3, vw / 2, vh / 2, true); };
+  document.getElementById('bOut').onclick = () => { preserveView(); zoomAt(view.k / 1.3, vw / 2, vh / 2, true); };
+  document.getElementById('bFit').onclick = () => { preserveView(); fit(true); };
+  document.getElementById('bOne').onclick = () => { preserveView(); actualSize(); };`, '工具列視圖行為');
+  html = once(html, `  window.addEventListener('resize', resize);
+  resize();
+  if (!readHash()) fit(false);`, `  window.addEventListener('resize', resize);
+  readHash();
+  resize();`, '初始載入視圖行為');
   return html;
 }
 

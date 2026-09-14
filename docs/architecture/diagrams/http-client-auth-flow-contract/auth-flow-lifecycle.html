@@ -5026,9 +5026,9 @@
         <path d="M 72 112 L 968 112" class="a-default" stroke-width="0.8" stroke-dasharray="3,8"/>
         <text x="72" y="100" class="t-dim" font-size="10" font-weight="600">01 / 建立與初始轉換</text>
         <path d="M 72 264 L 968 264" class="a-default" stroke-width="0.8" stroke-dasharray="3,8"/>
-        <text x="72" y="252" class="t-dim" font-size="10" font-weight="600">02 / 回應、後續轉換與重送</text>
+        <text x="72" y="252" class="t-dim" font-size="10" font-weight="600">02 / 送出、raw 回應與後續轉換</text>
         <path d="M 72 436 L 968 436" class="a-default" stroke-width="0.8" stroke-dasharray="3,8"/>
-        <text x="72" y="424" class="t-dim" font-size="10" font-weight="600">03 / ClientAction 結果</text>
+        <text x="72" y="424" class="t-dim" font-size="10" font-weight="600">03 / 終態結果</text>
 
         <!-- Primary lifecycle rail -->
         <path d="M 154 157 L 748 157" class="a-emphasis" stroke-width="2.2" marker-end="url(#arrowhead-emphasis)"/>
@@ -5060,8 +5060,8 @@
         <text data-detail="fine" x="94" y="177" class="t-frontend" font-size="7" text-anchor="middle">入口</text>
         </g>
 
-        <g id="node-auth-flow" data-node-id="auth-flow" data-node-label="AuthFlow" tabindex="0" role="button" aria-label="Focus AuthFlow, HTTPClient 不驅動流程, 建立與初始轉換" aria-pressed="false" data-node-kind="active" data-node-sublabel="HTTPClient 不驅動流程" data-node-tag="合約" data-node-context="建立與初始轉換">
-          <title>AuthFlow · HTTPClient 不驅動流程 · 建立與初始轉換 · 合約</title>
+        <g id="node-auth-flow" data-node-id="auth-flow" data-node-label="AuthFlow" tabindex="0" role="button" aria-label="Focus AuthFlow, flow 保有認證決策, 建立與初始轉換" aria-pressed="false" data-node-kind="active" data-node-sublabel="flow 保有認證決策" data-node-tag="合約" data-node-context="建立與初始轉換">
+          <title>AuthFlow · flow 保有認證決策 · 建立與初始轉換 · 合約</title>
           <rect x="193" y="126" width="110" height="62" rx="7" class="c-mask"/>
           <rect x="193" y="126" width="110" height="62" rx="7" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(286 132) scale(0.6875)">
@@ -5069,7 +5069,7 @@
           </g>
         <text data-detail="fine" x="203" y="140" class="t-backend" font-size="7" font-weight="700">02</text>
           <text data-node-label="" data-detail-anchor="" x="248" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">AuthFlow</text>
-          <text data-detail="context" x="248" y="163" class="t-muted" font-size="7" text-anchor="middle">HTTPClient 不驅動流程</text>
+          <text data-detail="context" x="248" y="163" class="t-muted" font-size="7" text-anchor="middle">flow 保有認證決策</text>
         <text data-detail="fine" x="248" y="177" class="t-backend" font-size="7" text-anchor="middle">合約</text>
         </g>
 
@@ -5100,8 +5100,8 @@
         <text data-detail="fine" x="556" y="177" class="t-backend" font-size="7" text-anchor="middle">start() 輸出</text>
         </g>
 
-        <g id="node-client-send" data-node-id="client-send" data-node-label="用戶端送出請求" tabindex="0" role="button" aria-label="Focus 用戶端送出請求, 依 .send(HTTPRequest), 建立與初始轉換" aria-pressed="false" data-node-kind="external" data-node-sublabel="依 .send(HTTPRequest)" data-node-tag="外部執行" data-node-context="建立與初始轉換">
-          <title>用戶端送出請求 · 依 .send(HTTPRequest) · 建立與初始轉換 · 外部執行</title>
+        <g id="node-client-send" data-node-id="client-send" data-node-label="HTTPClient" tabindex="0" role="button" aria-label="Focus HTTPClient, 經 Requester 送出請求, 建立與初始轉換" aria-pressed="false" data-node-kind="external" data-node-sublabel="經 Requester 送出請求" data-node-tag="外部執行" data-node-context="建立與初始轉換">
+          <title>HTTPClient · 經 Requester 送出請求 · 建立與初始轉換 · 外部執行</title>
           <rect x="651" y="126" width="118" height="62" rx="7" class="c-mask"/>
           <rect x="651" y="126" width="118" height="62" rx="7" class="c-external" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(752 132) scale(0.6875)">
@@ -5109,25 +5109,25 @@
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
         <text data-detail="fine" x="661" y="140" class="t-muted" font-size="7" font-weight="700">05</text>
-          <text data-node-label="" data-detail-anchor="" x="710" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">用戶端送出請求</text>
-          <text data-detail="context" x="710" y="163" class="t-muted" font-size="7" text-anchor="middle">依 .send(HTTPRequest)</text>
+          <text data-node-label="" data-detail-anchor="" x="710" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">HTTPClient</text>
+          <text data-detail="context" x="710" y="163" class="t-muted" font-size="7" text-anchor="middle">經 Requester 送出請求</text>
         <text data-detail="fine" x="710" y="177" class="t-muted" font-size="7" text-anchor="middle">外部執行</text>
         </g>
 
-        <g id="node-response" data-node-id="response" data-node-label="回應" tabindex="0" role="button" aria-label="Focus 回應, 用戶端收到 HTTPResponse, 回應、後續轉換與重送" aria-pressed="false" data-node-kind="active" data-node-sublabel="用戶端收到 HTTPResponse" data-node-tag="回應" data-node-context="回應、後續轉換與重送">
-          <title>回應 · 用戶端收到 HTTPResponse · 回應、後續轉換與重送 · 回應</title>
+        <g id="node-response" data-node-id="response" data-node-label="raw HTTPResponse" tabindex="0" role="button" aria-label="Focus raw HTTPResponse, 所有 HTTP status 原樣保留, 送出、raw 回應與後續轉換" aria-pressed="false" data-node-kind="active" data-node-sublabel="所有 HTTP status 原樣保留" data-node-tag="回應" data-node-context="送出、raw 回應與後續轉換">
+          <title>raw HTTPResponse · 所有 HTTP status 原樣保留 · 送出、raw 回應與後續轉換 · 回應</title>
           <rect x="647.5" y="238" width="125" height="58" rx="7" class="c-mask"/>
           <rect x="647.5" y="238" width="125" height="58" rx="7" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(755.5 244) scale(0.6875)">
             <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="710" y="259" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">回應</text>
-          <text data-detail="context" x="710" y="275" class="t-muted" font-size="7" text-anchor="middle">用戶端收到 HTTPResponse</text>
+          <text data-node-label="" data-detail-anchor="" x="710" y="259" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">raw HTTPResponse</text>
+          <text data-detail="context" x="710" y="275" class="t-muted" font-size="7" text-anchor="middle">所有 HTTP status 原樣保留</text>
         <text data-detail="fine" x="710" y="285" class="t-backend" font-size="7" text-anchor="middle">回應</text>
         </g>
 
-        <g id="node-receive" data-node-id="receive" data-node-label="receive(response)" tabindex="0" role="button" aria-label="Focus receive(response), 可產出 .send 或 .finish, 回應、後續轉換與重送" aria-pressed="false" data-node-kind="decision" data-node-sublabel="可產出 .send 或 .finish" data-node-tag="轉換" data-node-context="回應、後續轉換與重送">
-          <title>receive(response) · 可產出 .send 或 .finish · 回應、後續轉換與重送 · 轉換</title>
+        <g id="node-receive" data-node-id="receive" data-node-label="receive(response)" tabindex="0" role="button" aria-label="Focus receive(response), 可產出 .send 或 .finish, 送出、raw 回應與後續轉換" aria-pressed="false" data-node-kind="decision" data-node-sublabel="可產出 .send 或 .finish" data-node-tag="轉換" data-node-context="送出、raw 回應與後續轉換">
+          <title>receive(response) · 可產出 .send 或 .finish · 送出、raw 回應與後續轉換 · 轉換</title>
           <rect x="491" y="308" width="130" height="58" rx="7" class="c-mask"/>
           <rect x="491" y="308" width="130" height="58" rx="7" class="c-security" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="neutral" class="semantic-sigil s-external" transform="translate(604 314) scale(0.6875)">
@@ -5139,42 +5139,42 @@
         <text data-detail="fine" x="556" y="355" class="t-security" font-size="7" text-anchor="middle">轉換</text>
         </g>
 
-        <g id="node-resend" data-node-id="resend" data-node-label=".send(HTTPRequest)" tabindex="0" role="button" aria-label="Focus .send(HTTPRequest), receive() 的 .send（重送）, 回應、後續轉換與重送" aria-pressed="false" data-node-kind="active" data-node-sublabel="receive() 的 .send（重送）" data-node-tag="receive() 輸出" data-node-context="回應、後續轉換與重送">
-          <title>.send(HTTPRequest) · receive() 的 .send（重送） · 回應、後續轉換與重送 · receive() 輸出</title>
+        <g id="node-resend" data-node-id="resend" data-node-label=".send(HTTPRequest)" tabindex="0" role="button" aria-label="Focus .send(HTTPRequest), receive() 的下一個 .send, 送出、raw 回應與後續轉換" aria-pressed="false" data-node-kind="active" data-node-sublabel="receive() 的下一個 .send" data-node-tag="receive() 輸出" data-node-context="送出、raw 回應與後續轉換">
+          <title>.send(HTTPRequest) · receive() 的下一個 .send · 送出、raw 回應與後續轉換 · receive() 輸出</title>
           <rect x="491" y="398" width="130" height="58" rx="7" class="c-mask"/>
           <rect x="491" y="398" width="130" height="58" rx="7" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(604 404) scale(0.6875)">
             <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="556" y="419" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">.send(HTTPRequest)</text>
-          <text data-detail="context" x="556" y="435" class="t-muted" font-size="7" text-anchor="middle">receive() 的 .send（重送）</text>
+          <text data-detail="context" x="556" y="435" class="t-muted" font-size="7" text-anchor="middle">receive() 的下一個 .send</text>
         <text data-detail="fine" x="556" y="445" class="t-backend" font-size="7" text-anchor="middle">receive() 輸出</text>
         </g>
 
-        <g id="node-start-finish" data-node-id="start-finish" data-node-label=".finish" tabindex="0" role="button" aria-label="Focus .finish, start() 的 .finish, ClientAction 結果" aria-pressed="false" data-node-kind="neutral" data-node-sublabel="start() 的 .finish" data-node-tag="start() 輸出" data-node-context="ClientAction 結果">
-          <title>.finish · start() 的 .finish · ClientAction 結果 · start() 輸出</title>
+        <g id="node-start-finish" data-node-id="start-finish" data-node-label=".finish" tabindex="0" role="button" aria-label="Focus .finish, 無 response → typed error, 終態結果" aria-pressed="false" data-node-kind="failure" data-node-sublabel="無 response → typed error" data-node-tag="start() 輸出" data-node-context="終態結果">
+          <title>.finish · 無 response → typed error · 終態結果 · start() 輸出</title>
           <rect x="347" y="450" width="110" height="58" rx="7" class="c-mask"/>
-          <rect x="347" y="450" width="110" height="58" rx="7" class="c-external" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="neutral" class="semantic-sigil s-external" transform="translate(440 456) scale(0.6875)">
-            <rect x="3" y="3" width="10" height="10" rx="2"/>
-            <circle cx="8" cy="8" r="1.2" class="sigil-fill"/>
+          <rect x="347" y="450" width="110" height="58" rx="7" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="failure" class="semantic-sigil s-security" transform="translate(440 456) scale(0.6875)">
+            <circle cx="8" cy="8" r="5.3"/>
+            <path d="m5.7 5.7 4.6 4.6m0-4.6-4.6 4.6"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="402" y="471" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">.finish</text>
-          <text data-detail="context" x="402" y="487" class="t-muted" font-size="7" text-anchor="middle">start() 的 .finish</text>
-        <text data-detail="fine" x="402" y="497" class="t-muted" font-size="7" text-anchor="middle">start() 輸出</text>
+          <text data-detail="context" x="402" y="487" class="t-muted" font-size="6.8" text-anchor="middle">無 response → typed error</text>
+        <text data-detail="fine" x="402" y="497" class="t-security" font-size="7" text-anchor="middle">start() 輸出</text>
         </g>
 
-        <g id="node-receive-finish" data-node-id="receive-finish" data-node-label=".finish" tabindex="0" role="button" aria-label="Focus .finish, receive() 的 .finish, ClientAction 結果" aria-pressed="false" data-node-kind="neutral" data-node-sublabel="receive() 的 .finish" data-node-tag="receive() 輸出" data-node-context="ClientAction 結果">
-          <title>.finish · receive() 的 .finish · ClientAction 結果 · receive() 輸出</title>
+        <g id="node-receive-finish" data-node-id="receive-finish" data-node-label=".finish" tabindex="0" role="button" aria-label="Focus .finish, 回傳最後 response, 終態結果" aria-pressed="false" data-node-kind="success" data-node-sublabel="回傳最後 response" data-node-tag="receive() 輸出" data-node-context="終態結果">
+          <title>.finish · 回傳最後 response · 終態結果 · receive() 輸出</title>
           <rect x="655" y="450" width="110" height="58" rx="7" class="c-mask"/>
-          <rect x="655" y="450" width="110" height="58" rx="7" class="c-external" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="neutral" class="semantic-sigil s-external" transform="translate(748 456) scale(0.6875)">
-            <rect x="3" y="3" width="10" height="10" rx="2"/>
-            <circle cx="8" cy="8" r="1.2" class="sigil-fill"/>
+          <rect x="655" y="450" width="110" height="58" rx="7" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="success" class="semantic-sigil s-database" transform="translate(748 456) scale(0.6875)">
+            <circle cx="8" cy="8" r="5.3"/>
+            <path d="m5.2 8 1.8 1.8 3.8-4"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="710" y="471" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">.finish</text>
-          <text data-detail="context" x="710" y="487" class="t-muted" font-size="7" text-anchor="middle">receive() 的 .finish</text>
-        <text data-detail="fine" x="710" y="497" class="t-muted" font-size="7" text-anchor="middle">receive() 輸出</text>
+          <text data-detail="context" x="710" y="487" class="t-muted" font-size="7" text-anchor="middle">回傳最後 response</text>
+        <text data-detail="fine" x="710" y="497" class="t-database" font-size="7" text-anchor="middle">receive() 輸出</text>
         </g>
 
         <!-- Transition labels -->
@@ -5204,13 +5204,17 @@
             <rect x="220" y="596" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
             <text x="242" y="604" class="t-muted" font-size="10" font-weight="500">決策</text>
           </g>
-          <g data-legend-semantic-kind="neutral" data-legend-kind="neutral" data-legend-label="中性終態" data-legend-x="305" data-legend-baseline="604" data-legend-width="83">
-            <rect x="305" y="596" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
-            <text x="327" y="604" class="t-muted" font-size="10" font-weight="500">中性終態</text>
+          <g data-legend-semantic-kind="success" data-legend-kind="success" data-legend-label="terminal success" data-legend-x="305" data-legend-baseline="604" data-legend-width="123">
+            <rect x="305" y="596" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="327" y="604" class="t-muted" font-size="10" font-weight="500">terminal success</text>
           </g>
-          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="外部" data-legend-x="410" data-legend-baseline="604" data-legend-width="63">
-            <rect x="410" y="596" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
-            <text x="432" y="604" class="t-muted" font-size="10" font-weight="500">外部</text>
+          <g data-legend-semantic-kind="failure" data-legend-kind="failure" data-legend-label="failure / exit" data-legend-x="450" data-legend-baseline="604" data-legend-width="113">
+            <rect x="450" y="596" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="472" y="604" class="t-muted" font-size="10" font-weight="500">failure / exit</text>
+          </g>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="外部" data-legend-x="585" data-legend-baseline="604" data-legend-width="63">
+            <rect x="585" y="596" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
+            <text x="607" y="604" class="t-muted" font-size="10" font-weight="500">外部</text>
           </g>
         </g>
       </svg>
@@ -5401,14 +5405,14 @@
     <div class="cards">
       <div class="card">
         <div class="card-header">
-          <div class="card-dot slate"></div>
+          <div class="card-dot violet"></div>
           <h3>合約邊界</h3>
         </div>
         <ul>
-          <li>&bull; RivetHTTPClient 僅宣告通用 AuthFlow 合約；HTTPClient 不驅動 AuthFlow</li>
-          <li>&bull; 用戶端僅依 ClientAction 執行請求與交付回應；不解讀或驅動 AuthFlow</li>
+          <li>&bull; caller opt-in 時，HTTPClient 建立一次 flow，呼叫一次 start()，並 generic 地驅動 action</li>
+          <li>&bull; HTTPClient 只依 .send 經 Requester 發送，將 exact raw response 回灌一次；不解讀認證決策</li>
           <li>&bull; .send 攜帶既有不可變 HTTPRequest；.finish 是不攜帶資料的終止動作</li>
-          <li>&bull; 不包含執行期重送策略／實作、憑證、剖析器或 GitHub 特定行為</li>
+          <li>&bull; 不包含 retry 策略、憑證、剖析器或 GitHub 特定行為；transport error 立即傳遞</li>
         </ul>
       </div>
     </div>

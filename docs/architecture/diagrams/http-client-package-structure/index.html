@@ -171,7 +171,7 @@
 
 <div id="plate">
   <div class="k">RIVETHTTPCLIENT — MINIMAL INTERFACE</div>
-  <div class="n"><b>HTTPURL</b> → <b>HTTP method facade</b>（建立 <b>HTTPRequest</b>）→ <b>execute(_:)</b> → <b>Requester</b> → <b>Transport</b> → <b>HTTPResponse</b></div>
+  <div class="n"><b>HTTPURL</b> → <b>HTTPRequest</b> → <b>Auth</b>／<b>AuthFlow</b> → <b>execute(_:auth:)</b> → <b>Requester</b> → <b>Transport</b> → <b>HTTPResponse</b></div>
 </div>
 
 <div id="hint">
@@ -299,7 +299,7 @@
   function planeColor(id) { return (PLANES[id] || { c: C.slate }).c; }
 
   // ======================== SCENE START (generated) =========================
-const W = 1480, H = 1680;
+const W = 1480, H = 1110;
 
 // 此圖只表達 package ownership 與編譯期依賴，不描述 transport 的執行期 request／response flow。
 const PLANES = {
@@ -311,91 +311,95 @@ const PLANES = {
 };
 
 const BANDS = [
-  { id:'band-caller', plane:'caller', x:160, y:200, w:1260, h:156, alpha:0.48,
-    hdr:{x:184,y:230,t:'CALLER／DOMAIN LAYER'}, tagr:{x:1396,y:230,t:'不屬於 RIVETHTTPCLIENT',alpha:0.6} },
-  { id:'band-contracts', plane:'contracts', x:160, y:440, w:1260, h:238, alpha:0.5, dash:true,
-    hdr:{x:184,y:470,t:'RIVETHTTPCLIENT — HTTP CONTRACTS'}, tagr:{x:1396,y:470,t:'已實作最小介面',alpha:0.6} },
-  { id:'band-client', plane:'client', x:160, y:760, w:1260, h:156, alpha:0.5, dash:true,
-    hdr:{x:184,y:790,t:'CLIENT ABSTRACTIONS'}, tagr:{x:1396,y:790,t:'已實作 · typed failures',alpha:0.6} },
-  { id:'band-transport', plane:'transport', x:160, y:1000, w:1260, h:156, alpha:0.5, dash:true,
-    hdr:{x:184,y:1030,t:'TRANSPORT BOUNDARY'}, tagr:{x:1396,y:1030,t:'注入式 contract',alpha:0.6} },
-  { id:'band-outside', plane:'outside', x:160, y:1240, w:1260, h:156, alpha:0.48,
-    hdr:{x:184,y:1270,t:'OUTSIDE — FOUNDATION SURFACE'}, tagr:{x:1396,y:1270,t:'非 RIVET 所有',alpha:0.6} }
+  { id:'band-caller', plane:'caller', x:110, y:185, w:1260, h:120, alpha:0.48,
+    hdr:{x:140,y:215,t:'CALLER／DOMAIN LAYER'}, tagr:{x:1340,y:215,t:'不屬於 RIVETHTTPCLIENT',alpha:0.6} },
+  { id:'band-contracts', plane:'contracts', x:110, y:325, w:1260, h:220, alpha:0.5, dash:true,
+    hdr:{x:140,y:355,t:'RIVETHTTPCLIENT — HTTP CONTRACTS'}, tagr:{x:1340,y:355,t:'已實作最小介面',alpha:0.6} },
+  { id:'band-client', plane:'client', x:110, y:565, w:1260, h:140, alpha:0.5, dash:true,
+    hdr:{x:140,y:595,t:'CLIENT ABSTRACTIONS'}, tagr:{x:1340,y:595,t:'已實作 · typed failures',alpha:0.6} },
+  { id:'band-transport', plane:'transport', x:110, y:725, w:1260, h:135, alpha:0.5, dash:true,
+    hdr:{x:140,y:755,t:'TRANSPORT BOUNDARY'}, tagr:{x:1340,y:755,t:'注入式 contract',alpha:0.6} },
+  { id:'band-outside', plane:'outside', x:110, y:880, w:1260, h:135, alpha:0.48,
+    hdr:{x:140,y:910,t:'OUTSIDE — FOUNDATION SURFACE'}, tagr:{x:1340,y:910,t:'非 RIVET 所有',alpha:0.6} }
 ];
 
 const BOXES = [
-  { id:'endpoint-domain', plane:'caller', band:'band-caller', x:250,y:260,w:1080,h:68,r:10,
+  { id:'endpoint-domain', plane:'caller', band:'band-caller', x:160,y:232,w:1160,h:68,r:10,
     name:'Endpoint／Base URL／Path／Query',about:'呼叫端或 domain layer 組裝 API URL；package 不提供此 API。',
-    texts:[['bl',274,288,'Endpoint／Base URL／Path／Query'],['bs',274,310,'呼叫端組裝；再建立 HTTPURL']] },
-
-  { id:'http-url', plane:'contracts', band:'band-contracts', x:200,y:510,w:270,h:88,r:10,dash:true,
+    texts:[['bl',184,260,'Endpoint／Base URL／Path／Query'],['bs',184,282,'呼叫端組裝；再建立 HTTPURL']] },
+  { id:'http-url', plane:'contracts', band:'band-contracts', x:140,y:385,w:262,h:88,r:10,dash:true,
     name:'HTTPURL',about:'package-owned value object；只接受有 host 的 http 或 https URL。',
-    texts:[['bl',224,538,'HTTPURL'],['bs',224,560,'http／https + host'],['bn',224,582,'URL construction typed throws']] },
-  { id:'url-error', plane:'contracts', band:'band-contracts', x:500,y:510,w:270,h:88,r:10,dash:true,
+    texts:[['bl',164,413,'HTTPURL'],['bs',164,435,'http／https + host'],['bn',164,457,'URL construction typed throws']] },
+  { id:'url-error', plane:'contracts', band:'band-contracts', x:423,y:385,w:262,h:88,r:10,dash:true,
     name:'HTTPURLValidationError',about:'HTTPURL construction 的封閉 validation error。',
-    texts:[['bl',524,538,'HTTPURLValidationError'],['bs',524,560,'scheme 或 host validation'],['bn',524,582,'package-owned error']] },
-  { id:'request', plane:'contracts', band:'band-contracts', x:800,y:510,w:270,h:88,r:10,dash:true,
+    texts:[['bl',447,413,'HTTPURLValidationError'],['bs',447,435,'scheme 或 host validation'],['bn',447,457,'package-owned error']] },
+  { id:'request', plane:'contracts', band:'band-contracts', x:706,y:385,w:262,h:88,r:10,dash:true,
     name:'HTTPRequest',about:'只持有已驗證 HTTPURL、method、headers 與 optional body。',
-    texts:[['bl',824,538,'HTTPRequest'],['bs',824,560,'HTTPURL · method · headers'],['bn',824,582,'body: Data?；不 throws']] },
-  { id:'response', plane:'contracts', band:'band-contracts', x:1100,y:510,w:270,h:88,r:10,dash:true,
+    texts:[['bl',730,413,'HTTPRequest'],['bs',730,435,'HTTPURL · method · headers'],['bn',730,457,'body: Data?；不 throws']] },
+  { id:'response', plane:'contracts', band:'band-contracts', x:989,y:385,w:330,h:88,r:10,dash:true,
     name:'HTTPResponse',about:'Transport 未經 status 或 decode policy 處理的 raw response contract。',
-    texts:[['bl',1124,538,'HTTPResponse'],['bs',1124,560,'status · headers · body'],['bn',1124,582,'raw return value']] },
-  { id:'method-headers', plane:'contracts', band:'band-contracts', x:420,y:616,w:640,h:42,r:10,dash:true,
+    texts:[['bl',1013,413,'HTTPResponse'],['bs',1013,435,'status · headers · body'],['bn',1013,457,'raw return value']] },
+  { id:'auth', plane:'contracts', band:'band-contracts', x:140,y:495,w:262,h:42,r:10,dash:true,
+    name:'Auth',about:'caller opt-in 的 flow factory；不擁有 credential 或認證 policy。',
+    texts:[['bs',164,522,'Auth — makeFlow(for:)']] },
+  { id:'auth-flow', plane:'contracts', band:'band-contracts', x:423,y:495,w:262,h:42,r:10,dash:true,
+    name:'AuthFlow',about:'擁有認證決策，從 start 與 receive 產出 send 或 finish action。',
+    texts:[['bs',447,522,'AuthFlow — start／receive']] },
+  { id:'method-headers', plane:'contracts', band:'band-contracts', x:706,y:495,w:613,h:42,r:10,dash:true,
     name:'HTTPMethod 與 HTTPHeaders',about:'HTTPRequest 使用的 package-owned method 與 header value types。',
-    texts:[['bs',444,643,'HTTPMethod 與 HTTPHeaders — package-owned request metadata']] },
-
-  { id:'http-client', plane:'client', band:'band-client', x:200,y:820,w:560,h:68,r:10,dash:true,
-    name:'HTTPClient',about:'公開 method facade 與 advanced execute 入口；所有 facade 經 execute 委派給 Requester。',
-    texts:[['bl',224,848,'HTTPClient'],['bs',224,870,'request(...)／五個 verb → execute(_:)']] },
-  { id:'requester', plane:'client', band:'band-client', x:860,y:820,w:560,h:68,r:10,dash:true,
+    texts:[['bs',730,522,'HTTPMethod 與 HTTPHeaders — package-owned request metadata']] },
+  { id:'http-client', plane:'client', band:'band-client', x:140,y:620,w:545,h:68,r:10,dash:true,
+    name:'HTTPClient',about:'公開 facade 與 execute 入口；auth overload generic 地驅動 AuthFlow，其餘 facade 經 execute 委派給 Requester。',
+    texts:[['bl',164,648,'HTTPClient'],['bs',164,670,'facade → execute(_:)；auth overload 驅動 flow']] },
+  { id:'requester', plane:'client', band:'band-client', x:727,y:620,w:592,h:68,r:10,dash:true,
     name:'Requester',about:'把已驗證 HTTPRequest 映射為 Foundation URLRequest；不重驗 URL。',
-    texts:[['bl',884,848,'Requester'],['bs',884,870,'HTTPRequest → URLRequest']] },
-
-  { id:'transport', plane:'transport', band:'band-transport', x:200,y:1060,w:1220,h:68,r:10,dash:true,
+    texts:[['bl',751,648,'Requester'],['bs',751,670,'HTTPRequest → URLRequest']] },
+  { id:'transport', plane:'transport', band:'band-transport', x:140,y:780,w:1179,h:68,r:10,dash:true,
     name:'Transport／URLSessionTransport',about:'注入式 typed-throws contract 與 package-owned production URLSession transport。',
-    texts:[['bl',224,1088,'Transport／URLSessionTransport'],['bs',224,1110,'HTTPClientError；raw HTTP status']] },
-
-  { id:'url-request', plane:'outside', band:'band-outside', x:200,y:1300,w:350,h:68,r:10,
+    texts:[['bl',164,808,'Transport／URLSessionTransport'],['bs',164,830,'HTTPClientError；raw HTTP status']] },
+  { id:'url-request', plane:'outside', band:'band-outside', x:140,y:935,w:350,h:68,r:10,
     name:'Foundation URLRequest',about:'Requester 實際映射到的 Foundation request surface。',
-    texts:[['bl',224,1328,'Foundation URLRequest'],['bs',224,1350,'Requester 的輸出 surface']] },
-  { id:'foundation-url-data', plane:'outside', band:'band-outside', x:590,y:1300,w:350,h:68,r:10,
+    texts:[['bl',164,963,'Foundation URLRequest'],['bs',164,985,'Requester 的輸出 surface']] },
+  { id:'foundation-url-data', plane:'outside', band:'band-outside', x:530,y:935,w:350,h:68,r:10,
     name:'Foundation URL／Data',about:'HTTPURL value 與 request／response body 直接使用的 Foundation types。',
-    texts:[['bl',614,1328,'Foundation URL／Data'],['bs',614,1350,'value 與 body 的直接依賴']] },
-  { id:'urlsession', plane:'outside', band:'band-outside', x:980,y:1300,w:440,h:68,r:10,
+    texts:[['bl',554,963,'Foundation URL／Data'],['bs',554,985,'value 與 body 的直接依賴']] },
+  { id:'urlsession', plane:'outside', band:'band-outside', x:920,y:935,w:399,h:68,r:10,
     name:'Foundation URLSession',about:'URLSessionTransport 採用的 Outside networking surface。',
-    texts:[['bl',1004,1328,'Foundation URLSession'],['bs',1004,1350,'由 package-owned transport 採用']] }
+    texts:[['bl',944,963,'Foundation URLSession'],['bs',944,985,'由 package-owned transport 採用']] }
 ];
 
 const EDGES = [
-  { from:'endpoint-domain',to:'http-url',pts:[[740,334],[740,400],[335,400],[335,504]],label:{s:'al',x:349,y:444,t:'建立',rot:-90,anchor:'center'} },
-  { from:'http-url',to:'url-error',pts:[[474,554],[494,554]],label:{s:'al',x:484,y:542,t:'typed error',anchor:'center'} },
-  { from:'request',to:'http-url',pts:[[935,604],[935,628],[335,628],[335,604]],label:{s:'al',x:635,y:620,t:'依賴',anchor:'center'} },
-  { from:'request',to:'method-headers',pts:[[1076,554],[1080,554],[1080,637],[1064,637]],label:{s:'al',x:1074,y:592,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'requester',pts:[[764,854],[854,854]],label:{s:'al',x:809,y:842,t:'依賴',anchor:'center'} },
-  { from:'http-client',to:'request',pts:[[480,814],[480,718],[935,718],[935,604]],label:{s:'al',x:949,y:706,t:'使用',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'response',pts:[[520,814],[520,738],[1235,738],[1235,604]],label:{s:'al',x:1249,y:698,t:'回傳型別',rot:-90,anchor:'center'} },
-  { from:'requester',to:'request',pts:[[1000,814],[1000,680],[935,680],[935,604]],label:{s:'al',x:1014,y:746,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'response',pts:[[1360,814],[1360,680],[1094,680],[1094,554]],label:{s:'al',x:1374,y:746,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'transport',pts:[[1140,894],[1140,994],[810,994],[810,1054]],label:{s:'al',x:824,y:956,t:'注入依賴',rot:-90,anchor:'center'} },
-  { from:'transport',to:'response',pts:[[810,1054],[810,976],[1235,976],[1235,604]],label:{s:'al',x:1249,y:790,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'url-request',pts:[[1140,894],[1140,1180],[375,1180],[375,1294]],label:{s:'al',x:389,y:1126,t:'Foundation mapping',rot:-90,anchor:'center'} },
-  { from:'transport',to:'url-request',pts:[[375,1134],[375,1294]],label:{s:'al',x:389,y:1214,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'http-url',to:'foundation-url-data',pts:[[335,604],[335,700],[765,700],[765,1294]],label:{s:'al',x:779,y:942,t:'URL value',rot:-90,anchor:'center'} },
-  { from:'request',to:'foundation-url-data',pts:[[935,604],[935,720],[765,720],[765,1294]],label:{s:'al',x:949,y:662,t:'body Data',rot:-90,anchor:'center'} },
-  { from:'response',to:'foundation-url-data',pts:[[1235,604],[1235,740],[765,740],[765,1294]],label:{s:'al',x:1249,y:672,t:'body Data',rot:-90,anchor:'center'} },
-  { from:'transport',to:'urlsession',pts:[[1180,1134],[1180,1200],[1200,1200],[1200,1294]],label:{s:'al',x:1214,y:1214,t:'production execution',rot:-90,anchor:'center'} }
+  { from:'endpoint-domain',to:'http-url',pts:[[740,306],[740,315],[271,315],[271,379]],label:{s:'al',x:289,y:337,t:'建立',rot:-90,anchor:'center'} },
+  { from:'http-url',to:'url-error',pts:[[407,429],[417,429]],label:{s:'al',x:412,y:417,t:'typed error',anchor:'center'} },
+  { from:'request',to:'http-url',pts:[[837,479],[837,482],[271,482],[271,479]],label:{s:'al',x:554,y:480,t:'依賴',anchor:'center'} },
+  { from:'request',to:'method-headers',pts:[[973,429],[978,429],[978,516],[963,516]],label:{s:'al',x:971,y:466,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'auth',to:'auth-flow',pts:[[407,516],[417,516]],label:{s:'al',x:412,y:504,t:'建立',anchor:'center'} },
+  { from:'http-client',to:'requester',pts:[[690,654],[719,654]],label:{s:'al',x:705,y:642,t:'依賴',anchor:'center'} },
+  { from:'http-client',to:'auth-flow',pts:[[620,614],[620,555],[554,555],[554,543]],label:{s:'al',x:637,y:580,t:'驅動',rot:-90,anchor:'center'} },
+  { from:'http-client',to:'request',pts:[[420,614],[420,555],[837,555],[837,479]],label:{s:'al',x:854,y:568,t:'使用',rot:-90,anchor:'center'} },
+  { from:'http-client',to:'response',pts:[[465,614],[465,557],[1154,557],[1154,479]],label:{s:'al',x:1171,y:568,t:'回傳型別',rot:-90,anchor:'center'} },
+  { from:'requester',to:'request',pts:[[887,614],[887,550],[837,550],[837,479]],label:{s:'al',x:904,y:575,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'requester',to:'response',pts:[[1244,614],[1244,550],[1154,550],[1154,479]],label:{s:'al',x:1261,y:575,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'requester',to:'transport',pts:[[1023,694],[1023,770],[730,770],[730,774]],label:{s:'al',x:747,y:735,t:'注入依賴',rot:-90,anchor:'center'} },
+  { from:'transport',to:'response',pts:[[730,774],[730,715],[1154,715],[1154,479]],label:{s:'al',x:1171,y:652,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'requester',to:'url-request',pts:[[1023,694],[1023,870],[315,870],[315,929]],label:{s:'al',x:332,y:841,t:'Foundation mapping',rot:-90,anchor:'center'} },
+  { from:'transport',to:'url-request',pts:[[315,854],[315,929]],label:{s:'al',x:332,y:891,t:'依賴',rot:-90,anchor:'center'} },
+  { from:'http-url',to:'foundation-url-data',pts:[[271,479],[271,557],[705,557],[705,929]],label:{s:'al',x:722,y:727,t:'URL value',rot:-90,anchor:'center'} },
+  { from:'request',to:'foundation-url-data',pts:[[837,479],[837,562],[705,562],[705,929]],label:{s:'al',x:854,y:538,t:'body Data',rot:-90,anchor:'center'} },
+  { from:'response',to:'foundation-url-data',pts:[[1154,479],[1154,567],[705,567],[705,929]],label:{s:'al',x:1171,y:538,t:'body Data',rot:-90,anchor:'center'} },
+  { from:'transport',to:'urlsession',pts:[[1120,854],[1120,870],[1120,929]],label:{s:'al',x:1137,y:892,t:'production execution',rot:-90,anchor:'center'} }
 ];
 
 const TEXTS = [
-  {s:'title',x:160,y:86,t:'RivetHTTPClient — 最小介面結構'},
-  {s:'sub',x:160,y:118,t:'呼叫端提供已驗證 HTTPURL → HTTP method facade → execute(_:) → Requester → injected Transport／URLSessionTransport → HTTPResponse；decoder 由 caller 擁有'},
-  {s:'tag',x:160,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPClient',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
+  {s:'title',x:110,y:86,t:'RivetHTTPClient — 最小介面結構'},
+  {s:'sub',x:110,y:118,t:'auth opt-in：HTTPClient.execute(_:auth:) 驅動 AuthFlow → Requester → injected Transport → raw HTTPResponse'},
+  {s:'tag',x:110,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'Auth／AuthFlow',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPClient',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部 surface'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
-  {s:'bn',x:160,y:1530,t:'不變量：Endpoint、Base URL、Path 與 Query 由呼叫端／domain layer 組裝，不是 package API'},
-  {s:'bn',x:160,y:1550,t:'不變量：HTTPURL validation 與 HTTPClientError 分別表達 URL construction、transport failure；HTTP status 維持 raw response'},
-  {s:'bn',x:160,y:1570,t:'延後：Endpoint、status／Content-Type validation、retry、token refresh 與 package-owned decoder'}
+  {s:'bn',x:110,y:1040,t:'不變量：Endpoint、Base URL、Path 與 Query 由呼叫端／domain layer 組裝，不是 package API'},
+  {s:'bn',x:110,y:1060,t:'不變量：auth overload generic 地送出 flow action 並回灌 raw response；flow 保有認證決策，HTTP status 維持 raw response'},
+  {s:'bn',x:110,y:1080,t:'延後：Endpoint、status／Content-Type validation、retry、token refresh 與 package-owned decoder'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},
@@ -426,6 +430,10 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   let hovered = null;                  // box id under the cursor
   let focused = null;                  // box id locked by a click
   let raf = 0;
+  // A freshly opened diagram should always fit the viewport, including a
+  // larger viewport reached after initial load. Once the reader has supplied
+  // a view (by hash) or adjusted it, resize must keep that chosen framing.
+  let preserveViewOnResize = false;
 
   const MIN_K = 0.12, MAX_K = 4;
 
@@ -440,7 +448,12 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     vh = canvas.clientHeight;
     canvas.width = Math.round(vw * dpr);
     canvas.height = Math.round(vh * dpr);
+    if (!preserveViewOnResize) fit(false);
     schedule();
+  }
+
+  function preserveView() {
+    preserveViewOnResize = true;
   }
 
   function fitScale(pad) {
@@ -516,6 +529,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     const k = clamp(parseFloat(m[1]), MIN_K, MAX_K);
     if (!isFinite(k)) return false;
     view.k = k; view.x = +m[2]; view.y = +m[3];
+    preserveView();
     return true;
   }
 
@@ -941,6 +955,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       if (pinchDist > 0) {
         const r = canvas.getBoundingClientRect();
         zoomAt(pinchK * (d / pinchDist), (a[0] + b[0]) / 2 - r.left, (a[1] + b[1]) / 2 - r.top, false);
+        preserveView();
       }
       return;
     }
@@ -949,6 +964,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       const dx = e.clientX - lastX, dy = e.clientY - lastY;
       if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 4) moved = true;
       view.x += dx; view.y += dy;
+      if (moved) preserveView();
       lastX = e.clientX; lastY = e.clientY;
       anim = null;
       schedule();
@@ -1005,6 +1021,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       const sx = e.clientX - r.left, sy = e.clientY - r.top;
       anim = null;
       zoomAt(view.k * Math.exp(-e.deltaY * 0.01), sx, sy, false);
+      preserveView();
     } else if (e.ctrlKey || e.metaKey) {
       return;
     } else {
@@ -1015,6 +1032,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       view.x -= shiftWheel ? rawY : rawX;
       view.y -= shiftWheel ? 0 : rawY;
       anim = null;
+      preserveView();
       schedule();
     }
     hint.classList.add('faded');
@@ -1036,6 +1054,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     const sx = typeof e.clientX === 'number' ? e.clientX - r.left : vw / 2;
     const sy = typeof e.clientY === 'number' ? e.clientY - r.top : vh / 2;
     zoomAt(gestureK * e.scale, sx, sy, false);
+    preserveView();
   }, { passive: false });
   canvas.addEventListener('gestureend', (e) => {
     e.preventDefault();
@@ -1045,6 +1064,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   canvas.addEventListener('dblclick', (e) => {
     const r = canvas.getBoundingClientRect();
     zoomAt(view.k * 1.7, e.clientX - r.left, e.clientY - r.top, true);
+    preserveView();
   });
 
   // ---- keyboard
@@ -1053,16 +1073,16 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     if (e.target !== stage || e.metaKey || e.ctrlKey) return;
     const pan = e.shiftKey ? 220 : 70;
     switch (e.key) {
-      case '0': fit(true); break;
-      case '1': actualSize(); break;
+      case '0': preserveView(); fit(true); break;
+      case '1': preserveView(); actualSize(); break;
       case 't': case 'T': toggleTheme(); break;
-      case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
-      case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
+      case '+': case '=': preserveView(); zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
+      case '-': case '_': preserveView(); zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
       case 'Escape': focused = null; readout.classList.remove('on'); schedule(); break;
-      case 'ArrowLeft': view.x += pan; schedule(); break;
-      case 'ArrowRight': view.x -= pan; schedule(); break;
-      case 'ArrowUp': view.y += pan; schedule(); break;
-      case 'ArrowDown': view.y -= pan; schedule(); break;
+      case 'ArrowLeft': preserveView(); view.x += pan; schedule(); break;
+      case 'ArrowRight': preserveView(); view.x -= pan; schedule(); break;
+      case 'ArrowUp': preserveView(); view.y += pan; schedule(); break;
+      case 'ArrowDown': preserveView(); view.y -= pan; schedule(); break;
       default: return;
     }
     e.preventDefault();
@@ -1072,10 +1092,10 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   createTextFallback();
 
   // ---- toolbar
-  document.getElementById('bIn').onclick  = () => zoomAt(view.k * 1.3, vw / 2, vh / 2, true);
-  document.getElementById('bOut').onclick = () => zoomAt(view.k / 1.3, vw / 2, vh / 2, true);
-  document.getElementById('bFit').onclick = () => fit(true);
-  document.getElementById('bOne').onclick = () => actualSize();
+  document.getElementById('bIn').onclick  = () => { preserveView(); zoomAt(view.k * 1.3, vw / 2, vh / 2, true); };
+  document.getElementById('bOut').onclick = () => { preserveView(); zoomAt(view.k / 1.3, vw / 2, vh / 2, true); };
+  document.getElementById('bFit').onclick = () => { preserveView(); fit(true); };
+  document.getElementById('bOne').onclick = () => { preserveView(); actualSize(); };
   const pngButton = document.getElementById('bPng');
   pngButton.onclick = exportPng;
 
@@ -1160,8 +1180,8 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   // ==========================================================================
 
   window.addEventListener('resize', resize);
+  readHash();
   resize();
-  if (!readHash()) fit(false);
   schedule();
 
   // Canvas text is rasterised at draw time, so the first paint would use the
