@@ -381,6 +381,8 @@ const EDGES = [
   { from:'auth-requester',to:'auth',pts:[[650,614],[650,575],[271,575],[271,543]],label:{s:'al',x:668,y:580,t:'依賴',rot:-90,anchor:'center'} },
   { from:'auth-requester',to:'requester',pts:[[905,670],[925,670],[925,666],[934,666]],label:{s:'al',x:915,y:690,t:'injected',rot:-90,anchor:'center'} },
   { from:'auth-requester',to:'auth-flow',pts:[[720,614],[720,555],[554,555],[554,543]],label:{s:'al',x:737,y:580,t:'驅動',rot:-90,anchor:'center'} },
+  { from:'auth-requester',to:'request',pts:[[780,614],[780,580],[837,580],[837,479]],label:{s:'al',x:800,y:568,t:'依賴',anchor:'center'} },
+  { from:'auth-requester',to:'response',pts:[[860,614],[860,600],[1154,600],[1154,479]],label:{s:'al',x:1007,y:588,t:'依賴',anchor:'center'} },
   { from:'http-client',to:'request',pts:[[320,614],[320,555],[837,555],[837,479]],label:{s:'al',x:854,y:568,t:'使用',rot:-90,anchor:'center'} },
   { from:'http-client',to:'response',pts:[[360,614],[360,557],[1154,557],[1154,479]],label:{s:'al',x:1171,y:568,t:'回傳型別',rot:-90,anchor:'center'} },
   { from:'requester',to:'request',pts:[[1075,614],[1075,550],[837,550],[837,479]],label:{s:'al',x:1092,y:575,t:'依賴',rot:-90,anchor:'center'} },
@@ -403,7 +405,7 @@ const TEXTS = [
   {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部 surface'},
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任 plane'},
   {s:'bn',x:110,y:1040,t:'不變量：Endpoint、Base URL、Path 與 Query 由呼叫端／domain layer 組裝，不是 package API'},
-  {s:'bn',x:110,y:1060,t:'不變量：internal AuthRequester generic 地送出 flow action 並回灌 raw response；flow 保有認證決策，HTTP status 維持 raw response'},
+  {s:'bn',x:110,y:1060,t:'不變量：HTTPURL validation 與 HTTPClientError 分別表達 URL construction、transport failure；HTTP status 維持 raw response'},
   {s:'bn',x:110,y:1080,t:'延後：Endpoint、status／Content-Type validation、retry、token refresh 與 package-owned decoder'}
 ];
 const SWATCHES = [
