@@ -86,6 +86,40 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func importRootExtractionRecognizesFormFeedTrivia() throws {
+    let source = "import\u{000C}Security"
+
+    #expect(try importedModuleRoots(in: source) == ["Security"])
+  }
+
+  @Test
+  func importRootExtractionRecognizesVerticalTabTrivia() throws {
+    let source = "import\u{000B}Security"
+
+    #expect(try importedModuleRoots(in: source) == ["Security"])
+  }
+
+  @Test
+  func forbiddenImportsSeparatedByFormFeedAreDetected() throws {
+    let source = "import\u{000C}Security"
+    let forbiddenImports: Set = ["Security"]
+
+    #expect(
+      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
+    )
+  }
+
+  @Test
+  func forbiddenImportsSeparatedByVerticalTabAreDetected() throws {
+    let source = "import\u{000B}Security"
+    let forbiddenImports: Set = ["Security"]
+
+    #expect(
+      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
+    )
+  }
+
+  @Test
   func importRootExtractionRecognizesMultilineBalancedAttributeArguments() throws {
     let source = """
       @_implementationOnly(
@@ -359,7 +393,7 @@ private func rawDependencies(in target: [String: Any]) -> [[String: Any]] {
 }
 
 private func importedModuleRoots(in source: String) throws -> Set<String> {
-  let trivia = #"[\t \r\n]"#
+  let trivia = #"[\t \r\n\f\v]"#
   let expression =
     #"(?m)(?:^|;)"#
     + trivia + #"*"#

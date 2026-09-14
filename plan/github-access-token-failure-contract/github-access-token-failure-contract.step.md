@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。`IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04` 是 historical delivery route；PC-07 的 current route 固定為 `AM-12 → PR-15 → IM-07 → TE-12 → RV-09 → DL-05`，不得援引其他 route 取代其 gate。
+PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。`IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04` 是 historical delivery route；PC-08 在 DL-05 後的 current route 固定為 `AM-13 → PR-16 → IM-08 → TE-13 → RV-10 → DL-06`，不得援引其他 route 取代其 gate。
 
 ## Goal
 
@@ -34,6 +34,8 @@ AM-10 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`（僅 
 
 PC-07 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：`rawRegexHashCount` 僅辨識至少一個 `#` 開頭的 raw-regex literal，並加入 ordinary division 後接 forbidden `import Security` 的 regression fixture。不得改動任何其他 implementation file、production API、target/module、BC boundary、CI 或既有 contract。
 
+PC-08 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：import-parser trivia 僅從 space/tab/CR/LF 擴至 form-feed（`\f`）與 vertical-tab（`\v`），並加入 `import\fSecurity`、`import\vSecurity` regression fixtures。不得改動 raw-regex semantics、generic lexer、任何其他 implementation file、production API、target/module、BC/toolchain/fixture 或既有 contract。
+
 ## Deleted
 
 不得刪除、搬移或更名任何 tracked file。AM-10 唯一許可的 deletion 是 safety checks 通過後的 exact ignored generated output `Tests/GitHubIntegrationConsumer/.build`，以及由 `mktemp -d` 建立並經 `trap` 清理的 exact task scratch directory；不得刪除其他 target 或 path。
@@ -43,6 +45,8 @@ PC-07 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIso
 原樣 token return、`nil` 至 `.missingCredential`、`load()` store error 至保留 operation/underlying error 的 `.tokenStore`、external mock conformance、provider injection/conformance、`TokenStoreOperation: Sendable` explicit conformance compile check（不新增其他 explicit conformance 或 concurrency behavior，並保留 error types 的 Swift 隱含關係）、structured package/target graph assertion、four-source exact-set、actual target source enumeration、forbidden-import checks。parser 只 mask Swift `#/…/#` raw-regex literals，保留 newline 並以 delimiter-aware close 判定結尾；negative fixture 的 fake `; import Apollo` 與 `; import ApolloAPI` 必須忽略，real multiline attribute import 必須正確取出 module root，實際 `Apollo`、`ApolloAPI` imports 都 forbidden。wrapper 使用 `RIVET_CONSUMER_BUILD_PATH="$(mktemp -d)"` 與 `trap` 僅清理 exact scratch，並以 `--scratch-path` 執行 fixture；fixture `.build` 若是 symlink/non-directory 即 blocker，若存在則僅在 `git check-ignore --no-index -q -- Tests/GitHubIntegrationConsumer/.build` 成功後才可 `rm -rf --` exact path，否則直接 absence verification。禁止 broad target、glob、其他 delete 或 lint config change；cleanup/trap/absence 任一步失敗即停止。wrapper、root `swift test`、完整 `swiftlint lint --strict` 與 diff checks 必須通過，pre-commit 順序固定 swift-format → wrapper → swiftlint。non-force merge hunk 必須同時保留 GitHubIntegration implemented/deferred wording 與 generic Auth/AuthFlow／HTTP client 不 drive flow wording。
 
 PC-07 regression fixture 中 ordinary division 不得進入 raw-regex masking；其後的 `import Security` 必須仍被擷取，並觸發既有 forbidden-import failure。
+
+PC-08 regression fixtures 的 `import\fSecurity` 與 `import\vSecurity` 都必須擷取 `Security`，並各自觸發既有 forbidden-import failure；不得改變 raw-regex behavior。
 
 ## PR Comment Triage
 
@@ -56,6 +60,7 @@ PC-07 regression fixture 中 ordinary division 不得進入 raw-regex masking；
 | PC-04 | accepted | amendment 當時的 final thread-resolution gate 維持 pending，歷史 evidence 不取代 RV-05 remote approval。後續 delivery 已關閉該 historical route；它不提供新 comment 的 resolution authority。 |
 | PC-05 | accepted | `DL-02a → RV-05 → DL-02b` 是當時 remote 尚未承載已驗證 head 時的 corrective route。其後 feature branch、remote branch 與 PR head 已同步至 `67a2cb7`；`origin/dev` 已在 history，README conflict 已以 non-force merge 解決，PR 為 mergeable clean。此記錄不補造 RV-05 verdict，也不是後續 PR comment 的 gate。 |
 | PC-06 | accepted | human 授權唯一 external consumer fixture package；它與 multiline-attribute parser thread 必須走 fresh gate，且不改變 locked API、scope、failure contract、target dependency、Non-Goal 或 architecture decision。 |
+| PC-08 | accepted | 只擴充 import-parser trivia 至 `\f`、`\v`，以 `import\fSecurity`、`import\vSecurity` fixtures 驗證既有 forbidden-import failure；不改 raw-regex semantic、generic lexer、production API/module/target/BC/toolchain/fixture 或 locked contract。 |
 
 ## Ledger
 
@@ -127,12 +132,19 @@ PC-07 regression fixture 中 ordinary division 不得進入 raw-regex masking；
 | IM-07 | completed | Implementer | 僅在 PR-15 approved 後修正 PC-07。 | 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：`rawRegexHashCount` 只辨識至少一個 `#` 開頭的 raw-regex literal，並加入 ordinary division 後接 `import Security` regression fixture。不得改其他 source、API、target/module、BC boundary、CI 或 contract。 | External Implementer completed：僅修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`；red 為 ordinary division 導致 `hashCount = 0` 而 mask 後續 `import Security`，green 固定為只在 `hashCount > 0` 時進入 raw-regex masking。未執行 Git 或 delivery。 |
 | TE-12 | completed | Tester | 獨立驗證 IM-07。 | 驗證 ordinary `/` 不會進入 masking、`import Security` 被擷取並觸發 forbidden-import failure，且既有 raw-regex/forbidden-import coverage 不退化；如實回報 blocker。 | External Tester verdict `pass`：full `swift test` 31 tests／5 suites、focused division regression、consumer fixture 4 tests且 cache absent、format、strict SwiftLint 40 files／0 violations、pre-commit all-files 與 `git diff --check` 均通過。 |
 | RV-09 | completed | Code-Reviewer | 獨立審查 TE-12 後的 PC-07 snapshot。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check`；確認無 generic lexer、API、target/module、BC 或 scope drift。 | External Code-Reviewer fresh verdict `approved`；PC-07 snapshot 無 scope、contract、workflow 或 delivery blocker。 |
-| DL-05 | pending (eligible) | Implementer | 僅在 RV-09 approved、無 blocker 與 human 明示 delivery authority後 commit、non-force push，並 resolve PC-07。 | 只交付 reviewed PC-07 fix；只 resolve `PRRT_kwDOUFu0Cc6hmEoT`，不得處理其他 thread、rebase、force push、merge PR 或 release。 | RV-09 approved；existing human delivery authority 下可進行。 |
+| DL-05 | completed | Implementer | 僅在 RV-09 approved、無 blocker 與 human 明示 delivery authority後 commit、non-force push，並 resolve PC-07。 | 只交付 reviewed PC-07 fix；只 resolve `PRRT_kwDOUFu0Cc6hmEoT`，不得處理其他 thread、rebase、force push、merge PR 或 release。 | Commit `69b6d6bb0edc51698bc18f82e68f7136615b0f62`（`fix(github-integration): 修正 raw-regex 除法遮罩回歸`）已 non-force push 至 PR #26；只 resolve `PRRT_kwDOUFu0Cc6hmEoT`。PR 為 Ready／CLEAN、head `69b6d6b`，feature worktree 已同步。 |
+| AM-13 | completed | Plan-Creator | 依 PR thread `PRRT_kwDOUFu0Cc6h-iXj`／`PRRC_kwDOUFu0Cc7uiAil` 建立 form-feed／vertical-tab import-parser trivia amendment。 | 四份 artifacts 一致限制 implementation 為 `StaticIsolationTests.swift`，只將 trivia 從 space/tab/CR/LF 擴至 `\f`、`\v`，並加入 `import\fSecurity`、`import\vSecurity` fixtures；不得改 raw-regex semantic、generic lexer、production API/module/target/BC/toolchain/fixture 或 locked contract。 | Plan-Creator 僅修改四份 topic planning artifacts；未實作、測試、Git、commit/push 或 resolve thread。 |
+| PR-16 | completed | Plan-Reviewer | 獨立審查 AM-13。 | 明示 verdict；確認 exact trivia expansion、兩個 Security fixtures、ReadOnly/Modify/TestCase 與 post-DL-05 route 一致，且無 raw-regex/lexer/API/scope drift。 | External Plan-Reviewer verdict `pass`／`approved`；所有 AM-13 scope 與 route constraints 均符合。 |
+| IM-08 | completed | Implementer | 僅在 PR-16 approved 後修正 PC-08。 | 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：將 import-parser trivia 擴至 `\f`、`\v`，加入 `import\fSecurity`、`import\vSecurity` fixtures，並保留既有 forbidden-import failure。 | External Implementer completed：僅修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`；完成 TDD initial 與 coverage rework，具四個獨立 form-feed／vertical-tab extraction/forbidden tests；未執行 delivery。 |
+| TE-13 | completed | Tester | 獨立驗證 IM-08。 | 驗證兩個 focused fixtures 均萃取 `Security` 並觸發 forbidden-import failure，且既有 raw-regex/import-parser coverage 不退化；如實回報 blocker。 | External Tester verdict `pass`：allowed five files；four independent form-feed／vertical-tab extraction-and-forbidden assertions；`swift test` 35 tests／5 suites、consumer 4 tests／1 suite且 cache absent、format、strict SwiftLint 42 files／0 violations、pre-commit all-files 與 `git diff --check` 均通過；no scope drift。 |
+| RV-10 | completed | Code-Reviewer | 獨立審查 TE-13 後的 PC-08 snapshot。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check`；確認無 raw-regex semantic、generic lexer、API/module/target/BC/toolchain/fixture 或 scope drift。 | External Code-Reviewer fresh verdict `approved`；PC-08 snapshot 無 scope、contract、workflow 或 delivery blocker。 |
+| DL-06 | pending (eligible) | Implementer | 僅在 RV-10 approved、無 blocker 與 human 明示 delivery authority 後 commit、non-force push，並 resolve PC-08。 | 只交付 reviewed PC-08 fix；只 resolve `PRRT_kwDOUFu0Cc6h-iXj`，不得處理其他 thread、rebase、force push、merge PR 或 release。 | RV-10 approved；existing human delivery authority 下可進行。 |
 
 ## Blockers
 
 - DL-04 delivery 尚未執行；在 existing human delivery authority 下才可 push 或 resolve completed threads。
 - PC-07 在 PR-15、IM-07、TE-12、RV-09 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6hmEoT`。
+- PC-08 在 DL-05、PR-16、IM-08、TE-13、RV-10 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h-iXj`。
 
 ## Human Check
 
@@ -141,9 +153,12 @@ PC-07 regression fixture 中 ordinary division 不得進入 raw-regex masking；
 - 不得 rebase 或 force push；AM-10 只可在 CF-02 後、feature worktree clean 時 non-force merge `origin/dev`，並只 resolve bounded-context index 的指定 semantic hunk。
 - 若任一獨立 reviewer verdict 為 `blocked` 或 `human-check`，停止自動前進並交還 human。
 - PC-07 delivery 只可 resolve `PRRT_kwDOUFu0Cc6hmEoT`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-09。
+- PC-08 delivery 只可 resolve `PRRT_kwDOUFu0Cc6h-iXj`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-10。
 
 ## Last Updated
 
 2026-09-12 — PR-14 pass 後，實際 `origin/dev` conflict route 調整為 `IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04`。CF-02 是 reviewed fixes/artifacts 的 authorized non-delivery commit；IN-02 只在 feature worktree clean 時 non-force merge，並僅處理 bounded-context index exact hunk。其餘 AM-10 scope 與 historic verdicts 維持不變，RV-05 verdict 未記錄，不予推論。
 
 2026-09-14 — AM-12 處置 `PRRT_kwDOUFu0Cc6hmEoT`：`rawRegexHashCount` 只辨識至少一個 `#` 開頭的 raw-regex literal；ordinary division 後接 `import Security` 必須維持可偵測。新 route 為 `AM-12 → PR-15 → IM-07 → TE-12 → RV-09 → DL-05`；不重開既有 API、scope、target/module、BC boundary 或 historic routes。
+
+2026-09-14 — AM-13 處置 `PRRT_kwDOUFu0Cc6h-iXj`／`PRRC_kwDOUFu0Cc7uiAil`：import-parser trivia 只由 space/tab/CR/LF 擴至 `\f`、`\v`；`import\fSecurity` 與 `import\vSecurity` 必須維持可偵測。新 route 為 `AM-13 → PR-16 → IM-08 → TE-13 → RV-10 → DL-06`，且只可在 DL-05 後開始；不重開 raw-regex semantics、generic lexer、API、scope、target/module、BC/toolchain/fixture 或 historic routes。
