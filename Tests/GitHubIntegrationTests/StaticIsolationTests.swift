@@ -124,6 +124,19 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func divisionDoesNotMaskFollowingForbiddenImports() throws {
+    let source = """
+      let ratio = 6 / 2
+      ; import Security
+      """
+    let forbiddenImports: Set = ["Security"]
+
+    #expect(
+      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
+    )
+  }
+
+  @Test
   func forbiddenApolloImportRootsAreDetected() throws {
     let source = """
       import Apollo
@@ -468,7 +481,7 @@ private func rawRegexHashCount(in source: String, at candidate: String.Index) ->
     probe = source.index(after: probe)
   }
 
-  return probe < source.endIndex && source[probe] == "/" ? hashCount : nil
+  return hashCount > 0 && probe < source.endIndex && source[probe] == "/" ? hashCount : nil
 }
 
 private func stringLiteralReplacement(
