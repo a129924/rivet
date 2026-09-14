@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。`IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04` 是 historical delivery route；PC-09／PC-10 在 DL-06 後的 current route 固定為 `AM-14 → PR-17 → IM-09 → TE-14 → RV-11 → DL-07`，不得援引其他 route 取代其 gate。
+PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a → RV-05 → DL-02b` route 已不是 current gate，且本 ledger 不回填或推論未記錄的 RV-05 verdict。RV-02、RV-03 與 PR-13 的 historical verdict 均保持 `needs-rework`，其中 RV-03 不得改寫為 `approved`。`IM-06 → TE-10 → RV-07 → CF-02 → IN-02 → TE-11 → RV-08 → DL-04` 是 historical delivery route；PC-11 在 DL-07 後的 current route 固定為 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`，不得援引其他 route 取代其 gate。
 
 ## Goal
 
@@ -26,11 +26,15 @@ PR #26 處於 human review／PR-comment review-and-fix phase。historic `DL-02a 
 
 AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有 implementation、production API、target/module、BC、toolchain 與 consumer fixture 都維持 ReadOnly。
 
+AM-15 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有 implementation、production API、target/module、BC、toolchain 與 consumer fixture 都維持 ReadOnly。
+
 ## Written
 
 實作階段新增 `Sources/BoundedContexts/GitHubIntegration/Contracts/CredentialTypes.swift`、`GitHubTokenStore.swift`、`GitHubTokenProvider.swift`、`Providers/TokenStoreGitHubTokenProvider.swift`，以及 `Tests/GitHubIntegrationTests/GitHubTokenProviderTests.swift`、`StaticIsolationTests.swift`；fresh PR-comment route 另新增 `Tests/GitHubIntegrationConsumer/Package.swift` 與 `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift`、`scripts/check-github-integration-consumer.sh`。consumer manifest 固定 `../..` local-path dependency、macOS 15、Swift 6、單一 test target，僅依 package `Rivet` 的 `GitHubIntegration` product；public test 僅 `import GitHubIntegration`。planning phase 已寫入四份同 slug artifacts；AM-10 不改 fixture public tests、Swift production source 或 `.swiftlint.yml`。
 
 AM-14 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file，IM-09 只修改既有 `StaticIsolationTests.swift`。
+
+AM-15 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file，IM-10 只修改既有 `StaticIsolationTests.swift`。
 
 ## Modify
 
@@ -41,6 +45,8 @@ PC-07 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIso
 PC-08 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：import-parser trivia 僅從 space/tab/CR/LF 擴至 form-feed（`\f`）與 vertical-tab（`\v`），並加入 `import\fSecurity`、`import\vSecurity` regression fixtures。不得改動 raw-regex semantics、generic lexer、任何其他 implementation file、production API、target/module、BC/toolchain/fixture 或既有 contract。
 
 PC-09／PC-10 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：只新增 U+00A0 NBSP trivia 與 `import<NBSP>Security` independent extraction/forbidden fixture；raw string masking只新增 hash-escape-aware close 判定，使 `\#"` 不 prematurely close，並以 literal 後 real `import Security` 的 focused fixture 驗證既有 forbidden-import failure。不得 general whitespace sweep、structured parser、generic lexer、raw-regex semantic 或改動任何其他 implementation file、production API、target/module、BC/toolchain/fixture 或既有 contract。
+
+PC-11 的 implementation 只允許修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：只補 adjacent legal attributes traversal 至 import/access modifier/next attribute，並加入 `@_spi(Foo)@preconcurrency import Security` focused fixture，使 `Security` 觸發既有 forbidden-import assertion。不得改動其他 implementation file、production API、target/module、BC/toolchain/fixture、generic lexer、raw string／raw-regex semantics 或既有 contract。
 
 ## Deleted
 
@@ -55,6 +61,8 @@ PC-07 regression fixture 中 ordinary division 不得進入 raw-regex masking；
 PC-08 regression fixtures 的 `import\fSecurity` 與 `import\vSecurity` 都必須擷取 `Security`，並各自觸發既有 forbidden-import failure；不得改變 raw-regex behavior。
 
 PC-09 的 `import<NBSP>Security` 必須獨立擷取 `Security` 並觸發既有 forbidden-import failure；PC-10 的 raw string `\#"` 不得 premature close，literal 後 real `import Security` 必須被擷取並觸發既有 forbidden-import failure。兩者均不得改變 raw-regex behavior。
+
+PC-11 的 `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` 並觸發既有 forbidden-import assertion；只驗證 adjacent attributes traversal，不改 raw string／raw-regex behavior。
 
 ## PR Comment Triage
 
@@ -71,6 +79,7 @@ PC-09 的 `import<NBSP>Security` 必須獨立擷取 `Security` 並觸發既有 f
 | PC-08 | accepted | 只擴充 import-parser trivia 至 `\f`、`\v`，以 `import\fSecurity`、`import\vSecurity` fixtures 驗證既有 forbidden-import failure；不改 raw-regex semantic、generic lexer、production API/module/target/BC/toolchain/fixture 或 locked contract。 |
 | PC-09 | accepted | 只新增 U+00A0 NBSP trivia，並以 `import<NBSP>Security` independent extraction／forbidden regression 驗證；不做 general whitespace sweep、structured parser 或 production/API/target/module/BC/toolchain/fixture change。 |
 | PC-10 | accepted | raw string masking只變為 hash-escape-aware，使 `\#"` 不 prematurely close 並 hide post-literal real `import Security`；不擴張 raw-regex semantics、generic lexer 或 locked contract。 |
+| PC-11 | accepted | 只補 adjacent legal attributes traversal，並以 `@_spi(Foo)@preconcurrency import Security` 驗證 `Security` extraction／existing forbidden-import assertion；不改 production/API/target/module/BC/toolchain/fixture、generic lexer、raw string／raw-regex semantics 或 locked contract。 |
 
 ## Ledger
 
@@ -154,7 +163,13 @@ PC-09 的 `import<NBSP>Security` 必須獨立擷取 `Security` 並觸發既有 f
 | IM-09 | completed | Implementer | 僅在 PR-17 approved 後修正 PC-09／PC-10。 | 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：NBSP trivia/extraction/forbidden regression與 hash-escape-aware raw-string close/post-literal Security regression。 | External Implementer completed：僅修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`；完成 NBSP、raw-string hash escape 與 forbidden assertion，並完成後續 RV-11 assertion rework。未執行 delivery。 |
 | TE-14 | completed | Tester | 獨立驗證 IM-09。 | 驗證兩個 independent regressions 與既有 parser/raw-regex coverage；如實回報 blocker。 | External Tester fresh verdict `pass` after assertion rework：`swift test` 38 tests／5 suites、consumer 4 tests且 cache absent、full format、strict SwiftLint 42 files／0 violations、pre-commit all-files 與 `git diff --check` 均通過；allowed five files。 |
 | RV-11 | completed | Code-Reviewer | 獨立審查 TE-14 後的 PC-09／PC-10 snapshot。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check`；確認 no forbidden scope drift。 | External Code-Reviewer fresh verdict `approved`；PC-09／PC-10 snapshot 無 scope、contract、workflow 或 delivery blocker。 |
-| DL-07 | pending (eligible) | Implementer | 僅在 RV-11 approved、無 blocker 與 human 明示 delivery authority 後 commit、non-force push，並 resolve兩個 threads。 | 只交付 reviewed PC-09／PC-10 fix；只 resolve `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`，不得處理其他 thread、rebase、force push、merge PR 或 release。 | RV-11 approved；existing human delivery authority 下可進行。 |
+| DL-07 | completed | Implementer | 僅在 RV-11 approved、無 blocker 與 human 明示 delivery authority 後 commit、non-force push，並 resolve兩個 threads。 | 只交付 reviewed PC-09／PC-10 fix；只 resolve `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`，不得處理其他 thread、rebase、force push、merge PR 或 release。 | Commit `33de012`（`test(github-integration): 補齊 raw string 與 NBSP 邊界驗證`）已 non-force push；只 resolve `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`。PR 為 Ready／CLEAN，feature worktree 已同步。 |
+| AM-15 | completed | Plan-Creator | 依 PR thread `PRRT_kwDOUFu0Cc6h_Tcg` 建立 adjacent-attributes import-extraction amendment。 | 四份 artifacts 一致限制 implementation 為 `StaticIsolationTests.swift`：only adjacent legal attributes traversal／`@_spi(Foo)@preconcurrency import Security` extraction-forbidden fixture。不得改 production/API/target/module/BC/toolchain/fixture、generic lexer、raw string／raw-regex semantics 或 contract drift。 | Plan-Creator 僅修改四份 topic planning artifacts；未實作、測試、Git、commit/push 或 resolve thread。 |
+| PR-18 | completed | Plan-Reviewer | 獨立審查 AM-15。 | 明示 verdict；確認 exact fixture、ReadOnly/Written/Modify/TestCase 與 post-DL-07 route 一致，且無 scope drift。 | External Plan-Reviewer verdict `pass`；AM-15 scope 與 route constraints 確認一致。 |
+| IM-10 | completed | Implementer | 僅在 PR-18 approved 後修正 PC-11。 | 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：adjacent legal attributes traverse 至 import/access modifier/next attribute，並加入 Security extraction/forbidden fixture。 | External Implementer completed：僅修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`；adjacent-attributes fixture red 後 green，`Security` extraction 與既有 forbidden assertion 通過；未執行 delivery。 |
+| TE-15 | completed | Tester | 獨立驗證 IM-10。 | 驗證 focused adjacent-attributes regression 與既有 extraction coverage；如實回報 blocker。 | External Tester verdict `pass`：`swift test` 39 tests／5 suites、consumer 4 tests且 cache absent、format、strict SwiftLint 42 files／0 violations、pre-commit all-files 與 `git diff --check` 均通過；scope exact five files。 |
+| RV-12 | completed | Code-Reviewer | 獨立審查 TE-15 後的 PC-11 snapshot。 | 明示 `approved`、`needs-rework`、`blocked` 或 `human-check`；確認 no forbidden scope drift。 | External Code-Reviewer fresh verdict `approved`；PC-11 snapshot 無 scope、contract、workflow 或 delivery blocker。 |
+| DL-08 | pending (eligible) | Implementer | 僅在 RV-12 approved、無 blocker 與 human 明示 delivery authority 後 commit、non-force push，並 resolve PC-11。 | 只交付 reviewed PC-11 fix；只 resolve `PRRT_kwDOUFu0Cc6h_Tcg`，不得處理其他 thread、rebase、force push、merge PR 或 release。 | RV-12 approved；existing human delivery authority 下可進行。 |
 
 ## Blockers
 
@@ -162,6 +177,7 @@ PC-09 的 `import<NBSP>Security` 必須獨立擷取 `Security` 並觸發既有 f
 - PC-07 在 PR-15、IM-07、TE-12、RV-09 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6hmEoT`。
 - PC-08 在 DL-05、PR-16、IM-08、TE-13、RV-10 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h-iXj`。
 - PC-09／PC-10 在 DL-06、PR-17、IM-09、TE-14、RV-11 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`。
+- PC-11 在 DL-07、PR-18、IM-10、TE-15、RV-12 與 human 明示 delivery authority 全數成立前，不得 commit、push 或 resolve `PRRT_kwDOUFu0Cc6h_Tcg`。
 
 ## Human Check
 
@@ -172,6 +188,7 @@ PC-09 的 `import<NBSP>Security` 必須獨立擷取 `Security` 並觸發既有 f
 - PC-07 delivery 只可 resolve `PRRT_kwDOUFu0Cc6hmEoT`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-09。
 - PC-08 delivery 只可 resolve `PRRT_kwDOUFu0Cc6h-iXj`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-10。
 - PC-09／PC-10 delivery 只可 resolve `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-11。
+- PC-11 delivery 只可 resolve `PRRT_kwDOUFu0Cc6h_Tcg`；不得以 historic 或其他 thread 的 review/delivery route 取代 RV-12。
 
 ## Last Updated
 
@@ -182,3 +199,5 @@ PC-09 的 `import<NBSP>Security` 必須獨立擷取 `Security` 並觸發既有 f
 2026-09-14 — AM-13 處置 `PRRT_kwDOUFu0Cc6h-iXj`／`PRRC_kwDOUFu0Cc7uiAil`：import-parser trivia 只由 space/tab/CR/LF 擴至 `\f`、`\v`；`import\fSecurity` 與 `import\vSecurity` 必須維持可偵測。新 route 為 `AM-13 → PR-16 → IM-08 → TE-13 → RV-10 → DL-06`，且只可在 DL-05 後開始；不重開 raw-regex semantics、generic lexer、API、scope、target/module、BC/toolchain/fixture 或 historic routes。
 
 2026-09-14 — AM-14 處置 `PRRT_kwDOUFu0Cc6h-yNS`、`PRRT_kwDOUFu0Cc6h-yNU`：只新增 U+00A0 NBSP trivia 與 hash-escape-aware raw-string close（`\#"` 不 premature close）；兩個 focused fixtures 都必須維持後續 `Security` import 可偵測。新 route 為 `AM-14 → PR-17 → IM-09 → TE-14 → RV-11 → DL-07`，且只可在 DL-06 後開始；不重開 general whitespace、structured parser、generic lexer、raw-regex semantics、API、scope、target/module、BC/toolchain/fixture 或 historic routes。
+
+2026-09-14 — AM-15 處置 `PRRT_kwDOUFu0Cc6h_Tcg`：只補 adjacent legal attributes traversal 至 import/access modifier/next attribute；`@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` 並觸發既有 forbidden-import assertion。新 route 為 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`，且只可在 DL-07 後開始；不重開 production/API/target/module/BC/toolchain/fixture、generic lexer、raw string／raw-regex semantics 或 historic routes。

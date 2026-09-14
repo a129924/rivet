@@ -72,6 +72,8 @@ Tests/GitHubIntegrationConsumer/
 
 AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有 implementation、production API、target/module、BC、toolchain 與 consumer fixture 均為 ReadOnly。
 
+AM-15 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有 implementation、production API、target/module、BC、toolchain 與 consumer fixture 均為 ReadOnly。
+
 ### Written
 
 - `Sources/BoundedContexts/GitHubIntegration/Contracts/CredentialTypes.swift`
@@ -84,6 +86,7 @@ AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有
 - `docs/architecture/bounded-contexts/pr-reader.md` 與 `docs/github-api/README.md` 的 canonical factual writeback：只更新為已實作的 `GitHubIntegration` token contract，並保留 Keychain、authorizer、REST 與 OAuth lifecycle deferred。
 - 四份同 slug planning artifacts；AM-09 只寫入這四份 artifacts，不寫入 Swift source、consumer fixture 或 `.swiftlint.yml`。
 - AM-14 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file。
+- AM-15 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file。
 
 ### Modify
 
@@ -95,6 +98,7 @@ AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：import-parser trivia 僅由 space/tab/CR/LF 擴至 form-feed（`\f`）與 vertical-tab（`\v`）；`import\fSecurity` 與 `import\vSecurity` 都必須擷取 `Security` 並觸發既有 forbidden-import failure。不得改 raw-regex semantics、建立 generic lexer，或變更 production API/module/target/BC/toolchain/fixture。
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：import-parser trivia 只新增 U+00A0 NBSP，且 `import<NBSP>Security` 必須獨立擷取 `Security` 並觸發既有 forbidden-import failure；不得 general whitespace sweep 或 structured parser。
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：raw string masking 只新增 hash-escape-aware close 判定，使 raw body 的 `\#"` 不 prematurely close，並以 literal 後 real `import Security` 的 focused fixture 驗證 forbidden import 仍可被擷取；不得擴張 raw-regex semantics 或 generic lexer。
+- `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：import extraction 只補 adjacent legal attributes traversal，令 `@_spi(Foo)@preconcurrency import Security` traverse 至 import/access modifier/next attribute，並萃取 `Security` 觸發既有 forbidden-import failure；不得改 production/API/target/module/BC/toolchain/fixture、generic lexer、raw string 或 raw-regex semantics。
 - `scripts/check-github-integration-consumer.sh`：以 exact `mktemp -d` scratch、`trap` cleanup、fixture `.build` eligibility probe/cleanup/absence verification 包裝既有 consumer test。
 - `.pre-commit-config.yaml`：在 `swift-format` 後、`swiftlint` 前加入 wrapper local hook；不改 SwiftLint configuration/rules 或 CI。
 - `docs/toolchain.md`：記錄 routine wrapper、pre-commit ordering、scratch/trap 與 exact cleanup safety behavior。
@@ -124,6 +128,7 @@ AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有
 - `import\fSecurity` 與 `import\vSecurity` 的 focused regression fixtures 必須都擷取 `Security` 並觸發既有 forbidden-import failure；只驗證 form-feed／vertical-tab trivia，raw-regex behavior 維持不變。
 - `import<NBSP>Security` 必須獨立擷取 `Security` 並觸發既有 forbidden-import failure；NBSP 為唯一新增 trivia code point，不得 generalize whitespace。
 - raw string body 的 `\#"` 不得 prematurely close；literal 後 real `import Security` 必須被擷取並觸發既有 forbidden-import failure，raw-regex behavior 維持不變。
+- `@_spi(Foo)@preconcurrency import Security` 必須萃取 `Security` 並觸發既有 forbidden-import failure；只驗證 adjacent attributes traversal，不改 raw string／raw-regex behavior。
 - wrapper 以 `RIVET_CONSUMER_BUILD_PATH="$(mktemp -d)"` 建立 scratch，透過 `trap` 只清理此 exact scratch path，並以 `--scratch-path "$RIVET_CONSUMER_BUILD_PATH"` 執行 fixture。fixture `.build` 若為 symlink 或 non-directory 即 blocker；若存在，必須先以 `git check-ignore --no-index -q -- Tests/GitHubIntegrationConsumer/.build` 證實 ignored，才可 `rm -rf --` exact path；不存在時直接驗證 absence。禁止 broad target、glob、其他 deletion 與 `.swiftlint.yml` 修改；cleanup/trap/final absence 任一步失敗即停止。成功後 root `swift test`、完整 `swiftlint lint --strict` 與 diff checks 通過，且 pre-commit hook 順序為 swift-format → wrapper → swiftlint。
 - consumer verification 不得觸及 root manifest、target/product、production source 或任何已鎖定 public contract。
 - package target/test-target layout、target dependency 與 imports 維持 isolation；執行 root `swift test` 及 `git diff --check`。
@@ -146,6 +151,7 @@ AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有
 - PC-08（`PRRT_kwDOUFu0Cc6h-iXj`／`PRRC_kwDOUFu0Cc7uiAil`）：只擴充 import-parser trivia 至 form-feed（`\f`）及 vertical-tab（`\v`），並以 `import\fSecurity`、`import\vSecurity` fixtures 證明 forbidden import 被擷取。不得新增 generic Swift lexer、變更 raw-regex semantic、production API、target/module、BC/toolchain/fixture 或既有 contract。
 - PC-09（`PRRT_kwDOUFu0Cc6h-yNS`）：test-private U+00A0 NBSP trivia 與 `import<NBSP>Security` extraction／forbidden-import regression；不得 general whitespace sweep、structured parser 或任何 production/API/target/module/BC/toolchain/fixture change。
 - PC-10（`PRRT_kwDOUFu0Cc6h-yNU`）：test-private hash-escape-aware raw string masking，使 `\#"` 不 prematurely close，且後接 real `import Security` 不被 hide；不得改 raw-regex semantics、generic lexer 或既有 contract。
+- PC-11（`PRRT_kwDOUFu0Cc6h_Tcg`）：test-private adjacent legal attributes import extraction，並以 `@_spi(Foo)@preconcurrency import Security` fixture 驗證 `Security` extraction／existing forbidden-import assertion；不得改 production/API/target/module/BC/toolchain/fixture、generic lexer、raw string／raw-regex semantics 或既有 contract。
 
 ## Implementation Handoff
 
@@ -156,3 +162,4 @@ AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有
 5. PC-07 的新 route 固定為 `AM-12 → PR-15 → IM-07 → TE-12 → RV-09 → DL-05`。IM-07 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：`rawRegexHashCount` 只在至少一個 `#` 開頭的 raw-regex literal 回傳 raw delimiter count，並新增 ordinary division 後接 `import Security` 的 regression fixture；ordinary `/` 不得被 mask，`Security` 必須觸發既有 forbidden-import failure。TE-12 必須獨立驗證新 regression 與既有 raw-regex/forbidden-import behavior；RV-09 必須獨立確認 no scope/contract drift。僅 RV-09 明示 approved、無 blocker 且 human 明示 delivery authority 時，DL-05 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6hmEoT`。不得 rebase、force push、自動 merge、release 或處理任何其他 thread。
 6. PC-08 在 DL-05 後的 route 固定為 `AM-13 → PR-16 → IM-08 → TE-13 → RV-10 → DL-06`。IM-08 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：import-parser trivia 僅新增 `\f`、`\v`，並加入 `import\fSecurity`、`import\vSecurity` regression fixtures；兩者必須萃取 `Security` 並觸發既有 forbidden-import failure。TE-13 獨立驗證 focused fixtures 與既有 parser coverage；RV-10 獨立確認無 generic lexer、raw-regex semantic、API/module/target/BC/toolchain/fixture 或 scope drift。僅 RV-10 明示 approved、無 blocker且 human 明示 delivery authority 時，DL-06 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6h-iXj`；不得處理其他 thread、rebase、force push、自動 merge 或 release。
 7. PC-09／PC-10 在 DL-06 後的 route 固定為 `AM-14 → PR-17 → IM-09 → TE-14 → RV-11 → DL-07`。IM-09 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：只新增 U+00A0 NBSP trivia 與 `import<NBSP>Security` focused extraction/forbidden fixture；raw string masking只作 hash-escape-aware close 判定，令 `\#"` 不 prematurely close 且 literal 後 real `import Security` 仍觸發 forbidden-import failure。TE-14 獨立驗證兩項 regression 與既有 coverage；RV-11 獨立確認 no general whitespace sweep、structured parser、generic lexer、raw-regex semantic、API/module/target/BC/toolchain/fixture 或 scope drift。僅 RV-11 approved、無 blocker 且 human 明示 delivery authority後，DL-07 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6h-yNS` 與 `PRRT_kwDOUFu0Cc6h-yNU`；不得處理其他 thread、rebase、force push、自動 merge或 release。
+8. PC-11 在 DL-07 後的 route 固定為 `AM-15 → PR-18 → IM-10 → TE-15 → RV-12 → DL-08`。IM-10 只修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：adjacent legal attributes 只 traverse 至 import/access modifier/next attribute，並新增 `@_spi(Foo)@preconcurrency import Security` focused fixture，使 `Security` 觸發既有 forbidden-import assertion。TE-15 獨立驗證 regression 與既有 extraction coverage；RV-12 獨立確認無 production/API/target/module/BC/toolchain/fixture、generic lexer、raw string／raw-regex semantic 或 scope drift。僅 RV-12 approved、無 blocker且 human 明示 delivery authority後，DL-08 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6h_Tcg`；不得處理其他 thread、rebase、force push、自動 merge或 release。

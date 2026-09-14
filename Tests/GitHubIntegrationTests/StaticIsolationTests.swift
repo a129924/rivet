@@ -154,6 +154,17 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func importRootExtractionRecognizesAdjacentLegalAttributes() throws {
+    let source = "@_spi(Foo)@preconcurrency import Security"
+    let forbiddenImports: Set = ["Security"]
+
+    #expect(try importedModuleRoots(in: source) == ["Security"])
+    #expect(
+      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
+    )
+  }
+
+  @Test
   func rawRegexLiteralsMaskImportsAndKeepMultilineAttributes() throws {
     let source = """
       let ignored = #/
@@ -437,7 +448,7 @@ private func importedModuleRoots(in source: String) throws -> Set<String> {
     #"(?m)(?:^|;)"#
     + trivia + #"*"#
     + #"(?:@[_A-Za-z][_A-Za-z0-9]*(?:\((?:[^()]|\([^()]*\))*\))?"#
-    + trivia + #"+)*"#
+    + #"(?:"# + trivia + #"+|(?=@)))*"#
     + #"(?:(?:private|fileprivate|internal|package|public)"#
     + trivia + #"+)?"#
     + #"import"#
