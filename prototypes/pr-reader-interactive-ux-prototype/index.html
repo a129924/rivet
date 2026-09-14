@@ -585,8 +585,41 @@
     }
 
     .overview-progress {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       margin-bottom: 8px;
+    }
+
+    .overview-progress progress {
+      width: 72px;
+      height: 3px;
+      border: 0;
+      border-radius: 2px;
+      appearance: none;
+      background: var(--line);
+      color: var(--blue);
+    }
+
+    .overview-progress progress::-webkit-progress-bar {
+      border-radius: 2px;
+      background: var(--line);
+    }
+
+    .overview-progress progress::-webkit-progress-value {
+      border-radius: 2px;
+      background: var(--blue);
+    }
+
+    .overview-progress progress::-moz-progress-bar {
+      border-radius: 2px;
+      background: var(--blue);
+    }
+
+    .overview-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .stats {
@@ -979,6 +1012,13 @@
       background: rgba(98, 169, 246, 0.13);
       color: #c9e3ff;
       font-weight: 650;
+    }
+
+    .review-state-text {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
     }
 
     .simple-content {
@@ -1608,7 +1648,8 @@
         const additions = pr.files.reduce((total, file) => total + file.additions, 0);
         const deletions = pr.files.reduce((total, file) => total + file.deletions, 0);
         const reviewedCount = readerState.reviewedFileOrdinals.size;
-        const reviewActionLabel = reviewedCount === pr.files.length
+        const isFullyReviewed = reviewedCount === pr.files.length;
+        const reviewActionLabel = isFullyReviewed
           ? "Finish Reading"
           : reviewedCount === 0
             ? "Review Changes →"
@@ -1626,8 +1667,11 @@
                   <p class="summary-copy">${escapeHTML(pr.summary)}</p>
                   <h2 class="section-label">What Changed</h2>
                   <ul class="changed-list">${pr.whatChanged.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}</ul>
-                  <span class="progress-text overview-progress">${reviewedCount} / ${pr.files.length} reviewed</span>
-                  <button id="overview-review-action" class="primary-button" type="button">${reviewActionLabel}</button>
+                  <div class="overview-progress">
+                    <span id="overview-progress-label" class="progress-text">${reviewedCount} / ${pr.files.length} reviewed</span>
+                    <progress value="${reviewedCount}" max="${pr.files.length}" aria-labelledby="overview-progress-label" aria-valuetext="${reviewedCount} of ${pr.files.length} files reviewed"></progress>
+                  </div>
+                  <div class="overview-actions">${isFullyReviewed ? '<span class="review-state-text">✓ All files reviewed</span>' : ""}<button id="overview-review-action" class="primary-button" type="button">${reviewActionLabel}</button></div>
                 </div>
                 <aside>
                   <h2 class="section-label">Stats</h2>
@@ -1648,9 +1692,16 @@
       function renderFiles(pr, readerState) {
         const selectedFile = pr.files[readerState.selectedFileOrdinal - 1];
         const reviewedCount = readerState.reviewedFileOrdinals.size;
-        const reviewAction = reviewedCount === pr.files.length
-          ? '<button id="review-action" class="review-action-button" type="button">Finish Reading</button>'
-          : '<button id="review-action" class="review-action-button" type="button">Mark Reviewed</button>';
+        const isFullyReviewed = reviewedCount === pr.files.length;
+        const isCurrentFileReviewed = readerState.reviewedFileOrdinals.has(readerState.selectedFileOrdinal);
+        let reviewActions = `<button id="review-action" class="review-action-button" type="button" data-review-action="mark-reviewed" data-pr-key="${escapeHTML(pr.key)}" data-file-ordinal="${readerState.selectedFileOrdinal}">Mark Reviewed</button>`;
+        if (isCurrentFileReviewed) {
+          const reviewStateLabel = isFullyReviewed ? "✓ All files reviewed" : "Reviewed";
+          const finishAction = isFullyReviewed
+            ? `<button id="review-action" class="review-action-button" type="button" data-review-action="finish-reading" data-pr-key="${escapeHTML(pr.key)}" data-file-ordinal="${readerState.selectedFileOrdinal}">Finish Reading</button>`
+            : "";
+          reviewActions = `<span class="review-state-text">${reviewStateLabel}</span><button id="unreview-action" class="quiet-button" type="button" data-pr-key="${escapeHTML(pr.key)}" data-file-ordinal="${readerState.selectedFileOrdinal}">Mark as Unreviewed</button>${finishAction}`;
+        }
         const groups = ["Sources", "Tests"].map((group) => `
           <section aria-labelledby="group-${group.toLowerCase()}">
             <h3 id="group-${group.toLowerCase()}" class="file-group-title">${group}</h3>
@@ -1674,7 +1725,7 @@
               <div class="shortcut-legends" aria-label="Keyboard shortcuts">
                 <span><kbd>↑↓</kbd> Change</span><span><kbd>⌥↑↓</kbd> File</span>
               </div>
-              <div class="action-buttons"><button id="comment-button" class="quiet-button" type="button">C Comment</button>${reviewAction}</div>
+              <div class="action-buttons"><button id="comment-button" class="quiet-button" type="button">C Comment</button>${reviewActions}</div>
             </footer>
           </div>`;
       }
@@ -1762,6 +1813,7 @@
         document.querySelectorAll(".change-block").forEach((block) => block.addEventListener("click", handleChangeClick));
         document.getElementById("comment-button")?.addEventListener("click", () => openComposer("comment"));
         document.getElementById("review-action")?.addEventListener("click", handleFilesReviewAction);
+        document.getElementById("unreview-action")?.addEventListener("click", handleFilesUnreviewAction);
       }
 
       function handleRowClick(event) {
@@ -1868,19 +1920,26 @@
         focusSelectedChange();
       }
 
-      function handleFilesReviewAction() {
+      function handleFilesReviewAction(event) {
         const pr = activePR();
         const readerState = activeReaderState();
-        if (!pr || !readerState || readerState.activeTab !== "files") return;
-        if (readerState.reviewedFileOrdinals.size === pr.files.length) {
+        const eventOrdinal = Number(event.currentTarget.dataset.fileOrdinal);
+        if (state.workspace !== "reader" || state.composer?.isOpen || !pr || !readerState || readerState.activeTab !== "files") return;
+        if (event.currentTarget.dataset.prKey !== pr.key || eventOrdinal !== readerState.selectedFileOrdinal) return;
+        if (event.currentTarget.dataset.reviewAction === "finish-reading") {
+          if (readerState.reviewedFileOrdinals.size !== pr.files.length) return;
           finishReading();
           return;
         }
+        if (event.currentTarget.dataset.reviewAction !== "mark-reviewed") return;
+        if (readerState.reviewedFileOrdinals.size === pr.files.length) return;
+        if (readerState.reviewedFileOrdinals.has(readerState.selectedFileOrdinal)) return;
         markCurrentFileReviewed(pr, readerState);
       }
 
       function markCurrentFileReviewed(pr, readerState) {
         const markedOrdinal = readerState.selectedFileOrdinal;
+        if (readerState.reviewedFileOrdinals.has(markedOrdinal)) return;
         readerState.reviewedFileOrdinals.add(markedOrdinal);
         if (readerState.reviewedFileOrdinals.size < pr.files.length) {
           const nextUnreviewedOrdinal = findNextUnreviewedOrdinal(
@@ -1894,6 +1953,27 @@
           }
         }
 
+        render();
+        document.getElementById("review-action")?.focus({ preventScroll: true });
+      }
+
+      function handleFilesUnreviewAction(event) {
+        const pr = activePR();
+        const readerState = activeReaderState();
+        const selectedOrdinal = readerState?.selectedFileOrdinal;
+        const eventOrdinal = Number(event.currentTarget.dataset.fileOrdinal);
+        if (
+          state.workspace !== "reader"
+          || state.composer?.isOpen
+          || !pr
+          || !readerState
+          || readerState.activeTab !== "files"
+          || event.currentTarget.dataset.prKey !== pr.key
+          || eventOrdinal !== selectedOrdinal
+          || !readerState.reviewedFileOrdinals.has(selectedOrdinal)
+        ) return;
+
+        readerState.reviewedFileOrdinals.delete(selectedOrdinal);
         render();
         document.getElementById("review-action")?.focus({ preventScroll: true });
       }

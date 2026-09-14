@@ -10,8 +10,8 @@
 - 固定深色，唯一驗收 viewport 為 1440 × 900 Chrome。
 - 不使用外部資源、網路、storage、server、build step 或 package。
 - Reader 完全取代 Inbox workspace，不建立第三欄。
-- 所有 fixture 與互動狀態僅供展示，不建立或改變產品 API／Domain contract，也不發送 GitHub viewed write。
-- PC-03 baseline為 clean HEAD/upstream `0865469`；本輪只重寫 review progress既有互動，不 redesign surface。
+- 所有fixture與review/unreview狀態僅供展示，屬prototype-local Presentation Session；不建立或改變產品API／Domain contract，也不發送GitHub viewed/unviewed write。
+- PC-05 baseline為clean pushed HEAD/upstream`8c2facf`；本輪只調整既有review progress controls並加入同列原生progress，不redesign surface。
 
 ## Runtime Structure
 
@@ -108,10 +108,18 @@ Filter 是純 presentation；`Needs Review` 預設 active，三段均不響應 c
   3. `Adds coverage for offline transitions`
 - Stats：`8 files changed`、`+182`、`−43`、`3 commits`
 - Checks：只顯示 `✓ Build`、`✓ Tests`、`✓ Lint`
-- 初始 progress：`0 / 8 reviewed`
+- 初始 progress：`0 / 8 reviewed`及native`<progress value="0" max="8">`
 - 初始 action：`Review Changes →`
 
-不得顯示 Passed、duration 或額外 check detail。Overview在既有 action附近、同一既有surface內顯示由該PR `reviewedFileOrdinals.size`推導的逐字progress；不得新增panel、tab、surface或layout。Progress/action三態為：0顯示`0 / 8 reviewed`與`Review Changes →`、1...7顯示`n / 8 reviewed`與`Continue Review →`、8顯示`8 / 8 reviewed`與`Finish Reading`。
+不得顯示 Passed、duration 或額外 check detail。Overview在既有action附近、同一既有surface/action列顯示由該PR`reviewedFileOrdinals.size`推導的逐字numeric label；其右側加入唯一非互動native`<progress>`，不重排行動區、不加入Files，也不新增panel、tab、surface、shortcut或product能力。
+
+Overview progress element contract：
+
+- `value = reviewedFileOrdinals.size`，`max = files.length`；0／partial／full一律render。
+- 約`72px × 3px`，divider-toned track與restrained accent；不得成為第二個Files indicator或大型meter。
+- Visible numeric label具有該PR render內唯一穩定ID；`<progress aria-labelledby="<visible-label-id>">`引用它。
+- `aria-valuetext`逐次更新為`<n> of <file-count> files reviewed`，例如`0 of 8 files reviewed`與`8 of 8 files reviewed`。
+- 三態：0顯示`0 / 8 reviewed`＋progress＋`Review Changes →`；1...7顯示`n / 8 reviewed`＋progress＋`Continue Review →`；8顯示`8 / 8 reviewed`＋progress＋非互動`✓ All files reviewed`＋primary`Finish Reading`。
 
 ### Canonical Files
 
@@ -198,31 +206,54 @@ Initial state：
 - `currentFileOrdinal = selectedFileOrdinal`；current row indicator只由 selection推導。
 - `reviewedCount = reviewedFileOrdinals.size`；Files footer顯示`reviewedCount / 8 reviewed`。
 - `isFullyReviewed = reviewedCount == 8`。
-- current與 reviewed正交：同一 row可同時是 current與 reviewed；選取、重選或離開 row都不移除 reviewed membership。
+- current與reviewed正交：同一row可同時是current與reviewed；選取、重選或離開row都不改reviewed membership。只有合格`Mark Reviewed`／`Mark as Unreviewed`event可增減set。
 
 #87 首次由 `Review Changes →` 或 Files tab進入時，仍選`Tests/WorkspaceTests.swift`、顯示`WorkspaceTests.swift`與第一個 change；`reviewedFileOrdinals`維持空集合，footer顯示`0 / 8 reviewed`。進入 Files、選 file/change、切 tab或返回 Inbox本身都不會標記 reviewed。
 
 ## Review Progress Contract
 
+### Files Footer State Matrix
+
+Files footer保留既有numeric progress、shortcut legends與comment action，不加入native`<progress>`，再依current membership與reviewedCount呈現三種互斥action state：
+
+| State | Noninteractive status | Secondary action | Primary action |
+| --- | --- | --- | --- |
+| current未reviewed，count 0...7 | none | none | `Mark Reviewed` |
+| current已reviewed，count 1...7 | `Reviewed` | `Mark as Unreviewed` | none |
+| count 8、current必為reviewed | `✓ All files reviewed` | `Mark as Unreviewed` | `Finish Reading` |
+
+`Reviewed`與`✓ All files reviewed`不可focus、click或觸發state change。三態都使用既有Files footer/action area，不重排layout、不新增panel/tab/surface/shortcut。
+
 ### Mark Reviewed
 
-Files footer在 reviewedCount 0...7時顯示`Mark Reviewed`。啟用後依序執行：
+只有current未reviewed且reviewedCount 0...7時顯示enabled primary`Mark Reviewed`。啟用後依序執行：
 
 1. 讀取目前 `selectedFileOrdinal`為 `markedOrdinal`。
-2. 將 `markedOrdinal`加入`reviewedFileOrdinals`；若已存在，membership不變，因此操作 idempotent且不提供 unreview。
+2. 確認`markedOrdinal`尚未reviewed後加入`reviewedFileOrdinals`；stale/ineligible event則no-op。
 3. 若加入後 reviewedCount為8，保留`selectedFileOrdinal = markedOrdinal`與目前 selected change，不再切檔；footer改顯示`8 / 8 reviewed`與`Finish Reading`。
 4. 若尚未8/8，依候選順序`markedOrdinal + 1 ... 8`再`1 ... markedOrdinal - 1`向後搜尋第一個不在 reviewed set的 ordinal。
-5. 找到 next unreviewed後才切換`selectedFileOrdinal`，並將`selectedChangeIndex = 0`；reviewed membership只增不減。
+5. 找到 next unreviewed後才切換`selectedFileOrdinal`，並將`selectedChangeIndex = 0`；本次Mark操作只新增membership，後續合格的`Mark as Unreviewed`仍可移除目前ordinal。
 
-若目前檔已 reviewed而集合尚未滿，重按`Mark Reviewed`不改 membership，仍從目前檔下一 ordinal開始搜尋並前進到 next unreviewed。任何 file row indicator都只是既有 row內的呈現，不是 toggle或新 control。
+Reviewed current不顯示`Mark Reviewed`，因此不再有reviewed-current reactivation/forward行為。任何file row indicator都只是既有row內的呈現，不是toggle或新control。
+
+### Mark as Unreviewed
+
+只有current已reviewed時顯示enabled secondary`Mark as Unreviewed`。啟用後依序執行：
+
+1. 擷取active PR、`selectedFileOrdinal`與既有focus source；若workspace/tab不合格、current不在reviewed set、event已stale或modal/editable guard不合格，整體no-op。
+2. 只從該PR的`reviewedFileOrdinals`移除`selectedFileOrdinal`；reviewedCount恰減1。
+3. 保持active PR、active tab、selected file、selected change、saved/working draft與Inbox selection不變；不搜尋next file、不導覽、不wrap、不改change。
+4. Re-render後current row仍為current但已unreviewed，Files footer恢復primary`Mark Reviewed`，並把focus交給這個新render的`Mark Reviewed`。
+
+若由8/8移除，立即撤下Overview/Files的`✓ All files reviewed`與`Finish Reading`，Overview成為`7 / 8 reviewed`＋progress value 7＋`Continue Review →`。若由1/8移除，Overview成為`0 / 8 reviewed`＋progress value 0＋`Review Changes →`。Unreview本身絕不使用Mark的forward/wrap algorithm。
 
 ### Overview Action 與 Finish
 
 - Overview每次render都直接由`reviewedFileOrdinals.size`推導可見progress與action，不能另存可能失真的count或label。
-- reviewedCount = 0：在既有action附近顯示`0 / 8 reviewed`；action為`Review Changes →`，只切入 Files並保留 initial/current selection。
-- reviewedCount = 1...7：在相同位置顯示逐字`n / 8 reviewed`，其中n為實際set size；action為`Continue Review →`，只切入 Files並恢復該 PR最後 selected file/change。
-- reviewedCount = 8：在相同位置顯示`8 / 8 reviewed`；action為`Finish Reading`。
-- Files footer在0...7顯示`Mark Reviewed`；8時改顯示`Finish Reading`，不顯示`Done`。
+- reviewedCount = 0：顯示`0 / 8 reviewed`與progress value 0；action為`Review Changes →`，只切入Files並保留initial/current selection。
+- reviewedCount = 1...7：顯示逐字`n / 8 reviewed`與progress value n，其中n為實際set size；action為`Continue Review →`，只切入Files並恢復該PR最後selected file/change。
+- reviewedCount = 8：顯示`8 / 8 reviewed`、progress value 8、非互動`✓ All files reviewed`與primary`Finish Reading`。
+- Files footer依Files Footer State Matrix呈現；不顯示`Done`。
 - `Finish Reading`只能在8/8啟用；從 Overview或Files啟用都只切`workspace = inbox`、`activePRKey = null`，保留該 PR 8/8、tab/file/change/draft，不改 Inbox selection、membership、count `6`或 row metadata。
 - 頂部`← Inbox`在0...8任何 count都中性可用，只返回 Inbox並保留狀態；它不標記檔案、不觸發 Finish語意。
 
@@ -231,12 +262,13 @@ Files footer在 reviewedCount 0...7時顯示`Mark Reviewed`。啟用後依序執
 ```text
 Inbox select -> 只更新 inboxSelectionKey
 Inbox double-click / Enter -> activePRKey = inboxSelectionKey -> workspace = reader
-Reader tab activation -> 更新該 PR activeTab；Overview progress/action在render時由reviewed set size推導
+Reader tab activation -> 更新該 PR activeTab；Overview numeric/progress/completion/action在render時由reviewed set size推導
 Enter Files -> activeTab = files；保留 selected file/change；不改 reviewed set
 Review Changes → / Continue Review → -> 執行 Enter Files
 Select file -> selectedFileOrdinal = target -> selectedChangeIndex = 0；不改 reviewed set
 Select change -> 更新 selectedChangeIndex
-Mark Reviewed -> set加入 current（idempotent）-> 未滿則forward/wrap找next unreviewed並將change設0；全滿則留在最後marked file
+Mark Reviewed（current未reviewed）-> set加入 current -> 未滿則forward/wrap找next unreviewed並將change設0；全滿則留在最後marked file
+Mark as Unreviewed（current已reviewed）-> 只移除current membership -> file/change/draft/selection不變 -> render後focus Mark Reviewed
 合格 c/C 或 C Comment -> 開 composer working copy
 Save Draft -> 寫入該 PR savedDraft -> 關 modal
 Cancel/Escape -> 丟棄 working copy -> 關 modal
@@ -263,7 +295,7 @@ Reload -> 還原 Initial state
 - Disabled `Open on GitHub`：click、Enter、Space 均 no-op。
 - Tabs：click 可啟用；tablist focus 下 `ArrowLeft`／`ArrowRight`、`Home`／`End` 移動並啟用，首尾不 wrap；`Enter`／`Space` 啟用。
 - Tabs 只有 Overview、Files (8)、Commits (3)、Checks；沒有 Conversation。
-- Overview同一既有surface中，0/1...7/8 reviewed時分別顯示`0 / 8 reviewed`／`n / 8 reviewed`／`8 / 8 reviewed`；action分別為`Review Changes →`／`Continue Review →`／`Finish Reading`。Review/Continue的click/Enter/Space只切入Files，Finish只回Inbox。
+- Overview同一既有surface/action列中，0/1...7/8 reviewed時分別顯示numeric label＋native progress，action分別為`Review Changes →`／`Continue Review →`／`Finish Reading`；8/8另顯示非互動`✓ All files reviewed`。Review/Continue的click/Enter/Space只切入Files，Finish只回Inbox。
 
 ### Files/Diff
 
@@ -277,9 +309,10 @@ Reload -> 還原 Initial state
 - Cmd+C、Ctrl+C、Option+C 不攔截。
 - Click `C Comment`：開 composer。
 - `↑↓ Change`、`⌥↑↓ File` 是 legend，不是 control。
-- Files footer顯示`n / 8 reviewed`、shortcut legends、`C Comment`與`Mark Reviewed`或`Finish Reading`；移除`Done`。
-- `Mark Reviewed`使用 Review Progress Contract 的 idempotent forward/wrap algorithm。
-- `Finish Reading`只在8/8出現並返回 Inbox；未滿時不存在且合成/錯誤觸發必須 no-op。
+- Files footer顯示`n / 8 reviewed`、shortcut legends、`C Comment`與Files Footer State Matrix的status/actions；移除`Done`且不加入progress indicator。
+- `Mark Reviewed`只在current未reviewed時使用既有forward/wrap algorithm；reviewed current partial只顯示非互動`Reviewed`與secondary`Mark as Unreviewed`。
+- 8/8顯示非互動`✓ All files reviewed`、secondary`Mark as Unreviewed`與primary`Finish Reading`；Finish只返回Inbox。
+- `Mark as Unreviewed`只移除current membership、保持位置/state並恢復Mark focus；stale/ineligible event no-op。
 
 Overview、Commits、Checks 不顯示 Files footer；file/change/C shortcuts no-op且不自動切 Files。不得新增 progress panel、tab或 surface；只沿用 file-row indicator、Overview action與既有 Files footer。
 
@@ -291,7 +324,7 @@ Overview、Commits、Checks 不顯示 Files footer；file/change/C shortcuts no-
 - `Save Draft` 只在 trim 後非空時可用；每 PR 最多一份 `{body, fileOrdinal, changeIndex}`，新保存取代舊保存，diff 顯示 `Draft · not submitted`。
 - Cancel/Escape 丟棄 working copy，但保留先前 saved draft。
 - modal 或 editable/control focus 內不攔截 c/C、Arrow、Option+Arrow；不阻礙輸入或複製。
-- Open、Cancel、Save Draft與 inline conversation都不得改變 reviewed set/count、selected file/change或觸發 next-file navigation。
+- Open、Cancel、Save Draft與inline conversation都不得改變reviewed set/count、selected file/change，亦不得觸發Mark或Unreview navigation。
 - 不提供 Submit、Send、review action 或 persistence。
 
 ## Edge Cases
@@ -299,10 +332,11 @@ Overview、Commits、Checks 不顯示 Files footer；file/change/C shortcuts no-
 - 所有 selection navigation 在首尾 no-op，不 wrap、不越界。
 - 只有一個 change 的 file 收到 ArrowUp/Down 時 no-op。
 - 切 file 一律將 invalid/old change index 正規化為 0。
-- 重選 reviewed file仍維持 reviewed；不存在 unreview/remove操作。
-- Mark Reviewed目前未reviewed file時只新增一次；目前已reviewed file時membership不變，但仍搜尋 next unreviewed。
+- 重選reviewed file仍維持reviewed，並顯示對應`Reviewed`／`Mark as Unreviewed`或full state；row indicator與current不互相覆寫。
+- Mark Reviewed只適用未reviewed current；stale/ineligible Mark event no-op。
+- Mark as Unreviewed只移除current membership；stale/ineligible event no-op，且永不forward/wrap/navigation/change reset。
 - Forward search先走較大 ordinal再wrap到1；永不選回已reviewed file。最後一個未reviewed file被標記後留在該 file，顯示8/8與Finish。
-- 在未達8/8時不得出現或執行Finish；達8/8後 Overview與Files都顯示Finish Reading。
+- 在未達8/8時不得出現或執行Finish/completion label；達8/8後Overview與Files既有action area都顯示`✓ All files reviewed`與Finish Reading。8→7需立即撤下，1→0需回Review Changes。
 - Static filters 與 disabled GitHub action 永遠 no-op。
 - 空白 draft 不可保存；重複保存只取代同一 PR 的單一 draft。
 - 不同 PR 的 tab/file/change/reviewed/draft完全隔離；返回/重開不重設。
@@ -312,43 +346,42 @@ Overview、Commits、Checks 不顯示 Files footer；file/change/C shortcuts no-
 
 ## Public API / Interfaces
 
-不新增或修改 public API、Swift target、package manifest、Domain model、Port、Facade、UseCase、Adapter、Event、Message或 Cross-BC contract。`reviewedFileOrdinals`、DOM events與上述 state schema只屬原型 Presentation Session，不可當成產品或架構契約，也不得映射為 GitHub viewed write。
+不新增或修改public API、Swift target、package manifest、Domain model、Port、Facade、UseCase、Adapter、Event、Message或Cross-BC contract。`reviewedFileOrdinals`、review/unreview DOM events與上述state schema只屬prototype-local Presentation Session，不可當成產品或架構契約，也不得映射為GitHub viewed/unviewed write。
 
 ## Verification Mapping
 
 | TestCase | Technical focus |
 | --- | --- |
-| TC-01 | clean HEAD/upstream `0865469`；PC-03/PC-04只改四份 artifacts、IM-03只改既有 HTML、final commit只含五個 tracked paths；以status/equivalent枚舉所有狀態並實讀做whitespace/EOF檢查 |
-| TC-02 | file://、self-contained、zero network/storage、reviewed state reload reset |
-| TC-03 | 1440 × 900 fixed-dark native desktop visual |
+| TC-01 | clean pushed HEAD/upstream`8c2facf`；PC-05只改四份artifacts、IM-05只改既有HTML、DL-04只含五個tracked paths；以status/equivalent枚舉所有狀態並實讀做whitespace/EOF檢查 |
+| TC-02 | file://、self-contained、zero network/storage、review/unreview state reload reset |
+| TC-03 | 1440 × 900 fixed-dark native desktop visual與restrained native progress |
 | TC-04 | Inbox exact strings、static filters、repo/metadata hierarchy |
 | TC-05 | single/double click、keyboard selection/open、workspace replacement |
-| TC-06 | #87 exact Overview、0/1...7/8逐字progress與dynamic action labels |
-| TC-07 | four tabs、derived Overview progress/action transitions、8/8 Finish gate、no new surface/layout |
+| TC-06 | #87 exact Overview、numeric/native progress a11y、0/partial/full action與completion label |
+| TC-07 | four tabs、derived Overview transitions、8→7/1→0、no new surface/layout |
 | TC-08 | two-column Files、basename、initial selected3但0/8 reviewed、current/reviewed indicators |
-| TC-09 | Files keyboard、Mark idempotency、forward/wrap、last/full behavior |
-| TC-10 | no Done、Finish vs neutral back、Inbox count/membership/metadata |
+| TC-09 | Files footer三態、Mark forward/wrap、Unreview remove-only/focus、stale no-op、8→7/1→0 |
+| TC-10 | no Done、full completion/Finish vs neutral back、Inbox invariants |
 | TC-11 | canonical commits、other deterministic commits、checks |
-| TC-12 | inline conversation、modal/draft lifecycle不影響review progress/navigation |
-| TC-13 | multi-PR tab/file/change/reviewed/draft isolation、Overview↔Files↔Inbox persistence、derived display與reload reset |
-| TC-14 | no unreview/storage/network/domain/GitHub viewed write與scope/runtime hygiene |
+| TC-12 | inline conversation、modal/draft lifecycle不影響review/unreview progress/navigation |
+| TC-13 | multi-PR review/unreview/draft isolation、Overview↔Files↔Inbox persistence、derived display與reload reset |
+| TC-14 | prototype-local review/unreview、native progress a11y、no storage/network/domain/GitHub write/new product UI與scope/runtime hygiene |
 
 ## Baseline 與 Phase Allowlist
 
-- PC-03起始狀態：worktree clean，local HEAD與upstream均為`0865469`。
-- PC-03/PC-04 Modify allowlist只含四份 topic artifacts；HTML與其他 tracked paths ReadOnly。Written/Deleted皆為none。
-- PR-04明示 approved後，IM-03 Modify allowlist只有既有`prototypes/pr-reader-interactive-ux-prototype/index.html`；四份 artifacts與其他 paths ReadOnly。Written/Deleted仍為none。
-- RV-03明示 approved且 staged review通過、Human確認 commit後，final follow-up commit只包含四份 artifacts與既有 HTML共五個 tracked paths；不得新增、刪除或夾帶其他 path，之後由Implementer執行bounded non-force push。
+- PC-05起始狀態：worktree clean，local HEAD與upstream均為`8c2facf`；DL-03已完成。
+- PC-05 Modify allowlist只含四份topic artifacts；HTML與其他tracked paths ReadOnly。Written/Deleted皆為none。
+- PR-05明示approved後，IM-05 Modify allowlist只有既有`prototypes/pr-reader-interactive-ux-prototype/index.html`；四份artifacts與其他paths ReadOnly。Written/Deleted仍為none。
+- RV-05明示approved且staged review通過、Human確認commit message後，DL-04只包含四份artifacts與既有HTML共五個tracked paths；不得新增、刪除或夾帶其他path，之後由Implementer執行bounded non-force push。
 - 每一 phase使用`git status --short --untracked-files=all`或等效方式枚舉 tracked/staged/unstaged/untracked paths並套 phase allowlist；對實際內容執行 whitespace/EOF檢查，staged後以`git diff --cached --check`補強。空白普通 diff不作為未枚舉 path的證據。
 
 ## Planning Artifact Evidence
 
-- PC-03/PC-04 combined planning evidence必須如實顯示 clean baseline `0865469`之後只有四份 tracked artifacts被修改。
-- PR-03已明示`needs-rework`；唯一required finding是Overview缺少由reviewed set size推導、0/1...7/8三態皆可見且與Files footer同格式的逐字progress。PC-04只修此項。
-- PR-04為目前pending獨立Plan-Reviewer gate；只有明示`approved`才可建立IM-03 handoff。
-- Cross-artifact檢查需確認不再以`visitedFileOrdinals`、`Done`或`3 / 8 files`描述現行契約；歷史 ledger evidence可保留但必須標為歷史。
-- Checks只證明path/content一致性，不產生PR-04 approval。
+- DL-03 evidence：commit`8c2facf`已bounded non-force push，local/upstream一致且worktree clean；HC-02其後選擇「調整」。
+- PC-05 evidence必須如實顯示clean baseline`8c2facf`之後只有四份tracked artifacts被修改。
+- Cross-artifact檢查需確認舊no-unreview、monotonic set、reviewed-current enabled Mark/reactivation-forward與TC-14 forbidden-unreview都只留在明確標示的歷史ledger，不再描述active contract。
+- PR-05為目前pending獨立Plan-Reviewer gate；checks只證明path/content一致性，不產生approval。
 
 ## Last Updated
 
-2026-09-12
+2026-09-14

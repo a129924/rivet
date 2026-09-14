@@ -9,7 +9,7 @@
 
 ## Current Phase
 
-Delivery：RV-04已 completed／`approved`，commit gate open；HC-02 pending。DL-03仍待staged review、Human確認commit message、commit與non-force push。
+Delivery ready：RV-05 completed／`approved`，required/advisory findings均為none；commit gate open。DL-04 pending，仍待staged review、Human commit-message確認、commit與bounded non-force push；HC-03 pending。
 
 ## Planning Input
 
@@ -17,15 +17,17 @@ Delivery：RV-04已 completed／`approved`，commit gate open；HC-02 pending。
 - 正式四份 artifacts：`PR-01` verdict為 `needs-rework`；required fixes已由 PC-02寫入，`PR-02` 已明示 `approved`。
 - Base delivery prerequisite：`BP-01`，owner為 `Implementer`，status為 completed。上一 topic branch已完成 bounded non-force push並確認 remote/local HEAD；Observer/Dispatcher、Plan-Creator與 Reviewer未執行 push。
 - Human adjustment：HC-01於2026-09-12明示選擇「調整」review progress/Finish UX；PC-03起始worktree clean，local HEAD與upstream均為`0865469`。
+- Delivery baseline：DL-03已以commit`8c2facf`完成bounded non-force push；PC-05起始worktree clean，local HEAD與upstream均為`8c2facf`。
+- Human adjustment：HC-02明示選擇「調整」，要求prototype-local unreview、三態Files footer及Overview native progress；RV-04只保留歷史。
 
 ## Artifacts
 
 | Path | Status | Responsibility |
 | --- | --- | --- |
-| `analysis/pr-reader-interactive-ux-prototype/requirements.md` | changed by PC-03/PC-04 | 產品意圖、範圍、成功條件、Human Check |
-| `analysis/pr-reader-interactive-ux-prototype/technical-spec.md` | changed by PC-03/PC-04 | locked fixtures、state、interaction、technical verification mapping |
-| `plan/pr-reader-interactive-ux-prototype/pr-reader-interactive-ux-prototype.plan.md` | changed by PC-03/PC-04 | 受限執行契約、allowlist、TC-01～TC-14、workflow |
-| `plan/pr-reader-interactive-ux-prototype/pr-reader-interactive-ux-prototype.step.md` | changed by PC-03/PC-04 | phase、steps、evidence、verdict、blocker、Human Check |
+| `analysis/pr-reader-interactive-ux-prototype/requirements.md` | changed by PC-05 | 產品意圖、範圍、成功條件、Human Check |
+| `analysis/pr-reader-interactive-ux-prototype/technical-spec.md` | changed by PC-05 | locked fixtures、state、interaction、technical verification mapping |
+| `plan/pr-reader-interactive-ux-prototype/pr-reader-interactive-ux-prototype.plan.md` | changed by PC-05 | 受限執行契約、allowlist、TC-01～TC-14、workflow |
+| `plan/pr-reader-interactive-ux-prototype/pr-reader-interactive-ux-prototype.step.md` | changed by PC-05 | phase、steps、evidence、verdict、blocker、Human Check |
 
 ## Steps
 
@@ -398,21 +400,139 @@ Delivery：RV-04已 completed／`approved`，commit gate open；HC-02 pending。
 
 ### DL-03 — Final follow-up delivery
 
-- Status：pending
+- Status：completed
 - Owner role：Implementer
 - Entry criteria：RV-04明示`approved`、staged review clean、Human依repository commit convention確認commit message。
 - Completion criteria：
   - 單一commit只包含四份topic artifacts與既有HTML，共五個tracked paths。
   - 無新增/刪除/其他path；non-force push目前branch並確認upstream。
-- Verification evidence：pending。
+- Verification evidence：
+  - Human已依repository commit convention確認message；Implementer完成staged review與commit`8c2facf`（`feat(pr-reader): 調整檔案閱讀進度與完成流程`）。
+  - Commit恰含四份topic artifacts與既有HTML共五個tracked modified paths，無新增/刪除或其他path。
+  - 已bounded non-force push目前branch；local HEAD與upstream均為`8c2facf`，worktree clean。
 - Routing：completed後進HC-02。
 - Verdict：不適用
 
 ### HC-02 — Human UX 方向決策
 
-- Status：pending
+- Status：completed
 - Owner：Human
 - Entry criteria：RV-04明示`approved`且DL-03 completed；其他狀態不得進入。
+- Decision options：
+  - 採用：只允許另開正式SwiftUI topic，不自動實作。
+  - 調整：回到本topic對應planning/implementation phase。
+  - 放棄：本topic結案。
+- Verification evidence：Human明示選擇「調整」；要求加入prototype-local unreview、Files footer三態與Overview native progress accessibility。
+- Outcome：返回planning並由PC-05修改四份artifacts；RV-04與舊TC evidence只保留歷史，不放行新contract。
+- Decision：調整
+
+### PC-05 — 寫入第二次 Human adjustment contract
+
+- Status：completed
+- Owner role：Plan-Creator
+- Completion criteria：
+  - 只修改四份同topic artifacts；HTML與其他paths唯讀。
+  - 鎖定Files footer三態、Mark/Unreview非對稱state transition、Overview native progress與accessible metadata。
+  - 明確supersede active no-unreview、monotonic set、reviewed-current reactivation-forward與TC-14 forbidden-unreview敘述；歷史evidence保留且標示不可放行。
+  - 同步Goal/In/Out/ReadOnly/Written/Deleted/Modify/state/edges/public impact、TC-01～TC-14、baseline`8c2facf`與新workflow gates。
+- Verification evidence：
+  - 起始worktree clean，local HEAD與upstream均為`8c2facf`。
+  - `git status --short --untracked-files=all`與`git diff --name-status`都只列出四份allowlisted tracked artifact modifications；HTML、其他tracked paths與untracked paths皆未變動。
+  - `git diff --check`無diagnostic；四份artifacts的EOF byte皆為`0a`。
+  - Cross-artifact檢查確認Goal/scope、review/unreview三態、Overview native progress、baseline/allowlist、TC-01～TC-14與PR-05→IM-05→TE-05→RV-05→DL-04→HC-03 gates一致；舊no-unreview等敘述只留在明確標示的歷史ledger。
+  - Completed只表示planning write/self-check，不構成PR-05 approval。
+- Verdict：不適用；Plan-Creator不自我核准。
+
+### PR-05 — 獨立審查第二次 Human adjustment contract
+
+- Status：completed
+- Owner role：Plan-Reviewer
+- Completion criteria：
+  - 審查四份artifacts對review/unreview/footer三態、Overview progress a11y、edge cases、phase allowlists與updated TC的一致性及decision completeness。
+  - 確認舊RV-04未被誤用、歷史no-unreview contract未洩漏為active requirement，且無surface/domain/scope drift。
+  - 明示標準verdict。
+- Verification evidence：獨立Plan-Reviewer明示`approved`；required findings為none，advisory findings為none。四份artifacts對Human adjustment、footer三態、Mark/Unreview transition、Overview native progress a11y、TC-01～TC-14、phase allowlists與workflow gates一致，無surface/domain/scope drift。
+- Routing：
+  - `approved`：建立approved planning handoff，進IM-05。
+  - `needs-rework`：只回Plan-Creator修改四份artifacts。
+  - `blocked`／`human-check`：停止並交Human。
+- Verdict：`approved`
+
+### IM-05 — 實作 reversible reviewed progress
+
+- Status：completed；ready-for-test
+- Owner role：Implementer
+- Completion criteria：
+  - PR-05明示`approved`。
+  - 只修改既有`prototypes/pr-reader-interactive-ux-prototype/index.html`；四份artifacts與其他paths唯讀。
+  - 實作Files footer三態、Mark/Unreview transition、Overview native progress/accessible metadata與8/8 completion transition。
+  - 提供更新後TC-01～TC-14 evidence；不commit/push。
+- Verification evidence：
+  - Implementation只修改既有`prototypes/pr-reader-interactive-ux-prototype/index.html`；四份planning artifacts維持approved implementation baseline。
+  - 已實作Files footer三態：未reviewed current顯示primary`Mark Reviewed`；partial reviewed current顯示非互動`Reviewed`與secondary`Mark as Unreviewed`；8/8顯示`✓ All files reviewed`、secondary Unreview與primary`Finish Reading`。
+  - Unreview為remove-only：只移除selected ordinal，保持PR/tab/file/change/draft/Inbox selection，不搜尋、導覽或wrap；render後恢復`Mark Reviewed`與focus，並具stale/ineligible guards。
+  - Overview同列native progress已含value/max、visible-label association與更新的accessible value；0/partial/full numeric/action及completion labels由reviewed set size推導，8→7與1→0 transition成立。
+  - 既有未reviewed`Mark Reviewed`forward/wrap/change-reset與last-file行為保持不變；comment/draft仍不改progress/navigation。
+  - Implementer回報contract-targeted static checks clean；`git status --short --untracked-files=all`恰為五個tracked `M` paths：四份topic artifacts與既有HTML，無其他path。
+  - 未commit、未push；此handoff不構成Tester或Reviewer approval。
+- Routing：completed handoff後交TE-05。
+- Verdict：不適用
+
+### TE-05 — 驗證 reversible reviewed progress
+
+- Status：completed
+- Owner role：Tester
+- Completion criteria：
+  - 收到IM-05 completed handoff。
+  - 以真實Chrome 1440 × 900`file://`驗證TC-01～TC-14，包含footer三態、Mark forward/wrap、Unreview remove-only/focus、8→7、1→0、stale no-op、comment/multi-PR/reload與Overview progress a11y。
+  - 驗證runtime diagnostics、network/storage、scope/layout hygiene與path allowlist。
+- Verification evidence：
+  - Tester明示`approved`；TC-01～TC-14全數PASS。
+  - Overview在0/partial/full三態均顯示同列native progress，value/max、visible-label association、accessible value與numeric/action/completion衍生狀態正確。
+  - Partial reviewed current顯示非互動`Reviewed`與secondary`Mark as Unreviewed`；Unreview的2→1、1→0與8→7皆只移除current membership，保持PR/tab/file/change/draft/Inbox selection，且render後focus回到`Mark Reviewed`；stale/ineligible event為no-op。
+  - 未reviewed`Mark Reviewed`的forward/wrap、切檔change=0與最後一檔留位regression均PASS；8/8時Overview/Files的`✓ All files reviewed`與`Finish Reading`成立，Finish與中性返回語意正確。
+  - Comment/composer/draft不改progress或navigation；multi-PR state隔離、Inbox/Reader往返保留與reload reset均PASS。
+  - 無新增panel/tab/surface/shortcut或Files progress indicator；external network、storage與runtime errors均為零，scope/layout hygiene通過。
+  - Worktree仍恰為四份topic artifacts加既有HTML共五個tracked `M` paths；Tester未修改受測檔案。
+- Routing：完成後交獨立RV-05；Tester結果不等於Reviewer approval。
+- Verdict：`approved`
+
+### RV-05 — 獨立審查 reversible reviewed progress
+
+- Status：completed
+- Owner role：Reviewer
+- Completion criteria：
+  - 審查IM-05 change set與TE-05 evidence。
+  - 確認Human adjustment與updated TC完整成立、只有HTML implementation change且無contract/scope/a11y drift。
+  - 明示標準verdict。
+- Verification evidence：
+  - Reviewer明示`approved`；required findings為none，advisory findings為none。
+  - Source inspection確認implementation change只在既有HTML，Files footer三態、Unreview remove-only/preserve/focus/stale guards、Overview native progress a11y、0/partial/full completion transitions與既有Mark forward/wrap behavior符合active contract。
+  - TE-05已`approved`且TC-01～TC-14全數PASS；2→1、1→0、8→7、full labels/Finish、comment/multi-PR/reload與no redesign/network/storage/runtime-error evidence成立。
+  - Allowlist/status維持四份topic artifacts加既有HTML共五個tracked `M` paths，無其他path或scope drift。
+- Routing：
+  - `approved`：開啟DL-04 commit gate。
+  - `needs-rework`：只回Implementer修改同一HTML；超出則回planning。
+  - `blocked`／`human-check`：停止並交Human。
+- Verdict：`approved`
+
+### DL-04 — Final follow-up delivery
+
+- Status：pending；ready-for-staged-review
+- Owner role：Implementer
+- Entry criteria：RV-05明示`approved`、staged review clean、Human依repository commit convention確認commit message。
+- Completion criteria：
+  - 單一commit只包含四份topic artifacts與既有HTML，共五個tracked paths。
+  - 無新增/刪除/其他path；non-force push目前branch並確認upstream。
+- Verification evidence：pending。
+- Routing：completed後進HC-03。
+- Verdict：不適用
+
+### HC-03 — Human UX 方向決策
+
+- Status：pending
+- Owner：Human
+- Entry criteria：RV-05明示`approved`且DL-04 completed；其他狀態不得進入。
 - Decision options：
   - 採用：只允許另開正式SwiftUI topic，不自動實作。
   - 調整：回到本topic對應planning/implementation phase。
@@ -441,7 +561,9 @@ Delivery：RV-04已 completed／`approved`，commit gate open；HC-02 pending。
 | TC-13 | 六 PR state isolation與 reload | PASS | Tester |
 | TC-14 | Capability boundary與 runtime stability | PASS | Tester / Reviewer |
 
-## PC-03 / PC-04 TestCase Ledger — adjusted contract
+## Historical TestCase Ledger — pre-HC-02 contract
+
+下列PASS只證明HC-02選擇調整前的舊contract；其中no-unreview、monotonic set、reviewed-current enabled Mark/reactivation-forward與TC-14 forbidden-unreview皆已被HC-02 supersede，不得用於放行PR-05/IM-05/TE-05/RV-05。
 
 | ID | Adjusted scope | Status | Evidence owner |
 | --- | --- | --- | --- |
@@ -460,21 +582,41 @@ Delivery：RV-04已 completed／`approved`，commit gate open；HC-02 pending。
 | TC-13 | Multi-PR state isolation、Overview↔Files↔Inbox保留、derived display與reload reset | PASS | Tester |
 | TC-14 | No storage/network/domain/GitHub viewed write與scope/runtime hygiene | PASS | Tester |
 
+## PC-05 TestCase Ledger — active contract
+
+| ID | Adjusted scope | Status | Evidence owner |
+| --- | --- | --- | --- |
+| TC-01 | Baseline`8c2facf`；PC-05四artifacts、IM-05單一HTML、DL-04五tracked paths allowlists | PASS（TE-05）：目前status恰為四份artifacts＋單一HTML共五個tracked `M`；DL-04依其entry gate另行檢查 | Plan-Creator / Implementer / Tester / Reviewer |
+| TC-02 | Offline/self-contained、zero network/storage、review/unreview reload reset | PASS | Tester |
+| TC-03 | 1440 × 900 fixed-dark、native progress visual且無redesign | PASS | Tester / Reviewer |
+| TC-04 | Inbox exact strings、compact hierarchy與static filter不變 | PASS | Tester |
+| TC-05 | 六PR entry/time、workspace replacement不變 | PASS | Tester |
+| TC-06 | #87 Overview exact content、numeric/native progress a11y、三態action/completion | PASS | Tester |
+| TC-07 | Four tabs、derived transitions、8→7/1→0、no new surface/layout | PASS | Tester |
+| TC-08 | Initial selected ordinal3但0/8 reviewed；current/reviewed indicators正交、no Files progress | PASS | Tester |
+| TC-09 | Files footer三態、Mark forward/wrap、Unreview remove-only/focus、stale no-op、8→7/1→0 | PASS | Tester |
+| TC-10 | Done removed；full completion/Finish/neutral back與Inbox invariants | PASS | Tester / Reviewer |
+| TC-11 | Commits與Checks regression | PASS | Tester |
+| TC-12 | Comment/composer/draft不改review/unreview progress或navigation | PASS | Tester |
+| TC-13 | Multi-PR review/unreview/draft isolation、往返保留、derived display與reload reset | PASS | Tester |
+| TC-14 | Prototype-local review/unreview、progress a11y、no product/storage/network/write/new UI與scope/runtime hygiene | PASS | Tester / Reviewer |
+
 ## Blockers
 
-None for delivery。RV-04已`approved`；DL-03仍須完成staged review、Human commit-message確認、commit與non-force push。
+None for DL-04。RV-05已`approved`；仍須staged review與Human commit-message確認，之後才可由Implementer commit並bounded non-force push。
 
 ## Commit Gate
 
 - Current：open。
-- Reason：RV-04已明示`approved`，required/advisory findings均為none。
-- Boundary：仍須final staged review並由Human依repository commit convention確認message；確認前不得commit，且只有Implementer可執行五path follow-up commit/non-force push。
+- Reason：RV-05已明示`approved`，required/advisory findings均為none。
+- Boundary：只有RV-05明示`approved`後才可進DL-04 staged review；Human確認commit message前不得commit，且只有Implementer可執行五path follow-up commit/non-force push。
 
 ## Human Check
 
 - Historical HC-01：completed；Human decision為「調整」。
-- Current：HC-02 pending。
-- Gate：只有RV-04 `approved`且DL-03 completed才可進入。
+- Historical HC-02：completed；Human decision為「調整」。
+- Current：HC-03 pending。
+- Gate：只有RV-05`approved`且DL-04 completed才可進入。
 - Required Human response：採用／調整／放棄。
 - Boundary：不得自動建立或實作 SwiftUI topic。
 
@@ -498,8 +640,16 @@ None for delivery。RV-04已`approved`；DL-03仍須完成staged review、Human 
 - IM-04：completed／ready-for-test；統一enabled`Mark Reviewed`、移除disabled/early return，並保留idempotent count後的forward/wrap/change0與8/8 Finish-only；static checks PASS。
 - TE-04：`approved`；reviewed current enabled label、idempotent forward/wrap/change0、8/8 Finish-only及指定regression/status checks均PASS。
 - RV-04：`approved`；required/advisory findings均為none，source與TE-04 evidence成立，exact five `M` paths且無redesign/scope drift；commit gate open。
-- HC-02：pending。
+- DL-03：completed；commit`8c2facf`恰含五個tracked modified paths，已bounded non-force push，local/upstream一致且worktree clean。
+- HC-02：completed；Human選擇「調整」，要求prototype-local unreview、Files footer三態與Overview native progress；舊RV-04 approval不放行新contract。
+- PC-05：completed；只表示四份artifacts已寫入與自檢，不是approval。
+- PR-05：`approved`；required/advisory findings均為none。
+- IM-05：completed／ready-for-test；HTML-only implementation與static checks完成，未commit/push。
+- TE-05：`approved`；TC-01～TC-14全數PASS，代表性interaction、a11y、state isolation與runtime/scope evidence成立。
+- RV-05：`approved`；required/advisory findings均為none，source與TE-05 evidence成立。
+- DL-04：pending。
+- HC-03：pending。
 
 ## Last Updated
 
-2026-09-12
+2026-09-14
