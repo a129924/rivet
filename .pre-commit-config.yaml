@@ -11,6 +11,11 @@ repos:
         entry: scripts/check-swift-format.sh
         language: system
         pass_filenames: false
+      - id: github-integration-consumer
+        name: GitHubIntegration consumer contract
+        entry: scripts/check-github-integration-consumer.sh
+        language: system
+        pass_filenames: false
       - id: swiftlint
         name: swiftlint lint
         entry: scripts/check-swiftlint.sh
