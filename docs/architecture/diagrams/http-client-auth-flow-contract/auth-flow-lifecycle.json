@@ -66,7 +66,7 @@
       "col": 4,
       "width": 118,
       "step": "05",
-      "tag": "外部執行"
+      "tag": "internal"
     },
     {
       "id": "response",
@@ -120,6 +120,17 @@
       "col": 2,
       "width": 110,
       "tag": "receive() 輸出"
+    },
+    {
+      "id": "requester-failure",
+      "type": "failure",
+      "label": "Requester error",
+      "sublabel": "直接傳遞；不呼叫 receive()",
+      "lane": "terminal",
+      "col": 2,
+      "width": 130,
+      "yOffset": -140,
+      "tag": "終態"
     }
   ],
   "transitions": [
@@ -148,6 +159,14 @@
       "id": "client-receives-response",
       "from": "client-send",
       "to": "response"
+    },
+    {
+      "id": "requester-fails",
+      "from": "client-send",
+      "to": "requester-failure",
+      "fromSide": "right",
+      "toSide": "right",
+      "via": [[815, 157], [815, 339]]
     },
     {
       "id": "receives-response",

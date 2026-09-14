@@ -5040,10 +5040,11 @@
         <path data-edge-from="start" data-edge-to="start-finish" data-edge-key="3" data-edge-id="start-finishes" data-composition-points="402,188;308.5,188;308.5,450;402,450" d="M 402 188 L 318.5 188 Q 308.5 188 308.5 198 L 308.5 440 Q 308.5 450 318.5 450 L 402 450" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
         <path data-edge-from="initial-send" data-edge-to="client-send" data-edge-key="4" data-edge-id="client-sends-initial-request" data-composition-points="615,157;651,157" d="M 615 157 L 651 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
         <path data-edge-from="client-send" data-edge-to="response" data-edge-key="5" data-edge-id="client-receives-response" data-composition-points="710,188;710,238" d="M 710 188 L 710 238" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="response" data-edge-to="receive" data-edge-key="6" data-edge-id="receives-response" data-composition-points="647.5,267;634.25,267;634.25,337;621,337" d="M 647.5 267 L 640.875 267 Q 634.25 267 634.25 273.625 L 634.25 330.375 Q 634.25 337 627.625 337 L 621 337" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="receive" data-edge-to="receive-finish" data-edge-key="7" data-edge-id="receive-finishes" data-composition-points="491,337;480,337;480,540;710,540;710,508" d="M 491 337 L 485.5 337 Q 480 337 480 342.5 L 480 530 Q 480 540 490 540 L 700 540 Q 710 540 710 530 L 710 508" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="receive" data-edge-to="resend" data-edge-key="8" data-edge-id="receive-resends" data-composition-points="556,366;556,398" d="M 556 366 L 556 398" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="resend" data-edge-to="client-send" data-edge-key="9" data-edge-id="client-sends-retry" data-composition-points="621,427;805,427;805,157;769,157" d="M 621 427 L 795 427 Q 805 427 805 417 L 805 167 Q 805 157 795 157 L 769 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="client-send" data-edge-to="requester-failure" data-edge-key="6" data-edge-id="requester-fails" data-composition-points="769,157;815,157;815,339;775,339" d="M 769 157 L 805 157 Q 815 157 815 167 L 815 329 Q 815 339 805 339 L 775 339" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="response" data-edge-to="receive" data-edge-key="7" data-edge-id="receives-response" data-composition-points="647.5,267;634.25,267;634.25,337;621,337" d="M 647.5 267 L 640.875 267 Q 634.25 267 634.25 273.625 L 634.25 330.375 Q 634.25 337 627.625 337 L 621 337" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="receive" data-edge-to="receive-finish" data-edge-key="8" data-edge-id="receive-finishes" data-composition-points="491,337;480,337;480,540;710,540;710,508" d="M 491 337 L 485.5 337 Q 480 337 480 342.5 L 480 530 Q 480 540 490 540 L 700 540 Q 710 540 710 530 L 710 508" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="receive" data-edge-to="resend" data-edge-key="9" data-edge-id="receive-resends" data-composition-points="556,366;556,398" d="M 556 366 L 556 398" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="resend" data-edge-to="client-send" data-edge-key="10" data-edge-id="client-sends-retry" data-composition-points="621,427;805,427;805,157;769,157" d="M 621 427 L 795 427 Q 805 427 805 417 L 805 167 Q 805 157 795 157 L 769 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
 
         <!-- States -->
         <g id="node-make-flow" data-node-id="make-flow" data-node-label="建立流程" tabindex="0" role="button" aria-label="Focus 建立流程, Auth.makeFlow(for:), 建立與初始轉換" aria-pressed="false" data-node-kind="start" data-node-sublabel="Auth.makeFlow(for:)" data-node-tag="入口" data-node-context="建立與初始轉換">
@@ -5100,8 +5101,8 @@
         <text data-detail="fine" x="556" y="177" class="t-backend" font-size="7" text-anchor="middle">start() 輸出</text>
         </g>
 
-        <g id="node-client-send" data-node-id="client-send" data-node-label="AuthRequester" tabindex="0" role="button" aria-label="Focus AuthRequester, 經 Requester 發送, 建立與初始轉換" aria-pressed="false" data-node-kind="active" data-node-sublabel="經 Requester 發送" data-node-tag="外部執行" data-node-context="建立與初始轉換">
-          <title>AuthRequester · 經 Requester 發送 · 建立與初始轉換 · 外部執行</title>
+        <g id="node-client-send" data-node-id="client-send" data-node-label="AuthRequester" tabindex="0" role="button" aria-label="Focus AuthRequester, 經 Requester 發送, 建立與初始轉換" aria-pressed="false" data-node-kind="active" data-node-sublabel="經 Requester 發送" data-node-tag="internal" data-node-context="建立與初始轉換">
+          <title>AuthRequester · 經 Requester 發送 · 建立與初始轉換 · internal</title>
           <rect x="651" y="126" width="118" height="62" rx="7" class="c-mask"/>
           <rect x="651" y="126" width="118" height="62" rx="7" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(752 132) scale(0.6875)">
@@ -5110,7 +5111,7 @@
         <text data-detail="fine" x="661" y="140" class="t-backend" font-size="7" font-weight="700">05</text>
           <text data-node-label="" data-detail-anchor="" x="710" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">AuthRequester</text>
           <text data-detail="context" x="710" y="163" class="t-muted" font-size="7" text-anchor="middle">經 Requester 發送</text>
-        <text data-detail="fine" x="710" y="177" class="t-backend" font-size="7" text-anchor="middle">外部執行</text>
+        <text data-detail="fine" x="710" y="177" class="t-backend" font-size="7" text-anchor="middle">internal</text>
         </g>
 
         <g id="node-response" data-node-id="response" data-node-label="raw HTTPResponse" tabindex="0" role="button" aria-label="Focus raw HTTPResponse, 所有 HTTP status 原樣保留, 送出、raw 回應與後續轉換" aria-pressed="false" data-node-kind="active" data-node-sublabel="所有 HTTP status 原樣保留" data-node-tag="回應" data-node-context="送出、raw 回應與後續轉換">
@@ -5176,7 +5177,21 @@
         <text data-detail="fine" x="710" y="497" class="t-database" font-size="7" text-anchor="middle">receive() 輸出</text>
         </g>
 
+        <g id="node-requester-failure" data-node-id="requester-failure" data-node-label="Requester error" tabindex="0" role="button" aria-label="Focus Requester error, 直接傳遞；不呼叫 receive(), 終態結果" aria-pressed="false" data-node-kind="failure" data-node-sublabel="直接傳遞；不呼叫 receive()" data-node-tag="終態" data-node-context="終態結果">
+          <title>Requester error · 直接傳遞；不呼叫 receive() · 終態結果 · 終態</title>
+          <rect x="645" y="310" width="130" height="58" rx="7" class="c-mask"/>
+          <rect x="645" y="310" width="130" height="58" rx="7" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="failure" class="semantic-sigil s-security" transform="translate(758 316) scale(0.6875)">
+            <circle cx="8" cy="8" r="5.3"/>
+            <path d="m5.7 5.7 4.6 4.6m0-4.6-4.6 4.6"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="710" y="331" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Requester error</text>
+          <text data-detail="context" x="710" y="347" class="t-muted" font-size="7" text-anchor="middle">直接傳遞；不呼叫 receive()</text>
+        <text data-detail="fine" x="710" y="357" class="t-security" font-size="7" text-anchor="middle">終態</text>
+        </g>
+
         <!-- Transition labels -->
+
 
 
 

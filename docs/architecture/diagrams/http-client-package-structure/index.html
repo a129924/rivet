@@ -171,7 +171,7 @@
 
 <div id="plate">
   <div class="k">RIVETHTTPCLIENT — MINIMAL INTERFACE</div>
-  <div class="n">bare <b>HTTPClient</b> → <b>Requester</b>；internal <b>AuthRequester</b> → <b>AuthFlow</b> → <b>Requester</b> → <b>Transport</b> → <b>HTTPResponse</b></div>
+  <div class="n">public bare <b>HTTPClient</b>；internal <b>AuthRequester</b> 注入 <b>Requester</b> 與 <b>Auth</b>；<b>Requester</b> 注入 <b>Transport</b></div>
 </div>
 
 <div id="hint">
@@ -378,6 +378,7 @@ const EDGES = [
   { from:'request',to:'method-headers',pts:[[973,429],[978,429],[978,516],[963,516]],label:{s:'al',x:971,y:466,t:'依賴',rot:-90,anchor:'center'} },
   { from:'auth',to:'auth-flow',pts:[[407,516],[417,516]],label:{s:'al',x:412,y:504,t:'建立',anchor:'center'} },
   { from:'http-client',to:'requester',pts:[[505,640],[925,640],[925,642],[934,642]],label:{s:'al',x:722,y:628,t:'bare execute',anchor:'center'} },
+  { from:'auth-requester',to:'auth',pts:[[650,614],[650,575],[271,575],[271,543]],label:{s:'al',x:668,y:580,t:'依賴',rot:-90,anchor:'center'} },
   { from:'auth-requester',to:'requester',pts:[[905,670],[925,670],[925,666],[934,666]],label:{s:'al',x:915,y:690,t:'injected',rot:-90,anchor:'center'} },
   { from:'auth-requester',to:'auth-flow',pts:[[720,614],[720,555],[554,555],[554,543]],label:{s:'al',x:737,y:580,t:'驅動',rot:-90,anchor:'center'} },
   { from:'http-client',to:'request',pts:[[320,614],[320,555],[837,555],[837,479]],label:{s:'al',x:854,y:568,t:'使用',rot:-90,anchor:'center'} },
@@ -396,7 +397,7 @@ const EDGES = [
 
 const TEXTS = [
   {s:'title',x:110,y:86,t:'RivetHTTPClient — 最小介面結構'},
-  {s:'sub',x:110,y:118,t:'bare HTTPClient → Requester；internal AuthRequester 驅動 AuthFlow → injected Requester → Transport → raw HTTPResponse'},
+  {s:'sub',x:110,y:118,t:'public bare HTTPClient；internal AuthRequester 注入 Requester 與 Auth；Requester 注入 Transport'},
   {s:'tag',x:110,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'Auth／AuthFlow',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'AuthRequester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部 surface'},
@@ -434,10 +435,6 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   let hovered = null;                  // box id under the cursor
   let focused = null;                  // box id locked by a click
   let raf = 0;
-  // A freshly opened diagram should always fit the viewport, including a
-  // larger viewport reached after initial load. Once the reader has supplied
-  // a view (by hash) or adjusted it, resize must keep that chosen framing.
-  let preserveViewOnResize = false;
 
   const MIN_K = 0.12, MAX_K = 4;
 
@@ -452,12 +449,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     vh = canvas.clientHeight;
     canvas.width = Math.round(vw * dpr);
     canvas.height = Math.round(vh * dpr);
-    if (!preserveViewOnResize) fit(false);
     schedule();
-  }
-
-  function preserveView() {
-    preserveViewOnResize = true;
   }
 
   function fitScale(pad) {
@@ -533,7 +525,6 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     const k = clamp(parseFloat(m[1]), MIN_K, MAX_K);
     if (!isFinite(k)) return false;
     view.k = k; view.x = +m[2]; view.y = +m[3];
-    preserveView();
     return true;
   }
 
@@ -959,7 +950,6 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       if (pinchDist > 0) {
         const r = canvas.getBoundingClientRect();
         zoomAt(pinchK * (d / pinchDist), (a[0] + b[0]) / 2 - r.left, (a[1] + b[1]) / 2 - r.top, false);
-        preserveView();
       }
       return;
     }
@@ -968,7 +958,6 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       const dx = e.clientX - lastX, dy = e.clientY - lastY;
       if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 4) moved = true;
       view.x += dx; view.y += dy;
-      if (moved) preserveView();
       lastX = e.clientX; lastY = e.clientY;
       anim = null;
       schedule();
@@ -1025,7 +1014,6 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       const sx = e.clientX - r.left, sy = e.clientY - r.top;
       anim = null;
       zoomAt(view.k * Math.exp(-e.deltaY * 0.01), sx, sy, false);
-      preserveView();
     } else if (e.ctrlKey || e.metaKey) {
       return;
     } else {
@@ -1036,7 +1024,6 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       view.x -= shiftWheel ? rawY : rawX;
       view.y -= shiftWheel ? 0 : rawY;
       anim = null;
-      preserveView();
       schedule();
     }
     hint.classList.add('faded');
@@ -1058,7 +1045,6 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     const sx = typeof e.clientX === 'number' ? e.clientX - r.left : vw / 2;
     const sy = typeof e.clientY === 'number' ? e.clientY - r.top : vh / 2;
     zoomAt(gestureK * e.scale, sx, sy, false);
-    preserveView();
   }, { passive: false });
   canvas.addEventListener('gestureend', (e) => {
     e.preventDefault();
@@ -1068,7 +1054,6 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   canvas.addEventListener('dblclick', (e) => {
     const r = canvas.getBoundingClientRect();
     zoomAt(view.k * 1.7, e.clientX - r.left, e.clientY - r.top, true);
-    preserveView();
   });
 
   // ---- keyboard
@@ -1077,16 +1062,16 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     if (e.target !== stage || e.metaKey || e.ctrlKey) return;
     const pan = e.shiftKey ? 220 : 70;
     switch (e.key) {
-      case '0': preserveView(); fit(true); break;
-      case '1': preserveView(); actualSize(); break;
+      case '0': fit(true); break;
+      case '1': actualSize(); break;
       case 't': case 'T': toggleTheme(); break;
-      case '+': case '=': preserveView(); zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
-      case '-': case '_': preserveView(); zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
+      case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
+      case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
       case 'Escape': focused = null; readout.classList.remove('on'); schedule(); break;
-      case 'ArrowLeft': preserveView(); view.x += pan; schedule(); break;
-      case 'ArrowRight': preserveView(); view.x -= pan; schedule(); break;
-      case 'ArrowUp': preserveView(); view.y += pan; schedule(); break;
-      case 'ArrowDown': preserveView(); view.y -= pan; schedule(); break;
+      case 'ArrowLeft': view.x += pan; schedule(); break;
+      case 'ArrowRight': view.x -= pan; schedule(); break;
+      case 'ArrowUp': view.y += pan; schedule(); break;
+      case 'ArrowDown': view.y -= pan; schedule(); break;
       default: return;
     }
     e.preventDefault();
@@ -1096,10 +1081,10 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   createTextFallback();
 
   // ---- toolbar
-  document.getElementById('bIn').onclick  = () => { preserveView(); zoomAt(view.k * 1.3, vw / 2, vh / 2, true); };
-  document.getElementById('bOut').onclick = () => { preserveView(); zoomAt(view.k / 1.3, vw / 2, vh / 2, true); };
-  document.getElementById('bFit').onclick = () => { preserveView(); fit(true); };
-  document.getElementById('bOne').onclick = () => { preserveView(); actualSize(); };
+  document.getElementById('bIn').onclick  = () => zoomAt(view.k * 1.3, vw / 2, vh / 2, true);
+  document.getElementById('bOut').onclick = () => zoomAt(view.k / 1.3, vw / 2, vh / 2, true);
+  document.getElementById('bFit').onclick = () => fit(true);
+  document.getElementById('bOne').onclick = () => actualSize();
   const pngButton = document.getElementById('bPng');
   pngButton.onclick = exportPng;
 
@@ -1184,8 +1169,8 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   // ==========================================================================
 
   window.addEventListener('resize', resize);
-  readHash();
   resize();
+  if (!readHash()) fit(false);
   schedule();
 
   // Canvas text is rasterised at draw time, so the first paint would use the

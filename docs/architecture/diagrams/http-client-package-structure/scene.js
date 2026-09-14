@@ -77,6 +77,7 @@ const EDGES = [
   { from:'request',to:'method-headers',pts:[[973,429],[978,429],[978,516],[963,516]],label:{s:'al',x:971,y:466,t:'依賴',rot:-90,anchor:'center'} },
   { from:'auth',to:'auth-flow',pts:[[407,516],[417,516]],label:{s:'al',x:412,y:504,t:'建立',anchor:'center'} },
   { from:'http-client',to:'requester',pts:[[505,640],[925,640],[925,642],[934,642]],label:{s:'al',x:722,y:628,t:'bare execute',anchor:'center'} },
+  { from:'auth-requester',to:'auth',pts:[[650,614],[650,575],[271,575],[271,543]],label:{s:'al',x:668,y:580,t:'依賴',rot:-90,anchor:'center'} },
   { from:'auth-requester',to:'requester',pts:[[905,670],[925,670],[925,666],[934,666]],label:{s:'al',x:915,y:690,t:'injected',rot:-90,anchor:'center'} },
   { from:'auth-requester',to:'auth-flow',pts:[[720,614],[720,555],[554,555],[554,543]],label:{s:'al',x:737,y:580,t:'驅動',rot:-90,anchor:'center'} },
   { from:'http-client',to:'request',pts:[[320,614],[320,555],[837,555],[837,479]],label:{s:'al',x:854,y:568,t:'使用',rot:-90,anchor:'center'} },
@@ -95,7 +96,7 @@ const EDGES = [
 
 const TEXTS = [
   {s:'title',x:110,y:86,t:'RivetHTTPClient — 最小介面結構'},
-  {s:'sub',x:110,y:118,t:'bare HTTPClient → Requester；internal AuthRequester 驅動 AuthFlow → injected Requester → Transport → raw HTTPResponse'},
+  {s:'sub',x:110,y:118,t:'public bare HTTPClient；internal AuthRequester 注入 Requester 與 Auth；Requester 注入 Transport'},
   {s:'tag',x:110,y:146,runs:[{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'Auth／AuthFlow',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'AuthRequester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的 abstraction'},
   {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部 surface'},

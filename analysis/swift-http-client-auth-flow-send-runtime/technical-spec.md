@@ -35,7 +35,7 @@ while true {
 ```
 
 - `HTTPClientError.authFlowFinishedWithoutResponse` 保持無 associated value，供 generic terminal condition 使用。
-- docs／diagrams 改述 `AuthRequester → Requester → Transport`，並保留 Canvas initial-fit support 與其 verification。
+- docs／diagrams 改述 `AuthRequester → Requester → Transport`；package canvas 僅補 internal `AuthRequester` 標記與 `AuthRequester → Auth` injected dependency，lifecycle 僅補 Requester failure 不呼叫 `receive(_:)` 的 terminal branch。`BUILD.md` 與 `scene.js` 的 subtitle 僅描述 package ownership／compile-time dependency，不描述 runtime flow 或 raw response。
 
 ## Out-Of-Scope
 
@@ -66,12 +66,13 @@ while true {
 - `packages/RivetHTTPClient/Tests/RivetHTTPClientTests/Execution/TestDoubles.swift`
 - `docs/architecture/README.md`、`docs/architecture/bounded-contexts/README.md`
 - `docs/architecture/diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.json`、generated HTML 與 visual-check evidence
-- `docs/architecture/diagrams/http-client-package-structure/scene.js` 與 generated `index.html`；build/enhance support 只須維持既有 initial-fit contract。
+- `docs/architecture/diagrams/http-client-package-structure/scene.js` 與 generated `index.html`；`BUILD.md` 只改 ownership／dependency-only topology subtitle；`scene.js` 只改同一 subtitle、internal `AuthRequester` tag 與 `AuthRequester → Auth` dependency，不改 build semantics 或其他 scene content。
 
 ### ReadOnly
 
 - `Auth.swift`、`Requester.swift`、`Transport.swift`、`URLSessionTransport.swift`、`HTTPRequest.swift`、`HTTPResponse.swift`、`Package.swift`、`AuthTests.swift`、request／verb facades。
-- Canvas `BUILD.md` 與 `enhance-accessibility.js` 的 initial-fit／share／pan-zoom semantics。
+- `enhance-accessibility.js`：先恢復為 feature branch 對 dev 的 merge-base `c44def5` 版本，並保持 ReadOnly；相對於 `c44def5` 必須是 zero diff。
+- `BUILD.md` 的 build semantics；只有 topology subtitle 可修改。
 - 所有非本 topic 的 source、tests、docs、diagrams 與 historical topic artifacts。
 
 ### Deleted
@@ -82,8 +83,8 @@ while true {
 
 - `HTTPClientTests` 只驗證 bare facade；新增 `AuthRequesterTests` 以 `@testable import` 覆蓋 internal driver。
 - focused AuthRequester／HTTPClient tests、complete SwiftPM tests 與 `git diff --check`。
-- Archify lifecycle：showcase validate、deliver、visual-check 與 delivered light/dark 1440×900、2048×1320 人工 review；Canvas：既定 validate/build/enhance/verify 與 light/dark desktop 人工 review。
-- Canvas 若因 package-structure regeneration 被觸及，必須驗證 untouched unshared resize refit，以及 share hash 或 pan／zoom 後 resize preserve transform。
+- Archify lifecycle：showcase validate、deliver、visual-check 與 delivered light/dark 1440×900、2048×1320 獨立 manual visual review；Canvas：既定 validate/build/enhance/verify 與 light/dark desktop 獨立 manual visual review。manual visual review evidence 必須明確記錄於 step ledger，才可完成 TE-02。
+- 五個既有 PR thread 的 ID、個別修正與 resolve completion condition 只記錄於 step ledger；所有 mapped correction 經 Tester、Reviewer、push 後，才可 resolve 對應既有 thread。
 
 ## TestCase
 

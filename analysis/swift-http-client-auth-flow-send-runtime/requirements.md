@@ -18,13 +18,13 @@
 - 新增 internal `AuthRequester`，以 constructor injection 接收 `Requester` 與 `any Auth`；每個 `execute(_:)` 只建立一個新的 mutable `AuthFlow` 並只呼叫一次 `start()`。
 - 在 `AuthRequester` 依序處理 `.send(nextRequest) → requester.execute(nextRequest) → flow.receive(response)`；`.finish` 在已有 response 時回傳最後 response，否則 throw `HTTPClientError.authFlowFinishedWithoutResponse`。
 - transport／Requester error 原樣立即傳遞；不可 receive、取得下一 action、分類 status 或加上 retry。4xx／5xx 是回灌 flow 的 raw response。
-- 更新 architecture prose、AuthFlow lifecycle 與 HTTP package structure，使其如實表達 `AuthRequester → Requester → Transport` ownership；保留已交付的 Canvas initial-fit 行為與既有驗證要求。
+- 更新 architecture prose、AuthFlow lifecycle 與 HTTP package structure，使其如實表達 `AuthRequester → Requester → Transport` ownership；diagram 修正限於 internal `AuthRequester` 標記、`AuthRequester → Auth` injected dependency，以及 Requester failure 不呼叫 `receive(_:)` 的分支。`BUILD.md` 與 `scene.js` 的 subtitle 僅表達 package ownership／compile-time dependency，不可描述 runtime flow 或 raw response。
 
 ## Out-Of-Scope
 
 - `Auth`、`AuthFlow`、`ClientAction`、`Requester`、`Transport`、`URLSessionTransport`、`HTTPRequest`、`HTTPResponse`、manifest 與 HTTP method facade 的 declaration 或 semantics。
 - GitHubIntegration、其他 BC、bounded-context map、舊 topic artifacts，以及 GitHub REST 或 Apollo 實作。
-- Canvas viewer interaction、share format、pan／zoom semantics 或 accessibility redesign；initial-fit support 只能維持，不能藉本次改動重設其既有契約。
+- Canvas viewer interaction 或 accessibility redesign。
 
 ## Written
 
@@ -39,12 +39,13 @@
 - `HTTPClient.swift` 移除 auth overload，保持 bare facade。
 - `HTTPClientError.swift` 保留／使用 `authFlowFinishedWithoutResponse`。
 - `HTTPClientTests.swift` 移除已不屬於 client 的 auth-driver tests；`TestDoubles.swift` 僅保留或調整 deterministic flow／transport support。
-- architecture overview、BC directory README、AuthFlow lifecycle source/generated/evidence、HTTP package-structure source/generated artifact；Canvas build/enhancer support 維持 initial-fit 行為。
+- architecture overview、BC directory README、AuthFlow lifecycle source/generated/evidence、HTTP package-structure source/generated artifact；`BUILD.md` 僅更新 ownership／dependency-only topology subtitle；`scene.js` 僅更新同一 subtitle、internal `AuthRequester` tag 與 `AuthRequester → Auth` dependency，不改 build semantics 或其他 scene content。
 
 ## ReadOnly
 
 - `Auth.swift`、`Requester.swift`、`Transport.swift`、`URLSessionTransport.swift`、`HTTPRequest.swift`、`HTTPResponse.swift`、`Package.swift`、`AuthTests.swift` 與 request／verb facade source。
-- 既有 Canvas `BUILD.md`／`enhance-accessibility.js` 的 initial-fit contract，除維持與驗證所需的 generated output 外不改其 semantics。
+- `enhance-accessibility.js`：必須先恢復為 feature branch 對 dev 的 merge-base `c44def5` 版本，並維持 ReadOnly；其相對於 `c44def5` 必須是 zero diff。
+- `BUILD.md` 除允許更新 topology subtitle 外，其餘 build semantics 維持 ReadOnly。
 - `swift-http-client-auth-flow-contract` artifacts、GitHubIntegration、其他 BC 與 bounded-context map。
 
 ## Deleted
@@ -62,10 +63,11 @@
 | TC-05 | 每次 AuthRequester execute | 共用 injected Auth，但為每次 execution 建立新的 flow。 |
 | TC-06 | 首次或後續 requester failure | 原 `HTTPClientError` 立即傳遞；不 receive、不再 dispatch、不 retry。 |
 | TC-07 | 4xx／5xx | raw `HTTPResponse` 照常 receive，由 flow 決定後續 action。 |
-| TC-08 | diagrams／Canvas | flow ownership 改為 AuthRequester；Archify 與 Canvas gates 通過，且 initial untouched-unshared resize refit 與 share／pan-zoom transform preservation 不 regress。 |
+| TC-08 | diagrams／Canvas | flow ownership 改為 AuthRequester；package canvas 明示 internal tag 與 `AuthRequester → Auth` injected dependency，lifecycle 明示 Requester failure 不呼叫 `receive(_:)`；Archify 與 Canvas gates 通過，且獨立 manual visual review 已記錄。 |
 
 ## Success Criteria
 
 - `HTTPClient` 的 public surface 不再認識 `Auth`；`AuthRequester` 是唯一 generic flow driver。
 - flow lifecycle、terminal error、multi-send 與 failure semantics 均有 focused tests；完整 SwiftPM tests 與 `git diff --check` 通過。
 - 先完成新的 planning review；先前基於 HTTPClient driver 的 Tester、Reviewer、commit、Draft PR 與 human-review readiness 都不可作為本次 delivery evidence。
+- 五個既有 PR thread 的精確修正映射與 resolve completion condition 以 step ledger 為唯一追蹤真相；不得新增、替換或遺失既有 thread ID。
