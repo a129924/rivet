@@ -42,6 +42,7 @@
 - root `Package.swift`、`GitHubIntegration` product/target declaration、所有 `Sources/BoundedContexts/GitHubIntegration/` production source 與其 public API。
 - PR Inbox、PR Reader 與所有其他 Domain target/source/tests。
 - 既有 HTTP、GraphQL、未列於 Modify 的 architecture diagrams 與 Bounded Context boundary decisions。
+- AM-14 除 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 外的所有 implementation、production API、target/module、BC、toolchain 與 consumer fixture 都維持 ReadOnly。
 
 ## Written
 
@@ -56,6 +57,7 @@
 - 本 topic 的四份 planning artifacts。
 - AM-09 只寫入四份 planning artifacts；不寫入 Swift source、consumer fixture 或 `.swiftlint.yml`。
 - AM-10 新增 routine validation wrapper `scripts/check-github-integration-consumer.sh`；不改動 fixture public test、Swift production source 或 lint configuration。
+- AM-14 只寫入四份 planning artifacts；不新增 implementation、production、toolchain 或 fixture file。
 
 ## Modify
 
@@ -65,6 +67,8 @@
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：本次只補 multiline-attribute import parser edge case，維持既有 structured graph/source/import assertions；不得改變 production source set 或 package target graph。
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：僅 mask Swift `#/…/#` raw-regex literal content 後再擷取 imports；`rawRegexHashCount` 只可在開頭辨識至少一個 `#` 的 raw-regex literal，ordinary `/` 不得進入 raw-regex masking。mask 必須保留 newline 並以 delimiter-aware close 判定結尾，不擴張至其他 literal 或 lexer scope。`Apollo` 與 `ApolloAPI` 都是 forbidden module root；維持 existing graph/source assertions、production source set 與 package target graph。
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：import-parser trivia 只將 delimiter 後的 whitespace 從 space/tab/CR/LF 擴至 form-feed（`\f`）與 vertical-tab（`\v`）；必須以 `import\fSecurity` 與 `import\vSecurity` fixture 驗證 module root 被擷取並觸發既有 forbidden-import failure。不得改變 raw-regex semantics、建立 generic Swift lexer，或改動其他 source/API/target/module/BC/toolchain/fixture。
+- `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：僅將 import-parser trivia 精確新增 U+00A0 NBSP，並以 `import<NBSP>Security` fixture 驗證 `Security` 被擷取及觸發既有 forbidden-import failure；不得進行 general whitespace sweep 或 structured parser。
+- `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：raw string masking 僅新增 hash-escape-aware close 判定，使 raw string body 的 `\#"` 不得被誤判為 close，並以後接 real `import Security` 的 focused fixture 驗證該 import 不會被 hide。不得改變 raw-regex semantics 或擴張為 generic Swift lexer。
 - 新增 `scripts/check-github-integration-consumer.sh`：僅包裝既有 fixture 的 routine validation；以 task-scoped `mktemp -d` scratch path 與 `trap` 清理 scratch，並只在 eligibility 通過時精確處理 fixture `.build`。
 - `.pre-commit-config.yaml`：在 local `swift-format` hook 之後、`swiftlint` hook 之前加入上述 wrapper hook；不得變更 SwiftLint rule/configuration 或其他 hook 的責任。
 - `docs/toolchain.md`：記錄 routine consumer validation command、pre-commit ordering、task scratch 與 exact fixture cleanup safety contract；不得擴張為 CI policy。
@@ -92,6 +96,8 @@
 - static-isolation parser 只 mask Swift `#/…/#` raw-regex content，保留其中 newline 並以 delimiter-aware close 判定結尾；raw-regex negative fixture 內的 fake `; import Apollo` 與 `; import ApolloAPI` 不得被視為 import，real multiline attribute import 則必須正確萃取 module root 並通過 positive assertion。實際 `Apollo`、`ApolloAPI` imports 都必須觸發 forbidden-import failure。
 - `rawRegexHashCount` 對 ordinary division 後接 forbidden `import Security` 的 regression fixture 必須回傳非 raw-regex；該 `import Security` 必須仍被擷取並觸發 forbidden-import failure。
 - `import\fSecurity` 與 `import\vSecurity` 都必須被 import parser 擷取為 `Security`，並各自觸發既有 forbidden-import failure；此驗證僅擴充 form-feed／vertical-tab trivia，不改變 raw-regex parsing。
+- `import<NBSP>Security` 必須被擷取為 `Security`，並觸發既有 forbidden-import failure；NBSP 是唯一新增 trivia code point，不得擴張為 general whitespace behavior。
+- 含 `\#"` 的 raw string body 不得 prematurely close；literal 結束後的 real `import Security` 必須被擷取並觸發既有 forbidden-import failure，且 raw-regex behavior 維持不變。
 - 獨立 consumer package 以 root package 的 `GitHubIntegration` product 編譯，且不使用 `@testable`；其 public API test 驗證 token/error 的 public properties、initializers 與 cases，`TokenStoreOperation: Sendable`，外部 private typed-throws store mock，以及 provider 的 existential injection 與 success／missing／store-error mapping。
 - `scripts/check-github-integration-consumer.sh` 以 `RIVET_CONSUMER_BUILD_PATH="$(mktemp -d)"` 建立 task scratch，並以 `trap` 只清理該 exact scratch path；它以 `--scratch-path "$RIVET_CONSUMER_BUILD_PATH"` 執行 fixture。對 `Tests/GitHubIntegrationConsumer/.build`，先拒絕 symlink 與 non-directory；只有現存的 non-symlink directory 經 `git check-ignore --no-index -q -- Tests/GitHubIntegrationConsumer/.build` 證實為 ignored output 時，才可 `rm -rf --` 該 exact path。不存在時直接做 absence verification；禁止 broad target、glob、其他 deletion 或 `.swiftlint.yml` 修改。eligibility、cleanup、trap cleanup 或最終 `test ! -e Tests/GitHubIntegrationConsumer/.build && test ! -L Tests/GitHubIntegrationConsumer/.build` 任一步失敗均為 blocker。wrapper 成功後，root `swift test`、完整 `swiftlint lint --strict` 與 diff checks 必須通過；pre-commit ordering 必須是 swift-format → consumer wrapper → swiftlint。
 - 驗證 target dependency/import isolation，以及 root `swift test` 與 `git diff --check`。
@@ -111,6 +117,8 @@
 - PC-06：multiline attribute import parser 與 external public-consumer verification 為新的 threads；human 已授權 consumer fixture amendment。兩者必須進入新的獨立 route，不得援引 historic delivery route 作為 resolution authority。
 - PC-07（`PRRT_kwDOUFu0Cc6hmEoT`）：`rawRegexHashCount` 不得將 ordinary `/` 視為 raw-regex literal；只補 ordinary division 後接 `import Security` 的 regression fixture，驗證 forbidden import 仍可被偵測。不得擴張為 generic Swift lexer，亦不得改變 production API、target/module、BC boundary 或既有 contract。
 - PC-08（`PRRT_kwDOUFu0Cc6h-iXj`／`PRRC_kwDOUFu0Cc7uiAil`）：僅將 import-parser trivia 的 whitespace 從 space/tab/CR/LF 擴至 form-feed（`\f`）與 vertical-tab（`\v`），以 `import\fSecurity`、`import\vSecurity` fixtures 驗證既有 forbidden-import failure；不得改變 raw-regex semantics、建立 generic lexer 或改動 production API/module/target/BC/toolchain/fixture。
+- PC-09（`PRRT_kwDOUFu0Cc6h-yNS`）：test-private import-parser trivia 只新增 U+00A0 NBSP，並以 `import<NBSP>Security` 的 independent extraction／forbidden-import regression 驗證；不得 general whitespace sweep、structured parser 或改動 production/API/target/module/BC/toolchain/fixture。
+- PC-10（`PRRT_kwDOUFu0Cc6h-yNU`）：test-private raw string masking 只新增 hash-escape-aware close 判定，使 `\#"` 不會 prematurely close raw string 並 hide 後接 real `import Security`；不得擴張 raw-regex semantics、建立 generic Swift lexer 或改動 production/API/target/module/BC/toolchain/fixture。
 
 ## Implementation Handoff
 
@@ -119,3 +127,5 @@ PR-14 已 approved。AM-10/AM-11 fresh route 固定為 `PR-14 → IM-06 → TE-1
 PC-07 的 fresh route 固定為 `AM-12 → PR-15 → IM-07 → TE-12 → RV-09 → DL-05`。IM-07 只可修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：令 `rawRegexHashCount` 僅在至少一個 `#` 開頭的 raw-regex literal 回傳 raw delimiter count，並加入 ordinary division 後接 `import Security` 的 regression fixture；ordinary `/` 不得被 mask，`Security` 必須觸發既有 forbidden-import failure。Tester 獨立驗證該 regression 與既有 raw-regex/forbidden-import coverage；Reviewer 獨立確認 no scope/contract drift。僅 RV-09 明示 approved、無 blocker 且 human 明示 delivery authority 同時成立後，DL-05 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6hmEoT`。不得修改任何其他 source、API、target/module、BC boundary、CI 或 planning decision；不得 rebase、force push、merge PR 或 release。
 
 PC-08 在 DL-05 後必走 `AM-13 → PR-16 → IM-08 → TE-13 → RV-10 → DL-06`。IM-08 只可修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`，將 import-parser trivia 精確擴至 `\f`、`\v`，並加入 `import\fSecurity`、`import\vSecurity` fixtures；兩者都必須萃取 `Security` 並觸發既有 forbidden-import failure。Tester 獨立驗證兩個 focused regression fixtures 與既有 parser coverage；Reviewer 獨立確認沒有 generic lexer、raw-regex semantic、API/module/target/BC/toolchain/fixture drift。僅 RV-10 明示 approved、無 blocker 且 human 明示 delivery authority 同時成立後，DL-06 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6h-iXj`。不得處理任何其他 thread、rebase、force push、merge PR 或 release。
+
+PC-09／PC-10 在 DL-06 後必走 `AM-14 → PR-17 → IM-09 → TE-14 → RV-11 → DL-07`。IM-09 只可修改 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：一個 independent fixture 驗證 `import<NBSP>Security` 的 extraction 與既有 forbidden-import failure；另一個 focused fixture 驗證 raw string body 的 `\#"` 不會 prematurely close 並 hide literal 後的 real `import Security`。Tester 獨立驗證兩個 regression 與既有 parser/raw-regex coverage；Code Reviewer 獨立確認無 general whitespace sweep、structured parser、generic lexer、raw-regex semantic、production/API/target/module/BC/toolchain/fixture drift。僅 RV-11 approved、無 blocker 且 human 明示 delivery authority 後，DL-07 才可 commit、non-force push，並只 resolve `PRRT_kwDOUFu0Cc6h-yNS` 與 `PRRT_kwDOUFu0Cc6h-yNU`，不得處理其他 thread、rebase、force push、merge PR 或 release。

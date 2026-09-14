@@ -100,6 +100,13 @@ struct StaticIsolationTests {
   }
 
   @Test
+  func importRootExtractionRecognizesNonBreakingSpaceTrivia() throws {
+    let source = "import\u{00A0}Security"
+
+    #expect(try importedModuleRoots(in: source) == ["Security"])
+  }
+
+  @Test
   func forbiddenImportsSeparatedByFormFeedAreDetected() throws {
     let source = "import\u{000C}Security"
     let forbiddenImports: Set = ["Security"]
@@ -112,6 +119,16 @@ struct StaticIsolationTests {
   @Test
   func forbiddenImportsSeparatedByVerticalTabAreDetected() throws {
     let source = "import\u{000B}Security"
+    let forbiddenImports: Set = ["Security"]
+
+    #expect(
+      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
+    )
+  }
+
+  @Test
+  func forbiddenImportsSeparatedByNonBreakingSpaceAreDetected() throws {
+    let source = "import\u{00A0}Security"
     let forbiddenImports: Set = ["Security"]
 
     #expect(
@@ -154,6 +171,28 @@ struct StaticIsolationTests {
     #expect(
       try importedModuleRoots(in: source)
         == ["Security", "Foundation"]
+    )
+  }
+
+  @Test
+  func rawStringEscapedQuoteDoesNotHideFollowingRealImports() throws {
+    let source = ##"""
+      let ignored = #"
+      \#"#; import Apollo
+      "#
+      import Security
+      """##
+    let forbiddenImports: Set = [
+      "RivetHTTPClient",
+      "Security",
+      "Keychain",
+      "Apollo",
+      "ApolloAPI",
+    ]
+
+    #expect(try importedModuleRoots(in: source) == ["Security"])
+    #expect(
+      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
     )
   }
 
@@ -393,7 +432,7 @@ private func rawDependencies(in target: [String: Any]) -> [[String: Any]] {
 }
 
 private func importedModuleRoots(in source: String) throws -> Set<String> {
-  let trivia = #"[\t \r\n\f\v]"#
+  let trivia = "[\\t \\r\\n\\f\\v\u{00A0}]"
   let expression =
     #"(?m)(?:^|;)"#
     + trivia + #"*"#
@@ -533,9 +572,16 @@ private func stringLiteralReplacement(
   var precedingBackslashCount = 0
 
   while probe < source.endIndex {
-    let isClosingDelimiter =
-      sourceContains(closingDelimiter, in: source, at: probe)
-      && (hashCount > 0 || precedingBackslashCount.isMultiple(of: 2))
+    let isClosingDelimiter: Bool
+    if hashCount == 0 {
+      isClosingDelimiter =
+        sourceContains(closingDelimiter, in: source, at: probe)
+        && precedingBackslashCount.isMultiple(of: 2)
+    } else {
+      isClosingDelimiter =
+        sourceContains(closingDelimiter, in: source, at: probe)
+        && !rawStringQuoteIsEscaped(in: source, at: probe, hashCount: hashCount)
+    }
     if isClosingDelimiter {
       replacement += String(repeating: " ", count: closingDelimiter.count)
       return (replacement, source.index(probe, offsetBy: closingDelimiter.count))
@@ -548,6 +594,31 @@ private func stringLiteralReplacement(
   }
 
   return (replacement, probe)
+}
+
+private func rawStringQuoteIsEscaped(
+  in source: String,
+  at quote: String.Index,
+  hashCount: Int
+) -> Bool {
+  guard
+    hashCount > 0,
+    let firstHash = source.index(
+      quote,
+      offsetBy: -hashCount,
+      limitedBy: source.startIndex
+    ),
+    firstHash > source.startIndex
+  else {
+    return false
+  }
+
+  let escape = source.index(before: firstHash)
+  guard source[escape] == "\\" else {
+    return false
+  }
+
+  return source[firstHash..<quote].allSatisfy { $0 == "#" }
 }
 
 private func rawRegexLiteralReplacement(
