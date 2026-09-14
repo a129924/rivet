@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-review-pending。historical DL-02 已以 `c1c4bff` 完成 topic delivery、push 與當時五條 mapped thread resolution；這不是本輪 delivery claim。current post-delivery review-fix 已完成 PL-04、PR-04、IM-03 與 TE-03；尚未執行本輪 reviewer verdict、commit、push 或新的 thread resolution。
+reviewer-pending。historical DL-02 已以 `c1c4bff` 完成 topic delivery、push 與當時五條 mapped thread resolution；這不是本輪 delivery claim。current post-delivery review-fix 已完成 PL-04、PR-04、IM-03、TE-03、RV-03，以及 initial DL-03 delivery：`fc1ea26` 已 push 至 PR #27。四條 current mapped threads 仍未 resolve；它們只能在本次 ledger-only follow-up 經 RV-04 approval、DL-04 commit／push 後精確 resolve。HC-03 仍為 pending。
 
 先前的 PR-01、IM-01、TE-01、RV-01、DL-01 與 HC-01 僅對已 supersede 的 HTTPClient driver 有效，現全部失效；既有 commit 與 Draft PR 不可視為本次架構的 delivery 或 human-review readiness evidence。
 
@@ -23,8 +23,11 @@ review-pending。historical DL-02 已以 `c1c4bff` 完成 topic delivery、push 
 | PR-04 | Plan-Reviewer | approved | 獨立審查 PL-04 的 scope、四條 exact mapping、historical delivery wording、canvas ownership boundary 與 execution readiness。 | `approved`；否則 needs-rework、blocked 或 human-check。 | Independent Plan-Reviewer approval。 |
 | IM-03 | Implementer | completed | 僅在 PR-04 approved 後，修改嚴格 allowlist：`docs/architecture/README.md`、package `scene.js` 與 pipeline `index.html`；將 runtime invariant 替換為 `c44def5` 的指定原文、加入兩條 AuthRequester type edges，並補 overview terminal-error prose。`BUILD.md` 只有 subtitle 被證實不一致時才可修改。 | 只變更 locked paths；不改 lifecycle、BC README、Swift behavior、Canvas interaction、build semantics 或 auth policy。 | Bounded IM-03 handoff；無本輪 delivery claim。 |
 | TE-03 | Tester | passed | 獨立驗證 IM-03 的 Canvas source/artifact、docs truth、scope 與既定 checks。 | SwiftPM tests、`git diff --check`、Canvas validate/build/enhance/verify、source/generated consistency 與 rebuild 後 light/dark desktop manual visual evidence 均明確記錄。 | Independent Tester PASS：root suite 39、package suite 53；Canvas checks 5／15／23 均 zero warnings；rebuild byte-identical；4 張 manual light/dark desktop captures 均 pass；diff check pass，enhancer 維持相對 `c44def5` zero diff。 |
-| RV-03 | Reviewer | pending | 在 TE-03 pass 後，獨立審查四項 review fixes、scope、contract、historical truth 與 Tester evidence。 | `approved`，沒有 scope／contract／workflow drift。 | 待 TE-03 handoff。 |
-| DL-03 | Implementer | pending | 僅在 RV-03 approved 後，以 human-confirmed commit message commit、push，更新既有 PR，並 resolve 四條本輪 mapped threads。 | single bounded correction delivery、push 與四條 exact resolution evidence；五條 prior resolved threads 不變。 | 待 RV-03 approval；不得將 DL-02 historical evidence 視為本輪 delivery。 |
+| RV-03 | Reviewer | approved | 在 TE-03 pass 後，獨立審查四項 review fixes、scope、contract、historical truth 與 Tester evidence。 | `approved`，沒有 scope／contract／workflow drift。 | Independent Reviewer approval before initial DL-03 delivery. |
+| DL-03 | Implementer | completed | RV-03 approved 後完成 initial bounded correction delivery：以 topic commit push 更新既有 PR。四條本輪 mapped threads 未在此 delivery resolve。 | `fc1ea26` 已 push 至 PR #27；不將未完成的 thread resolution 記為已完成。 | Historical initial delivery completed at `fc1ea26`; the four current mapped threads remain unresolved pending DL-04. |
+| PL-05 | Plan-Creator | completed | 僅同步 step ledger 的 remote-head、RV-03 approval、DL-03 initial delivery 與未 resolve thread truth，並鎖定後續 reviewer／delivery gate。 | 僅此 ledger 變更；明確保留 HC-03 pending，且不宣稱四條 current threads 已 resolved。 | This ledger-only follow-up; no code、docs、diagram 或其他 planning artifact change. |
+| RV-04 | Reviewer | pending | 獨立審查 PL-05 ledger truth、`fc1ea26` initial delivery fact，以及 DL-04 的精確四條 resolution allowlist。 | `approved`；確認不把 DL-03 誤記為 thread resolution，且 DL-04 不擴張 scope。 | 待 PL-05 handoff。 |
+| DL-04 | Implementer | pending | 僅在 RV-04 approved 後，以 ledger-only topic follow-up commit／push 更新既有 PR，然後 resolve 四條 exact current mapped threads。 | follow-up commit 只含本 ledger truth；push 完成後只 resolve `r4002938379`、`r4002938384`、`r4002938388`、`r4002938393`，不 resolve 其他 thread。 | 待 RV-04 approval；不得改 code、docs、diagram，或將 DL-03 視為 resolution delivery。 |
 | HC-03 | Human | pending | 審查 DL-03 更新後的 PR。 | human 明示下一步。 | DL-03 完成後立即停止；不得 merge、release 或處理其他 comment。 |
 
 ## File Boundary
@@ -42,12 +45,14 @@ concrete auth policy、OAuth／GitHub／Apollo integration、public AuthRequeste
 - HTTPClient auth overload 移除、AuthRequester source/test 新增、HTTPClient bare regression coverage。
 - docs／diagrams ownership correction：internal AuthRequester tag、AuthRequester → Auth edge 與 Requester failure/no-receive branch。
 - post-delivery correction：package canvas 僅保留 ownership／compile-time invariant，自 `c44def5` 恢復 `不變量：HTTPURL validation 與 HTTPClientError 分別表達 URL construction、transport failure；HTTP status 維持 raw response`，加入 AuthRequester → HTTPRequest／HTTPResponse edges；architecture overview 明列 public no-response terminal error；ledger 如實保留 DL-02 historical delivery。
+- PL-05／DL-04 僅同步此 step ledger 的 initial delivery 與 unresolved-thread truth，並在 RV-04 approval 後將四條指定 current threads 做精確 resolution。
 
 ### Out-Of-Scope
 
 - Auth／AuthFlow／Requester／Transport declarations、HTTP request-response values、manifest、facades、GitHubIntegration、其他 BC、historical topic artifacts。
 - Canvas runtime behavior、enhancer implementation 與 BUILD.md build semantics。
 - lifecycle source／generated artifact／visual evidence、bounded-context README、HTTPURL validation／transport-failure semantics，以及五條 prior resolved threads。
+- PL-05／DL-04 的任何 code、documentation、diagram、其他 planning artifact、Git scope 或未列 thread resolution。
 
 ### Written
 
@@ -59,6 +64,7 @@ concrete auth policy、OAuth／GitHub／Apollo integration、public AuthRequeste
 - PR-02 historical scope 曾修改 `HTTPClient.swift`、`HTTPClientError.swift`、`HTTPClientTests.swift`、`TestDoubles.swift`；這些 paths 在 PL-04 是 ReadOnly。
 - PR-02／PR-03 historical scope 曾修改 architecture overview／BC README、AuthFlow lifecycle source-generated-evidence、HTTP package structure source-generated output，以及 BUILD.md 的 ownership／dependency-only topology subtitle、scene.js 的既定 internal tag／Auth dependency；它們不是 PL-04 writable authorization。
 - PL-04 writable allowlist 嚴格為 `docs/architecture/README.md` public terminal-error prose、package `scene.js` 的指定 runtime-invariant replacement／兩條 direct type edges，以及由 pipeline 產生的 `index.html`。`BUILD.md` 只有 subtitle 被證實不一致時才是 conditional writable path；現有 subtitle 維持不變。
+- PL-05／DL-04 唯一 writable path 為本 step ledger；DL-04 僅可在 RV-04 approval 後交付該 ledger-only follow-up。
 
 ### ReadOnly
 
@@ -104,15 +110,15 @@ PR review history 與 thread IDs 是 external immutable traceability；本 topic
 
 | Thread ID | Mapped correction | Resolve completion condition |
 | --- | --- | --- |
-| `r4002938379` | package canvas 移除「generic 地送出 flow action 並回灌 raw response」runtime invariant，並自 `c44def5` 恢復 `不變量：HTTPURL validation 與 HTTPClientError 分別表達 URL construction、transport failure；HTTP status 維持 raw response`。 | IM-03 source 與 generated artifact 只表達 ownership／compile-time truth，且指定 invariant 逐字一致；TE-03 Canvas pipeline、source/generated consistency 與 manual visual evidence 通過；RV-03 approved；DL-03 push 完成。 |
-| `r4002938384` | package canvas 加入 `AuthRequester → HTTPRequest` 與 `AuthRequester → HTTPResponse` direct compile-time dependencies。 | 兩條 edge 出現在 source 與 generated artifact；TE-03 Canvas checks／manual evidence 通過；RV-03 approved；DL-03 push 完成。 |
-| `r4002938388` | ledger 如實將 DL-02 記為 historical `c1c4bff` delivery，並分離 current PL-04 review-fix pending state。 | PL-04 artifacts 與 step ledger 一致，不將 historical delivery 誤寫為 current delivery；PR-04、TE-03、RV-03 完成且 DL-03 push 完成。 |
-| `r4002938393` | architecture overview 列出 public `HTTPClientError.authFlowFinishedWithoutResponse` 是 non-transport generic terminal error。 | docs prose 與 public enum 一致；TE-03 docs/static verification 通過；RV-03 approved；DL-03 push 完成。 |
+| `r4002938379` | package canvas 移除「generic 地送出 flow action 並回灌 raw response」runtime invariant，並自 `c44def5` 恢復 `不變量：HTTPURL validation 與 HTTPClientError 分別表達 URL construction、transport failure；HTTP status 維持 raw response`。 | IM-03 source 與 generated artifact 只表達 ownership／compile-time truth，且指定 invariant 逐字一致；TE-03 Canvas pipeline、source/generated consistency 與 manual visual evidence 通過；RV-03 approved；DL-03 initial push 已完成；RV-04 approved 且 DL-04 ledger-only follow-up 已 push。 |
+| `r4002938384` | package canvas 加入 `AuthRequester → HTTPRequest` 與 `AuthRequester → HTTPResponse` direct compile-time dependencies。 | 兩條 edge 出現在 source 與 generated artifact；TE-03 Canvas checks／manual evidence 通過；RV-03 approved；DL-03 initial push 已完成；RV-04 approved 且 DL-04 ledger-only follow-up 已 push。 |
+| `r4002938388` | ledger 如實將 DL-02 記為 historical `c1c4bff` delivery，並分離 current PL-04 review-fix pending state。 | PL-04 artifacts 與 step ledger 一致，不將 historical delivery 誤寫為 current delivery；PR-04、TE-03、RV-03、DL-03 initial push 完成，且 RV-04 approved 與 DL-04 ledger-only follow-up 已 push。 |
+| `r4002938393` | architecture overview 列出 public `HTTPClientError.authFlowFinishedWithoutResponse` 是 non-transport generic terminal error。 | docs prose 與 public enum 一致；TE-03 docs/static verification 通過；RV-03 approved；DL-03 initial push 已完成；RV-04 approved 且 DL-04 ledger-only follow-up 已 push。 |
 
-四個 current mapped correction 全部完成、PR-04 approved、獨立 Tester pass、獨立 Reviewer approval 且 DL-03 已 push 至 PR 後，才可 resolve 對應四條 thread；不得 resolve 其他 thread。
+四個 current mapped correction 已由 DL-03 initial delivery push 至 PR，但 thread resolution 尚未完成。僅在 RV-04 approval 與 DL-04 ledger-only follow-up push 後，才可 resolve `r4002938379`、`r4002938384`、`r4002938388`、`r4002938393`；不得 resolve 其他 thread。
 
 ## Stop Conditions
 
-- PR-04 或 RV-03 requires rework, blocker or human-check：停止並交 Dispatcher；不得自行交付或重開已鎖定 ownership。
-- PR-04、TE-03 與 RV-03 approval／pass 前不得 commit、push、更新 PR 或 resolve current thread；DL-02 historical evidence 不可視為 current correction delivery evidence。
-- DL-03 完成 PR update 與四條 exact thread resolution 後立即停止於 HC-03；不得自行 merge、release 或處理其他 review comment。
+- RV-04 requires rework, blocker or human-check：停止並交 Dispatcher；不得自行交付或重開已鎖定 ownership。
+- RV-04 approval 前不得執行 DL-04 的 ledger-only follow-up commit、push、PR update 或 current thread resolution；DL-03 initial delivery evidence 不可視為四條 thread 的 resolution evidence。
+- DL-04 完成 PR update 與四條 exact thread resolution 後立即停止於 HC-03；不得自行 merge、release 或處理其他 review comment。
