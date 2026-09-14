@@ -371,7 +371,7 @@
     .toolbar-button,
     .primary-button,
     .quiet-button,
-    .done-button {
+    .review-action-button {
       border: 1px solid var(--line-strong);
       border-radius: 6px;
       background: #1b222c;
@@ -388,7 +388,7 @@
 
     .toolbar-button:hover,
     .quiet-button:hover,
-    .done-button:hover {
+    .review-action-button:hover {
       border-color: #4a5664;
       background: #222b36;
     }
@@ -584,6 +584,11 @@
       background: #2b72ba;
     }
 
+    .overview-progress {
+      display: block;
+      margin-bottom: 8px;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -738,9 +743,13 @@
       white-space: nowrap;
     }
 
-    .visited-mark {
-      color: var(--blue);
+    .reviewed-mark {
+      color: var(--text-muted);
       font-size: 10px;
+    }
+
+    .reviewed-mark.is-reviewed {
+      color: var(--green);
     }
 
     .file-status {
@@ -959,13 +968,13 @@
     }
 
     .quiet-button,
-    .done-button {
+    .review-action-button {
       height: 29px;
       padding: 0 10px;
       font-size: 12px;
     }
 
-    .done-button {
+    .review-action-button {
       border-color: rgba(98, 169, 246, 0.48);
       background: rgba(98, 169, 246, 0.13);
       color: #c9e3ff;
@@ -1487,7 +1496,7 @@
           activeTab: "overview",
           selectedFileOrdinal: pr.initialFileOrdinal,
           selectedChangeIndex: 0,
-          visitedFileOrdinals: new Set(),
+          reviewedFileOrdinals: new Set(),
           savedDraft: null
         }])),
         composer: null
@@ -1577,7 +1586,7 @@
         }).join("");
 
         let content = "";
-        if (readerState.activeTab === "overview") content = renderOverview(pr);
+        if (readerState.activeTab === "overview") content = renderOverview(pr, readerState);
         if (readerState.activeTab === "files") content = renderFiles(pr, readerState);
         if (readerState.activeTab === "commits") content = renderCommits(pr);
         if (readerState.activeTab === "checks") content = renderChecks(pr);
@@ -1595,9 +1604,15 @@
           ${state.composer?.isOpen ? renderComposer(pr, readerState) : ""}`;
       }
 
-      function renderOverview(pr) {
+      function renderOverview(pr, readerState) {
         const additions = pr.files.reduce((total, file) => total + file.additions, 0);
         const deletions = pr.files.reduce((total, file) => total + file.deletions, 0);
+        const reviewedCount = readerState.reviewedFileOrdinals.size;
+        const reviewActionLabel = reviewedCount === pr.files.length
+          ? "Finish Reading"
+          : reviewedCount === 0
+            ? "Review Changes →"
+            : "Continue Review →";
         return `
           <div class="overview-scroll">
             <article class="overview">
@@ -1611,7 +1626,8 @@
                   <p class="summary-copy">${escapeHTML(pr.summary)}</p>
                   <h2 class="section-label">What Changed</h2>
                   <ul class="changed-list">${pr.whatChanged.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}</ul>
-                  <button id="review-changes" class="primary-button" type="button">Review Changes →</button>
+                  <span class="progress-text overview-progress">${reviewedCount} / ${pr.files.length} reviewed</span>
+                  <button id="overview-review-action" class="primary-button" type="button">${reviewActionLabel}</button>
                 </div>
                 <aside>
                   <h2 class="section-label">Stats</h2>
@@ -1631,6 +1647,10 @@
 
       function renderFiles(pr, readerState) {
         const selectedFile = pr.files[readerState.selectedFileOrdinal - 1];
+        const reviewedCount = readerState.reviewedFileOrdinals.size;
+        const reviewAction = reviewedCount === pr.files.length
+          ? '<button id="review-action" class="review-action-button" type="button">Finish Reading</button>'
+          : '<button id="review-action" class="review-action-button" type="button">Mark Reviewed</button>';
         const groups = ["Sources", "Tests"].map((group) => `
           <section aria-labelledby="group-${group.toLowerCase()}">
             <h3 id="group-${group.toLowerCase()}" class="file-group-title">${group}</h3>
@@ -1650,11 +1670,11 @@
               </div>
             </section>
             <footer class="files-action-bar">
-              <span class="progress-text">${readerState.selectedFileOrdinal} / 8 files</span>
+              <span class="progress-text">${reviewedCount} / ${pr.files.length} reviewed</span>
               <div class="shortcut-legends" aria-label="Keyboard shortcuts">
                 <span><kbd>↑↓</kbd> Change</span><span><kbd>⌥↑↓</kbd> File</span>
               </div>
-              <div class="action-buttons"><button id="comment-button" class="quiet-button" type="button">C Comment</button><button id="done-button" class="done-button" type="button">Done</button></div>
+              <div class="action-buttons"><button id="comment-button" class="quiet-button" type="button">C Comment</button>${reviewAction}</div>
             </footer>
           </div>`;
       }
@@ -1662,12 +1682,15 @@
       function renderFileRow(file, index, readerState) {
         const ordinal = index + 1;
         const selected = ordinal === readerState.selectedFileOrdinal;
-        const visited = readerState.visitedFileOrdinals.has(ordinal);
+        const reviewed = readerState.reviewedFileOrdinals.has(ordinal);
+        const fileState = selected
+          ? `Current file, ${reviewed ? "reviewed" : "unreviewed"}`
+          : reviewed ? "Reviewed" : "Unreviewed";
         return `
-          <div class="file-row${selected ? " selected" : ""}" role="option" aria-selected="${selected}" tabindex="-1" data-file-ordinal="${ordinal}" title="${escapeHTML(file.path)}" aria-label="${escapeHTML(file.path)}, ${file.additions} additions, ${file.deletions} deletions, ${file.changes.length} changes">
+          <div class="file-row${selected ? " selected" : ""}" role="option" aria-selected="${selected}" tabindex="-1" data-file-ordinal="${ordinal}" data-review-state="${reviewed ? "reviewed" : "unreviewed"}" title="${escapeHTML(file.path)}" aria-label="${escapeHTML(file.path)}, ${fileState}, ${file.additions} additions, ${file.deletions} deletions, ${file.changes.length} changes">
             <span class="file-ordinal">${ordinal}</span>
             <span class="file-name">${escapeHTML(file.name)}</span>
-            <span class="file-meta"><span class="visited-mark" aria-label="${visited ? "Visited" : "Not visited"}">${visited ? "●" : "○"}</span><span class="file-status">M</span><span class="file-delta"><span class="additions">+${file.additions}</span> <span class="deletions">−${file.deletions}</span></span><span>${file.changes.length}c</span></span>
+            <span class="file-meta"><span class="reviewed-mark${reviewed ? " is-reviewed" : ""}" aria-label="${reviewed ? "Reviewed" : "Unreviewed"}">${reviewed ? "✓" : "○"}</span><span class="file-status">M</span><span class="file-delta"><span class="additions">+${file.additions}</span> <span class="deletions">−${file.deletions}</span></span><span>${file.changes.length}c</span></span>
           </div>`;
       }
 
@@ -1734,11 +1757,11 @@
         document.getElementById("back-inbox")?.addEventListener("click", returnToInbox);
         document.querySelector(".reader-tabs")?.addEventListener("click", handleTabClick);
         document.querySelector(".reader-tabs")?.addEventListener("keydown", handleTabKeydown);
-        document.getElementById("review-changes")?.addEventListener("click", () => activateTab("files"));
+        document.getElementById("overview-review-action")?.addEventListener("click", handleOverviewReviewAction);
         document.querySelectorAll(".file-row").forEach((row) => row.addEventListener("click", handleFileClick));
         document.querySelectorAll(".change-block").forEach((block) => block.addEventListener("click", handleChangeClick));
         document.getElementById("comment-button")?.addEventListener("click", () => openComposer("comment"));
-        document.getElementById("done-button")?.addEventListener("click", returnToInbox);
+        document.getElementById("review-action")?.addEventListener("click", handleFilesReviewAction);
       }
 
       function handleRowClick(event) {
@@ -1778,6 +1801,24 @@
         document.getElementById("pr-list")?.focus({ preventScroll: true });
       }
 
+      function finishReading() {
+        const pr = activePR();
+        const readerState = activeReaderState();
+        if (!pr || !readerState || readerState.reviewedFileOrdinals.size !== pr.files.length) return;
+        returnToInbox();
+      }
+
+      function handleOverviewReviewAction() {
+        const pr = activePR();
+        const readerState = activeReaderState();
+        if (!pr || !readerState) return;
+        if (readerState.reviewedFileOrdinals.size === pr.files.length) {
+          finishReading();
+          return;
+        }
+        activateTab("files");
+      }
+
       function handleTabClick(event) {
         const tab = event.target.closest("[data-tab]");
         if (tab) activateTab(tab.dataset.tab);
@@ -1808,7 +1849,6 @@
       }
 
       function enterFiles(readerState) {
-        readerState.visitedFileOrdinals.add(readerState.selectedFileOrdinal);
         const file = activePR().files[readerState.selectedFileOrdinal - 1];
         readerState.selectedChangeIndex = Math.min(readerState.selectedChangeIndex, file.changes.length - 1);
       }
@@ -1824,9 +1864,46 @@
         if (!pr || !readerState || ordinal < 1 || ordinal > pr.files.length) return;
         readerState.selectedFileOrdinal = ordinal;
         readerState.selectedChangeIndex = 0;
-        readerState.visitedFileOrdinals.add(ordinal);
         render();
         focusSelectedChange();
+      }
+
+      function handleFilesReviewAction() {
+        const pr = activePR();
+        const readerState = activeReaderState();
+        if (!pr || !readerState || readerState.activeTab !== "files") return;
+        if (readerState.reviewedFileOrdinals.size === pr.files.length) {
+          finishReading();
+          return;
+        }
+        markCurrentFileReviewed(pr, readerState);
+      }
+
+      function markCurrentFileReviewed(pr, readerState) {
+        const markedOrdinal = readerState.selectedFileOrdinal;
+        readerState.reviewedFileOrdinals.add(markedOrdinal);
+        if (readerState.reviewedFileOrdinals.size < pr.files.length) {
+          const nextUnreviewedOrdinal = findNextUnreviewedOrdinal(
+            markedOrdinal,
+            pr.files.length,
+            readerState.reviewedFileOrdinals
+          );
+          if (nextUnreviewedOrdinal !== null) {
+            readerState.selectedFileOrdinal = nextUnreviewedOrdinal;
+            readerState.selectedChangeIndex = 0;
+          }
+        }
+
+        render();
+        document.getElementById("review-action")?.focus({ preventScroll: true });
+      }
+
+      function findNextUnreviewedOrdinal(markedOrdinal, fileCount, reviewedFileOrdinals) {
+        for (let step = 1; step < fileCount; step += 1) {
+          const candidate = ((markedOrdinal - 1 + step) % fileCount) + 1;
+          if (!reviewedFileOrdinals.has(candidate)) return candidate;
+        }
+        return null;
       }
 
       function handleChangeClick(event) {
