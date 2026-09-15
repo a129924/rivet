@@ -126,6 +126,7 @@ struct HTTPClientTests {
       try await client.delete(url: url, headers: headers, body: body)
     }
   }
+
 }
 
 private func assertSendable<Value: Sendable>(_ value: Value.Type) {}
