@@ -15,7 +15,7 @@
 
 ## 責任與依賴
 
-[責任與依賴 canvas](diagrams/github-oauth-dual-client-architecture/index.html) 只呈現 component ownership 與 dependency；它刻意不表達 request sequence。 [Token lifecycle](diagrams/github-oauth-dual-client-architecture/token-lifecycle-v3.html) 則呈現 snapshot、401 recovery 與一次 retry；其 canonical／歷史 evidence 狀態見 [圖表說明](diagrams/github-oauth-dual-client-architecture/README.md)。
+[責任與依賴 canvas](diagrams/github-oauth-dual-client-architecture/index.html) 只呈現 component ownership 與 dependency；它刻意不表達 request sequence。 [Token lifecycle](diagrams/github-oauth-dual-client-architecture/token-lifecycle-v6.html) 則呈現 expiry-valid snapshot、401-only response recovery 與一次 retry；其 canonical／歷史 evidence 狀態見 [圖表說明](diagrams/github-oauth-dual-client-architecture/README.md)。
 
 ```text
 Facade（layer 外的 application composition root）
@@ -34,13 +34,14 @@ Facade（layer 外的 application composition root）
 - `TokenStore` 只讀寫完整 OAuth credential bundle。`OAuthTokenFetcher` 只透過 bare HTTP 呼叫 GitHub OAuth token endpoint，並回傳完整 rotated bundle。
 - `OAuthTokenProvider` 是唯一 lifecycle owner：記憶體 snapshot、restore、expiry、refresh、rotation、version 與 single-flight。它不持有、不接收、不重送 `HTTPRequest` 或 Apollo operation。
 - `TokenSnapshot` 是 client 的 immutable input，只包含 access token 與 version；refresh token 與完整 bundle 不會暴露給 client。
+- 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration；本文件只鎖定未來 shared OAuth mechanism 的責任邊界。
 - REST client 由 Facade 注入 bare HTTP sender／request executor 與 `TokenProvider`，並保有自己的 `HTTPRequest`；GraphQL client 保有自己的 Apollo operation。兩者只共用 provider instance，不互相呼叫，GraphQL 亦不經 REST route。
 
 ## Token Lifecycle
 
-1. REST 或 GraphQL client 向 provider 取得有效 `TokenSnapshot`，並將 access token 加為 `Authorization: Bearer`。
+1. REST 或 GraphQL client 向 provider 取得 expiry-valid `TokenSnapshot`；若 snapshot 已到期，Provider 先完成自身更新，再將 access token 交給 client 加為 `Authorization: Bearer`。
 2. 每個 client 走自己的 transport route 送出原工作。
-3. 非 401 回應由 consuming BC 的 local Infra 依自己的 adapter boundary 處理；403、repository permission 與 resource visibility 不觸發 refresh。
+3. 401 是此 lifecycle 唯一的**回應狀態**復原觸發；expiry check 是 Provider 交付 snapshot 前的內部責任，不是 response-status policy。非 401 回應由 consuming BC 的 local Infra 依自己的 adapter boundary 處理；403、repository permission 與 resource visibility 不觸發 refresh。
 4. 收到 401 時，client 回報**實際使用的 snapshot**。若 provider 已有更高 version，直接回傳目前 snapshot；若仍是相同 stale version，僅 single-flight refresh 一次。
 5. refresh 成功時，provider 接受遠端 rotated credential bundle、保存完整 bundle、更新記憶體 snapshot/version，最後讓等待者取得新版 snapshot。僅在接受遠端 rotation 前發生的暫時性 technical failure 才保留既有 credential；若遠端 rotation 已接受而本地 persistence 失敗，不宣稱舊 bundle 仍可用，credential reconciliation 留待後續獨立 topic。
 6. 原 client 以新版 snapshot 重送自己的原 request／operation 一次；每個原工作最多 retry 一次。

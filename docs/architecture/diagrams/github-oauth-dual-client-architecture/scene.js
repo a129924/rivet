@@ -78,6 +78,7 @@ const EDGES = [
   { from: 'facade', to: 'rest-client', pts: [[650,334], [480,334], [480,494]], label: { s: 'al', x: 494, y: 410, t: '注入共享提供者' } },
   { from: 'facade', to: 'graphql-client', pts: [[930,334], [995,334], [995,494]], label: { s: 'al', x: 1009, y: 410, t: '注入共享提供者' } },
   { from: 'rest-client', to: 'provider', pts: [[620,592], [620,750], [820,750], [820,774]], label: { s: 'al', x: 634, y: 742, t: '依賴快照復原' } },
+  { from: 'rest-client', to: 'http-client', pts: [[224,544], [200,544], [200,1214], [224,1214]], label: { s: 'al', x: 186, y: 900, t: '使用 bare HTTP 執行器', rot: -90, anchor: 'center' } },
   { from: 'graphql-client', to: 'provider', pts: [[995,592], [995,774]], label: { s: 'al', x: 1009, y: 690, t: '依賴快照復原' } },
   { from: 'github-integration', to: 'provider', pts: [[624,826], [664,826]], label: { s: 'al', x: 644, y: 814, t: '共享機制', anchor: 'center' } },
   { from: 'provider', to: 'snapshot', pts: [[668,836], [630,836], [630,947], [624,947]], label: { s: 'al', x: 644, y: 900, t: '回傳不可變輸入', rot: -90, anchor: 'center' } },
