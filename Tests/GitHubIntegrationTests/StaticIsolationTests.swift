@@ -352,6 +352,7 @@ struct StaticIsolationTests {
       "Contracts/GitHubTokenStore.swift",
       "Contracts/GitHubTokenProvider.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
+      "Stores/InMemoryGitHubTokenStore.swift",
     ]
 
     let actualPaths = try sourcePaths(in: sourceDirectory)
