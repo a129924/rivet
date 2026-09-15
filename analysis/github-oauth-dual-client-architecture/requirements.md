@@ -10,7 +10,7 @@
 
 - 初次 OAuth sign-in、authorization code + PKCE、callback、logout、revoke、多帳號、PAT、GitHub Enterprise 或跨裝置同步。
 - Swift runtime、OAuth flow、REST／GraphQL client、Apollo interceptor、module、package、test、API、Domain Port 或 BC failure contract。
-- 修改或讓 `RivetHTTPClient.Auth`／`AuthFlow` 成為 runtime driver。
+- 修改既有 generic `AuthRequester`／`Auth`／`AuthFlow` runtime。
 - 改寫或刪除歷史 `github-integration-auth-boundary` topic。
 
 ## In-Scope
@@ -72,7 +72,7 @@ Phase 2 僅在 independent Plan Review 明示 `approved` 後，才可寫入下�
 ## Acceptance Criteria
 
 1. 四份 artifacts 使用相同 slug，並一致標明 documentation-only scope 與 ReadOnly boundary。
-2. 四份 artifacts 一致說明 `GithubIntegration` non-BC shared module、generic `RivetHTTPClient`、以及 declarations-only `AuthFlow` boundary。
+2. 四份 artifacts 一致說明 `GithubIntegration` non-BC shared module、raw／OAuth-unaware generic `RivetHTTPClient`，以及 internal `AuthRequester` 以 injected `Requester` 與 caller `Auth` 建立並驅動 generic `send → execute → receive` flow 的 boundary；Auth decision 屬 flow，不屬 GitHub OAuth lifecycle。
 3. 四份 artifacts 一致說明 shared provider、client-owned retry、snapshot version 與 single-flight。
 4. 四份 artifacts 一致限制 credential precondition 為既有 refreshable bundle，不選擇 OAuth App 或 GitHub App。
 5. v1／v2 lifecycle artifacts 保留為 immutable rejected evidence，canonical manifest 指出已驗證交付的 v3 為 canonical lifecycle；v3 明確補上 transient technical-failure outcome；post-rotation persistence failure 不宣稱舊 bundle 可用。

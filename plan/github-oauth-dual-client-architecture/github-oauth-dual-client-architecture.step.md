@@ -52,7 +52,7 @@ initial sign-in／PKCE／callback、logout、多帳號、PAT、GitHub Enterprise
 ## Locked Contract Checklist
 
 - [x] `GithubIntegration` 是 BC 外 shared GitHub-specific integration module，非 Bounded Context。
-- [x] `RivetHTTPClient` 是 generic、GitHub-unaware bare HTTP foundation；`Auth`／`AuthFlow` 不由 HTTPClient runtime drive，亦不承擔 OAuth lifecycle。
+- [x] `RivetHTTPClient` 是 generic、raw、GitHub／OAuth-unaware bare HTTP foundation；internal `AuthRequester` 以 injected `Requester` 與 caller `Auth` 建立並驅動 generic `send → execute → receive` flow，Auth decision 屬 flow，且不承擔 GitHub OAuth lifecycle。
 - [x] layer 外 application composition root Facade 建立唯一 `OAuthTokenProvider`，並注入 REST 與 GraphQL client；不改 BC `Facade → UseCase → Port`。
 - [x] TokenStore 僅持有完整 credential bundle；Fetcher 僅用 bare HTTP；TokenSnapshot 僅提供 access token + version。
 - [x] Provider 擁有 memory snapshot、restore、expiry、refresh、rotation、version、single-flight；不持有 request／operation。

@@ -68,7 +68,7 @@
   - REST 注入 bare HTTP sender／request executor 與 TokenProvider，並重送自己的 HTTPRequest；GraphQL 以 Apollo retry 自己的 operation；兩者不互相呼叫。
   - stale version 直接取現行 snapshot；same stale version concurrent 401 single-flight refresh；每個原工作最多 retry 一次。
   - 無 credential、permanent refresh failure、second 401 為 authentication-required；僅未接受遠端 rotation 前的 transient technical failure 保留 credential。post-rotation persistence failure 不宣稱舊 bundle 可用並 defer reconciliation；403／權限／資源可見性不 refresh。
-  - `RivetHTTPClient` 維持 GitHub-unaware；`Auth`／`AuthFlow` 維持 independent generic declarations-only contract，HTTPClient 不 drive flow。
+  - `RivetHTTPClient` 維持 raw、GitHub／OAuth-unaware；internal `AuthRequester` 以 injected `Requester` 與 caller `Auth` 建立並驅動 independent generic `send → execute → receive` flow，Auth decision 屬 flow，非 GitHub OAuth lifecycle。
 - **Exit**：四份 artifacts complete，交由獨立 Plan-Reviewer；此階段不得自行判定 approved。
 
 ## Phase 1 Gate：Independent Plan Review

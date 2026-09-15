@@ -21,8 +21,8 @@ Facade（layer 外 application composition root）
 ```
 
 - `GithubIntegration` 是 BC 外、GitHub-specific 的 future shared integration module；它不成為 Bounded Context、不依賴 BC，亦不擁有 Domain Port、DTO translation、BC failure mapping 或 business meaning。
-- `RivetHTTPClient`／`URLSessionTransport` 保持 bare、generic 與 GitHub-unaware。它不認識 OAuth、Bearer lifecycle、TokenProvider、401 recovery 或 retry。
-- `RivetHTTPClient.Auth`／`AuthFlow` 是另一條 generic declarations-only state-machine contract。此 topic 不修改它，也不讓 HTTPClient 建立、驅動或解讀它以承擔 GitHub OAuth lifecycle。
+- `RivetHTTPClient`／`URLSessionTransport` 保持 bare、generic、raw 與 GitHub／OAuth-unaware。它不認識 OAuth、Bearer lifecycle、TokenProvider、401 recovery 或 retry。
+- `RivetHTTPClient` 的 internal `AuthRequester` 以 injected `Requester` 與 caller-provided `Auth` 建立並驅動 generic `send → execute → receive` flow；Auth decision 由 flow 擁有。此 topic 不修改該 runtime，且此 generic flow 不承擔 GitHub OAuth lifecycle。
 - 此 Facade 是 layer 外的 application composition root：建立單一共享 `OAuthTokenProvider` instance，並注入兩個 client；它不預先替每一個工作驗證 token，亦不改變各 BC 的 `Facade → UseCase → Port` 層級方向。
 - 本 lifecycle 的 credential precondition 僅是已存在、可 refresh 的 OAuth credential bundle；本 topic 不選擇 OAuth App 或 GitHub App。
 
@@ -99,7 +99,7 @@ delivery 必須保留 v1／v2 lifecycle artifacts 作 immutable rejected evidenc
 ## TestCase
 
 - **TC-01**：責任圖不將 `GithubIntegration` 表示成 BC、Domain adapter 或 Domain Port owner。
-- **TC-02**：責任圖不使 `RivetHTTPClient` 依賴 OAuth／TokenProvider，亦不表達 AuthFlow runtime driver。
+- **TC-02**：責任圖不使 raw `RivetHTTPClient` 依賴 OAuth／TokenProvider；若提及 generic Auth flow，必須正確表達 internal `AuthRequester` 由 injected `Requester` 與 caller `Auth` 驅動 `send → execute → receive`，且不將其誤作 GitHub OAuth lifecycle。
 - **TC-03**：lifecycle 圖呈現 stale version fast-path、same-version single-flight、rotation 後新版 snapshot 與原工作 one retry。
 - **TC-04**：lifecycle 圖呈現 permanent authentication-required、transient technical failure（pre-rotation 保留 credential）、post-rotation persistence failure deferred reconciliation，及 403 no-refresh boundary。
 - **TC-05**：v1／v2 lifecycle artifacts 保留為 immutable rejected evidence，canonical manifest 將已驗證交付的 v3 指為 canonical lifecycle；canvas colour fix 不改變既定 diagram semantics。

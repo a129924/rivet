@@ -57,8 +57,8 @@ const BOXES = [
     name: 'URLSessionTransport', about: '供通用 HTTP 基礎使用的純 URLSession 傳輸。',
     texts: [['bl', 654, 1198, 'URLSessionTransport'], ['bs', 654, 1220, '純 URLSession 傳輸'], ['bn', 654, 1242, '沒有 GitHub 認證策略']] },
   { id: 'auth-flow', plane: 'foundation', band: 'band-foundation', x: 960, y: 1170, w: 250, h: 88, r: 10,
-    name: 'Auth / AuthFlow', about: '獨立的僅宣告通用狀態機契約；HTTPClient 不驅動流程。',
-    texts: [['bl', 984, 1198, 'Auth / AuthFlow'], ['bs', 984, 1220, '通用僅宣告契約'], ['bn', 984, 1242, 'HTTPClient 不驅動流程']] },
+    name: 'AuthRequester', about: '既有 internal runtime 注入 Requester 與 caller-provided Auth，並驅動 generic AuthFlow；它不承擔 GitHub OAuth lifecycle。',
+    texts: [['bl', 984, 1198, 'AuthRequester'], ['bs', 984, 1220, '注入 Requester + caller Auth'], ['bn', 984, 1242, '驅動 generic flow；非 GitHub OAuth']] },
 
   { id: 'keychain', plane: 'outside', band: 'band-outside', x: 230, y: 1450, w: 270, h: 82, r: 10,
     name: 'Keychain', about: '權杖儲存轉接器背後的外部安全儲存。',
@@ -86,7 +86,7 @@ const EDGES = [
   { from: 'token-store', to: 'keychain', pts: [[790,988], [790,1350], [365,1350], [365,1444]], label: { s: 'al', x: 804, y: 1328, t: '安全保存' } },
   { from: 'fetcher', to: 'http-client', pts: [[948,952], [920,952], [920,1080], [395,1080], [395,1164]], label: { s: 'al', x: 934, y: 1048, t: '使用純 HTTP', rot: -90, anchor: 'center' } },
   { from: 'http-client', to: 'transport', pts: [[564,1214], [624,1214]], label: { s: 'al', x: 594, y: 1202, t: '執行', anchor: 'center' } },
-  { from: 'auth-flow', to: 'http-client', pts: [[956,1214], [900,1214], [900,1080], [560,1080], [560,1200]], label: { s: 'al', x: 886, y: 1100, t: '獨立契約' } },
+  { from: 'auth-flow', to: 'http-client', pts: [[956,1214], [900,1214], [900,1080], [560,1080], [560,1200]], label: { s: 'al', x: 886, y: 1100, t: '注入 Requester' } },
   { from: 'fetcher', to: 'oauth-endpoint', pts: [[1060,988], [1060,1360], [705,1360], [705,1444]], label: { s: 'al', x: 1074, y: 1270, t: '權杖端點', rot: -90, anchor: 'center' } },
   { from: 'rest-client', to: 'github-rest-api', pts: [[420,592], [420,1340], [1020,1340], [1020,1444]], label: { s: 'al', x: 434, y: 1040, t: 'REST 路徑', rot: -90, anchor: 'center' } },
   { from: 'graphql-client', to: 'github-graphql-api', pts: [[1188,544], [1350,544], [1350,1444]], label: { s: 'al', x: 1364, y: 1000, t: 'Apollo GraphQL 路徑', rot: -90, anchor: 'center' } }
@@ -101,7 +101,7 @@ const TEXTS = [
   { s: 'legend', x: 1082, y: 110, t: '實線 — 應用表面、基礎或外部系統' },
   { s: 'legend', x: 1143, y: 134, t: '顏色 — 所屬責任平面' },
   { s: 'bn', x: 160, y: 1644, t: '不變量：OAuthTokenProvider 不持有請求／操作；REST 與 Apollo GraphQL 用戶端不互相呼叫。' },
-  { s: 'bn', x: 160, y: 1664, t: '不變量：RivetHTTPClient 與 AuthFlow 都保持通用、不認識 GitHub；權杖生命週期屬 GithubIntegration 機制。' },
+  { s: 'bn', x: 160, y: 1664, t: '不變量：bare HTTPClient 不驅動 flow；internal AuthRequester 僅驅動 generic flow，不承擔 GitHub OAuth 生命週期。' },
   { s: 'bn', x: 160, y: 1684, t: '不變量：403、儲存庫權限與資源可見性不是權杖更新訊號。' }
 ];
 
