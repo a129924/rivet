@@ -38,6 +38,18 @@ struct PublicAPITests {
   }
 
   @Test
+  func inMemoryStoreCanBeUsedThroughThePublicStoreExistential() throws {
+    let store: any GitHubTokenStore = InMemoryGitHubTokenStore()
+    let expected = GitHubAccessToken(rawValue: "consumer-token")
+
+    try store.save(expected)
+    #expect(try store.load()?.rawValue == expected.rawValue)
+
+    try store.delete()
+    #expect(try store.load() == nil)
+  }
+
+  @Test
   func providerMapsAnExternalStoreMissingTokenToThePublicMissingCredentialCase() {
     let store: any GitHubTokenStore = ExternalTokenStore(loadResult: .missing)
     let provider: any GitHubTokenProvider = TokenStoreGitHubTokenProvider(store: store)
