@@ -5,21 +5,12 @@
     "title": "RivetHTTPClient AuthFlow 合約生命週期",
     "quality_profile": "showcase",
     "viewBox": [1040, 640],
-    "legend": {
-      "mode": "auto",
-      "entries": {
-        "start": { "label": "起始" },
-        "active": { "label": "進行中" },
-        "decision": { "label": "決策" },
-        "neutral": { "label": "中性終態" },
-        "external": { "label": "外部" }
-      }
-    }
+    "legend": { "mode": "hidden" }
   },
   "lanes": [
     { "id": "main", "label": "建立與初始轉換" },
-    { "id": "response", "label": "回應、後續轉換與重送" },
-    { "id": "terminal", "label": "ClientAction 結果" }
+    { "id": "response", "label": "送出、raw 回應與後續轉換" },
+    { "id": "terminal", "label": "終態結果" }
   ],
   "states": [
     {
@@ -37,7 +28,7 @@
       "id": "auth-flow",
       "type": "active",
       "label": "AuthFlow",
-      "sublabel": "HTTPClient 不驅動流程",
+      "sublabel": "flow 保有認證決策",
       "lane": "main",
       "col": 1,
       "width": 110,
@@ -68,20 +59,20 @@
     },
     {
       "id": "client-send",
-      "type": "external",
-      "label": "用戶端送出請求",
-      "sublabel": "依 .send(HTTPRequest)",
+      "type": "active",
+      "label": "AuthRequester",
+      "sublabel": "經 Requester 發送",
       "lane": "main",
       "col": 4,
       "width": 118,
       "step": "05",
-      "tag": "外部執行"
+      "tag": "internal"
     },
     {
       "id": "response",
       "type": "active",
-      "label": "回應",
-      "sublabel": "用戶端收到 HTTPResponse",
+      "label": "raw HTTPResponse",
+      "sublabel": "所有 HTTP status 原樣保留",
       "lane": "response",
       "col": 2,
       "width": 125,
@@ -103,7 +94,7 @@
       "id": "resend",
       "type": "active",
       "label": ".send(HTTPRequest)",
-      "sublabel": "receive() 的 .send（重送）",
+      "sublabel": "receive() 的下一個 .send",
       "lane": "response",
       "col": 1,
       "width": 130,
@@ -112,9 +103,9 @@
     },
     {
       "id": "start-finish",
-      "type": "neutral",
+      "type": "failure",
       "label": ".finish",
-      "sublabel": "start() 的 .finish",
+      "sublabel": "無 response → error",
       "lane": "terminal",
       "col": 0,
       "width": 110,
@@ -122,13 +113,24 @@
     },
     {
       "id": "receive-finish",
-      "type": "neutral",
+      "type": "success",
       "label": ".finish",
-      "sublabel": "receive() 的 .finish",
+      "sublabel": "回傳最後 response",
       "lane": "terminal",
       "col": 2,
       "width": 110,
       "tag": "receive() 輸出"
+    },
+    {
+      "id": "requester-failure",
+      "type": "failure",
+      "label": "Requester error",
+      "sublabel": "直接傳遞；不呼叫 receive()",
+      "lane": "terminal",
+      "col": 2,
+      "width": 130,
+      "yOffset": -140,
+      "tag": "終態"
     }
   ],
   "transitions": [
@@ -159,6 +161,14 @@
       "to": "response"
     },
     {
+      "id": "requester-fails",
+      "from": "client-send",
+      "to": "requester-failure",
+      "fromSide": "right",
+      "toSide": "right",
+      "via": [[815, 157], [815, 339]]
+    },
+    {
       "id": "receives-response",
       "from": "response",
       "to": "receive"
@@ -180,18 +190,6 @@
       "route": "right-channel",
       "fromSide": "right",
       "toSide": "right"
-    }
-  ],
-  "cards": [
-    {
-      "dot": "slate",
-      "title": "合約邊界",
-      "items": [
-        "RivetHTTPClient 僅宣告通用 AuthFlow 合約；HTTPClient 不驅動 AuthFlow",
-        "用戶端僅依 ClientAction 執行請求與交付回應；不解讀或驅動 AuthFlow",
-        ".send 攜帶既有不可變 HTTPRequest；.finish 是不攜帶資料的終止動作",
-        "不包含執行期重送策略／實作、憑證、剖析器或 GitHub 特定行為"
-      ]
     }
   ]
 }
