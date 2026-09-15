@@ -143,6 +143,31 @@ struct CapturingTransport: Transport {
   }
 }
 
+final class RecordingTransportState: @unchecked Sendable {
+  private let lock = NSLock()
+  private var requests: [URLRequest] = []
+
+  func record(_ request: URLRequest) {
+    lock.withLock {
+      requests.append(request)
+    }
+  }
+
+  var executedRequests: [URLRequest] {
+    lock.withLock { requests }
+  }
+}
+
+struct RecordingTransport: Transport {
+  let state: RecordingTransportState
+  let response: HTTPResponse
+
+  func execute(_ request: URLRequest) async throws(HTTPClientError) -> HTTPResponse {
+    state.record(request)
+    return response
+  }
+}
+
 struct FailingTransport: Transport {
   func execute(_ request: URLRequest) async throws(HTTPClientError) -> HTTPResponse {
     throw .underlyingFailure(TransportFailure.unavailable)
