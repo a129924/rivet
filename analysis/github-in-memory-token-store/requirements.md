@@ -2,14 +2,14 @@
 
 ## Goal
 
-讓 `GitHubIntegration` 的呼叫端可在單一 process 與單一 store instance 的生命週期內，透過既有 `GitHubTokenStore` contract 保存、讀取、覆寫與刪除一個 GitHub access token。
+讓 `GitHubIntegration` 的呼叫端可在單一 process 與單一 store instance 的生命週期內，透過既有 `GitHubTokenStore` contract 保存、讀取、覆寫與刪除一個 GitHub access token，並讓指定長期文件如實同步其已交付的 public、process-local、non-persistent 事實。
 
 ## In-Scope
 
 - 一個 process-local、non-persistent 的 in-memory token store。
 - 空 store、save/load、overwrite、delete 與空 store delete 的可觀察狀態轉換。
 - 外部 consumer 可只依賴 `GitHubIntegration` product 建立並使用該 store。
-- 對 `docs/architecture/README.md` 的最小 factual documentation writeback。
+- 對 `docs/architecture/README.md`、`docs/architecture/bounded-contexts/README.md`、`docs/architecture/bounded-contexts/pr-reader.md` 與 `docs/github-api/README.md` 的受限 factual documentation writeback。
 
 ## Non-Goal
 
@@ -22,6 +22,7 @@
 - token validation、正規化、格式化、記錄、加密、帳號選擇或 credential lifecycle 協調。
 - `GitHubTokenStore`、credential failure contract、`GitHubTokenProvider` 或 `TokenStoreGitHubTokenProvider` 的變更。
 - thread-safety、`Sendable`、actor isolation、async、cancellation 或其他 concurrency guarantee。
+- 對上述四份文件以外的 docs、Bounded Context 決策或 deferred capability 的修改。
 
 ## Success Criteria
 

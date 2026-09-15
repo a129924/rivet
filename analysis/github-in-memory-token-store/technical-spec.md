@@ -18,4 +18,4 @@
 
 ## Documentation Boundary
 
-最小 factual writeback 僅限 `docs/architecture/README.md` 的現有「不實作 persistence」描述：明確記錄 process-local、non-persistent in-memory store 已實作，並保留 Keychain、authorizer、raw transport、OAuth lifecycle 與其他長生命週期 credential persistence 為 deferred。其他 docs 與 Bounded Context 文件不在本 topic 的 write scope。
+factual writeback 僅限 `docs/architecture/README.md`、`docs/architecture/bounded-contexts/README.md`、`docs/architecture/bounded-contexts/pr-reader.md` 與 `docs/github-api/README.md`：一致記錄 public、process-local、non-persistent `InMemoryGitHubTokenStore` 已交付，並保留 Keychain、cross-process persistence、authorizer、raw transport、OAuth lifecycle 與其他 deferred capability 不變。其他 docs 與 Bounded Context 文件不在本 topic 的 write scope。
