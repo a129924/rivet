@@ -9,7 +9,7 @@
 
 ## Current Phase
 
-Delivery ready：RV-05 completed／`approved`，required/advisory findings均為none；commit gate open。DL-04 pending，仍待staged review、Human commit-message確認、commit與bounded non-force push；HC-03 pending。
+Topic completed：DL-04已完成bounded delivery，Human於2026-09-15在HC-03明示決策原值`採用`。本UX topic結案；只允許另開正式SwiftUI topic，不自動建立或實作。
 
 ## Planning Input
 
@@ -518,27 +518,32 @@ Delivery ready：RV-05 completed／`approved`，required/advisory findings均為
 
 ### DL-04 — Final follow-up delivery
 
-- Status：pending；ready-for-staged-review
+- Status：completed
 - Owner role：Implementer
 - Entry criteria：RV-05明示`approved`、staged review clean、Human依repository commit convention確認commit message。
 - Completion criteria：
   - 單一commit只包含四份topic artifacts與既有HTML，共五個tracked paths。
   - 無新增/刪除/其他path；non-force push目前branch並確認upstream。
-- Verification evidence：pending。
+- Verification evidence：
+  - Staged review與Human commit-message確認已完成；Implementer建立commit`b87959c9f79f825f5443b80734cf4ddb76da0563`，message為`feat(pr-reader): 支援可逆閱讀狀態與完成進度`。
+  - 已執行bounded non-force fast-forward push：`8c2facf → b87959c`。
+  - Delivery完成時local HEAD、upstream與remote ref均為`b87959c9f79f825f5443b80734cf4ddb76da0563`，worktree當時clean。
 - Routing：completed後進HC-03。
 - Verdict：不適用
 
 ### HC-03 — Human UX 方向決策
 
-- Status：pending
+- Status：completed
 - Owner：Human
 - Entry criteria：RV-05明示`approved`且DL-04 completed；其他狀態不得進入。
 - Decision options：
   - 採用：只允許另開正式SwiftUI topic，不自動實作。
   - 調整：回到本topic對應planning/implementation phase。
   - 放棄：本topic結案。
-- Verification evidence：pending Human明示決策。
-- Stop condition：到此停止自動前進，不得推論或代替Human選擇。
+- Verification evidence：Human於2026-09-15明示決策原值`採用`。
+- Outcome：本UX方向獲採用，本topic結案；只允許另開正式SwiftUI topic，不自動建立或實作。
+- Decision：`採用`
+- Stop condition：已到Human boundary並取得明示決策；不得以本決策自動建立或實作SwiftUI topic。
 
 ## Historical TestCase Ledger — pre-HC-01 contract
 
@@ -586,7 +591,7 @@ Delivery ready：RV-05 completed／`approved`，required/advisory findings均為
 
 | ID | Adjusted scope | Status | Evidence owner |
 | --- | --- | --- | --- |
-| TC-01 | Baseline`8c2facf`；PC-05四artifacts、IM-05單一HTML、DL-04五tracked paths allowlists | PASS（TE-05）：目前status恰為四份artifacts＋單一HTML共五個tracked `M`；DL-04依其entry gate另行檢查 | Plan-Creator / Implementer / Tester / Reviewer |
+| TC-01 | Baseline`8c2facf`；PC-05四artifacts、IM-05單一HTML、DL-04五tracked paths allowlists | PASS：TE-05驗證五path scope；DL-04以bounded commit`b87959c`完成non-force fast-forward push，local/upstream/remote一致 | Plan-Creator / Implementer / Tester / Reviewer |
 | TC-02 | Offline/self-contained、zero network/storage、review/unreview reload reset | PASS | Tester |
 | TC-03 | 1440 × 900 fixed-dark、native progress visual且無redesign | PASS | Tester / Reviewer |
 | TC-04 | Inbox exact strings、compact hierarchy與static filter不變 | PASS | Tester |
@@ -603,22 +608,22 @@ Delivery ready：RV-05 completed／`approved`，required/advisory findings均為
 
 ## Blockers
 
-None for DL-04。RV-05已`approved`；仍須staged review與Human commit-message確認，之後才可由Implementer commit並bounded non-force push。
+None。DL-04與HC-03均completed，本UX topic已結案。
 
 ## Commit Gate
 
-- Current：open。
-- Reason：RV-05已明示`approved`，required/advisory findings均為none。
-- Boundary：只有RV-05明示`approved`後才可進DL-04 staged review；Human確認commit message前不得commit，且只有Implementer可執行五path follow-up commit/non-force push。
+- Current：closed；DL-04 delivery gate已完成並消耗。
+- Reason：bounded commit`b87959c`已non-force fast-forward push，HC-03已取得Human明示決策，本topic無後續delivery。
+- Boundary：本次status-only ledger更新沒有commit/push授權；不得由此自動建立或實作SwiftUI topic。
 
 ## Human Check
 
 - Historical HC-01：completed；Human decision為「調整」。
 - Historical HC-02：completed；Human decision為「調整」。
-- Current：HC-03 pending。
-- Gate：只有RV-05`approved`且DL-04 completed才可進入。
-- Required Human response：採用／調整／放棄。
-- Boundary：不得自動建立或實作 SwiftUI topic。
+- Current：HC-03 completed。
+- Gate evidence：RV-05`approved`且DL-04 completed後，Human於2026-09-15明示決策。
+- Human decision原值：`採用`。
+- Outcome：本UX topic結案；只允許另開正式SwiftUI topic，不自動建立或實作。
 
 ## Verdict History
 
@@ -647,9 +652,9 @@ None for DL-04。RV-05已`approved`；仍須staged review與Human commit-message
 - IM-05：completed／ready-for-test；HTML-only implementation與static checks完成，未commit/push。
 - TE-05：`approved`；TC-01～TC-14全數PASS，代表性interaction、a11y、state isolation與runtime/scope evidence成立。
 - RV-05：`approved`；required/advisory findings均為none，source與TE-05 evidence成立。
-- DL-04：pending。
-- HC-03：pending。
+- DL-04：completed；commit`b87959c9f79f825f5443b80734cf4ddb76da0563`（`feat(pr-reader): 支援可逆閱讀狀態與完成進度`）已由`8c2facf` bounded non-force fast-forward push至`b87959c`，local/upstream/remote一致且worktree當時clean。
+- HC-03：completed；Human於2026-09-15明示決策原值`採用`，本UX topic結案；只允許另開正式SwiftUI topic，不自動建立或實作。
 
 ## Last Updated
 
-2026-09-14
+2026-09-15
