@@ -6,12 +6,12 @@
   "input": "docs/architecture/diagrams/github-oauth-dual-client-architecture/token-lifecycle-v2.json",
   "output": "docs/architecture/diagrams/github-oauth-dual-client-architecture/token-lifecycle-v2.html",
   "specification": {
-    "sha256": "3ba593af44c16b2a3737b2301df7ab5ef19fb421c353203340caf7c2819b2884",
-    "bytes": 3299
+    "sha256": "231991f9315ade2a45fb8772bbc6bff8d383979f6c001a49a0583fb433cd42c0",
+    "bytes": 3698
   },
   "artifact": {
-    "sha256": "71d8e23ff5ab6bbcceec0e4744c1c54c5e93c797c7550275e0a896ff40a4129d",
-    "bytes": 704528
+    "sha256": "fc98bc5d417634a1adaac2e2f97f9794b4b968bf1d32f8dfb4b84e5be4f8a52a",
+    "bytes": 706026
   },
   "validation": {
     "checksPassed": 9,

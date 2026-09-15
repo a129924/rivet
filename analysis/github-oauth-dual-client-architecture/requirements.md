@@ -2,7 +2,7 @@
 
 ## Goal
 
-建立可審查的長期架構文件依據，鎖定 GitHub OAuth credential 已存在時的 shared token lifecycle：同一個 `OAuthTokenProvider` 供 GitHub REST 與 Apollo GraphQL client 共用，使兩者在 access token 過期或收到一次 401 時，安全取得新版 snapshot 並各自重送原工作一次。
+建立可審查的長期架構文件依據，鎖定已存在且可 refresh 的 GitHub OAuth credential bundle 的 shared token lifecycle：同一個 `OAuthTokenProvider` 供 GitHub REST 與 Apollo GraphQL client 共用，使兩者在 access token 過期或收到一次 401 時，安全取得新版 snapshot 並各自重送原工作一次。
 
 本 topic 是 **documentation-only architecture topic**。它不交付可執行 OAuth、client 或 token lifecycle。
 
@@ -16,16 +16,18 @@
 ## In-Scope
 
 - 記錄 `GithubIntegration` 為 BC 外 shared GitHub-specific integration module，不建立或重建為 Bounded Context。
-- 記錄 Facade 作 composition root：建立 bare `RivetHTTPClient`／`URLSessionTransport`、`KeychainTokenStore`、`OAuthTokenFetcher`、唯一共享的 `OAuthTokenProvider`，並注入 GitHub REST client 與 GraphQL client。
+- 記錄 layer 外的 application composition root Facade：建立 bare `RivetHTTPClient`／`URLSessionTransport`、`KeychainTokenStore`、`OAuthTokenFetcher`、唯一共享的 `OAuthTokenProvider`，並注入 GitHub REST client 與 GraphQL client；這不改變各 BC 的 `Facade → UseCase → Port` 層級方向。
 - 記錄 TokenStore、Fetcher、Provider、TokenSnapshot、REST request 與 Apollo operation 的責任與所有權。
-- 記錄 snapshot version、restore、expiry、rotation、single-flight、一次 401 retry 與 permanent／transient failure boundary。
+- 記錄 REST client 取得 bare HTTP sender／request executor 與 TokenProvider；它保有並重送自己的 request。
+- 記錄 snapshot version、restore、expiry、rotation、single-flight、一次 401 retry 與 permanent／transient failure boundary；transient technical failure 的「保留 credential」僅適用於尚未接受遠端 rotation 的失敗。遠端 rotation 已接受後的本地 persistence failure 不宣稱舊 bundle 仍可用，reconciliation 留待後續 topic。
 - 記錄 REST 與 GraphQL 不互相呼叫；GraphQL 不經 REST route；Provider 不持有、不接收或重送 request／operation。
+- 保留 v1／v2 lifecycle artifacts 作 immutable rejected evidence，並新增 canonical manifest 指出已驗證交付的 v3 為本 topic 的 canonical lifecycle；v3 補上 transient technical-failure terminal outcome。責任／依賴 canvas 僅修正 colour，不改變責任、依賴或 runtime-sequence boundary。
 - 建立本 topic 的四份 planning artifacts；經獨立 Plan Review 核准後，才可交付 long-lived docs 與圖表。
 
 ## Out-Of-Scope
 
 - GitHub endpoint／DTO、GraphQL schema、PR Inbox／PR Reader adapter、Domain failure mapping、rate limit、pagination 或一般 retry policy。
-- Keychain service/account identity、entitlement 與首次 credential 寫入流程。
+- Keychain service/account identity、entitlement 與首次 credential 寫入流程；OAuth App 與 GitHub App 的選擇。
 - 403 以外的 status policy；403、repository permission 與 resource visibility 均不視為 token 失效。
 - 任何 runtime API signature、型別實作、failure representation 或 package/source-path 決定。
 
@@ -72,8 +74,10 @@ Phase 2 僅在 independent Plan Review 明示 `approved` 後，才可寫入下�
 1. 四份 artifacts 使用相同 slug，並一致標明 documentation-only scope 與 ReadOnly boundary。
 2. 四份 artifacts 一致說明 `GithubIntegration` non-BC shared module、generic `RivetHTTPClient`、以及 declarations-only `AuthFlow` boundary。
 3. 四份 artifacts 一致說明 shared provider、client-owned retry、snapshot version 與 single-flight。
-4. Phase 1 沒有 long-lived docs、圖表、Swift、package、test、API 或 BC contract 寫入。
-5. Phase 2 的任何寫入以前，必須有 independent Plan Review 的明示 `approved` verdict。
+4. 四份 artifacts 一致限制 credential precondition 為既有 refreshable bundle，不選擇 OAuth App 或 GitHub App。
+5. v1／v2 lifecycle artifacts 保留為 immutable rejected evidence，canonical manifest 指出已驗證交付的 v3 為 canonical lifecycle；v3 明確補上 transient technical-failure outcome；post-rotation persistence failure 不宣稱舊 bundle 可用。
+6. Phase 1 沒有 long-lived docs、圖表、Swift、package、test、API 或 BC contract 寫入。
+7. Phase 2 的任何寫入以前，必須有 independent Plan Review 的明示 `approved` verdict。
 
 ## TestCase
 
@@ -81,5 +85,7 @@ Phase 2 僅在 independent Plan Review 明示 `approved` 後，才可寫入下�
 - **TC-02**：文件明示 runtime、package、tests、BC contracts 與長期 architecture docs 在 Phase 1 為 ReadOnly。
 - **TC-03**：文件明示 Facade 注入同一 provider；REST 與 GraphQL 不互相呼叫，Provider 不擁有 request／operation。
 - **TC-04**：文件明示同版本 concurrent 401 single-flight、每個原工作最多 retry 一次，403 不 refresh。
-- **TC-05**：文件區分 authentication-required（無 credential、permanent refresh failure、第二次 401）與 transient technical failure（保留 credential）。
-- **TC-06**：Plan Review 未核准時，不建立 long-lived docs 或任何正式 canvas／lifecycle artifact。
+- **TC-05**：文件區分 authentication-required（無 credential、permanent refresh failure、第二次 401）與 transient technical failure；僅 pre-rotation technical failure 保留 credential，post-rotation persistence failure defer reconciliation 且不宣稱舊 bundle 可用。
+- **TC-06**：文件明示 application composition root 不改變 BC 的 `Facade → UseCase → Port`，REST client 依賴 bare HTTP sender／request executor 與 TokenProvider。
+- **TC-07**：v1／v2 lifecycle artifacts 保留為 immutable rejected evidence；canonical manifest 指出已驗證交付的 v3 為 canonical lifecycle，且 v3 包含 transient technical-failure terminal outcome；canvas colour 修正不改變語意。
+- **TC-08**：Plan Review 未核准時，不建立 long-lived docs 或任何正式 canvas／lifecycle artifact。

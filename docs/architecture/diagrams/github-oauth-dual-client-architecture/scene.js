@@ -24,12 +24,12 @@ const BANDS = [
 
 const BOXES = [
   { id: 'facade', plane: 'composition', band: 'band-composition', x: 210, y: 260, w: 1160, h: 70, r: 10,
-    name: 'Facade — 組裝根節點', about: '建立唯一的 OAuthTokenProvider，並將它注入兩個 GitHub 用戶端。',
-    texts: [['bl', 454, 288, 'Facade — 組裝根節點'], ['bs', 454, 310, '建立純 HTTP、權杖儲存元件、取得元件與唯一共享提供者；注入兩個用戶端']] },
+    name: 'Facade — 層級外的組裝根節點', about: '作為 layer 外的 application composition root，建立唯一的 OAuthTokenProvider 並注入兩個 GitHub 用戶端。',
+    texts: [['bl', 454, 288, 'Facade — 層級外的組裝根節點'], ['bs', 454, 310, '建立純 HTTP、權杖儲存元件、取得元件與唯一共享提供者；注入兩個用戶端']] },
 
   { id: 'rest-client', plane: 'clients', band: 'band-clients', x: 230, y: 500, w: 500, h: 88, r: 10, dash: true,
-    name: 'GitHub REST 用戶端', about: '保有自己的原 HTTPRequest，取得新版快照後只重送該請求。',
-    texts: [['bl', 254, 528, 'GitHub REST 用戶端'], ['bs', 254, 550, '取得快照 · 加入 Bearer · 保有 HTTPRequest'], ['bn', 254, 572, '401 後只重送自己的原請求一次']] },
+    name: 'GitHub REST 用戶端', about: '由 Facade 注入 bare HTTP sender／request executor 與 TokenProvider，保有自己的原 HTTPRequest 並只重送該請求。',
+    texts: [['bl', 254, 528, 'GitHub REST 用戶端'], ['bs', 254, 550, 'bare HTTP 執行器 + TokenProvider'], ['bn', 254, 572, '保有 HTTPRequest；401 後只重送一次']] },
   { id: 'graphql-client', plane: 'clients', band: 'band-clients', x: 800, y: 500, w: 390, h: 88, r: 10, dash: true,
     name: 'GitHub GraphQL 用戶端', about: '以 Apollo 只重送自己的操作；不呼叫 REST 用戶端。',
     texts: [['bl', 824, 528, 'GitHub GraphQL 用戶端'], ['bs', 824, 550, '權杖提供者 + Apollo'], ['bn', 824, 572, '不經 REST 路徑；保有原操作']] },
@@ -96,7 +96,7 @@ const TEXTS = [
   { s: 'title', x: 160, y: 86, t: 'GitHub OAuth — 雙用戶端架構' },
   { s: 'sub', x: 160, y: 118, t: '同一個提供者擁有權杖生命週期；兩個用戶端各自保有並重送自己的原工作' },
   { s: 'tag', x: 160, y: 146, runs: [
-    { t: '組裝', fill: C.slate }, { t: ' → ', fill: '#4A5462' }, { t: '共享權杖生命週期', fill: C.violet }, { t: ' → ', fill: '#4A5462' }, { t: '原工作所有權留在用戶端', fill: C.sky } ] },
+    { t: '組裝', fill: C.slate }, { t: ' → ', fill: '#4A5462' }, { t: '共享權杖生命週期', fill: planeColor('integration') }, { t: ' → ', fill: '#4A5462' }, { t: '原工作所有權留在用戶端', fill: C.sky } ] },
   { s: 'legend', x: 1082, y: 86, t: '虛線 — Rivet 擁有的未來抽象' },
   { s: 'legend', x: 1082, y: 110, t: '實線 — 應用表面、基礎或外部系統' },
   { s: 'legend', x: 1143, y: 134, t: '顏色 — 所屬責任平面' },
