@@ -141,14 +141,22 @@ current／snapshot／cache state。
    的 `.swift` source，並保留既有 banned import／network token checks。
 3. TE-03 已對 8 個 tests 與 `swift package dump-package`、`swift test`、
    `scripts/check-swift-format.sh`、`scripts/check-swiftlint.sh`、
-   `scripts/check-swift-coverage.sh`、`git diff --check`。獨立 Reviewer 完成後回到
-   Human Check；不提交、push、改 PR 狀態、merge 或 release。
+   `scripts/check-swift-coverage.sh`、`git diff --check`。RV-04 未收到 Reviewer 明示
+   verdict，現保留為 historical／no-verdict 紀錄；不得將後續處置推導為 Reviewer
+   approval。
 
 ## Workflow Gate
 
 本計畫不是 approval。baseline 的歷史 PR-01 至 RV-01 不追溯補填 verdict。selected PR
-comment amendment 已完成 PR-04、IM-03 與 TE-03；RV-04 是唯一 current pending gate。RV-04 的
-`needs-rework` 只回交 Plan-Creator，`blocked` 或 `human-check` 停止自動前進。
-最終 Reviewer 明示結果後交還 human review，不可自行 commit、push、改 PR 狀態、merge、
-release 或繞過 human boundary。未來 adapter topic 才可採用 GitHub API catalog 的 query
-並在 PR Inbox Port 前映射外部 contract。
+comment amendment 已完成 PR-04、IM-03 與 TE-03；RV-04 從未收到 Reviewer 明示 verdict，
+因此只保留為 historical／no-verdict 紀錄，不回填 `approved` 或其他 verdict。
+
+2026-09-11 Human 明示 PR #12 的合併是 HC-03 的最終處置。merge evidence 為 commit
+`52937bfb1bb275771705a1a4f7e9511abfe67238`（`Merge pull request #12`），已包含於
+`origin/dev` 與目前 feature HEAD lineage。HC-03 已完成，topic 已結案且不再有 pending
+gate；此 human disposition 不構成或取代 RV-04 Reviewer approval。未來 adapter topic 才可
+採用 GitHub API catalog 的 query 並在 PR Inbox Port 前映射外部 contract。
+
+## Last Updated
+
+2026-09-11

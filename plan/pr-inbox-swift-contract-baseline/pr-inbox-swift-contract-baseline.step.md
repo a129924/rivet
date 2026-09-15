@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-程式碼審查（Selected PR Comment Amendment；RV-04 pending）
+已結案（HC-03 completed；RV-04 historical／no-verdict）
 
 ## Scope Register
 
@@ -66,20 +66,21 @@
 | PR-04 | completed | Plan-Reviewer | 獨立審查 selected PR comment amendment，確認 initializer 是唯一 public API 增加、三個 locked implementation paths、ordinary import、recursive target-only scan、既有 checks 與 workflow。 | Plan-Reviewer 提供明示 verdict。 | 已收到獨立 Plan-Reviewer 明示 `approved`。 |
 | IM-03 | completed | Implementer | 在 PR-04 明示 `approved` 後，於三個 locked implementation paths 完成 selected review fixes。 | 新 initializer 與兩個 test changes 符合 locked contract，沒有其他 path 或 behavior 變更。 | 已完成；實際 scope 僅 `Sources/BoundedContexts/PRInbox/ReviewRequestCandidate.swift`、`Tests/RivetPRInboxTests/ContractTests.swift`、`Tests/RivetPRInboxTests/StaticIsolationTests.swift`。 |
 | TE-03 | completed | Tester | 獨立執行 TC-01 至 TC-12 與所有六個指定 validation commands。 | 回報每一 testcase／command 的明示結果或 blocker。 | 已收到 Tester 對六個指定 commands 與 8 個 tests 明示 `approved`。 |
-| RV-04 | pending | Reviewer | 獨立審查 IM-03 scope 與 TE-03 evidence。 | Reviewer 提供明示 verdict。 | 待 Tester handoff。 |
-| HC-03 | pending | Human | 審閱 RV-04 結果與既有 ready PR #12 的最小 amendment diff。 | Human 明示後續決策。 | RV-04 verdict 後停止自動前進；不可自行 commit、push、改 PR 狀態、merge、release 或處理 review comments。 |
+| RV-04 | historical/no-verdict | Reviewer | 曾規劃獨立審查 IM-03 scope 與 TE-03 evidence。 | 不適用；topic 已依 Human 的 HC-03 最終處置結案。 | 未收到 Reviewer 明示 verdict；不得將 PR #12 merge 或 HC-03 human decision 解讀為 approval 或其他 Reviewer verdict。 |
+| HC-03 | completed | Human | 決定既有 PR #12 與本 topic 的最終處置。 | Human 明示最終處置。 | 2026-09-11 Human 明示 PR #12 的合併為 HC-03 最終處置；merge commit `52937bfb1bb275771705a1a4f7e9511abfe67238` 已包含於 `origin/dev` 與目前 feature HEAD lineage。topic 已結案。 |
 
 ## Blockers
 
 - baseline 已交付於 feature branch `feat/pr-inbox-swift-contract-baseline` 的 commit `2db4d13` 與既有 draft PR #12；歷史 PC-01 至 RV-01 status 保留原樣，不得回填為 approval。
 - RV-02 已明示 `needs-rework`。PC-03 已完成其 artifact-only 回修，且 PR-03 已明示 `approved`；RV-03 未記錄 verdict、delivery 或 review-thread resolution 結果，且已被本次 human-authorized PR comment amendment 取代為 historical／superseded。
-- selected review threads 1–4 的 Comment-Reviewer 已明示 `needs-rework`。PC-04、PR-04、IM-03 與 TE-03 已完成；RV-04 是唯一 current pending gate，尚無其他已知 blocker。
+- selected review threads 1–4 的 Comment-Reviewer 已明示 `needs-rework`。PC-04、PR-04、IM-03 與 TE-03 已完成；RV-04 未收到明示 verdict，現保留為 historical／no-verdict。HC-03 已依 2026-09-11 Human 最終處置完成，topic 已結案，沒有 current blocker 或 pending gate。
 
 ## Human Check
 
 - PR-04 的 `approved` 僅代表 selected comment amendment 可前進至 IM-03，不代表 Tester、Reviewer 或 delivery approval。
-- RV-04 明示結果後停止自動前進，交由 human 審閱既有 ready PR #12；不可自行 commit、push、改 PR 狀態、merge、release 或處理 review comments。
+- RV-04 未收到 Reviewer 明示 verdict；不得由 merge、human decision、ledger status 或其他 evidence 推導 approval。
+- 2026-09-11 Human 已明示 PR #12 merge 為 HC-03 最終處置。HC-03 completed，topic 已結案，沒有待處理的 Human Check 或自動下一步。
 
 ## Last Updated
 
-2026-09-04
+2026-09-11
