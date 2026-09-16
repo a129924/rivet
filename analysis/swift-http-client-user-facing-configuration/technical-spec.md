@@ -36,7 +36,7 @@ public init(configuration: Configuration, transport: any Transport)
 ## Configuration、Headers 與 Execution
 
 - timeout 必須 finite 且大於零；zero、負數、`NaN`、正／負 infinity 都拋 `.invalidTimeout`。
-- `baseURL` 存在時先通過既有 HTTP/HTTPS-with-host `HTTPURL` validation，再接受本 topic 的 base URL constraints。
+- `baseURL` 存在時，先正規化為其 `absoluteURL`，再通過既有 HTTP/HTTPS-with-host `HTTPURL` validation 與本 topic 的 base URL constraints，並儲存該 absolute URL。
 - configured `HTTPClient` 的 `execute(_:)`、既有 `HTTPURL` facades、Foundation `URL` facades 與 relative path facades 都先將 configuration default headers 與 request headers 做大小寫無關 merge；request value 覆寫同名 default value。
 - configured `HTTPClient` 的所有執行入口都把 configuration timeout 設為 outbound `URLRequest.timeoutInterval`。`Requester` 的既有 public standalone contract 不變；它只提供 `HTTPClient` 所需的非公開 timeout forwarding，不能取得 default headers 或 base URL policy。
 - Foundation `URL` facade 先以既有 `HTTPURL` validation 建立 request URL，且永不與 configured `baseURL` 合成。
@@ -48,7 +48,7 @@ public init(configuration: Configuration, transport: any Transport)
 
 - absolute Foundation `URL` 遵循既有 `HTTPURL` contract；base URL restrictions 不套用到 absolute request URL。
 - base URL 的 query、fragment、literal／decoded dot-segment 分別拋 `.baseURLHasQuery`、`.baseURLHasFragment`、`.baseURLHasDotSegment`；可有 path 與 trailing slash。base validation 僅基於 Foundation 可觀察的 canonical `percentEncodedPath` 和 URL components，不宣稱能回復或拒絕 Foundation `URL` 建構前已遺失的 malformed source spelling。
-- relative input 可含 path 與 raw query；scheme 或 authority 拋 `.relativePathIsNotRelative`，fragment 拋 `.relativePathHasFragment`，literal／percent-decoded dot-segment 拋 `.relativePathHasDotSegment`。結構不合格的 relative path 拋 `.malformedRelativePath`；malformed percent escape 拋 `.malformedRelativePathPercentEncoding`。raw `percentEncodedQuery` 原樣帶入合成 URL。
+- relative input 可含 path 與 raw query；scheme、authority，或以 `//` 開頭（包含 `///`）者拋 `.relativePathIsNotRelative`，fragment 拋 `.relativePathHasFragment`，literal／percent-decoded dot-segment 拋 `.relativePathHasDotSegment`。結構不合格的 relative path 拋 `.malformedRelativePath`；malformed percent escape 拋 `.malformedRelativePathPercentEncoding`。raw `percentEncodedQuery` 原樣帶入合成 URL。
 - 合成時保留 base URL subpath，只把 base 尾端與 path 開頭相鄰 slash 正規化為一個 slash。`%2F` 是 segment data，不是 path separator；dot-segment check 在各 raw segment decode 後執行。
 - 未設定 base URL 的 relative entry 拋 `.missingBaseURL`。所有 base、absolute 或 relative validation failure 都必須在 fake transport capture 前發生。
 

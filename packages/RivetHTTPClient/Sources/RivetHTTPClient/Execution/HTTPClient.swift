@@ -18,11 +18,12 @@ public struct HTTPClient: Sendable {
         throw .invalidTimeout
       }
 
-      if let baseURL {
-        try Self.validate(baseURL: baseURL)
+      let resolvedBaseURL = baseURL?.absoluteURL
+      if let resolvedBaseURL {
+        try Self.validate(baseURL: resolvedBaseURL)
       }
 
-      self.baseURL = baseURL
+      self.baseURL = resolvedBaseURL
       self.timeout = timeout
       self.defaultHeaders = defaultHeaders
     }
@@ -256,6 +257,9 @@ public struct HTTPClient: Sendable {
     }
     guard !relativePath.isEmpty else {
       throw .malformedRelativePath
+    }
+    guard !relativePath.hasPrefix("//") else {
+      throw .relativePathIsNotRelative
     }
     guard Self.hasValidPercentEncoding(relativePath) else {
       throw .malformedRelativePathPercentEncoding

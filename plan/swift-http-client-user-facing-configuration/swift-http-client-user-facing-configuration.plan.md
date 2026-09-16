@@ -38,8 +38,8 @@
 
 ### ReadOnly
 
-- `Packages/RivetHTTPClient/Sources/RivetHTTPClient/Execution/Transport.swift`、`URLSessionTransport.swift`、`AuthRequester.swift`、`HTTPClientError.swift`：既有 transport/auth/error boundary。
-- `Packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPRequest.swift`、`HTTPHeaders.swift`、`HTTPMethod.swift`、`HTTPHeaderName.swift`，以及 `Response/HTTPResponse.swift`：既有 raw request/header/response contract。
+- `packages/RivetHTTPClient/Sources/RivetHTTPClient/Execution/Transport.swift`、`URLSessionTransport.swift`、`AuthRequester.swift`、`HTTPClientError.swift`：既有 transport/auth/error boundary。
+- `packages/RivetHTTPClient/Sources/RivetHTTPClient/Request/HTTPRequest.swift`、`HTTPHeaders.swift`、`HTTPMethod.swift`、`HTTPHeaderName.swift`，以及 `Response/HTTPResponse.swift`：既有 raw request/header/response contract。
 - Auth runtime/tests、`Packages/RivetHTTPClient/Package.swift`、root manifest、`GitHubIntegration`、`docs/architecture/bounded-contexts/`、其他 topic artifacts 與未列於 Modify 的 diagram tooling。
 
 ### Written

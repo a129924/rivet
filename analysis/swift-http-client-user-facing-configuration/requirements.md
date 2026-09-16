@@ -8,11 +8,12 @@
 
 ## In-Scope
 
-- `HTTPClient.Configuration`：optional `baseURL`、default headers、timeout；預設 timeout 為 60 秒，且只接受 finite 正數。
+- `HTTPClient.Configuration`：optional `baseURL`、default headers、timeout；預設 timeout 為 60 秒，且只接受 finite 正數。relative-backed `baseURL` 必須先正規化為 `absoluteURL`，再驗證與儲存。
 - `HTTPClient()` 與 `HTTPClient(configuration:)` 採 package-owned `URLSessionTransport`；保留既有 transport injection，並提供 configuration 與 injected transport 的組合入口。
 - 既有 `HTTPURL` request／method facades 與 `execute(_:)` 繼續可用；configured client 的每個 entry 都套用 timeout 與 default headers。
 - Foundation `URL` absolute request／method facades，以及 `path: String` relative request／method facades。
 - absolute URL precedence、base URL subpath preservation、slash-boundary join、relative raw query preservation、case-insensitive default/request header merge。
+- relative path 以 `//` 開頭（包含 `///`）時，必須在 transport 前以 `.relativePathIsNotRelative` 拒絕。
 - transport 前的 URL/path/configuration validation，以及 validation failure 與既有 transport failure 的可區分性。
 - 對 HTTP client architecture overview 與既有 package structure canvas 做最小長期事實回寫；canvas 的 `BUILD.md` 僅可調整 title、kicker、subtitle，使其與 configured `HTTPClient` scene 和 rebuilt `index.html` 一致，不改變任何其他 canvas workflow。
 

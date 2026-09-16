@@ -262,6 +262,23 @@ struct HTTPClientTests {
     #expect(captured.value?.url == absoluteURL)
   }
 
+  @Test
+  func relativeBackedBaseURLIsResolvedBeforePathComposition() async throws {
+    let captured = LockedBox<URLRequest?>(nil)
+    let origin = try #require(URL(string: "https://example.com/root/"))
+    let relativeBackedBaseURL = try #require(URL(string: "api", relativeTo: origin))
+    let configuration = try HTTPClient.Configuration(baseURL: relativeBackedBaseURL)
+    let client = HTTPClient(
+      configuration: configuration,
+      transport: CapturingTransport(captured: captured, response: .fixture)
+    )
+
+    _ = try await client.get(path: "/users")
+
+    #expect(configuration.baseURL == relativeBackedBaseURL.absoluteURL)
+    #expect(captured.value?.url?.absoluteString == "https://example.com/root/api/users")
+  }
+
   @Test(arguments: pathCompositionCases)
   func relativePathCompositionPreservesBaseSubpathAndSlashBoundary(
     testCase: PathCompositionCase
@@ -331,6 +348,10 @@ struct HTTPClientTests {
     )
     try await assertPathValidation(
       path: "//other.example/users",
+      expected: .relativePathIsNotRelative
+    )
+    try await assertPathValidation(
+      path: "///users",
       expected: .relativePathIsNotRelative
     )
     try await assertPathValidation(path: "/users#section", expected: .relativePathHasFragment)
