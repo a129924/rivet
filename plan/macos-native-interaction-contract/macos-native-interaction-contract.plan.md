@@ -47,7 +47,7 @@
 - `plan/pr-reader-interactive-ux-prototype/pr-reader-interactive-ux-prototype.step.md`
 - `prototypes/pr-reader-interactive-ux-prototype/index.html`
 
-Closed-world rule：除當前phase列在`Written`的exact path外，所有既有repository paths均為ReadOnly；不得以此規則擴充任何未列名寫入。
+Closed-world rule：除當前phase列在`Written`或`Modify`的exact path外，所有repository paths均為ReadOnly；不得以此規則擴充任何未列名寫入。
 
 ## Written
 
@@ -62,20 +62,39 @@ PR-04明示`approved`後，IM-01只新增：
 
 - `docs/presentation/native-interaction-contract.md`
 
-各phase的Written allowlist互不混用；IM-01不得修改四份planning artifacts。
+以上只記錄path第一次建立時所屬的phase；後續若有已授權rework，必須改依該rework phase的`Modify` allowlist，不得把既有path再次列入`Written`。
 
 ## Modify
 
-None。若任一Written path在對應phase開始前已存在，停止並回報`blocked`，不得改以Modify處理。
+下列每列都是一個獨立phase的exact repository-relative allowlist；`None`表示該phase不得修改既有檔案：
+
+| Phase | Exact `Modify` allowlist |
+| --- | --- |
+| PC-01 initial planning authoring | `None` |
+| PC-02 focus planning rework | `analysis/macos-native-interaction-contract/requirements.md`<br>`analysis/macos-native-interaction-contract/technical-spec.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.plan.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.step.md` |
+| PC-03 stale focus ID correction | `analysis/macos-native-interaction-contract/technical-spec.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.step.md` |
+| PC-04 workflow reference correction | `analysis/macos-native-interaction-contract/requirements.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.plan.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.step.md` |
+| IM-01 initial durable authoring | `None` |
+| IM-02 durable rework | `docs/presentation/native-interaction-contract.md` |
+| Post-HC ledger synchronization | `plan/macos-native-interaction-contract/macos-native-interaction-contract.step.md` |
+| Post-HC status synchronization | `analysis/macos-native-interaction-contract/requirements.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.plan.md` |
+| Post-HC Stop Conditions correction | `plan/macos-native-interaction-contract/macos-native-interaction-contract.plan.md` |
+| PR comment planning correction C1／C6（current） | `plan/macos-native-interaction-contract/macos-native-interaction-contract.plan.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.step.md` |
+| PR comment durable correction C2／C3／C5／C7／C8（只可在PR-05 `approved`後） | `docs/presentation/native-interaction-contract.md` |
+| Plan-Reviewer／Tester／Reviewer verification | `None` |
+
+若任一`Written` path在其初次建立phase開始前已存在，該phase仍須停止並回報`blocked`，不得臨時改以`Modify`處理。C4明示不改；C9／C10只在修正push後留言說明並resolve，不增加任何repository path allowlist。
 
 ## Deleted
 
-None。
+所有phase均為`None`。
 
 ## Path Set Rules
 
-- 本計畫的`ReadOnly`、`Written`、`Modify`、`Deleted` inventory兩兩互斥；PC-01產出的四份planning artifacts在後續phase保持frozen，仍歸類為已交付的`Written`，不重複列入`ReadOnly`。`Modify`與`Deleted`皆為`None`。
-- 不允許glob、directory-only write scope、絕對路徑、未解析變數或模糊path。
+- `ReadOnly`、`Written`、`Modify`、`Deleted`四組path sets的兩兩互斥規則只在同一phase內成立；同一path可在初次建立phase屬`Written`、在明示授權的後續rework phase屬`Modify`，但不得在同一phase跨set。
+- 每個phase都只接受exact repository-relative file path；不允許glob、directory-only write scope、絕對路徑、未解析變數或模糊path。
+- 每個phase未列在該phase `Written`或`Modify` allowlist的path一律ReadOnly；`Deleted`在所有phase均為`None`。
+- Current PR comment planning correction只允許修改本plan與step ledger；通過獨立PR-05後的durable correction只允許修改`docs/presentation/native-interaction-contract.md`。
 - Tester須枚舉tracked／staged／unstaged／untracked paths並依phase套allowlist；普通空白diff不能證明untracked path不存在。
 - Scope需要任何額外path時停止，回到planning；不得由Implementer自行擴張。
 
@@ -122,7 +141,8 @@ None。
 ### TC-01 — Topic與path allowlist
 
 - 四份planning artifacts與durable output使用同一topic intent，durable output只有一份。
-- PC-01只新增四份planning artifacts；IM-01只新增durable output；Modify／Deleted皆為None。
+- PC-01只新增四份planning artifacts，IM-01只新增durable output；其後每次planning、durable與post-HC rework只修改對應phase明列的exact paths，所有phase的Deleted皆為None。
+- Current C1／C6 correction只修改plan與step；後續C2／C3／C5／C7／C8 correction只修改durable output；C4不改，C9／C10不增加repository path。
 - 不存在prototype、Swift、Logic、Domain、Integration、BC docs或其他tracked path變更。
 
 ### TC-02 — Baseline與ownership
