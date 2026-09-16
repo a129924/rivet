@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "GitHub OAuth 雙用戶端權杖生命週期",
+    "quality_profile": "showcase",
+    "viewBox": [980, 566],
+    "views": [
+      { "id": "main", "label": "主要路徑", "focus": ["request", "snapshot", "dispatch", "response", "complete"], "note": "兩個 client 以自己的原工作取得 snapshot、加上 Bearer，並走各自的 transport route。" },
+      { "id": "recovery", "label": "401 復原", "focus": ["response", "refresh", "retry"], "note": "Provider 只回傳目前有效 snapshot；REST request 與 Apollo operation 留在原 client。" },
+      { "id": "terminal", "label": "終止結果", "focus": ["refresh", "retry", "reauth", "technical-failure"], "note": "永久失敗導向重新登入；遠端輪替前的暫時失敗保留 credential。遠端 rotation 已接受後的 persistence failure 不宣稱舊 bundle 可用，credential reconciliation 留待後續 topic。" }
+    ]
+  },
+  "lanes": [
+    { "id": "main", "label": "Client 原工作" },
+    { "id": "recovery", "label": "Provider recovery 與終止 outcome" }
+  ],
+  "states": [
+    { "id": "request", "type": "start", "label": "REST / GraphQL", "sublabel": "保有原 request／operation", "lane": "main", "col": 0, "step": "01", "tag": "client" },
+    { "id": "snapshot", "type": "active", "label": "TokenSnapshot", "sublabel": "access token + version", "lane": "main", "col": 1, "step": "02", "tag": "共享輸入" },
+    { "id": "dispatch", "type": "active", "label": "加入 Bearer 後送出", "sublabel": "各自 transport route", "lane": "main", "col": 2, "step": "03", "tag": "原工作" },
+    { "id": "response", "type": "decision", "label": "收到 401？", "sublabel": "403 不觸發 refresh", "lane": "main", "col": 3, "step": "04", "tag": "判定" },
+    { "id": "complete", "type": "success", "label": "交還回應", "sublabel": "非 401 交由 local Infra", "lane": "main", "col": 4, "step": "05", "tag": "完成" },
+    { "id": "refresh", "type": "active", "label": "取得新版 snapshot", "sublabel": "stale fast-path／single-flight", "lane": "recovery", "col": 1, "yOffset": 26, "tag": "provider" },
+    { "id": "retry", "type": "active", "label": "原工作重送一次", "sublabel": "REST request／Apollo operation", "lane": "recovery", "col": 2, "yOffset": 94, "tag": "client" },
+    { "id": "reauth", "type": "failure", "label": "需要重新登入", "sublabel": "永久失敗或第二次 401", "lane": "recovery", "col": 0, "yOffset": 72, "tag": "authentication-required" },
+    { "id": "technical-failure", "type": "failure", "label": "技術失敗", "sublabel": "遠端輪替前；保留 credential", "lane": "recovery", "col": 0, "yOffset": -60, "tag": "pre-rotation" }
+  ],
+  "transitions": [
+    { "id": "uses-snapshot", "from": "request", "to": "snapshot" },
+    { "id": "adds-bearer", "from": "snapshot", "to": "dispatch" },
+    { "id": "receives-response", "from": "dispatch", "to": "response" },
+    { "id": "returns-response", "from": "response", "to": "complete" },
+    { "id": "reports-401", "from": "response", "to": "refresh", "route": "drop", "variant": "security" },
+    { "id": "returns-current", "from": "refresh", "to": "retry", "route": "right-channel", "variant": "emphasis" },
+    { "id": "retry-once", "from": "retry", "to": "response", "route": "top-channel", "variant": "emphasis" },
+    { "id": "refresh-permanent-failure", "from": "refresh", "to": "reauth", "route": "left-channel", "variant": "security" },
+    { "id": "pre-rotation-technical-failure", "from": "refresh", "to": "technical-failure", "route": "top-channel", "variant": "default" },
+    { "id": "second-401", "from": "retry", "to": "reauth", "route": "bottom-channel", "variant": "security" }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "GitHub OAuth 雙 Client Token Lifecycle",
+    "quality_profile": "showcase",
+    "viewBox": [980, 566],
+    "views": [
+      { "id": "main", "label": "主要路徑", "focus": ["request", "snapshot", "dispatch", "response", "complete"], "note": "兩個 client 都以自己的原工作走同一條 token 使用路徑。" },
+      { "id": "recovery", "label": "401 復原", "focus": ["response", "refresh", "retry"], "note": "Provider 只處理 snapshot；原 request／operation 仍由 client 擁有。" },
+      { "id": "terminal", "label": "終止結果", "focus": ["refresh", "retry", "reauth"], "note": "永久失敗或第二次 401 才導向重新登入。" }
+    ]
+  },
+  "lanes": [
+    { "id": "main", "label": "Client 原工作" },
+    { "id": "recovery", "label": "OAuthTokenProvider" },
+    { "id": "terminal", "label": "Authentication outcome" }
+  ],
+  "states": [
+    { "id": "request", "type": "start", "label": "REST / GraphQL", "sublabel": "保有原 request／operation", "lane": "main", "col": 0, "step": "01", "tag": "client" },
+    { "id": "snapshot", "type": "active", "label": "TokenSnapshot", "sublabel": "access token + version", "lane": "main", "col": 1, "step": "02", "tag": "共享輸入" },
+    { "id": "dispatch", "type": "active", "label": "加入 Bearer 後送出", "sublabel": "各自 transport route", "lane": "main", "col": 2, "step": "03", "tag": "原工作" },
+    { "id": "response", "type": "decision", "label": "收到 401？", "sublabel": "403 不觸發 refresh", "lane": "main", "col": 3, "step": "04", "tag": "判定" },
+    { "id": "complete", "type": "success", "label": "交還回應", "sublabel": "非 401 交由 local Infra", "lane": "main", "col": 4, "step": "05", "tag": "完成" },
+    { "id": "refresh", "type": "active", "label": "取得新版 snapshot", "sublabel": "stale fast-path／single-flight", "lane": "recovery", "col": 1, "yOffset": 84, "tag": "provider" },
+    { "id": "retry", "type": "active", "label": "原工作重送一次", "sublabel": "REST request／Apollo operation", "lane": "recovery", "col": 2, "yOffset": 154, "tag": "client" },
+    { "id": "reauth", "type": "failure", "label": "需要重新登入", "sublabel": "永久失敗或第二次 401", "lane": "terminal", "col": 0, "tag": "authentication-required" }
+  ],
+  "transitions": [
+    { "id": "uses-snapshot", "from": "request", "to": "snapshot" },
+    { "id": "adds-bearer", "from": "snapshot", "to": "dispatch" },
+    { "id": "receives-response", "from": "dispatch", "to": "response" },
+    { "id": "returns-response", "from": "response", "to": "complete" },
+    { "id": "reports-401", "from": "response", "to": "refresh", "variant": "security" },
+    { "id": "returns-current", "from": "refresh", "to": "retry", "route": "top-channel", "variant": "emphasis" },
+    { "id": "retry-once", "from": "retry", "to": "response", "label": "最多一次", "route": "top-channel", "variant": "emphasis" },
+    { "id": "refresh-permanent-failure", "from": "refresh", "to": "reauth", "route": "bottom-channel", "variant": "security" },
+    { "id": "second-401", "from": "retry", "to": "reauth", "route": "bottom-channel", "variant": "security" }
+  ]
+}
