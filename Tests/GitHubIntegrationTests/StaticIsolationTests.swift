@@ -353,6 +353,7 @@ struct StaticIsolationTests {
       "Contracts/GitHubOAuthCredentialBundle.swift",
       "Contracts/GitHubTokenStore.swift",
       "Contracts/GitHubTokenProvider.swift",
+      "OAuth/GitHubOAuthEndpoints.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift",
       "Stores/KeychainTokenStore.swift",
