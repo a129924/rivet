@@ -11,9 +11,9 @@ node "$CANVAS_SKILL/scripts/validate.js" scene.js
 node "$CANVAS_SKILL/scripts/build.js" \
   --scene scene.js \
   --out "$RAW_DIR/index.html" \
-  --title "RivetHTTPClient — 最小介面結構" \
-  --kicker "RIVETHTTPCLIENT — MINIMAL INTERFACE" \
-  --sub "public bare <b>HTTPClient</b>；internal <b>AuthRequester</b> 注入 <b>Requester</b> 與 <b>Auth</b>；<b>Requester</b> 注入 <b>Transport</b>" \
+  --title "RivetHTTPClient — 設定式介面結構" \
+  --kicker "RIVETHTTPCLIENT — CONFIGURED REQUEST API" \
+  --sub "<b>Configuration</b> → 受限 base URL／relative path 合成 → <b>HTTPURL</b> → <b>HTTPRequest</b> → <b>Requester</b> → <b>Transport</b>" \
   --slug http-client-package-structure
 node enhance-accessibility.js \
   --input "$RAW_DIR/index.html" \
