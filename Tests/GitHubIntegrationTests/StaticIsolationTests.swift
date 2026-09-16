@@ -349,6 +349,7 @@ struct StaticIsolationTests {
 
     let expectedPaths: Set = [
       "Contracts/CredentialTypes.swift",
+      "Contracts/GitHubAccessTokenProvider.swift",
       "Contracts/GitHubTokenStore.swift",
       "Contracts/GitHubTokenProvider.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",

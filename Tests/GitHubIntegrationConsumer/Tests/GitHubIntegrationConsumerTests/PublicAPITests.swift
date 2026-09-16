@@ -17,13 +17,25 @@ struct PublicAPITests {
     switch GitHubCredentialError.tokenStore(storeError) {
     case .tokenStore(let actualError):
       #expect(actualError.operation == .save)
-    case .missingCredential:
+    case .missingCredential, .tokenAcquisition:
       Issue.record("Expected the public token-store error case")
     }
 
     assertSendable(TokenStoreOperation.load)
     assertSendable(storeError)
     assertSendable(GitHubCredentialError.missingCredential)
+    assertSendable(GitHubCredentialError.tokenAcquisition(StoreFailure()))
+  }
+
+  @Test
+  func asyncAccessTokenProviderCanBeUsedThroughThePublicContract() async throws {
+    let expected = GitHubAccessToken(rawValue: "consumer-token")
+    let provider: any GitHubAccessTokenProvider = ExternalAccessTokenProvider(token: expected)
+
+    let actual = try await provider.token()
+
+    #expect(actual.rawValue == expected.rawValue)
+    assertSendable(provider)
   }
 
   @Test
@@ -127,5 +139,17 @@ private struct ExternalTokenStore: GitHubTokenStore {
 }
 
 private final class StoreFailure: Error, @unchecked Sendable {}
+
+private struct ExternalAccessTokenProvider: GitHubAccessTokenProvider {
+  let providedToken: GitHubAccessToken
+
+  init(token: GitHubAccessToken) {
+    providedToken = token
+  }
+
+  func token() async throws(GitHubCredentialError) -> GitHubAccessToken {
+    providedToken
+  }
+}
 
 private func assertSendable<Value: Sendable>(_ value: Value) {}

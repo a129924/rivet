@@ -13,7 +13,7 @@
 - 每個 Domain BC 的 Core、UseCase 與 Port 不依賴 GitHub 外部協定或 transport；該 BC 未來自己的 Infra 負責 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping。
 - 外部 GitHub DTO、HTTP status、OAuth／Keychain 細節與 infrastructure failure 不得洩漏到核心 BC，也不得形成 BC-to-BC compile-time dependency。
 - 每個 BC 擁有自己的 failure contract；即使 `GitHubIntegration` 未來對 raw transport 或 GitHub error 作 technical classification，也只有各 BC Infra 可將它映射為該 BC 語意，絕不形成 shared BC failure contract。
-- `GitHubIntegration` 是已實作的 non-BC shared GitHub-specific integration module；目前只提供可注入、同步、typed-throws 的 access-token store/provider contract。未來只有各 BC Infra 可依賴其 deferred GitHub REST／GraphQL raw transport、authentication mechanism、共通 request headers／API version、pagination、rate limit、retry、GitHub error technical classification 與 shared configuration；它不進入 Core、UseCase 或 Port，也不依賴任何 BC。endpoint-specific media type、DTO translation、BC failure mapping 與 business meaning 留在各 BC Infra。
+- `GitHubIntegration` 是已實作的 non-BC shared GitHub-specific integration module；目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及 public、`Sendable`、async 的 `GitHubAccessTokenProvider` token-acquisition contract。後者尚無 PAT 或 OAuth conformer，且不處理 lifecycle、request、transport、401 recovery 或 retry。未來只有各 BC Infra 可依賴其 deferred GitHub REST／GraphQL raw transport、authentication mechanism、共通 request headers／API version、pagination、rate limit、retry、GitHub error technical classification 與 shared configuration；它不進入 Core、UseCase 或 Port，也不依賴任何 BC。endpoint-specific media type、DTO translation、BC failure mapping 與 business meaning 留在各 BC Infra。
 - Presentation Session 是 UI 狀態，不是假裝成 Bounded Context。
 
 ## 工作方法
