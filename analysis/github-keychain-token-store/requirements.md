@@ -9,6 +9,7 @@
 - public `KeychainTokenStore` 的單一 GitHub access-token persistence，以及 load、save、overwrite、idempotent delete、new-instance reload 與 technical-failure semantics。
 - legacy macOS Keychain generic-password item：固定 private service/account、`kSecAttrSynchronizable = false`，不設定 Data Protection Keychain query 或 explicit accessibility attribute。
 - 一般 SwiftPM `@testable import GitHubIntegration` 的 real Keychain tests，以 UUID service namespace、direct Security fixture setup 與 exact cleanup 驗證 adapter 行為。
+- 在既有 `KeychainTokenStoreTests.swift` 補足 PR #32 thread 1 選定的 cross-process acceptance：parent 以 adapter 對 UUID service／fixed account 寫入同一個 non-secret、source-held fixed sentinel，重用 `CommandLine.arguments[0]` 的既有 SwiftPM `swiftpm-testing-helper` executable，並從既有 `--test-bundle-path` argument 取得同一已建置 bundle binary。child 以 reader mode 與相同 service/account 執行唯一 filtered test，用 fresh internal `KeychainTokenStore` 讀回並比對同一 source-held fixed sentinel，直接結束且不再 spawn；parent 只等待／檢查 exit status，再以 `defer` 清理 exact identity。
 - SwiftPM unit/public/static checks、consumer public conformer compile check，以及 production source static isolation。
 - 移除先前 signed-host route 的五個受管 artifacts：`Tests/KeychainIntegrationHost/KeychainIntegrationHost.xcodeproj/project.pbxproj`、`Tests/KeychainIntegrationHost/KeychainIntegrationHost.xcodeproj/xcshareddata/xcschemes/KeychainIntegrationHost.xcscheme`、`Tests/KeychainIntegrationHost/KeychainIntegrationHost/AppDelegate.swift`、`Tests/KeychainIntegrationHost/KeychainIntegrationHostTests/KeychainTokenStoreIntegrationTests.swift` 與 `scripts/run-keychain-integration-tests.sh`。不處理 Xcode `xcuserdata` 或其他使用者產物。
 - 實作完成後最小回寫已交付 legacy Keychain persistence 的長期 architecture facts；`docs/architecture/README.md` 需先與其 active worktree owner 協調。
@@ -17,6 +18,8 @@
 
 - `kSecUseDataProtectionKeychain`、`kSecAttrAccessibleWhenUnlockedThisDeviceOnly`、`kSecAttrAccessGroup`、Keychain Sharing、App Group、iCloud、mock Keychain client、Keychain abstraction、fake Security implementation。
 - signed app host、hosted XCTest、Xcode project、Automatic Signing、team identifier、codesign preflight 或 signed-integration CI state。
+- 新 target、product、`Package.swift` 修改、Xcode host、helper executable 或任何為 cross-process test 新增的 executable／package graph。
+- child `swift test`／`--skip-build`、one-shot `swift -e` direct Security query、temporary direct-Security script、repository-root／`repositoryRoot` helper、package resolution、`.build` lookup/build、manifest／target mutation，或新增 repository helper executable 的 cross-process route。
 - OAuth、token refresh／rotation、re-auth、401 retry、authorization header、HTTP／network、REST／GraphQL request execution、多帳號、migration、biometric、user-presence 或跨裝置共享。
 - 改變 `GitHubTokenStore`、`GitHubAccessToken`、`TokenStoreError`、`GitHubCredentialError`、`GitHubTokenProvider`、`TokenStoreGitHubTokenProvider` 或 `InMemoryGitHubTokenStore` 的 public contract 或現有行為。
 - thread-safety、`Sendable`、actor isolation、async、跨 process 同時寫入保證、runtime product UI、log 或新的 Bounded Context。
@@ -25,7 +28,8 @@
 
 - `KeychainTokenStore` 只透過 legacy macOS Keychain 保存單一 UTF-8 token；不得產生檔案、UserDefaults、網路或 log 副本。
 - empty load 回傳 `nil`；save 後原樣 load；後次 save 覆寫舊值；delete（含 item 不存在）後 load 為 `nil`；同一 identity 的新 store instance 可讀回值。
+- 既有 same-process new-instance adapter-load test 繼續獨立存在；新增 parent／child acceptance 使用既有 test helper 的 fresh process 直接執行同一 filtered test：parent save 與 reader fresh internal store compare 的值是同一個 non-secret、source-held fixed sentinel。child 只以 exit code 交接；environment 繼承後只覆寫 non-secret reader-mode／service／fixed-account keys，sentinel／token 不可經 environment 或 arguments 傳遞。child stdout／stderr 必須是 null，且 child 不執行 `swift test`、不做 `.build` lookup/build、不解析 package／manifest／targets。
 - 只有 `errSecItemNotFound` 可表示缺少 item；其他 OSStatus 或不合法 Keychain data 必須成為既有 `TokenStoreError`，不得誤回傳 `nil`。
 - SwiftPM `KeychainTokenStoreTests` 使用 UUID service namespace 與 exact cleanup；`swift test` 成功才可作為 legacy Keychain integration evidence，沒有 signed-host 額外 gate 或狀態。
 - 只移除列明的五個受管 signed-host artifacts；不得以 directory delete 處理 `Tests/KeychainIntegrationHost/`，也不得變動其 Xcode `xcuserdata`、workspace user-interface state 或其他使用者產物。production、tests、scripts 與 project scope 不得殘留 Team ID、signed-host、hosted XCTest、Automatic Signing 或 codesign runner。
-- long-lived docs 只在實作及 SwiftPM evidence 後回寫；未完成 shared-doc coordination 的 `docs/architecture/README.md` 不得宣稱已更新。
+- `HC-01` 的 shared-doc coordination authorization 是已完成的歷史事實，僅涵蓋四份 long-lived docs writeback；它不是未完成的 PR human decision。draft PR 建立後的 human review／approval／merge decision 由獨立 `HC-02` 處理，且仍 pending。
