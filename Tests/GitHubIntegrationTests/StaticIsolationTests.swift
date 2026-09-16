@@ -353,6 +353,7 @@ struct StaticIsolationTests {
       "Contracts/GitHubTokenProvider.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift",
+      "Stores/KeychainTokenStore.swift",
     ]
 
     let actualPaths = try sourcePaths(in: sourceDirectory)
@@ -361,15 +362,74 @@ struct StaticIsolationTests {
     for path in actualPaths {
       let sourceFile = sourceDirectory.appendingPathComponent(path)
       let source = try String(contentsOf: sourceFile, encoding: .utf8)
+      let imports = try importedModuleRoots(in: source)
 
       let forbiddenImports: Set = [
         "RivetHTTPClient",
-        "Security",
         "Keychain",
+        "Network",
+        "FoundationNetworking",
         "Apollo",
         "ApolloAPI",
       ]
-      #expect(try importedModuleRoots(in: source).isDisjoint(with: forbiddenImports))
+      #expect(imports.isDisjoint(with: forbiddenImports))
+
+      if path == "Stores/KeychainTokenStore.swift" {
+        #expect(imports == ["Foundation", "Security"])
+      } else {
+        #expect(!imports.contains("Security"))
+      }
+    }
+  }
+
+  @Test
+  func keychainAdapterUsesTheCommonLegacyBaseQueryForEveryOperation() throws {
+    let adapterPath =
+      repositoryRoot
+      .appendingPathComponent("Sources/BoundedContexts/GitHubIntegration/Stores")
+      .appendingPathComponent("KeychainTokenStore.swift")
+
+    let source = try String(contentsOf: adapterPath, encoding: .utf8)
+
+    for requiredSnippet in [
+      "private var baseQuery: [CFString: Any]",
+      "kSecClass: kSecClassGenericPassword",
+      "kSecAttrService: service",
+      "kSecAttrAccount: account",
+      "kSecAttrSynchronizable: false",
+      "var query = baseQuery",
+      "SecItemCopyMatching(query as CFDictionary, &result)",
+      "SecItemUpdate(\n      baseQuery as CFDictionary,",
+      "var addQuery = baseQuery",
+      "SecItemAdd(addQuery as CFDictionary, nil)",
+      "SecItemDelete(baseQuery as CFDictionary)",
+      "underlyingError: KeychainStoreFailure.operationFailed",
+      "private enum KeychainStoreFailure: Error {\n  case operationFailed\n}",
+    ] {
+      #expect(source.contains(requiredSnippet))
+    }
+
+    for forbiddenMarker in [
+      "OAuth",
+      "Authorization",
+      "Bearer",
+      "URLSession",
+      "HTTP",
+      "kSecUseDataProtectionKeychain",
+      "kSecAttrAccessible",
+      "kSecAttrAccessGroup",
+      "KeychainSharing",
+      "AppGroup",
+      "DEVELOPMENT_TEAM",
+      "xcodebuild",
+      "codesign",
+      "XCTest",
+      "Automatic Signing",
+      "OSStatus",
+      "print(",
+      "Logger",
+    ] {
+      #expect(!source.contains(forbiddenMarker))
     }
   }
 

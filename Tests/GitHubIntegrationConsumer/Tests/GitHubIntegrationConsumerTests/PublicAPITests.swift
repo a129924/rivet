@@ -50,6 +50,13 @@ struct PublicAPITests {
   }
 
   @Test
+  func keychainStoreCanBeConstructedThroughThePublicStoreExistential() {
+    let store: any GitHubTokenStore = KeychainTokenStore()
+
+    _ = store
+  }
+
+  @Test
   func providerMapsAnExternalStoreMissingTokenToThePublicMissingCredentialCase() {
     let store: any GitHubTokenStore = ExternalTokenStore(loadResult: .missing)
     let provider: any GitHubTokenProvider = TokenStoreGitHubTokenProvider(store: store)
