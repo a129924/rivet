@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>GitHub OAuth — 雙用戶端架構</title>
+<title>Rivet — GitHub OAuth 雙用戶端架構</title>
 <script>
   // Dark is the style's default — the OS preference deliberately does not
   // override it, since these diagrams are authored and reviewed as dark. A
@@ -152,7 +152,7 @@
 <div id="stage"><canvas id="c"></canvas></div>
 
 <div id="plate">
-  <div class="k">GITHUB CLIENT INFRASTRUCTURE</div>
+  <div class="k">RIVET — GITHUB OAUTH 雙用戶端架構</div>
   <div class="n"><b>組裝</b> → <b>共享權杖生命週期</b> → <b>原工作所有權留在用戶端</b></div>
 </div>
 
@@ -320,9 +320,9 @@ const BOXES = [
   { id: 'github-integration', plane: 'integration', band: 'band-integration', x: 230, y: 780, w: 390, h: 92, r: 10, dash: true,
     name: 'GithubIntegration', about: '所有 Bounded Context 之外、GitHub 專屬的未來共享整合模組。',
     texts: [['bl', 254, 808, 'GithubIntegration'], ['bs', 254, 830, 'BC 外共享 GitHub 專屬整合模組'], ['bn', 254, 852, '不是 BC；不擁有 Port、DTO 或失敗對應']] },
-  { id: 'provider', plane: 'integration', band: 'band-integration', x: 670, y: 780, w: 510, h: 110, r: 10, dash: true,
-    name: 'OAuthTokenProvider', about: '唯一擁有權杖狀態、版本、更新輪替與單飛復原的元件。',
-    texts: [['bl', 694, 808, 'OAuthTokenProvider'], ['bs', 694, 830, '記憶體快照 · 還原 · 到期判定 · 更新'], ['bs', 694, 846, '輪替 · 版本 · 相同版本單飛'], ['bn', 694, 868, '不持有 HTTPRequest 或 Apollo 操作']] },
+  { id: 'provider', plane: 'integration', band: 'band-integration', x: 670, y: 780, w: 510, h: 126, r: 10, dash: true,
+    name: 'OAuthTokenProvider', about: '唯一擁有 OAuth 權杖狀態、版本、更新輪替與單飛復原的未來元件；可在獨立 topic 決定是否符合 async token-acquisition contract。',
+    texts: [['bl', 694, 808, 'OAuthTokenProvider'], ['bs', 694, 830, '記憶體快照 · 還原 · 到期判定 · 更新'], ['bs', 694, 846, '輪替 · 版本 · 相同版本單飛'], ['bs', 694, 862, '未來可符合 async GitHubAccessTokenProvider'], ['bn', 694, 884, '不持有 HTTPRequest 或 Apollo 操作']] },
   { id: 'snapshot', plane: 'integration', band: 'band-integration', x: 230, y: 910, w: 390, h: 74, r: 10, dash: true,
     name: 'TokenSnapshot', about: '不可變的用戶端輸入，只暴露存取權杖與版本。',
     texts: [['bl', 254, 938, 'TokenSnapshot'], ['bs', 254, 960, '存取權杖 + 版本；不暴露更新權杖']] },
@@ -386,7 +386,8 @@ const TEXTS = [
   { s: 'legend', x: 1143, y: 134, t: '顏色 — 所屬責任平面' },
   { s: 'bn', x: 160, y: 1644, t: '不變量：OAuthTokenProvider 不持有請求／操作；REST 與 Apollo GraphQL 用戶端不互相呼叫。' },
   { s: 'bn', x: 160, y: 1664, t: '不變量：bare HTTPClient 不驅動 flow；internal AuthRequester 僅驅動 generic flow，不承擔 GitHub OAuth 生命週期。' },
-  { s: 'bn', x: 160, y: 1684, t: '不變量：403、儲存庫權限與資源可見性不是權杖更新訊號。' }
+  { s: 'bn', x: 160, y: 1684, t: '不變量：403、儲存庫權限與資源可見性不是權杖更新訊號。' },
+  { s: 'bn', x: 160, y: 1704, t: '已交付 async contract 僅取得權杖；PAT／OAuth 實作、401 復原與 HTTP sender 均延後。' }
 ];
 
 const SWATCHES = [

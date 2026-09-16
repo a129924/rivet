@@ -83,6 +83,6 @@ private struct MockTokenStore: GitHubTokenStore {
   func delete() throws(TokenStoreError) {}
 }
 
-private enum UnderlyingStoreFailure: Error {
+private enum UnderlyingStoreFailure: Error, Sendable {
   case load
 }

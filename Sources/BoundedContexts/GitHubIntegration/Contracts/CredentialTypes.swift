@@ -1,4 +1,4 @@
-public struct GitHubAccessToken {
+public struct GitHubAccessToken: Sendable {
   public let rawValue: String
 
   public init(rawValue: String) {
@@ -12,17 +12,18 @@ public enum TokenStoreOperation: Sendable {
   case delete
 }
 
-public struct TokenStoreError: Error {
+public struct TokenStoreError: Error, Sendable {
   public let operation: TokenStoreOperation
-  public let underlyingError: any Error
+  public let underlyingError: any Error & Sendable
 
-  public init(operation: TokenStoreOperation, underlyingError: any Error) {
+  public init(operation: TokenStoreOperation, underlyingError: any Error & Sendable) {
     self.operation = operation
     self.underlyingError = underlyingError
   }
 }
 
-public enum GitHubCredentialError: Error {
+public enum GitHubCredentialError: Error, Sendable {
   case missingCredential
   case tokenStore(TokenStoreError)
+  case tokenAcquisition(any Error & Sendable)
 }
