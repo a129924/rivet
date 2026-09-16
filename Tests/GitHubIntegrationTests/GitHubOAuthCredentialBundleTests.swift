@@ -7,12 +7,14 @@ struct GitHubOAuthCredentialBundleTests {
   @Test
   func tokenResponseDecodesAllRequiredGitHubOAuthAppFields() throws {
     let response = try decodeTokenResponse()
+    let hasExpectedAccessToken = isExpectedAccessToken(response.accessToken)
+    let hasExpectedRefreshToken = isExpectedRefreshToken(response.refreshToken)
 
-    #expect(isExpectedAccessToken(response.accessToken))
+    #expect(hasExpectedAccessToken)
     #expect(response.tokenType == .bearer)
     #expect(response.grantedScopes == "repo,gist")
     #expect(response.expiresIn == 28_800)
-    #expect(isExpectedRefreshToken(response.refreshToken))
+    #expect(hasExpectedRefreshToken)
     #expect(response.refreshTokenExpiresIn == 15_897_600)
   }
 
@@ -20,9 +22,11 @@ struct GitHubOAuthCredentialBundleTests {
   func credentialMapsRelativeExpiryAtTheCallerSuppliedReceiptTime() throws {
     let receivedAt = Date(timeIntervalSinceReferenceDate: 1_000)
     let credential = try decodeTokenResponse().credential(receivedAt: receivedAt)
+    let hasExpectedAccessToken = isExpectedAccessToken(credential.accessToken.rawValue)
+    let hasExpectedRefreshToken = isExpectedRefreshToken(credential.refreshToken.rawValue)
 
-    #expect(isExpectedAccessToken(credential.accessToken.rawValue))
-    #expect(isExpectedRefreshToken(credential.refreshToken.rawValue))
+    #expect(hasExpectedAccessToken)
+    #expect(hasExpectedRefreshToken)
     #expect(credential.accessTokenExpiresAt == receivedAt.addingTimeInterval(28_800))
     #expect(
       credential.refreshTokenExpiresAt

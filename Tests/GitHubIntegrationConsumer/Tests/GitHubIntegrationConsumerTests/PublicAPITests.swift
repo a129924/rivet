@@ -43,8 +43,11 @@ struct PublicAPITests {
       grantedScopes: "repo,gist"
     )
 
-    #expect(bundle.accessToken.rawValue.hasPrefix("consumer-"))
-    #expect(bundle.refreshToken.rawValue.hasPrefix("consumer-"))
+    let hasExpectedAccessTokenPrefix = bundle.accessToken.rawValue.hasPrefix("consumer-")
+    let hasExpectedRefreshTokenPrefix = bundle.refreshToken.rawValue.hasPrefix("consumer-")
+
+    #expect(hasExpectedAccessTokenPrefix)
+    #expect(hasExpectedRefreshTokenPrefix)
     #expect(bundle.accessTokenExpiresAt == accessTokenExpiresAt)
     #expect(bundle.refreshTokenExpiresAt == refreshTokenExpiresAt)
     #expect(bundle.tokenType == .bearer)

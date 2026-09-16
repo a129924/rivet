@@ -72,3 +72,9 @@ PAT、credential-kind union、OAuth request/refresh runtime、Keychain、TokenSt
 ## Delivery Boundary
 
 僅在獨立 Plan-Reviewer、Tester 與 Reviewer 都沒有 blocker、且所有 scope/path checks 合格後，才能由授權的 Implementer 依 topic 建立單一 commit、non-force push 並開 draft PR。draft PR 開啟後立即停止於 human review；不得 auto-merge、release、rebase、force push 或處理未授權 review comment。
+
+## Workflow Reconciliation
+
+2026-09-16 的既有 PR snapshot 已在原始 `PR-01` 沒有 recorded independent verdict 前完成 implementation 與 delivery。這是 workflow deviation；不得將任何後續 review 回填或表示為 `PR-01` 的歷史 approval，也不得以此段改寫既有 architecture、path allowlist 或 implementation contract。
+
+後續唯一可前進的 planning workflow 是 fresh、獨立的 Plan-Reviewer 審查本 planning contract、ledger 與已交付 snapshot 的偏差紀錄。該 review 只可給出現況 verdict，不能 retroactively clear 原始 gate 或自動放行 delivery；不論 verdict，均須在 human boundary 停止並由 human 決定後續處置。
