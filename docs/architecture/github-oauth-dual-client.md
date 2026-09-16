@@ -2,13 +2,13 @@
 
 ## Goal
 
-鎖定既有、可 refresh 的 GitHub OAuth credential bundle 的 shared token lifecycle：同一個 `OAuthTokenProvider` 供 GitHub REST client 與 Apollo GraphQL client 共用。access token 過期或某個原工作收到一次 401 時，client 取得新版 snapshot，並只重送自己的原工作一次。本文件不選擇 OAuth App 或 GitHub App。
+鎖定 GitHub OAuth App 的可 refresh、會過期 credential bundle shared token lifecycle：同一個未來 `OAuthTokenProvider` 供 GitHub REST client 與 Apollo GraphQL client 共用。access token 過期或某個原工作收到一次 401 時，client 取得新版 snapshot，並只重送自己的原工作一次。
 
 這是長期**架構文件**，不是 OAuth、client 或 retry 的 runtime 實作規格。
 
 ## Non-Goal
 
-- 不定義 Swift 型別、方法、actor isolation、storage schema、endpoint payload 或 failure enum。
+- 除已交付的 internal OAuth App token-response DTO → public immutable credential bundle mapping 外，不定義 OAuth lifecycle 的 Swift 型別、方法、actor isolation、storage schema、endpoint request payload 或 failure enum。
 - 不實作 OAuth authorization code、PKCE、callback、初次 sign-in、logout、revoke、多帳號、PAT 或 GitHub Enterprise。
 - 不定義 Domain endpoint、DTO、GraphQL schema、rate limit、pagination、一般 retry 或各 Bounded Context 的 failure mapping。
 - 不修改 `RivetHTTPClient`，也不讓其 `Auth`／`AuthFlow` 成為 OAuth runtime driver。
@@ -31,7 +31,8 @@ Facade（layer 外的 application composition root）
 - Facade 是 layer 外的 application composition root，只負責 composition：建立唯一共享的 `OAuthTokenProvider` instance，並注入 REST 與 GraphQL client。它不在每個工作前預先驗證 token，也不改變各 BC 的 `Facade → UseCase → Port` 層級方向。
 - `RivetHTTPClient`／`URLSessionTransport` 是 bare、generic、GitHub-unaware foundation；bare `HTTPClient` 只執行 raw HTTP request，不認識 OAuth、Bearer、TokenProvider、401 recovery 或 retry，也不直接建立或驅動 `AuthFlow`。
 - `RivetHTTPClient` 既有 internal `AuthRequester` runtime：它注入 `Requester` 與 caller-provided generic `Auth`，建立並驅動 generic `AuthFlow` 的 `.send(HTTPRequest) → raw HTTPResponse → receive(response)` loop，直到 `.finish`；flow 保有 authentication decision。這條 generic capability 不持有 credential、retry 或 GitHub OAuth lifecycle。
-- `TokenStore` 只讀寫完整 OAuth credential bundle。`OAuthTokenFetcher` 只透過 bare HTTP 呼叫 GitHub OAuth token endpoint，並回傳完整 rotated bundle。
+- 已交付 schema 只接受 GitHub OAuth App 的六欄 refreshable、expiring token response，並由 internal DTO 在 caller-supplied `receivedAt` 映射為 public immutable `GitHubOAuthCredentialBundle`；它不包含 request、refresh、persistence 或 client runtime。DTO 不外洩至 public API，bundle 僅保存 absolute expiry 與原始 granted scope 字串。
+- 未來 `TokenStore` 只讀寫完整 OAuth credential bundle。未來 `OAuthTokenFetcher` 只透過 bare HTTP 呼叫 GitHub OAuth token endpoint，並回傳完整 rotated bundle。
 - `OAuthTokenProvider` 是唯一 lifecycle owner：記憶體 snapshot、restore、expiry、refresh、rotation、version 與 single-flight。它不持有、不接收、不重送 `HTTPRequest` 或 Apollo operation。
 - `TokenSnapshot` 是 client 的 immutable input，只包含 access token 與 version；refresh token 與完整 bundle 不會暴露給 client。
 - 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration。另已交付的 async `GitHubAccessTokenProvider` 只表示 token acquisition，不實作或定義本文件的 OAuth lifecycle、snapshot／version、401 recovery 或 migration；未來 OAuth provider 可在獨立 implementation topic 決定是否符合該 contract。
@@ -43,7 +44,7 @@ Facade（layer 外的 application composition root）
 2. 每個 client 走自己的 transport route 送出原工作。
 3. 401 是此 lifecycle 唯一的**回應狀態**復原觸發；expiry check 是 Provider 交付 snapshot 前的內部責任，不是 response-status policy。非 401 回應由 consuming BC 的 local Infra 依自己的 adapter boundary 處理；403、repository permission 與 resource visibility 不觸發 refresh。
 4. 收到 401 時，client 回報**實際使用的 snapshot**。若 provider 已有更高 version，直接回傳目前 snapshot；若仍是相同 stale version，僅 single-flight refresh 一次。
-5. refresh 成功時，provider 接受遠端 rotated credential bundle、保存完整 bundle、更新記憶體 snapshot/version，最後讓等待者取得新版 snapshot。僅在接受遠端 rotation 前發生的暫時性 technical failure 才保留既有 credential；若遠端 rotation 已接受而本地 persistence 失敗，不宣稱舊 bundle 仍可用，credential reconciliation 留待後續獨立 topic。
+5. 未來 refresh 成功時，provider 接受遠端 rotated credential bundle，並以完整新 bundle 原子取代舊 bundle、更新記憶體 snapshot/version，最後讓等待者取得新版 snapshot。僅在接受遠端 rotation 前發生的暫時性 technical failure 才保留既有 credential；若遠端 rotation 已接受而本地 persistence 失敗，不宣稱舊 bundle 仍可用，credential reconciliation 留待後續獨立 topic。
 6. 原 client 以新版 snapshot 重送自己的原 request／operation 一次；每個原工作最多 retry 一次。
 
 | 狀況 | Outcome |

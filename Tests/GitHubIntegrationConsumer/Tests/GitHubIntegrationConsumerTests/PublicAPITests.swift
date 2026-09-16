@@ -1,3 +1,4 @@
+import Foundation
 import GitHubIntegration
 import Testing
 
@@ -25,6 +26,35 @@ struct PublicAPITests {
     assertSendable(storeError)
     assertSendable(GitHubCredentialError.missingCredential)
     assertSendable(GitHubCredentialError.tokenAcquisition(StoreFailure()))
+  }
+
+  @Test
+  func publicOAuthCredentialBundleSurfaceIsAvailableAndSendable() {
+    let accessToken = GitHubAccessToken(rawValue: "consumer-access-token")
+    let refreshToken = GitHubOAuthRefreshToken(rawValue: "consumer-refresh-token")
+    let accessTokenExpiresAt = Date.distantFuture
+    let refreshTokenExpiresAt = Date.distantPast
+    let bundle = GitHubOAuthCredentialBundle(
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      accessTokenExpiresAt: accessTokenExpiresAt,
+      refreshTokenExpiresAt: refreshTokenExpiresAt,
+      tokenType: .bearer,
+      grantedScopes: "repo,gist"
+    )
+
+    let hasExpectedAccessTokenPrefix = bundle.accessToken.rawValue.hasPrefix("consumer-")
+    let hasExpectedRefreshTokenPrefix = bundle.refreshToken.rawValue.hasPrefix("consumer-")
+
+    #expect(hasExpectedAccessTokenPrefix)
+    #expect(hasExpectedRefreshTokenPrefix)
+    #expect(bundle.accessTokenExpiresAt == accessTokenExpiresAt)
+    #expect(bundle.refreshTokenExpiresAt == refreshTokenExpiresAt)
+    #expect(bundle.tokenType == .bearer)
+    #expect(bundle.grantedScopes == "repo,gist")
+    assertSendable(refreshToken)
+    assertSendable(bundle.tokenType)
+    assertSendable(bundle)
   }
 
   @Test
