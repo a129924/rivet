@@ -67,7 +67,7 @@ Durable output 必須以 table 記錄 `Source focus`、`Event/action`、`Destina
 | F-05 | Files tab啟用時，使用標準Tab向前離開tab strip的primary destination固定為saved selected change的Diff／Change Reader anchor；anchor有效時恢復該PR的selected file／change與scroll anchor。若saved selected change anchor失效，保持selected file並將focus固定到該selected file row，不得自動選取該file的第一個change。 |
 | F-06 | Commits tab啟用時，使用標準Tab向前離開tab strip的primary destination固定為第一個可見commit row；若沒有commit row，focus留在Commits tab。 |
 | F-07 | Checks tab啟用時，使用標準Tab向前離開tab strip的primary destination固定為第一個可見check row；若沒有check row，focus留在Checks tab。 |
-| F-08 | File Navigator選取另一file後，focus固定留在新selected file row。目標file有可讀change時，change selection正規化為第一個change；目標file沒有可讀change時，selected file仍有效、selected change明示為unavailable／不存在，不建立假anchor，focus仍在selected file row，change-dependent navigation／comment依既有safe rules disabled。若target file在event完成前失效，selection不變且focus留在原selected file row。 |
+| F-08 | File Navigator選取另一file後，focus固定留在新selected file row。目標file有可讀change時，change selection正規化為第一個change；此selected change有效時，從selected file row使用標準Tab向前的primary destination固定為該selected change的Diff／Change Reader anchor，anchor失效時唯一fallback是同一selected file row。到達anchor後，後續標準Tab才依F-16進入Review Actions。目標file沒有可讀change時，selected file仍有效、selected change明示為unavailable／不存在，不建立假anchor，focus仍在selected file row，change-dependent navigation／comment依既有safe rules disabled。若target file在event完成前失效，selection不變且focus留在原selected file row。 |
 | F-09 | Change navigation後，focus固定移到新selected change的Diff／Change Reader anchor，reveal採minimum necessary scroll；若target change失效，selection不變且focus留在原selected change anchor。 |
 | F-10 | Mark Reviewed後若尚有unreviewed file，選下一個unreviewed file；該file有可讀change時選第一個change並將focus固定交給其Diff／Change Reader anchor，anchor失效時唯一fallback是新selected file row。該file沒有可讀change時，selected file仍有效、selected change明示為unavailable／不存在，不建立假anchor，focus固定為新selected file row，change-dependent navigation／comment依既有safe rules disabled。不得將focus留在已消失或失效的Mark Reviewed action。 |
 | F-11 | Mark Reviewed形成8/8時，保留最後marked file／change並將focus固定交回該selected change的Diff／Change Reader anchor；若change anchor失效，唯一fallback是最後marked file row。Completion以局部announcement表達，不接收focus且不自動啟動Finish。 |
@@ -75,12 +75,14 @@ Durable output 必須以 table 記錄 `Source focus`、`Event/action`、`Destina
 | F-13 | Composer open後primary destination固定為composer body editor並形成modal focus containment；若body editor無法建立，composer不得保持開啟，focus回到觸發event前的opening target。 |
 | F-14 | Composer Cancel／Escape／Save關閉後使用固定ordered fallback chain：opening target → current selected change的Diff／Change Reader anchor → selected file row → 僅當selected file亦失效時，才交給當前Reader presentation state matrix明示的focus target。Keyboard `C`開啟時，opening target就是觸發前的focus target；不得跳過chain中的有效target。 |
 | F-15 | Back to Inbox／Finish Reading後，primary destination固定為先前保留的Inbox selection row；若該row已不存在，唯一fallback是Inbox第一個可選row。不得任意重設到其他row。 |
-| F-16 | Diff／Change Reader使用標準Tab向前進入Review Actions時，source focus固定為目前selected change的Diff／Change Reader anchor；若selected change不存在或unavailable，實際source固定為目前selected file row。Primary destination由目前review state唯一決定：current未reviewed時為Mark Reviewed；current已reviewed時為Mark as Unreviewed。若對應action不可用，focus留在上述實際source，不得跳到其他target。這是標準focus traversal，不新增product shortcut。 |
+| F-16 | Diff／Change Reader使用標準Tab向前進入Review Actions時，source focus固定為目前selected change的Diff／Change Reader anchor；若selected change不存在或unavailable，實際source固定為目前selected file row。由F-08完成後的selected file row出發且selected change有效時，第一個標準Tab必須先依F-08進入該change anchor，下一個標準Tab才由本row進Review Actions，不得直接跳過anchor。Primary destination由目前review state唯一決定：current未reviewed時為Mark Reviewed；current已reviewed時為Mark as Unreviewed。若對應action不可用，focus留在上述實際source，不得跳到其他target。這是標準focus traversal，不新增product shortcut。 |
 | F-17 | Review Actions使用標準Shift-Tab向後返回reading surface時，primary destination固定為目前selected change的Diff／Change Reader anchor；若該anchor失效，唯一fallback是目前selected file row。Mark／Unreview action啟用後的focus另由F-10～F-12決定。 |
 
 F-10 是核心 keyboard loop gate：next unreviewed file有可讀change時，`Mark Reviewed → next unreviewed file → first change reveal → Diff/Change reading focus` 必須可連續操作；沒有可讀change時只選file並focus其row，不得合成change或anchor。F-02區分首次開啟與重開同一PR：首次開啟固定進Overview title／tab fallback；重開恢復saved active tab並直接使用F-04～F-07的deterministic content target。Overview ↔ Files restoration不保留模糊的focus history：Overview依F-04進入PR title heading；Files依F-05進入saved selected change anchor，失效時保持selected file並只回selected file row，不自動選第一個change。Reader處於`content`且任一明示transition的primary destination與ordered fallback都因referenced content unavailable而失效時，terminal focus固定為目前active Reader tab；此規則不新增heading、presentation state、transition ID或UI capability。
 
 Composer開啟期間若背景Reader轉為`offline-without-readable-content`，Composer保持modal且背景保持inert；working copy不得自動保存或丟棄，focus固定留在body editor。Save Draft只在目前content與action safety已知且安全時enabled。Cancel／Escape關閉後依F-14針對當前offline state求值；不可讀背景使content targets失效時，focus固定交給`offline-without-readable-content`的offline heading。此規則不定義persistence或新workflow。
+
+Composer開啟期間若背景Reader轉為`loading`，Composer同樣保持modal且背景inert；focus固定留在body editor，working copy與既有saved draft保持原值，Back disabled且不得穿透，Cancel／Escape優先。關閉後依F-14 ordered chain求值；loading期間失效的content targets不得恢復，最後固定交給Reader `loading` row的nonmodal focus target：首次開啟為Overview tab，重開同一PR為saved active tab。此規則不新增persistence、state、shortcut或capability。
 
 Save Draft的trimmed內容為空白時必須disabled；stale activation為no-op，Composer保持開啟、focus留在editor、working copy與saved draft都不變，且不得宣告saved。不得以此新增submit或persistence行為。
 
@@ -112,6 +114,7 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 - Existing selection／review progress只有在其 referenced content仍可閱讀時保留；不可因 error／offline自動清除。
 - Reader處於`content`且明示transition的primary destination與fallback因referenced content unavailable全部失效時，terminal focus固定為目前active Reader tab；不得另造heading或隱含state。
 - Inbox availability input缺失時唯一fallback是`error`，不得推定offline；只有offline狀態已知時才可使用offline rows。缺值的error state不得顯示PR rows或啟用Open，focus固定為error heading，recovery依下列safe-capability規則。
+- Inbox處於`content`時，native single-selection與local list navigation保持可用。Open Reader只有selected row仍存在，且UIIR-NI-006提供的Open capability與action safety均known-safe時才enabled；capability unknown／unavailable時Open保持可理解地disabled，stale activation為no-op，selection與focus都保持不變。此規則不定義Logic或Integration policy。
 - Offline with content明示stale／offline狀態並禁止需要network或不可安全執行的action，但保留local reading/navigation。
 - Reader轉入`offline-with-readable-existing-content`時，若Review Action正持有focus且該action因offline而disabled，focus固定移到current selected change anchor；若anchor失效，唯一fallback是selected file row；只有Files content亦失效時，才交給該Reader presentation state matrix row明示的focus target。
 - Offline without content不顯示虛假的reader content，也不得把不安全或未知的content-dependent action假裝為可用；非modal Back仍依CMD-NI-012／UIIR-NI-002保持enabled，focus落在清楚的狀態與recovery affordance。
@@ -119,6 +122,7 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 - Error／offline recovery只有在capability已知且可安全執行時enabled；capability或safety資訊缺失時顯示可理解的disabled affordance，不得樂觀執行或宣告成功。
 - Retry／recovery只定義UI affordance與enablement，不定義network、retry、authentication、cache或其他policy。
 - Reader處於非modal的`error`或`offline-without-readable-content`時，Back to Inbox MUST保持enabled，並依CMD-NI-012／UIIR-NI-002返回Inbox；不得因content或recovery不可用而disabled。Composer開啟時仍以modal containment為優先，背景Reader保持inert，Cancel／Escape先關閉Composer並依F-14恢復focus，不得穿透執行Back。
+- Composer開啟期間背景Reader轉為`loading`時，Composer保持modal、背景inert、focus與working／saved drafts原值保留；background Back disabled且不得穿透，Cancel／Escape優先。關閉後依F-14，失效的content target最終回到loading row的固定nonmodal target：首次開啟Overview tab，重開同一PR saved active tab。
 - Composer開啟期間背景可轉為`offline-without-readable-content`，但Composer維持modal、背景inert、focus在editor且working copy不自動保存／丟棄；Save enablement依目前content與action safety，Cancel／Escape關閉後focus該offline row的heading。
 
 ## Command Matrix
@@ -143,9 +147,10 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 - 不得以 global shortcut 無條件攔截。
 - 文字輸入、Comment Composer、editable controls 與 VoiceOver interaction優先；衝突時 Reader command不執行。
 - Command context不成立時保持 state與focus，不偷偷切換 tab或workspace。
-- `Open` context item只在clicked Inbox PR row同時是selected row時提供；clicked row不是selected row時不得顯示或執行`Open`，亦不得為了`Open`暗改selection。實際Open仍由CMD-NI-002語意處理selected PR並保留F-02返回點。
+- `Open` context item只在clicked Inbox PR row同時是selected row時提供；clicked row不是selected row時不得顯示或執行`Open`，亦不得為了`Open`暗改selection。`CMD-NI-002`只有selected row仍存在且UIIR-NI-006的Open capability／action safety均known-safe時enabled；unknown／unavailable時disabled，stale activation為no-op且selection／focus不變。實際Open仍只處理selected PR並保留F-02返回點；不得定義Logic或Integration policy。
 - `CMD-NI-006` Option+Arrow Up／Down只在既有Files reading context切換file；new file有可讀change時，selection固定為new file＋第一個change並focus new change anchor，anchor失效時唯一fallback是new selected file row；new file沒有可讀change時，只選new file、selected change為unavailable／不存在且focus new selected file row，不建立假anchor，change-dependent navigation／comment disabled。F-08只描述File Navigator內的direct selection，不得拿來改寫此command result，也不得新增transition ID或shortcut。
 - `CMD-NI-012` Back to Inbox在非modal Reader `error`與`offline-without-readable-content`仍須enabled，並依UIIR-NI-002執行中性返回；Composer modal開啟時背景command不得執行，Cancel／Escape優先依F-14關閉Composer。
+- Reader背景為`loading`且Composer modal開啟時，CMD-NI-012與其他background commands均disabled且不得穿透；Cancel／Escape依CMD-NI-008優先關閉Composer，再由F-14恢復到loading row固定的nonmodal focus target。
 - Save Draft只在trimmed working copy非空白且action safety成立時可用；trim後空白必須disabled。Stale activation為no-op，Composer保持開啟、focus editor、working／saved draft不變且不宣告saved。
 - Toolbar action 必須有合理 menu counterpart；context menu只有已存在且適用於 clicked／selected item 的能力。
 - 不新增 Draft 未列出的 workflow 或 shortcut。
@@ -155,7 +160,7 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 Durable output 必須為每個 region 記錄 `Native role`、`Selection/focus semantics`、`Commands/menu`、`State representation`、`Forbidden expansion`：
 
 - Inbox sidebar：native sidebar behavior與標準 Show／Hide Sidebar。
-- Inbox PR list：native single-selection semantics；selection與open為不同action。`Open` context item只適用於clicked row同時是selected row；non-selected clicked row不得顯示／執行`Open`或暗改selection。
+- Inbox PR list：native single-selection semantics；selection與local navigation在`content`保持可用，且selection與open為不同action。`Open` context item只適用於clicked row同時是selected row；non-selected clicked row不得顯示／執行`Open`或暗改selection。Selected row存在時仍須由UIIR-NI-006確認Open capability／action safety known-safe才enabled；unknown／unavailable時disabled，stale activation no-op且selection／focus不變。
 - Reader toolbar：只承載既有高階action，並由menu提供等價command。
 - Reader tabs/navigation：提供既有 Overview／Files／Commits／Checks，不新增能力。
 - File navigator：native list selection；current與reviewed可同時表達。
@@ -216,6 +221,8 @@ Prohibited decisions: <calculation, storage, Domain model, API or transport choi
 
 允許定義 UI 需要什麼、如何呈現、缺少時如何退化；禁止定義 Logic計算、儲存、Domain model、Application API、commit SHA／hash／baseline判斷或Integration來源。
 
+UIIR-NI-006對Inbox `content`的Open安全輸入必須採closed-world degradation：只有selected row存在且capability／action safety known-safe時enabled；unknown或unavailable一律disabled，stale activation一律no-op並保持selection／focus。此處只定義Presentation use與missing-input degradation，不定義eligibility計算、Logic或Integration來源。
+
 ## SwiftUI Implementation Acceptance Criteria
 
 Durable output必須用穩定 `AC-NI-###` ID列出observable acceptance，至少覆蓋：
@@ -233,6 +240,9 @@ Durable output必須用穩定 `AC-NI-###` ID列出observable acceptance，至少
 - AC-NI-009／010／031必須驗收availability缺值、known-offline與safe recovery；AC-NI-006及applicable command acceptance必須驗收Composer offline與空白／stale Save Draft。不得改寫F-17、CMD-NI-015、AC-NI-036、TC-14或UIIR-NI-007既有語意。
 - AC-NI-003內必須互斥驗收兩種既有行為：F-08 file selection在target file有可讀change時正規化到第一個change，沒有可讀change時只保留selected file並focus其row；F-09 change navigation則移到指定target change anchor並以minimum necessary scroll reveal，invalid target沿F-09保持原selection與原selected change anchor的fallback。不得把兩者合併或新增acceptance ID。
 - AC-NI-004／008／029必須同步F-16：source為selected change anchor；change不存在或unavailable時source為selected file row；destination仍依review state為Mark Reviewed／Mark as Unreviewed，action unavailable時focus留在實際source。Reader matrix與applicable acceptance亦須明示非modal`error`／`offline-without-readable-content`的Back保持enabled；Composer modal時背景inert且Cancel／Escape優先。不得新增shortcut、transition ID或capability。
+- Keyboard acceptance必須同步F-08／F-16：selected change有效時，從selected file row的第一個標準Tab先到該change anchor，anchor失效唯一fallback為同一file row；只有到達anchor後，後續標準Tab才依F-16進Review Actions。不得新增shortcut、transition ID或capability。
+- AC-NI-006／010及applicable keyboard acceptance必須驗收Composer開啟後Reader背景轉`loading`：modal與background inert持續、editor focus及working／saved drafts保持、Back disabled且不穿透、Cancel／Escape優先；關閉後依F-14回到首次Overview tab或重開saved active tab的loading-row nonmodal target，不新增persistence。
+- AC-NI-001／009／011／013及applicable command acceptance必須驗收Inbox `content`：native selection／local navigation保持可用；CMD-NI-002只有selected row存在且Open capability／action safety known-safe時enabled，unknown／unavailable時disabled，stale activation no-op且selection／focus不變。不得定義Logic或Integration policy。
 
 每列固定包含 `ID`、`Given/context`、`Action`、`Observable result`、`Source trace`；不得指定無必要的SwiftUI type或internal implementation。
 
