@@ -78,7 +78,7 @@ Durable output 必須以 table 記錄 `Source focus`、`Event/action`、`Destina
 | F-16 | Diff／Change Reader使用標準Tab向前進入Review Actions時，primary destination由目前review state唯一決定：current未reviewed時為Mark Reviewed；current已reviewed時為Mark as Unreviewed。若對應action不可用，focus留在目前selected change anchor。這是標準focus traversal，不新增product shortcut。 |
 | F-17 | Review Actions使用標準Shift-Tab向後返回reading surface時，primary destination固定為目前selected change的Diff／Change Reader anchor；若該anchor失效，唯一fallback是目前selected file row。Mark／Unreview action啟用後的focus另由F-10～F-12決定。 |
 
-F-10 是核心 keyboard loop gate：`Mark Reviewed → next unreviewed file → first change reveal → Diff/Change reading focus` 必須可連續操作。F-02區分首次開啟與重開同一PR：首次開啟固定進Overview title／tab fallback；重開恢復saved active tab並直接使用F-04～F-07的deterministic content target。Overview ↔ Files restoration不保留模糊的focus history：Overview依F-04進入PR title heading；Files依F-05進入saved selected change anchor，失效時保持selected file並只回selected file row，不自動選第一個change。
+F-10 是核心 keyboard loop gate：`Mark Reviewed → next unreviewed file → first change reveal → Diff/Change reading focus` 必須可連續操作。F-02區分首次開啟與重開同一PR：首次開啟固定進Overview title／tab fallback；重開恢復saved active tab並直接使用F-04～F-07的deterministic content target。Overview ↔ Files restoration不保留模糊的focus history：Overview依F-04進入PR title heading；Files依F-05進入saved selected change anchor，失效時保持selected file並只回selected file row，不自動選第一個change。Reader處於`content`且任一明示transition的primary destination與ordered fallback都因referenced content unavailable而失效時，terminal focus固定為目前active Reader tab；此規則不新增heading、presentation state、transition ID或UI capability。
 
 ## Presentation State Matrices
 
@@ -106,6 +106,7 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 - Workspace chrome在可合理保留時維持，避免狀態切換造成 context loss。
 - `empty` 顯示成功完成的無內容結果，不顯示 failure language或 retry-as-error。
 - Existing selection／review progress只有在其 referenced content仍可閱讀時保留；不可因 error／offline自動清除。
+- Reader處於`content`且明示transition的primary destination與fallback因referenced content unavailable全部失效時，terminal focus固定為目前active Reader tab；不得另造heading或隱含state。
 - Offline with content明示stale／offline狀態並禁止需要network或不可安全執行的action，但保留local reading/navigation。
 - Reader轉入`offline-with-readable-existing-content`時，若Review Action正持有focus且該action因offline而disabled，focus固定移到current selected change anchor；若anchor失效，唯一fallback是selected file row；只有Files content亦失效時，才交給該Reader presentation state matrix row明示的focus target。
 - Offline without content不顯示虛假的reader content或可用action；focus落在清楚的狀態與recovery affordance。
@@ -134,6 +135,7 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 - 不得以 global shortcut 無條件攔截。
 - 文字輸入、Comment Composer、editable controls 與 VoiceOver interaction優先；衝突時 Reader command不執行。
 - Command context不成立時保持 state與focus，不偷偷切換 tab或workspace。
+- `Open` context item只在clicked Inbox PR row同時是selected row時提供；clicked row不是selected row時不得顯示或執行`Open`，亦不得為了`Open`暗改selection。實際Open仍由CMD-NI-002語意處理selected PR並保留F-02返回點。
 - Option+Arrow Up／Down只在既有Files reading context切換file；成功後selection固定為new file＋該file第一個change，focus固定到new change anchor；若new change anchor不存在，唯一fallback是new selected file row。F-08只描述File Navigator內的direct selection，不得拿來改寫此command result，也不得新增transition ID或shortcut。
 - Toolbar action 必須有合理 menu counterpart；context menu只有已存在且適用於 clicked／selected item 的能力。
 - 不新增 Draft 未列出的 workflow 或 shortcut。
@@ -143,12 +145,12 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 Durable output 必須為每個 region 記錄 `Native role`、`Selection/focus semantics`、`Commands/menu`、`State representation`、`Forbidden expansion`：
 
 - Inbox sidebar：native sidebar behavior與標準 Show／Hide Sidebar。
-- Inbox PR list：native single-selection semantics；selection與open為不同action。
+- Inbox PR list：native single-selection semantics；selection與open為不同action。`Open` context item只適用於clicked row同時是selected row；non-selected clicked row不得顯示／執行`Open`或暗改selection。
 - Reader toolbar：只承載既有高階action，並由menu提供等價command。
 - Reader tabs/navigation：提供既有 Overview／Files／Commits／Checks，不新增能力。
 - File navigator：native list selection；current與reviewed可同時表達。
 - Diff reader：閱讀與change navigation surface；code/diff可水平scroll，其他chrome不可。
-- Context menus：只mirror現有能力，依context enable／disable。
+- Context menus：只mirror現有能力，依context enable／disable；Inbox `Open`只適用於clicked row同時是selected row，且不得以context action改變selection。
 - Menu commands：遵循responder/context routing；inactive context不攔截。
 
 System accent、inactive-window appearance、Increase Contrast與Reduce Motion交給native semantics；自訂呈現不得覆蓋其可辨識性。
@@ -177,7 +179,7 @@ Durable output必須分別定義：change navigation、file navigation、Page Up
 
 ### File semantics
 
-VoiceOver可取得 filename、current selection、reviewed／unreviewed、change statistics與存在時的comment count；current與reviewed必須是兩個可同時成立的semantic state。
+VoiceOver可取得 filename、current selection與reviewed／unreviewed；change statistics與comment count都只有資料存在時才必須可讀。依UIIR-NI-005，缺少任一metadata時省略該欄，不得顯示或宣告假`0`；current與reviewed必須是兩個可同時成立的semantic state。此規則只定義Presentation degradation，不定義Logic、DTO或data source。
 
 ### Diff／Change semantics
 
@@ -208,13 +210,13 @@ Prohibited decisions: <calculation, storage, Domain model, API or transport choi
 
 Durable output必須用穩定 `AC-NI-###` ID列出observable acceptance，至少覆蓋：
 
-- Focus transition、restoration與F-10核心loop；包含F-02首次開啟／重開同一PR的tab與content target，以及F-14 composer close ordered fallback chain。
-- Inbox／Reader所有presentation states與offline兩分法；包含offline-readable transition使disabled Review Action讓出focus的ordered fallback。
-- Native command routing、menu counterpart、context menu與editable／VoiceOver conflict；包含Option+Arrow file switch的new file＋first change selection、new change anchor focus與selected file row fallback。
-- Native toolbar、sidebar、list與tab semantics。
+- Focus transition、restoration與F-10核心loop；包含F-02首次開啟／重開同一PR的tab與content target、F-14 composer close ordered fallback chain，以及Reader `content`中referenced targets全部失效時terminal focus回目前active Reader tab。
+- Inbox／Reader所有presentation states與offline兩分法；包含offline-readable transition使disabled Review Action讓出focus的ordered fallback，以及Reader `content`的全域terminal active-tab fallback。
+- Native command routing、menu counterpart、context menu與editable／VoiceOver conflict；包含Option+Arrow file switch的new file＋first change selection、new change anchor focus與selected file row fallback，以及`Open` context item只在clicked row同時為selected row時存在且不得暗改selection。
+- Native toolbar、sidebar、list與tab semantics；包含non-selected clicked Inbox row不得顯示／執行`Open`。
 - 1440 × 900、half-window、narrow、minimum的resize／degradation。
 - Large diff keyboard／trackpad／scrollbar與scroll restoration；包含saved change anchor失效時保持selected file、focus selected file row且不自動first change。
-- VoiceOver file／diff／state semantics及非色彩辨識。
+- VoiceOver file／diff／state semantics及非色彩辨識；change statistics與comment count只在資料存在時可讀，缺值依UIIR-NI-005省略且不得顯示假`0`。
 - Semantic system colors、Increase Contrast、inactive window、Reduce Motion。
 - Mock-only／disabled controls必須可辨識且不可暗示可執行能力。
 
