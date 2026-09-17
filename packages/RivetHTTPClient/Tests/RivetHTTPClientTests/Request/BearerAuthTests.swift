@@ -75,4 +75,24 @@ struct BearerAuthTests {
 
     #expect(authorizedRequest.headers.authorization == "Bearer token-123")
   }
+
+  @Test
+  func redactsTokenFromDescriptionsAndReflection() {
+    let fakeTokenSentinel = "fake-bearer-token-sentinel-do-not-log"
+    let authorization = BearerAuth(token: fakeTokenSentinel)
+    let mirror = Mirror(reflecting: authorization)
+    let outputs = [
+      String(describing: authorization),
+      authorization.debugDescription,
+      String(reflecting: authorization),
+      String(describing: mirror),
+      String(describing: mirror.children.map(\.value)),
+    ]
+
+    for output in outputs {
+      #expect(!output.contains(fakeTokenSentinel))
+    }
+
+    #expect(mirror.children.isEmpty)
+  }
 }
