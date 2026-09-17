@@ -2,77 +2,77 @@
   "schema_version": 1,
   "diagram_type": "lifecycle",
   "meta": {
-    "title": "RivetHTTPClient AuthFlow 合約生命週期",
+    "title": "RivetHTTPClient AuthFlow 目標合約生命週期",
     "quality_profile": "showcase",
     "viewBox": [1040, 640],
     "legend": { "mode": "hidden" }
   },
   "lanes": [
-    { "id": "main", "label": "建立與初始轉換" },
-    { "id": "response", "label": "送出、raw 回應與後續轉換" },
-    { "id": "terminal", "label": "終態結果" }
+    { "id": "main", "label": "採用目標架構（尚未實作）" },
+    { "id": "response", "label": "回應輸入與語意決策" },
+    { "id": "terminal", "label": "終態與待定邊界" }
   ],
   "states": [
     {
       "id": "make-flow",
       "type": "start",
-      "label": "建立流程",
-      "sublabel": "Auth.makeFlow(for:)",
+      "label": "獨立流程",
+      "sublabel": "工廠 API 尚未鎖定",
       "lane": "main",
       "col": 0,
       "width": 110,
       "step": "01",
-      "tag": "入口"
+      "tag": "目標架構入口"
     },
     {
       "id": "auth-flow",
       "type": "active",
       "label": "AuthFlow",
-      "sublabel": "flow 保有認證決策",
+      "sublabel": "策略／狀態所有者",
       "lane": "main",
       "col": 1,
       "width": 110,
       "step": "02",
-      "tag": "合約"
+      "tag": "目標合約"
     },
     {
       "id": "start",
       "type": "decision",
-      "label": "start()",
-      "sublabel": "→ .send / .finish",
+      "label": "初始決策",
+      "sublabel": "僅語意決策",
       "lane": "main",
       "col": 2,
       "width": 115,
       "step": "03",
-      "tag": "轉換"
+      "tag": "不建構請求"
     },
     {
       "id": "initial-send",
       "type": "active",
-      "label": ".send(HTTPRequest)",
-      "sublabel": "start() 的 .send",
+      "label": "AuthRequester",
+      "sublabel": "原始請求唯一所有者",
       "lane": "main",
       "col": 3,
       "width": 118,
       "step": "04",
-      "tag": "start() 輸出"
+      "tag": "目標所有者"
     },
     {
       "id": "client-send",
       "type": "active",
-      "label": "AuthRequester",
-      "sublabel": "經 Requester 發送",
+      "label": "Requester",
+      "sublabel": "通用 HTTP 輸入／輸出",
       "lane": "main",
       "col": 4,
       "width": 118,
       "step": "05",
-      "tag": "internal"
+      "tag": "目標所有者"
     },
     {
       "id": "response",
       "type": "active",
-      "label": "raw HTTPResponse",
-      "sublabel": "所有 HTTP status 原樣保留",
+      "label": "原始 HTTPResponse",
+      "sublabel": "轉交給流程",
       "lane": "response",
       "col": 2,
       "width": 125,
@@ -82,55 +82,55 @@
     {
       "id": "receive",
       "type": "decision",
-      "label": "receive(response)",
-      "sublabel": "可產出 .send 或 .finish",
+      "label": "回應策略",
+      "sublabel": "結束／更新／重試",
       "lane": "response",
       "col": 1,
       "width": 130,
       "yOffset": 30,
-      "tag": "轉換"
+      "tag": "僅限 AuthFlow"
     },
     {
       "id": "resend",
       "type": "active",
-      "label": ".send(HTTPRequest)",
-      "sublabel": "receive() 的下一個 .send",
+      "label": "僅重試原始請求",
+      "sublabel": "不可任意建構請求",
       "lane": "response",
       "col": 1,
       "width": 130,
       "yOffset": 120,
-      "tag": "receive() 輸出"
+      "tag": "目標限制"
     },
     {
       "id": "start-finish",
       "type": "failure",
-      "label": ".finish",
-      "sublabel": "無 response → error",
+      "label": "待定的憑證更新",
+      "sublabel": "僅限後續主題",
       "lane": "terminal",
       "col": 0,
       "width": 110,
-      "tag": "start() 輸出"
+      "tag": "未命名／未實作"
     },
     {
       "id": "receive-finish",
       "type": "success",
-      "label": ".finish",
-      "sublabel": "回傳最後 response",
+      "label": "終態回應",
+      "sublabel": "由 AuthRequester 回傳",
       "lane": "terminal",
       "col": 2,
       "width": 110,
-      "tag": "receive() 輸出"
+      "tag": "目標結果"
     },
     {
       "id": "requester-failure",
       "type": "failure",
-      "label": "Requester error",
-      "sublabel": "直接傳遞；不呼叫 receive()",
+      "label": "既有模型 A",
+      "sublabel": ".send(HTTPRequest)；非目標",
       "lane": "terminal",
       "col": 2,
       "width": 130,
       "yOffset": -140,
-      "tag": "終態"
+      "tag": "歷史可追溯性"
     }
   ],
   "transitions": [
@@ -145,8 +145,8 @@
       "toSide": "left"
     },
     {
-      "id": "start-finishes",
-      "from": "start",
+      "id": "refresh-decision",
+      "from": "receive",
       "to": "start-finish",
       "route": "left-channel"
     },
@@ -161,20 +161,12 @@
       "to": "response"
     },
     {
-      "id": "requester-fails",
-      "from": "client-send",
-      "to": "requester-failure",
-      "fromSide": "right",
-      "toSide": "right",
-      "via": [[815, 157], [815, 339]]
-    },
-    {
       "id": "receives-response",
       "from": "response",
       "to": "receive"
     },
     {
-      "id": "receive-finishes",
+      "id": "terminal-decision",
       "from": "receive",
       "to": "receive-finish",
       "route": "bottom-channel",
@@ -182,7 +174,7 @@
       "toSide": "bottom",
       "via": [[480, 337], [480, 540], [710, 540]]
     },
-    { "id": "receive-resends", "from": "receive", "to": "resend" },
+    { "id": "retry-decision", "from": "receive", "to": "resend" },
     {
       "id": "client-sends-retry",
       "from": "resend",

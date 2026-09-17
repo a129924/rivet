@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>RivetHTTPClient — 設定式介面結構</title>
+<title>RivetHTTPClient — 認證責任目標</title>
 <script>
   // Dark is the style's default — the OS preference deliberately does not
   // override it, since these diagrams are authored and reviewed as dark. A
@@ -52,26 +52,13 @@
     --hint-faded: 0.75;
   }
   * { box-sizing: border-box; }
-  html { min-height: 100%; overflow-x: hidden; overflow-y: auto; }
-  body {
-    margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; overflow-y: auto;
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
     background: var(--bg); color: var(--ink);
     font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     -webkit-font-smoothing: antialiased;
   }
   #stage { position: fixed; inset: 0; }
-  #stage:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
-  #diagram-fallback {
-    position: relative; z-index: 11; width: min(34rem, calc(100vw - 36px));
-    margin: 88px 18px 88px auto; border: 1px solid var(--chrome-border);
-    border-radius: 12px; background: var(--chrome); color: var(--ink);
-  }
-  #diagram-fallback summary { cursor: pointer; padding: 11px 13px; font-size: 12px; font-weight: 700; }
-  #diagram-fallback .fallback-content { padding: 0 13px 13px; font-size: 12px; line-height: 1.6; }
-  #diagram-fallback h2, #diagram-fallback h3 { font-size: 13px; margin: 12px 0 6px; }
-  #diagram-fallback ol, #diagram-fallback ul { margin: 0; padding-left: 22px; }
-  #diagram-fallback li + li { margin-top: 6px; }
-  #diagram-fallback:focus-within, #diagram-fallback summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   #c { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
   #c.panning { cursor: grabbing; }
   #c.pointing { cursor: pointer; }
@@ -162,21 +149,16 @@
 </head>
 <body>
 
-<div id="stage" tabindex="0" role="region" aria-label="HTTP Client package 結構互動圖" aria-describedby="diagram-operations"><canvas id="c" aria-hidden="true"></canvas></div>
-
-<!-- HTTP_CLIENT_A11Y:START -->
-<p id="diagram-operations" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">此互動圖可用方向鍵平移，0 縮放至符合視窗，1 回到原始大小，T 切換主題，Esc 清除選取。可展開下方文字替代內容以讀取節點與關係。</p>
-<section id="diagram-fallback" aria-label="HTTP Client package 結構文字替代內容"></section>
-<!-- HTTP_CLIENT_A11Y:END -->
+<div id="stage"><canvas id="c"></canvas></div>
 
 <div id="plate">
-  <div class="k">RivetHTTPClient — 設定式請求 API</div>
-  <div class="n"><b>Configuration</b> → 受限基礎 URL／相對路徑合成 → <b>HTTPURL</b> → <b>HTTPRequest</b> → <b>Requester</b> → <b>Transport</b></div>
+  <div class="k">RivetHTTPClient — 認證責任目標</div>
+  <div class="n"><b>AuthRequester</b> 持有原始請求 → <b>AuthFlow</b> 擁有策略／狀態 → <b>Requester</b> 執行通用輸入／輸出</div>
 </div>
 
 <div id="hint">
-  <div><kbd>拖曳／雙指捲動</kbd> 平移 &nbsp;·&nbsp; <kbd>雙指縮放</kbd> 縮放</div>
-  <div><kbd>點擊</kbd> 聚焦 &nbsp;·&nbsp; <kbd>0</kbd> 符合視窗 &nbsp;·&nbsp; <kbd>T</kbd> 主題 &nbsp;·&nbsp; <kbd>Esc</kbd> 清除</div>
+  <div><kbd>drag / two-finger scroll</kbd> pan &nbsp;·&nbsp; <kbd>pinch</kbd> zoom</div>
+  <div><kbd>click</kbd> isolate &nbsp;·&nbsp; <kbd>0</kbd> fit &nbsp;·&nbsp; <kbd>t</kbd> theme &nbsp;·&nbsp; <kbd>esc</kbd> clear</div>
 </div>
 
 <div id="readout">
@@ -185,20 +167,20 @@
   <div class="d"></div>
 </div>
 
-<div class="bar" id="toolbar" role="toolbar" aria-label="互動圖工具列">
-  <button id="bOut" title="縮小（−）" aria-label="縮小">
+<div class="bar" id="toolbar">
+  <button id="bOut" title="Zoom out (−)" aria-label="Zoom out">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M8 11h6"/></svg>
   </button>
   <div id="zoomLabel">100%</div>
-  <button id="bIn" title="放大（+）" aria-label="放大">
+  <button id="bIn" title="Zoom in (+)" aria-label="Zoom in">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M8 11h6M11 8v6"/></svg>
   </button>
   <div class="sep"></div>
-  <button id="bFit" title="符合視窗（0）">符合視窗</button>
-  <button id="bOne" title="原始大小（1）">1:1</button>
+  <button id="bFit" title="Fit to screen (0)">Fit</button>
+  <button id="bOne" title="Actual size (1)">1:1</button>
   <div class="sep"></div>
-  <button id="bTheme" title="切換淺色與深色主題（T）" aria-label="切換淺色與深色主題"></button>
-  <button id="bPng" title="下載 PNG（2 倍）" aria-label="下載 PNG（2 倍）">
+  <button id="bTheme" title="Light theme (t)" aria-label="Toggle light and dark theme"></button>
+  <button id="bPng" title="Download PNG @2×">
     <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
   </button>
 </div>
@@ -299,120 +281,95 @@
   function planeColor(id) { return (PLANES[id] || { c: C.slate }).c; }
 
   // ======================== SCENE START (generated) =========================
-const W = 1480, H = 1110;
+const W = 1480, H = 1480;
 
-// 此圖只表達套件所有權與編譯期依賴，不描述 Transport 的執行期請求／回應流程。
+// 此架構圖只表達已採用模型 C 的責任／依賴目標；它不是現行執行期序列。
+// 虛線表示 Rivet 擁有的抽象；實線表示呼叫端、外部或待定邊界。
 const PLANES = {
-  caller:     { c: '#F6821F', label: '呼叫端 API 領域' },
-  client:     { c: '#A78BFA', label: 'HTTP 用戶端抽象' },
-  contracts:  { c: '#22D3EE', label: 'HTTP 合約' },
-  transport:  { c: '#4ADE80', label: 'Transport 邊界' },
-  outside:    { c: '#94A3B8', label: '外部' }
+  caller: { c: '#94A3B8', label: '呼叫端' },
+  coordination: { c: '#22D3EE', label: '協調與請求所有權' },
+  policy: { c: '#A78BFA', label: '認證策略／狀態' },
+  io: { c: '#4ADE80', label: '通用 HTTP 輸入／輸出' },
+  deferred: { c: '#F6821F', label: '未來待定邊界' }
 };
 
 const BANDS = [
-  { id:'band-caller', plane:'caller', x:110, y:185, w:1260, h:120, alpha:0.48,
-    hdr:{x:140,y:215,t:'呼叫端／領域層'}, tagr:{x:1340,y:215,t:'不屬於 RivetHTTPClient',alpha:0.6} },
-  { id:'band-contracts', plane:'contracts', x:110, y:325, w:1260, h:220, alpha:0.5, dash:true,
-    hdr:{x:140,y:355,t:'RivetHTTPClient — HTTP 合約'}, tagr:{x:1340,y:355,t:'已實作最小介面',alpha:0.6} },
-  { id:'band-client', plane:'client', x:110, y:565, w:1260, h:140, alpha:0.5, dash:true,
-    hdr:{x:140,y:595,t:'用戶端抽象'}, tagr:{x:1340,y:595,t:'已實作 · 型別化失敗',alpha:0.6} },
-  { id:'band-transport', plane:'transport', x:110, y:725, w:1260, h:135, alpha:0.5, dash:true,
-    hdr:{x:140,y:755,t:'TRANSPORT 邊界'}, tagr:{x:1340,y:755,t:'注入式合約',alpha:0.6} },
-  { id:'band-outside', plane:'outside', x:110, y:880, w:1260, h:135, alpha:0.48,
-    hdr:{x:140,y:910,t:'外部 — FOUNDATION 表層'}, tagr:{x:1340,y:910,t:'非 Rivet 所有',alpha:0.6} }
+  { id:'band-caller', plane:'caller', x:110, y:185, w:1260, h:146, alpha:0.48,
+    hdr:{x:140,y:215,t:'呼叫端'}, tagr:{x:1340,y:215,t:'交接前的原始請求所有者',alpha:0.6} },
+  { id:'band-coordination', plane:'coordination', x:110, y:405, w:1260, h:182, alpha:0.5, dash:true,
+    hdr:{x:140,y:435,t:'AuthRequester — 協調'}, tagr:{x:1340,y:435,t:'Rivet 所有 — 原始請求唯一所有者',alpha:0.6} },
+  { id:'band-policy', plane:'policy', x:110, y:665, w:1260, h:220, alpha:0.5, dash:true,
+    hdr:{x:140,y:695,t:'認證策略／狀態'}, tagr:{x:1340,y:695,t:'Rivet 所有 — 不建構請求、不執行輸入／輸出',alpha:0.6} },
+  { id:'band-io', plane:'io', x:110, y:965, w:1260, h:182, alpha:0.5, dash:true,
+    hdr:{x:140,y:995,t:'通用 HTTP 輸入／輸出'}, tagr:{x:1340,y:995,t:'Requester 是輸入／輸出所有者',alpha:0.6} },
+  { id:'band-deferred', plane:'deferred', x:110, y:1225, w:1260, h:132, alpha:0.48,
+    hdr:{x:140,y:1255,t:'待定的未來邊界'}, tagr:{x:1340,y:1255,t:'未定義型別／端點／程式介面',alpha:0.6} }
 ];
 
 const BOXES = [
-  { id:'application-caller', plane:'caller', band:'band-caller', x:160,y:232,w:1160,h:68,r:10,
-    name:'應用程式／轉接器呼叫端',about:'呼叫端以通用 HTTPClient.Configuration 設定 base URL、headers 與 timeout；不引入端點策略。',
-    texts:[['bl',184,260,'應用程式／轉接器呼叫端'],['bs',184,282,'設定 Configuration；發送絕對 URL 或相對路徑']] },
-  { id:'http-url', plane:'contracts', band:'band-contracts', x:140,y:385,w:262,h:88,r:10,dash:true,
-    name:'HTTPURL',about:'套件擁有的值物件；只接受有 host 的 http 或 https URL，並承接用戶端已驗證的 URL。',
-    texts:[['bl',164,413,'HTTPURL'],['bs',164,435,'http／https + 主機'],['bn',164,457,'用戶端 URL 驗證以 typed throws 回報']] },
-  { id:'url-error', plane:'contracts', band:'band-contracts', x:423,y:385,w:262,h:88,r:10,dash:true,
-    name:'HTTPURLValidationError',about:'區分 URL、設定與相對路徑驗證的套件擁有錯誤。',
-    texts:[['bl',447,413,'HTTPURLValidationError'],['bs',447,435,'URL／設定／路徑驗證'],['bn',447,457,'不混入 Transport 失敗']] },
-  { id:'request', plane:'contracts', band:'band-contracts', x:706,y:385,w:262,h:88,r:10,dash:true,
-    name:'HTTPRequest',about:'只持有已驗證 HTTPURL、method、headers 與可選 body。',
-    texts:[['bl',730,413,'HTTPRequest'],['bs',730,435,'HTTPURL · method · headers'],['bn',730,457,'body: Data?；不以 throws 回報']] },
-  { id:'response', plane:'contracts', band:'band-contracts', x:989,y:385,w:330,h:88,r:10,dash:true,
-    name:'HTTPResponse',about:'Transport 未經 status 或解碼政策處理的原始回應合約。',
-    texts:[['bl',1013,413,'HTTPResponse'],['bs',1013,435,'status · headers · body'],['bn',1013,457,'原始回傳值']] },
-  { id:'auth', plane:'contracts', band:'band-contracts', x:140,y:495,w:262,h:42,r:10,dash:true,
-    name:'Auth',about:'現行 makeFlow(for:) 是既有模型 A；採用的模型 C 則提供策略與獨立流程，確切工廠 API 尚未鎖定。',
-    texts:[['bs',164,522,'Auth — 既有模型 A／模型 C 目標架構']] },
-  { id:'auth-flow', plane:'contracts', band:'band-contracts', x:423,y:495,w:262,h:42,r:10,dash:true,
-    name:'AuthFlow',about:'現行 .send(HTTPRequest) 能力是既有模型 A；採用的模型 C 只擁有認證策略／狀態與重試決策。',
-    texts:[['bs',447,522,'AuthFlow — 目標策略／狀態']] },
-  { id:'method-headers', plane:'contracts', band:'band-contracts', x:706,y:495,w:613,h:42,r:10,dash:true,
-    name:'HTTPMethod 與 HTTPHeaders',about:'HTTPRequest 使用的套件擁有 method 與 header 值型別。',
-    texts:[['bs',730,522,'HTTPMethod 與 HTTPHeaders — 套件擁有的請求中繼資料']] },
-  { id:'http-client', plane:'client', band:'band-client', x:140,y:620,w:360,h:68,r:10,dash:true,
-    name:'HTTPClient／Configuration',about:'公開通用 HTTP 介面；Configuration 合成相對路徑、合併 headers 並設定 timeout，所有介面經 execute 委派。',
-    texts:[['bl',164,648,'HTTPClient／Configuration'],['bs',164,670,'絕對 URL／相對路徑 → execute(_:)']] },
-  { id:'auth-requester', plane:'client', band:'band-client', x:540,y:620,w:360,h:68,r:10,dash:true,
-    name:'AuthRequester',about:'現行驅動迴圈是既有模型 A；採用的模型 C 中它是原始請求唯一所有者與語意解讀者。',
-    texts:[['bl',564,648,'AuthRequester'],['bs',564,670,'目標：原始請求所有者與語意解讀者']] },
-  { id:'requester', plane:'client', band:'band-client', x:940,y:620,w:379,h:68,r:10,dash:true,
-    name:'Requester',about:'把已驗證 HTTPRequest 映射為 Foundation URLRequest；不重驗 URL。',
-    texts:[['bl',964,648,'Requester'],['bs',964,670,'HTTPRequest → URLRequest']] },
-  { id:'transport', plane:'transport', band:'band-transport', x:140,y:780,w:1179,h:68,r:10,dash:true,
-    name:'Transport／URLSessionTransport',about:'注入式 typed-throws 合約與套件擁有的正式 URLSession Transport。',
-    texts:[['bl',164,808,'Transport／URLSessionTransport'],['bs',164,830,'HTTPClientError；raw HTTP status']] },
-  { id:'url-request', plane:'outside', band:'band-outside', x:140,y:935,w:350,h:68,r:10,
-    name:'Foundation URLRequest',about:'Requester 實際映射到的 Foundation 請求表層。',
-    texts:[['bl',164,963,'Foundation URLRequest'],['bs',164,985,'Requester 的輸出表層']] },
-  { id:'foundation-url-data', plane:'outside', band:'band-outside', x:530,y:935,w:350,h:68,r:10,
-    name:'Foundation URL／Data',about:'HTTPURL 值與請求／回應 body 直接使用的 Foundation 型別。',
-    texts:[['bl',554,963,'Foundation URL／Data'],['bs',554,985,'值與 body 的直接依賴']] },
-  { id:'urlsession', plane:'outside', band:'band-outside', x:920,y:935,w:399,h:68,r:10,
-    name:'Foundation URLSession',about:'URLSessionTransport 採用的外部網路表層。',
-    texts:[['bl',944,963,'Foundation URLSession'],['bs',944,985,'由套件擁有的 Transport 採用']] }
+  { id:'caller', plane:'caller', band:'band-caller', x:180,y:240,w:1120,h:68,r:10,
+    name:'呼叫端原始 HTTPRequest',about:'呼叫端交付原始請求；在目標架構中僅 AuthRequester 於執行生命週期內持有它。',
+    texts:[['bl',204,268,'呼叫端原始 HTTPRequest'],['bs',204,290,'呼叫端意圖：URL · 方法 · 查詢 · 本體；不交給 AuthFlow']] },
+  { id:'auth-requester', plane:'coordination', band:'band-coordination', x:180,y:466,w:530,h:86,r:10,dash:true,
+    name:'AuthRequester',about:'保有呼叫端原始請求並解讀流程的語意決策，不重訂認證策略。',
+    texts:[['bl',204,494,'AuthRequester'],['bs',204,516,'原始請求唯一所有者；語意解讀者'],['bn',204,538,'只委派輸入／輸出；不擁有重試策略']] },
+  { id:'request-instance', plane:'coordination', band:'band-coordination', x:770,y:466,w:530,h:86,r:10,dash:true,
+    name:'保留的 HTTPRequest',about:'由 AuthRequester 以保留的呼叫端意圖準備的選定請求；裝飾表示法尚未鎖定。',
+    texts:[['bl',794,494,'保留的 HTTPRequest'],['bs',794,516,'保留呼叫端意圖；裝飾表示法待定'],['bn',794,538,'不是 AuthFlow 可任意建構的請求']] },
+  { id:'auth', plane:'policy', band:'band-policy', x:180,y:726,w:346,h:108,r:10,dash:true,
+    name:'Auth',about:'提供認證策略與獨立流程，不擁有個別執行的狀態或輸入／輸出。',
+    texts:[['bl',204,754,'Auth'],['bs',204,776,'認證策略／流程提供者'],['bs',204,792,'不持有原始請求或輸入／輸出'],['bn',204,814,'確切工廠簽章待定']] },
+  { id:'auth-flow', plane:'policy', band:'band-policy', x:592,y:726,w:346,h:108,r:10,dash:true,
+    name:'AuthFlow',about:'唯一擁有認證狀態、回應策略、更新資格、重試上限與終結決策。',
+    texts:[['bl',616,754,'AuthFlow'],['bs',616,776,'認證策略／狀態機'],['bs',616,792,'讀取 HTTPResponse 語意；控制重試'],['bn',616,814,'不建構請求；不執行輸入／輸出']] },
+  { id:'semantic-decision', plane:'policy', band:'band-policy', x:1004,y:726,w:296,h:108,r:10,dash:true,
+    name:'語意決策',about:'流程的目標輸出只描述下一步語意，未鎖定列舉或請求裝飾表示法。',
+    texts:[['bl',1028,754,'語意決策'],['bs',1028,776,'傳送／更新／結束等語意'],['bs',1028,792,'確切操作形狀待定'],['bn',1028,814,'不授予請求能力']] },
+  { id:'requester', plane:'io', band:'band-io', x:180,y:1026,w:346,h:86,r:10,dash:true,
+    name:'Requester',about:'唯一通用 HTTP 輸入／輸出所有者；接收選定 HTTPRequest 並回傳原始 HTTPResponse。',
+    texts:[['bl',204,1054,'Requester'],['bs',204,1076,'HTTPRequest → 原始 HTTPResponse'],['bn',204,1098,'不認識認證策略或重試']] },
+  { id:'transport', plane:'io', band:'band-io', x:592,y:1026,w:346,h:86,r:10,dash:true,
+    name:'Transport',about:'套件所有的 HTTP 執行邊界；Requester 將選定請求委派給 Transport。',
+    texts:[['bl',616,1054,'Transport'],['bs',616,1076,'執行 HTTP 輸入／輸出'],['bn',616,1098,'不擁有認證語意']] },
+  { id:'raw-response', plane:'io', band:'band-io', x:1004,y:1026,w:296,h:86,r:10,dash:true,
+    name:'原始 HTTPResponse',about:'所有 HTTP 狀態原樣回傳；AuthFlow 只將它當作策略輸入。',
+    texts:[['bl',1028,1054,'原始 HTTPResponse'],['bs',1028,1076,'401 等回應語意'],['bn',1028,1098,'不在輸入／輸出邊界重訂策略']] },
+  { id:'refresh-boundary', plane:'deferred', band:'band-deferred', x:280,y:1280,w:920,h:56,r:10,
+    name:'待定的憑證更新輸入／輸出邊界',about:'僅後續具體消費端主題才可鎖定的憑證更新機制；本主題不命名型別、端點、憑證程式介面或結果契約。',
+    texts:[['bl',304,1308,'待定的憑證更新輸入／輸出邊界'],['bs',304,1328,'僅限後續具體消費端主題；AuthRequester 派送語意上的憑證更新，不由 AuthFlow 直接呼叫']] }
 ];
 
 const EDGES = [
-  { from:'application-caller',to:'http-client',pts:[[740,306],[740,580],[320,580],[320,614]],label:{s:'al',x:338,y:560,t:'設定並呼叫',rot:-90,anchor:'center'} },
-  { from:'http-url',to:'url-error',pts:[[407,429],[417,429]],label:{s:'al',x:412,y:417,t:'型別化錯誤',anchor:'center'} },
-  { from:'request',to:'http-url',pts:[[837,479],[837,482],[271,482],[271,479]],label:{s:'al',x:554,y:480,t:'依賴',anchor:'center'} },
-  { from:'request',to:'method-headers',pts:[[973,429],[978,429],[978,516],[963,516]],label:{s:'al',x:971,y:466,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'auth',to:'auth-flow',pts:[[407,516],[417,516]],label:{s:'al',x:412,y:504,t:'建立',anchor:'center'} },
-  { from:'http-client',to:'requester',pts:[[505,640],[925,640],[925,642],[934,642]],label:{s:'al',x:722,y:628,t:'設定後執行',anchor:'center'} },
-  { from:'auth-requester',to:'auth',pts:[[650,614],[650,575],[271,575],[271,543]],label:{s:'al',x:668,y:580,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'auth-requester',to:'requester',pts:[[905,670],[925,670],[925,666],[934,666]],label:{s:'al',x:915,y:690,t:'注入',rot:-90,anchor:'center'} },
-  { from:'auth-requester',to:'auth-flow',pts:[[720,614],[720,555],[554,555],[554,543]],label:{s:'al',x:737,y:580,t:'回應／語意決策',rot:-90,anchor:'center'} },
-  { from:'auth-requester',to:'request',pts:[[780,614],[780,580],[837,580],[837,479]],label:{s:'al',x:800,y:568,t:'目標所有者',anchor:'center'} },
-  { from:'auth-requester',to:'response',pts:[[860,614],[860,600],[1154,600],[1154,479]],label:{s:'al',x:1007,y:588,t:'策略輸入',anchor:'center'} },
-  { from:'http-client',to:'request',pts:[[320,614],[320,555],[837,555],[837,479]],label:{s:'al',x:854,y:568,t:'建立',rot:-90,anchor:'center'} },
-  { from:'http-client',to:'response',pts:[[360,614],[360,557],[1154,557],[1154,479]],label:{s:'al',x:1171,y:568,t:'回傳型別',rot:-90,anchor:'center'} },
-  { from:'requester',to:'request',pts:[[1075,614],[1075,550],[837,550],[837,479]],label:{s:'al',x:1092,y:575,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'response',pts:[[1244,614],[1244,550],[1154,550],[1154,479]],label:{s:'al',x:1261,y:575,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'transport',pts:[[1129,694],[1129,770],[730,770],[730,774]],label:{s:'al',x:747,y:735,t:'注入依賴',rot:-90,anchor:'center'} },
-  { from:'transport',to:'response',pts:[[730,774],[730,715],[1154,715],[1154,479]],label:{s:'al',x:1171,y:652,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'requester',to:'url-request',pts:[[1129,694],[1129,870],[315,870],[315,929]],label:{s:'al',x:332,y:841,t:'Foundation 對映',rot:-90,anchor:'center'} },
-  { from:'transport',to:'url-request',pts:[[315,854],[315,929]],label:{s:'al',x:332,y:891,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'http-url',to:'foundation-url-data',pts:[[271,479],[271,557],[705,557],[705,929]],label:{s:'al',x:722,y:727,t:'URL 值',rot:-90,anchor:'center'} },
-  { from:'request',to:'foundation-url-data',pts:[[837,479],[837,562],[705,562],[705,929]],label:{s:'al',x:854,y:538,t:'body Data',rot:-90,anchor:'center'} },
-  { from:'response',to:'foundation-url-data',pts:[[1154,479],[1154,567],[705,567],[705,929]],label:{s:'al',x:1171,y:538,t:'body Data',rot:-90,anchor:'center'} },
-  { from:'transport',to:'urlsession',pts:[[1120,854],[1120,870],[1120,929]],label:{s:'al',x:1137,y:892,t:'正式執行',rot:-90,anchor:'center'} }
+  { from:'caller',to:'auth-requester',pts:[[740,314],[740,390],[445,390],[445,460]],label:{s:'al',x:462,y:370,t:'交付原始請求',rot:-90,anchor:'center'} },
+  { from:'auth-requester',to:'auth',pts:[[330,558],[330,710],[353,710],[353,720]],label:{s:'al',x:370,y:634,t:'取得策略／流程',rot:-90,anchor:'center'} },
+  { from:'auth',to:'auth-flow',pts:[[532,780],[586,780]],label:{s:'al',x:559,y:768,t:'獨立流程',anchor:'center'} },
+  { from:'auth-requester',to:'auth-flow',pts:[[500,558],[500,672],[765,672],[765,720]],label:{s:'al',x:782,y:644,t:'回應輸入',rot:-90,anchor:'center'} },
+  { from:'auth-flow',to:'semantic-decision',pts:[[944,780],[998,780]],label:{s:'al',x:971,y:768,t:'輸出語意',anchor:'center'} },
+  { from:'semantic-decision',to:'auth-requester',pts:[[1152,840],[1152,910],[92,910],[92,509],[174,509]],label:{s:'al',x:76,y:708,t:'AuthRequester 解讀決策',rot:-90,anchor:'center'} },
+  { from:'auth-requester',to:'request-instance',pts:[[716,509],[764,509]],label:{s:'al',x:740,y:497,t:'保留呼叫端意圖',anchor:'center'} },
+  { from:'request-instance',to:'requester',pts:[[1035,558],[1035,930],[353,930],[353,1020]],label:{s:'al',x:1052,y:744,t:'選定請求',rot:-90,anchor:'center'} },
+  { from:'requester',to:'transport',pts:[[532,1069],[586,1069]],label:{s:'al',x:559,y:1057,t:'委派輸入／輸出',anchor:'center'} },
+  { from:'transport',to:'raw-response',pts:[[944,1069],[998,1069]],label:{s:'al',x:971,y:1057,t:'原始回應',anchor:'center'} },
+  { from:'raw-response',to:'auth-requester',pts:[[1152,1020],[1152,930],[1360,930],[1360,509],[1306,509]],label:{s:'al',x:1376,y:720,t:'回傳策略輸入',rot:-90,anchor:'center'} },
+  { from:'auth-requester',to:'refresh-boundary',pts:[[445,558],[445,1218],[740,1218],[740,1274]],label:{s:'al',x:757,y:980,t:'派送語意更新',rot:-90,anchor:'center'} }
 ];
 
 const TEXTS = [
-  {s:'title',x:110,y:86,t:'RivetHTTPClient — 設定式介面結構'},
-  {s:'sub',x:110,y:118,t:'Configuration → URL 驗證／合成 → 原始執行；Auth 區塊標示既有模型 A 與已採用、尚未實作的模型 C'},
-  {s:'tag',x:110,y:146,runs:[{t:'Configuration',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'HTTPURL',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'HTTPRequest',fill:planeColor('contracts')},{t:' → ',fill:'#4A5462'},{t:'Requester',fill:planeColor('client')},{t:' → ',fill:'#4A5462'},{t:'Transport',fill:planeColor('transport')}]},
+  {s:'title',x:110,y:86,t:'RivetHTTPClient — 認證責任目標'},
+  {s:'sub',x:110,y:118,t:'原始請求所有權 → 語意策略／狀態 → 通用 HTTP 輸入／輸出；已採用模型 C，尚未實作'},
+  {s:'tag',x:110,y:146,runs:[{t:'AuthRequester',fill:planeColor('coordination')},{t:' 持有原始請求；',fill:'#4A5462'},{t:'AuthFlow',fill:planeColor('policy')},{t:' 只擁有策略／狀態；',fill:'#4A5462'},{t:'Requester',fill:planeColor('io')},{t:' 執行通用輸入／輸出',fill:'#4A5462'}]},
   {s:'legend',x:1082,y:86,t:'虛線 — Rivet 擁有的抽象'},
-  {s:'legend',x:1082,y:110,t:'實線 — 呼叫端、Foundation 或外部表層'},
-  {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任層'},
-  {s:'bn',x:110,y:1040,t:'不變量：Configuration 提供通用 base URL／相對路徑便利功能，不是端點或查詢建構器'},
-  {s:'bn',x:110,y:1060,t:'不變量：HTTPURL 驗證與 HTTPClientError 分別表達設定／URL／路徑驗證、Transport 失敗；HTTP status 維持原始回應'},
-  {s:'bn',x:110,y:1080,t:'Auth 歷史／目標架構：現行 `.send(HTTPRequest)` 是既有模型 A；模型 C 將策略／狀態、原始請求與輸入／輸出分離，Swift 遷移尚待後續主題'}
+  {s:'legend',x:1082,y:110,t:'實線 — 呼叫端或待定邊界'},
+  {s:'legend',x:1143,y:134,t:'顏色 — 所屬責任層'},
+  {s:'bn',x:110,y:1406,t:'歷史：現行 `.send(HTTPRequest)` 任意請求能力是既有模型 A 基線，不是本圖目標。'},
+  {s:'bn',x:110,y:1426,t:'限制：本圖不建立 HeaderOverlay、CredentialRefresher、AuthEvent、TokenFetcher 或 TokenProvider 執行期。'},
+  {s:'bn',x:110,y:1446,t:'未來：憑證更新輸入／輸出、憑證更新、操作／失敗／非同步程式介面必須由獨立具體消費端主題鎖定。'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},
   {x:1046,y:99,w:26,h:13,stroke:C.boxStroke,alpha:1,fill:C.boxFill}
 ];
-const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>({x:1046+i*13,y:123,w:9,h:13,fill:planeColor(id)}));
+const CHIPS = ['caller','coordination','policy','io','deferred'].map((id,i)=>({x:1046+i*13,y:123,w:9,h:13,fill:planeColor(id)}));
 
   // ========================= SCENE END ======================================
 
@@ -871,62 +828,12 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-
-  function createTextFallback() {
-    const target = document.getElementById('diagram-fallback');
-    const details = document.createElement('details');
-    const summary = document.createElement('summary');
-    summary.textContent = '開啟文字替代內容（節點與關係）';
-    details.appendChild(summary);
-    const content = document.createElement('div');
-    content.className = 'fallback-content';
-    const nodeTitle = document.createElement('h2');
-    nodeTitle.textContent = '節點';
-    content.appendChild(nodeTitle);
-    const nodes = document.createElement('ol');
-    BOXES.forEach(box => {
-      const item = document.createElement('li');
-      const plane = PLANES[box.plane] || { label: box.plane };
-      item.textContent = box.name + '；' + plane.label + '。' + box.about;
-      nodes.appendChild(item);
-    });
-    content.appendChild(nodes);
-    const relationTitle = document.createElement('h3');
-    relationTitle.textContent = '關係';
-    content.appendChild(relationTitle);
-    const relations = document.createElement('ul');
-    EDGES.forEach(edge => {
-      const item = document.createElement('li');
-      const from = BOX_BY_ID.get(edge.from);
-      const to = BOX_BY_ID.get(edge.to);
-      const relationLabel = edge.label ? '：' + edge.label.t : '';
-      item.textContent = (from ? from.name : edge.from) + ' → ' + (to ? to.name : edge.to) + relationLabel;
-      relations.appendChild(item);
-    });
-    content.appendChild(relations);
-    const annotationTitle = document.createElement('h3');
-    annotationTitle.textContent = '圖表註記';
-    content.appendChild(annotationTitle);
-    const annotations = document.createElement('ul');
-    TEXTS.forEach(entry => {
-      const text = entry.t || (entry.runs ? entry.runs.map(run => run.t).join('') : '');
-      if (!text || entry.s === 'plane') return;
-      const item = document.createElement('li');
-      item.textContent = text;
-      annotations.appendChild(item);
-    });
-    content.appendChild(annotations);
-    details.appendChild(content);
-    target.appendChild(details);
-  }
-
   // ---- pointer
   let dragging = false, moved = false, lastX = 0, lastY = 0, downX = 0, downY = 0;
   const pointers = new Map();
   let pinchDist = 0, pinchK = 1;
 
   canvas.addEventListener('pointerdown', (e) => {
-    document.getElementById('stage').focus({ preventScroll: true });
     canvas.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, [e.clientX, e.clientY]);
     if (pointers.size === 2) {
@@ -1059,9 +966,8 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   });
 
   // ---- keyboard
-  const stage = document.getElementById('stage');
-  stage.addEventListener('keydown', (e) => {
-    if (e.target !== stage || e.metaKey || e.ctrlKey) return;
+  window.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey) return;
     const pan = e.shiftKey ? 220 : 70;
     switch (e.key) {
       case '0': fit(true); break;
@@ -1069,18 +975,17 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
       case 't': case 'T': toggleTheme(); break;
       case '+': case '=': zoomAt(view.k * 1.3, vw / 2, vh / 2, true); break;
       case '-': case '_': zoomAt(view.k / 1.3, vw / 2, vh / 2, true); break;
-      case 'Escape': focused = null; readout.classList.remove('on'); schedule(); break;
-      case 'ArrowLeft': view.x += pan; schedule(); break;
+      case 'Escape':
+        focused = null; readout.classList.remove('on'); schedule(); break;
+      case 'ArrowLeft':  view.x += pan; schedule(); break;
       case 'ArrowRight': view.x -= pan; schedule(); break;
-      case 'ArrowUp': view.y += pan; schedule(); break;
-      case 'ArrowDown': view.y -= pan; schedule(); break;
+      case 'ArrowUp':    view.y += pan; schedule(); break;
+      case 'ArrowDown':  view.y -= pan; schedule(); break;
       default: return;
     }
     e.preventDefault();
     hint.classList.add('faded');
   });
-
-  createTextFallback();
 
   // ---- toolbar
   document.getElementById('bIn').onclick  = () => zoomAt(view.k * 1.3, vw / 2, vh / 2, true);
@@ -1103,9 +1008,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
     theme = t;
     document.documentElement.setAttribute('data-theme', t);
     themeButton.innerHTML = t === 'dark' ? SUN : MOON;
-    const nextThemeLabel = t === 'dark' ? '切換為淺色主題（T）' : '切換為深色主題（T）';
-    themeButton.title = nextThemeLabel;
-    themeButton.setAttribute('aria-label', nextThemeLabel);
+    themeButton.title = (t === 'dark' ? 'Light' : 'Dark') + ' theme (t)';
     if (remember) { try { localStorage.setItem('ac-theme', t); } catch (e) {} }
     schedule();
   }
@@ -1126,7 +1029,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
   } catch (e) {
     embedded = true;   // cross-origin parent — same sandbox story
   }
-  if (embedded) { pngButton.title = '在新分頁開啟 PNG（2 倍）'; pngButton.setAttribute('aria-label', '在新分頁開啟 PNG（2 倍）'); }
+  if (embedded) pngButton.title = 'Open PNG @2× in a new tab';
 
   // Renders the full diagram at 2× into an offscreen canvas, ignoring the
   // current pan/zoom and any focus state.
@@ -1157,7 +1060,7 @@ const CHIPS = ['caller','client','contracts','transport','outside'].map((id,i)=>
         // best shot, and it costs nothing when it fails.
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'http-client-package-structure@2x.png';
+        a.download = 'redefine-auth-subsystem-responsibilities-component-dependency@2x.png';
         a.click();
       } else {
         ttl = 60000;
