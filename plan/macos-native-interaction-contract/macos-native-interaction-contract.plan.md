@@ -8,7 +8,7 @@
 - Base：建立於最新 `dev` 的獨立 worktree；此事由上游已確認，Plan-Creator不執行Git。
 - 唯一 durable output：`docs/presentation/native-interaction-contract.md`
 - 目的：把已採用 HTML workflow 與 UI/UX `SHOULD FIX` 轉為 native macOS 行為契約；不實作Swift。
-- Current status：原topic維持completed／adopted。上一輪PR-10 `approved`、IM-06 completed、TE-08 PASS、RV-10 `approved`、Human commit message confirmed、DL-05 commit `4ea0af9`、DL-06 push與DL-07三threads reply＋resolve均已完成。PC-11 entry baseline的PR head、local HEAD與origin head皆為`4ea0af9`且working tree clean。本輪6個threads均unresolved／non-outdated；RV-11已明示`needs-rework`並鎖定T1～T6。PC-11已完成planning correction，下一gate唯一為獨立PR-11；IM-07／TE-09／RV-12／DL-08～DL-10均pending。此cycle不授權或自動開始Swift implementation。
+- Current status：原topic維持completed／adopted。上一輪PR-11 `approved`、IM-07 completed、TE-09 PASS、RV-12 `approved`、Human commit message confirmed、DL-08 commit `afc5616`、DL-09 push與DL-10六threads reply＋resolve均已完成。PC-12 entry baseline的PR head、local HEAD與origin head皆為`afc5616`且working tree clean。本輪4個L1～L4 threads均unresolved／non-outdated；RV-13已明示`needs-rework`並鎖定L1～L4。PC-12已完成planning correction，下一gate唯一為獨立PR-12；IM-08／TE-10／RV-14／DL-11～DL-13均pending。此cycle不授權或自動開始Swift implementation。
 
 ## Goal
 
@@ -95,11 +95,16 @@ PR-04明示`approved`後，IM-01只新增：
 | IM-06 U1～U3 durable correction（只可在PR-10 `approved`後） | `docs/presentation/native-interaction-contract.md` |
 | TE-08／RV-10 verification | `None` |
 | DL-05 human-confirmed commit／DL-06 push／DL-07 thread resolution | `None` |
-| PC-11 T1～T6 planning／technical correction（current） | `analysis/macos-native-interaction-contract/technical-spec.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.plan.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.step.md` |
+| PC-11 T1～T6 planning／technical correction（completed） | `analysis/macos-native-interaction-contract/technical-spec.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.plan.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.step.md` |
 | PR-11 planning verification | `None` |
 | IM-07 T2～T6 durable correction（只可在PR-11 `approved`後） | `docs/presentation/native-interaction-contract.md` |
 | TE-09／RV-12 verification | `None` |
 | DL-08 human-confirmed commit／DL-09 push／DL-10 six-thread resolution | `None` |
+| PC-12 L1～L4 planning／technical correction（current） | `analysis/macos-native-interaction-contract/technical-spec.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.plan.md`<br>`plan/macos-native-interaction-contract/macos-native-interaction-contract.step.md` |
+| PR-12 planning verification | `None` |
+| IM-08 L1／L2／L4 durable correction（只可在PR-12 `approved`後） | `docs/presentation/native-interaction-contract.md` |
+| TE-10／RV-14 verification | `None` |
+| DL-11 human-confirmed commit／DL-12 push／DL-13 four-thread resolution | `None` |
 | Plan-Reviewer／Tester／Reviewer verification | `None` |
 
 若任一`Written` path在其初次建立phase開始前已存在，該phase仍須停止並回報`blocked`，不得臨時改以`Modify`處理。C4明示不改；C9／C10只在修正push後留言說明並resolve，不增加任何repository path allowlist。
@@ -116,7 +121,8 @@ PR-04明示`approved`後，IM-01只新增：
 - PC-07／PC-08只允許修改相同的technical spec、plan與step ledger exact paths；allowlist scope不變，`requirements.md`與durable contract在兩個phase均ReadOnly。只有獨立PR-08明示`approved`後，IM-04才只允許修改`docs/presentation/native-interaction-contract.md`。
 - PC-09只允許修改plan與step ledger；technical spec、requirements與durable contract均ReadOnly。只有獨立PR-09明示`approved`後，IM-05才只允許修改`docs/presentation/native-interaction-contract.md`；該cycle已完成delivery。
 - PC-10的`Written`與`Deleted`均為`None`，`Modify`只包含technical spec、plan與step ledger三個exact paths；PR-10 `approved`後IM-06只修改durable contract，該cycle已完成delivery。
-- Current PC-11的`Written`與`Deleted`均為`None`，`Modify`只包含technical spec、plan與step ledger三個exact paths；requirements、durable contract及所有未列paths均ReadOnly。只有獨立PR-11明示`approved`後，IM-07的`Modify`才只包含`docs/presentation/native-interaction-contract.md`；其`Written`／`Deleted`仍為`None`，其他paths全為ReadOnly。
+- PC-11的`Written`與`Deleted`均為`None`，`Modify`只包含technical spec、plan與step ledger三個exact paths；PR-11 `approved`後IM-07只修改durable contract，該cycle已完成delivery。
+- Current PC-12的`Written`與`Deleted`均為`None`，`Modify`只包含technical spec、plan與step ledger三個exact paths；requirements、durable contract及所有未列paths均ReadOnly。只有獨立PR-12明示`approved`後，IM-08的`Modify`才只包含`docs/presentation/native-interaction-contract.md`；其`Written`／`Deleted`仍為`None`，其他paths全為ReadOnly。
 - Tester須枚舉tracked／staged／unstaged／untracked paths並依phase套allowlist；普通空白diff不能證明untracked path不存在。
 - Scope需要任何額外path時停止，回到planning；不得由Implementer自行擴張。
 
@@ -197,6 +203,14 @@ PR-04明示`approved`後，IM-01只新增：
 - T6（thread `PRRT_kwDOUFu0Cc6jOmbG`）：trim後空白Save Draft disabled；stale activation no-op，Composer保持開啟、focus editor、working／saved draft不變且不宣告saved，不新增submit／persistence。
 - 不新增F／CMD／AC／UIIR／TestCase ID、product capability、shortcut、runtime API或artifact；F-17、CMD-NI-015、AC-NI-036、TC-14、UIIR-NI-007及ownership／non-BC／Human boundary維持既有語意。
 
+### IM-08.1 — 套用L1／L2／L4 bounded durable corrections
+
+- 只修改durable output；不得修改planning artifacts、requirements、prototype、Swift或其他path。L3（thread `PRRT_kwDOUFu0Cc6jPcJM`）只屬workflow truth同步，不重跑PR-11～DL-10。
+- L1（thread `PRRT_kwDOUFu0Cc6jPcJD`）：非modal Reader `error`／`offline-without-readable-content`時Back MUST enabled，並與CMD-NI-012／UIIR-NI-002一致；Composer modal時背景inert，Cancel／Escape優先，不新增capability。
+- L2（thread `PRRT_kwDOUFu0Cc6jPcJJ`）：F-16 source固定為selected change anchor；change absent／unavailable時固定為selected file row。Destination仍依review state為Mark Reviewed／Mark as Unreviewed；action unavailable時focus留在實際source。同步AC-NI-004／008／029，不新增shortcut、F ID或capability。
+- L4（thread `PRRT_kwDOUFu0Cc6jPcJQ`）：既有AC-NI-003內互斥表達F-08 file selection的first-change normalization／no-change fallback，以及F-09 change navigation的指定target anchor＋minimum reveal／invalid-target fallback；不新增AC ID或capability。
+- 不新增F／CMD／AC／UIIR／TestCase ID、product capability、shortcut、runtime API或artifact；F-17、CMD-NI-015、AC-NI-036、TC-14、UIIR-NI-007及ownership／non-BC／Human／Swift boundaries維持既有語意。
+
 ## TestCase
 
 ### TC-01 — Topic與path allowlist
@@ -206,6 +220,7 @@ PR-04明示`approved`後，IM-01只新增：
 - PC-05只修改plan與step，IM-03只修改durable output；PC-07／PC-08只修改相同的technical spec、plan與step exact paths，PR-08 `approved`後的IM-04只修改durable output。所有其他paths均ReadOnly，所有phase的Deleted皆為None。
 - PC-10只修改technical spec、plan與step三個exact paths；PR-10 `approved`後IM-06只修改durable output。兩個phase的Written／Deleted皆為None，其他paths均ReadOnly。
 - PC-11只修改technical spec、plan與step三個exact paths；PR-11 `approved`後IM-07只修改durable output。兩個phase的Written／Deleted皆為None，其他paths均ReadOnly。
+- PC-12只修改technical spec、plan與step三個exact paths；PR-12 `approved`後IM-08只修改durable output。兩個phase的Written／Deleted皆為None，其他paths均ReadOnly。
 - 不存在prototype、Swift、Logic、Domain、Integration、BC docs或其他tracked path變更。
 
 ### TC-02 — Baseline與ownership
@@ -222,6 +237,7 @@ PR-04明示`approved`後，IM-01只新增：
 - Composer close固定依opening target → current selected change anchor → selected file row → Reader state matrix focus target的ordered chain；Overview↔Files、返回Inbox及Diff Reader ↔ Review Actions的標準Tab／Shift-Tab皆有deterministic destination與fallback，且未新增workflow或product shortcut。
 - Reader為`content`且某明示transition的primary destination與fallback都因referenced content unavailable而失效時，terminal focus固定為目前active Reader tab；不新增heading、state、transition ID或UI capability。
 - Composer開啟期間背景轉為`offline-without-readable-content`時維持modal containment、背景inert、working copy不自動保存／丟棄及focus editor；Cancel／Escape後依目前state固定focus offline heading。
+- F-16的實際source固定為selected change anchor；change不存在或unavailable時固定為selected file row。Destination依review state固定為Mark Reviewed／Mark as Unreviewed；action unavailable時focus留在實際source，不新增shortcut或F ID。
 
 ### TC-04 — Inbox Presentation State Matrix
 
@@ -236,6 +252,7 @@ PR-04明示`approved`後，IM-01只新增：
 - 轉入offline-with-readable-existing-content時，若focused Review Action因offline disabled，focus依current selected change anchor → selected file row → 該matrix row focus target的固定順序移動。
 - Reader為`content`時，明示transition的referenced targets全部失效即回目前active Reader tab，作為唯一terminal focus。
 - Error／offline recovery只在capability已知且安全時enabled；資訊缺失顯示可理解的disabled affordance，不樂觀執行或定義network／retry／authentication policy。
+- 非modal Reader `error`與`offline-without-readable-content`的Back MUST enabled並依CMD-NI-012／UIIR-NI-002返回Inbox；Composer modal時背景inert且Cancel／Escape優先，不穿透執行Back。
 - Composer開啟時背景可轉offline-without-readable-content，但Composer保持modal、背景inert、focus editor與working copy；Save依content／action safety，Cancel／Escape後focus offline heading。
 
 ### TC-06 — Command routing
@@ -245,6 +262,7 @@ PR-04明示`approved`後，IM-01只新增：
 - Option+Arrow Up／Down切file後，new file有可讀change才選第一個change並focus其anchor；沒有可讀change時只選file、selected change為unavailable／不存在且focus file row，不建立假anchor並disabled change-dependent navigation／comment。F-08 direct selection使用同一有／無change distinction。
 - `Open` context item只在clicked Inbox PR row同時為selected row時提供；non-selected clicked row不得顯示／執行`Open`或為Open暗改selection。CMD-NI-002仍只處理selected PR與F-02返回點。
 - Save Draft的trimmed working copy為空白時disabled；stale activation為no-op，Composer保持開啟、focus editor、working／saved draft不變且不得宣告saved。
+- CMD-NI-012在非modal Reader error／offline-without-readable-content維持enabled；Composer modal時背景command不執行，Cancel／Escape優先關閉Composer。
 - 無新增shortcut或workflow。
 
 ### TC-07 — Native containers
@@ -263,6 +281,7 @@ PR-04明示`approved`後，IM-01只新增：
 
 - Change、file、page、system Space／Shift-Space（若沿用）、trackpad、scrollbar、reveal與restoration都有明示行為。
 - Overview → Files只在saved change anchor有效時恢復selected file／change與scroll anchor；anchor失效保持selected file並focus selected file row，不自動first change。F-08 direct selection與Option+Arrow new-file switch只有在new file有可讀change時才正常化到第一change；沒有可讀change時selected change不存在、focus file row且不建立假anchor。Reveal採minimum necessary scroll且不無條件置中。
+- AC-NI-003內互斥驗收F-08與F-09：F-08 file selection依有／無可讀change分別執行first-change normalization或selected file row fallback；F-09 change navigation移到指定target change anchor並採minimum necessary scroll，invalid target保持原selection與原selected change anchor。
 
 ### TC-10 — Accessibility
 
@@ -276,11 +295,13 @@ PR-04明示`approved`後，IM-01只新增：
 - 每個Logic缺口使用固定格式，僅描述required information、presentation use與missing-input degradation。
 - 無計算、儲存、Domain model、Application API、hash/baseline或Integration來源決策。
 - Action／recovery safety資訊缺失時使用disabled affordance；availability缺值進error，不推定offline。UIIR-NI-007既有scroll restoration語意保持不變。
+- UIIR-NI-002維持Back中性返回語意，並支援非modal Reader error／offline-without-readable-content時Back enabled；Composer modal仍由Cancel／Escape優先處理。
 
 ### TC-12 — SwiftUI acceptance criteria
 
 - 每列使用穩定`AC-NI-###`、Given/context、Action、Observable result、Source trace。
-- 覆蓋native routing、menus、toolbar、sidebar、resize、large diff、VoiceOver、system colors與mock-only controls；applicable rows亦驗收T2無change file、T3 safe recovery、T4 missing availability、T5 Composer offline及T6 blank／stale Save Draft。AC-NI-009／010／031須同步，AC-NI-036保持既有語意。
+- 覆蓋native routing、menus、toolbar、sidebar、resize、large diff、VoiceOver、system colors與mock-only controls；既有rows持續驗收T2無change file、T3 safe recovery、T4 missing availability、T5 Composer offline及T6 blank／stale Save Draft，AC-NI-009／010／031與AC-NI-036既有語意保持。
+- 覆蓋native routing、menus、toolbar、sidebar、resize、large diff、VoiceOver、system colors與mock-only controls；applicable rows亦驗收L1非modal Back／Composer優先序、L2 F-16實際source與L4 F-08／F-09互斥行為。AC-NI-003、AC-NI-004／008／029須同步，AC-NI-036保持既有語意。
 - 不指定不必要的SwiftUI internal type或implementation detail。
 
 ### TC-13 — Future Swift admission schema
@@ -297,7 +318,7 @@ PR-04明示`approved`後，IM-01只新增：
 - Human `採用`只允許未來另開正式Swift implementation topic，不自動實作；`Ready PR`僅是本topic delivery request。
 - 新cycle的RV-06 `human-check`已由HC-03原值`Execution Authorized`解除N6 conflict並鎖定N1～N6；PR-07 `needs-rework`後只有PR-08 `approved`才可進IM-04，只有RV-08 `approved`且DL-03完成commit／push後，才可由DL-04回覆並resolve新6個threads。
 - 上一輪delivery完成後的baseline為PR head／local HEAD／origin head皆`952fb54`且working tree clean；本輪三個U1～U3 threads均為unresolved／non-outdated。只有PR-10 `approved`可進IM-06，只有RV-10 `approved`可進human-confirmed commit；其後依序push，再回覆並resolve三個threads。
-- U1～U3 cycle已完成PR-10 → IM-06 → TE-08 → RV-10 → DL-05／DL-06／DL-07；commit為`4ea0af9`，三threads已reply＋resolve。PC-11 entry baseline三端head一致且clean；本輪6個T1～T6 threads均unresolved／non-outdated。只有PR-11 `approved`可進IM-07，只有RV-12 `approved`可進human-confirmed commit；其後依序push，再回覆並resolve6個threads。TC-14、ownership、non-BC與Human boundary維持不變。
+- T1～T6 cycle已完成PR-11 → IM-07 → TE-09 → RV-12 → Human-confirmed DL-08 → DL-09 → DL-10；commit為`afc5616`，六threads已reply＋resolved。PC-12 entry baseline三端head一致且clean；本輪4個L1～L4 threads均unresolved／non-outdated。只有PR-12 `approved`可進IM-08，只有RV-14 `approved`可進human-confirmed commit；其後依序push，再回覆並resolve4個threads。L3不得重跑舊delivery；TC-14、ownership、non-BC與Human／Swift boundaries維持不變。
 
 ## Workflow / Gates
 
@@ -336,13 +357,16 @@ PR-04明示`approved`後，IM-01只新增：
 33. `PR-10 → DL-07` — PR-10 `approved`、IM-06 completed、TE-08 PASS、RV-10 `approved`、Human commit message confirmed、DL-05 commit `4ea0af9`、DL-06 push及DL-07三threads reply＋resolve均已完成；不得重跑舊delivery。
 34. `RV-11` — 已明示`needs-rework`；findings只限T1 workflow truth與T2～T6 bounded semantics，6個threads仍unresolved／non-outdated。
 35. `PC-11` — completed；只修改technical spec、plan與step鎖定T1～T6 semantics、acceptance、allowlists與routing，完成不構成approval。
-36. `PR-11` — pending；只由獨立Plan-Reviewer審查PC-11，僅`approved`可進IM-07。
-37. `IM-07` — pending；PR-11 `approved`後只修改durable output完成T2～T6 corrections；T1不重跑舊delivery。
-38. `TE-09` — pending；IM-07後重新驗證TC-01～TC-14與T2～T6 observable results。
-39. `RV-12` — pending；獨立Reviewer審查IM-07、TE-09 evidence與6 threads resolution map，僅`approved`可進delivery。
-40. `DL-08` — pending；RV-12 `approved`後依`git-commit-convention`檢查staged semantic boundary，取得Human明示確認後才可commit。
-41. `DL-09` — pending；DL-08 commit完成後才可push並確認local／origin head一致。
-42. `DL-10` — pending；DL-09 push完成後才可依核准resolution map回覆並resolve6個T1～T6 threads。
+36. `PR-11 → DL-10` — PR-11 `approved`、IM-07 completed、TE-09 PASS、RV-12 `approved`、Human commit message confirmed、DL-08 commit `afc5616`、DL-09 push及DL-10六threads reply＋resolve均已完成；不得重跑舊delivery。
+37. `RV-13` — 已明示`needs-rework`；findings只限L1非modal Back、L2 F-16 source、L3 workflow truth與L4 AC-NI-003互斥語意，4個threads仍unresolved／non-outdated。
+38. `PC-12` — completed；只修改technical spec、plan與step鎖定L1～L4 semantics、acceptance、allowlists與routing，完成不構成approval。
+39. `PR-12` — pending；只由獨立Plan-Reviewer審查PC-12，僅`approved`可進IM-08。
+40. `IM-08` — pending；PR-12 `approved`後只修改durable output完成L1／L2／L4 corrections；L3不重跑舊delivery。
+41. `TE-10` — pending；IM-08後重新驗證TC-01～TC-14與L1／L2／L4 observable results。
+42. `RV-14` — pending；獨立Reviewer審查IM-08、TE-10 evidence與4 threads resolution map，僅`approved`可進delivery。
+43. `DL-11` — pending；RV-14 `approved`後依`git-commit-convention`檢查staged semantic boundary，取得Human明示確認後才可commit。
+44. `DL-12` — pending；DL-11 commit完成後才可push並確認local／origin head一致。
+45. `DL-13` — pending；DL-12 push完成後才可依核准resolution map回覆並resolve4個L1～L4 threads。
 
 任何checkbox、step status、Plan-Creator self-check或Tester結果都不等於Plan-Reviewer／Reviewer approval。
 
@@ -353,17 +377,18 @@ PR-04明示`approved`後，IM-01只新增：
 - IM-01 entry時若durable output path已預存、工作需要allowlist外path，或發現baseline／Draft衝突：回報`blocked`，不得猜測、改path或擴張scope。
 - 出現workflow、ownership、Logic／Domain／Integration或product capability drift：停止並回planning，不得在implementation或delivery中改寫contract。
 - 到HC-01後不得自動選擇Human decision，亦不得自動命名、建立或實作Swift topic。
-- Current cycle若PR-11或RV-12為`needs-rework`，只交回對應產出角色；`blocked`或`human-check`停止交Human。未取得Human對commit boundary／message的明示確認不得commit；未完成commit不得push，未完成push不得reply或resolve6個T1～T6 threads。
+- Current cycle若PR-12或RV-14為`needs-rework`，只交回對應產出角色；`blocked`或`human-check`停止交Human。未取得Human對commit boundary／message的明示確認不得commit；未完成commit不得push，未完成push不得reply或resolve4個L1～L4 threads。
 
 ## Completion Outcome
 
 - PR-04實際verdict為`approved`；TE-01 Overall FAIL與RV-01 `needs-rework`依上述規則只回Implementer，IM-02完成required fixes後由TE-02驗證TC-01～TC-14全部PASS，RV-02明示`approved`且Findings None。
-- HC-01已由Human明示decision原值`採用`；本topic completed／adopted，沒有pending contract gate或topic content blocker。
+- HC-01已由Human明示decision原值`採用`；本topic維持completed／adopted且原始adoption gate已關閉。Current L1～L4 comment cycle仍有PR-12之後的bounded correction／delivery gates，但沒有unresolved input或topic content blocker，也不重開Human adoption。
 - Earlier PR-01、PR-02、PR-03與RV-01的`needs-rework`保留原值，不因最終完成而改寫為`approved`。
 - 上一輪Ready PR delivery已由DL-01／DL-02完成；commit為`3b62409`，7個threads已reply＋resolved且0 unresolved。
 - RV-06提出的N1～N6 cycle及RV-07 follow-up已完成PR-09 → IM-05 → TE-07 → RV-08 → DL-03／DL-04 delivery；PC-10 entry baseline的PR head／local HEAD／origin head皆`952fb54`且working tree clean。
 - U1～U3 cycle已完成PR-10 `approved`、IM-06、TE-08 PASS、RV-10 `approved`、Human-confirmed commit、DL-05 commit `4ea0af9`、DL-06 push與DL-07三threads reply＋resolve；PC-11 entry baseline三端head一致且working tree clean。
-- 新T1～T6 cycle的RV-11實際verdict為`needs-rework`；PC-11 completed，PR-11及其後IM-07／TE-09／RV-12／DL-08～DL-10仍pending。6個threads保持unresolved／non-outdated，不得當作已核准或已交付。
+- T1～T6 cycle已完成PR-11 `approved`、IM-07、TE-09 PASS、RV-12 `approved`、Human-confirmed commit、DL-08 commit `afc5616`、DL-09 push與DL-10六threads reply＋resolve；PC-12 entry baseline三端head一致且working tree clean。
+- 新L1～L4 cycle的RV-13實際verdict為`needs-rework`；PC-12 completed，PR-12及其後IM-08／TE-10／RV-14／DL-11～DL-13仍pending。4個threads保持unresolved／non-outdated，不得當作已核准或已交付。
 
 ## Delivery Boundary
 

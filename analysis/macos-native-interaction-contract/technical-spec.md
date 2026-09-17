@@ -75,7 +75,7 @@ Durable output 必須以 table 記錄 `Source focus`、`Event/action`、`Destina
 | F-13 | Composer open後primary destination固定為composer body editor並形成modal focus containment；若body editor無法建立，composer不得保持開啟，focus回到觸發event前的opening target。 |
 | F-14 | Composer Cancel／Escape／Save關閉後使用固定ordered fallback chain：opening target → current selected change的Diff／Change Reader anchor → selected file row → 僅當selected file亦失效時，才交給當前Reader presentation state matrix明示的focus target。Keyboard `C`開啟時，opening target就是觸發前的focus target；不得跳過chain中的有效target。 |
 | F-15 | Back to Inbox／Finish Reading後，primary destination固定為先前保留的Inbox selection row；若該row已不存在，唯一fallback是Inbox第一個可選row。不得任意重設到其他row。 |
-| F-16 | Diff／Change Reader使用標準Tab向前進入Review Actions時，primary destination由目前review state唯一決定：current未reviewed時為Mark Reviewed；current已reviewed時為Mark as Unreviewed。若對應action不可用，focus留在目前selected change anchor。這是標準focus traversal，不新增product shortcut。 |
+| F-16 | Diff／Change Reader使用標準Tab向前進入Review Actions時，source focus固定為目前selected change的Diff／Change Reader anchor；若selected change不存在或unavailable，實際source固定為目前selected file row。Primary destination由目前review state唯一決定：current未reviewed時為Mark Reviewed；current已reviewed時為Mark as Unreviewed。若對應action不可用，focus留在上述實際source，不得跳到其他target。這是標準focus traversal，不新增product shortcut。 |
 | F-17 | Review Actions使用標準Shift-Tab向後返回reading surface時，primary destination固定為目前selected change的Diff／Change Reader anchor；若該anchor失效，唯一fallback是目前selected file row。Mark／Unreview action啟用後的focus另由F-10～F-12決定。 |
 
 F-10 是核心 keyboard loop gate：next unreviewed file有可讀change時，`Mark Reviewed → next unreviewed file → first change reveal → Diff/Change reading focus` 必須可連續操作；沒有可讀change時只選file並focus其row，不得合成change或anchor。F-02區分首次開啟與重開同一PR：首次開啟固定進Overview title／tab fallback；重開恢復saved active tab並直接使用F-04～F-07的deterministic content target。Overview ↔ Files restoration不保留模糊的focus history：Overview依F-04進入PR title heading；Files依F-05進入saved selected change anchor，失效時保持selected file並只回selected file row，不自動選第一個change。Reader處於`content`且任一明示transition的primary destination與ordered fallback都因referenced content unavailable而失效時，terminal focus固定為目前active Reader tab；此規則不新增heading、presentation state、transition ID或UI capability。
@@ -114,10 +114,11 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 - Inbox availability input缺失時唯一fallback是`error`，不得推定offline；只有offline狀態已知時才可使用offline rows。缺值的error state不得顯示PR rows或啟用Open，focus固定為error heading，recovery依下列safe-capability規則。
 - Offline with content明示stale／offline狀態並禁止需要network或不可安全執行的action，但保留local reading/navigation。
 - Reader轉入`offline-with-readable-existing-content`時，若Review Action正持有focus且該action因offline而disabled，focus固定移到current selected change anchor；若anchor失效，唯一fallback是selected file row；只有Files content亦失效時，才交給該Reader presentation state matrix row明示的focus target。
-- Offline without content不顯示虛假的reader content或可用action；focus落在清楚的狀態與recovery affordance。
+- Offline without content不顯示虛假的reader content，也不得把不安全或未知的content-dependent action假裝為可用；非modal Back仍依CMD-NI-012／UIIR-NI-002保持enabled，focus落在清楚的狀態與recovery affordance。
 - Loading／error／offline announcement採一次性、局部且可理解的狀態更新；不得把整個workspace設為live region。
 - Error／offline recovery只有在capability已知且可安全執行時enabled；capability或safety資訊缺失時顯示可理解的disabled affordance，不得樂觀執行或宣告成功。
 - Retry／recovery只定義UI affordance與enablement，不定義network、retry、authentication、cache或其他policy。
+- Reader處於非modal的`error`或`offline-without-readable-content`時，Back to Inbox MUST保持enabled，並依CMD-NI-012／UIIR-NI-002返回Inbox；不得因content或recovery不可用而disabled。Composer開啟時仍以modal containment為優先，背景Reader保持inert，Cancel／Escape先關閉Composer並依F-14恢復focus，不得穿透執行Back。
 - Composer開啟期間背景可轉為`offline-without-readable-content`，但Composer維持modal、背景inert、focus在editor且working copy不自動保存／丟棄；Save enablement依目前content與action safety，Cancel／Escape關閉後focus該offline row的heading。
 
 ## Command Matrix
@@ -144,6 +145,7 @@ Inbox 與 Reader 必須分為兩張 matrix；共同欄位固定為：`State`、`
 - Command context不成立時保持 state與focus，不偷偷切換 tab或workspace。
 - `Open` context item只在clicked Inbox PR row同時是selected row時提供；clicked row不是selected row時不得顯示或執行`Open`，亦不得為了`Open`暗改selection。實際Open仍由CMD-NI-002語意處理selected PR並保留F-02返回點。
 - `CMD-NI-006` Option+Arrow Up／Down只在既有Files reading context切換file；new file有可讀change時，selection固定為new file＋第一個change並focus new change anchor，anchor失效時唯一fallback是new selected file row；new file沒有可讀change時，只選new file、selected change為unavailable／不存在且focus new selected file row，不建立假anchor，change-dependent navigation／comment disabled。F-08只描述File Navigator內的direct selection，不得拿來改寫此command result，也不得新增transition ID或shortcut。
+- `CMD-NI-012` Back to Inbox在非modal Reader `error`與`offline-without-readable-content`仍須enabled，並依UIIR-NI-002執行中性返回；Composer modal開啟時背景command不得執行，Cancel／Escape優先依F-14關閉Composer。
 - Save Draft只在trimmed working copy非空白且action safety成立時可用；trim後空白必須disabled。Stale activation為no-op，Composer保持開啟、focus editor、working／saved draft不變且不宣告saved。
 - Toolbar action 必須有合理 menu counterpart；context menu只有已存在且適用於 clicked／selected item 的能力。
 - 不新增 Draft 未列出的 workflow 或 shortcut。
@@ -229,6 +231,8 @@ Durable output必須用穩定 `AC-NI-###` ID列出observable acceptance，至少
 - Mock-only／disabled controls必須可辨識且不可暗示可執行能力。
 - Composer開啟時背景轉`offline-without-readable-content`仍保持modal／inert、focus editor與working copy；Save依content／action safety，Cancel／Escape後focus offline heading且不新增persistence。
 - AC-NI-009／010／031必須驗收availability缺值、known-offline與safe recovery；AC-NI-006及applicable command acceptance必須驗收Composer offline與空白／stale Save Draft。不得改寫F-17、CMD-NI-015、AC-NI-036、TC-14或UIIR-NI-007既有語意。
+- AC-NI-003內必須互斥驗收兩種既有行為：F-08 file selection在target file有可讀change時正規化到第一個change，沒有可讀change時只保留selected file並focus其row；F-09 change navigation則移到指定target change anchor並以minimum necessary scroll reveal，invalid target沿F-09保持原selection與原selected change anchor的fallback。不得把兩者合併或新增acceptance ID。
+- AC-NI-004／008／029必須同步F-16：source為selected change anchor；change不存在或unavailable時source為selected file row；destination仍依review state為Mark Reviewed／Mark as Unreviewed，action unavailable時focus留在實際source。Reader matrix與applicable acceptance亦須明示非modal`error`／`offline-without-readable-content`的Back保持enabled；Composer modal時背景inert且Cancel／Escape優先。不得新增shortcut、transition ID或capability。
 
 每列固定包含 `ID`、`Given/context`、`Action`、`Observable result`、`Source trace`；不得指定無必要的SwiftUI type或internal implementation。
 
