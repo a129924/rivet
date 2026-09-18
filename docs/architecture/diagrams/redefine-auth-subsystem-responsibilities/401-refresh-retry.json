@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "模型 C：401 憑證更新與重試（採用目標架構／尚未實作）",
+    "quality_profile": "showcase",
+    "viewBox": [1080, 640],
+    "column_fit": "spread",
+    "legend": { "mode": "hidden" }
+  },
+  "participants": [
+    { "id": "caller", "type": "external", "label": "呼叫端", "sublabel": "原始 HTTPRequest 提供者" },
+    { "id": "auth-requester", "type": "backend", "label": "AuthRequester", "sublabel": "原始請求唯一所有者／語意解讀者" },
+    { "id": "auth", "type": "security", "label": "Auth", "sublabel": "每次執行建立 AuthFlow 的工廠" },
+    { "id": "auth-flow", "type": "security", "label": "AuthFlow", "sublabel": "每次執行的 401 策略／狀態" },
+    { "id": "requester", "type": "backend", "label": "Requester", "sublabel": "通用 HTTP 輸入／輸出所有者" },
+    { "id": "refresh-boundary", "type": "external", "label": "待定的憑證更新邊界", "sublabel": "僅限後續具體消費端" }
+  ],
+  "segments": [
+    { "from": 150, "to": 230, "label": "每次執行的流程建立與初始語意傳送" },
+    { "from": 236, "to": 420, "label": "首次 401 的唯一策略所有者" },
+    { "from": 426, "to": 570, "label": "只在更新成功後的一次重試" }
+  ],
+  "messages": [
+    { "id": "create-flow", "from": "auth", "to": "auth-flow", "y": 160, "label": "為本次執行建立新的 AuthFlow", "variant": "security" },
+    { "id": "initial-decision-input", "from": "auth-requester", "to": "auth-flow", "y": 188, "label": "請求初始語意（無請求資料）", "variant": "security" },
+    { "id": "initial-send", "from": "auth-flow", "to": "auth-requester", "y": 216, "label": "初始傳送語意（無請求資料）", "variant": "return" },
+    { "id": "initial-execution", "from": "auth-requester", "to": "requester", "y": 244, "label": "執行保留的原始請求", "variant": "default" },
+    { "id": "first-401", "from": "requester", "to": "auth-requester", "y": 272, "label": "原始 HTTPResponse：401", "variant": "return" },
+    { "id": "flow-receives-401", "from": "auth-requester", "to": "auth-flow", "y": 300, "label": "轉交 401 回應語意", "variant": "security" },
+    { "id": "refresh-decision", "from": "auth-flow", "to": "auth-requester", "y": 328, "label": "僅符合資格的 AuthFlow：更新；不具資格則終態", "variant": "return" },
+    { "id": "dispatch-refresh", "from": "auth-requester", "to": "refresh-boundary", "y": 356, "label": "派送待定的憑證更新", "variant": "dashed" },
+    { "id": "refresh-complete", "from": "refresh-boundary", "to": "auth-requester", "y": 384, "label": "更新結果（合約延後確定）", "variant": "return" },
+    { "id": "refresh-outcome", "from": "auth-requester", "to": "auth-flow", "y": 412, "label": "經延後確定的結果邊界交回流程", "variant": "security" },
+    { "id": "retry-permission", "from": "auth-flow", "to": "auth-requester", "y": 440, "label": "只有更新成功：一次重試；失敗終態", "variant": "return" },
+    { "id": "retry-original", "from": "auth-requester", "to": "requester", "y": 468, "label": "僅重送原始請求", "variant": "emphasis" },
+    { "id": "retry-response", "from": "requester", "to": "auth-requester", "y": 496, "label": "原始 HTTPResponse", "variant": "return" },
+    { "id": "terminal-input", "from": "auth-requester", "to": "auth-flow", "y": 524, "label": "轉交重試回應語意", "variant": "security" },
+    { "id": "terminal-decision", "from": "auth-flow", "to": "auth-requester", "y": 552, "label": "終態決策：第二次 401 不再更新；由 AuthRequester 回傳", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "auth-requester", "from": 184, "to": 558, "type": "backend" },
+    { "participant": "auth", "from": 154, "to": 166, "type": "security" },
+    { "participant": "auth-flow", "from": 154, "to": 558, "type": "security" },
+    { "participant": "requester", "from": 238, "to": 502, "type": "backend" },
+    { "participant": "refresh-boundary", "from": 350, "to": 390, "type": "external" }
+  ]
+}
