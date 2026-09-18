@@ -16,8 +16,8 @@
     {
       "id": "make-flow",
       "type": "start",
-      "label": "獨立流程",
-      "sublabel": "工廠 API 尚未鎖定",
+      "label": "Auth 建立流程",
+      "sublabel": "每次執行；初始語意前",
       "lane": "main",
       "col": 0,
       "width": 110,
@@ -38,8 +38,8 @@
     {
       "id": "start",
       "type": "decision",
-      "label": "初始決策",
-      "sublabel": "僅語意決策",
+      "label": "初始語意決策",
+      "sublabel": "無請求資料",
       "lane": "main",
       "col": 2,
       "width": 115,
@@ -50,7 +50,7 @@
       "id": "initial-send",
       "type": "active",
       "label": "AuthRequester",
-      "sublabel": "原始請求唯一所有者",
+      "sublabel": "只保有呼叫端原始請求",
       "lane": "main",
       "col": 3,
       "width": 118,
@@ -72,7 +72,7 @@
       "id": "response",
       "type": "active",
       "label": "原始 HTTPResponse",
-      "sublabel": "轉交給流程",
+      "sublabel": "由 AuthRequester 轉交流程",
       "lane": "response",
       "col": 2,
       "width": 125,
@@ -83,7 +83,7 @@
       "id": "receive",
       "type": "decision",
       "label": "回應策略",
-      "sublabel": "結束／更新／重試",
+      "sublabel": "正常／首次 401 的資格判斷",
       "lane": "response",
       "col": 1,
       "width": 130,
@@ -93,8 +93,8 @@
     {
       "id": "resend",
       "type": "active",
-      "label": "僅重試原始請求",
-      "sublabel": "不可任意建構請求",
+      "label": "一次重試決策",
+      "sublabel": "僅更新成功後",
       "lane": "response",
       "col": 1,
       "width": 130,
@@ -103,9 +103,9 @@
     },
     {
       "id": "start-finish",
-      "type": "failure",
+      "type": "external",
       "label": "待定的憑證更新",
-      "sublabel": "僅限後續主題",
+      "sublabel": "更新失敗時終態",
       "lane": "terminal",
       "col": 0,
       "width": 110,
@@ -115,11 +115,11 @@
       "id": "receive-finish",
       "type": "success",
       "label": "終態回應",
-      "sublabel": "由 AuthRequester 回傳",
+      "sublabel": "流程終態",
       "lane": "terminal",
       "col": 2,
       "width": 110,
-      "tag": "目標結果"
+      "tag": "正常／不具資格／第二次 401"
     },
     {
       "id": "requester-failure",
@@ -148,7 +148,9 @@
       "id": "refresh-decision",
       "from": "receive",
       "to": "start-finish",
-      "route": "left-channel"
+      "route": "left-channel",
+      "label": "首次 401：具資格才可更新",
+      "variant": "security"
     },
     {
       "id": "client-sends-initial-request",
@@ -174,7 +176,26 @@
       "toSide": "bottom",
       "via": [[480, 337], [480, 540], [710, 540]]
     },
-    { "id": "retry-decision", "from": "receive", "to": "resend" },
+    {
+      "id": "refresh-success-result",
+      "from": "start-finish",
+      "to": "resend",
+      "label": "成功結果回到流程",
+      "variant": "emphasis",
+      "fromSide": "left",
+      "toSide": "right",
+      "via": [[300, 479], [300, 560], [805, 560], [805, 427]],
+      "labelAt": [590, 600]
+    },
+    {
+      "id": "refresh-failure-terminal",
+      "from": "start-finish",
+      "to": "receive-finish",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "via": [[402, 580], [845, 580], [845, 479]]
+    },
     {
       "id": "client-sends-retry",
       "from": "resend",

@@ -12,28 +12,31 @@ concrete-consumer topic 取得獨立 implementation approval 為止。
 caller
   │ original HTTPRequest（所有權保留）
   ▼
-AuthRequester ──取得 independent flow──► Auth（strategy／flow provider）
+AuthRequester ──要求新 flow──────► Auth（factory／strategy provider）
+  │                                  │
+  │◄── per-execution AuthFlow（新建）─┘
   │
   ├── response input ───────────────► AuthFlow（policy/state）
   │◄── semantic decision ────────────┤  response semantics／retry decision
   │                                  │  no request construction／no I/O
   │                                  │
-  ├── preserved original request ───► Requester（generic HTTP I/O）
+  ├── retained original request ────► Requester（generic HTTP I/O）
   │◄── raw HTTPResponse ─────────────┤
   │
   └── deferred refresh dispatch ────► deferred refresh I/O boundary
                                         （未命名、未鎖定；不由 AuthFlow 直接呼叫）
 ```
 
-- `Auth` 的 contract 是提供 authentication strategy 與獨立 flow instance，不是
-  credential store、HTTP decorator 或 I/O component。它不取得 caller original
-  request 的 ownership。
+- `Auth` 的 contract 是在每個 `AuthRequester` execution 開始時建立並回傳一個獨立
+  `AuthFlow` 的 factory／authentication strategy，不是 credential store、HTTP decorator
+  或 I/O component。它不取得 caller original request 的 ownership。
 - `AuthFlow` 擁有 per-execution authentication state、response-to-next-decision
   transition、refresh eligibility、retry limit 和 terminal decision。它可以讀取
   `HTTPResponse`，包括 401 semantics；這不是 request construction 或 I/O authority。
 - `AuthRequester` 擁有 original request 的 lifetime 和 semantic action
   interpretation。它不得重訂 retry policy，也不得把 caller request ownership
-  交給 flow。它以 `Requester` 執行已保留 caller intent 的 request。
+  交給 flow；它只保有 caller original request，**不建構**該 request。selected／decorated
+  representation 的 owner／API 維持 deferred；它以 `Requester` 執行該 retained request。
 - `Requester` 唯一負責 generic HTTP I/O：接收已選定 `HTTPRequest`，交 transport，
   回傳 raw `HTTPResponse`。它不認識 auth flow、credential refresh 或 retry policy。
 
@@ -45,7 +48,7 @@ Model C 的 type contract 必須最終能表達下列限制：
 | --- | --- | --- |
 | 讀取 401／其他 raw response semantics | 允許 | `AuthFlow` 作為 policy input |
 | 決定是否 refresh、retry、finish | 允許 | `AuthFlow`，唯一 policy owner |
-| 保有／讀取 original URL、method、query、body | 禁止 | `AuthRequester` |
+| 保有／讀取 original URL、method、query、body | 禁止 | `AuthRequester` 只保有 caller original request |
 | 建構或修改 arbitrary `HTTPRequest` | 禁止 | 不授予 `AuthFlow`；exact decoration owner deferred |
 | 建構 refresh endpoint request | 禁止 | future refresh I/O component，尚未定義 |
 | 執行 transport／`Requester`／`URLSession` I/O | 禁止 | `Requester` 或 future dedicated I/O component |
@@ -60,7 +63,7 @@ Model C 的 type contract 必須最終能表達下列限制：
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `Auth` | 否 | 否 | 否 | 否 | 否 | 否 | 否 |
 | `AuthFlow` | 是 | 是 | 否 | 否 | 否 | 否 | 是 |
-| `AuthRequester` | 否 | 是，轉交給 flow | 是，唯一 owner | 是，僅保留 caller intent；representation deferred | 否 | 否，僅委派 | 否 |
+| `AuthRequester` | 否 | 是，轉交給 flow | 是，唯一 owner | 否；只保有 caller original request，selected／decorated representation deferred | 否 | 否，僅委派 | 否 |
 | `Requester` | 否 | 是，raw return | 僅取得待執行 instance | 否 | 否 | 是 | 否 |
 | `TokenFetcher` | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | `TokenProvider` | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
@@ -85,25 +88,31 @@ request-decoration ownership。Model C 保留最小責任決定，延後尚無 c
 ### Normal Request
 
 1. caller 將 original request 交給 `AuthRequester`；它是唯一 owner。
-2. `AuthRequester` 取得 independent `AuthFlow`，並取得 flow 的 semantic send
-   decision；factory interface 尚未鎖定。
-3. `AuthRequester` 以 preserved caller intent 準備待執行 request；decoration
-   representation 尚未鎖定。
+2. `AuthRequester` 向 `Auth` factory 要求新 flow；`Auth` 為這個 execution 建立並回傳
+   一個 independent `AuthFlow`，之後才開始與 flow 的 semantic send decision exchange；
+   factory interface 尚未鎖定。
+3. `AuthRequester` 只轉交 retained caller original request 以供執行；它不建構
+   original request，selected／decorated representation 尚未鎖定。
 4. `Requester` 執行 HTTP I/O，回傳 raw `HTTPResponse`。
 5. `AuthRequester` 把 response 交給 `AuthFlow`；flow 作 terminal policy decision。
 6. `AuthRequester` 回傳 terminal response；它不自行產生 retry count policy。
 
 ### 401 Refresh and Retry
 
-1. `Requester` 回傳 401 raw response；`AuthRequester` 將它交給 `AuthFlow`。
-2. `AuthFlow` 依自己的 state 判斷是否進入 refresh；它是唯一 decision/state owner。
+1. initial semantic send 前，`AuthRequester` 向 `Auth` factory 要求 flow，`Auth` 為該
+   execution 建立並回傳一個 independent `AuthFlow`；之後的 `AuthRequester ↔ AuthFlow`
+   exchange 才開始，且只傳遞 response／semantic decision，不帶 request payload。
+2. `Requester` 回傳 401 raw response；`AuthRequester` 將它交給 `AuthFlow`。只有具
+   refresh capability 且該 state eligible 的 flow 可在第一次 401 發出 semantic refresh
+   decision；不具資格的 flow 可以 terminal，仍由 flow 單一擁有 decision/state。
 3. `AuthRequester` 只解讀 semantic refresh decision，交給 **deferred credential-refresh
    I/O boundary**；這份文件不命名 type、不定義 endpoint、payload、credential update
    API 或 refresh-result type。
-4. deferred boundary 完成其 I/O 與 credential update responsibility 後，將足夠的結果
-   交回 flow 的結果傳遞邊界；該 delivery contract deferred。
-5. flow 決定是否允許 original request retry；`AuthRequester` 仍只可重送其保有的
-   original work。第二次 401 的 terminal/retry decision 仍只屬 flow。
+4. deferred boundary 完成其 I/O 與 credential update responsibility後，將 refresh result
+   經 `AuthRequester` 的 deferred result boundary 傳回 flow；沒有 receive→retry shortcut。
+5. **只有 refresh-success** result 使 flow 可發出 semantic retry decision；refresh
+   failure、ineligible flow 與第二次 401 都 terminal。`AuthRequester` 仍只可重送其
+   retained original work，且不自行決定 retry。
 
 401 diagram 不得將上述 topology 畫成 existing runtime，亦不得以圖表建立新的
 `TokenFetcher`、`TokenProvider`、`CredentialRefresher` 或 `AuthEvent` public contract。
@@ -128,6 +137,27 @@ request-decoration ownership。Model C 保留最小責任決定，延後尚無 c
 Canvas 只表達 component responsibility/dependency，不表達 runtime sequence。三份
 Archify artifacts 只表達 adopted target；所有作者內容為繁體中文。不得發布
 artifact.cafe。
+
+## PR #37 Comment-Fix Materialization Contract
+
+此 comment-fix 不改變 Model C。獨立 Implementer 只可在既有 allowlist 內完成下列
+修正，並使 source、generated output 與 evidence 一致：
+
+1. canonical responsibility document 的 matrix 改為 `AuthRequester` 不建構 original
+   request，只保有 caller original request；selected／decorated representation 仍 deferred，
+   不新增 decoration API 或 runtime role。
+2. lifecycle、401 sequence、state diagram 由 `Auth` factory 在 initial semantic send 前
+   建立 one per-execution flow，並將 `AuthRequester ↔ AuthFlow` 標為無 request-payload 的
+   response／semantic exchange；不得畫成 `AuthRequester` 向預先存在的 flow 取得 instance。
+3. 401／state 明示 eligible refresh-capable flow 才可在 first 401 request refresh，
+   refresh result 經 deferred boundary 回 flow，只有 refresh-success retry；ineligible、
+   refresh-failure 及 second-401 terminal。
+4. `http-client-package-structure/BUILD.md` 僅可調整固定 build kicker／subtitle 的作者
+   arguments，使既有 pipeline 可重現已交付繁中 HTML；enhancement script 和其他 build
+   semantics 均為 ReadOnly。
+5. lifecycle、401、state 的所有說明性文案必須使用繁體中文：以「request 資料」、「資格」、
+   「延後確定」、「更新成功」分別取代 payload、eligibility、deferred、refresh-success
+   的解釋；只有 type、protocol、state、檔名等 identifier 可保留英文。
 
 ## Validation and Gate Contract
 
@@ -159,15 +189,24 @@ artifact.cafe。
    TE-03 = `approved` **且** RV-02 = `approved`；不得以單一 check 或未解決 finding
    取代此 gate。
 9. 只有上述「無重大問題」條件成立，DL-01 才可依 user-authorized topic workflow 與
-   `git-commit-convention` 完成 topic commit、push、open **draft PR**。
-10. DL-01 完成後進入 HC-01 human review；停止自動前進。不得 merge、release 或處理
-   review comment，也不得開始 future Swift implementation。
+   `git-commit-convention` 完成 topic commit、push 至 PR #37；該 PR 現為 OPEN、ready for
+   review，這是已完成的 historical delivery gate。
+10. PR #37 是 **OPEN、ready for review** 的既有 PR，planning contract 不得改變其 status。
+    RV-03 `needs-rework` 的 replacement workflow 是 PC-07 Plan-Creator amendment → PR-07
+    independent Plan Review → IM-04 Implementer → TE-05 independent Tester → RV-04
+    independent Reviewer → DL-03 topic commit/push to the existing ready-for-review PR →
+    CH-02 reply/resolve → HC-02 human review。CH-02 僅可在 TE-05/RV-04 approved 與
+    DL-03 completed 後執行：T06 依 supplied evidence
+    reply+resolve；T01/T02/T03/T05/T07/T08/T09 要等 corrected delivery visible；T04 要等
+    reproducibility fix visible。不得現在 resolve，且不得 merge、release 或開始 Swift
+    implementation。
 
 ## TestCase
 
 - **TC-01**：future implementation 的 flow unit test 證明 normal response terminal、
-  first 401 requests refresh、refresh success permits original retry、second 401 stops、
-  refresh failure is terminal；本 topic 不新增此 Swift test。
+  eligible refresh-capable flow 的 first 401 requests refresh、refresh success permits
+  original retry、second 401 stops、ineligible flow／refresh failure terminal；本 topic 不新增
+  此 Swift test。
 - **TC-02**：future compile/API test 證明 `AuthFlow` 無 arbitrary endpoint/request
   construction authority；若未來不採納此限制，必須另開 topic 明確重啟 architecture
   decision。
@@ -177,3 +216,13 @@ artifact.cafe。
   lifecycle 或 historical topic 變更。
 - **TC-05**：diagram validation/visual evidence 滿足本文件的 skill gate，且 no
   artifact.cafe publication。
+- **TC-06**：canonical matrix、lifecycle、401 與 state 的 source/generated evidence
+  一致表達 `Auth` factory 先建立 per-execution flow、沒有 request-payload flow exchange
+  或 receive→retry shortcut。
+- **TC-07**：`BUILD.md` 固定作者參數可重現 package canvas 的已交付繁中 HTML；enhancement
+  script 與其他 build semantics 不變。
+- **TC-08**：lifecycle、401、state 說明性文案為繁體中文，以「request 資料」、「資格」、
+  「延後確定」、「更新成功」取代 payload、eligibility、deferred、refresh-success 的解釋；
+  英文限於 identifier。
+- **TC-09**：PR #37 維持 OPEN、ready for review；PR-07 至 CH-02 不改 PR status，DL-03
+  commit/push 後才可進入 thread resolve，最後交 HC-02。

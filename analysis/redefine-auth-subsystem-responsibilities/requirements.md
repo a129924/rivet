@@ -55,8 +55,8 @@ source 沒有 `TokenFetcher` 或 `TokenProvider` runtime contract；本 topic �
   是否可進行、可進行幾次與 terminal decision；它不取得 original request、不建構
   original 或 refresh request，也不執行 I/O。
 - `AuthRequester` 是 original request 的唯一 owner 與 semantic-action
-  interpreter。它把已保留 caller intent 的 request 交給 `Requester`；任何
-  decoration representation 及 refresh dispatch interface 尚未鎖定。
+  interpreter。它只保有 caller 傳入的 original request，**不建構**該 request；任何
+  selected／decorated representation、decoration API 與 refresh dispatch interface 尚未鎖定。
 - `Requester` 仍是唯一 generic HTTP I/O component，不取得 auth state 或 retry
   policy。
 
@@ -72,7 +72,7 @@ signature。
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `Auth` | 否 | 否 | 否 | 否 | 否 | 否 | 否 |
 | `AuthFlow` | 是 | 是，作為 policy input | 否 | 否 | 否 | 否 | 是 |
-| `AuthRequester` | 否 | 是，負責轉交 flow | 是，唯一 owner | 是，只保留 caller intent；decoration shape deferred | 否 | 否，委派給 `Requester` | 否 |
+| `AuthRequester` | 否 | 是，負責轉交 flow | 是，唯一 owner | 否；只保有 caller original request，selected／decorated representation deferred | 否 | 否，委派給 `Requester` | 否 |
 | `Requester` | 否 | 是，raw return | 僅接收待執行 instance，不擁有 | 否 | 否 | 是 | 否 |
 | `TokenFetcher` | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 | `TokenProvider` | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
@@ -80,6 +80,28 @@ signature。
 `N/A` 是明確結論：此 topic 不宣稱這兩個 type 已存在、擁有 runtime role，或應被
 新增。未來若需要 refresh I/O component，必須以獨立 topic 鎖定它的名稱、依賴和
 credential update contract。
+
+## PR #37 Comment-Fix Contract
+
+此 amendment 只收斂已採用的 Model C 文件／圖表表述，不重開 architecture decision。
+
+- canonical responsibility document、requirements 與 technical spec 的 matrix 都必須將
+  `AuthRequester` 的「Builds original request」記為「否」：它只保有 caller original
+  request；selected／decorated representation 維持 deferred。不得因此新增 decoration
+  API 或 runtime role。
+- 只有具 refresh capability 且在該 state 下 eligible 的 `AuthFlow`，才可在第一次 401
+  發出 semantic refresh decision；不具資格的 flow 可以 terminal。Model C 的 policy
+  owner 不變。
+- `Auth` factory 必須在每次 execution 的 initial semantic send 前建立一個
+  per-execution `AuthFlow`，再由 `AuthRequester ↔ AuthFlow` 進行 semantic exchange；不得
+  將 `AuthRequester` 畫成向預先存在的 flow 取得 instance。
+- lifecycle、401 sequence 與 state 的 Archify source／generated evidence 必須共同表達：
+  `AuthRequester ↔ AuthFlow` 的 semantic exchange 沒有 request payload；refresh 經
+  deferred boundary 執行並把 result 傳回 flow；只有 refresh-success 才允許 retry；不得
+  存在 receive→retry shortcut，ineligible 與 refresh failure 都 terminal。圖表所有說明性
+  文案必須是繁體中文：以「request 資料」、「資格」、「延後確定」、「更新成功」分別說明
+  payload、eligibility、deferred、refresh-success；只有 type、protocol、state 或檔名等
+  identifier 可保留英文。
 
 ## Model Comparison
 
@@ -98,6 +120,11 @@ credential update contract。
   HTTP client package canvas 的 target／legacy wording。
 - 在新 diagram namespace 交付繁體中文的 responsibility/dependency canvas、normal
   request sequence、401 refresh/retry boundary sequence、AuthFlow state diagram。
+- 在新的獨立 Plan Review 核准後，對 PR #37 九個 comment thread 所涵蓋的 matrix、
+  canonical document、lifecycle／401／state Archify artifacts 與其 evidence 做上述
+  limited correction；不新增 runtime contract。
+- 在 RV-03 `needs-rework` 後，限定修正 Auth factory 的 per-execution-flow lifecycle、
+  圖表繁體中文說明文案與 PR #37 delivery wording；不變更 PR 狀態或 runtime contract。
 
 ## Out-Of-Scope
 
@@ -127,6 +154,10 @@ Phase 2 僅在 independent Plan Review 明示 `approved` 後建立：
 - `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/` 內的新 canvas、
   Archify source／generated artifacts 與 validation evidence。
 
+PR #37 comment-fix 只可校正已由本 Phase 2 Written allowlist materialize 的 canonical
+responsibility document 與新 diagram namespace 內 lifecycle／401／state 的 source、
+generated output 和 artifact-local evidence；這不是新的 path allowance，也不授權新 API。
+
 ### Modify
 
 Phase 1 無既有檔修改。
@@ -142,6 +173,9 @@ adopted Model C 如實標為尚未實作 target：
 - `docs/architecture/diagrams/http-client-package-structure/scene.js`
 - `docs/architecture/diagrams/http-client-package-structure/index.html`
 - 該 canvas 的 artifact-local validation／visual evidence
+- `docs/architecture/diagrams/http-client-package-structure/BUILD.md`：**僅**固定 build
+  kicker／subtitle 的作者參數，使現有 pipeline 可重現已交付的繁體中文 HTML；enhancement
+  script 與其餘 build semantics 維持 ReadOnly。
 
 ### ReadOnly
 
@@ -183,10 +217,16 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
    後，才可進入 RV-02 independent Reviewer re-review。
 6. 本 topic 的「無重大問題」只有在 **TE-02 = `approved`、TE-03 = `approved` 且
    RV-02 = `approved`** 時才成立；任何其他 status 或 verdict 均不得進入 delivery。
-7. 上述條件成立後，DL-01 由 Implementer 依 topic delivery intent 與
-   `git-commit-convention` 執行 topic commit、push、open **draft PR**。
-8. draft PR 建立後進入 HC-01 human review。不得自行 merge、release 或處理 review
-   comment；future Swift implementation 仍須另開 topic。
+7. 前述是已完成 DL-01 的 historical delivery gate。PR #37 目前是 **OPEN、ready for
+   review** 的既有 PR；這是 human 已執行的 delivery decision，planning artifact 不得改變
+   PR status。RV-03 `needs-rework` 後，PC-07／PR-07／IM-04／TE-05／RV-04 必須完成，
+   Implementer 才可由 DL-03 作 topic commit／push 到該既有 ready-for-review PR；不得開新
+   PR、merge、release 或開始 Swift implementation。
+8. DL-03 commit／push 後，Implementer 才可由 CH-02 依已提供 evidence 回覆並 resolve T06；T01、T02、
+   T03、T05、T07、T08、T09 只在對應 corrected delivery 已可見時 resolve；T04 只在
+   reproducibility fix 已可見時 resolve。此刻不得 resolve 任一 thread。
+9. CH-02 thread handling 完成後，HC-02 交還 human review 既有 ready-for-review PR；不得
+   自行 merge、release 或開始 future Swift implementation。
 
 ## TestCase
 
@@ -204,3 +244,18 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   errors、0 warnings；exact delivered artifact 經人工 light/dark 檢視。
 - **TC-07 — ReadOnly isolation**：無 Swift、package、OAuth dual-client lifecycle 或
   historical topic 變更。
+- **TC-08 — Comment-fix matrix**：三份 planning matrix 與 canonical document 都將
+  `AuthRequester` 的 original-request construction 記為「否」，且未引入 decoration API
+  或新的 runtime role。
+- **TC-09 — Eligible refresh topology**：lifecycle、401、state source/output/evidence
+  共同證明 `Auth` factory 在 semantic exchange 前建立 per-execution flow、無
+  request-payload semantic exchange、refresh result 回 flow、
+  只有 refresh-success retry，以及 ineligible／refresh-failure terminal。
+- **TC-10 — Reproducibility**：package canvas 既有 pipeline 以 `BUILD.md` 的固定
+  kicker／subtitle 作者參數重現已交付繁體中文 HTML，且 enhancement script/build semantics
+  沒有超出該作者參數的改動。
+- **TC-11 — Diagram language**：lifecycle、401、state 的所有說明性文案均為繁體中文；
+  「request 資料」、「資格」、「延後確定」、「更新成功」分別取代 payload、eligibility、
+  deferred、refresh-success 的解釋，僅 identifier 可保留英文。
+- **TC-12 — Existing PR boundary**：PR #37 維持 OPEN、ready for review；PC-07 至 CH-02
+  不得改變其 status，僅在 DL-03 後依可見 corrected delivery 回覆／resolve，最後交 HC-02。

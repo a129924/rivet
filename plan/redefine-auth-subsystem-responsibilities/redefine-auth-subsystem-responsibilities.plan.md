@@ -27,6 +27,14 @@ concrete-consumer Swift implementation topic 建立可驗收的 capability bound
   diagrams。
 - diagrams 必須表達 component/dependency、normal request、401 refresh/retry boundary、
   AuthFlow state；401 圖只表達 topology，不能新增未鎖定的 credential runtime。
+- PR #37 comment-fix：在獨立 Plan Review 後，最小修正 matrix/canonical document、
+  lifecycle／401／state Archify source/generated evidence 與 package canvas build
+  reproducibility；不重開 Model C 或定義 decoration/runtime API。
+- RV-03 rework：由 `Auth` factory 在 initial semantic send 前建立 per-execution
+  `AuthFlow`，使 `AuthRequester ↔ AuthFlow` semantic exchange 不再暗示取得預先存在的
+  flow；lifecycle／401／state 的所有說明性圖文使用繁體中文，僅 identifier 可保留英文。
+- 依已執行的 human delivery decision，PR #37 維持 **OPEN、ready for review**；只規劃
+  後續 commit/push、thread resolution 與 human review，不改變 PR status。
 
 ## Out-Of-Scope
 
@@ -101,9 +109,15 @@ implementer 不可從本 plan 推定這些 API。
 - `docs/architecture/diagrams/http-client-package-structure/scene.js`
 - `docs/architecture/diagrams/http-client-package-structure/index.html`
 - 該 canvas 的 artifact-local validation／visual evidence
+- `docs/architecture/diagrams/http-client-package-structure/BUILD.md`，且僅限固定 build
+  kicker／subtitle 的作者 arguments，以重現已交付繁體中文 HTML；enhancement script 與其餘
+  build semantics 維持 ReadOnly。
 
 所有修改只可澄清「現行 Model A 是 legacy runtime；Model C 是 adopted but
-unimplemented target」，不得虛構新的 API 或 runtime。
+unimplemented target」，不得虛構新的 API 或 runtime。PR #37 comment-fix 可修正已由
+Phase 2 Written allowlist materialize 的 canonical responsibility document，以及新 diagram
+namespace 內 lifecycle／401／state 的 source、generated output、artifact-local evidence；
+這不增加其他 Modify path。
 
 ### Deleted
 
@@ -115,7 +129,8 @@ unimplemented target」，不得虛構新的 API 或 runtime。
 - **TC-02**：四份 artifacts 對 matrix 的每格、legacy/target distinction 和
   `TokenFetcher`／`TokenProvider` N/A 結論一致。
 - **TC-03**：future Swift implementation 可證明 flow 的 normal terminal、first 401
-  refresh、refresh-success original retry、second 401 stop、refresh failure terminal；
+  refresh（僅 eligible refresh-capable flow）、refresh-success original retry、second 401
+  stop、ineligible／refresh failure terminal；
   本 topic 不新增或執行此等 Swift test。
 - **TC-04**：future type/API test 可證明 `AuthFlow` 不可 arbitrary request/endpoint
   construction 或 I/O；若無法證明，implementation 不可聲稱完成 Model C。
@@ -126,6 +141,19 @@ unimplemented target」，不得虛構新的 API 或 runtime。
   independent evidence；不得發布 artifact.cafe。
 - **TC-07**：source/tests/manifests、OAuth dual-client lifecycle 與歷史 topics 維持
   ReadOnly。
+- **TC-08**：`AuthRequester` 在 requirements、technical spec 與 canonical document 的
+  「Builds original request」均為「否」；只保有 caller original request，selected／decorated
+  representation deferred，未新增 API/runtime role。
+- **TC-09**：lifecycle、401、state 的 source/output/evidence 表達 one per-execution flow、
+  `Auth` factory 先建立 flow、無 request-payload semantic exchange、refresh result 回 flow、
+  只有 refresh-success retry 與 ineligible／refresh-failure terminal。
+- **TC-10**：只由 `BUILD.md` 的固定 kicker／subtitle 作者 arguments 使 package canvas
+  pipeline 重現已交付繁中 HTML；enhancement script/build semantics 無其他變更。
+- **TC-11**：lifecycle、401、state 的所有說明性文案均為繁體中文，以「request 資料」、
+  「資格」、「延後確定」、「更新成功」取代 payload、eligibility、deferred、refresh-success
+  的解釋；英文僅作 identifier。
+- **TC-12**：PR #37 維持 OPEN、ready for review；PR-07 至 CH-02 不改變 PR status，
+  DL-03 後才可 resolve thread，最終由 HC-02 human review。
 
 ## Implementation Phases and Gates
 
@@ -172,13 +200,18 @@ unimplemented target」，不得虛構新的 API 或 runtime。
 - **RV-02 / Reviewer**：獨立判定 scope、contract、workflow drift；發現 drift 時
   `needs-rework` 優先保守收斂，無 drift 才可明示 `approved`。
 - **No-major-issue gate**：只有 **TE-02 = `approved`、TE-03 = `approved` 且 RV-02 =
-  `approved`** 才定義為「無重大問題」並授權 DL-01；任何其他 status 或 verdict
+  `approved`** 才定義為「無重大問題」並授權 historical DL-01；任何其他 status 或 verdict
   不得交付。
-- **DL-01 / Implementer**：只在 no-major-issue gate 後，依 user-authorized topic
-  delivery intent 與 `git-commit-convention`，取得 human-confirmed message 後
-  commit by topic、push、open **draft PR**。
-- **HC-01 / Human**：draft PR 建立後立刻停在 human review；不得 merge、release、
-  處理未授權 review comment 或進入 Swift implementation。
+- **RV-03 rework workflow**：RV-03 = `needs-rework` 後，PC-07 Plan-Creator amendment
+  必先經 PR-07 independent Plan Review；其 approved 才可進入 IM-04 bounded correction。
+  IM-04 後必經 TE-05 independent Tester 與 RV-04 independent Reviewer。兩者 approved 後，
+  DL-03 才可依 topic delivery contract commit/push 到既有 **OPEN、ready-for-review** PR #37；
+  不開新 PR，也不得改變其 status。
+- **CH-02 / Implementer**：DL-03 completed 後才可處理 thread。依 supplied evidence
+  reply+resolve T06；T01/T02/T03/T05/T07/T08/T09 只在各自 corrected delivery visible 時
+  resolve；T04 只在 reproducibility fix visible 時 resolve。此刻沒有任何 thread 可 resolve。
+- **HC-02 / Human**：CH-02 完成後停在 human review；不得 merge、release 或進入 Swift
+  implementation。
 
 ## Branch Naming
 
