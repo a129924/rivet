@@ -10,7 +10,7 @@ struct StaticIsolationTests {
     let products = try namedItems(in: package, named: "products")
     let targets = try namedItems(in: package, named: "targets")
 
-    #expect(Set(products.keys) == ["GitHubIntegration", "RivetPRInbox"])
+    #expect(Set(products.keys) == ["GitHubIntegration", "RivetPRInbox", "RivetPresentation"])
     #expect(
       Set(targets.keys)
         == [
@@ -18,6 +18,8 @@ struct StaticIsolationTests {
           "GitHubIntegrationTests",
           "RivetPRInbox",
           "RivetPRInboxTests",
+          "RivetPresentation",
+          "RivetPresentationTests",
         ]
     )
 

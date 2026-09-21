@@ -179,6 +179,8 @@ Inbox row縮窄時 **MUST（必須）**依下列順序保留，且只能由低�
 
 換言之，secondary metadata最先隱藏或縮寫，其次author，再其次context；PR title與repository／PR identity **MUST NOT（不得）**因保留低優先資訊而消失。
 
+`PullRequestRow` title **MUST（必須）**保持單行，寬度不足時使用tail truncation，不得為完整顯示title而增加row高度。Repository／PR identity保持在title的次一層；secondary metadata依full、without metadata、without author/time、title＋identity only順序收斂。`620`／`480`／`340` 是row-local tier thresholds，不是window minimum；candidate是否fit只取決於available width與這三個threshold，不得被title、repository或metadata的ideal width改寫。Tier內文字自行truncate，非diff row **MUST NOT（不得）**產生horizontal scrolling。
+
 Reader縮窄時 **MUST（必須）**依下列順序處理：
 
 1. 保留Back、active tab、狀態與既有核心action的可達性。
