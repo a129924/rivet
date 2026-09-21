@@ -1,4 +1,4 @@
-public struct GitHubAccessToken: Sendable {
+public struct GitHubAccessToken: Equatable, Sendable {
   public let rawValue: String
 
   public init(rawValue: String) {

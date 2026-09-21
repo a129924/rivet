@@ -353,7 +353,11 @@ struct StaticIsolationTests {
       "Contracts/GitHubOAuthCredentialBundle.swift",
       "Contracts/GitHubTokenStore.swift",
       "Contracts/GitHubTokenProvider.swift",
+      "Contracts/OAuthCredentialStore.swift",
+      "Contracts/OAuthTokenFetcher.swift",
+      "Contracts/TokenSnapshot.swift",
       "OAuth/GitHubOAuthEndpoints.swift",
+      "Providers/OAuthTokenProvider.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift",
       "Stores/KeychainTokenStore.swift",
@@ -439,6 +443,45 @@ struct StaticIsolationTests {
   @Test
   func tokenStoreOperationIsSendable() {
     assertSendable(TokenStoreOperation.load)
+  }
+}
+
+extension StaticIsolationTests {
+  @Test
+  func oAuthProviderKeepsCredentialBundlesInsideTheAdapterAndProviderBoundary() throws {
+    let contractsDirectory =
+      repositoryRoot
+      .appendingPathComponent("Sources/BoundedContexts/GitHubIntegration/Contracts")
+    let providerPath =
+      repositoryRoot
+      .appendingPathComponent(
+        "Sources/BoundedContexts/GitHubIntegration/Providers/OAuthTokenProvider.swift"
+      )
+    let snapshotSource = try String(
+      contentsOf: contractsDirectory.appendingPathComponent("TokenSnapshot.swift"),
+      encoding: .utf8
+    )
+    let providerSource = try String(contentsOf: providerPath, encoding: .utf8)
+    #expect(snapshotSource.contains("public struct TokenSnapshot: Equatable, Sendable"))
+    #expect(snapshotSource.contains("public let accessToken: GitHubAccessToken"))
+    #expect(snapshotSource.contains("public let version: UInt64"))
+    #expect(snapshotSource.contains("public func hasSameVersion(as other: Self) -> Bool"))
+    #expect(!snapshotSource.contains("hasDifferentVersion"))
+    #expect(!snapshotSource.contains("public init"))
+    for requiredSignature in [
+      "public func replacementSnapshot(\n    afterUnauthorized usedSnapshot: TokenSnapshot",
+      "public func snapshot() async throws(OAuthTokenProviderError) -> TokenSnapshot",
+    ] {
+      #expect(providerSource.contains(requiredSignature))
+    }
+    for forbiddenMarker in [
+      "GitHubAccessTokenProvider", "RivetHTTPClient", "Keychain",
+      "Security", "Apollo", "URLSession",
+      "HTTPRequest", "HTTPResponse", "AuthFlow",
+    ] {
+      #expect(!providerSource.contains(forbiddenMarker))
+    }
+    #expect(try importedModuleRoots(in: providerSource) == ["Foundation"])
   }
 }
 
