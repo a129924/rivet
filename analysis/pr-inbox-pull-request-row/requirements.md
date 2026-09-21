@@ -7,7 +7,7 @@
 - Base branch：`dev`
 - Work branch：`feat/pr-inbox-pull-request-row`
 - Implementation environment：Human/operator 準備並 attach 的專用 worktree
-- Status：Topic／Mission `completed`，HC-01 decision維持`採用`。Human於2026-09-21另以原值`可以 commit -> push -> Open Ready PR`授權post-completion external delivery；PR-07已`approved`（Findings：None），PC-11 completed，current delivery step為DL-01 current／pending，Human exact commit-message confirmation pending。
+- Status：Product acceptance與HC-01 `採用`維持completed。DL-01、DL-02、DL-03已完成；PR #39為Open／Ready，base=`dev`、head=`feat/pr-inbox-pull-request-row`、current head=`7d162aa`。PR-09已`approved`（Findings：None），IM-02 completed，TE-02 explicit verdict=`approved`；PC-14已完成workflow sync，current step為RV-03 pending。
 
 ## Goal
 
@@ -44,6 +44,7 @@ Row 在寬度受限時必須依 title、repository／PR identity、context、aut
 - Swift Testing focused suite、root package regression、source/path/API/dependency isolation checks。
 - `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`的bounded compatibility update：只把已核准的`RivetPresentation` product/target/test target加入既有locked graph expected sets，保留所有既有entries與assertions。
 - 實作完成且focused verification通過後，精確替換 `README.md` 與 `docs/architecture/README.md` 的stale current-state文字。
+- PR #39 comment rework：修正release test compilation、讓production fit path與tested policy共享同一決策來源、讓長內容不改寫620／480／340 tier threshold，並bounded回寫既有`docs/presentation/native-interaction-contract.md`。
 
 ## Product and Architecture Boundary
 
@@ -74,7 +75,7 @@ Row 在寬度受限時必須依 title、repository／PR identity、context、aut
 | `340` | `withoutAuthorTime` | title、identity、context |
 | none | `primaryOnly` | title、identity |
 
-Implementation必須使用實際影響candidate measured width的zero-height fit probe；不得讓可截斷child使第一個`ViewThatFits` candidate永遠fit。
+Implementation必須讓internal fit layout與`PullRequestRowLayoutTier`共用同一組620／480／340 constants。Candidate回報給`ViewThatFits`的水平fit width只由available width與該tier minimum決定；title、identity或metadata的intrinsic／ideal width不得參與candidate acceptance。Tier內文字在實際available width自行tail truncation，不得改寫threshold、增加row高度或建立horizontal scrolling。
 
 ### Accessibility
 
@@ -95,6 +96,8 @@ Implementation必須使用實際影響candidate measured width的zero-height fit
 | `minimalMetadata` | id `fixture-labs/minimal-row#503`；title `Simplify the empty state copy`；repo `minimal-row`；number `#503`；author `Avery Quinn`；time `1d`；context `nil`；metadata `[]` |
 | `richMetadata` | id `example-labs/nebula-ui#142`；title `Tighten keyboard movement across command results`；repo `nebula-ui`；number `#142`；author `Mira Vale`；time `12m`；context `Keyboard flow`；metadata `mentioned`、`keyboard` |
 
+`PullRequestRowPreviewFixtures`必須維持internal且只存在於`#if DEBUG`。既有fixture test名稱不變；expected values必須在test file中always-compilable，release build不得引用fixture symbol，只有DEBUG branch比對actual fixtures與expected values。
+
 ## Success Criteria
 
 - `RivetPresentation` product/target可獨立build，且沒有BC或integration dependency。
@@ -103,8 +106,11 @@ Implementation必須使用實際影響candidate measured width的zero-height fit
 - Width tier在`680/560/400/300` points依序呈現full／withoutMetadata／withoutAuthorTime／primaryOnly。
 - 五個fixtures逐值符合contract，ids與repository/number tuples唯一。
 - Focused六個Swift Testing tests與root 70 tests通過；既有locked graph test保留全部既有entries/assertions，並包含`RivetPresentation`、`RivetPresentationTests`。
+- Debug與release configuration都能編譯並執行同一組六個既有test names；release test target不引用DEBUG-only fixtures。
+- Production `ViewThatFits` path與既有`layoutTierBreakpointsFollowDegradationOrder()`共享internal fit decision source；長title／repository ideal width不得改變620／480／340 boundary結果。
 - Preview可檢視standard、long title、long repository、minimal、rich、Increase Contrast與inactive leaf style。
 - `README.md`與architecture README的stale current-state敘述被精確替換，沒有矛盾或architecture drift。
+- `docs/presentation/native-interaction-contract.md`以bounded amendment記錄已採用row contract：單行tail truncation、不增加row高度、identity次層、metadata依tiers收斂、620／480／340為row-local thresholds、content ideal width不影響tier selection、無horizontal scrolling；不改BC ownership。
 - Exact path audit只包含本topic allowlist。
 - Tester完成驗證、獨立Reviewer明示verdict後停止於Human Review。
 
@@ -144,16 +150,33 @@ Implementation必須使用實際影響candidate measured width的zero-height fit
 - PC-10：completed，只同步delivery workflow truth，不變更product contract且不產生verdict。
 - PR-07：`approved`，Findings：None；獨立Plan-Reviewer只審delivery workflow truth，未重開single-line title、其他product contract、test／Reviewer evidence或path allowlist。
 - PC-11：completed，只同步PR-07 explicit result與DL-01 current state，不變更product/path/commands/tests/evidence或delivery authorization，亦不產生verdict。
+- DL-01：completed；既有topic scope已stage且commit message gate已完成。
+- DL-02：completed；Human-confirmed commit已建立並push。
+- DL-03：completed；PR #39已建立為Open／Ready，base=`dev`、head=`feat/pr-inbox-pull-request-row`，current head=`7d162aa`。
+- RV-02：`needs-rework`。T-01與T-03為同一release compile failure；T-02要求production path與tested policy共享決策來源；T-04要求長內容不得蓋過tier threshold；T-05要求bounded durable writeback。Findings不要求新增public API、dependency、test name、snapshot/UI dependency、BC ownership或新文件。
+- PC-12：completed，只materialize bounded PR-comment amendment與truthful workflow state，不構成approval。
+- PR-08：`needs-rework`；findings只限step ledger的historical doc-only scope標示與plan內一處「執行」文字誤植。
+- PC-13：completed；只修正PR-08兩項findings並同步workflow truth，不構成approval。
+- PR-09：`approved`，Findings：None。
+- IM-02：completed；red release fixture／layout seam後green，debug／release builds、focused 6/6、root 70/70、precommit／path／API audits均通過，diff恰為七個allowlist paths。
+- TE-02：explicit verdict=`approved`；獨立驗證上述同evidence。Human-only Preview／VoiceOver仍為pending，但不是automated blocker。
+- PC-14：completed；只同步本次workflow truth，不構成approval。
+- RV-03：pending；current step為獨立Reviewer。只有RV-03 `approved`才可進DL-04。
 
 ## Post-Completion External Delivery Authorization
 
 - Human authorization原值：`可以 commit -> push -> Open Ready PR`；date：2026-09-21。
 - Ready PR固定base=`dev`、head=`feat/pr-inbox-pull-request-row`，且不得建立Draft PR。
-- DL-01（Implementer）current／pending：完成delivery preflight，僅stage既有Exact Path Contract的8個Written paths與4個Modify paths；依`git-commit-convention`檢查staged diff是否為single semantic boundary並提出message，隨即停止等待Human明確確認message。
-- Human exact commit-message confirmation：pending。HC-01的`採用`與external delivery authorization都不等同commit-message確認。
-- DL-02（Implementer）pending：只在Human明確確認message後commit並push `feat/pr-inbox-pull-request-row`。
-- DL-03（Implementer）pending：只在push成功且local/remote heads一致後建立Ready（非Draft）PR，base=`dev`、head=`feat/pr-inbox-pull-request-row`，並回報URL。
+- DL-01／DL-02／DL-03：completed；PR #39為Open／Ready，base=`dev`、head=`feat/pr-inbox-pull-request-row`、current head=`7d162aa`。
 - 不授權merge、release、tag、branch deletion、worktree removal或自動開始`PullRequestList`／下一Mission。
+
+## PR #39 Comment Rework Authorization
+
+- Human授權順序固定為comment review／bounded fix → Tester → independent Reviewer → stage＋message proposal → Human exact commit-message confirmation → commit → push → reply／resolve addressed comments。
+- Bounded implementation paths只有`Sources/Presentation/PRInbox/PullRequestRow.swift`、`Tests/RivetPresentationTests/PullRequestRowPresentationTests.swift`與`docs/presentation/native-interaction-contract.md`；本cycle四份planning artifacts仍可修改。不得修改其他path。
+- Fixtures維持DEBUG-only；六個test名稱、13個public declarations、620／480／340 thresholds、single-line title、無BC coupling與leaf selection/focus boundary均保持。
+- Static graph不需擴張；`colorSchemeContrast` public key path不可寫，維持現行Preview-only作法。
+- 不授權merge、release或下一Mission；只有addressed comments可在push成功且evidence完整後reply／resolve。
 
 ## Workspace Evidence
 
@@ -162,7 +185,8 @@ Implementation必須使用實際影響candidate measured width的zero-height fit
 - Branch：`feat/pr-inbox-pull-request-row`。
 - Baseline：HEAD、local `dev`與`origin/dev`均為`579e67b6db650218078e3383365e40cf08a5e641`。
 - Worktree在PC-01前已驗證clean且branch只attach一次。
-- Workspace preparation不是Plan-Creator執行；PC-01至PC-11均未執行Git。
+- Current PR delivery truth：PR #39 Open／Ready；base=`dev`；head=`feat/pr-inbox-pull-request-row`；current head=`7d162aa`。
+- Workspace preparation不是Plan-Creator執行；PC-01至PC-14均未執行Git。
 
 ## Last Updated
 

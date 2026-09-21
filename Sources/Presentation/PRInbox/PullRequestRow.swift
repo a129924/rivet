@@ -4,7 +4,7 @@ enum PullRequestRowLayoutContract {
   static let titleLineLimit = 1
 }
 
-enum PullRequestRowLayoutTier: Equatable, Sendable {
+enum PullRequestRowLayoutTier: Equatable, Hashable, Sendable {
   case full
   case withoutMetadata
   case withoutAuthorTime
@@ -13,6 +13,12 @@ enum PullRequestRowLayoutTier: Equatable, Sendable {
   static let fullMinimumWidth: CGFloat = 620
   static let withoutMetadataMinimumWidth: CGFloat = 480
   static let withoutAuthorTimeMinimumWidth: CGFloat = 340
+  static let orderedFitCandidates: [Self] = [
+    .full,
+    .withoutMetadata,
+    .withoutAuthorTime,
+    .primaryOnly,
+  ]
 
   var minimumWidth: CGFloat? {
     switch self {
@@ -40,15 +46,63 @@ enum PullRequestRowLayoutTier: Equatable, Sendable {
   }
 
   static func resolve(availableWidth: CGFloat) -> Self {
-    if availableWidth >= fullMinimumWidth {
-      .full
-    } else if availableWidth >= withoutMetadataMinimumWidth {
-      .withoutMetadata
-    } else if availableWidth >= withoutAuthorTimeMinimumWidth {
-      .withoutAuthorTime
-    } else {
-      .primaryOnly
-    }
+    orderedFitCandidates.first { tier in
+      availableWidth >= (tier.minimumWidth ?? 0)
+    } ?? .primaryOnly
+  }
+}
+
+struct PullRequestRowFitLayout: Layout {
+  let tier: PullRequestRowLayoutTier
+
+  static func reportedWidth(
+    proposedWidth: CGFloat?,
+    contentIdealWidth _: CGFloat,
+    tier: PullRequestRowLayoutTier
+  ) -> CGFloat {
+    let minimumWidth = tier.minimumWidth ?? 0
+    return max(proposedWidth ?? minimumWidth, minimumWidth)
+  }
+
+  func sizeThatFits(
+    proposal: ProposedViewSize,
+    subviews: Subviews,
+    cache: inout ()
+  ) -> CGSize {
+    let minimumWidth = tier.minimumWidth ?? 0
+    let contentWidth = proposal.width ?? minimumWidth
+    let contentProposal = ProposedViewSize(
+      width: contentWidth,
+      height: proposal.height
+    )
+    let contentSize = subviews.first?.sizeThatFits(contentProposal) ?? .zero
+
+    return CGSize(
+      width: Self.reportedWidth(
+        proposedWidth: proposal.width,
+        contentIdealWidth: contentSize.width,
+        tier: tier
+      ),
+      height: contentSize.height
+    )
+  }
+
+  func placeSubviews(
+    in bounds: CGRect,
+    proposal: ProposedViewSize,
+    subviews: Subviews,
+    cache: inout ()
+  ) {
+    guard let content = subviews.first else { return }
+
+    content.place(
+      at: bounds.origin,
+      anchor: .topLeading,
+      proposal: ProposedViewSize(
+        width: bounds.width,
+        height: proposal.height ?? bounds.height
+      )
+    )
   }
 }
 
@@ -61,10 +115,9 @@ public struct PullRequestRow: View {
 
   public var body: some View {
     ViewThatFits(in: .horizontal) {
-      PullRequestRowCandidate(presentation: presentation, tier: .full)
-      PullRequestRowCandidate(presentation: presentation, tier: .withoutMetadata)
-      PullRequestRowCandidate(presentation: presentation, tier: .withoutAuthorTime)
-      PullRequestRowCandidate(presentation: presentation, tier: .primaryOnly)
+      ForEach(PullRequestRowLayoutTier.orderedFitCandidates, id: \.self) { tier in
+        PullRequestRowCandidate(presentation: presentation, tier: tier)
+      }
     }
     .accessibilityElement(children: .ignore)
     .accessibilityLabel(Text(verbatim: presentation.accessibilityLabelText))
@@ -77,11 +130,7 @@ private struct PullRequestRowCandidate: View {
   let tier: PullRequestRowLayoutTier
 
   var body: some View {
-    ZStack(alignment: .leading) {
-      if let minimumWidth = tier.minimumWidth {
-        PullRequestRowFitProbe(minimumWidth: minimumWidth)
-      }
-
+    PullRequestRowFitLayout(tier: tier) {
       content
     }
   }
@@ -133,16 +182,5 @@ private struct PullRequestRowCandidate: View {
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding(.vertical, 4)
-  }
-}
-
-private struct PullRequestRowFitProbe: View {
-  let minimumWidth: CGFloat
-
-  var body: some View {
-    Color.clear
-      .frame(minWidth: minimumWidth, maxWidth: .infinity)
-      .frame(height: 0)
-      .accessibilityHidden(true)
   }
 }

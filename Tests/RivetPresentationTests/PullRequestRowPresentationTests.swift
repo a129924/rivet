@@ -95,8 +95,7 @@ struct PullRequestRowPresentationTests {
 
   @Test
   func previewFixturesHaveUniqueIdentitiesAndAreDeterministic() {
-    let fixtures = PullRequestRowPreviewFixtures.all
-    let expected = [
+    let expected: [PullRequestRowPresentation] = [
       PullRequestRowPresentation(
         id: "sample-studio/atlas-desktop#87",
         title: "Clarify offline workspace state",
@@ -148,17 +147,24 @@ struct PullRequestRowPresentationTests {
       ),
     ]
 
-    #expect(fixtures == expected)
-    #expect(Set(fixtures.map(\.id)).count == fixtures.count)
+    #expect(Set(expected.map(\.id)).count == expected.count)
     #expect(
-      Set(fixtures.map { "\($0.repositoryLabel)\u{0}\($0.numberLabel)" }).count
-        == fixtures.count
+      Set(expected.map { "\($0.repositoryLabel)\u{0}\($0.numberLabel)" }).count
+        == expected.count
     )
+
+    #if DEBUG
+      #expect(PullRequestRowPreviewFixtures.all == expected)
+    #endif
   }
 
   @Test
   func layoutTierBreakpointsFollowDegradationOrder() {
     #expect(PullRequestRowLayoutContract.titleLineLimit == 1)
+    #expect(
+      PullRequestRowLayoutTier.orderedFitCandidates
+        == [.full, .withoutMetadata, .withoutAuthorTime, .primaryOnly]
+    )
 
     let cases: [(width: CGFloat, expected: PullRequestRowLayoutTier)] = [
       (680, .full),
@@ -177,6 +183,29 @@ struct PullRequestRowPresentationTests {
       #expect(
         PullRequestRowLayoutTier.resolve(availableWidth: testCase.width)
           == testCase.expected
+      )
+
+      for contentIdealWidth in [CGFloat(80), CGFloat(10_000)] {
+        let resolvedByProductionFitPolicy =
+          PullRequestRowLayoutTier.orderedFitCandidates.first { tier in
+            PullRequestRowFitLayout.reportedWidth(
+              proposedWidth: testCase.width,
+              contentIdealWidth: contentIdealWidth,
+              tier: tier
+            ) <= testCase.width
+          }
+
+        #expect(resolvedByProductionFitPolicy == testCase.expected)
+      }
+    }
+
+    for tier in PullRequestRowLayoutTier.orderedFitCandidates {
+      #expect(
+        PullRequestRowFitLayout.reportedWidth(
+          proposedWidth: nil,
+          contentIdealWidth: 10_000,
+          tier: tier
+        ) == (tier.minimumWidth ?? 0)
       )
     }
   }
