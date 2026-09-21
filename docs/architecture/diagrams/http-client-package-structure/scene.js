@@ -51,8 +51,8 @@ const BOXES = [
     name:'HTTPClient／Configuration',about:'公開通用 HTTP 介面；Configuration 合成相對路徑、合併 headers 並設定 timeout，所有介面經 execute 委派。',
     texts:[['bl',164,648,'HTTPClient／Configuration'],['bs',164,670,'絕對 URL／相對路徑 → execute(_:)']] },
   { id:'auth-requester', plane:'client', band:'band-client', x:540,y:620,w:360,h:68,r:10,dash:true,
-    name:'AuthRequester',about:'現行驅動迴圈是既有模型 A；採用的模型 C 中它是原始請求唯一所有者與語意解讀者。',
-    texts:[['bl',564,648,'AuthRequester'],['bs',564,670,'目標：原始請求所有者與語意解讀者']] },
+    name:'AuthRequester',about:'現行驅動迴圈是既有模型 A；採用的模型 C 中它只保有呼叫端原始請求並解讀語意決策。選定／修飾後請求的準備者與表徵均延後確定；它不負責準備該請求。',
+    texts:[['bl',564,648,'AuthRequester'],['bs',564,670,'目標：保有原始請求；解讀語意決策']] },
   { id:'requester', plane:'client', band:'band-client', x:940,y:620,w:379,h:68,r:10,dash:true,
     name:'Requester',about:'把已驗證 HTTPRequest 映射為 Foundation URLRequest；不重驗 URL。',
     texts:[['bl',964,648,'Requester'],['bs',964,670,'HTTPRequest → URLRequest']] },
@@ -78,9 +78,9 @@ const EDGES = [
   { from:'auth',to:'auth-flow',pts:[[407,516],[417,516]],label:{s:'al',x:412,y:504,t:'建立',anchor:'center'} },
   { from:'http-client',to:'requester',pts:[[505,640],[925,640],[925,642],[934,642]],label:{s:'al',x:722,y:628,t:'設定後執行',anchor:'center'} },
   { from:'auth-requester',to:'auth',pts:[[650,614],[650,575],[271,575],[271,543]],label:{s:'al',x:668,y:580,t:'依賴',rot:-90,anchor:'center'} },
-  { from:'auth-requester',to:'requester',pts:[[905,670],[925,670],[925,666],[934,666]],label:{s:'al',x:915,y:690,t:'注入',rot:-90,anchor:'center'} },
+  // 此相依只表達泛用 I/O 委派，不表示 AuthRequester 準備選定／修飾後請求。
+  { from:'auth-requester',to:'requester',pts:[[720,694],[720,714],[1129,714],[1129,694]],label:{s:'al',x:924,y:706,t:'泛用 I/O 委派；非請求準備',anchor:'center'} },
   { from:'auth-requester',to:'auth-flow',pts:[[720,614],[720,555],[554,555],[554,543]],label:{s:'al',x:737,y:580,t:'回應／語意決策',rot:-90,anchor:'center'} },
-  { from:'auth-requester',to:'request',pts:[[780,614],[780,580],[837,580],[837,479]],label:{s:'al',x:800,y:568,t:'目標所有者',anchor:'center'} },
   { from:'auth-requester',to:'response',pts:[[860,614],[860,600],[1154,600],[1154,479]],label:{s:'al',x:1007,y:588,t:'策略輸入',anchor:'center'} },
   { from:'http-client',to:'request',pts:[[320,614],[320,555],[837,555],[837,479]],label:{s:'al',x:854,y:568,t:'建立',rot:-90,anchor:'center'} },
   { from:'http-client',to:'response',pts:[[360,614],[360,557],[1154,557],[1154,479]],label:{s:'al',x:1171,y:568,t:'回傳型別',rot:-90,anchor:'center'} },
@@ -105,7 +105,7 @@ const TEXTS = [
   {s:'legend',x:1143,y:134,t:'顏色 — 所屬的責任層'},
   {s:'bn',x:110,y:1040,t:'不變量：Configuration 提供通用 base URL／相對路徑便利功能，不是端點或查詢建構器'},
   {s:'bn',x:110,y:1060,t:'不變量：HTTPURL 驗證與 HTTPClientError 分別表達設定／URL／路徑驗證、Transport 失敗；HTTP status 維持原始回應'},
-  {s:'bn',x:110,y:1080,t:'Auth 歷史／目標架構：現行 `.send(HTTPRequest)` 是既有模型 A；模型 C 將策略／狀態、原始請求與輸入／輸出分離，Swift 遷移尚待後續主題'}
+  {s:'bn',x:110,y:1080,t:'Auth 歷史／目標架構：現行 `.send(HTTPRequest)` 是既有模型 A；模型 C 分離策略／狀態、呼叫端原始請求與 I/O，經選擇／修飾請求的準備責任維持延後確定'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},

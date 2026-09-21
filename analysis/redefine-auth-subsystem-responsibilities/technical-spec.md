@@ -99,20 +99,26 @@ request-decoration ownership。Model C 保留最小責任決定，延後尚無 c
 
 ### 401 Refresh and Retry
 
-1. initial semantic send 前，`AuthRequester` 向 `Auth` factory 要求 flow，`Auth` 為該
-   execution 建立並回傳一個 independent `AuthFlow`；之後的 `AuthRequester ↔ AuthFlow`
-   exchange 才開始，且只傳遞 response／semantic decision，不帶 request payload。
-2. `Requester` 回傳 401 raw response；`AuthRequester` 將它交給 `AuthFlow`。只有具
+1. caller 先把 original request 交給 `AuthRequester`，作為本次 original execution entry；
+   `AuthRequester` 保有它，但不建構它，也不把它交給 `AuthFlow`。
+2. initial semantic send 前，`AuthRequester` 向 `Auth` factory 要求 per-execution flow；
+   `Auth` 建立並回傳一個 independent `AuthFlow` 給 `AuthRequester`。factory request／return
+   不帶 original request，之後的 `AuthRequester ↔ AuthFlow` exchange 才開始，且只傳遞
+   response／semantic decision，不帶 request payload。
+3. `Requester` 回傳 401 raw response；`AuthRequester` 將它交給 `AuthFlow`。只有具
    refresh capability 且該 state eligible 的 flow 可在第一次 401 發出 semantic refresh
    decision；不具資格的 flow 可以 terminal，仍由 flow 單一擁有 decision/state。
-3. `AuthRequester` 只解讀 semantic refresh decision，交給 **deferred credential-refresh
+4. `AuthRequester` 只解讀 semantic refresh decision，交給 **deferred credential-refresh
    I/O boundary**；這份文件不命名 type、不定義 endpoint、payload、credential update
    API 或 refresh-result type。
-4. deferred boundary 完成其 I/O 與 credential update responsibility後，將 refresh result
+5. deferred boundary 完成其 I/O 與 credential update responsibility後，將 refresh result
    經 `AuthRequester` 的 deferred result boundary 傳回 flow；沒有 receive→retry shortcut。
-5. **只有 refresh-success** result 使 flow 可發出 semantic retry decision；refresh
-   failure、ineligible flow 與第二次 401 都 terminal。`AuthRequester` 仍只可重送其
-   retained original work，且不自行決定 retry。
+6. **只有 refresh-success** result 使 flow 可發出 semantic retry permission **transition／event**；
+   它進入 waiting-for-retry-response policy state，而非成為獨立 lifecycle node。該 state 收到
+   retry response 後，才由 response policy 分支 normal-success terminal 或 second-401 terminal；不得由
+   retry permission
+   直接到任一終態。refresh failure、ineligible flow 與第二次 401 都 terminal。
+   `AuthRequester` 仍只可重送其 retained original work，且不自行決定 retry。
 
 401 diagram 不得將上述 topology 畫成 existing runtime，亦不得以圖表建立新的
 `TokenFetcher`、`TokenProvider`、`CredentialRefresher` 或 `AuthEvent` public contract。
@@ -158,6 +164,91 @@ artifact.cafe。
 5. lifecycle、401、state 的所有說明性文案必須使用繁體中文：以「request 資料」、「資格」、
    「延後確定」、「更新成功」分別取代 payload、eligibility、deferred、refresh-success
    的解釋；只有 type、protocol、state、檔名等 identifier 可保留英文。
+6. current PR #37 comment preflight 的四個必要 correction 僅限：(a) 401 diagram 在無
+   request-payload semantic exchange 前表達 caller entry 及 `AuthRequester → Auth → AuthRequester`
+   的 per-execution-flow factory round-trip；(b) state diagram 將 retry permission 表示為進入
+   waiting-for-retry-response state 的 transition／event（非 lifecycle node），再由 response policy
+   分支 normal success 或 second 401；
+   (c) package canvas 不得將 selected／decorated request preparation 指派給 `AuthRequester`；
+   (d) ledger 如實回復 delivered head 的 RV-04 = approved、DL-03 = active，並為 current
+   preflight = needs-rework 定義新的 gated route。以上不決定 preparation owner、representation
+   或任何新的 runtime API。
+
+## Human-Authorized State Delivery-Recovery Redesign
+
+human 現明確授權只擴張 `auth-flow-state.json` 的 topology/layout presentation scope，目的僅為
+消除 Archify showcase composition crossing `[850,307]`、恢復 normal standard delivery。PC-10／
+PR-10／IM-08 alternate-materialization route（public validate／deliver／render 都失敗，preview 無
+source-matched output）保留為 historical failed recovery evidence，現由 PC-11 route supersede。PC-13
+進一步 supersede IM-09 的 prior state-node formulation；此為 expression revision，非 retry policy change，
+也不恢復 alternate HTML materialization path。
+
+IM-11 可將 retry permission 表達為進入 waiting-for-retry-response 的 transition／event（不是
+distinct lifecycle node），並調整相連 state presentation、labels、areas 與 transitions，卻必須保持
+下列 locked semantics：first 401 的 ineligible／non-refresh-capable flow terminal；eligible path refresh；
+refresh outcome 回到 Flow policy；只有 refresh success grants exactly one retry；waiting state 將 retry
+response 交給 response policy 分支 normal success／second-401 terminal；沒有 receive→retry shortcut。
+這不重開 Model C、original-request ownership、
+deferred preparation owner/representation、401/canvas contract 或任何 runtime API。
+
+state redesign 的 acceptance 是 standard Archify showcase validate 9/9、0 errors、0 warnings、
+successful standard `deliver` 的 source-matched HTML／receipt，以及 exact-delivered visual evidence
+與 manual light/dark inspection；不得將未消除的 `[850,307]` 稱為 accepted non-pass 或 delivery。
+兩次 focused repair、一次 independent overall-layout attempt、all-attempts-restored 與 IM-08 failure
+只保留為歷史。既有 desktop containment accepted non-pass 完全分離且不變：1440×900 scrollHeight
+1035、1600×1000／1920×1080 1109、2048×1320 pass；它仍不得稱 visual-check pass。401 sequence
+仍須完整 standard 9/9、normal `deliver`、visual pass；package canvas 維持 validate/build/
+reproducibility/accessibility；其他 diagram、scope、ReadOnly、diff、PR status 或 thread gates
+一概不被豁免。
+
+PC-12 明確分離 source modification 與 output materialization；PC-13 使 IM-11 成為唯一可修改 state
+expression／presentation 的 step。IM-10 在其後獨立執行，且 **source ReadOnly**。實際現況只記錄下列
+unproven pairs：401 JSON SHA-256
+`edf7864d859bede17f9572d1a24dff31452ce8a4f0ec80ec14874c818cc5c798`、existing 401 HTML SHA-256
+`f4e4d9f546a7f772127b008a7e64f7e01b47bc0d7fb3b142155992d4697c73ca`；package scene SHA-256
+`017bdfe15961912f24c6e479938fff17f6a85b6bc7069eeeaa9aefb2c336bc3f`、existing index SHA-256
+`ca7b3773ab24971f8f41172ad1489df29015b1a85f1abfb900115483f9aa03d2`。沒有 receipt 將各 pair 證明為
+source-matched；不得從現有 hash 推定 output validity。IM-10 必須重新建立可追溯的 delivery／build
+relation，而 `BUILD.md` 與 enhancement script 維持 ReadOnly。
+
+## Human 授權的 401 參與者脈絡表述調整
+
+human 授權 PC-15／PR-15／IM-13 只將 `401-refresh-retry` 的參與者副標籤表述從參與者標頭移至
+圖外脈絡／說明區。這只 supersede IM-12 的「所有副標籤置於標頭」表述限制，並不是 visual exception、
+retry-policy change、component identity change 或 ownership change。
+
+每個移出的副標籤必須在圖外脈絡／說明區以可對照的說明文字保留既有解釋意義；不得 invent ownership、
+capability、runtime behavior 或 architecture decision。IM-13 只可修改 `401-refresh-retry.json`、其 generated
+HTML 和 artifact-local validation／delivery／visual evidence；`auth-flow-state`、package canvas、lifecycle、normal
+sequence、Swift、OAuth 和所有其他 paths 皆為 ReadOnly。必須保留 17 則 sequence messages、caller →
+AuthRequester 的 entry、AuthRequester → Auth → AuthRequester 的 per-execution flow factory round-trip、
+request-less exchange、Flow 無 original-request access、ineligible／eligible policy、refresh result 回 policy、
+refresh-success-only exactly-one retry、waiting-for-retry-response → response-policy split 和 no
+receive→retry shortcut。
+
+IM-13 的交付仍是 standard Archify showcase validate 9/9、0 errors、0 warnings、source-matched `deliver`、
+1440×900／1600×1000／1920×1080／2048×1320 全數 visual-check pass 與 exact-delivered manual light/dark
+inspection。package passed materialization evidence 維持、不重做。route 固定為 PC-15 → PR-15 → IM-13 →
+TE-11 → RV-11；TE-11 只驗證、不產生 output/evidence。RV-11 `needs-rework` 已取代原本未開始的
+DL-09 → CH-08 → HC-08 downstream route。
+
+## RV-11 Canvas Ownership／Ledger Rework
+
+RV-11 = `needs-rework` 的範圍只有兩項：component-dependency canvas 不得將
+selected／decorated request 的準備責任交給 `AuthRequester`；該角色只保有 caller original request
+並解讀 semantic action，準備者與 representation 的 exact owner 維持 deferred。step ledger 也必須以
+RV-11 = `needs-rework` 為 current rework truth，不得將 IM-14 receipt regeneration 或已 supersede
+的 DL-03 誤述為 current gate。
+
+這不重開 Model C、original request ownership、retry policy、401 sequence、state topology、
+participant-context presentation 或 deferred API。這是直接交回 IM-15 的最小回修，不建立新的 planning cycle。
+TE-12 initial 已 `needs-rework`；IM-15 rework 已完成同一個 bounded canvas finding 的回修，且 TE-12 re-test 已
+`approved`；目前 gate 為 RV-12。IM-15 的
+實作範圍只可更新
+`component-dependency/scene.js`、其 generated `index.html`、artifact-local validation／visual evidence 與
+actual-step ledger evidence；`BUILD.md`、enhancement script、401、state、lifecycle、normal sequence、
+canonical document、Swift、OAuth 與其他 path 均為 ReadOnly。current route：
+IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → CH-09 → HC-09。
 
 ## Validation and Gate Contract
 
@@ -168,10 +259,11 @@ artifact.cafe。
    寫入 long-lived allowlist。
 3. architecture-canvas artifact 必須依 skill 執行 validate、build，並人工檢閱 exact
    light/dark output。
-4. 每份 Archify artifact 必須先以 showcase quality validate（完整 9/9 checks、0
-   errors、0 warnings），再 deliver；delivery 會 freeze exact source/output。之後須
-   以 repository-root visual-check 取得 evidence，並人工檢閱 exact delivered
-   light/dark output。
+4. 每份 Archify artifact（包含重新設計後的 state）必須先以 showcase quality validate（完整
+   9/9 checks、0 errors、0 warnings），再 standard `deliver`；delivery 會 freeze exact source/output。
+   之後須以 repository-root visual-check 取得 evidence，並人工檢閱 exact delivered light/dark
+   output。state 只保留既有 desktop containment exact non-pass，不存在 alternate-materialization
+   delivery path。
 5. TE-01 是 historical `needs-rework`，不是 delivery entry condition。其唯一
    independent replacement verification gate 為 TE-02：獨立 Tester 必須驗證
    changed-path allowlist、`git diff --check`、legacy/target wording、OAuth isolation、
@@ -198,8 +290,66 @@ artifact.cafe。
     CH-02 reply/resolve → HC-02 human review。CH-02 僅可在 TE-05/RV-04 approved 與
     DL-03 completed 後執行：T06 依 supplied evidence
     reply+resolve；T01/T02/T03/T05/T07/T08/T09 要等 corrected delivery visible；T04 要等
-    reproducibility fix visible。不得現在 resolve，且不得 merge、release 或開始 Swift
-    implementation。
+    reproducibility fix visible。這是 PC-08 前的 historical route；delivered head 只記錄
+    DL-03 = `active`，不得現在 resolve，且不得 merge、release 或開始 Swift implementation。
+11. delivered head 的 workflow ledger 只記錄 RV-04 = `approved`、DL-03 = `active`；它不
+    把 push、thread closure 或 HC-02 寫成已完成。PC-08／PR-08 是 historical correction lineage；
+    PC-09／PR-09／IM-07 blocked 是 standard-delivery limitation 的歷史 evidence，不得回寫為
+    pass 或 delivery approval。
+12. PC-10／PR-10／IM-08 blocked 是 historical failed alternate-materialization route，不得被回寫為
+    delivery pass；其 downstream TE-07 至 HC-04 未前進，現由 PC-11 replacement route supersede。
+13. PC-12／PR-12 與 IM-09 blocked 是 historical source/output-separation route。PC-13 只可將 retry
+    permission 從 node 改為進入 waiting-for-retry-response 的 transition／event，並 supersede
+    alternate HTML materialization 與 prior state-node formulation；不得改變任何 policy semantics。PR-13
+    必須由 independent Plan-Reviewer 審查 IM-11 state-only、IM-10 source-ReadOnly、TE-09
+    verification-only、unproven checksum observations與 all-existing gates；`approved` 才可依序進入
+    IM-11、IM-10。
+14. IM-11 只可修改 `auth-flow-state` source/HTML/standard receipt/visual evidence，並將 retry
+    permission 表達為進入 waiting-for-retry-response 的 transition／event（非 node），以及必要的
+    topology/layout presentation 調整以消除 `[850,307]`。它必須保留 locked semantics，並取得 normal
+    standard validation/delivery evidence。IM-10 在 IM-11 completed 後，
+    不得修改 source：401 必須 standard validate → deliver → visual-check，取得 source-match/
+    9-of-9/0-error/visual-pass evidence；package 必須 validate → temporary build → enhance → verify
+    materialize `index.html`，取得 reproducibility/accessibility/source-output consistency；BUILD.md／
+    enhancement script ReadOnly。任一項不能完成即 `blocked` 交還 human。
+15. 只有 IM-11 **及** IM-10 completed 且 state/401/package evidence 齊備，TE-09 才可開始，且只可
+    verify、不得生成 output/evidence。其後 route 固定為 TE-09 → RV-09 → DL-07 → CH-06 → HC-06；
+    DL-07 只在 TE-09/RV-09 `approved` 後 commit/push，CH-06 只在 corrected delivery visible 後
+    重新取得並處理 thread，PR status 不變。
+16. IM-10 的 package materialization 已通過（5 bands／15 boxes／22 edges、0 errors、0 warnings、
+    build→enhance→verify、byte-identical output），保留為有效 evidence，不得重做。401 source ReadOnly
+    delivery雖為 9/9、0 errors、0 warnings、source-matched，fresh visual-check 的 1440×900 = 1001、
+    1600×1000 = 1073 卻失敗，且不屬於 state exception；IM-10 因此是 historical blocked route。
+17. PC-14 只可建立 bounded `401-refresh-retry` layout/source repair contract，且明定這不是 new exception。
+    PR-14 必須獨立確認只有 IM-12 可 supersede IM-10 的 **401 source ReadOnly** 限制；package passed
+    evidence、BUILD.md、enhancement script與其他 ReadOnly boundary不變。`approved` 才可進入 IM-12。
+18. IM-12 只可修改 401 diagram source/layout及其 required delivery evidence；必須保留 caller →
+    AuthRequester entry、AuthRequester → Auth per-execution flow request、Auth → AuthRequester flow return
+    後才開始 request-less exchange，且 original request 不提供給 Flow。first-401 ineligible terminal、
+    eligible refresh、refresh result 回 policy、refresh-success-only exactly-one retry、waiting → response-
+    policy normal-success／second-401 split及 no receive→retry shortcut均不得變動。IM-12 必須 standard
+    validate 9/9、0 errors、0 warnings、deliver/source-match、1440×900／1600×1000／1920×1080／2048×1320
+    全數 visual pass、manual light/dark。route 為 PC-14 → PR-14 → IM-12 → TE-10 → RV-10 → DL-08 →
+    CH-07 → HC-07；TE-10 只 verify，絕不生成 output/evidence。
+19. PC-15 狹義 supersede IM-12 的「所有副標籤置於標頭」表述限制：參與者副標籤表述只可移至
+    圖外脈絡／說明區，並非 new visual exception。PR-15 必須確認 17 sequence messages、flow contract、
+    retry policy、participant/component identities 與 package passed evidence 不變；`approved` 才可進入 IM-13。
+20. IM-13 只可修改 `401-refresh-retry` 的參與者標頭／圖外脈絡表述及 required delivery evidence。
+    每個移出標頭的副標籤必須於圖外脈絡／說明區保留可對照的說明意義，且不得 invent ownership、
+    capability、runtime behavior或 architecture decision。caller → AuthRequester、AuthRequester → Auth、
+    Auth → AuthRequester prefix、request-less exchange及 Flow 無 original-request access不變；first-401
+    ineligible terminal、eligible refresh、refresh result→policy、success-only retry、waiting→response-policy
+    split及 no receive→retry shortcut不變。IM-13 必須 standard validate 9/9、0 errors、0 warnings、
+    deliver/source-match、1440／1600／1920／2048 visual pass及 manual light/dark。route 為 PC-15 → PR-15 →
+    IM-13 → TE-11 → RV-11；TE-11 只 verify。RV-11 `needs-rework` 後，不得前進至原本未開始的
+    DL-09 → CH-08 → HC-08。
+21. RV-11 `needs-rework` 僅要求：component-dependency canvas 不得將 selected／decorated request
+    preparation 指派給 `AuthRequester`，以及 ledger 必須把 RV-11 `needs-rework` 視為 current rework
+    truth。這是直接交回 IM-15 的最小回修，不建立新的 planning cycle。TE-12 initial 已 `needs-rework`，
+    IM-15 rework 已完成、TE-12 re-test 已 `approved`，目前 gate 為 RV-12；IM-15 只可修改 canvas `scene.js`、generated `index.html`、artifact-local validation／
+    visual evidence 和 actual-step ledger evidence；其後 route 固定為 IM-15 rework → TE-12 re-test（approved）→
+    RV-12（current）→ DL-10 → CH-09 → HC-09。DL-10 只在 TE-12/RV-12 approved 後 commit/push；CH-09 只在 corrected delivery visible 後重新取得
+    exact thread evidence，必要事項修正後 resolve，非必要事項留言後 resolve；PR status 不變。
 
 ## TestCase
 
@@ -224,5 +374,46 @@ artifact.cafe。
 - **TC-08**：lifecycle、401、state 說明性文案為繁體中文，以「request 資料」、「資格」、
   「延後確定」、「更新成功」取代 payload、eligibility、deferred、refresh-success 的解釋；
   英文限於 identifier。
-- **TC-09**：PR #37 維持 OPEN、ready for review；PR-07 至 CH-02 不改 PR status，DL-03
-  commit/push 後才可進入 thread resolve，最後交 HC-02。
+- **TC-09**：PR #37 維持 OPEN、ready for review；PR-07 至 CH-02 是 historical route，
+  不得以其 DL-03／CH-02 status 略過 current PC-08 replacement route。
+- **TC-10**：401 sequence 的 factory prefix 從 caller original-execution entry 開始，依序
+  要求並回傳 per-execution flow，之後才進行無 request payload 的 semantic exchange；這不授予
+  `AuthFlow` original-request access。
+- **TC-11**：state diagram 的 retry permission 是進入 waiting-for-retry-response 的
+  transition／event、不是 lifecycle node；waiting state 將 retry response 交給 response policy，
+  再區分 normal-success 與 second-401 terminal，沒有 shortcut。
+- **TC-12**：package canvas 只保留 `AuthRequester` 的 original-request ownership／semantic
+  interpretation，不指派 selected／decorated preparation；其 owner／representation 未決。
+- **TC-13**：current comment preflight = `needs-rework`、RV-04 approved／DL-03 active 的
+  historical ledger、PC-10／PR-10／IM-08 blocked alternate history與 IM-09 blocked history均如實保留；
+  它們均非 current route，thread 只在 CH-09 重新取得 evidence。
+- **TC-14**：state redesign 只可將 retry permission 改為進入 waiting state 的 transition／event並調整
+  相連 presentation，卻同時保留 first-401
+  ineligible terminal、eligible refresh、outcome 回 Flow policy、refresh-success-only exactly-one retry、
+  retry waiting state/responsive-policy terminal split，且無 receive→retry shortcut。
+- **TC-15**：`[850,307]` 必須被消除；state 以 normal standard validate 9/9、0 errors、0 warnings、
+  deliver/source-matched receipt、visual evidence/manual inspection 證明，不再以 alternate receipt
+  或 crossing accepted non-pass 交付。
+- **TC-16**：desktop containment 1035／1109／1109、2048 pass 維持 exact distinct non-pass，不稱
+  visual pass，也不放寬其他 diagram/canvas、scope、diff、delivery、PR status 或 thread gates。
+- **TC-17**：401 sequence 仍為 standard showcase 9/9、normal deliver、visual pass；package canvas
+  仍為 validate/build/reproducibility/accessibility。任何其他 failure 均不得以 state scope expansion
+  豁免。
+- **TC-18**：IM-10 source ReadOnly；401 的 current JSON／HTML hashes 和 package scene／index hashes
+  僅是 unproven observations，重新 materialize 後必須以 receipt/build evidence 證明 source-output
+  relation。TE-09 只驗證，不得重新 build、deliver 或寫 evidence。
+- **TC-19**：PC-14／PR-14 只授權 IM-12 的 401 layout/source repair，不是 new exception；IM-10 的
+  package passed evidence 維持有效且不重做，所有其他 ReadOnly boundary 不變。
+- **TC-20**：IM-12 的 401 source/output/evidence 保留 caller/AuthRequester/Auth factory prefix、
+  request-less exchange與 Flow 無 original-request access，並保留 ineligible/eligible、refresh-result
+  policy return、success-only retry/waiting-response-policy/no-shortcut semantics。
+- **TC-21**：IM-12 standard source-matched delivery 為 showcase 9/9、0 errors、0 warnings，且
+  1440×900、1600×1000、1920×1080、2048×1320 全數 visual pass、manual light/dark；
+  PC-14 → PR-14 → IM-12 → TE-10 → RV-10 → DL-08 → CH-07 → HC-07 是 historical route，不是 current route。
+- **TC-22**：IM-13 只把參與者副標籤表述從標頭移至圖外脈絡／說明區；17 messages、factory prefix、
+  request-less exchange、Flow original-request boundary、retry policy 和 component identities 均不變。
+- **TC-23**：每個移出的副標籤在圖外脈絡／說明區保留可對照的說明意義，不 invent ownership、capability、
+  runtime behavior 或 architecture decision；此為 presentation change，不是 exception。
+- **TC-24**：IM-13 standard source-matched delivery 為 9/9、0 errors、0 warnings，1440×900、1600×1000、
+  1920×1080、2048×1320 全數 visual pass、manual light/dark；RV-11 `needs-rework` 後，未開始的
+  DL-09 → CH-08 → HC-08 不再是 current route。

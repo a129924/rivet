@@ -15,12 +15,12 @@
   "states": [
     { "id": "flow-created", "type": "start", "label": "Auth 建立流程", "sublabel": "每次執行；初始語意前", "lane": "main", "col": 0, "step": "01", "tag": "目標架構入口" },
     { "id": "initial-decision", "type": "active", "label": "初始決策", "sublabel": "傳送語意；無請求資料", "lane": "main", "col": 1, "step": "02", "tag": "不建構請求" },
-    { "id": "waiting-response", "type": "waiting", "label": "等待原始回應", "sublabel": "AuthRequester 交付回應", "lane": "main", "col": 2, "step": "03", "tag": "回應輸入" },
-    { "id": "response-policy", "type": "decision", "label": "回應策略", "sublabel": "正常／首次 401 的資格判斷", "lane": "main", "col": 3, "step": "04", "tag": "流程所有者" },
+    { "id": "waiting-response", "type": "waiting", "label": "等待原始／重試回應", "sublabel": "AuthRequester 交付回應", "lane": "main", "col": 2, "step": "03", "tag": "回應輸入" },
+    { "id": "response-policy", "type": "decision", "label": "回應策略", "sublabel": "初始／重試回應的流程狀態判斷", "lane": "main", "col": 3, "step": "04", "tag": "流程所有者" },
     { "id": "terminal-response", "type": "success", "label": "終態回應", "sublabel": "回傳正常／重試成功結果", "lane": "main", "col": 4, "step": "05", "tag": "終態" },
     { "id": "first-401", "type": "decision", "label": "首次 401", "sublabel": "具資格才可要求更新", "lane": "recovery", "col": 0, "tag": "策略" },
     { "id": "refresh-boundary", "type": "external", "label": "待定的憑證更新", "sublabel": "經延後確定的邊界", "lane": "recovery", "col": 1, "tag": "未來機制" },
-    { "id": "retry-permission", "type": "active", "label": "一次重試許可", "sublabel": "僅成功結果回到流程後", "lane": "recovery", "col": 2, "tag": "策略" },
+    { "id": "waiting-for-retry-response", "type": "waiting", "label": "等待重試回應", "sublabel": "重送後交付回應", "lane": "recovery", "col": 2, "tag": "回應輸入" },
     { "id": "ineligible-401", "type": "failure", "label": "不具資格的 401", "sublabel": "終態；不要求更新", "lane": "terminal", "col": 0, "tag": "終態" },
     { "id": "refresh-failed", "type": "failure", "label": "憑證更新失敗", "sublabel": "終態；不可重試", "lane": "terminal", "col": 1, "tag": "終態" },
     { "id": "second-401", "type": "failure", "label": "第二次 401", "sublabel": "終態；不再更新", "lane": "terminal", "col": 2, "tag": "終態" }
@@ -29,13 +29,13 @@
     { "id": "create-flow", "from": "flow-created", "to": "initial-decision" },
     { "id": "initial-send", "from": "initial-decision", "to": "waiting-response" },
     { "id": "receive-response", "from": "waiting-response", "to": "response-policy" },
-    { "id": "normal-terminal", "from": "response-policy", "to": "terminal-response" },
-    { "id": "first-401-decision", "from": "response-policy", "to": "first-401", "label": "首次 401 的資格判斷", "variant": "security", "fromSide": "bottom", "toSide": "top", "via": [[556, 240], [402, 240]] },
+    { "id": "normal-terminal", "from": "response-policy", "to": "terminal-response", "route": "straight", "fromSide": "right", "toSide": "left" },
+    { "id": "first-401-decision", "from": "response-policy", "to": "first-401", "label": "初始回應為 401：資格判斷", "variant": "security", "fromSide": "bottom", "toSide": "top", "via": [[556, 240], [402, 240]] },
     { "id": "dispatch-refresh", "from": "first-401", "to": "refresh-boundary", "label": "具資格的更新語意", "variant": "security", "fromSide": "bottom", "toSide": "bottom", "via": [[402, 370], [556, 370]] },
     { "id": "ineligible-terminal", "from": "first-401", "to": "ineligible-401", "label": "不具資格／不具更新能力", "variant": "security", "route": "straight", "labelAt": [402, 390] },
     { "id": "refresh-failure", "from": "refresh-boundary", "to": "refresh-failed", "variant": "security", "route": "bottom-channel" },
-    { "id": "refresh-success", "from": "refresh-boundary", "to": "retry-permission", "label": "成功結果回到流程", "variant": "emphasis", "fromSide": "bottom", "toSide": "bottom", "via": [[556, 400], [710, 400]] },
-    { "id": "retry-success", "from": "retry-permission", "to": "terminal-response", "variant": "emphasis", "route": "top-channel" },
-    { "id": "second-401-terminal", "from": "retry-permission", "to": "second-401", "variant": "security", "route": "bottom-channel" }
+    { "id": "refresh-success", "from": "refresh-boundary", "to": "waiting-for-retry-response", "label": "更新成功：一次重試許可", "variant": "emphasis", "fromSide": "bottom", "toSide": "bottom", "via": [[556, 405], [710, 405]], "labelAt": [633, 430] },
+    { "id": "retry-response-policy", "from": "waiting-for-retry-response", "to": "response-policy", "variant": "emphasis" },
+    { "id": "second-401-terminal", "from": "response-policy", "to": "second-401", "variant": "security", "fromSide": "bottom", "toSide": "right", "via": [[556, 240], [850, 240], [850, 479]] }
   ]
 }
