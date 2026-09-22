@@ -20,6 +20,7 @@
 - 對 Presentation 提供穩定的 Inbox Facade；Presentation Session 可在重新整理後保留目前選取狀態。
 - 未來若需 GitHub 資料，僅 PR Inbox 自己的 Infra 可擁有 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping；它不與 PR Reader 或其他 BC 共用 adapter。
 - 已實作的 non-BC `GitHubIntegration` 目前提供既有同步 access-token store/provider contract，以及沒有 conformer 的 public、`Sendable` async `GitHubAccessTokenProvider` token-acquisition contract；後者不處理 PAT／OAuth lifecycle、request、transport、401 recovery 或 retry。未來只有此 Infra 可依賴其 deferred raw transport、authentication、共通 request headers／API version、pagination、rate-limit、retry、GitHub error technical classification 與 shared configuration。它不依賴任何 BC。GitHub DTO translation、technical classification 到 Inbox failure contract 的 mapping 與 Inbox business meaning 仍只留在此 Infra；它們不會進入 Core、UseCase 或 Port，且不形成 shared BC failure contract。
+- `GitHubIntegration` 已交付的 `OAuthTokenProvider` actor 與 `OAuthCredentialStore`／`OAuthTokenFetcher` ports 僅提供 shared credential lifecycle；Inbox 不持有其 credential bundle 或 provider failure，也不由此取得 HTTP、401 或 retry policy。OAuth adapters 與 Inbox client integration 仍為 deferred。
 
 ## Failure Contract
 

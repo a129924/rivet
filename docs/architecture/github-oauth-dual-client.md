@@ -2,13 +2,13 @@
 
 ## Goal
 
-鎖定 GitHub OAuth App 的可 refresh、會過期 credential bundle shared token lifecycle：同一個未來 `OAuthTokenProvider` 供 GitHub REST client 與 Apollo GraphQL client 共用。access token 過期或某個原工作收到一次 401 時，client 取得新版 snapshot，並只重送自己的原工作一次。
+鎖定 GitHub OAuth App 的可 refresh、會過期 credential bundle shared token lifecycle：`GitHubIntegration` 已交付 `OAuthTokenProvider` runtime 與 adapter ports，未來 GitHub REST client 與 Apollo GraphQL client 可共用同一 instance。provider 在 access token 過期時先更新；client 收到 401 後的 snapshot recovery 與原工作 retry 仍未實作。
 
 這是長期**架構文件**，不是 OAuth、client 或 retry 的 runtime 實作規格。
 
 ## Non-Goal
 
-- 除已交付的 internal OAuth App token-response DTO → public immutable credential bundle mapping 外，不定義 OAuth lifecycle 的 Swift 型別、方法、actor isolation、storage schema、endpoint request payload 或 failure enum。
+- 已交付 internal OAuth App token-response DTO → public immutable credential bundle mapping，以及 public `OAuthCredentialStore`／`OAuthTokenFetcher` ports、`TokenSnapshot` 與 actor-isolated `OAuthTokenProvider` finite failure contract；不定義 Keychain credential storage schema 或 OAuth endpoint request payload。
 - 不實作 OAuth authorization code、PKCE、callback、初次 sign-in、logout、revoke、多帳號、PAT 或 GitHub Enterprise。
 - 不定義 Domain endpoint、DTO、GraphQL schema、rate limit、pagination、一般 retry 或各 Bounded Context 的 failure mapping。
 - 不修改 `RivetHTTPClient`，也不讓其 `Auth`／`AuthFlow` 成為 OAuth runtime driver。
@@ -20,9 +20,9 @@
 ```text
 Facade（layer 外的 application composition root）
   ├─ bare RivetHTTPClient / URLSessionTransport
-  ├─ KeychainTokenStore
-  ├─ OAuthTokenFetcher(bare HTTP)
-  ├─ OAuthTokenProvider(TokenStore, TokenFetcher)
+  ├─ OAuthCredentialStore adapter（deferred）
+  ├─ OAuthTokenFetcher adapter（bare HTTP，deferred）
+  ├─ OAuthTokenProvider(OAuthCredentialStore, OAuthTokenFetcher)
   ├─ GitHub REST client(TokenProvider, bare HTTP sender／request executor)
   └─ GitHub GraphQL client(TokenProvider, Apollo)
 ```
@@ -31,11 +31,10 @@ Facade（layer 外的 application composition root）
 - Facade 是 layer 外的 application composition root，只負責 composition：建立唯一共享的 `OAuthTokenProvider` instance，並注入 REST 與 GraphQL client。它不在每個工作前預先驗證 token，也不改變各 BC 的 `Facade → UseCase → Port` 層級方向。
 - `RivetHTTPClient`／`URLSessionTransport` 是 bare、generic、GitHub-unaware foundation；bare `HTTPClient` 只執行 raw HTTP request，不認識 OAuth、Bearer、TokenProvider、401 recovery 或 retry，也不直接建立或驅動 `AuthFlow`。
 - `RivetHTTPClient` 既有 internal `AuthRequester` runtime：它注入 `Requester` 與 caller-provided generic `Auth`，建立並驅動 generic `AuthFlow` 的 `.send(HTTPRequest) → raw HTTPResponse → receive(response)` loop，直到 `.finish`；flow 保有 authentication decision。這條 generic capability 不持有 credential、retry 或 GitHub OAuth lifecycle。
-- 已交付 schema 只接受 GitHub OAuth App 的六欄 refreshable、expiring token response，並由 internal DTO 在 caller-supplied `receivedAt` 映射為 public immutable `GitHubOAuthCredentialBundle`；它不包含 request、refresh、persistence 或 client runtime。DTO 不外洩至 public API，bundle 僅保存 absolute expiry 與原始 granted scope 字串。
-- 未來 `TokenStore` 只讀寫完整 OAuth credential bundle。未來 `OAuthTokenFetcher` 只透過 bare HTTP 呼叫 GitHub OAuth token endpoint，並回傳完整 rotated bundle。
-- `OAuthTokenProvider` 是唯一 lifecycle owner：記憶體 snapshot、restore、expiry、refresh、rotation、version 與 single-flight。它不持有、不接收、不重送 `HTTPRequest` 或 Apollo operation。
-- `TokenSnapshot` 是 client 的 immutable input，只包含 access token 與 version；refresh token 與完整 bundle 不會暴露給 client。
-- 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration。另已交付的 async `GitHubAccessTokenProvider` 只表示 token acquisition，不實作或定義本文件的 OAuth lifecycle、snapshot／version、401 recovery 或 migration；未來 OAuth provider 可在獨立 implementation topic 決定是否符合該 contract。
+- 已交付 schema 接受 GitHub OAuth App 的六欄 refreshable、expiring token response，並由 internal DTO 在 caller-supplied `receivedAt` 映射為 public immutable `GitHubOAuthCredentialBundle`。public `OAuthCredentialStore`／`OAuthTokenFetcher` ports 在 adapter boundary 使用完整 bundle；OAuth Keychain adapter 與 bare-HTTP fetcher 未交付。
+- `OAuthTokenProvider` 是唯一 lifecycle owner：記憶體 credential、restore、expiry-first refresh、accepted rotation persistence、version 與 single-flight。remote rotation accepted 後的 persistence failure 使 provider 永久 unavailable；它不持有、不接收、不重送 `HTTPRequest` 或 Apollo operation。
+- `TokenSnapshot` 是 public immutable、`Equatable`、`Sendable` client input，只包含 access token 與 version；`hasSameVersion(as:)` 只比較 version。refresh token 與完整 bundle 不會暴露給 client。
+- 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration。另已交付的 async `GitHubAccessTokenProvider` 只表示 token acquisition；新的 OAuth provider 不 conform 或 bridge 它，也不實作 request、transport、401 classification 或 retry。
 - REST client 由 Facade 注入 bare HTTP sender／request executor 與 `TokenProvider`，並保有自己的 `HTTPRequest`；GraphQL client 保有自己的 Apollo operation。兩者只共用 provider instance，不互相呼叫，GraphQL 亦不經 REST route。
 
 ## Token Lifecycle
@@ -44,14 +43,16 @@ Facade（layer 外的 application composition root）
 2. 每個 client 走自己的 transport route 送出原工作。
 3. 401 是此 lifecycle 唯一的**回應狀態**復原觸發；expiry check 是 Provider 交付 snapshot 前的內部責任，不是 response-status policy。非 401 回應由 consuming BC 的 local Infra 依自己的 adapter boundary 處理；403、repository permission 與 resource visibility 不觸發 refresh。
 4. 收到 401 時，client 回報**實際使用的 snapshot**。若 provider 已有更高 version，直接回傳目前 snapshot；若仍是相同 stale version，僅 single-flight refresh 一次。
-5. 未來 refresh 成功時，provider 接受遠端 rotated credential bundle，並以完整新 bundle 原子取代舊 bundle、更新記憶體 snapshot/version，最後讓等待者取得新版 snapshot。僅在接受遠端 rotation 前發生的暫時性 technical failure 才保留既有 credential；若遠端 rotation 已接受而本地 persistence 失敗，不宣稱舊 bundle 仍可用，credential reconciliation 留待後續獨立 topic。
+5. 已交付 provider 在 refresh 成功時接受遠端 rotated credential bundle，先持久化完整新 bundle，再更新記憶體 snapshot/version，最後讓等待者取得新版 snapshot。僅在接受遠端 rotation 前發生的暫時性 technical failure 才保留既有 credential；若遠端 rotation 已接受而本地 persistence 失敗，provider 不再交付 snapshot，credential reconciliation 留待後續獨立 topic。
 6. 原 client 以新版 snapshot 重送自己的原 request／operation 一次；每個原工作最多 retry 一次。
 
 | 狀況 | Outcome |
 | --- | --- |
-| 無 credential、永久 refresh failure、重送後第二次 401 | `authentication-required`，交由 Facade 導向重新登入 |
-| 暫時性 refresh／Keychain／網路失敗，且遠端 rotation 尚未接受 | technical failure；保留 credential，不強制重新登入 |
-| 遠端 rotation 已接受後的本地 persistence failure | technical failure；不宣稱舊 bundle 仍可用，credential reconciliation 留待後續 topic |
+| 無 credential | provider 回傳 `.missingCredential`；Facade re-auth deferred |
+| credential store load failure | provider 回傳 `.restore`；Keychain adapter／client outcome deferred |
+| token fetcher refresh failure，且遠端 rotation 尚未接受 | provider 回傳 `.refresh` 並保留 credential |
+| 遠端 rotation 已接受後的本地 persistence failure | provider `.persist` 後永久 unavailable；不宣稱舊 bundle 仍可用，credential reconciliation 留待後續 topic |
+| 重送後第二次 401 | client policy deferred |
 | 403、repository permission、resource visibility | 非 token-invalid signal；不 refresh |
 
 ## Boundary 與後續 Topic
