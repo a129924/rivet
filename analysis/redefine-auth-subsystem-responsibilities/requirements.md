@@ -251,7 +251,8 @@ ownership、deferred preparation owner 或 OAuth boundary。
 四個 finding 以 planning aliases 追蹤，並非 GitHub thread ID：
 
 1. **PM-01 — state truth**：四份 formal artifacts 必須把上述 commit／delivery／thread history 與
-   current state 如實寫成 PC-18／PR-18／IM-18／TE-15／RV-15 completed、DL-13 active，以及
+   current state 如實寫成 PC-18／PR-18／IM-18／TE-15／RV-15／DL-13 completed、CH-12 completed（四個
+   thread 已 resolve、無未分類 feedback）、HC-12 active（human review），以及
    `PC-18 → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12`；
    PR #37 維持 OPEN、ready for review，既不重新開 PR，也不宣稱已 merge 或 release。
 2. **PM-02 — state receipt**：不修改 `auth-flow-state.json` 的 policy/topology；以既有 canonical-
@@ -271,11 +272,9 @@ ownership、deferred preparation owner 或 OAuth boundary。
    semantic exchange、Flow 無 original-request access、eligible-only refresh、refresh-result-to-policy、
    success-only exactly-one retry、waiting-to-response-policy split 與 no receive→retry shortcut 都保持。
 
-PC-18 completed 後，獨立 Plan-Reviewer 已將 PR-18 `approved`；IM-18 與獨立 TE-15 已完成，
-TE-15／RV-15 verdict 均為 `approved`，DL-13 現為 active。只有 TE-15／RV-15 都 `approved`，DL-13
-才可依既有 human-authorized commit convention commit/push 到同一 ready PR。delivery visible 後，
-CH-12 必須重新取得 exact thread state：四項必要 finding 在對應修正可見後 resolve；任何新取得、
-已分類且非必要的 thread 必須先留言說明再 resolve。最後一律停在 HC-12 human review。
+PC-18、PR-18、IM-18、TE-15、RV-15 與 DL-13 均已完成；PR-18、TE-15／RV-15 verdict 為
+`approved`。CH-12 已完成：四個 thread 已 resolve，重新取得結果沒有未分類 feedback。HC-12 現為
+active human review；PR #37 維持 OPEN、ready for review，且不 merge、不 release。
 
 ## Model Comparison
 
@@ -615,7 +614,8 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   historical snapshot；唯一 current route 是 PC-18 → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12，
   不得將 IM-14 或 superseded DL-03 當作 current gate，也不得建立新的 planning cycle。
 - **PM-01 — Post-merge state truth**：`f277ac4`、`d2cefd4`、DL-12／CH-11 completed、HC-11
-  `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15 completed 與 DL-13 active 如實記錄；四份 artifacts 的唯一 current route 是
+  `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15／DL-13 completed、CH-12 completed（四個 thread
+  已 resolve、無未分類 feedback）與 HC-12 active（human review）如實記錄；四份 artifacts 的唯一 current route 是
   PC-18 → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12。
 - **PM-02 — Producer-generated state receipt**：不手改 receipt；canonical-containment producer 以
   repository-relative arguments 產生 `auth-flow-state.delivery.json`，其中 input、output、artifact 與
@@ -628,5 +628,5 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   `AuthRequester → caller` final response，caller activation 覆蓋該 return，sequence message count
   從 17 變為 18；所有已鎖定 factory／policy／no-payload semantics 與四 viewport visual pass 不漂移。
 - **PM-05 — Independent delivery closure**：PR-18／TE-15／RV-15 已分別由獨立角色明示 `approved`；
-  DL-13 現為 active。DL-13 visible 後才由 CH-12 重新取得並處理 thread，非必要項留言後 resolve，最後停止於
-  HC-12，不 merge、不 release。
+  DL-13 已完成，CH-12 已處理完成（四個 thread resolved、無未分類 feedback）。目前只停在 active 的
+  HC-12 human review，不 merge、不 release。

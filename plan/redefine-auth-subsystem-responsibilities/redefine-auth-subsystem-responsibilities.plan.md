@@ -267,7 +267,8 @@ PC-18 (completed) → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 �
 ```
 
 PR-18 已由與 Plan-Creator 獨立的 Plan-Reviewer `approved`，確認本次只有四個 bounded findings；
-IM-18／TE-15／RV-15 已完成；TE-15／RV-15 verdict 均為 `approved`，current gate 為 DL-13 = active：
+IM-18／TE-15／RV-15／DL-13 已完成；TE-15／RV-15 verdict 均為 `approved`。CH-12 已完成，四個 thread
+均已 resolved 且無未分類 feedback；current gate 為 HC-12 = active（human review）：
 
 1. 四份 formal artifacts 如實同步上述 commit、delivery/thread history、current gate 與 PR #37
    OPEN／ready status；不預告 merge 或 release。
@@ -292,9 +293,9 @@ dual-client lifecycle、package canvas、canonical document、lifecycle、normal
 
 TE-15 僅驗證 producer provenance/hash、state exact non-pass、canvas legacy boundary及 rebuild/accessibility、
 401 one-message delta／caller activation／locked semantics／delivery/visual、scope、`git diff --check` 與 dev
-clean；不得產生 output。RV-15 獨立確認四個 finding 已消除且無 drift。只有 TE-15／RV-15 `approved` 才可
-DL-13 依已授權的 commit convention commit/push 同一 branch；CH-12 delivery visible 後重新取得 exact thread
-state，必要項 resolve，非必要項先留言再 resolve，最後一律停在 HC-12 human review。
+clean；不得產生 output。RV-15 獨立確認四個 finding 已消除且無 drift。TE-15／RV-15 `approved` 後，DL-13 已依
+既有授權完成 commit/push；CH-12 已完成四個 thread 的 resolve，重新取得結果無未分類 feedback。現在一律停在
+HC-12 active human review，不 merge、不 release。
 
 ### Deleted
 
@@ -389,8 +390,8 @@ state，必要項 resolve，非必要項先留言再 resolve，最後一律停�
 - **PM-04**：401 由 17 增至 18 messages，唯一新增的是 terminal
   `AuthRequester → caller` final response 與其 caller activation；factory/no-payload/retry-policy contract、
   source-matched 9/9 與四 viewport visual pass 不變。
-- **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13 現為 active，delivery visible 前不得回覆或 resolve，CH-12 對
-  非必要 thread 必先留言再 resolve，HC-12 是不可跨越的 human boundary。
+- **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13／CH-12 已 completed，四個 thread 均已
+  resolved、無未分類 feedback；HC-12 是 active 且不可自動跨越的 human-review boundary。
 
 ## Implementation Phases and Gates
 
@@ -505,9 +506,9 @@ state，必要項 resolve，非必要項先留言再 resolve，最後一律停�
 - **PC-18 (completed) → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12**：這是
   `f277ac4`／`d2cefd4` delivered 後四個 stable review finding 的唯一 current route，並 supersede
   前項的 current wording。PR-18 已獨立審查 formal-state sync、state producer receipt、legacy type edge 與
-  401 terminal return 的 bounded contract，並 `approved`；IM-18 已完成，TE-15／RV-15 已依序獨立驗證／審查並 `approved`，DL-13 現為 active；
-  DL-13 delivery visible 後 CH-12 才可抓取 exact thread state，
-  必要項 resolve、非必要項留言再 resolve；最後停在 HC-12，不 merge、不 release。
+  401 terminal return 的 bounded contract，並 `approved`；IM-18、TE-15、RV-15、DL-13、CH-12 已依序完成，
+  TE-15／RV-15 均 `approved`，四個 thread 均已 resolved、無未分類 feedback；最後停在 active 的
+  HC-12 human review，不 merge、不 release。
 
 ## Branch Naming
 

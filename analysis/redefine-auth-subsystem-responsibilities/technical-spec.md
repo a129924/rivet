@@ -264,7 +264,8 @@ PC-18 (completed) → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 �
 ```
 
 PR-18 是獨立 Plan Review，現已 `approved` 並授權且完成 IM-18。它只確認下列已鎖定 contract
-內的 correction；不重新決定 architecture。TE-15／RV-15 均已 `approved`，現在 current gate 是 DL-13 = active。
+內的 correction；不重新決定 architecture。TE-15／RV-15 均已 `approved`，DL-13 已 completed；CH-12
+已 completed（四個 thread 已 resolved、無未分類 feedback）。現在 current gate 是 HC-12 = active（human review）。
 
 1. **formal state**：四份 artifacts 一致敘述 `f277ac4`／`d2cefd4`、DL-12／CH-11 completed、
    HC-11 `needs-rework` 與上述 route；PR #37 保持 OPEN、ready for review。
@@ -298,9 +299,9 @@ lifecycle、normal sequence 與其他 repository paths 均為 ReadOnly；無刪�
 
 TE-15 只驗證這些產出、hash/provenance、message delta、canvas semantics/reproducibility/accessibility、
 visual facts、scope、`git diff --check` 與 dev clean，不產生 output。RV-15 只在 TE-15 `approved` 後
-獨立判斷四個 finding 與所有 locked contract 是否無 drift。TE-15／RV-15 都 `approved` 才可 DL-13
-commit/push；CH-12 只在 delivery visible 後重新抓取 exact threads，必要項直接 resolve，非必要項先留言
-再 resolve，最後 HC-12 停在 human review，不 merge、不 release。
+獨立判斷四個 finding 與所有 locked contract 是否無 drift。TE-15／RV-15 `approved` 後，DL-13 已完成
+commit/push；CH-12 已在 delivery visible 後完成四個 thread 的 resolve，且重新取得結果沒有未分類 feedback。
+現在 HC-12 停在 active human review，不 merge、不 release。
 
 ## Validation and Gate Contract
 
@@ -470,7 +471,8 @@ commit/push；CH-12 只在 delivery visible 後重新抓取 exact threads，必�
   1920×1080、2048×1320 全數 visual pass、manual light/dark；RV-11 `needs-rework` 後，未開始的
   DL-09 → CH-08 → HC-08 不再是 current route。
 - **PM-01**：formal artifacts 的 current status 是 DL-12／CH-11 completed、HC-11
-  `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15 completed、DL-13 active；`f277ac4` 與 `d2cefd4` 僅為已交付歷史，
+  `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15／DL-13 completed、CH-12 completed（四個 thread 已
+  resolved、無未分類 feedback）、HC-12 active（human review）；`f277ac4` 與 `d2cefd4` 僅為已交付歷史，
   current route 唯一為 PC-18 → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12。
 - **PM-02**：state receipt 僅能由 canonical-containment producer 以 repository-relative
   arguments 標準產生；source／HTML SHA-256、9/9、0 errors、0 warnings 與 repository-relative
@@ -481,5 +483,5 @@ commit/push；CH-12 只在 delivery visible 後重新抓取 exact threads，必�
 - **PM-04**：401 唯一新增 message 是 terminal `AuthRequester → caller` final response；caller
   activation 覆蓋 return，message count 由 17 變 18，其他 locked semantics、source-match、9/9 與四 viewport
   visual pass 維持。
-- **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13 現為 active。CH-12 僅在 delivery visible
-  後按必要 resolve／非必要留言再 resolve，HC-12 是 human boundary。
+- **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13／CH-12 已 completed，四個 thread 均已
+  resolved、無未分類 feedback。HC-12 是 active human-review boundary。
