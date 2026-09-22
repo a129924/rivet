@@ -26,7 +26,7 @@
     { "id": "obtain-flow", "from": "auth-requester", "to": "auth", "y": 210, "label": "取得獨立流程（工廠 API 尚未鎖定）", "variant": "default" },
     { "id": "flow-instance", "from": "auth", "to": "auth-requester", "y": 242, "label": "獨立流程實例", "variant": "return" },
     { "id": "initial-decision-input", "from": "auth-requester", "to": "auth-flow", "y": 274, "label": "請求初始語意決策（不傳遞請求）", "variant": "security" },
-    { "id": "semantic-send", "from": "auth-flow", "to": "auth-requester", "y": 306, "label": "傳送語意決策（操作形狀尚未鎖定）", "variant": "return" },
+    { "id": "semantic-send", "from": "auth-flow", "to": "auth-requester", "y": 306, "label": "傳送語意；選定／修飾請求的表徵與準備者均延後確定", "variant": "return" },
     { "id": "execute-original", "from": "auth-requester", "to": "requester", "y": 342, "label": "執行保留的原始請求", "variant": "emphasis" },
     { "id": "http-io", "from": "requester", "to": "transport", "y": 376, "label": "HTTP 輸入／輸出", "variant": "default" },
     { "id": "raw-response", "from": "transport", "to": "requester", "y": 410, "label": "原始 HTTPResponse", "variant": "return" },

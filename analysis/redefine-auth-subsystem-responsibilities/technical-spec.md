@@ -307,12 +307,9 @@ PC-18 route 已在 HC-12 的兩項 P2 feedback 後結束為 `needs-rework`，不
 ### PC-19 — Post-HC-12 Two-P2 Diagram Expression Rework
 
 human 已明示授權此 formal rework cycle。PC-19 是既有 architecture contract 內的最小 post-HC-12 rework，
-已 `completed`，PR-19／TE-16／RV-16 verdict 為 `approved`，DL-14 現為 `active`；不重新決定 Model C、retry policy、state topology、original-request ownership、deferred
-preparation owner 或 OAuth boundary。唯一 current route 是：
-
-```text
-PC-19 (completed) → PR-19 (completed／approved) → IM-19 (completed) → TE-16 (completed／approved) → RV-16 (completed／approved) → DL-14 (active) → CH-13 → HC-13
-```
+已 `completed`，PR-19／TE-16／RV-16 verdict 為 `approved`，DL-14 已 completed；CH-13 = `needs-rework`、
+HC-13 = `pending`，故 PC-19 為 PC-20 前 historical route。不重新決定 Model C、retry policy、state topology、
+original-request ownership、deferred preparation owner 或 OAuth boundary。
 
 HC-12 = `needs-rework` 的兩項 precise P2 feedback 為：
 
@@ -324,17 +321,48 @@ HC-12 = `needs-rework` 的兩項 precise P2 feedback 為：
    normal-terminal edge 只可透過 layout／route 分離，消除假雙向箭頭的視覺讀法。不得新增、移除或改變
    retry policy、state topology、transition／terminal semantics、message contract 或 runtime behavior。
 
-PC-19 completed 後，PR-19 必須由獨立 Plan-Reviewer review。其 approved 後，IM-19 的 Written allowlist
-僅為四份 planning artifacts 的 actual-step evidence、`http-client-package-structure/scene.js`／generated
-`index.html`／artifact-local evidence，以及 `auth-flow-state.json`／HTML／delivery receipt／artifact-local evidence。
-component-dependency canvas、401、receipt producer／tests、Swift、OAuth、canonical docs、lifecycle、normal sequence
-及其餘 paths 均為 ReadOnly；不 delete、rename、move、merge 或 release。
+PC-19 的 P2-01／P2-02 已由 DL-14 completed delivery 處理；它們只保留為 historical evidence。
 
-TE-16 必須獨立確認 package edge 的 legacy-only capability boundary 與 component canvas 一致，並確認 state
-route separation 沒有假雙向箭頭、policy/topology/contract 未漂移，以及各 artifact 的正常 validation／deliver、
-source-output-receipt provenance、state exact non-pass truth、rebuild／accessibility 與 scope。RV-16 在 TE-16
-`approved` 後獨立審查。僅 RV-16 `approved` 後可 DL-14 delivery；delivery visible 後 CH-13 才能處理兩項
-P2 threads，最後停在 HC-13 human review。
+### PC-20 — Final PR Comment Rework
+
+human 已直接授權 PC-20；其 initial formal planning write 與 PR-20 `needs-rework` 的最小 amendment 均已
+`completed`／historical，獨立 PR-20 re-review 亦已 `approved`／`completed`，IM-20 已 `completed`，TE-17／RV-17 已 `approved`／`completed`，DL-15 現為 `active`。它是最後的
+bounded comment-rework route，只處理下列 exact feedback，不改 API、owner、retry policy、state topology、Swift、OAuth 或 long-lived architecture docs：
+
+1. **P3-01** `PRRT_kwDOUFu0Cc6knhr9`：normal-request sequence 清楚維持 selected／decorated request
+   representation 與 preparer deferred，未指派給 `AuthRequester` 或新 role。
+2. **P3-02** `PRRT_kwDOUFu0Cc6knhsB`：auth-flow lifecycle 的 refresh-failure terminal 只採 neutral／generic
+   style，不能暗示 success；terminal semantics 不變，且不得新增 node、payload 或 API。
+3. **P3-03** `PRRT_kwDOUFu0Cc6knhsF`：401 只拆分 Requester initial/retry activation；固定 18 messages，
+   不改 factory/no-payload/retry semantics。
+4. **P3-04** `PRRT_kwDOUFu0Cc6knaSA`：auth-flow-state 只 revalidate current source/output，無 source change。
+5. **P3-05** `PRRT_kwDOUFu0Cc6knaR9`：package canvas 只 revalidate current source/output，無 source change；
+   在 delivery visible 後 reply／resolve。
+
+README／bounded-contexts additive base conflict 是 comment closure，而非 document rewrite。actual additive resolution
+必須同時保留既有 OAuth runtime description 與 Model C auth canonical conclusion，兩者共存且不構成 long-lived-doc
+architecture change：`docs/architecture/README.md`、bounded-contexts 與其他 canonical architecture docs 均 ReadOnly。
+
+唯一 current route 是：
+
+```text
+PC-20 amendment (completed／historical) → PR-20 re-review (approved／completed／historical) → IM-20 (completed／historical) → TE-17 (approved／completed／historical) → RV-17 (approved／completed／historical) → DL-15 (active) → CH-14 → HC-14
+```
+
+PR-20 是獨立 Plan Review gate。PR-20 `approved` 後，IM-20 的 Written allowlist 僅為四份 planning
+artifacts 的 actual-step evidence、normal-request source／HTML／artifact-local evidence、auth-flow-lifecycle
+source／HTML／artifact-local evidence、401 source／HTML／receipt／artifact-local evidence及必要 generated
+delivery evidence。package/state source、component canvas、Swift、OAuth、receipt producer／tests、long-lived docs、
+canonical README與所有其餘 path 一律 ReadOnly；不得 delete、rename、move、merge 或 release。
+
+IM-20 completion 必須確認 lifecycle 僅為 neutral／generic terminal presentation，未新增 node、payload 或 API。
+TE-17 必須獨立驗證 normal/lifecycle/401 presentation correction、401 18-message invariant、P3-02
+no-node／no-payload／no-API assertion、package/state no-source revalidation，以及 README／bounded-contexts actual
+additive resolution 同時保留 OAuth runtime description 與 Model C auth canonical conclusion、沒有 long-lived-doc
+architecture change；並驗證 scope、source-output-delivery evidence與 state exact non-pass truth。RV-17 只在 TE-17
+`approved` 後獨立審查上述 P3-02 與 conflict criteria。RV-17 `approved` 後才可 DL-15；delivery visible 後 CH-14 只在
+確認兩項 README／bounded-contexts conclusion 共存、無 long-lived-doc architecture change 時，處理五項 P3、
+README base-conflict reply／resolve及新取得已分類 feedback，最後停在 HC-14 human review。
 
 ## Validation and Gate Contract
 
@@ -506,7 +534,8 @@ P2 threads，最後停在 HC-13 human review。
 - **PM-01**：formal artifacts 的 current status 是 DL-12／CH-11 completed、HC-11
   `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15／DL-13 completed、CH-12 completed（四個 thread 已
   resolved、無未分類 feedback）、HC-12 `needs-rework`；`f277ac4` 與 `d2cefd4` 僅為已交付歷史，
-  current route 唯一為 PC-19 → PR-19 → IM-19 → TE-16 → RV-16 → DL-14 → CH-13 → HC-13。
+  PC-19 至 DL-14 已 completed、CH-13 = `needs-rework`、HC-13 = `pending` 亦為 historical；current route
+  唯一為 PC-20 → PR-20 → IM-20 → TE-17 → RV-17 → DL-15 → CH-14 → HC-14。
 - **PM-02**：state receipt 僅能由 canonical-containment producer 以 repository-relative
   arguments 標準產生；source／HTML SHA-256、9/9、0 errors、0 warnings 與 repository-relative
   metadata 都匹配，exact 1035／1109／1109、2048 pass 維持 non-pass truth。
@@ -517,9 +546,20 @@ P2 threads，最後停在 HC-13 human review。
   activation 覆蓋 return，message count 由 17 變 18，其他 locked semantics、source-match、9/9 與四 viewport
   visual pass 維持。
 - **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13／CH-12 已 completed，四個 thread 均已
-  resolved、無未分類 feedback。HC-12 因 P2-01／P2-02 為 `needs-rework`，PC-18 route 為 historical。
+  resolved、無未分類 feedback。HC-12 因 P2-01／P2-02 為 `needs-rework`，PC-18 route 為 historical；
+  PC-19 route 已在 CH-13 = `needs-rework`、HC-13 = `pending` 停止，PC-20 是唯一 current route。
 - **P2-01**：`PRRT_kwDOUFu0Cc6knaR9` 要求 package canvas 的 `AuthRequester → HTTPRequest` edge
   明示 legacy Model A compile-time request-type dependency，非 Model C preparation／construction／ownership／
   dataflow／I/O。
 - **P2-02**：`PRRT_kwDOUFu0Cc6knaSA` 要求 state retry-response transition 與 normal-terminal edge
   只作 layout／route separation，避免假雙向箭頭，且 retry policy、state topology、contract 不變。
+- **P3-01**：`PRRT_kwDOUFu0Cc6knhr9` 限定 normal selected／decorated representation 與 preparer 為
+  deferred；`AuthRequester` 或新 role 均不得被指派。
+- **P3-02**：`PRRT_kwDOUFu0Cc6knhsB` 限定 lifecycle refresh-failure terminal 為 neutral／generic、
+  non-success-styled presentation，semantics 不變，且不得新增 node、payload 或 API。
+- **P3-03**：`PRRT_kwDOUFu0Cc6knhsF` 限定 401 Requester initial／retry activation presentation split，
+  18 messages 與 factory／no-payload／retry semantics 不變。
+- **P3-04／P3-05**：state `PRRT_kwDOUFu0Cc6knaSA`、package `PRRT_kwDOUFu0Cc6knaR9` 僅 revalidate
+  current source/output；不改 source，delivery visible 後才 reply／resolve；README／bounded-contexts conflict
+  只作 comment disposition，並須確認 OAuth runtime description 與 Model C auth canonical conclusion 共存、沒有
+  long-lived-doc architecture change。

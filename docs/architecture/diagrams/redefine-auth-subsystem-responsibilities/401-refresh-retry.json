@@ -66,7 +66,8 @@
     { "participant": "auth-requester", "from": 156, "to": 642, "type": "backend" },
     { "participant": "auth", "from": 182, "to": 222, "type": "security" },
     { "participant": "auth-flow", "from": 238, "to": 614, "type": "security" },
-    { "participant": "requester", "from": 294, "to": 558, "type": "backend" },
+    { "participant": "requester", "from": 294, "to": 334, "type": "backend" },
+    { "participant": "requester", "from": 518, "to": 558, "type": "backend" },
     { "participant": "refresh-boundary", "from": 406, "to": 446, "type": "external" }
   ]
 }

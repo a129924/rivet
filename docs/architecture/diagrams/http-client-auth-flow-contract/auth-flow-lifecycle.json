@@ -113,7 +113,7 @@
     },
     {
       "id": "receive-finish",
-      "type": "success",
+      "type": "neutral",
       "label": "終態回應",
       "sublabel": "流程終態",
       "lane": "terminal",

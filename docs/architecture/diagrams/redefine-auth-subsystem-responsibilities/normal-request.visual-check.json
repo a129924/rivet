@@ -6,8 +6,8 @@
   "visualReview": "pending",
   "artifact": {
     "path": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/normal-request.html",
-    "sha256": "65d4d1530d4ed425593d7fa888974d638889d393d285a6249c927d23b320e51f",
-    "bytes": 705881
+    "sha256": "c9458c370f0a69c5a153375f39dc92ee2e5ca44b423a42a8a83d77db08eb9d27",
+    "bytes": 705929
   },
   "state": {
     "detail": "read",

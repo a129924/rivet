@@ -6,12 +6,12 @@
   "input": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.json",
   "output": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.html",
   "specification": {
-    "sha256": "9efd5694aa12b5500795676a7562c6ea918c546359a2a358d0b02d659647f221",
-    "bytes": 5260
+    "sha256": "989de9442e90d37e8846ead9125ef8eb53d3723f9aa341ae0c62f0d3ea745138",
+    "bytes": 5339
   },
   "artifact": {
-    "sha256": "683aa433ba3c27e5d49160254753dec6853d6e2b89670f3554ab0d8cc5142b43",
-    "bytes": 710432
+    "sha256": "3e7c2c9765e3afc96739db474d259a2e62e6edb2ff878e5bd4800bc0806f348e",
+    "bytes": 710608
   },
   "validation": {
     "checksPassed": 9,
