@@ -54,6 +54,10 @@ concrete-consumer Swift implementation topic 建立可驗收的 capability bound
   不再是 current delivery path。state 必須 standard validate 9/9、0 errors／warnings、successful
   deliver/source-matched receipt；desktop containment 1035／1109／1109、2048 pass 維持 distinct
   non-pass。401/package、diff、scope、delivery 或 thread gates 均不放寬。
+- post-merge four-thread correction：同步 `f277ac4`／`d2cefd4` 之後的 delivery/thread truth；以標準
+  producer 交付 state receipt；將 component canvas 的 `AuthRequester → HTTPRequest` 限縮為 legacy
+  Model A 編譯期 type dependency；並補 401 的唯一 terminal response／caller activation。這些是既有
+  contract 的 evidence／expression 回修，不改 Model C 或 retry policy。
 
 ## Out-Of-Scope
 
@@ -156,6 +160,14 @@ generated `index.html`、artifact-local validation／visual evidence 與 actual-
 `BUILD.md`、enhancement script、401、state、lifecycle、normal sequence、canonical document、Swift、OAuth
 與其他 path 均為 ReadOnly。
 
+PC-18／IM-18 的 current override：新寫入僅限
+`docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/auth-flow-state.delivery.json`。
+可修改四份 planning artifacts 的 actual state／step evidence、`auth-flow-state.html` 及其 visual evidence、
+`component-dependency/scene.js`／`index.html` 及其 evidence，以及 `401-refresh-retry.json`／HTML／receipt／
+visual evidence。`auth-flow-state.json`、receipt producer 和其 tests 必須 ReadOnly；所有 state receipt
+只能由 producer 標準產生。package canvas、canonical document、lifecycle、normal sequence、Swift、OAuth 與
+未列出的 path 皆為 ReadOnly。
+
 PC-10／PR-10／IM-08 alternate-materialization route 是 historical blocked evidence：public Archify
 validate／deliver／render 都在 `[850,307]` proper-crossing 失敗，preview 沒有 source-matched output；
 它不再是 current delivery path。
@@ -235,12 +247,54 @@ DL-03 宣稱為 current gate。
 
 這是已鎖定 contract 內的直接回修，不建立新的 Plan-Creator／Plan-Reviewer cycle。TE-12 initial 已
 `needs-rework`；IM-15 rework 已完成同一個 bounded canvas finding 的回修，且 TE-12 re-test 已
-`approved`。TE-14 已 `approved`；目前 gate 為 RV-14。IM-15 的實作範圍
+`approved`。下列是 PC-18 前的 historical snapshot：TE-14 已 `approved`；當時 gate 為 RV-14。IM-15 的實作範圍
 只可更新
 `component-dependency/scene.js`、其 generated `index.html`、artifact-local validation／visual evidence
 與 actual-step ledger evidence；`BUILD.md`、enhancement script、401、state、lifecycle、normal sequence、
-canonical document、Swift、OAuth 與所有其他 paths 均為 ReadOnly。current route 固定為
-TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。
+canonical document、Swift、OAuth 與所有其他 paths 均為 ReadOnly。當時 historical route 為
+TE-14（approved）→ RV-14（approved）→ DL-12（completed）→ CH-11（completed）→ HC-11（needs-rework）。
+
+### PC-18 — Post-Merge Four-Thread Correction
+
+此 section 為 current workflow 的唯一 override。`f277ac4` 的 receipt correction 與 `d2cefd4`
+的 conflict resolution 已交付；`DL-12`／`CH-11` completed，`HC-11` = `needs-rework`。任何本 plan
+較早的 RV-14／DL-12／CH-11 current-route 表述僅是歷史 snapshot，不可作為 gate。
+
+current route 固定為：
+
+```text
+PC-18 (completed) → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12
+```
+
+PR-18 已由與 Plan-Creator 獨立的 Plan-Reviewer `approved`，確認本次只有四個 bounded findings；
+IM-18／TE-15／RV-15 已完成；TE-15／RV-15 verdict 均為 `approved`，current gate 為 DL-13 = active：
+
+1. 四份 formal artifacts 如實同步上述 commit、delivery/thread history、current gate 與 PR #37
+   OPEN／ready status；不預告 merge 或 release。
+2. `auth-flow-state.json` 維持 ReadOnly，由既有 canonical-containment producer 以
+   repository-relative parameters standard `deliver` 重建 HTML／新 receipt。receipt 必須包含 source／HTML
+   SHA-256、showcase 9/9、0 errors、0 warnings 與完全 repository-relative metadata；state visual fact
+   仍只可記錄 1035／1109／1109、2048 pass 的 accepted non-pass。
+3. component canvas 的 `AuthRequester → HTTPRequest` edge 只可標示 legacy Model A 編譯期
+   request-type dependency；不得暗示 adopted Model C request preparation、construction、ownership／dataflow
+   transfer 或 I/O。canvas 仍須 validate、build、temporary rebuild byte-identical 與既有 accessibility baseline。
+4. 401 sequence 只新增一則 terminal `AuthRequester → caller` final response 及對應 caller activation；
+   message count 從 17 變為 18，新增 terminal response 為唯一 delta。factory prefix、no-payload
+   exchange、Flow boundary、eligible refresh、result-to-policy、success-only retry、waiting-to-policy terminal
+   split 與 no shortcut 不得變動，並重做 normal standard delivery／four-viewport visual pass。
+
+PR-18 `approved` 後的 IM-18 allowlist 僅為：四份 planning artifacts 的 actual-step evidence；
+`auth-flow-state.html`、新的 `auth-flow-state.delivery.json` 與 artifact-local visual evidence（state JSON
+ReadOnly）；`component-dependency/scene.js`、其 `index.html` 與 artifact-local evidence；
+`401-refresh-retry.json`、HTML、receipt、artifact-local visual evidence。receipt producer／tests、Swift、OAuth
+dual-client lifecycle、package canvas、canonical document、lifecycle、normal sequence與其他 paths ReadOnly。
+不得 delete、rename、move、手改 receipt 或改變 PR status。
+
+TE-15 僅驗證 producer provenance/hash、state exact non-pass、canvas legacy boundary及 rebuild/accessibility、
+401 one-message delta／caller activation／locked semantics／delivery/visual、scope、`git diff --check` 與 dev
+clean；不得產生 output。RV-15 獨立確認四個 finding 已消除且無 drift。只有 TE-15／RV-15 `approved` 才可
+DL-13 依已授權的 commit convention commit/push 同一 branch；CH-12 delivery visible 後重新取得 exact thread
+state，必要項 resolve，非必要項先留言再 resolve，最後一律停在 HC-12 human review。
 
 ### Deleted
 
@@ -320,9 +374,23 @@ TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。
   不是 current route。
 - **TC-26**：RV-11 `needs-rework` 只允許修正 canvas 對 selected／decorated request preparation 的
   `AuthRequester` 錯誤指派，exact owner／representation 仍 deferred；TE-12 initial = `needs-rework`、
-  re-test = `approved` 後，ledger 的 current route 必須是 IM-15 rework → TE-12 re-test（approved）→
-  TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。不得建立新的
+  re-test = `approved` 後，IM-15 rework → TE-12 re-test（approved）→ TE-14（approved）→
+  RV-14（approved）→ DL-12（completed）→ CH-11（completed）→ HC-11（needs-rework）是 historical snapshot。不得建立新的
   planning cycle，且在 RV-14 approved 前不得 commit/push、reply 或 resolve thread。
+- **PM-01**：PC-18 是唯一 current override；`f277ac4`／`d2cefd4`、DL-12／CH-11 completed 與
+  HC-11 `needs-rework` 在四份 artifacts 一致，current route 為 PC-18 → PR-18 → IM-18 → TE-15 →
+  RV-15 → DL-13 → CH-12 → HC-12。
+- **PM-02**：state JSON ReadOnly；canonical-containment producer 以 repository-relative parameters
+  產生 state receipt，receipt hash／9/9／0 errors／0 warnings／relative metadata 一致，state 1035／1109／1109、
+  2048 pass 維持 exact non-pass。
+- **PM-03**：component canvas 中 `AuthRequester → HTTPRequest` 是 legacy Model A 編譯期
+  request-type dependency，絕非 Model C preparation、construction、ownership/dataflow transfer 或 I/O；
+  source/output/rebuild/accessibility evidence 一致。
+- **PM-04**：401 由 17 增至 18 messages，唯一新增的是 terminal
+  `AuthRequester → caller` final response 與其 caller activation；factory/no-payload/retry-policy contract、
+  source-matched 9/9 與四 viewport visual pass 不變。
+- **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13 現為 active，delivery visible 前不得回覆或 resolve，CH-12 對
+  非必要 thread 必先留言再 resolve，HC-12 是不可跨越的 human boundary。
 
 ## Implementation Phases and Gates
 
@@ -432,9 +500,14 @@ TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。
 - **RV-11 → IM-15 rework → TE-12 re-test**：RV-11 的兩項 finding 均未改變 locked contract，故直接由
   IM-15 回修 canvas ownership wording／edge 與 ledger current-gate truth，不建立新的 planning cycle。TE-12 initial
   `needs-rework` 後，IM-15 rework 已完成；TE-12 re-test 已 `approved`。
-- **TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11**：RV-14 approved 後才可 DL-12 delivery。
-  corrected delivery visible 後，CH-11 重新取得 exact thread evidence：必要事項修正後 resolve，非必要事項留言後
-  resolve，最後停在 HC-11 human boundary。
+- **Historical TE-14 → RV-14 → DL-12 → CH-11 → HC-11**：RV-14 approved 後才可 DL-12 delivery；
+  DL-12／CH-11 已 completed，HC-11 = needs-rework。這是 PC-18 前歷史，並不構成 current route。
+- **PC-18 (completed) → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12**：這是
+  `f277ac4`／`d2cefd4` delivered 後四個 stable review finding 的唯一 current route，並 supersede
+  前項的 current wording。PR-18 已獨立審查 formal-state sync、state producer receipt、legacy type edge 與
+  401 terminal return 的 bounded contract，並 `approved`；IM-18 已完成，TE-15／RV-15 已依序獨立驗證／審查並 `approved`，DL-13 現為 active；
+  DL-13 delivery visible 後 CH-12 才可抓取 exact thread state，
+  必要項 resolve、非必要項留言再 resolve；最後停在 HC-12，不 merge、不 release。
 
 ## Branch Naming
 

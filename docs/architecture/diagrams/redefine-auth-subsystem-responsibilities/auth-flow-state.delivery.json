@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/auth-flow-state.json",
+  "output": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/auth-flow-state.html",
+  "specification": {
+    "sha256": "9ee9c0e466b5245355dd6c67f4da520928ed528c072bd90904c6d0aca45410fe",
+    "bytes": 4204
+  },
+  "artifact": {
+    "sha256": "3267ff0257abfad1026e31fd765da93a827edeb49be0ccbba0eb5d3227486b5d",
+    "bytes": 708827
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

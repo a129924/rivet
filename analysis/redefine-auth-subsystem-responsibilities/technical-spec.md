@@ -243,12 +243,64 @@ RV-11 = `needs-rework` 為 current rework truth，不得將 IM-14 receipt regene
 這不重開 Model C、original request ownership、retry policy、401 sequence、state topology、
 participant-context presentation 或 deferred API。這是直接交回 IM-15 的最小回修，不建立新的 planning cycle。
 TE-12 initial 已 `needs-rework`；IM-15 rework 已完成同一個 bounded canvas finding 的回修，且 TE-12 re-test 已
-`approved`；TE-14 已 `approved`，目前 gate 為 RV-14。IM-15 的
+`approved`；下列是 PC-18 前的 historical snapshot：TE-14 已 `approved`，當時 gate 為 RV-14。IM-15 的
 實作範圍只可更新
 `component-dependency/scene.js`、其 generated `index.html`、artifact-local validation／visual evidence 與
 actual-step ledger evidence；`BUILD.md`、enhancement script、401、state、lifecycle、normal sequence、
-canonical document、Swift、OAuth 與其他 path 均為 ReadOnly。current route：
-TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。
+canonical document、Swift、OAuth 與其他 path 均為 ReadOnly。當時 historical route：
+TE-14（approved）→ RV-14（approved）→ DL-12（completed）→ CH-11（completed）→ HC-11（needs-rework）。
+
+## Post-Merge Four-Thread Correction Contract
+
+`f277ac4` 的 canonical-containment delivery 與 `d2cefd4` 的 `dev` merge-conflict
+resolution 都已可見於同一 feature branch。`DL-12`、`CH-11` 因而是 completed historical
+steps；`HC-11` 收到四個穩定 review finding 後為 `needs-rework`。這一 current-state sync
+supersede 本文件所有較早的「RV-14 current」或「DL-12 active」敘述；它們只保留為歷史。
+
+本 amendment 的 current route 是：
+
+```text
+PC-18 (completed) → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12
+```
+
+PR-18 是獨立 Plan Review，現已 `approved` 並授權且完成 IM-18。它只確認下列已鎖定 contract
+內的 correction；不重新決定 architecture。TE-15／RV-15 均已 `approved`，現在 current gate 是 DL-13 = active。
+
+1. **formal state**：四份 artifacts 一致敘述 `f277ac4`／`d2cefd4`、DL-12／CH-11 completed、
+   HC-11 `needs-rework` 與上述 route；PR #37 保持 OPEN、ready for review。
+2. **state standard delivery**：`auth-flow-state.json` 是 ReadOnly。IM-18 只能透過既有
+   canonical-containment producer，由 repository root 以 repository-relative input／output 執行
+   standard `deliver`，寫入 `auth-flow-state.html`、新
+   `auth-flow-state.delivery.json` 與必要 visual evidence。receipt 必須 producer-generated，記錄
+   source／HTML SHA-256、showcase 9/9、0 errors、0 warnings，以及只含 repository-relative POSIX
+   path 的 artifact/input/output/provenance metadata；不得 postprocess 或修改 producer。state visual
+   check 仍精確記錄 1440×900 = 1035、1600×1000／1920×1080 = 1109、2048×1320 pass，為 accepted
+   non-pass 而非 pass。
+3. **component legacy dependency**：`component-dependency/scene.js` 可恢復
+   `AuthRequester → HTTPRequest`，但 edge 與對應說明必須明確限定為 legacy Model A 的編譯期
+   request-type dependency。它不可描述成 adopted Model C target request preparation、request
+   construction、ownership/dataflow transfer 或 I/O delegation；Model C 的 original-request ownership
+   和 selected／decorated preparation owner／representation deferred 都維持原判。canvas 必須重新
+   validate、build、檢驗 temporary rebuild byte-identical 與既有 accessibility baseline。
+4. **401 terminal response**：`401-refresh-retry.json` 可增加唯一的
+   `AuthRequester → caller` terminal final-response message，以及與該 response 相符的 caller
+   activation。實作須把 message count 從 17 記為 18，並證明此是唯一新增 message；其他
+   factory prefix、no-request-payload semantic exchange、Flow 無 original request、eligible-only
+   refresh、refresh result 回 policy、success-only exactly-one retry、waiting-to-response-policy terminal
+   split 和 no receive→retry shortcut 一律 ReadOnly semantics。401 仍須 standard `validate`／`deliver`、
+   source-match、showcase 9/9、0 errors、0 warnings、四個 desktop viewport visual pass 與 exact
+   delivered manual light/dark inspection。
+
+IM-18 只可寫入四份 planning artifacts 的 actual-step evidence、state generated delivery output／receipt／
+visual evidence、component source/generated output/evidence、401 source/generated output/evidence。Swift、
+OAuth dual-client lifecycle、receipt producer／tests、package canvas、canonical architecture document、
+lifecycle、normal sequence 與其他 repository paths 均為 ReadOnly；無刪除、rename 或 move 授權。
+
+TE-15 只驗證這些產出、hash/provenance、message delta、canvas semantics/reproducibility/accessibility、
+visual facts、scope、`git diff --check` 與 dev clean，不產生 output。RV-15 只在 TE-15 `approved` 後
+獨立判斷四個 finding 與所有 locked contract 是否無 drift。TE-15／RV-15 都 `approved` 才可 DL-13
+commit/push；CH-12 只在 delivery visible 後重新抓取 exact threads，必要項直接 resolve，非必要項先留言
+再 resolve，最後 HC-12 停在 human review，不 merge、不 release。
 
 ## Validation and Gate Contract
 
@@ -346,9 +398,9 @@ TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。
 21. RV-11 `needs-rework` 僅要求：component-dependency canvas 不得將 selected／decorated request
     preparation 指派給 `AuthRequester`，以及 ledger 必須把 RV-11 `needs-rework` 視為 current rework
     truth。這是直接交回 IM-15 的最小回修，不建立新的 planning cycle。TE-12 initial 已 `needs-rework`，
-    IM-15 rework 已完成、TE-12 re-test 已 `approved`；TE-14 已 `approved`，目前 gate 為 RV-14；IM-15 只可修改 canvas `scene.js`、generated `index.html`、artifact-local validation／
+    IM-15 rework 已完成、TE-12 re-test 已 `approved`；以下為 PC-18 前 historical snapshot：TE-14 已 `approved`，當時 gate 為 RV-14；IM-15 只可修改 canvas `scene.js`、generated `index.html`、artifact-local validation／
     visual evidence 和 actual-step ledger evidence；其後 route 固定為 IM-15 rework → TE-12 re-test（approved）→
-    TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。DL-12 只在 RV-14 approved 後 commit/push；CH-11 只在 corrected delivery visible 後重新取得
+    TE-14（approved）→ RV-14（approved）→ DL-12（completed）→ CH-11（completed）→ HC-11（needs-rework）。DL-12 只在 RV-14 approved 後 commit/push；CH-11 只在 corrected delivery visible 後重新取得
     exact thread evidence，必要事項修正後 resolve，非必要事項留言後 resolve；PR status 不變。
 
 ## TestCase
@@ -417,3 +469,17 @@ TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。
 - **TC-24**：IM-13 standard source-matched delivery 為 9/9、0 errors、0 warnings，1440×900、1600×1000、
   1920×1080、2048×1320 全數 visual pass、manual light/dark；RV-11 `needs-rework` 後，未開始的
   DL-09 → CH-08 → HC-08 不再是 current route。
+- **PM-01**：formal artifacts 的 current status 是 DL-12／CH-11 completed、HC-11
+  `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15 completed、DL-13 active；`f277ac4` 與 `d2cefd4` 僅為已交付歷史，
+  current route 唯一為 PC-18 → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12。
+- **PM-02**：state receipt 僅能由 canonical-containment producer 以 repository-relative
+  arguments 標準產生；source／HTML SHA-256、9/9、0 errors、0 warnings 與 repository-relative
+  metadata 都匹配，exact 1035／1109／1109、2048 pass 維持 non-pass truth。
+- **PM-03**：component canvas 的 `AuthRequester → HTTPRequest` edge 明示 legacy Model A
+  編譯期 type dependency，並不表示 Model C request preparation、construction、ownership transfer 或 I/O。
+  canvas source/output/rebuild/accessibility evidence 必須一致。
+- **PM-04**：401 唯一新增 message 是 terminal `AuthRequester → caller` final response；caller
+  activation 覆蓋 return，message count 由 17 變 18，其他 locked semantics、source-match、9/9 與四 viewport
+  visual pass 維持。
+- **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13 現為 active。CH-12 僅在 delivery visible
+  後按必要 resolve／非必要留言再 resolve，HC-12 是 human boundary。
