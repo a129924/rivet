@@ -1,4 +1,4 @@
-const W = 1480, H = 1240;
+const W = 1480, H = 1280;
 
 // 此圖只表達套件所有權與編譯期依賴，不描述 Transport 的執行期請求／回應流程。
 const PLANES = {
@@ -86,6 +86,8 @@ const EDGES = [
   { from:'async-request-authorization',to:'request',pts:[[1324,587],[1340,587],[1340,480],[974,480],[974,429]] },
   { from:'http-client',to:'requester',pts:[[505,740],[925,740],[925,742],[934,742]],label:{s:'al',x:722,y:728,t:'設定後執行',anchor:'center'} },
   { from:'auth-requester',to:'auth',pts:[[650,714],[650,655],[271,655],[271,543]],label:{s:'al',x:668,y:660,t:'依賴',rot:-90,anchor:'center'} },
+  // 僅 legacy Model A 的編譯期 request-type 相依；不是模型 C 的請求準備或執行期資料流。
+  { from:'auth-requester',to:'request',pts:[[534,714],[94,714],[94,640],[690,640],[690,450],[700,450]],label:{s:'al',x:78,y:676,t:'僅 legacy Model A 編譯期型別相依',rot:-90,anchor:'center'} },
   // 此相依只表達泛用 I/O 委派，不表示 AuthRequester 準備選定／修飾後請求。
   { from:'auth-requester',to:'requester',pts:[[720,794],[720,814],[1129,814],[1129,794]],label:{s:'al',x:924,y:806,t:'泛用 I/O 委派；非請求準備',anchor:'center'} },
   { from:'auth-requester',to:'auth-flow',pts:[[720,714],[720,655],[554,655],[554,543]],label:{s:'al',x:737,y:660,t:'回應／語意決策',rot:-90,anchor:'center'} },
@@ -114,7 +116,9 @@ const TEXTS = [
   {s:'bn',x:110,y:1140,t:'不變量：Configuration 提供通用 base URL／相對路徑便利功能，不是端點或查詢建構器'},
   {s:'bn',x:110,y:1160,t:'不變量：HTTPURL 驗證與 HTTPClientError 分別表達設定／URL／路徑驗證、Transport 失敗；HTTP status 維持原始回應'},
   {s:'bn',x:110,y:1180,t:'不變量：請求授權轉換由呼叫端於 bare execution 前套用；非同步一般 error 原樣交回呼叫端'},
-  {s:'bn',x:110,y:1200,t:'Auth 目標架構：模型 C 分離策略／狀態、呼叫端原始請求與 I/O；選定／修飾後請求的準備責任維持延後確定'}
+  {s:'bn',x:110,y:1200,t:'Auth 目標架構：模型 C 分離策略／狀態、呼叫端原始請求與 I/O；選定／修飾後請求的準備責任維持延後確定'},
+  {s:'bn',x:110,y:1220,t:'歷史關係：AuthRequester → HTTPRequest 僅是 legacy Model A 編譯期 request-type 相依'},
+  {s:'bn',x:110,y:1240,t:'非目前模型 C 的選定／修飾請求準備、建構、所有權、資料流或輸入／輸出；準備者與表徵仍延後確定'}
 ];
 const SWATCHES = [
   {x:1046,y:75,w:26,h:13,stroke:'#8B93A1',alpha:0.8,dash:true},

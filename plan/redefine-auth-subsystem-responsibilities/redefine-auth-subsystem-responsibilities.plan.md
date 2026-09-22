@@ -256,7 +256,7 @@ TE-14（approved）→ RV-14（approved）→ DL-12（completed）→ CH-11（co
 
 ### PC-18 — Post-Merge Four-Thread Correction
 
-此 section 為 current workflow 的唯一 override。`f277ac4` 的 receipt correction 與 `d2cefd4`
+此 section 是 PC-19 前的 historical workflow override。`f277ac4` 的 receipt correction 與 `d2cefd4`
 的 conflict resolution 已交付；`DL-12`／`CH-11` completed，`HC-11` = `needs-rework`。任何本 plan
 較早的 RV-14／DL-12／CH-11 current-route 表述僅是歷史 snapshot，不可作為 gate。
 
@@ -268,7 +268,7 @@ PC-18 (completed) → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 �
 
 PR-18 已由與 Plan-Creator 獨立的 Plan-Reviewer `approved`，確認本次只有四個 bounded findings；
 IM-18／TE-15／RV-15／DL-13 已完成；TE-15／RV-15 verdict 均為 `approved`。CH-12 已完成，四個 thread
-均已 resolved 且無未分類 feedback；current gate 為 HC-12 = active（human review）：
+均已 resolved 且無未分類 feedback；HC-12 隨後收到兩項 P2 feedback，現為 `needs-rework`：
 
 1. 四份 formal artifacts 如實同步上述 commit、delivery/thread history、current gate 與 PR #37
    OPEN／ready status；不預告 merge 或 release。
@@ -295,7 +295,40 @@ TE-15 僅驗證 producer provenance/hash、state exact non-pass、canvas legacy 
 401 one-message delta／caller activation／locked semantics／delivery/visual、scope、`git diff --check` 與 dev
 clean；不得產生 output。RV-15 獨立確認四個 finding 已消除且無 drift。TE-15／RV-15 `approved` 後，DL-13 已依
 既有授權完成 commit/push；CH-12 已完成四個 thread 的 resolve，重新取得結果無未分類 feedback。現在一律停在
-HC-12 active human review，不 merge、不 release。
+HC-12 `needs-rework`，不 merge、不 release。
+
+### PC-19 — Post-HC-12 Two-P2 Diagram Expression Rework
+
+此 section 是 current workflow 的唯一 override。human 已明示授權此 formal rework cycle。HC-12 final GitHub
+verification 的兩項 P2 feedback 只要求已鎖定 contract 內的圖表 expression／layout 回修；它們不重新決定
+Model C、retry policy、state topology、original-request ownership、deferred preparation owner 或 OAuth boundary。
+PC-18 的 DL-13／CH-12 completed 與四個 resolved threads 均為 historical，不得重開或重新處理。
+
+唯一 current route 固定為：
+
+```text
+PC-19 (completed) → PR-19 (completed／approved) → IM-19 (completed) → TE-16 (completed／approved) → RV-16 (completed／approved) → DL-14 (active) → CH-13 → HC-13
+```
+
+1. **P2-01 — package legacy type dependency**（`PRRT_kwDOUFu0Cc6knaR9`）：
+   `http-client-package-structure` canvas 必須明示 `AuthRequester → HTTPRequest` 是 legacy Model A 的
+   compile-time request-type dependency，並與 component-dependency canvas 一致。不得暗示 Model C target
+   request preparation、construction、ownership、dataflow transfer 或 I/O；component canvas 是 ReadOnly。
+2. **P2-02 — state route separation**（`PRRT_kwDOUFu0Cc6knaSA`）：`auth-flow-state` 的 retry-response
+   transition 與 normal-terminal edge 必須只以 layout／route 分離，以消除假雙向箭頭。不得改變 retry policy、
+   state topology、transition／terminal semantics、message contract 或 runtime behavior。
+
+PC-19 已 completed；PR-19 已獨立審查並 `approved`，IM-19／TE-16／RV-16 已 completed，TE-16／RV-16 verdict 為 `approved`，DL-14 現為 active。IM-19 的 Written allowlist 僅為
+四份 planning artifacts 的 actual-step evidence、
+`http-client-package-structure/scene.js`／generated `index.html`／artifact-local evidence、以及
+`auth-flow-state.json`／HTML／delivery receipt／artifact-local evidence。component-dependency canvas、401、
+receipt producer／tests、Swift、OAuth、canonical docs、lifecycle、normal sequence 及所有其他 paths 是 ReadOnly；
+不 delete、rename、move、merge 或 release。
+
+TE-16 只驗證 package edge 的 legacy-only semantics／component consistency、state route separation 沒有假雙向
+箭頭、policy/topology/contract no-drift、正常 validation／deliver、source-output-receipt provenance、state exact
+non-pass truth、rebuild/accessibility 與 scope。RV-16 只在 TE-16 `approved` 後獨立審查。RV-16 `approved` 後
+才可 DL-14；delivery visible 後 CH-13 才可處理兩項 P2 threads，最後停在 HC-13 human review。
 
 ### Deleted
 
@@ -378,9 +411,9 @@ HC-12 active human review，不 merge、不 release。
   re-test = `approved` 後，IM-15 rework → TE-12 re-test（approved）→ TE-14（approved）→
   RV-14（approved）→ DL-12（completed）→ CH-11（completed）→ HC-11（needs-rework）是 historical snapshot。不得建立新的
   planning cycle，且在 RV-14 approved 前不得 commit/push、reply 或 resolve thread。
-- **PM-01**：PC-18 是唯一 current override；`f277ac4`／`d2cefd4`、DL-12／CH-11 completed 與
-  HC-11 `needs-rework` 在四份 artifacts 一致，current route 為 PC-18 → PR-18 → IM-18 → TE-15 →
-  RV-15 → DL-13 → CH-12 → HC-12。
+- **PM-01**：PC-18 是 PC-19 前 historical override；`f277ac4`／`d2cefd4`、DL-12／CH-11 completed、
+  HC-11 `needs-rework`、DL-13／CH-12 completed 與 HC-12 `needs-rework` 在四份 artifacts 一致。唯一 current
+  route 為 PC-19 → PR-19 → IM-19 → TE-16 → RV-16 → DL-14 → CH-13 → HC-13。
 - **PM-02**：state JSON ReadOnly；canonical-containment producer 以 repository-relative parameters
   產生 state receipt，receipt hash／9/9／0 errors／0 warnings／relative metadata 一致，state 1035／1109／1109、
   2048 pass 維持 exact non-pass。
@@ -391,7 +424,13 @@ HC-12 active human review，不 merge、不 release。
   `AuthRequester → caller` final response 與其 caller activation；factory/no-payload/retry-policy contract、
   source-matched 9/9 與四 viewport visual pass 不變。
 - **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13／CH-12 已 completed，四個 thread 均已
-  resolved、無未分類 feedback；HC-12 是 active 且不可自動跨越的 human-review boundary。
+  resolved、無未分類 feedback；HC-12 因 P2-01／P2-02 為 `needs-rework`。四個 resolved threads 保持
+  historical，不得重開。
+- **P2-01**：`PRRT_kwDOUFu0Cc6knaR9` 要求 package canvas 也明示 `AuthRequester → HTTPRequest` 僅為
+  legacy Model A compile-time request-type dependency，並與 component canvas 一致，非 Model C
+  preparation／construction／ownership／dataflow／I/O。
+- **P2-02**：`PRRT_kwDOUFu0Cc6knaSA` 要求 state retry-response transition 與 normal-terminal edge
+  只作 layout／route separation，避免假雙向箭頭，不改 retry policy、state topology 或 contract。
 
 ## Implementation Phases and Gates
 
@@ -503,12 +542,15 @@ HC-12 active human review，不 merge、不 release。
   `needs-rework` 後，IM-15 rework 已完成；TE-12 re-test 已 `approved`。
 - **Historical TE-14 → RV-14 → DL-12 → CH-11 → HC-11**：RV-14 approved 後才可 DL-12 delivery；
   DL-12／CH-11 已 completed，HC-11 = needs-rework。這是 PC-18 前歷史，並不構成 current route。
-- **PC-18 (completed) → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12**：這是
-  `f277ac4`／`d2cefd4` delivered 後四個 stable review finding 的唯一 current route，並 supersede
-  前項的 current wording。PR-18 已獨立審查 formal-state sync、state producer receipt、legacy type edge 與
-  401 terminal return 的 bounded contract，並 `approved`；IM-18、TE-15、RV-15、DL-13、CH-12 已依序完成，
-  TE-15／RV-15 均 `approved`，四個 thread 均已 resolved、無未分類 feedback；最後停在 active 的
-  HC-12 human review，不 merge、不 release。
+- **Historical PC-18 route**：PC-18 → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12 是
+  `f277ac4`／`d2cefd4` delivered 後四個 stable review finding 的 historical route。PR-18 已獨立審查
+  formal-state sync、state producer receipt、legacy type edge 與 401 terminal return 的 bounded contract，並
+  `approved`；IM-18、TE-15、RV-15、DL-13、CH-12 已依序完成，TE-15／RV-15 均 `approved`，四個 thread
+  均已 resolved、無未分類 feedback；HC-12 因兩項 P2 feedback 為 `needs-rework`。
+- **PC-19 (completed) → PR-19 (completed／approved) → IM-19 (completed) → TE-16 (completed／approved) → RV-16 (completed／approved) → DL-14 (active) → CH-13 → HC-13**：此為唯一 current
+  route。P2-01 只補 package canvas 的 legacy Model A compile-time type dependency；P2-02 只分離 state
+  retry-response／normal-terminal 的 layout route，兩者均不得改變 Model C、retry policy、state topology、
+  Swift 或 OAuth。PC-19 completed 後才交獨立 PR-19，最後停在 HC-13，不 merge、不 release。
 
 ## Branch Naming
 

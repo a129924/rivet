@@ -29,13 +29,13 @@
     { "id": "create-flow", "from": "flow-created", "to": "initial-decision" },
     { "id": "initial-send", "from": "initial-decision", "to": "waiting-response" },
     { "id": "receive-response", "from": "waiting-response", "to": "response-policy" },
-    { "id": "normal-terminal", "from": "response-policy", "to": "terminal-response", "route": "straight", "fromSide": "right", "toSide": "left" },
+    { "id": "normal-terminal", "from": "response-policy", "to": "terminal-response", "route": "top-channel", "fromSide": "top", "toSide": "top", "channelY": 96 },
     { "id": "first-401-decision", "from": "response-policy", "to": "first-401", "label": "初始回應為 401：資格判斷", "variant": "security", "fromSide": "bottom", "toSide": "top", "via": [[556, 240], [402, 240]] },
     { "id": "dispatch-refresh", "from": "first-401", "to": "refresh-boundary", "label": "具資格的更新語意", "variant": "security", "fromSide": "bottom", "toSide": "bottom", "via": [[402, 370], [556, 370]] },
     { "id": "ineligible-terminal", "from": "first-401", "to": "ineligible-401", "label": "不具資格／不具更新能力", "variant": "security", "route": "straight", "labelAt": [402, 390] },
     { "id": "refresh-failure", "from": "refresh-boundary", "to": "refresh-failed", "variant": "security", "route": "bottom-channel" },
     { "id": "refresh-success", "from": "refresh-boundary", "to": "waiting-for-retry-response", "label": "更新成功：一次重試許可", "variant": "emphasis", "fromSide": "bottom", "toSide": "bottom", "via": [[556, 405], [710, 405]], "labelAt": [633, 430] },
-    { "id": "retry-response-policy", "from": "waiting-for-retry-response", "to": "response-policy", "variant": "emphasis" },
+    { "id": "retry-response-policy", "from": "waiting-for-retry-response", "to": "response-policy", "variant": "emphasis", "fromSide": "left", "toSide": "right", "via": [[631, 307], [631, 157]] },
     { "id": "second-401-terminal", "from": "response-policy", "to": "second-401", "variant": "security", "fromSide": "bottom", "toSide": "right", "via": [[556, 240], [850, 240], [850, 479]] }
   ]
 }
