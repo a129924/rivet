@@ -48,9 +48,11 @@ Facade（layer 外的 application composition root）
 
 | 狀況 | Outcome |
 | --- | --- |
-| 無 credential、refresh failure、重送後第二次 401 | provider 分別回傳 `.missingCredential`／`.refresh`；Facade re-auth 與第二次 401 policy deferred |
-| 暫時性 refresh／Keychain／網路失敗，且遠端 rotation 尚未接受 | provider 的 `.refresh` 保留 credential；Keychain adapter／client outcome deferred |
+| 無 credential | provider 回傳 `.missingCredential`；Facade re-auth deferred |
+| credential store load failure | provider 回傳 `.restore`；Keychain adapter／client outcome deferred |
+| token fetcher refresh failure，且遠端 rotation 尚未接受 | provider 回傳 `.refresh` 並保留 credential |
 | 遠端 rotation 已接受後的本地 persistence failure | provider `.persist` 後永久 unavailable；不宣稱舊 bundle 仍可用，credential reconciliation 留待後續 topic |
+| 重送後第二次 401 | client policy deferred |
 | 403、repository permission、resource visibility | 非 token-invalid signal；不 refresh |
 
 ## Boundary 與後續 Topic

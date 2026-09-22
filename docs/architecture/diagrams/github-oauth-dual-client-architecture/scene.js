@@ -35,8 +35,8 @@ const BOXES = [
     texts: [['bl', 824, 528, 'GitHub GraphQL 用戶端'], ['bs', 824, 550, '權杖提供者 + Apollo'], ['bn', 824, 572, '不經 REST 路徑；保有原操作']] },
 
   { id: 'github-integration', plane: 'integration', band: 'band-integration', x: 230, y: 780, w: 390, h: 92, r: 10, dash: true,
-    name: 'GithubIntegration', about: '所有限界上下文之外、已交付既定契約的 GitHub 專屬共享整合模組。',
-    texts: [['bl', 254, 808, 'GithubIntegration'], ['bs', 254, 830, '限界上下文外的 GitHub 專屬共享整合模組'], ['bn', 254, 852, '不是限界上下文；不擁有介面、DTO 或失敗對應']] },
+    name: 'GithubIntegration', about: '所有限界上下文之外、已交付轉接器使用介面的 GitHub 專屬共享整合模組；不擁有限界上下文的 Port、DTO 或失敗對應。',
+    texts: [['bl', 254, 808, 'GithubIntegration'], ['bs', 254, 830, '限界上下文外的 GitHub 專屬共享整合；已交付轉接器使用介面'], ['bn', 254, 852, '不擁有限界上下文的 Port、DTO 或失敗對應']] },
   { id: 'provider', plane: 'integration', band: 'band-integration', x: 670, y: 780, w: 510, h: 126, r: 10, dash: true,
     name: 'OAuthTokenProvider', about: '已交付的唯一生命週期擁有者，封裝 OAuth 憑證狀態、版本、輪替持久化與單飛；不處理用戶端重試。',
     texts: [['bl', 694, 808, 'OAuthTokenProvider — 已交付'], ['bs', 694, 830, '記憶體快照 · 還原 · 到期判定 · 更新'], ['bs', 694, 846, '輪替持久化 · 版本 · 相同版本單飛'], ['bs', 694, 862, '不符合 GitHubAccessTokenProvider'], ['bn', 694, 884, '不持有 HTTPRequest／Apollo；不處理重試']] },

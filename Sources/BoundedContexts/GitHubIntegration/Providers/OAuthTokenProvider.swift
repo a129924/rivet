@@ -11,6 +11,7 @@ public actor OAuthTokenProvider {
   private let store: any OAuthCredentialStore
   private let fetcher: any OAuthTokenFetcher
   private let now: @Sendable () -> Date
+  private let onInFlightTaskJoin: (@Sendable () async -> Void)?
 
   private var credential: GitHubOAuthCredentialBundle?
   private var currentSnapshot: TokenSnapshot?
@@ -25,13 +26,26 @@ public actor OAuthTokenProvider {
     self.store = store
     self.fetcher = fetcher
     self.now = now
+    onInFlightTaskJoin = nil
+  }
+
+  init(
+    store: any OAuthCredentialStore,
+    fetcher: any OAuthTokenFetcher,
+    now: @escaping @Sendable () -> Date = Date.init,
+    onInFlightTaskJoin: @escaping @Sendable () async -> Void
+  ) {
+    self.store = store
+    self.fetcher = fetcher
+    self.now = now
+    self.onInFlightTaskJoin = onInFlightTaskJoin
   }
 
   public func snapshot() async throws(OAuthTokenProviderError) -> TokenSnapshot {
     try throwIfUnavailable()
 
     if let inFlightTask {
-      return try await value(of: inFlightTask)
+      return try await join(inFlightTask)
     }
 
     if let currentSnapshot, let credential {
@@ -65,7 +79,7 @@ public actor OAuthTokenProvider {
     }
 
     if let inFlightTask {
-      return try await value(of: inFlightTask)
+      return try await join(inFlightTask)
     }
 
     guard let credential else {
@@ -77,7 +91,7 @@ public actor OAuthTokenProvider {
 
   private func startRestore() async throws(OAuthTokenProviderError) -> TokenSnapshot {
     if let inFlightTask {
-      return try await value(of: inFlightTask)
+      return try await join(inFlightTask)
     }
 
     let task: Task<TokenSnapshot, any Error> = Task { [self] in
@@ -91,7 +105,7 @@ public actor OAuthTokenProvider {
     from credential: GitHubOAuthCredentialBundle
   ) async throws(OAuthTokenProviderError) -> TokenSnapshot {
     if let inFlightTask {
-      return try await value(of: inFlightTask)
+      return try await join(inFlightTask)
     }
 
     let task: Task<TokenSnapshot, any Error> = Task { [self] in
@@ -178,5 +192,14 @@ public actor OAuthTokenProvider {
     } catch {
       preconditionFailure("OAuthTokenProvider work must only throw OAuthTokenProviderError")
     }
+  }
+
+  private func join(
+    _ task: Task<TokenSnapshot, any Error>
+  ) async throws(OAuthTokenProviderError) -> TokenSnapshot {
+    if let onInFlightTaskJoin {
+      await onInFlightTaskJoin()
+    }
+    return try await value(of: task)
   }
 }

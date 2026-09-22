@@ -67,14 +67,22 @@ struct OAuthTokenProviderTests {
       refreshResults: [.success(replacement)],
       refreshGate: refreshGate
     )
-    let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { now })
+    let joinObservation = TestInFlightJoinObservation()
+    let provider = OAuthTokenProvider(
+      store: store,
+      fetcher: fetcher,
+      now: { now },
+      onInFlightTaskJoin: {
+        await joinObservation.recordJoin()
+      }
+    )
 
     let firstDemand = Task { try await provider.snapshot() }
     await refreshGate.waitForArrival()
     let secondDemand = Task { try await provider.snapshot() }
-    await Task.yield()
-    await Task.yield()
+    await joinObservation.waitForJoin()
 
+    #expect(await joinObservation.count() == 1)
     #expect(await fetcher.refreshInvocationCount() == 1)
     #expect(await store.saveInvocationCount() == 0)
     await refreshGate.open()
@@ -99,14 +107,22 @@ struct OAuthTokenProviderTests {
       loadGate: loadGate
     )
     let fetcher = TestTokenFetcher()
-    let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { now })
+    let joinObservation = TestInFlightJoinObservation()
+    let provider = OAuthTokenProvider(
+      store: store,
+      fetcher: fetcher,
+      now: { now },
+      onInFlightTaskJoin: {
+        await joinObservation.recordJoin()
+      }
+    )
 
     let firstDemand = Task { try await provider.snapshot() }
     await loadGate.waitForArrival()
     let secondDemand = Task { try await provider.snapshot() }
-    await Task.yield()
-    await Task.yield()
+    await joinObservation.waitForJoin()
 
+    #expect(await joinObservation.count() == 1)
     #expect(await store.loadInvocationCount() == 1)
     await loadGate.open()
     let first = try await firstDemand.value
@@ -128,7 +144,15 @@ struct OAuthTokenProviderTests {
       refreshResults: [.success(replacement)],
       refreshGate: refreshGate
     )
-    let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { now })
+    let joinObservation = TestInFlightJoinObservation()
+    let provider = OAuthTokenProvider(
+      store: store,
+      fetcher: fetcher,
+      now: { now },
+      onInFlightTaskJoin: {
+        await joinObservation.recordJoin()
+      }
+    )
     let usedSnapshot = try await provider.snapshot()
 
     let firstRecovery = Task {
@@ -138,9 +162,9 @@ struct OAuthTokenProviderTests {
     let secondRecovery = Task {
       try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
     }
-    await Task.yield()
-    await Task.yield()
+    await joinObservation.waitForJoin()
 
+    #expect(await joinObservation.count() == 1)
     #expect(await fetcher.refreshInvocationCount() == 1)
     await refreshGate.open()
     let first = try await firstRecovery.value
@@ -544,5 +568,33 @@ private actor TestGate {
     for waiter in currentWaiters {
       waiter.resume()
     }
+  }
+}
+
+private actor TestInFlightJoinObservation {
+  private var joinCount = 0
+  private var waiters: [CheckedContinuation<Void, Never>] = []
+
+  func recordJoin() {
+    joinCount += 1
+    let currentWaiters = waiters
+    waiters.removeAll()
+    for waiter in currentWaiters {
+      waiter.resume()
+    }
+  }
+
+  func waitForJoin() async {
+    guard joinCount == 0 else {
+      return
+    }
+
+    await withCheckedContinuation { continuation in
+      waiters.append(continuation)
+    }
+  }
+
+  func count() -> Int {
+    joinCount
   }
 }
