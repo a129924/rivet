@@ -235,12 +235,12 @@ DL-03 宣稱為 current gate。
 
 這是已鎖定 contract 內的直接回修，不建立新的 Plan-Creator／Plan-Reviewer cycle。TE-12 initial 已
 `needs-rework`；IM-15 rework 已完成同一個 bounded canvas finding 的回修，且 TE-12 re-test 已
-`approved`。目前 gate 為 RV-12。IM-15 的實作範圍
+`approved`。TE-14 已 `approved`；目前 gate 為 RV-14。IM-15 的實作範圍
 只可更新
 `component-dependency/scene.js`、其 generated `index.html`、artifact-local validation／visual evidence
 與 actual-step ledger evidence；`BUILD.md`、enhancement script、401、state、lifecycle、normal sequence、
 canonical document、Swift、OAuth 與所有其他 paths 均為 ReadOnly。current route 固定為
-IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → CH-09 → HC-09。
+TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。
 
 ### Deleted
 
@@ -321,8 +321,8 @@ IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → 
 - **TC-26**：RV-11 `needs-rework` 只允許修正 canvas 對 selected／decorated request preparation 的
   `AuthRequester` 錯誤指派，exact owner／representation 仍 deferred；TE-12 initial = `needs-rework`、
   re-test = `approved` 後，ledger 的 current route 必須是 IM-15 rework → TE-12 re-test（approved）→
-  RV-12（current）→ DL-10 → CH-09 → HC-09。不得建立新的
-  planning cycle，且在 TE-12/RV-12 approved 前不得 commit/push、reply 或 resolve thread。
+  TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。不得建立新的
+  planning cycle，且在 RV-14 approved 前不得 commit/push、reply 或 resolve thread。
 
 ## Implementation Phases and Gates
 
@@ -432,9 +432,9 @@ IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → 
 - **RV-11 → IM-15 rework → TE-12 re-test**：RV-11 的兩項 finding 均未改變 locked contract，故直接由
   IM-15 回修 canvas ownership wording／edge 與 ledger current-gate truth，不建立新的 planning cycle。TE-12 initial
   `needs-rework` 後，IM-15 rework 已完成；TE-12 re-test 已 `approved`。
-- **IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → CH-09 → HC-09**：IM-15 只修正 component-dependency canvas
-  及其 evidence；RV-12 approved 後才可 DL-10 delivery。corrected delivery visible 後，CH-09 重新取得
-  exact thread evidence：必要事項修正後 resolve，非必要事項留言後 resolve，最後停在 HC-09 human boundary。
+- **TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11**：RV-14 approved 後才可 DL-12 delivery。
+  corrected delivery visible 後，CH-11 重新取得 exact thread evidence：必要事項修正後 resolve，非必要事項留言後
+  resolve，最後停在 HC-11 human boundary。
 
 ## Branch Naming
 

@@ -233,12 +233,12 @@ retry policy、401 sequence、state topology、participant-context presentation 
 
 此為已鎖定 contract 內的最小回修，不建立新的 Plan-Creator／Plan-Reviewer cycle。TE-12 initial 已
 `needs-rework`；**IM-15 rework 已完成**同一個 bounded canvas finding 的回修，且 **TE-12 re-test 已
-`approved`**。目前 gate 為 **RV-12**。IM-15 的
+`approved`**。TE-14 已 `approved`；目前 gate 為 **RV-14**。IM-15 的
 實作範圍只可更新
 `component-dependency/scene.js`、其 generated `index.html`、artifact-local validation／visual evidence
 與 actual-step ledger evidence。`BUILD.md`、enhancement script、401、state、lifecycle、normal sequence、
 canonical document、Swift、OAuth 與其他 path 均維持 ReadOnly。current route：
-**IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → CH-09 → HC-09**。
+**TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11**。
 
 ## Model Comparison
 
@@ -485,9 +485,9 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
     selected／decorated request preparation 指派給 `AuthRequester`，以及 ledger 必須如實將
     RV-11 `needs-rework` 作為 current rework truth。這是直接交回 IM-15 的最小回修，不建立新的
     planning cycle。TE-12 initial 已 `needs-rework`；IM-15 rework 已完成，TE-12 re-test 已
-    `approved`，目前 gate 為 RV-12。IM-15 只可修正 canvas `scene.js`、generated
+    `approved`。TE-14 已 `approved`，目前 gate 為 RV-14。IM-15 只可修正 canvas `scene.js`、generated
     `index.html` 與 artifact-local validation／visual evidence；其後 route 固定為 IM-15 rework →
-    TE-12 re-test（approved）→ RV-12（current）→ DL-10 → CH-09 → HC-09。DL-10 僅在 TE-12/RV-12 approved 後 commit/push；CH-09 僅在
+    TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。DL-12 僅在 RV-14 approved 後 commit/push；CH-11 僅在
     corrected delivery visible 後重新取得 exact thread evidence，必要事項修正後 resolve，非必要事項
     留言後 resolve；PR status 不變。
 
@@ -522,8 +522,8 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   「request 資料」、「資格」、「延後確定」、「更新成功」分別取代 payload、eligibility、
   deferred、refresh-success 的解釋，僅 identifier 可保留英文。
 - **TC-12 — Historical PR boundary**：PR #37 維持 OPEN、ready for review；PC-07 至 CH-02
-  的 historical route 不得改變其 status。current route 以 step ledger 的 IM-15 rework →
-  TE-12 re-test（approved）→ RV-12（current）→ DL-10 → CH-09 → HC-09 為準，不得以 DL-03、CH-02、superseded
+  的 historical route 不得改變其 status。current route 以 step ledger 的 TE-14（approved）→
+  RV-14（current）→ DL-12 → CH-11 → HC-11 為準，不得以 DL-03、CH-02、superseded
   CH-03 或 CH-04 提前回覆／resolve。
 - **TC-13 — Current 401 factory prefix**：401 source/output/evidence 依序表達 caller entry、
   `AuthRequester → Auth` flow request、`Auth → AuthRequester` flow return、再開始不帶 request
@@ -568,5 +568,5 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   RV-11 `needs-rework` 後，DL-09 → CH-08 → HC-08 不再是 current route。
 - **TC-25 — RV-11 canvas／ledger rework**：component-dependency canvas 不稱 `AuthRequester` 準備
   selected／decorated request，exact preparation owner／representation 維持 deferred；TE-12 initial =
-  `needs-rework`、re-test = `approved` 後，ledger current route 是 IM-15 rework → TE-12 re-test（approved）→
-  RV-12（current）→ DL-10 → CH-09 → HC-09，不得將 IM-14 或 superseded DL-03 當作 current gate，也不得建立新的 planning cycle。
+  `needs-rework`、re-test = `approved` 後，TE-14 已 `approved`，ledger current route 是
+  RV-14（current）→ DL-12 → CH-11 → HC-11，不得將 IM-14 或 superseded DL-03 當作 current gate，也不得建立新的 planning cycle。

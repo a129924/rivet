@@ -243,12 +243,12 @@ RV-11 = `needs-rework` 為 current rework truth，不得將 IM-14 receipt regene
 這不重開 Model C、original request ownership、retry policy、401 sequence、state topology、
 participant-context presentation 或 deferred API。這是直接交回 IM-15 的最小回修，不建立新的 planning cycle。
 TE-12 initial 已 `needs-rework`；IM-15 rework 已完成同一個 bounded canvas finding 的回修，且 TE-12 re-test 已
-`approved`；目前 gate 為 RV-12。IM-15 的
+`approved`；TE-14 已 `approved`，目前 gate 為 RV-14。IM-15 的
 實作範圍只可更新
 `component-dependency/scene.js`、其 generated `index.html`、artifact-local validation／visual evidence 與
 actual-step ledger evidence；`BUILD.md`、enhancement script、401、state、lifecycle、normal sequence、
 canonical document、Swift、OAuth 與其他 path 均為 ReadOnly。current route：
-IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → CH-09 → HC-09。
+TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。
 
 ## Validation and Gate Contract
 
@@ -346,9 +346,9 @@ IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → 
 21. RV-11 `needs-rework` 僅要求：component-dependency canvas 不得將 selected／decorated request
     preparation 指派給 `AuthRequester`，以及 ledger 必須把 RV-11 `needs-rework` 視為 current rework
     truth。這是直接交回 IM-15 的最小回修，不建立新的 planning cycle。TE-12 initial 已 `needs-rework`，
-    IM-15 rework 已完成、TE-12 re-test 已 `approved`，目前 gate 為 RV-12；IM-15 只可修改 canvas `scene.js`、generated `index.html`、artifact-local validation／
+    IM-15 rework 已完成、TE-12 re-test 已 `approved`；TE-14 已 `approved`，目前 gate 為 RV-14；IM-15 只可修改 canvas `scene.js`、generated `index.html`、artifact-local validation／
     visual evidence 和 actual-step ledger evidence；其後 route 固定為 IM-15 rework → TE-12 re-test（approved）→
-    RV-12（current）→ DL-10 → CH-09 → HC-09。DL-10 只在 TE-12/RV-12 approved 後 commit/push；CH-09 只在 corrected delivery visible 後重新取得
+    TE-14（approved）→ RV-14（current）→ DL-12 → CH-11 → HC-11。DL-12 只在 RV-14 approved 後 commit/push；CH-11 只在 corrected delivery visible 後重新取得
     exact thread evidence，必要事項修正後 resolve，非必要事項留言後 resolve；PR status 不變。
 
 ## TestCase
@@ -386,7 +386,7 @@ IM-15 rework → TE-12 re-test（approved）→ RV-12（current）→ DL-10 → 
   interpretation，不指派 selected／decorated preparation；其 owner／representation 未決。
 - **TC-13**：current comment preflight = `needs-rework`、RV-04 approved／DL-03 active 的
   historical ledger、PC-10／PR-10／IM-08 blocked alternate history與 IM-09 blocked history均如實保留；
-  它們均非 current route，thread 只在 CH-09 重新取得 evidence。
+  它們均非 current route，thread 只在 CH-11 重新取得 evidence。
 - **TC-14**：state redesign 只可將 retry permission 改為進入 waiting state 的 transition／event並調整
   相連 presentation，卻同時保留 first-401
   ineligible terminal、eligible refresh、outcome 回 Flow policy、refresh-success-only exactly-one retry、

@@ -3,8 +3,8 @@
   "ok": true,
   "command": "deliver",
   "type": "sequence",
-  "input": "/Users/andrew/code/swift/rivet.worktrees/agent-20260917-redefine-auth-subsystem-responsibilities/docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.json",
-  "output": "/Users/andrew/code/swift/rivet.worktrees/agent-20260917-redefine-auth-subsystem-responsibilities/docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.html",
+  "input": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.json",
+  "output": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.html",
   "specification": {
     "sha256": "7d9b632bbf015a3c21dae4df372fb7ea3929df33093a815937cd96db4f0fc9a6",
     "bytes": 5101

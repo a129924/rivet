@@ -2,10 +2,20 @@
 
 ## Current Phase
 
-`dl-10-delivery-active`。TE-12 re-test 與 RV-12 已 independent `approved`；current gate 是 DL-10 的
-topic delivery。這不是新需求、architecture decision 或 substantive planning cycle；不得建立新的
-Plan-Creator／Plan-Reviewer cycle，亦不得重開 Model C、deferred ownership 或任何既有 evidence。corrected
-delivery visible 前仍不得 reply 或 resolve thread。delivered head 的歷史只記錄 `RV-04 = approved` 與
+`rv-14-canonical-containment-review-active`。IM-16 已完成，TE-13 已由 Independent Tester `approved`；DL-10 的 corrected delivery 已可見，CH-09 已重新取得
+thread state，但 P1 `PRRT_kwDOUFu0Cc6kQlYl` 指出 `401-refresh-retry.delivery.json` 含有本機絕對路徑。
+CH-09 因此為 `blocked`；這是 delivery receipt 的 provenance／privacy 回修，不是新需求、architecture
+decision、401 flow contract 或 retry-policy change。RV-13 = `needs-rework`：IM-16 的 lexical
+`--repo-root` containment 尚可接受 lexical 在 repository 內、但 canonical resolve 後逃逸到 root 外的 symlink
+input／output，因此不足以滿足 P1 的 provenance boundary。IM-17 已完成 canonical containment：producer 先以
+`realpath` canonicalize repository root 與 input／output，再判定實體 descendant 關係；direct-outside 與 in-root
+symlink-escape rejection tests 均在 delivery／receipt-write 前通過 fail-closed 驗證。success path 已由 repository
+root 的 relative input／output 重新產生同一份 401 receipt，未對 generated receipt 作 postprocess；receipt 的 path
+與 provenance metadata 維持 canonical repository-relative 表達。TE-14 已由 Independent Tester `approved`；RV-14 已由 Independent
+Reviewer `approved`；DL-12 是目前的 delivery gate（ledger status = `active`）。
+目前 route 為 RV-14 → DL-12 → CH-11 → HC-11。不得建立新的 Plan-Creator／Plan-Reviewer cycle，
+亦不得重開 Model C、deferred ownership 或任何既有 evidence；DL-12 corrected delivery visible 前仍不得 reply 或
+resolve P1 thread。delivered head 的歷史只記錄 `RV-04 = approved` 與
 `DL-03 = active`；不得將 commit/push、thread closure 或 HC-02 寫成已完成。current PR #37
 comment preflight 為 `needs-rework`，有四個必要的 diagram／ledger findings。PC-08 已完成本
 planning amendment；PR-08 已由 independent Plan-Reviewer `approved`。human 已接受
@@ -36,8 +46,8 @@ PC-14 已完成、PR-14 已由 independent Plan-Reviewer `approved`。IM-12 在�
 context projection 只有 5.208px，小於 6px。human 已選擇 bounded participant-context presentation change：
 PC-15 已完成，PR-15 已由 independent Plan-Reviewer `approved`；IM-13／IM-14 已完成；TE-11 re-test
 已 `approved`，RV-11 = `needs-rework`，TE-12 initial = `needs-rework`，IM-15 rework = completed，
-TE-12 re-test = approved、RV-12 = approved；current route 為
-DL-10 → CH-09 → HC-09。17 messages、flow/policy/component identities
+TE-12 re-test = approved、RV-12 = approved、DL-10 = completed、CH-09 = blocked、IM-16 = completed、
+TE-13 = approved、RV-13 = needs-rework、IM-17 = completed、TE-14 = approved、RV-14 = approved、DL-12 = active；current route 為 RV-14 → DL-12 → CH-11 → HC-11。17 messages、flow/policy/component identities
 與 package passed evidence 均鎖定、不重做。
 PR #37 是既有 **OPEN、ready for review** PR；不得改變其 status，也不得在新的 delivery gate
 前 reply/resolve thread。
@@ -70,6 +80,15 @@ entry／factory round-trip、state 的 retry-response policy topology、package 
 preparation ownership，以及 delivered-head/current-preflight workflow truth。它們不重開 Model C
 或任何 deferred API。
 
+本 ledger 亦追蹤 CH-09 後唯一新增的 P1：401 delivery receipt 不得保留本機絕對路徑。此回修只處理
+receipt 的 repository-relative path provenance；401 source、HTML、17-message flow、factory prefix、
+retry policy、visual evidence 與其他 diagram/canvas 均不在範圍內。
+
+RV-13 指出的 symlink-escape 是同一 P1 的 canonical-containment gap：IM-17 只修正既有 receipt producer
+對 canonical repository root／input／output 的 containment 判定，並新增 direct-outside 與 in-root symlink-escape
+rejection tests；成功路徑才可重新產生同一份 401 receipt。這不改變 receipt schema、401 artifact source／HTML、
+architecture、policy 或任何 product source。
+
 ## Out-Of-Scope
 
 任何 production implementation、test implementation、package release、merge、OAuth
@@ -93,8 +112,17 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 - Phase 1：無既有檔修改。
 - Phase 2：僅在 PR-03 `approved` 後，依 plan.md allowlist 修改 architecture overview、
   BC directory index、existing AuthFlow lifecycle artifact、HTTP client package canvas
- 及其 artifact-local evidence；PR #37 comment-fix 另僅可依 plan.md 使用既有 Written
+及其 artifact-local evidence；PR #37 comment-fix 另僅可依 plan.md 使用既有 Written
  namespace，並在 Modify allowlist 中新增的 `BUILD.md` 固定作者 arguments。
+- IM-16：只可修改 `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.delivery.json`
+  與此 actual-step ledger evidence，以 repository-relative path 重新產生並 sanitize receipt；401 source、HTML、
+  visual evidence、其他 diagrams/canvas、Swift、OAuth、Git 與 GH 均為 ReadOnly。
+- IM-17：只可修改既有 Archify receipt producer 的以 `realpath` canonicalize repository root／input／output
+  的 containment implementation 與其 direct-outside／in-root symlink-escape tests，並在 tests 通過後以
+  repository-relative arguments 重新產生同一份
+  `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.delivery.json` 與此
+  actual-step ledger evidence；不得 postprocess generated receipt。401 source／HTML、receipt schema、visual evidence、其他 diagrams/canvas、
+  architecture、product source、Swift、OAuth、Git 與 GH 均為 ReadOnly。
 
 ## Deleted
 
@@ -196,11 +224,23 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 | TE-12 | Independent Tester | approved | 獨立驗證 IM-15 rework 的 component-dependency canvas source/output、reproducibility、accessibility、deferred ownership 與 ledger current gate。 | IM-15 rework completed。 | `approved` 授權 RV-12；`needs-rework` 只可回交相同 bounded canvas finding，不建立新的 planning cycle。 | 2026-09-21 re-test：component-dependency canvas standard validate 為 5 bands／9 boxes／11 edges／0 errors／0 warnings；在暫存路徑獨立 standard build 後與交付 `index.html` byte-identical（SHA-256 `57ff00d7b69daac985100beaa2a4c7b6a69011d92c14773ea985c55f48ca4c33`）。source／output 無 `request-instance`、無 `AuthRequester → HTTPRequest` ownership edge；僅保留標示「泛用 I/O 委派；非請求準備」的 `AuthRequester → Requester` dependency，selected／decorated request 的 preparation owner／representation 均明示 deferred。generated viewer baseline 具 title、互動 control `aria-label` 與 keyboard handler。HTTP client package canvas 同樣 validate 5 bands／15 boxes／22 edges／0 errors／0 warnings，temporary build → enhance → accessibility verify 與交付 HTML byte-identical（SHA-256 `5e6fdd1226c84728fae4307d67d30780e67557980752cc111af5fdc9e2fdc5e3`）。401 delivery receipt 的 source／HTML hash 維持 `7d9b…c9a6`／`2184…5362`，state source／HTML hash 維持 IM-11 的 `9ee9…10fe`／`3267…6b5d`；兩者 showcase validate 均 9/9、0 errors／0 warnings。state desktop containment exception 仍如實為 1035／1109／1109，2048 pass。`git diff --check`、allowlist 與 dev clean 均通過；未 commit、push、reply 或 resolve thread。 |
 | RV-12 | Independent Reviewer | approved | 獨立確認 RV-11 的兩項 finding 已消除，並審查 scope、contract、workflow/PR-status 與 final evidence drift。 | TE-12 = approved。 | `approved` 才授權 DL-10；`needs-rework` 回交對應產出角色。 | Independent Reviewer 確認 component-dependency 不再將 selected／decorated request preparation 指派給 `AuthRequester`，formal artifacts 與 step ledger 的 current state 一致；401、state、兩份 canvas、receipt、scope 與 dev clean 均未漂移。 |
 | DL-09 | Implementer | superseded | 原 RV-11 後的 delivery gate。 | TE-11 = approved、RV-11 = approved。 | 由 DL-10 replacement delivery gate 取代；不得執行 Git/PR action。 | 未開始。 |
-| DL-10 | Implementer | active | 在 TE-12/RV-12 approved 後，依 topic delivery contract commit/push corrected delivery 至既有 OPEN、ready-for-review PR #37。 | TE-12 = approved、RV-12 = approved，且 commit message 已獲 human confirmation。 | corrected delivery visible；不得開新 PR、改變 PR status、merge 或 release。 | RV-12 已批准；待依既有 topic delivery contract 執行 commit/push。 |
+| DL-10 | Implementer | completed | 在 TE-12/RV-12 approved 後，依 topic delivery contract commit/push corrected delivery 至既有 OPEN、ready-for-review PR #37。 | TE-12 = approved、RV-12 = approved，且 commit message 已獲 human confirmation。 | corrected delivery visible；不得開新 PR、改變 PR status、merge 或 release。 | 2026-09-21：`196080b` 已 push 至既有 feature branch；PR #37 維持 OPEN、ready for review。 |
 | CH-08 | Implementer | superseded | 原 RV-11 後的 comment-resolution gate。 | DL-09 completed。 | 由 CH-09 replacement comment-resolution gate 取代；不得 reply/resolve。 | 未開始。 |
-| CH-09 | Implementer | pending | 在 DL-10 visible 後重新取得 PR #37 thread state，處理 current-comment threads。 | DL-10 completed。 | 必要 threads 只在相應 corrected delivery visible 後 resolve；非必要 threads 先留言說明再 resolve；記錄當時 evidence。 | 未開始；不得 reply/resolve。 |
+| CH-09 | Implementer | blocked | 在 DL-10 visible 後重新取得 PR #37 thread state，處理 current-comment threads。 | DL-10 completed。 | 由 IM-17 canonical-containment remediation、independent verification/review 與 DL-12 visible delivery 解除；在此之前不得 reply/resolve P1。 | P1 `PRRT_kwDOUFu0Cc6kQlYl` 指出 `401-refresh-retry.delivery.json` 含本機絕對路徑；RV-13 另確認 lexical containment 未拒絕 canonical symlink escape；兩者皆非 source／policy finding。 |
+| IM-16 | Independent Implementer | completed | 只重新產生並 sanitize current `401-refresh-retry` delivery receipt 的 path provenance。 | CH-09 = blocked，P1 已明確指出本機絕對路徑。 | `401-refresh-retry.delivery.json` 的 artifact/input/output path 均為 repository-relative；source 與 HTML hashes、17-message flow、factory prefix、retry policy、visual evidence 與所有 ReadOnly paths 不變。完成後只交回 independent TE-13。 | 2026-09-21：依 human producer-first contract，最小修正 Archify receipt producer：`--repo-root` 可用於 sequence delivery，並將受該 root 約束的 success receipt input/output 序列化為 POSIX repository-relative path；root 外路徑在 delivery 前失敗，不會回退記錄絕對路徑。從 repository root 以 relative input/output 與 `--repo-root .` 重新 `deliver`，沒有手改 JSON。新 receipt 的 input/output 為 `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.{json,html}`；specification／artifact SHA-256 維持 `7d9b632bbf015a3c21dae4df372fb7ea3929df33093a815937cd96db4f0fc9a6`／`21847c0d4cd80620f7debb9568dc43c8aad5d9b4c4c5fc0d0122fc5b3cb65362`。獨立 validate 為 showcase 9/9、0 errors／0 warnings；既有 visual-check receipt 仍對應相同 HTML hash，四個 desktop viewport 均 pass。掃描整個 pending diff 的 receipt／HTML／planning evidence，未發現本機絕對路徑、使用者名稱、home 或 worktree 名稱；`git diff --check` 與 dev clean 通過。未改 401 source／HTML／visual evidence、其他 diagrams/canvas、Swift、OAuth、Git 或 GH。 |
+| TE-13 | Independent Tester | approved | 獨立驗證 IM-16 receipt path normalization、source/output hash continuity、scope 與 absolute-path absence。 | IM-16 completed。 | `approved` 授權 RV-13；不得 generate/build/deliver 或更新 receipt/evidence。 | Independent Tester 已 `approved`；詳細 verification evidence 由獨立測試 handoff 保存，未在此 ledger 重複推論。 |
+| RV-13 | Independent Reviewer | needs-rework | 獨立確認 P1 receipt-path finding 已消除，並審查 Model C／401 contract、scope、previous evidence 與 workflow drift。 | TE-13 = approved。 | 若 receipt producer 對 canonical repository-root containment、direct-outside rejection 或 in-root symlink-escape rejection 不足，交回同一 bounded producer remediation；不得改變 401 contract、architecture 或 product source。 | required finding：IM-16 僅保證 lexical `--repo-root` containment；lexical in-root symlink 可 canonical resolve 至 root 外，故 provenance boundary 未證明。DL-11 不獲授權。 |
+| IM-17 | Independent Implementer | completed | 只回修既有 Archify receipt producer 的 canonical containment，新增 direct-outside／in-root symlink-escape rejection tests，並在 tests 通過後從 repository root 以 relative input／output 重新產生 current 401 receipt。 | RV-13 = needs-rework。 | 以 `realpath` canonicalize repository root、input 與 output 後才判定實體 descendant；direct-outside 與 lexical in-root 但 canonical root 外的 symlink-escape 必須於 deliver／receipt-write 前拒絕。成功 delivery 的 receipt input／output／artifact path 與 provenance metadata 只可使用 repository-relative POSIX path，且不得 postprocess generated receipt；401 source／HTML hash、17-message flow、factory prefix、retry policy、visual evidence 與全部 ReadOnly paths 不變。完成後只交回 independent TE-14。 | 2026-09-21：producer 已以 `realpath` canonicalize repository root、input、output 後執行 containment；direct-outside 與 in-root symlink-escape rejection tests 均在 artifact／receipt write 前 fail-closed 通過。從 repository root 使用 relative input／output 重跑 delivery，無 postprocess；401 receipt 的 input／output／provenance metadata 為 canonical repository-relative 表達，source／HTML hash、17-message flow、factory prefix、retry policy 與 visual evidence 未變。未改 401 source／HTML、receipt schema、diagram、architecture、product source、Swift、OAuth、Git 或 GH。 |
+| TE-14 | Independent Tester | approved | 獨立驗證 IM-17 canonical containment、direct-outside／symlink-escape tests、relative-arg delivery、receipt path privacy、source／HTML／receipt hash continuity、visual evidence 與 scope no-drift。 | IM-17 completed。 | 只 verify；確認 two rejection tests 不產生 artifact／receipt，成功 401 receipt 所有 path／provenance metadata 均為 canonical repository-relative 表達、沒有 postprocess，並對 full pending diff 掃描 absolute path、使用者名稱、home 與 worktree 名稱。`approved` 才授權 RV-14；不得 generate/build/deliver 或更新 output/evidence。 | Independent Tester 已 `approved`；詳細 verification evidence 由獨立測試 handoff 保存，未在此 ledger 重複推論。 |
+| RV-14 | Independent Reviewer | approved | 獨立確認 P1 的 absolute-path 與 canonical symlink-escape finding 已消除，並審查 Model C／401 contract、scope、previous evidence 與 workflow drift。 | TE-14 = approved。 | `approved` 才授權 DL-12；任何 producer containment、source/policy 或 scope drift 一律 needs-rework。 | Independent Reviewer 已 `approved`；P1 的 canonical containment 與 path privacy finding 已消除，授權 DL-12。 |
+| DL-11 | Implementer | superseded | 原 TE-13／RV-13 後的 receipt-only delivery gate。 | TE-13 = approved、RV-13 = approved。 | 由 IM-17 → TE-14 → RV-14 → DL-12 canonical-containment replacement route 取代；不得執行 Git/PR action。 | RV-13 = needs-rework；未開始。 |
+| DL-12 | Implementer | active | 在 TE-14/RV-14 approved 後，依 topic delivery contract commit/push canonical-containment receipt correction 至既有 OPEN、ready-for-review PR #37。 | TE-14 = approved、RV-14 = approved，且 commit message 已獲 human confirmation。 | corrected delivery visible；不得開新 PR、改變 PR status、merge 或 release。 | current delivery gate；尚未 commit 或 push。 |
+| CH-10 | Implementer | superseded | 原 DL-11 後的 comment-resolution gate。 | DL-11 completed。 | 由 DL-12 → CH-11 replacement route 取代；不得 reply/resolve。 | 未開始。 |
+| CH-11 | Implementer | pending | 在 DL-12 visible 後重新取得 PR #37 thread state，處理 P1 與任何新取得且已分類的 current-comment threads。 | DL-12 completed。 | 必要 threads 只在相應 corrected delivery visible 後 resolve；非必要 threads 先留言說明再 resolve；重新取得 evidence 確認沒有未分類 feedback。 | 未開始；不得 reply/resolve。 |
 | HC-08 | Human | superseded | 原 RV-11 後的 human boundary。 | CH-08 completed。 | 由 HC-09 replacement human boundary 取代。 | 未開始。 |
-| HC-09 | Human | pending | Review corrected OPEN、ready-for-review PR #37。 | CH-09 completed。 | human 明示下一步。 | 未開始；IM-15 minimal recovery 不是 human review substitute。 |
+| HC-09 | Human | superseded | 原 DL-10／CH-09 comment-resolution route 的 human boundary。 | CH-09 completed。 | 由 HC-10 replacement human boundary 取代；CH-09 已因 P1 blocked。 | 未開始。 |
+| HC-10 | Human | superseded | 原 DL-11／CH-10 receipt-only replacement route 的 human boundary。 | CH-10 completed。 | 由 HC-11 replacement human boundary 取代。 | RV-13 = needs-rework；未開始。 |
+| HC-11 | Human | pending | Review canonical-containment corrected OPEN、ready-for-review PR #37。 | CH-11 completed。 | human 明示下一步。 | 未開始；IM-17 producer remediation 不是 human review substitute。 |
 
 ## PR #37 Thread Mapping
 
@@ -215,15 +255,19 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 | T07 | refresh 經 deferred boundary 執行，refresh result 經 `AuthRequester` 傳回 flow。 | corrected 401／state delivery visible。 |
 | T08 | 移除 receive→retry shortcut；retry 必須是 flow 在結果後作出的 semantic decision。 | corrected 401／state delivery visible。 |
 | T09 | 只有 refresh-success permits retry；ineligible、refresh-failure 與 second-401 terminal。 | corrected 401／state delivery visible。 |
+| P1 `PRRT_kwDOUFu0Cc6kQlYl` | `401-refresh-retry.delivery.json` 的 artifact/input/output path 與 provenance metadata 只可為 canonical repository-relative path，不能暴露本機絕對路徑，亦不得接受 canonical resolve 後逃逸 repository root 的 symlink。 | IM-17 canonical-containment correction 經 TE-14／RV-14 approved、DL-12 visible 後。 |
 
 previous T01–T09 mapping 是 historical correction reference，不是 current GitHub thread
-state 的宣告。current four-thread handling 只可在 CH-09 重新取得 exact thread evidence 後開始。
+state 的宣告。CH-09 已重新取得 P1 evidence 但因 receipt path finding `blocked`；current handling 只可在
+DL-12 visible 後的 CH-11 重新取得 exact thread evidence 才開始。
 
 PR #37 的 current replacement workflow 保留 historical prefix：**PC-08 → PR-08 → PC-09 → PR-09 →
 IM-07 (historical blocked) → PC-10 → PR-10 → IM-08 (historical blocked) → PC-11 → PR-11**；
 其精確 current replacement route 為：**PC-15 → PR-15 → IM-13 → TE-11 (needs-rework) → IM-14 →
 TE-11 re-test → RV-11 (needs-rework) → IM-15 → TE-12 (needs-rework) → IM-15 rework → TE-12 re-test →
-RV-12 → DL-10 → CH-09 → HC-09**。RV-11／TE-12 finding 未改變 locked contract，故不建立新的 planning cycle。PR #37 維持
+RV-12 → DL-10 (completed) → CH-09 (blocked) → IM-16 → TE-13 → RV-13 (needs-rework) → IM-17 → TE-14 →
+RV-14 (approved) → DL-12 (active) → CH-11 → HC-11**。P1 只回修 delivery receipt canonical path provenance，未改變 locked
+contract，故不建立新的 planning cycle。PR #37 維持
 OPEN、ready for review；任何前置 gate 未完成時不得改變 status 或提前處理 thread。IM-11 只放行
 `auth-flow-state` 的 retry permission transition／event expression 與必要 topology/layout presentation，
 以消除 `[850,307]` 並恢復 normal Archify 9/9、0 errors/warnings、standard deliver/source-matched receipt；
@@ -289,7 +333,8 @@ IM-14 只可更新 stale 401 delivery receipt，不能修改 source／output sem
   RV-02 才可依 verification evidence 重新判定 verdict。
 - **TC-07**：PC-07／PC-08 的 historical route 不取代 current PC-15 → PR-15 → IM-13 →
   TE-11 needs-rework → IM-14 → TE-11 re-test → RV-11 needs-rework → IM-15 → TE-12 needs-rework →
-  IM-15 rework → TE-12 re-test → RV-12 → DL-10 → CH-09 → HC-09；RV-11／TE-12 只可回修既有 canvas
+  IM-15 rework → TE-12 re-test → RV-12 → DL-10 completed → CH-09 blocked → IM-16 → TE-13 →
+  RV-13 needs-rework → IM-17 → TE-14 → RV-14 → DL-12 → CH-11 → HC-11；RV-11／TE-12 只可回修既有 canvas
   deferred-owner wording／edge 與 stale ledger gate，不得建立新的 planning cycle。PC-10／PR-10／IM-08 blocked、IM-09 blocked、IM-10
   401 visual blocked與 IM-12 renderer blocked均如實保留為 historical evidence。未經 TE-12/RV-12 與 follow-up delivery 不得 reply/resolve
   current PR #37 threads 或改變 PR status。
@@ -326,6 +371,16 @@ IM-14 只可更新 stale 401 delivery receipt，不能修改 source／output sem
   1600×1000、1920×1080、2048×1320 全數 visual pass並 manual light/dark。TE-11 只 verify、不
   generate/build/deliver/更新 output 或 evidence；若 receipt stale，僅 IM-14 可重新產生 receipt，且不得改變
   source／output semantics。
+- **TC-19**：IM-16／TE-13 的 lexical repository-relative path normalization 是 historical evidence，不能視為
+  canonical containment pass。P1 `PRRT_kwDOUFu0Cc6kQlYl` 只允許 IM-17 對既有 receipt producer canonicalize
+  repository root、input 與 output，並在 deliver／receipt-write 前拒絕 direct-outside path 與 lexical in-root、
+  canonical root 外的 symlink-escape。兩個拒絕 tests 均不得產生 receipt；成功路徑才可重建
+  `401-refresh-retry.delivery.json` 的 repository-relative artifact/input/output/provenance metadata，且不得
+  postprocess generated receipt。source／HTML
+  hashes、17-message flow、factory prefix、retry policy、visual evidence、其他 diagrams/canvas、architecture、
+  product source、Swift 與 OAuth 不得漂移。TE-14 只驗證 containment、path absence、source／HTML／receipt hash
+  continuity、visual evidence 與 full pending-diff scan；
+  RV-14 approved、DL-12 visible 後才可由 CH-11 reply/resolve。
 
 ## Blockers
 
@@ -339,15 +394,22 @@ RV-11 已確認 401 receipt 的 historical stale finding 已由 IM-14／TE-11 re
 均已完成並 approved。它只消除「`AuthRequester` 被表達為 selected／decorated request preparation owner」與
 stale current-gate 兩項落差；component-dependency canvas 的 standard validate → build → temporary rebuild
 reproducibility、generic I/O non-preparation dependency 與 deferred preparation boundary 均已獨立驗證。
-RV-12 已 approved；current gate 為 DL-10。corrected delivery visible 前不得 reply 或 resolve thread。
-不得新增 exception、重做 package 以外 artifact、手改 HTML、擴張 state/Swift/OAuth/other diagrams/runtime architecture
-scope 或重開 deferred ownership。既有 state desktop containment exact accepted non-pass 與所有其他 gates 維持不變。
+RV-12 已 approved，DL-10 已完成；CH-09 已因 P1 `PRRT_kwDOUFu0Cc6kQlYl` 指出的 401 delivery receipt
+本機絕對路徑而 `blocked`。IM-16 只可重新產生並 sanitize receipt path 為 repository-relative，不能修改
+source／HTML／visual evidence 或任何 401 policy/contract。IM-16 已完成且 TE-13 已
+`approved`；但 RV-13 = `needs-rework`：lexical repository-relative serialization 尚未拒絕 lexical in-root、
+canonical resolve 後 root 外的 symlink-escape。IM-17 已完成既有 receipt producer 的 canonical containment，並以
+direct-outside 與 in-root symlink-escape tests 證明 delivery／receipt-write 前拒絕，再以 repository-relative input／output
+重新產生同一 receipt；current gate 為 DL-12 → CH-11 → HC-11。DL-12 visible 前不得 reply 或 resolve P1。不得新增 exception、
+重做 package 以外 artifact、手改 HTML、
+擴張 state/Swift/OAuth/other diagrams/runtime architecture scope 或重開 deferred ownership。既有 state desktop
+containment exact accepted non-pass 與所有其他 gates 維持不變。
 
 ## Human Check
 
-HC-09 是 current PR #37 comment-fix replacement workflow 完成後的強制 human boundary。
-CH-09 完成前沒有 current thread 可 resolve；PR #37 必須維持 OPEN、ready for review。其後只有
-human 可授權後續工作。IM-15 minimal recovery 不是 HC-09 的替代，也不授權 merge、release
+HC-11 是 current PR #37 canonical-containment replacement workflow 完成後的強制 human boundary。
+CH-11 完成前不得 resolve current P1 thread；PR #37 必須維持 OPEN、ready for review。其後只有
+human 可授權後續工作。IM-17 producer remediation 不是 HC-11 的替代，也不授權 merge、release
 或 future Swift implementation。
 
 ## Last Updated
@@ -424,3 +486,38 @@ deferred。401／state source-output evidence 未漂移；state 既有 desktop c
 component-dependency 不再把 selected／decorated request preparation 指派給 `AuthRequester`，且 formal
 artifacts／step ledger 的 current state 一致。401、state、兩份 canvas、receipt、scope 與 dev clean 未漂移。
 current gate 為 DL-10；尚未 commit、push、reply 或 resolve thread。
+
+2026-09-21 — DL-10 completed 後，CH-09 重新取得 P1 `PRRT_kwDOUFu0Cc6kQlYl`：
+`401-refresh-retry.delivery.json` 仍含本機絕對路徑。這是 receipt provenance／privacy finding，不改變
+401 source、HTML、17-message flow、factory prefix、retry policy、visual evidence 或任何 locked contract。
+依最小閉環，CH-09 = `blocked`、IM-16 = `active`；IM-16 只可重建並 sanitize receipt path 為
+repository-relative，後續為 TE-13 → RV-13 → DL-11 → CH-10 → HC-10。不建立新的 planning cycle，
+也不得在 corrected delivery visible 前 reply 或 resolve P1。
+
+2026-09-21 — TE-13 = `approved`：Independent Tester 已完成 IM-16 receipt path normalization、source/output
+hash continuity、scope 與 absolute-path absence 的獨立驗證；current gate 為 RV-13。此 state sync 不修改
+receipt、diagram、contract 或其他 formal artifact。
+
+2026-09-21 — RV-13 = `needs-rework`：review 發現 IM-16 的 `--repo-root` containment 為 lexical，未能證明
+lexical 在 repository 內但 canonical resolve 後逃逸 root 的 symlink input／output 會被拒絕；因此不能把
+repository-relative receipt serialization 視為完整 provenance boundary。這是同一 P1 的 producer-only
+canonical-containment finding，不改變 receipt schema、401 source／HTML、17-message flow、factory prefix、retry
+policy、visual evidence、architecture 或 product source。IM-17 = `completed`：以 `realpath` canonicalize repository
+root／input／output，拒絕 direct-outside 與 in-root symlink-escape，並以兩個 rejection tests 證明在 delivery／receipt-write
+前失敗；success path 已從 repository root 以 relative path 重新產生同一 401 receipt，沒有 postprocess。
+TE-14 已驗證 source／HTML／receipt hash、visual evidence 與 full pending-diff path scan；RV-14 已 approved。後續固定為
+DL-12 → CH-11 → HC-11；不建立新的 planning cycle，也不得在 DL-12 visible 前 reply 或
+resolve P1。
+
+2026-09-21 — IM-17 = `completed`：canonical receipt producer 已先以 `realpath` 解析 repository root、input 與
+output，再判定實體 descendant containment。direct-outside 與 in-root symlink-escape rejection tests 均確認在
+delivery／receipt-write 前 fail-closed，且不產生 artifact 或 receipt。success path 由 repository root 的 relative
+input／output 重新 `deliver` 同一份 401 receipt，沒有 postprocess；receipt 的 input／output／artifact path 與
+provenance metadata 均為 canonical repository-relative 表達。401 source／HTML hash、17-message flow、factory prefix、
+retry policy 與 visual evidence 未漂移。current gate 為 TE-14 independent verification（ledger status = `pending`）；
+TE-14 未 `approved` 前不得 commit、push、reply 或 resolve P1。
+
+2026-09-21 — TE-14 = `approved`：Independent Tester 已完成 IM-17 canonical containment、direct-outside／
+symlink-escape rejection、repository-relative delivery、receipt path privacy、hash continuity、visual evidence 與
+scope no-drift 的獨立驗證。此 state sync 不修改 producer、receipt、diagram、contract 或其他 formal artifact；current
+gate 為 DL-12。
