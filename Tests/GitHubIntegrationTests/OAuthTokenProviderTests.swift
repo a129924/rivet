@@ -54,6 +54,170 @@ struct OAuthTokenProviderTests {
     #expect(await store.saveInvocationCount() == 1)
     #expect(await store.hasSavedAccessToken(.replacement))
   }
+}
+
+extension OAuthTokenProviderTests {
+  @Test
+  func expiredRestoreRotationThatExpiresDuringPersistencePublishesVersionTwo() async throws {
+    let now = testDate
+    let expiringRotationExpiry = now.addingTimeInterval(1)
+    let usableRotationExpiry = now.addingTimeInterval(2)
+    let clock = TestClock(now: now)
+    let saveGate = TestGate()
+    let store = TestCredentialStore(
+      loadResults: [.success(credential(.initial, accessExpiry: now))],
+      saveGate: saveGate
+    )
+    let fetcher = TestTokenFetcher(
+      refreshResults: [
+        .success(credential(.alternate, accessExpiry: expiringRotationExpiry)),
+        .success(credential(.replacement, accessExpiry: usableRotationExpiry)),
+      ]
+    )
+    let joinObservation = TestInFlightJoinObservation()
+    let provider = OAuthTokenProvider(
+      store: store,
+      fetcher: fetcher,
+      now: { clock.now() },
+      onInFlightTaskJoin: { await joinObservation.recordJoin() }
+    )
+    let firstDemand = Task { try await provider.snapshot() }
+    await saveGate.waitForArrival()
+    let secondDemand = Task { try await provider.snapshot() }
+    await joinObservation.waitForJoin()
+    clock.advance(to: expiringRotationExpiry)
+    await saveGate.open()
+    let first = try await firstDemand.value
+    let second = try await secondDemand.value
+    #expect(hasAccessToken(first, .replacement))
+    #expect(!hasAccessToken(first, .alternate))
+    #expect(areSnapshotsFullyEqual(first, second))
+    #expect(first.version == 2)
+    #expect(second.version == 2)
+    #expect(clock.now() < usableRotationExpiry)
+    #expect(await joinObservation.count() == 1)
+    #expect(await store.loadInvocationCount() == 1)
+    #expect(await fetcher.refreshInvocationCount() == 2)
+    #expect(await store.saveInvocationCount() == 2)
+    #expect(await store.hasSavedAccessToken(.alternate))
+    #expect(await store.hasSavedAccessToken(.replacement))
+  }
+
+  @Test
+  func rotationThatExpiresDuringPersistenceRefreshesBeforePublishing() async throws {
+    let now = testDate
+    let expiringRotationExpiry = now.addingTimeInterval(1)
+    let usableRotationExpiry = now.addingTimeInterval(2)
+    let clock = TestClock(now: now)
+    let saveGate = TestGate()
+    let store = TestCredentialStore(
+      loadResults: [.success(credential(.initial, accessExpiry: expiringRotationExpiry))],
+      saveGate: saveGate
+    )
+    let fetcher = TestTokenFetcher(
+      refreshResults: [
+        .success(credential(.alternate, accessExpiry: expiringRotationExpiry)),
+        .success(credential(.replacement, accessExpiry: usableRotationExpiry)),
+      ]
+    )
+    let joinObservation = TestInFlightJoinObservation()
+    let provider = OAuthTokenProvider(
+      store: store,
+      fetcher: fetcher,
+      now: { clock.now() },
+      onInFlightTaskJoin: { await joinObservation.recordJoin() }
+    )
+    let usedSnapshot = try await provider.snapshot()
+    let firstRecovery = Task {
+      try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
+    }
+    await saveGate.waitForArrival()
+    let secondRecovery = Task {
+      try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
+    }
+    await joinObservation.waitForJoin()
+    clock.advance(to: expiringRotationExpiry)
+    await saveGate.open()
+    let first = try await firstRecovery.value
+    let second = try await secondRecovery.value
+    #expect(usedSnapshot.version == 1)
+    #expect(hasAccessToken(first, .replacement))
+    #expect(!hasAccessToken(first, .alternate))
+    #expect(areSnapshotsFullyEqual(first, second))
+    #expect(first.version == 3)
+    #expect(clock.now() < usableRotationExpiry)
+    #expect(await joinObservation.count() == 1)
+    #expect(await fetcher.refreshInvocationCount() == 2)
+    #expect(await store.saveInvocationCount() == 2)
+    #expect(await store.hasSavedAccessToken(.alternate))
+    #expect(await store.hasSavedAccessToken(.replacement))
+  }
+
+  @Test
+  func expiredRotationFollowedByRefreshFailureRemainsRetryable() async throws {
+    let now = testDate
+    let expiringRotationExpiry = now.addingTimeInterval(1)
+    let usableRotationExpiry = now.addingTimeInterval(2)
+    let clock = TestClock(now: now)
+    let saveGate = TestGate()
+    let store = TestCredentialStore(
+      loadResults: [.success(credential(.initial, accessExpiry: expiringRotationExpiry))],
+      saveGate: saveGate
+    )
+    let fetcher = TestTokenFetcher(
+      refreshResults: [
+        .success(credential(.alternate, accessExpiry: expiringRotationExpiry)),
+        .failure(.refresh),
+        .success(credential(.replacement, accessExpiry: usableRotationExpiry)),
+      ]
+    )
+    let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { clock.now() })
+    let usedSnapshot = try await provider.snapshot()
+    let firstRecovery = Task {
+      try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
+    }
+    await saveGate.waitForArrival()
+    clock.advance(to: expiringRotationExpiry)
+    await saveGate.open()
+    await expectRefreshFailure(firstRecovery)
+    let result = try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
+    #expect(hasAccessToken(result, .replacement))
+    #expect(result.version == 3)
+    #expect(await fetcher.refreshInvocationCount() == 3)
+    #expect(await store.saveInvocationCount() == 2)
+  }
+
+  @Test
+  func expiredRotationFollowedByPersistenceFailureMakesProviderUnavailable() async throws {
+    let now = testDate
+    let expiringRotationExpiry = now.addingTimeInterval(1)
+    let usableRotationExpiry = now.addingTimeInterval(2)
+    let clock = TestClock(now: now)
+    let saveGate = TestGate()
+    let store = TestCredentialStore(
+      loadResults: [.success(credential(.initial, accessExpiry: expiringRotationExpiry))],
+      saveResults: [.success(()), .failure(.persist)],
+      saveGate: saveGate
+    )
+    let fetcher = TestTokenFetcher(
+      refreshResults: [
+        .success(credential(.alternate, accessExpiry: expiringRotationExpiry)),
+        .success(credential(.replacement, accessExpiry: usableRotationExpiry)),
+      ]
+    )
+    let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { clock.now() })
+    let usedSnapshot = try await provider.snapshot()
+    let firstRecovery = Task {
+      try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
+    }
+    await saveGate.waitForArrival()
+    clock.advance(to: expiringRotationExpiry)
+    await saveGate.open()
+    await expectPersistFailure(firstRecovery)
+    await expectPersistFailure(provider)
+    #expect(await fetcher.refreshInvocationCount() == 2)
+    #expect(await store.saveInvocationCount() == 2)
+  }
 
   @Test
   func concurrentExpiredSnapshotDemandsShareOneRefreshAndOnePersistence() async throws {
@@ -72,24 +236,18 @@ struct OAuthTokenProviderTests {
       store: store,
       fetcher: fetcher,
       now: { now },
-      onInFlightTaskJoin: {
-        await joinObservation.recordJoin()
-      }
+      onInFlightTaskJoin: { await joinObservation.recordJoin() }
     )
-
     let firstDemand = Task { try await provider.snapshot() }
     await refreshGate.waitForArrival()
     let secondDemand = Task { try await provider.snapshot() }
     await joinObservation.waitForJoin()
-
     #expect(await joinObservation.count() == 1)
     #expect(await fetcher.refreshInvocationCount() == 1)
     #expect(await store.saveInvocationCount() == 0)
     await refreshGate.open()
-
     let first = try await firstDemand.value
     let second = try await secondDemand.value
-
     #expect(hasAccessToken(first, .replacement))
     #expect(areSnapshotsFullyEqual(first, second))
     #expect(first.version == 1)
@@ -112,22 +270,17 @@ struct OAuthTokenProviderTests {
       store: store,
       fetcher: fetcher,
       now: { now },
-      onInFlightTaskJoin: {
-        await joinObservation.recordJoin()
-      }
+      onInFlightTaskJoin: { await joinObservation.recordJoin() }
     )
-
     let firstDemand = Task { try await provider.snapshot() }
     await loadGate.waitForArrival()
     let secondDemand = Task { try await provider.snapshot() }
     await joinObservation.waitForJoin()
-
     #expect(await joinObservation.count() == 1)
     #expect(await store.loadInvocationCount() == 1)
     await loadGate.open()
     let first = try await firstDemand.value
     let second = try await secondDemand.value
-
     #expect(areSnapshotsFullyEqual(first, second))
     #expect(await fetcher.refreshInvocationCount() == 0)
   }
@@ -149,12 +302,9 @@ struct OAuthTokenProviderTests {
       store: store,
       fetcher: fetcher,
       now: { now },
-      onInFlightTaskJoin: {
-        await joinObservation.recordJoin()
-      }
+      onInFlightTaskJoin: { await joinObservation.recordJoin() }
     )
     let usedSnapshot = try await provider.snapshot()
-
     let firstRecovery = Task {
       try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
     }
@@ -163,19 +313,19 @@ struct OAuthTokenProviderTests {
       try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
     }
     await joinObservation.waitForJoin()
-
     #expect(await joinObservation.count() == 1)
     #expect(await fetcher.refreshInvocationCount() == 1)
     await refreshGate.open()
     let first = try await firstRecovery.value
     let second = try await secondRecovery.value
-
     #expect(hasAccessToken(first, .replacement))
     #expect(areSnapshotsFullyEqual(first, second))
     #expect(first.version == 2)
     #expect(await store.saveInvocationCount() == 1)
   }
+}
 
+extension OAuthTokenProviderTests {
   @Test
   func differentVersionUnauthorizedRecoveryReturnsCurrentSnapshotWithoutRefreshing() async throws {
     let now = testDate
@@ -389,6 +539,17 @@ private func expectRefreshFailure(
   }
 }
 
+private func expectRefreshFailure(_ task: Task<TokenSnapshot, any Error>) async {
+  do {
+    _ = try await task.value
+    Issue.record("Expected the provider to map a refresh failure")
+  } catch let error as OAuthTokenProviderError {
+    #expect(isRefreshFailure(error))
+  } catch {
+    Issue.record("Expected OAuthTokenProviderError.refresh")
+  }
+}
+
 private func expectPersistFailure(
   _ provider: OAuthTokenProvider,
   afterUnauthorized usedSnapshot: TokenSnapshot? = nil
@@ -402,6 +563,17 @@ private func expectPersistFailure(
     Issue.record("Expected the provider to remain unavailable after a persistence failure")
   } catch {
     #expect(isPersistFailure(error))
+  }
+}
+
+private func expectPersistFailure(_ task: Task<TokenSnapshot, any Error>) async {
+  do {
+    _ = try await task.value
+    Issue.record("Expected the provider to remain unavailable after a persistence failure")
+  } catch let error as OAuthTokenProviderError {
+    #expect(isPersistFailure(error))
+  } catch {
+    Issue.record("Expected OAuthTokenProviderError.persist")
   }
 }
 
@@ -451,6 +623,7 @@ private actor TestCredentialStore: OAuthCredentialStore {
   private var loadResults: [Result<GitHubOAuthCredentialBundle?, TestPortFailure>]
   private var saveResults: [Result<Void, TestPortFailure>]
   private let loadGate: TestGate?
+  private let saveGate: TestGate?
   private var loadCount = 0
   private var saveCount = 0
   private var savedCredentials: [GitHubOAuthCredentialBundle] = []
@@ -458,11 +631,13 @@ private actor TestCredentialStore: OAuthCredentialStore {
   init(
     loadResults: [Result<GitHubOAuthCredentialBundle?, TestPortFailure>] = [],
     saveResults: [Result<Void, TestPortFailure>] = [],
-    loadGate: TestGate? = nil
+    loadGate: TestGate? = nil,
+    saveGate: TestGate? = nil
   ) {
     self.loadResults = loadResults
     self.saveResults = saveResults
     self.loadGate = loadGate
+    self.saveGate = saveGate
   }
 
   func load() async throws(any Error & Sendable) -> GitHubOAuthCredentialBundle? {
@@ -479,6 +654,9 @@ private actor TestCredentialStore: OAuthCredentialStore {
   func save(_ credential: GitHubOAuthCredentialBundle) async throws(any Error & Sendable) {
     saveCount += 1
     savedCredentials.append(credential)
+    if let saveGate {
+      await saveGate.wait()
+    }
     guard !saveResults.isEmpty else {
       return
     }
@@ -596,5 +774,26 @@ private actor TestInFlightJoinObservation {
 
   func count() -> Int {
     joinCount
+  }
+}
+
+private final class TestClock: @unchecked Sendable {
+  private let lock = NSLock()
+  private var value: Date
+
+  init(now: Date) {
+    value = now
+  }
+
+  func now() -> Date {
+    lock.lock()
+    defer { lock.unlock() }
+    return value
+  }
+
+  func advance(to date: Date) {
+    lock.lock()
+    defer { lock.unlock() }
+    value = date
   }
 }

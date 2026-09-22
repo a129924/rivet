@@ -15,6 +15,7 @@ public actor OAuthTokenProvider {
 
   private var credential: GitHubOAuthCredentialBundle?
   private var currentSnapshot: TokenSnapshot?
+  private var version: UInt64 = 0
   private var inFlightTask: Task<TokenSnapshot, any Error>?
   private var unavailableError: OAuthTokenProviderError?
 
@@ -59,7 +60,7 @@ public actor OAuthTokenProvider {
       if isExpired(credential) {
         return try await startRefresh(from: credential)
       }
-      return publish(credential)
+      return publishNextVersion(credential)
     }
 
     return try await startRestore()
@@ -133,7 +134,7 @@ public actor OAuthTokenProvider {
     if isExpired(restoredCredential) {
       return try await refreshAndPublish(from: restoredCredential)
     }
-    return publish(restoredCredential)
+    return publishNextVersion(restoredCredential)
   }
 
   private func runRefresh(
@@ -144,32 +145,47 @@ public actor OAuthTokenProvider {
   }
 
   private func refreshAndPublish(
-    from currentCredential: GitHubOAuthCredentialBundle
+    from initialCredential: GitHubOAuthCredentialBundle
   ) async throws(OAuthTokenProviderError) -> TokenSnapshot {
-    let rotatedCredential: GitHubOAuthCredentialBundle
-    do {
-      rotatedCredential = try await fetcher.refresh(currentCredential)
-    } catch {
-      throw .refresh(underlying: error)
-    }
+    var credentialToRefresh = initialCredential
 
-    do {
-      try await store.save(rotatedCredential)
-    } catch {
-      let error = OAuthTokenProviderError.persist(underlying: error)
-      unavailableError = error
-      throw error
-    }
+    while true {
+      let rotatedCredential: GitHubOAuthCredentialBundle
+      do {
+        rotatedCredential = try await fetcher.refresh(credentialToRefresh)
+      } catch {
+        throw .refresh(underlying: error)
+      }
 
-    credential = rotatedCredential
-    return publish(rotatedCredential)
+      do {
+        try await store.save(rotatedCredential)
+      } catch {
+        let error = OAuthTokenProviderError.persist(underlying: error)
+        unavailableError = error
+        throw error
+      }
+
+      credential = rotatedCredential
+      version += 1
+      guard !isExpired(rotatedCredential) else {
+        credentialToRefresh = rotatedCredential
+        continue
+      }
+      return publish(rotatedCredential)
+    }
   }
 
   private func publish(_ credential: GitHubOAuthCredentialBundle) -> TokenSnapshot {
-    let version = (currentSnapshot?.version ?? 0) + 1
     let snapshot = TokenSnapshot(accessToken: credential.accessToken, version: version)
     currentSnapshot = snapshot
     return snapshot
+  }
+
+  private func publishNextVersion(
+    _ credential: GitHubOAuthCredentialBundle
+  ) -> TokenSnapshot {
+    version += 1
+    return publish(credential)
   }
 
   private func isExpired(_ credential: GitHubOAuthCredentialBundle) -> Bool {

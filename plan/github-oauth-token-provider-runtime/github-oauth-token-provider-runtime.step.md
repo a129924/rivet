@@ -7,7 +7,7 @@
 - Current phase：`outcome-review`
 - Upstream verdict：Plan-Reviewer `approved` 與最新 Tester `approved`（均經 Dispatcher handoff）；Reviewer 尚未審查。
 - Current verdict：`tester-approved`
-- Last updated：2026-09-21 — 已記錄最新 Tester `approved` evidence；outcome review 等待獨立 Reviewer recheck，不等於 Reviewer 或 human approval。
+- Last updated：2026-09-22 — Human 已鎖定 rotation version event 與 expiry-race edge case；Plan-Creator 已更新四份 artifacts，未自行產生新的 Plan Review approval。
 
 ## Steps
 
@@ -24,6 +24,7 @@
 
 - 無已知 implementation 或 canvas rework blocker。
 - `GitHubAccessToken` 是否可 additive conform `Equatable` 的 blocker 已由 Human 選擇 A 解除；僅允許修改 `Sources/BoundedContexts/GitHubIntegration/Contracts/CredentialTypes.swift` 以加入此 conformance。
+- version 是否在 expired-before-publish rotation 保留 event 的 blocker 已由 Human 選擇 A 解除：每個 accepted 且成功 persist 的 rotation 都保留 version event；本次紀錄不等於新的 Plan Review approval。
 
 ## Hook Remediation Evidence
 
@@ -52,6 +53,7 @@
   "locked_decisions": [
     "OAuth provider runtime、TokenSnapshot Equatable/hasSameVersion、finite failure contract、injected expiry clock、single-flight、rotation persistence/unavailable state、allowlist 與 human boundary",
     "Human 選擇 A：GitHubAccessToken additive Equatable authorized；TokenSnapshot 保持 GitHubAccessToken field type 與 synthesized Equatable",
+    "Human 選擇 A：version 代表每次 accepted 且成功 persist 的 credential rotation；expired-before-publish rotation 不抹去 version event，version 僅作 equality/staleness",
     "canvas 僅更新 provider status；所有作者文案使用繁體中文，code identifiers 保持原樣"
   ],
   "upstream_verdict": "Plan-Reviewer approved via Dispatcher handoff; Tester approved via Dispatcher handoff",
