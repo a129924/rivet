@@ -21,6 +21,7 @@
 - public contracts、provider actor、finite typed error、injected clock、restore／refresh single-flight、rotation persistence 與 unavailable state。
 - Human 已授權的 `GitHubAccessToken` additive `Equatable` conformance；`TokenSnapshot` 保持 `GitHubAccessToken` field type 與 synthesized full equality。
 - Human 已鎖定 version semantics：每個 accepted 且成功 persist 的 rotation 均保留 version event，即使其 credential 在 publish 前 expired；version 僅用於 equality/staleness。
+- Human 已鎖定 post-persist expiry policy A：expired-before-publish rotation 最多再 refresh/persist 一次；第二次仍 expired 時以既有 `.refresh` 包 private exhausted error 終止，不新增 public failure case。
 - focused async runtime tests、static isolation、architecture writeback 與 OAuth dual-client canvas status update。
 - 同 slug 的四份 formal artifacts。
 
@@ -65,7 +66,7 @@
 - same-version/different-token 的 `hasSameVersion(as:)` 為 true；different-version/same-token 為 false；synthesized `Equatable` 仍要求兩個 properties 都相同。
 - `GitHubAccessToken` 的 additive `Equatable` 必須可編譯，且 `TokenSnapshot` 以 `GitHubAccessToken` 與 `UInt64` 的 synthesized full equality 比較；不得以 version-only helper 取代完整 equality。
 - valid restore 不 fetch/save；exact expiry 或過期 credential 在 publish 前 refresh。
-- 一般無 expiry race 時首個 delivered snapshot 為 v1；首次 restore credential expired 且第一個 persisted rotation 也 expired 時，該 rotation 的 version event 必須保留、provider 必須再次 refresh，首個 delivered snapshot 為 v2。
+- 一般無 expiry race 時首個 delivered snapshot 為 v1；首次 restore credential expired 且第一個 persisted rotation 也 expired 時，該 rotation 的 version event 必須保留，最多再 refresh/persist 一次；第二次 rotation 有效時首個 delivered snapshot 為 v2，第二次仍 expired 時以 `.refresh` 包 private exhausted error 終止，且沒有第三次 refresh/persist。
 - `load()` 回傳 `nil` 時，當次回傳 `.missingCredential`，後續 demand 可重新 restore，且不進永久 unavailable。
 - concurrent initial restore、expired demand、same-version concurrent recovery 各只執行一次相應 port work；different-version recovery 不 fetch。
 - current snapshot 尚不存在時，`replacementSnapshot(afterUnauthorized:)` 必須走正常 restore/expiry path，而不是比較 caller snapshot 或直接 refresh。

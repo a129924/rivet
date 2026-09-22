@@ -220,6 +220,40 @@ extension OAuthTokenProviderTests {
   }
 
   @Test
+  func expiredInitialRestoreStopsAfterTwoPersistedRotations() async {
+    let now = testDate
+    let store = TestCredentialStore(
+      loadResults: [.success(credential(.initial, accessExpiry: now))]
+    )
+    let fetcher = TestTokenFetcher(refreshResults: expiringThenValidRefreshResults(at: now))
+    let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { now })
+
+    await expectExpiredRotationExhaustion(Task { try await provider.snapshot() })
+
+    #expect(await store.loadInvocationCount() == 1)
+    await assertOnlyTwoExpiredRotationsWerePersisted(store: store, fetcher: fetcher)
+  }
+
+  @Test
+  func expiredUnauthorizedRecoveryStopsAfterTwoPersistedRotations() async throws {
+    let now = testDate
+    let store = TestCredentialStore(
+      loadResults: [.success(credential(.initial, accessExpiry: now.addingTimeInterval(1)))]
+    )
+    let fetcher = TestTokenFetcher(refreshResults: expiringThenValidRefreshResults(at: now))
+    let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { now })
+    let usedSnapshot = try await provider.snapshot()
+
+    await expectExpiredRotationExhaustion(
+      Task { try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot) }
+    )
+
+    #expect(usedSnapshot.version == 1)
+    #expect(await store.loadInvocationCount() == 1)
+    await assertOnlyTwoExpiredRotationsWerePersisted(store: store, fetcher: fetcher)
+  }
+
+  @Test
   func concurrentExpiredSnapshotDemandsShareOneRefreshAndOnePersistence() async throws {
     let now = testDate
     let replacement = credential(.replacement, accessExpiry: now.addingTimeInterval(1))
@@ -412,10 +446,8 @@ extension OAuthTokenProviderTests {
     let fetcher = TestTokenFetcher(refreshResults: [.failure(.refresh), .success(replacement)])
     let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { now })
     let usedSnapshot = try await provider.snapshot()
-
     await expectRefreshFailure(provider, afterUnauthorized: usedSnapshot)
     let result = try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
-
     #expect(hasAccessToken(result, .replacement))
     #expect(result.version == 2)
     #expect(await store.loadInvocationCount() == 1)
@@ -435,10 +467,8 @@ extension OAuthTokenProviderTests {
     )
     let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { now })
     let usedSnapshot = try await provider.snapshot()
-
     await expectPersistFailure(provider, afterUnauthorized: usedSnapshot)
     await expectPersistFailure(provider)
-
     #expect(await store.loadInvocationCount() == 1)
     #expect(await fetcher.refreshInvocationCount() == 1)
     #expect(await store.saveInvocationCount() == 1)
@@ -449,7 +479,6 @@ extension OAuthTokenProviderTests {
     let store = TestCredentialStore()
     let fetcher = TestTokenFetcher()
     let provider = OAuthTokenProvider(store: store, fetcher: fetcher)
-
     assertSendable(store)
     assertSendable(fetcher)
     assertSendable(provider)
@@ -459,16 +488,11 @@ extension OAuthTokenProviderTests {
 }
 
 private let testDate = Date(timeIntervalSinceReferenceDate: 1_000)
-
 private enum TokenFixture {
   case initial
   case replacement
   case alternate
-
-  var accessToken: GitHubAccessToken {
-    GitHubAccessToken(rawValue: rawValue)
-  }
-
+  var accessToken: GitHubAccessToken { GitHubAccessToken(rawValue: rawValue) }
   private var rawValue: String {
     switch self {
     case .initial:
@@ -480,11 +504,7 @@ private enum TokenFixture {
     }
   }
 }
-
-private func credential(
-  _ token: TokenFixture,
-  accessExpiry: Date
-) -> GitHubOAuthCredentialBundle {
+private func credential(_ token: TokenFixture, accessExpiry: Date) -> GitHubOAuthCredentialBundle {
   GitHubOAuthCredentialBundle(
     accessToken: token.accessToken,
     refreshToken: GitHubOAuthRefreshToken(rawValue: "oauth-provider-refresh"),
@@ -494,7 +514,6 @@ private func credential(
     grantedScopes: "repo"
   )
 }
-
 private func snapshot(_ token: TokenFixture, version: UInt64) -> TokenSnapshot {
   TokenSnapshot(accessToken: token.accessToken, version: version)
 }
@@ -550,6 +569,32 @@ private func expectRefreshFailure(_ task: Task<TokenSnapshot, any Error>) async 
   }
 }
 
+private func expectExpiredRotationExhaustion(_ task: Task<TokenSnapshot, any Error>) async {
+  do {
+    _ = try await task.value
+    Issue.record("Expected the provider to stop before publishing an expired rotation")
+  } catch let error as OAuthTokenProviderError {
+    guard case .refresh(let underlying) = error else {
+      Issue.record("Expected OAuthTokenProviderError.refresh")
+      return
+    }
+    #expect((underlying as? TestPortFailure) == nil)
+  } catch {
+    Issue.record("Expected OAuthTokenProviderError.refresh")
+  }
+}
+
+private func assertOnlyTwoExpiredRotationsWerePersisted(
+  store: TestCredentialStore,
+  fetcher: TestTokenFetcher
+) async {
+  #expect(await fetcher.refreshInvocationCount() == 2)
+  #expect(await store.saveInvocationCount() == 2)
+  #expect(await store.hasSavedAccessToken(.alternate))
+  #expect(await store.hasSavedAccessToken(.replacement))
+  #expect(!(await store.hasSavedAccessToken(.initial)))
+}
+
 private func expectPersistFailure(
   _ provider: OAuthTokenProvider,
   afterUnauthorized usedSnapshot: TokenSnapshot? = nil
@@ -578,37 +623,27 @@ private func expectPersistFailure(_ task: Task<TokenSnapshot, any Error>) async 
 }
 
 private func isMissingCredentialError(_ error: OAuthTokenProviderError) -> Bool {
-  guard case .missingCredential = error else {
-    return false
-  }
+  guard case .missingCredential = error else { return false }
   return true
 }
 
 private func isRestoreFailure(_ error: OAuthTokenProviderError) -> Bool {
-  guard case .restore(let underlying) = error else {
-    return false
-  }
+  guard case .restore(let underlying) = error else { return false }
   return matches(underlying, .load)
 }
 
 private func isRefreshFailure(_ error: OAuthTokenProviderError) -> Bool {
-  guard case .refresh(let underlying) = error else {
-    return false
-  }
+  guard case .refresh(let underlying) = error else { return false }
   return matches(underlying, .refresh)
 }
 
 private func isPersistFailure(_ error: OAuthTokenProviderError) -> Bool {
-  guard case .persist(let underlying) = error else {
-    return false
-  }
+  guard case .persist(let underlying) = error else { return false }
   return matches(underlying, .persist)
 }
 
 private func matches(_ error: any Error & Sendable, _ expected: TestPortFailure) -> Bool {
-  guard let actual = error as? TestPortFailure else {
-    return false
-  }
+  guard let actual = error as? TestPortFailure else { return false }
   return actual == expected
 }
 
@@ -619,6 +654,16 @@ private enum TestPortFailure: Error, Equatable, Sendable {
   case exhausted
 }
 
+private func expiringThenValidRefreshResults(
+  at now: Date
+) -> [Result<GitHubOAuthCredentialBundle, TestPortFailure>] {
+  [
+    .success(credential(.alternate, accessExpiry: now)),
+    .success(credential(.replacement, accessExpiry: now)),
+    .success(credential(.initial, accessExpiry: now.addingTimeInterval(1))),
+  ]
+}
+
 private actor TestCredentialStore: OAuthCredentialStore {
   private var loadResults: [Result<GitHubOAuthCredentialBundle?, TestPortFailure>]
   private var saveResults: [Result<Void, TestPortFailure>]
@@ -627,7 +672,6 @@ private actor TestCredentialStore: OAuthCredentialStore {
   private var loadCount = 0
   private var saveCount = 0
   private var savedCredentials: [GitHubOAuthCredentialBundle] = []
-
   init(
     loadResults: [Result<GitHubOAuthCredentialBundle?, TestPortFailure>] = [],
     saveResults: [Result<Void, TestPortFailure>] = [],
@@ -639,42 +683,27 @@ private actor TestCredentialStore: OAuthCredentialStore {
     self.loadGate = loadGate
     self.saveGate = saveGate
   }
-
   func load() async throws(any Error & Sendable) -> GitHubOAuthCredentialBundle? {
     loadCount += 1
     if let loadGate {
       await loadGate.wait()
     }
-    guard !loadResults.isEmpty else {
-      throw TestPortFailure.exhausted
-    }
+    guard !loadResults.isEmpty else { throw TestPortFailure.exhausted }
     return try loadResults.removeFirst().get()
   }
-
   func save(_ credential: GitHubOAuthCredentialBundle) async throws(any Error & Sendable) {
     saveCount += 1
     savedCredentials.append(credential)
     if let saveGate {
       await saveGate.wait()
     }
-    guard !saveResults.isEmpty else {
-      return
-    }
+    guard !saveResults.isEmpty else { return }
     try saveResults.removeFirst().get()
   }
-
-  func loadInvocationCount() -> Int {
-    loadCount
-  }
-
-  func saveInvocationCount() -> Int {
-    saveCount
-  }
-
+  func loadInvocationCount() -> Int { loadCount }
+  func saveInvocationCount() -> Int { saveCount }
   func hasSavedAccessToken(_ expected: TokenFixture) -> Bool {
-    savedCredentials.contains { credential in
-      credential.accessToken.rawValue == expected.accessToken.rawValue
-    }
+    savedCredentials.contains { $0.accessToken.rawValue == expected.accessToken.rawValue }
   }
 }
 
@@ -682,7 +711,6 @@ private actor TestTokenFetcher: OAuthTokenFetcher {
   private var refreshResults: [Result<GitHubOAuthCredentialBundle, TestPortFailure>]
   private let refreshGate: TestGate?
   private var refreshCount = 0
-
   init(
     refreshResults: [Result<GitHubOAuthCredentialBundle, TestPortFailure>] = [],
     refreshGate: TestGate? = nil
@@ -690,7 +718,6 @@ private actor TestTokenFetcher: OAuthTokenFetcher {
     self.refreshResults = refreshResults
     self.refreshGate = refreshGate
   }
-
   func refresh(
     _ credential: GitHubOAuthCredentialBundle
   ) async throws(any Error & Sendable) -> GitHubOAuthCredentialBundle {
@@ -698,15 +725,10 @@ private actor TestTokenFetcher: OAuthTokenFetcher {
     if let refreshGate {
       await refreshGate.wait()
     }
-    guard !refreshResults.isEmpty else {
-      throw TestPortFailure.exhausted
-    }
+    guard !refreshResults.isEmpty else { throw TestPortFailure.exhausted }
     return try refreshResults.removeFirst().get()
   }
-
-  func refreshInvocationCount() -> Int {
-    refreshCount
-  }
+  func refreshInvocationCount() -> Int { refreshCount }
 }
 
 private actor TestGate {
@@ -715,10 +737,7 @@ private actor TestGate {
   private var arrivalWaiters: [CheckedContinuation<Void, Never>] = []
 
   func wait() async {
-    guard !isOpen else {
-      return
-    }
-
+    guard !isOpen else { return }
     await withCheckedContinuation { continuation in
       waiters.append(continuation)
       let currentArrivalWaiters = arrivalWaiters
@@ -728,17 +747,12 @@ private actor TestGate {
       }
     }
   }
-
   func waitForArrival() async {
-    guard waiters.isEmpty else {
-      return
-    }
-
+    guard waiters.isEmpty else { return }
     await withCheckedContinuation { continuation in
       arrivalWaiters.append(continuation)
     }
   }
-
   func open() {
     isOpen = true
     let currentWaiters = waiters
@@ -752,7 +766,6 @@ private actor TestGate {
 private actor TestInFlightJoinObservation {
   private var joinCount = 0
   private var waiters: [CheckedContinuation<Void, Never>] = []
-
   func recordJoin() {
     joinCount += 1
     let currentWaiters = waiters
@@ -761,36 +774,24 @@ private actor TestInFlightJoinObservation {
       waiter.resume()
     }
   }
-
   func waitForJoin() async {
-    guard joinCount == 0 else {
-      return
-    }
-
+    guard joinCount == 0 else { return }
     await withCheckedContinuation { continuation in
       waiters.append(continuation)
     }
   }
-
-  func count() -> Int {
-    joinCount
-  }
+  func count() -> Int { joinCount }
 }
 
 private final class TestClock: @unchecked Sendable {
   private let lock = NSLock()
   private var value: Date
-
-  init(now: Date) {
-    value = now
-  }
-
+  init(now: Date) { value = now }
   func now() -> Date {
     lock.lock()
     defer { lock.unlock() }
     return value
   }
-
   func advance(to date: Date) {
     lock.lock()
     defer { lock.unlock() }

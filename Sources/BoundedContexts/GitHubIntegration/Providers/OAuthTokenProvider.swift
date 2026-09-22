@@ -7,7 +7,13 @@ public enum OAuthTokenProviderError: Error, Sendable {
   case persist(underlying: any Error & Sendable)
 }
 
+private enum ExpiredRotationExhaustionError: Error, Sendable {
+  case reachedLimit
+}
+
 public actor OAuthTokenProvider {
+  private static let maximumPersistedExpiredRotations = 2
+
   private let store: any OAuthCredentialStore
   private let fetcher: any OAuthTokenFetcher
   private let now: @Sendable () -> Date
@@ -148,6 +154,7 @@ public actor OAuthTokenProvider {
     from initialCredential: GitHubOAuthCredentialBundle
   ) async throws(OAuthTokenProviderError) -> TokenSnapshot {
     var credentialToRefresh = initialCredential
+    var persistedExpiredRotationCount = 0
 
     while true {
       let rotatedCredential: GitHubOAuthCredentialBundle
@@ -168,6 +175,10 @@ public actor OAuthTokenProvider {
       credential = rotatedCredential
       version += 1
       guard !isExpired(rotatedCredential) else {
+        persistedExpiredRotationCount += 1
+        guard persistedExpiredRotationCount < Self.maximumPersistedExpiredRotations else {
+          throw .refresh(underlying: ExpiredRotationExhaustionError.reachedLimit)
+        }
         credentialToRefresh = rotatedCredential
         continue
       }
