@@ -2,6 +2,8 @@
 
 本目錄的責任／依賴 canvas 為 [index.html](index.html)；它只表達元件責任與依賴，不表達 runtime sequence。
 
+Canvas 已標示 `OAuthTokenProvider`、`TokenSnapshot`、`OAuthCredentialStore` 與 `OAuthTokenFetcher` 為已交付；Keychain credential adapter、bare-HTTP fetcher adapter、client integration 與 retry 仍為 deferred。它不改寫下列 canonical token-lifecycle artifact 的 client retry 設計狀態。
+
 ## Canonical Token Lifecycle
 
 本 topic 唯一的 canonical token lifecycle 是：
