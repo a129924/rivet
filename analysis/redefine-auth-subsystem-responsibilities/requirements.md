@@ -299,8 +299,8 @@ PC-18 的 DL-13／CH-12 completed 與四個已 resolved thread 均維持 histori
 
 human 已明示授權這個最後的 formal rework cycle。HC-13 保持 `pending`，而 CH-13 的下列 feedback 為
 `needs-rework`。PR-20 的 `needs-rework` 已由 PC-20 最小 planning amendment 修正，PR-20 re-review 已
-`approved`／`completed` 並成為 historical；IM-20 已 `completed`，TE-17／RV-17 已 `approved`／`completed`，DL-15 現為 `active`。它們只收斂既有圖表表達、delivery closure 與
-base-conflict disposition；不得新增 API、
+`approved`／`completed` 並成為 historical；IM-20 已 `completed`，TE-17／RV-17 已 `approved`／`completed`，DL-15 已
+於 `3abbc71` completed，CH-14 = `needs-rework`、HC-14 = `pending`，故 PC-20 為 historical。它們只收斂既有圖表表達、delivery closure 與 base-conflict disposition；不得新增 API、
 owner、policy、state topology、Swift 或 OAuth behavior。
 
 1. **P3-01**（`PRRT_kwDOUFu0Cc6knhr9`）：normal-request sequence 必須明示 selected／decorated request
@@ -321,10 +321,10 @@ resolution 必須同時保留既有 OAuth runtime description 與 Model C auth c
 long-lived-doc architecture change。`docs/architecture/README.md`、bounded-contexts 長期文件與其他 canonical
 architecture docs 均為 ReadOnly。
 
-唯一 current route 為：
+PC-20 historical route 為：
 
 ```text
-PC-20 amendment (completed／historical) → PR-20 re-review (approved／completed／historical) → IM-20 (completed／historical) → TE-17 (approved／completed／historical) → RV-17 (approved／completed／historical) → DL-15 (active) → CH-14 → HC-14
+PC-20 amendment → PR-20 re-review → IM-20 → TE-17 → RV-17 → DL-15 (`3abbc71` completed) → CH-14 (needs-rework) → HC-14 (pending)
 ```
 
 PR-20 必須由獨立 Plan-Reviewer 審查 bounded scope 與 no-drift boundary。其 `approved` 後，IM-20 只可寫入
@@ -340,9 +340,35 @@ API。TE-17 必須獨立驗證三項 presentation correction、normal/lifecycle/
 401 的 18-message invariant、P3-02 的 no-node／no-payload／no-API assertion、package/state 的 no-source
 revalidation，以及 README／bounded-contexts actual additive resolution 同時保留 OAuth runtime description 與 Model C
 auth canonical conclusion、沒有 long-lived-doc architecture change；並驗證 scope 與 existing state exact non-pass truth。
-RV-17 只在 TE-17 `approved` 後獨立審查上述 P3-02 與 conflict criteria。僅在 RV-17 `approved` 後可 DL-15
-commit/push；delivery visible 後 CH-14 才在同時確認該兩項 README／bounded-contexts conclusion 共存、無 long-lived-doc
-architecture change 時 reply／resolve，並處理 P3-01 至 P3-05 與所有新取得已分類 feedback，最後停在 HC-14 human review。
+RV-17 只在 TE-17 `approved` 後獨立審查上述 P3-02 與 conflict criteria。DL-15 已於 `3abbc71` completed；CH-14 因
+新的 P2 receipt finding 為 `needs-rework`、HC-14 = `pending`，故 PC-20 route 成為 PC-21 前 historical route。
+
+### PC-21 — Receipt-Only Final Rework
+
+human 已直接確認 PC-21 同一最小 planning amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 `completed`／`approved`／historical、DL-16 `active`，並授權在
+exact receipt-only scope 內依既有 gates 直達 CH-15／HC-15，無需逐 gate 再取得 human confirmation；這不豁免 independent
+review／verification 或 P4 locks。唯一 thread 為 **P4-01** `PRRT_kwDOUFu0Cc6koqlS`。此 rework 只重建
+`normal-request` 與 `auth-flow-lifecycle` 的 standard producer-generated `.delivery.json` receipts，不改 artifacts
+或其 source semantics。唯一 current route 為：
+
+```text
+PC-21／PR-21／IM-21／TE-18／RV-18 (completed／approved／historical) → DL-16 (active) → CH-15 → HC-15
+```
+
+IM-21 必須以 repository-relative input／output 與 `--repo-root` 重跑 standard `deliver`，只允許生成兩份 receipt
+及 artifact-local receipt/visual evidence。每份新 receipt 必須記錄並驗證既有 source／HTML hashes、showcase 9/9、
+0 errors、0 warnings，以及 provenance 沒有絕對路徑；normal/lifecycle source、HTML、artifact semantics 與既有圖表
+bytes 必須 byte-identical。若 standard delivery 需要四 viewport visual evidence，僅可 revalidate，不能改圖。
+
+TE-18 必須獨立驗證 standard producer invocation、repository-relative metadata、source／HTML hash continuity、9/9／0／0、
+absolute-path absence、byte-identical source/HTML 及必要四 viewport visual evidence。RV-18 只在 TE-18 `approved` 後審查
+P4-01 與 no-drift。僅 RV-18 `approved` 後，DL-16 才可依本 direct human execution authorization 將 receipt-only diff commit，並
+normal push 至既有 PR #37 branch。只有該 pushed commit 在既有 PR branch 可見且 P4-01 receipt evidence 已 verified 後，
+CH-15 才可回覆並 resolve P4-01，最後停在 HC-15 human review。
+
+ReadOnly：所有其他 diagrams、source、HTML、README／merge candidates、Swift、OAuth、producer、tests、state、package、
+401、long-lived docs 與未列 path；不新增 contract、API、policy、topology、role 或 test implementation，不 delete、rename、
+move、merge 或 release。
 
 ## Model Comparison
 
@@ -681,13 +707,15 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   `needs-rework`、re-test = `approved` 後，TE-14 已 `approved`，RV-14 → DL-12 → CH-11 → HC-11 是
   historical snapshot；PC-18 → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 → HC-12 亦是
   PC-19 前 historical snapshot。PC-19 → PR-19 → IM-19 → TE-16 → RV-16 → DL-14 已完成，CH-13 =
-  `needs-rework`、HC-13 = `pending`，亦為 historical snapshot；唯一 current route 是 PC-20 → PR-20 →
-  IM-20 → TE-17 → RV-17 → DL-15 → CH-14 → HC-14。不得將 IM-14 或 superseded DL-03 當作 current gate，也不得重開 architecture。
+  `needs-rework`、HC-13 = `pending`，亦為 historical snapshot；PC-20 route 亦於 DL-15 completed、CH-14
+  needs-rework、HC-14 pending 後 historical；PC-21 同一 amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 已 completed／approved／historical、DL-16 active，唯一 current route 是 DL-16 →
+  DL-16 → CH-15 → HC-15。不得將 IM-14 或 superseded DL-03 當作 current gate，也不得重開 architecture。
 - **PM-01 — Post-merge state truth**：`f277ac4`、`d2cefd4`、DL-12／CH-11 completed、HC-11
   `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15／DL-13 completed、CH-12 completed（四個 thread
   已 resolve、無未分類 feedback）與 HC-12 `needs-rework` 如實記錄；這是 PC-19 前 historical snapshot。
-  PC-19 至 DL-14 均已 completed，CH-13 = `needs-rework`、HC-13 = `pending`。四份 artifacts 的唯一 current
-  route 是 PC-20 → PR-20 → IM-20 → TE-17 → RV-17 → DL-15 → CH-14 → HC-14。
+  PC-19 至 DL-14 均已 completed，CH-13 = `needs-rework`、HC-13 = `pending`。PC-20 已在 DL-15
+  `3abbc71` completed、CH-14 needs-rework、HC-14 pending 後 historical；四份 artifacts 的唯一 current
+  route 是 DL-16 → CH-15 → HC-15。
 - **PM-02 — Producer-generated state receipt**：不手改 receipt；canonical-containment producer 以
   repository-relative arguments 產生 `auth-flow-state.delivery.json`，其中 input、output、artifact 與
   provenance path 均無絕對路徑，並與 state JSON／HTML SHA-256、showcase 9/9、0 errors、0 warnings 相符。
@@ -701,7 +729,8 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
 - **PM-05 — Independent delivery closure**：PR-18／TE-15／RV-15 已分別由獨立角色明示 `approved`；
   DL-13 已完成，CH-12 已處理完成（四個 thread resolved、無未分類 feedback）。HC-12 收到兩項 P2 feedback，
   現為 `needs-rework`；上述四個 resolved thread 保持 historical。PC-19 route 已在 CH-13 =
-  `needs-rework`、HC-13 = `pending` 停止；PC-20 是唯一 current rework route，不 merge、不 release。
+  `needs-rework`、HC-13 = `pending` 停止；PC-20 已於 DL-15 `3abbc71` completed、CH-14 =
+  `needs-rework`、HC-14 = `pending` 後成為 historical；PC-21 是唯一 current rework route，不 merge、不 release。
 - **P2-01 — Package legacy type dependency**：thread `PRRT_kwDOUFu0Cc6knaR9` 要求
   `http-client-package-structure` canvas 同樣明示 `AuthRequester → HTTPRequest` 僅為 legacy Model A
   編譯期 request-type dependency，非 Model C preparation／construction／ownership／dataflow／I/O。
@@ -717,3 +746,7 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   revalidate existing source/output；不改 source。delivery visible 後由 CH-14 reply／resolve，README／bounded-
   contexts additive base-conflict 僅作 comment disposition，且 reply／resolve 前須確認 OAuth runtime description 與
   Model C auth canonical conclusion 共存、沒有 long-lived-doc architecture change。
+- **P4-01**：`PRRT_kwDOUFu0Cc6koqlS` 只允許 normal-request／auth-flow-lifecycle 的 producer-generated
+  `.delivery.json` receipts 重建；必須以 repository-relative inputs/output／`--repo-root` standard deliver 證明
+  source/HTML hash、9/9、0 errors、0 warnings、無絕對路徑，且 source/HTML/artifact semantics byte-identical；DL-16 必須
+  commit 並 normal push 至既有 PR branch，只有 pushed commit 可見且 receipt evidence verified 後 CH-15 才可 reply／resolve。

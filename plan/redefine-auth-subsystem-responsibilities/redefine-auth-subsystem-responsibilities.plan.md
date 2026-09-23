@@ -338,10 +338,10 @@ contexts additive base-conflict disposition；不新增 API、owner、retry poli
 behavior，也不重開 Model C contract。
 
 HC-13 = `pending`，CH-13 = `needs-rework`。PR-20 的 `needs-rework` 已由 PC-20 最小 planning amendment
-修正，PR-20 re-review 已 `approved`／`completed` 並成為 historical；IM-20 已 `completed`，TE-17／RV-17 已 `approved`／`completed`，DL-15 現為 `active`。唯一 current route 固定為：
+修正，PR-20 re-review 已 `approved`／`completed` 並成為 historical；IM-20 已 `completed`，TE-17／RV-17 已 `approved`／`completed`，DL-15 已於 `3abbc71` completed，CH-14 = `needs-rework`、HC-14 = `pending`，PC-20 route 為 historical：
 
 ```text
-PC-20 amendment (completed／historical) → PR-20 re-review (approved／completed／historical) → IM-20 (completed／historical) → TE-17 (approved／completed／historical) → RV-17 (approved／completed／historical) → DL-15 (active) → CH-14 → HC-14
+PC-20 amendment → PR-20 re-review → IM-20 → TE-17 → RV-17 → DL-15 (`3abbc71` completed) → CH-14 (needs-rework) → HC-14 (pending)
 ```
 
 1. **P3-01**（`PRRT_kwDOUFu0Cc6knhr9`）：normal-request sequence 只補明 selected／decorated request
@@ -376,7 +376,31 @@ resolution 同時保留 OAuth runtime description 與 Model C auth canonical con
 change；並驗證 scope、source-output-delivery evidence與 state exact non-pass truth。RV-17 只在 TE-17 `approved` 後獨立審查
 上述 P3-02 與 conflict criteria。僅 RV-17 `approved` 後才可 DL-15 commit/push；delivery visible 後 CH-14 只在確認
 兩項 README／bounded-contexts conclusion 共存、無 long-lived-doc architecture change 時處理五項 P3、README base-conflict
-reply／resolve與新取得已分類 feedback，最後停在 HC-14 human review。
+reply／resolve與新取得已分類 feedback。DL-15 已於 `3abbc71` completed；CH-14 因新的 P2 receipt finding 為
+`needs-rework`、HC-14 = `pending`，PC-20 route 為 PC-21 前 historical。
+
+### PC-21 — Receipt-Only Final Rework
+
+human 已直接確認同一最小 PC-21 planning amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 `completed`／`approved`／historical、DL-16 `active`，並授權在 exact
+receipt-only scope 內依既有 gates 直達 CH-15／HC-15，無需逐 gate 再取得 human confirmation；independent review／verification
+與 P4 locks 不變。唯一 **P4-01** `PRRT_kwDOUFu0Cc6koqlS` 只允許 normal-request／
+auth-flow-lifecycle 的 standard producer-generated `.delivery.json` receipts 重新產生；不改 artifacts/source semantics。
+唯一 current route：
+
+```text
+PC-21／PR-21／IM-21／TE-18／RV-18 (completed／approved／historical) → DL-16 (active) → CH-15 → HC-15
+```
+
+PR-21 `approved` 後，IM-21 以 repository-relative input／output 和 `--repo-root` 重跑 standard `deliver`；Written
+allowlist 只有兩份 receipt、四份 planning artifacts actual-step evidence及必要 artifact-local receipt/visual evidence。
+每份 receipt 必須記錄並驗證 source／HTML hashes、9/9、0 errors、0 warnings與 provenance 無絕對路徑；normal-request／
+auth-flow-lifecycle source、HTML、artifact semantics 均 byte-identical。四 viewport visual evidence 僅可 revalidate。
+
+TE-18 只驗證 invocation、relative metadata、hash continuity、9/9／0／0、absolute-path absence、byte identity與必要
+visual evidence；RV-18 只審查 P4-01/no-drift。僅 RV-18 `approved` 後，DL-16 才可依本 direct human execution authorization 將
+receipt-only diff commit，並 normal push 至既有 PR #37 branch。只有 pushed commit 在既有 PR branch 可見且 P4-01 receipt evidence
+已 verified 後，CH-15 才可 reply／resolve P4-01，最後停在 HC-15。其他 diagrams/source/HTML、README/merge candidates、Swift、OAuth、producer/tests、state/package/401、
+long-lived docs與未列 path ReadOnly；不得新增 contract/API/policy/topology/role/test implementation，也不得 delete、rename、move、merge 或 release。
 
 ### Deleted
 
@@ -491,6 +515,9 @@ reply／resolve與新取得已分類 feedback，最後停在 HC-14 human review�
   existing source/output；不改 source。delivery visible 後才 reply／resolve；README／bounded-contexts additive
   base conflict 只作 comment disposition，並須確認 OAuth runtime description 與 Model C auth canonical conclusion
   共存、沒有 long-lived-doc architecture change。
+- **P4-01**：`PRRT_kwDOUFu0Cc6koqlS` 僅重建 normal-request／auth-flow-lifecycle producer-generated receipts；
+  repository-relative `--repo-root` deliver 必須證明 source/HTML hash、9/9、0／0、provenance 無 absolute path與 byte identity；
+  DL-16 必須 commit 並 normal push 至既有 PR branch，只有 pushed commit 可見且 receipt evidence verified 後 CH-15 才可 reply／resolve。
 
 ## Implementation Phases and Gates
 
@@ -610,9 +637,11 @@ reply／resolve與新取得已分類 feedback，最後停在 HC-14 human review�
 - **Historical PC-19 route**：PC-19／PR-19／IM-19／TE-16／RV-16／DL-14 均已 completed，PR-19／TE-16／RV-16
   已 `approved`；CH-13 = `needs-rework`、HC-13 = `pending`。P2-01 的 package legacy Model A type dependency
   與 P2-02 的 state layout route separation 均保持 historical，不改 Model C、retry policy、state topology、Swift 或 OAuth。
-- **PC-20 amendment (completed／historical) → PR-20 re-review (approved／completed／historical) → IM-20 (completed／historical) → TE-17 (approved／completed／historical) → RV-17 (approved／completed／historical) → DL-15 (active) → CH-14 → HC-14**：此為唯一 current route。僅處理
-  normal deferred wording、lifecycle neutral terminal、401 activation presentation／18-message invariant，並 revalidate
-  package/state；不改 API、owner、policy、topology、Swift、OAuth、component canvas、producer/tests 或 long-lived docs。
+- **PC-20 historical route**：PC-20 amendment → PR-20 re-review → IM-20 → TE-17 → RV-17 → DL-15
+  (`3abbc71` completed) → CH-14 (needs-rework) → HC-14 (pending)。PC-21 同一 amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 completed／approved／historical、
+  DL-16 active；DL-16 → CH-15 → HC-15 是唯一 current route；僅重建 normal-request／auth-flow-lifecycle producer-generated
+  receipts，驗證 relative `--repo-root` deliver、source/HTML hash、9/9、0/0、無 absolute path及 byte identity；
+  不改任何 diagrams/source/HTML、README/merge candidates、Swift、OAuth、producer/tests、state/package/401 或 long-lived docs。
 
 ## Branch Naming
 
