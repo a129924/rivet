@@ -404,10 +404,10 @@ long-lived docs與未列 path ReadOnly；不得新增 contract/API/policy/topolo
 ### PC-22 — P5 Current-State and 401 Terminal-Decision Rework
 
 human 已授權兩項 P5 thread 且 independent Planner verdict = ready。DL-16 `bccc183` completed／visible、CH-15=
-`needs-rework`、HC-15=`pending` 為 historical；PC-22 completed／historical、PR-22 completed／approved／historical、IM-22 completed／historical、TE-19 completed／approved／historical、RV-19 completed／approved／historical，DL-17 `cc15069` completed／visible／historical；CH-16 因 `PRRT_kwDOUFu0Cc6k_x2f` 為 `needs-rework`，HC-16 pending。唯一 route：
+`needs-rework`、HC-15=`pending` 為 historical；PC-22 completed／historical、PR-22 completed／approved／historical、IM-22 completed／historical、TE-19 completed／approved／historical、RV-19 completed／approved／historical，DL-17 `cc15069` completed／visible／historical；其後 DL-18 `51ae037` completed／visible。CH-16 因 `PRRT_kwDOUFu0Cc6k_x2f` 為 `needs-rework`、HC-16 pending，均為 PC-23 前 historical state。以下為 PC-22 historical route：
 
 ```text
-PC-22 (completed／historical) → PR-22 (completed／approved／historical) → IM-22 (completed／historical) → TE-19 (completed／approved／historical) → RV-19 (completed／approved／historical) → DL-17 (`cc15069` completed／visible／historical) → CH-16 (needs-rework) → HC-16 (pending)
+PC-22 (completed／historical) → PR-22 (completed／approved／historical) → IM-22 (completed／historical) → TE-19 (completed／approved／historical) → RV-19 (completed／approved／historical) → DL-17 (`cc15069` completed／visible／historical) → DL-18 (`51ae037` completed／visible／historical) → CH-16 (needs-rework historical) → HC-16 (pending historical)
 ```
 
 1. **P5-01** `PRRT_kwDOUFu0Cc6kqRi3`：只同步 stale current claim、current gate、current route 至 actual state；
@@ -430,6 +430,36 @@ stale-current historical preservation、六 closures、401 validate/deliver/rece
 18 exact old messages unchanged、only-two mutual-exclusive guarded terminals、及禁項 absent；RV-19 獨立 no-drift。TE-19/RV-19
 approved 後 DL-17 依 direct authorization single-topic commit/normal-push existing PR branch；pushed commit/evidence visible
 後 CH-16 回覆/resolve P5 threads、重抓確認 six closures resolved/no unclassified feedback，HC-16 human review；不 merge/release。
+
+### PC-23 — P6 Component Canvas Raw-Response Route-Only Rework
+
+human 對 exact thread `PRRT_kwDOUFu0Cc6lAdHo` 的 authorization 只涵蓋 component-dependency canvas raw `HTTPResponse`
+edge route geometry，且 direct progression authority 只在此 scope 內適用。DL-18 `51ae037` completed／visible、CH-16=
+`needs-rework`、HC-16=`pending` 均為 historical；PC-23／PR-23／IM-23／TE-20／RV-20 已 completed／historical，PR-23／TE-20／RV-20 verdict=`approved`；DL-19 為唯一 current gate：
+
+```text
+PC-23 (completed／historical) → PR-23 (completed／approved／historical) → IM-23 (completed／historical) → TE-20 (completed／approved／historical) → RV-20 (completed／approved／historical) → DL-19 (active) → CH-17 → HC-17
+```
+
+1. **P6-01** `PRRT_kwDOUFu0Cc6lAdHo`：唯一 visual/source modification 是 component canvas raw-response edge 的 route
+   geometry，使其可見終點在 `AuthRequester` box、非 legacy `HTTPRequest` box。endpoint semantics、label、contract、
+   boxes、ownership 與 legacy Model A `AuthRequester → HTTPRequest` compile-time type dependency 全部不變，且絕不表示
+   Model C preparation、construction、ownership、dataflow 或 I/O。
+2. **Written/Modify**：只有四份 planning artifacts、component-dependency `scene.js`、generated `index.html` 與該
+   canvas validation/build/enhance/a11y/temporary-rebuild reproducibility/visual evidence。**ReadOnly**：其餘 diagram/
+   document/source、README、Swift、OAuth、producer、tests、receipts、package、401、normal、lifecycle、state、Git/GitHub
+   與未列 path。**Deleted**：無；不得 delete、rename、move、merge 或 release。
+3. **TestCase**：TE-20 必須獨立證明 raw-response edge 的 visible termination=`AuthRequester`，而 endpoint
+   semantics/label/contract、boxes/ownership/legacy edge 不變；並驗證 source/output/evidence consistency 與
+   validation/build/enhance/a11y/repro/visual pipeline。不得新增 product test 或改動任何其他 artifact。
+
+PR-23 僅審查 P6-01 edge-route / ReadOnly boundary；`approved` 才授權 IM-23。RV-20 僅在 TE-20 `approved` 後審查
+no-drift；TE-20/RV-20 approved 後，DL-19 才可依 direct progression authority 建立單一 topic commit、normal push 至既有
+PR branch。pushed commit/evidence visible 後 CH-17 才可 reply/resolve 全部十個 fixed threads：
+`PRRT_kwDOUFu0Cc6knhr9`、`PRRT_kwDOUFu0Cc6knhsB`、`PRRT_kwDOUFu0Cc6knhsF`、
+`PRRT_kwDOUFu0Cc6knaSA`、`PRRT_kwDOUFu0Cc6knaR9`、`PRRT_kwDOUFu0Cc6koqlS`、
+`PRRT_kwDOUFu0Cc6kqRi3`、`PRRT_kwDOUFu0Cc6kqRi9`、`PRRT_kwDOUFu0Cc6k_x2f`、
+`PRRT_kwDOUFu0Cc6lAdHo`。重抓 feedback 確認十個皆 resolved、無未分類 feedback後停在 HC-17 human review；不 merge/release。
 
 ### Deleted
 
@@ -515,9 +545,7 @@ approved 後 DL-17 依 direct authorization single-topic commit/normal-push exis
 - **PM-01**：PC-18 是 PC-19 前 historical override；`f277ac4`／`d2cefd4`、DL-12／CH-11 completed、
   HC-11 `needs-rework`、DL-13／CH-12 completed 與 HC-12 `needs-rework` 在四份 artifacts 一致。PC-20 →
   PR-20 → IM-20 → TE-17 → RV-17 → DL-15 → CH-14 → HC-14 是 historical snapshot，不是 current route；
-  PC-19 至 DL-14 已 completed、CH-13 = `needs-rework`、HC-13 = `pending` 亦為 historical。唯一 current route 為
-  PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→
-  TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（`cc15069` completed／visible／historical）→ CH-16（needs-rework）→ HC-16（pending）。
+  PC-19 至 DL-14 已 completed、CH-13 = `needs-rework`、HC-13 = `pending` 亦為 historical。DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；唯一 current route 為 PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（active）→ CH-17 → HC-17。
 - **PM-02**：state JSON ReadOnly；canonical-containment producer 以 repository-relative parameters
   產生 state receipt，receipt hash／9/9／0 errors／0 warnings／relative metadata 一致，state 1035／1109／1109、
   2048 pass 維持 exact non-pass。
@@ -530,9 +558,7 @@ approved 後 DL-17 依 direct authorization single-topic commit/normal-push exis
 - **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13／CH-12 已 completed，四個 thread 均已
   resolved、無未分類 feedback；HC-12 因 P2-01／P2-02 為 `needs-rework`。四個 resolved threads 保持
   historical，不得重開。PC-19 route 已在 CH-13 = `needs-rework`、HC-13 = `pending` 停止；PC-20 至
-  DL-15=`3abbc71` completed、CH-14=`needs-rework`、HC-14=`pending` 均為 historical。唯一 current route 為
-  PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→
-  TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（`cc15069` completed／visible／historical）→ CH-16（needs-rework）→ HC-16（pending）。
+  DL-15=`3abbc71` completed、CH-14=`needs-rework`、HC-14=`pending` 均為 historical。DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；唯一 current route 為 PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（active）→ CH-17 → HC-17。
 - **P2-01**：`PRRT_kwDOUFu0Cc6knaR9` 要求 package canvas 也明示 `AuthRequester → HTTPRequest` 僅為
   legacy Model A compile-time request-type dependency，並與 component canvas 一致，非 Model C
   preparation／construction／ownership／dataflow／I/O。
@@ -677,7 +703,7 @@ approved 後 DL-17 依 direct authorization single-topic commit/normal-push exis
   與 P2-02 的 state layout route separation 均保持 historical，不改 Model C、retry policy、state topology、Swift 或 OAuth。
 - **PC-20 historical route**：PC-20 amendment → PR-20 re-review → IM-20 → TE-17 → RV-17 → DL-15
   (`3abbc71` completed) → CH-14 (needs-rework) → HC-14 (pending)。DL-16 `bccc183` completed／visible、CH-15 needs-rework、
-  HC-15 pending 均為 historical；PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→ TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（`cc15069` completed／visible／historical）→ CH-16（needs-rework）→ HC-16（pending）是唯一 current route。
+  HC-15 pending 均為 historical；DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（active）→ CH-17 → HC-17 是唯一 current route。
   P5-01 只更正 stale current state；P5-02 只寫 401 source/output/receipt/visual、18 existing IDs/semantics unchanged、
   total=20/two guarded terminals。所有其他 diagrams/source/HTML、README/merge candidates、Swift、OAuth、producer/tests、
   state/package/normal/lifecycle 與 long-lived docs ReadOnly。

@@ -372,10 +372,10 @@ move、merge 或 release。
 ### PC-22 — P5 Current-State and 401 Terminal-Decision Rework
 
 human 已直接授權兩項 P5 feedback，independent Planner verdict = ready；不需要新的 architecture 或 human choice。
-PC-22 已 completed／historical，PR-22 已 completed／approved／historical，IM-22 已 completed／historical，TE-19 已 completed／approved／historical，RV-19 已 completed／approved／historical，DL-17 已由 `cc15069` completed／visible／historical；CH-16 因 `PRRT_kwDOUFu0Cc6k_x2f` 為 `needs-rework`，HC-16 為 pending。唯一 current route 為：
+PC-22 已 completed／historical，PR-22 已 completed／approved／historical，IM-22 已 completed／historical，TE-19 已 completed／approved／historical，RV-19 已 completed／approved／historical，DL-17 已由 `cc15069` completed／visible／historical；其後的 DL-18 已由 `51ae037` completed／visible。CH-16 因 `PRRT_kwDOUFu0Cc6k_x2f` 為 `needs-rework`、HC-16 為 pending，均為 PC-23 前 historical state。以下為 PC-22 historical route：
 
 ```text
-PC-22 (completed／historical) → PR-22 (completed／approved／historical) → IM-22 (completed／historical) → TE-19 (completed／approved／historical) → RV-19 (completed／approved／historical) → DL-17 (`cc15069` completed／visible／historical) → CH-16 (needs-rework) → HC-16 (pending)
+PC-22 (completed／historical) → PR-22 (completed／approved／historical) → IM-22 (completed／historical) → TE-19 (completed／approved／historical) → RV-19 (completed／approved／historical) → DL-17 (`cc15069` completed／visible／historical) → DL-18 (`51ae037` completed／visible／historical) → CH-16 (needs-rework historical) → HC-16 (pending historical)
 ```
 
 - **P5-01** `PRRT_kwDOUFu0Cc6kqRi3`：只修正與 `bccc183`／CH-15=`needs-rework`／HC-15=`pending`
@@ -406,6 +406,40 @@ no-state-node/no-transition/no-policy/no-ownership assertions。RV-19 只在 TE-
 至既有 PR #37 branch。只有 pushed commit 可見、P5 receipt/visual evidence verified 後，CH-16 才可 reply／resolve
 兩個 P5 threads，重新取得 feedback state 並確認六個 fixed closure threads 仍 resolved、沒有未分類 feedback；最後停在
 HC-16 human review，不 merge、不 release。
+
+### PC-23 — P6 Component Canvas Raw-Response Route-Only Rework
+
+human 已直接授權 exact thread `PRRT_kwDOUFu0Cc6lAdHo` 的最小 P6 rework，且既有 direct progression authority 僅在本 scope
+內適用。PC-22 route 與 DL-18 `51ae037` completed／visible 是 historical；CH-16=`needs-rework`、HC-16=`pending`
+同為 historical，不重開其 architecture／P5 contract。PC-23／PR-23／IM-23／TE-20／RV-20 已 completed／historical，PR-23／TE-20／RV-20 verdict=`approved`；DL-19 現為唯一 current gate：
+
+```text
+PC-23 (completed／historical) → PR-23 (completed／approved／historical) → IM-23 (completed／historical) → TE-20 (completed／approved／historical) → RV-20 (completed／approved／historical) → DL-19 (active) → CH-17 → HC-17
+```
+
+- **P6-01** `PRRT_kwDOUFu0Cc6lAdHo`：只修正 component-dependency canvas 中 raw `HTTPResponse` edge 的 geometry／route，
+  使其視覺終點明確落在 `AuthRequester` box，而非 legacy `HTTPRequest` box。edge 的 endpoint semantics、label 與既有
+  architecture contract 不得變更；不得移動、改寫或重新解釋任何 box、ownership 或 legacy Model A
+  `AuthRequester → HTTPRequest` compile-time request-type dependency。
+
+Written/Modify allowlist 只限四份 formal planning artifacts、
+`docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/scene.js`、其 generated
+`index.html`，以及該 canvas 的 validation、build、enhance、accessibility、temporary-rebuild reproducibility 與 visual evidence。
+所有其他 diagram/document/source、README、Swift、OAuth、producer、tests、receipts、其他 canvas、package、401、normal、
+lifecycle、state、Git/GitHub 與未列 path 均 ReadOnly；不得新增、移除或改寫 API、role、owner、policy、topology、payload、
+message、contract、box 或 legacy edge，不 delete、rename、move、merge 或 release。
+
+PR-23 只審查 P6-01 exact edge-route/allowlist/ReadOnly boundary。IM-23 只可調整該 raw-response edge 的 route geometry，並
+依既有 component canvas pipeline 產生 validation/build/enhance/accessibility/reproducibility/visual evidence。TE-20 獨立驗證
+edge 視覺終點落在 `AuthRequester`、endpoint semantics/label/contract unchanged、boxes/ownership/legacy edge byte-equivalent
+in meaning、source/output/evidence consistency、validate/build/enhance/a11y/repro/visual checks 均完成。RV-20 僅在 TE-20
+`approved` 後進行 independent no-drift review。TE-20/RV-20 approved 後，DL-19 才可依既有 direct progression authority
+建立單一 topic commit 並 normal push 至既有 PR branch；pushed commit/evidence visible 後，CH-17 才可 reply/resolve **全部十個**
+fixed threads：`PRRT_kwDOUFu0Cc6knhr9`、`PRRT_kwDOUFu0Cc6knhsB`、`PRRT_kwDOUFu0Cc6knhsF`、
+`PRRT_kwDOUFu0Cc6knaSA`、`PRRT_kwDOUFu0Cc6knaR9`、`PRRT_kwDOUFu0Cc6koqlS`、
+`PRRT_kwDOUFu0Cc6kqRi3`、`PRRT_kwDOUFu0Cc6kqRi9`、`PRRT_kwDOUFu0Cc6k_x2f`、
+`PRRT_kwDOUFu0Cc6lAdHo`。重抓 feedback 後確認十個皆 resolved、無未分類 feedback，停止於 HC-17 human review；不 merge、
+不 release。
 
 ## Model Comparison
 
@@ -746,14 +780,13 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   PC-19 前 historical snapshot。PC-19 → PR-19 → IM-19 → TE-16 → RV-16 → DL-14 已完成，CH-13 =
   `needs-rework`、HC-13 = `pending`，亦為 historical snapshot；PC-20 route 亦於 DL-15 completed、CH-14
   needs-rework、HC-14 pending 後 historical；DL-16 `bccc183` completed／visible、CH-15 needs-rework、HC-15 pending
-  亦為 historical；唯一 current route 是 PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→ TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（`cc15069` completed／visible／historical）→ CH-16（needs-rework）→ HC-16（pending）。不得將 IM-14 或 superseded DL-03 當作 current gate，也不得重開 architecture。
+  亦為 historical；DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；唯一 current route 是 PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（active）→ CH-17 → HC-17。不得將 IM-14 或 superseded DL-03 當作 current gate，也不得重開 architecture。
 - **PM-01 — Post-merge state truth**：`f277ac4`、`d2cefd4`、DL-12／CH-11 completed、HC-11
   `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15／DL-13 completed、CH-12 completed（四個 thread
   已 resolve、無未分類 feedback）與 HC-12 `needs-rework` 如實記錄；這是 PC-19 前 historical snapshot。
   PC-19 至 DL-14 均已 completed，CH-13 = `needs-rework`、HC-13 = `pending`。PC-20 已在 DL-15
   `3abbc71` completed、CH-14 needs-rework、HC-14 pending 後 historical；DL-16 `bccc183` completed／visible、
-  CH-15 needs-rework、HC-15 pending 亦為 historical；四份 artifacts 的唯一 current route 是
-  PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→ TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（`cc15069` completed／visible／historical）→ CH-16（needs-rework）→ HC-16（pending）。
+  CH-15 needs-rework、HC-15 pending 亦為 historical；DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；四份 artifacts 的唯一 current route 是 PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（active）→ CH-17 → HC-17。
 - **PM-02 — Producer-generated state receipt**：不手改 receipt；canonical-containment producer 以
   repository-relative arguments 產生 `auth-flow-state.delivery.json`，其中 input、output、artifact 與
   provenance path 均無絕對路徑，並與 state JSON／HTML SHA-256、showcase 9/9、0 errors、0 warnings 相符。
@@ -770,8 +803,7 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   `needs-rework`、HC-13 = `pending` 停止；PC-20 已於 DL-15 `3abbc71` completed、CH-14 =
   `needs-rework`、HC-14 = `pending` 後成為 historical；PC-21 亦已於 DL-16 `bccc183` completed／visible、
   CH-15 = `needs-rework`、HC-15 = `pending` 後成為 historical。唯一 current route 為
-  PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→
-  TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（`cc15069` completed／visible／historical）→ CH-16（needs-rework）→ HC-16（pending）；不 merge、不 release。
+  PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（active）→ CH-17 → HC-17；不 merge、不 release。
 - **P2-01 — Package legacy type dependency**：thread `PRRT_kwDOUFu0Cc6knaR9` 要求
   `http-client-package-structure` canvas 同樣明示 `AuthRequester → HTTPRequest` 僅為 legacy Model A
   編譯期 request-type dependency，非 Model C preparation／construction／ownership／dataflow／I/O。
