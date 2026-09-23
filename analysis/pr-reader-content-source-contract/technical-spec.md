@@ -83,7 +83,7 @@ fake Port／Core values 須能表達完整、有序多檔快照、六種 file ch
 
 ## Planning Status
 
-PR-01 曾由獨立 Plan-Reviewer 明示 `approved`。IM-01 runtime evidence 顯示 focused Reader 11 tests、`swift build`、`swift package dump-package` 通過，但 root `swift test` 唯一 failure 是既有 graph exact set 未包含 Reader 新節點；Plan-Reviewer 因此明示 `needs-rework`。本輪只加入上述 compatibility sync，修訂後仍待 fresh independent re-review，不得視為實作、測試或 delivery gate 通過。
+PR-02 是 package graph exact set 未同步所觸發的歷史 `needs-rework`；修訂後 PR-03 已由獨立 Plan-Reviewer 明示 `approved`。IM-01、DL-01 與 HC-01 均已 `completed`，TE-01 與 RV-01 均已 `approved`；PR #42 目前為 OPEN／Ready（`isDraft=false`）。詳細即時狀態與 evidence 以 [Step Ledger](../../plan/pr-reader-content-source-contract/pr-reader-content-source-contract.step.md) 為準。
 
 ## Last Updated
 

@@ -72,7 +72,7 @@ TC-03 的 ID 相等與 reference 唯一 fixture 只能驗表示能力。它們�
 
 ## Assumptions and Current Gate
 
-使用者已接受完整文字草案並授權 feature worktree 實作／delivery 路線；PR-01 曾 `approved`，但 IM-01 runtime evidence 後 Plan-Reviewer 對既有 graph set blocker 明示 `needs-rework`。本輪 compatibility 修訂仍需 fresh independent re-review。`patch` 缺席、合法 optional nil 與必要資料無法保真是不同情況；只有最後者使用 `.contentNotRepresentable`。目前沒有新的 planning re-approval、implementation completion、Tester／Reviewer approval 或 delivery approval。
+PR-02 是 package graph exact set 未同步所觸發的歷史 `needs-rework`；修訂後 PR-03 已由獨立 Plan-Reviewer 明示 `approved`。IM-01、DL-01 與 HC-01 均已 `completed`，TE-01 與 RV-01 均已 `approved`；PR #42 目前為 OPEN／Ready（`isDraft=false`）。詳細即時狀態與 evidence 以 [Step Ledger](pr-reader-content-source-contract.step.md) 為準。`patch` 缺席、合法 optional nil 與必要資料無法保真是不同情況；只有最後者使用 `.contentNotRepresentable`。
 
 ## Last Updated
 

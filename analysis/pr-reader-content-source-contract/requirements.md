@@ -39,7 +39,7 @@
 
 ## Planning Status
 
-PR-01 曾由獨立 Plan-Reviewer 明示 `approved`。IM-01 runtime evidence 隨後發現 root full-suite 唯一 failure 是既有 package graph exact set 未同步；Plan-Reviewer 對此 implementation blocker 明示 `needs-rework`。本輪僅修正四份 artifacts，加入單一 test-only compatibility path 與驗收；修訂後仍待 fresh independent re-review，不構成 implementation、test 或 delivery approval。
+PR-02 是 package graph exact set 未同步所觸發的歷史 `needs-rework`；修訂後 PR-03 已由獨立 Plan-Reviewer 明示 `approved`。IM-01、DL-01 與 HC-01 均已 `completed`，TE-01 與 RV-01 均已 `approved`；PR #42 目前為 OPEN／Ready（`isDraft=false`）。詳細即時狀態與 evidence 以 [Step Ledger](../../plan/pr-reader-content-source-contract/pr-reader-content-source-contract.step.md) 為準。
 
 ## Last Updated
 
