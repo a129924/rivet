@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-DL-01 已完成 topic commit、non-force push 與 draft PR 建立；目前停止於 `HC-01` Human boundary，等待人類審閱。不得宣稱 human approved、merge 或 release。
+Human 已明確授權將 PR #42 轉為 Ready，HC-01 human boundary 已 `completed`；PR 目前仍為 OPEN，未 merge、close 或 release。本 topic 的既定 human boundary 已完成。
 
 ## Topic
 
@@ -33,21 +33,21 @@ DL-01 已完成 topic commit、non-force push 與 draft PR 建立；目前停止
 | IM-01 | completed | Implementer | 僅在有效 planning approval 後，於 feature worktree 完成受限 Core、tests、manifest、唯一 root graph compatibility test 與 PR Reader BC truth writeback，交接變更及實作證據。 | 原 Implementer 明示完成：唯一 static graph test 只同步核准的 products／targets expected sets；focused `swift test --filter PRReader` 11 tests／2 suites pass；root `swift test` 101 tests／14 suites pass；`swift build` pass；`swift package dump-package` pass 且 Reader path／dependencies 正確；`git diff --check` pass。changed paths 僅四份 artifacts、`Package.swift`、Reader Core 6 files、Reader tests 2 files、PR Reader BC doc、唯一 graph test；dev worktree clean。producer ID／reference obligations 仍待 concrete mapper；未交付 Infra／bridge／viewed／TS compatibility。此為 Implementer evidence，只 handoff TE-01。 |
 | TE-01 | approved | Tester | IM-01 完成後，獨立驗證 TC-01 至 TC-08 與必要命令，回報逐項結果或 blocker。 | 獨立 `/root/swift_tester` 明示 `approved`：fresh writable rerun `swift test --filter RivetPRReader` 11 tests／2 suites exit 0（初次 sandbox cache 權限 run 不採信）；root `swift test` 101 tests／14 suites exit 0；`swift build` exit 0；`swift package dump-package` 只新增 Reader product／regular target／test target且 dependencies 正確；package describe JSON 顯示 Core path 只有 6 個 Swift files、SDL 未納入；`git diff --check` pass；staged diff empty；changed paths 符合 allowlist；唯一 graph test 只有 expected-set additions 與 line wrap；dev clean 且 base 相同。Contract coverage 完整；remaining gaps 僅 out-of-scope producer／Infra／TS／bridge／viewed。此 verdict 只通過 TE-01。 |
 | RV-01 | approved | Reviewer | TE-01 後獨立審查 public contract、scope、BC truth、測試證據與阻礙分類，明示 verdict。 | 獨立 `/root/code_reviewer` 明示 `approved`，findings none：public API 與 spec 完全一致；Core 使用 per-file optional patch 且無 top-level unified diff；target／dependencies／exact graph、BC truth、changed-path allowlist、dev clean、`git diff --check` 與 TE-01 evidence 均接受。remaining risks 僅 out-of-scope producer／TS／bridge／viewed。Reviewer 補跑因 sandbox cache／build DB 權限 exit 1，不列為新驗證證據且不影響 TE-01 既有 fresh pass。此 verdict 只放行 DL-01 preparation。 |
-| DL-01 | completed | Implementer | 僅在 RV-01 `approved` 且無重大問題時，依使用者授權完成 topic commit、push、以 `dev` 為 base 開 draft PR；保留 staged diff 語意檢查與 human-confirmed commit。 | commit `5b8b279844928f9c1dec699e6811bdcc86332b06`，message `feat(pr-reader): 新增內容來源 Core 契約`，pre-commit hooks pass；non-force push 至 origin branch `feat/pr-reader-content-source-contract`，`ls-remote` exact head 相同；建立前查無 same-head PR；Draft PR #42（https://github.com/a129924/rivet/pull/42）為 OPEN、isDraft=true、base `dev`、head branch／headRefOid exact、title 正確；feature／dev worktree clean。未 merge、未 release。本次 delivery-receipt ledger edit 不含於該 commit，仍未 commit。 |
-| HC-01 | pending | Human | 在 Draft PR #42 檢查 Core-only 契約、failure truth、TS prerequisite 與未接線邊界。 | DL-01 已完成；目前停止於 human boundary。尚無 human approval、merge 或 release。 |
+| DL-01 | completed | Implementer | 僅在 RV-01 `approved` 且無重大問題時，依使用者授權完成 topic commit、push、以 `dev` 為 base 開 draft PR；保留 staged diff 語意檢查與 human-confirmed commit。 | commit `5b8b279844928f9c1dec699e6811bdcc86332b06`，message `feat(pr-reader): 新增內容來源 Core 契約`，pre-commit hooks pass；non-force push 至 origin branch `feat/pr-reader-content-source-contract`，`ls-remote` exact head 相同；建立前查無 same-head PR；Draft PR #42（https://github.com/a129924/rivet/pull/42）為 OPEN、isDraft=true、base `dev`、head branch／headRefOid exact、title 正確；feature／dev worktree clean。未 merge、未 release。 |
+| HC-01 | completed | Human | 在 Draft PR #42 檢查 Core-only 契約、failure truth、TS prerequisite 與未接線邊界。 | Human 明確表示「可以 to Ready PR 了」，完成 HC-01 並授權 Ready transition。Precheck：PR #42 OPEN、isDraft=true、base `dev`、head `feat/pr-reader-content-source-contract`、headRefOid prefix `e8bc73d`；執行 `gh pr ready` 後 postcheck：OPEN、isDraft=false，base／head／OID／title 不變；feature／dev worktree clean。未 merge、close、release 或修改 PR 內容。 |
 | PR-02 | needs-rework | Plan-Reviewer | 審查 IM-01 blocker 是否需要回到 planning，並明示修正範圍。 | 明示 `needs-rework`：唯一新增 Modify path 為 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 的 exact graph expected-set compatibility sync；同步 TC-01／TC-07／TC-08 與 planning status，修訂後 fresh re-review。required scope 不改 public API、BC 責任或產品能力。 |
 | PC-02 | completed | Plan-Creator | 只修訂四份正式 artifacts，加入唯一 test-only compatibility 例外、exact graph 規則、runtime evidence 與 re-review route。 | 四份 artifacts 已同步；未修改 Swift source／tests、未實作、未 commit／push／PR，不構成 re-approval。 |
 | PR-03 | approved | Plan-Reviewer | Fresh independent review PC-02：確認唯一 test-only path、exact expected-set 變更、既有 graph assertions preservation、TC-01／TC-07／TC-08、IM-01 pause 與 workflow。 | 獨立 `/root/formal_plan_reviewer` 明示 `approved`，required fixes 無：四份 artifacts 只新增 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` Modify；products 只加 `RivetPRReader`，targets 只加 `RivetPRReader`／`RivetPRReaderTests`；既有 assertions、helpers、mappings、behavior 保留，TC-01／TC-07／TC-08 已同步，原 contract 無 drift，且 static test 尚未修改。僅放行恢復同一 IM-01。 |
 
 ## Blockers
 
-- 目前沒有已知 implementation、verification、review 或 delivery blocker；DL-01 已完成。唯一 current step／stop condition 是 HC-01 human review。
+- 目前沒有 active workflow blocker；DL-01 與 HC-01 均已完成，本 topic 的既定 human boundary 已結束。PR #42 維持 OPEN／Ready，未 merge、close 或 release。
 - Producer ID／reference obligations 仍待 future concrete mapper 驗證；Infra、Swift／WebView bridge、viewed persistence 與 TS compatibility 未交付，均不得由已完成的 delivery 或 draft PR 推導完成。
 
 ## Human Check
 
-- Draft PR #42 已建立並停在 HC-01；Human 尚未 approve、merge 或 release。本次只記錄 delivery receipt 的 ledger 變更尚未 commit，須交 Implementer依 `$git-commit-convention` 進行純 ledger follow-up commit preparation；不得以該準備取代或完成 HC-01。
-- draft PR 開立後停在 `HC-01`，交還人類審閱。不得自行 merge、release 或將 human review 標成完成。
+- Human 已明確授權 Ready transition，HC-01 completed；PR #42 已由 Draft 轉為 Ready 且仍 OPEN。此狀態不構成 merge、close 或 release。
+- 本次 final ledger receipt edit 尚未 commit；交 Implementer 依 `$git-commit-convention` 進行純 ledger commit preparation。該 follow-up 只交付狀態事實，不重開 HC-01，也不授權 merge、close 或 release。
 
 ## Last Updated
 
