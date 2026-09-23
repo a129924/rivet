@@ -2,7 +2,9 @@
 
 ## Locked boundary
 
-`RivetPresentation` 是沒有 BC dependencies 的 non-BC target。`PullRequestList` 位於 `Sources/Presentation/PRInbox/PullRequestList.swift`，由既有 `PullRequestRowPresentation` 與 `PullRequestRow` 組成；不更動 Row、`Package.swift` 或 static isolation tests。工作區與流程狀態見同 slug step ledger；PR-01 `needs-rework`（Preview evidence gap）、PC-02 completed、PR-02 `approved`（Findings：None）、PC-03 workflow sync completed、IM-01 completed、TE-01 `approved` automated scope（Human-only native UI pending）、RV-01 `needs-rework`（fixture ID uniqueness test 與 ledger stale status）、PC-04 workflow sync completed、IM-02 completed、TE-02 `approved` automated scope（debug/release focused 5/5、root 75/75、build/path/whitespace pass）、RV-02 `approved`（Findings：None；source-format-sensitive parsing 為非阻擋維護限制）、PC-05 workflow sync completed、HC-01 pending。Human HR-02 failed：`Clear selection` 後 Open known-safe on，初始未選第一列雙擊 Selection 變該列但 Count 0；再次雙擊仍 0；Enter 使 Count +1 後雙擊才有反應；HR-03 Enter pass。獨立 RV-03 Reviewer 明示 `needs-rework`；雙擊位於 Row `simultaneousGesture`、Enter／雙擊共用 guard、Preview Clear／Count 接線正常，根因未定。現有 path/contract 足夠；PC-06 workflow-only sync completed，IM-03 受限診斷／修正 current／pending，後續 TE-03 → 獨立 RV-04 → Human 重驗 HR-02。HC-01 未有最終「採用／調整／放棄」，PL-02／03／05 其餘 Human-only native evidence 尚未驗收。
+`RivetPresentation` 是沒有 BC dependencies 的 non-BC target。`PullRequestList` 位於 `Sources/Presentation/PRInbox/PullRequestList.swift`，由既有 `PullRequestRowPresentation` 與 `PullRequestRow` 組成；不更動 Row、`Package.swift` 或 static isolation tests。
+
+Workflow 現況只以 `plan/pr-inbox-pull-request-list/pr-inbox-pull-request-list.step.md` 的 final ledger 為準；歷史 findings、bounded fixes、Tester／Reviewer evidence 與 handoff trace 均保留於該檔。HC-01 completed：HR-01～HR-07 pass，Visual／structural、Long List internal vertical scrolling 與 VoiceOver pass，固定 x finding withdrawn／not reproduced；Human decision 原值為 `採用 PullRequestList`。PC-10 completed，PR-03 `approved`（Findings：None），Topic／Mission completed／stopped，Current Step=`None`，Next Action=`Stop`。PR #41 已 Ready；不因此改變本 spec 的 public API、selection policy、scope 或 capability boundary，也不得自動開始下一 component。
 
 ## Public interface
 
