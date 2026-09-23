@@ -2,9 +2,9 @@
 
 ## Current Phase
 
-### Current DL-16 receipt-only delivery gate — takes precedence
+### Current DL-17 P5 delivery gate — takes precedence
 
-`dl-16-receipt-only-delivery-active`。`f277ac4` 的 canonical-containment receipt
+`dl-17-p5-current-state-401-terminal-decision-delivery-active`。`f277ac4` 的 canonical-containment receipt
 correction 與 `d2cefd4` 的 `dev` merge-conflict resolution 已交付至既有
 `docs/redefine-auth-subsystem-responsibilities` branch；`DL-12` 與 `CH-11` = completed，
 `HC-11` 因四個 stable current review findings = `needs-rework`。本小節 supersede 下方所有
@@ -18,12 +18,13 @@ RV-16／DL-14 已 completed，PR-19／TE-16／RV-16 verdict 為 `approved`。CH-
 `pending`，故 PC-19 是 historical route。PR-20 `needs-rework` 的 PC-20 最小 planning amendment 已 completed／historical，
 PR-20 re-review 已 approved／completed；IM-20 已 completed，TE-17／RV-17 已 approved／completed，DL-15 已於
 `3abbc71` completed。CH-14 因 P4-01 receipt finding 為 `needs-rework`、HC-14 = `pending`；PC-21 同一最小 planning
-amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 已 completed／approved／historical，DL-16 現為 active。human 已授權在 exact receipt-only scope 內依既有 gates
-直達 CH-15／HC-15，無需逐 gate 再取得 confirmation；independent review／verification 與 P4 locks 不變。
+amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 已 completed／approved／historical，DL-16 已以 `bccc183`
+completed／visible。CH-15 因兩項 P5 feedback 為 `needs-rework`，HC-15 為 pending historical human boundary。human 已
+授權 PC-22，independent Planner verdict = ready；PC-22 已 completed／historical、PR-22 已 completed／approved／historical、IM-22 已 completed／historical、TE-19 已 completed／approved／historical、RV-19 已 completed／approved／historical，DL-17 現為 active；不重開 architecture，且只走 P5 bounded route。
 現在唯一 current route 為：
 
 ```text
-PC-21／PR-21／IM-21／TE-18／RV-18 (completed／approved／historical) → DL-16 (active) → CH-15 → HC-15
+PC-22 (completed／historical) → PR-22 (completed／approved／historical) → IM-22 (completed／historical) → TE-19 (completed／approved／historical) → RV-19 (completed／approved／historical) → DL-17 (active) → CH-16 → HC-16
 ```
 
 四個 planning aliases 不是 GitHub thread ID：(PM-01) formal current-state sync；(PM-02) standard
@@ -36,7 +37,7 @@ reply／resolve與 README／bounded-contexts additive base-conflict disposition�
 policy、state topology、Swift、OAuth、receipt producer／tests、component canvas、canonical architecture README或
 long-lived docs。PC-21 只重建 normal-request／auth-flow-lifecycle producer-generated receipts；source/HTML/artifact
 semantics 必須 byte-identical，其他 diagrams/source/HTML、README／merge candidates、Swift、OAuth、producer/tests、
-state/package/401 均 ReadOnly。PR #37 必須保持 OPEN、ready for review；PR-21／HC-15 前後均不得 merge 或 release。
+state/package/normal/lifecycle 均 ReadOnly；僅 P5-02 的 401 artifact set 例外。PR #37 必須保持 OPEN、ready for review；PC-22／HC-16 前後均不得 merge 或 release。
 
 以下為 2026-09-21 前的歷史 snapshot，不是 current phase：`rv-14-canonical-containment-review-active`。IM-16 已完成，TE-13 已由 Independent Tester `approved`；DL-10 的 corrected delivery 已可見，CH-09 已重新取得
 thread state，但 P1 `PRRT_kwDOUFu0Cc6kQlYl` 指出 `401-refresh-retry.delivery.json` 含有本機絕對路徑。
@@ -130,9 +131,10 @@ receipt、component canvas 的 legacy Model A `AuthRequester → HTTPRequest` co
 401 sequence 的唯一 terminal response／caller activation。它們已循 PC-18 → PR-18 → IM-18 → TE-15 →
 RV-15 → DL-13 → CH-12 → HC-12 完成，現為 historical；不改變 Model C、original request ownership、
 deferred preparation、retry policy、OAuth boundary 或 PR status。PC-19 只處理 package legacy-only edge 與
-state route separation，已在 DL-14 completed、CH-13 `needs-rework`、HC-13 `pending` 後成為 historical。PC-20 是唯一
-current route，僅處理 normal deferred wording、lifecycle neutral terminal、401 activation presentation與 package/state
-no-source revalidation；不重開 contract。
+state route separation，已在 DL-14 completed、CH-13 `needs-rework`、HC-13 `pending` 後成為 historical。PC-20 亦已在
+DL-15=`3abbc71` completed、CH-14=`needs-rework`、HC-14=`pending` 後成為 historical。唯一 current route 為
+PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→
+TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（active）→ CH-16 → HC-16；不重開 contract。
 
 ## Out-Of-Scope
 
@@ -321,9 +323,17 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 | IM-21 | Independent Implementer | completed | 只以 repository-relative input/output、`--repo-root` standard deliver 重建 normal-request 與 auth-flow-lifecycle receipts及必要 evidence。 | PR-21 = approved。 | 只寫兩份 `.delivery.json`／allowed evidence；source/HTML/artifact semantics byte-identical；receipt 驗證 hash、9/9、0/0、relative provenance、無 absolute path。 | 2026-09-23：human 確認 completed；historical；不得改 diagrams/source/HTML、README/merge candidates、Swift、OAuth、producer/tests、state/package/401、Git或GH。 |
 | TE-18 | Independent Tester | completed | 獨立驗證 IM-21 invocation、relative metadata、hash continuity、9/9/0/0、absolute-path absence、byte identity及必要四 viewport evidence。 | IM-21 completed。 | `approved` 才授權 RV-18；只 verify，不得生成 output/evidence。 | 2026-09-23：approved／completed；historical。 |
 | RV-18 | Independent Reviewer | completed | 獨立確認 P4-01 receipt-only finding 消除，並審查 source/HTML no-drift、scope、historical state與 evidence。 | TE-18 = approved。 | `approved` 才授權 DL-16；否則回交正確角色。 | 2026-09-23：approved／completed；historical。 |
-| DL-16 | Implementer | active | 在 TE-18／RV-18 approved 後，依本 direct human execution authorization 將 receipt-only diff commit，並 normal push 至既有 PR #37 branch。 | TE-18 = approved、RV-18 = approved。 | pushed commit 必須在既有 PR branch 可見，且 P4-01 receipt evidence 已 verified；PR OPEN、ready；不開新 PR、不 merge、不 release。 | 2026-09-23：RV-18 approved evidence 下 active；無需逐 gate 再取得 human confirmation；不得提前 Git/GH action。 |
-| CH-15 | Implementer | pending | 僅在 DL-16 的 pushed commit 在既有 PR branch 可見且 P4-01 receipt evidence 已 verified 後，reply／resolve P4-01，並重新取得 feedback state。 | DL-16 commit/push completed；pushed commit visible；P4-01 receipt evidence verified。 | 僅在此前提後 resolve；無未分類 feedback。 | 未開始；不得提前 reply/resolve。 |
-| HC-15 | Human | pending | Review final P4-01 receipt-only correction delivered OPEN、ready-for-review PR #37。 | CH-15 completed。 | human 明示下一步。 | 不 merge、不 release。 |
+| DL-16 | Implementer | completed | 在 TE-18／RV-18 approved 後，依 direct human execution authorization 將 receipt-only diff commit，並 normal push 至既有 PR #37 branch。 | TE-18 = approved、RV-18 = approved。 | pushed commit 在既有 PR branch 可見，且 P4-01 receipt evidence verified；PR OPEN、ready。 | 2026-09-23：`bccc183` completed／visible；PC-21 成為 historical。 |
+| CH-15 | Implementer | needs-rework | 在 DL-16 pushed commit visible 且 P4-01 evidence verified 後處理 P4-01，並重新取得 feedback state。 | DL-16 completed。 | P5-01/P5-02 只由 PC-22 承接；六個 fixed closure threads 不 reopen。 | 2026-09-23：`PRRT_kwDOUFu0Cc6kqRi3`、`PRRT_kwDOUFu0Cc6kqRi9` 啟動 PC-22。 |
+| HC-15 | Human | pending | Review P4-01 correction delivered OPEN、ready-for-review PR #37。 | CH-15 completed。 | PC-22 route 完成前不跨越。 | pending historical human boundary；不 merge、不 release。 |
+| PC-22 | Plan-Creator | completed | 依 human 兩項 P5 authorization 與 independent Planner ready verdict 建立 bounded rework。 | DL-16 `bccc183` completed／visible；CH-15 = needs-rework；兩個 exact IDs 已提供。 | 四份 artifacts 鎖定 P5-01 stale-current historical preservation、P5-02 401-only total=20/two guarded terminals、allowlist、六 closure threads與唯一 route；不新增 architecture。 | human 確認 completed；historical。 |
+| PR-22 | Independent Plan-Reviewer | completed | 獨立審查 P5 exact IDs、stale-current boundary、401 20-message/guard/no-capability boundary、allowlist、closure及 route。 | PC-22 completed。 | `approved` 才授權 IM-22；`needs-rework` 只交回 Plan-Creator；`blocked`／`human-check` 停止。 | approved；historical。 |
+| IM-22 | Independent Implementer | completed | 只修正 P5-01 planning current claims，並對 401 artifact set 加入兩則 guarded terminal decision、標準 delivery/visual evidence。 | PR-22 = approved。 | 18 old IDs/semantics unchanged；20 total；only two mutual-exclusive AuthFlow→AuthRequester terminal decisions；無 caller failure return/payload/API/state/policy/ownership drift。 | completed；historical。 |
+| TE-19 | Independent Tester | completed | 獨立驗證 P5 current claims/history、six fixed closures、401 source/output/receipt/provenance/9/9/0/0/four-viewports、20-message and capability invariants。 | IM-22 completed。 | `approved` 才授權 RV-19；只 verify，不得生成 output/evidence。 | approved；historical。 |
+| RV-19 | Independent Reviewer | completed | 獨立確認 P5 two findings 消除、401 no-drift、scope、historical state、six closures與 delivery evidence。 | TE-19 = approved。 | `approved` 才授權 DL-17；否則回交正確角色。 | approved；historical。 |
+| DL-17 | Implementer | active | 在 TE-19／RV-19 approved 後，依 direct human authorization 將單一 P5 topic commit 並 normal push 至既有 PR #37 branch。 | TE-19 = approved、RV-19 = approved。 | pushed commit 在既有 PR branch 可見，P5 receipt/visual evidence verified；PR OPEN、ready；不開新 PR、不 merge、不 release。 | active；不得提前 Git/GH action。 |
+| CH-16 | Implementer | pending | 只在 DL-17 pushed commit 可見、P5 evidence verified 後，reply／resolve P5-01/P5-02，重抓 feedback state。 | DL-17 commit/push completed；pushed commit visible；P5 evidence verified。 | 兩 P5 threads resolved；six fixed closures 仍 resolved、不 reopen；無未分類 feedback。 | 未開始；不得提前 reply/resolve。 |
+| HC-16 | Human | pending | Review final P5 correction delivered OPEN、ready-for-review PR #37。 | CH-16 completed。 | human 明示下一步。 | 不 merge、不 release。 |
 
 ## PR #37 Thread Mapping
 
@@ -339,7 +349,7 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 | T08 | 移除 receive→retry shortcut；retry 必須是 flow 在結果後作出的 semantic decision。 | corrected 401／state delivery visible。 |
 | T09 | 只有 refresh-success permits retry；ineligible、refresh-failure 與 second-401 terminal。 | corrected 401／state delivery visible。 |
 | P1 `PRRT_kwDOUFu0Cc6kQlYl` | `401-refresh-retry.delivery.json` 的 artifact/input/output path 與 provenance metadata 只可為 canonical repository-relative path，不能暴露本機絕對路徑，亦不得接受 canonical resolve 後逃逸 repository root 的 symlink。 | IM-17 canonical-containment correction 經 TE-14／RV-14 approved、DL-12 visible 後。 |
-| PM-01（planning alias，非 thread ID） | formal artifacts 的 current state 必須如實反映 `f277ac4`／`d2cefd4` 已交付、DL-12／CH-11 completed、HC-11 needs-rework 與 PC-18 replacement route。 | DL-13／CH-12 已 completed；四個 thread 已 resolve、無未分類 feedback；HC-12 = needs-rework。PC-19 至 DL-14 已 completed（PR-19／TE-16／RV-16 approved），CH-13 = needs-rework、HC-13 = pending；PC-20 route 已於 `3abbc71` DL-15 completed，CH-14 = needs-rework、HC-14 = pending；PC-21 amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 completed／approved／historical，current gate 為 DL-16 active。 |
+| PM-01（planning alias，非 thread ID） | formal artifacts 的 current state 必須如實反映 `f277ac4`／`d2cefd4` 已交付、DL-12／CH-11 completed、HC-11 needs-rework 與 PC-18 replacement route。 | DL-13／CH-12 已 completed；四個 thread 已 resolve、無未分類 feedback；HC-12 = needs-rework。PC-19 至 DL-14 已 completed（PR-19／TE-16／RV-16 approved），CH-13 = needs-rework、HC-13 = pending；PC-20 route 已於 `3abbc71` DL-15 completed，CH-14 = needs-rework、HC-14 = pending；DL-16 `bccc183` completed／visible、CH-15 needs-rework、HC-15 pending historical；PC-22 completed historical、PR-22 completed／approved historical、IM-22 completed historical、TE-19 completed／approved historical、RV-19 completed／approved historical，current gate 為 DL-17 active。 |
 | PM-02（planning alias，非 thread ID） | `auth-flow-state.delivery.json` 必須由 canonical-containment producer standard `deliver` 產生，metadata 僅含 repository-relative paths，並匹配 source／HTML hash、9/9 與 exact state non-pass evidence。 | IM-18 delivery 已經 TE-15／RV-15 approved 與 DL-13 completed。 |
 | PM-03（planning alias，非 thread ID） | canvas 恢復的 `AuthRequester → HTTPRequest` 只可被解讀為 legacy Model A 編譯期 request-type dependency，不是 Model C preparation／ownership／I/O。 | IM-18 canvas rebuild 已經 TE-15／RV-15 approved 與 DL-13 completed。 |
 | PM-04（planning alias，非 thread ID） | 401 必須有 terminal `AuthRequester → caller` final response 與 caller activation；message count 由 17 僅增至 18，其他 locked semantics 不變。 | IM-18 sequence delivery 已經 TE-15／RV-15 approved 與 DL-13 completed。 |
@@ -351,13 +361,15 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 | P3-04 `PRRT_kwDOUFu0Cc6knaSA` | auth-flow-state 只 revalidate existing source/output；不改 source、topology、policy、contract或 exact non-pass truth。 | PR-20 approved、TE-17／RV-17 revalidation approved、DL-15 visible 後。 |
 | P3-05 `PRRT_kwDOUFu0Cc6knaR9` | package canvas 只 revalidate existing source/output；不改 source；delivery visible 後 reply／resolve。 | PR-20 approved、TE-17／RV-17 revalidation approved、DL-15 visible 後。 |
 | P4-01 `PRRT_kwDOUFu0Cc6koqlS` | 只重建 normal-request／auth-flow-lifecycle producer-generated `.delivery.json` receipts；relative `--repo-root` standard deliver 必須驗證 source/HTML hash、9/9、0 errors、0 warnings、provenance 無 absolute path及 source/HTML/artifact semantics byte identity。DL-16 必須 commit 並 normal push 至既有 PR branch；CH-15 只在 pushed commit 可見且 receipt evidence verified 後 reply／resolve。 | PR-21 approved、IM-21 receipt-only rework 經 TE-18／RV-18 approved、DL-16 committed／normally pushed、pushed commit visible 且 receipt evidence verified 後。 |
+| P5-01 `PRRT_kwDOUFu0Cc6kqRi3` | 只修正 stale current claim/gate/route 至 DL-16 `bccc183` completed/visible、CH-15 needs-rework、HC-15 pending historical；保留 dated historical snapshots/evidence/closures。六個 fixed closures `PRRT_kwDOUFu0Cc6knhr9`、`PRRT_kwDOUFu0Cc6knhsB`、`PRRT_kwDOUFu0Cc6knhsF`、`PRRT_kwDOUFu0Cc6knaSA`、`PRRT_kwDOUFu0Cc6knaR9`、`PRRT_kwDOUFu0Cc6koqlS` 維持 resolved，禁止 reopen/reply/change。 | PR-22 approved、IM-22 planning-only current-state correction 經 TE-19／RV-19 approved、DL-17 visible 後。 |
+| P5-02 `PRRT_kwDOUFu0Cc6kqRi9` | 401 only：18 existing message IDs/semantics 不變、total=20；只加 ineligible/no-refresh 與 refresh-failure/no-retry 兩則 mutually-exclusive guarded `AuthFlow → AuthRequester` terminals；無 caller failure return/payload/API/state node/transition/policy/ownership。 | PR-22 approved、IM-22 401 correction 經 TE-19／RV-19 approved、DL-17 visible 後。 |
 
 previous T01–T09 mapping 是 historical correction reference，不是 current GitHub thread
 state 的宣告。CH-09 已重新取得 P1 evidence 但因 receipt path finding `blocked`；DL-12 visible 後的
 CH-11 處理也是已完成的 historical handling。PC-18 → PR-18 → IM-18 → TE-15 → RV-15 → DL-13 → CH-12 →
 HC-12 同樣是 historical route；PC-19 → PR-19 → IM-19 → TE-16 → RV-16 → DL-14 → CH-13 → HC-13 亦為
 historical route；PC-20 → PR-20 → IM-20 → TE-17 → RV-17 → DL-15（`3abbc71` completed）→ CH-14（needs-rework）→
-HC-14（pending）亦為 historical；PC-21 同一 minimal amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 completed／approved／historical，current handling 只可走 DL-16 → CH-15 → HC-15。
+HC-14（pending）亦為 historical；PC-21 route 已由 DL-16 `bccc183` completed／visible、CH-15 needs-rework、HC-15 pending historical 結束。current handling 只可走 PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→ TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（active）→ CH-16 → HC-16。
 
 PR #37 的 PC-18 前 historical replacement workflow 保留 prefix：**PC-08 → PR-08 → PC-09 → PR-09 →
 IM-07 (historical blocked) → PC-10 → PR-10 → IM-08 (historical blocked) → PC-11 → PR-11**；
@@ -481,9 +493,11 @@ IM-14 只可更新 stale 401 delivery receipt，不能修改 source／output sem
   RV-14 approved、DL-12 visible 後已由 CH-11 reply/resolve；此為 historical evidence。
 - **PM-01**：DL-12／CH-11 completed 與 HC-11 `needs-rework` 是 historical truth；`f277ac4`／
   `d2cefd4` 不再被當作 pending。PC-18／PR-18／IM-18／TE-15／RV-15／DL-13 completed、CH-12 completed
-  （四個 thread 已 resolved、無未分類 feedback）與 HC-12 `needs-rework` 是 PC-19 前 snapshot；唯一 route 為
-  PC-20 → PR-20 → IM-20 → TE-17 → RV-17 → DL-15 → CH-14 → HC-14。PC-19 至 DL-14 已 completed、
-  CH-13 = `needs-rework`、HC-13 = `pending` 為 historical。
+  （四個 thread 已 resolved、無未分類 feedback）與 HC-12 `needs-rework` 是 PC-19 前 snapshot；PC-20 →
+  PR-20 → IM-20 → TE-17 → RV-17 → DL-15 → CH-14 → HC-14 是 historical snapshot，不是 current route。PC-19 至
+  DL-14 已 completed、CH-13 = `needs-rework`、HC-13 = `pending` 亦為 historical。唯一 current route 為
+  PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→
+  TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（active）→ CH-16 → HC-16。
 - **PM-02**：`auth-flow-state.delivery.json` 只由 canonical-containment producer 以
   repository-relative parameters 標準產生；metadata 無絕對路徑，source／HTML hash、showcase 9/9／0 errors／
   0 warnings 與 1035／1109／1109、2048 pass exact non-pass evidence 均一致。
@@ -495,8 +509,10 @@ IM-14 只可更新 stale 401 delivery receipt，不能修改 source／output sem
   全 viewport visual pass 無漂移。
 - **PM-05**：PR-18／TE-15／RV-15 已 `approved`；DL-13／CH-12 已 completed，四個 thread 均已
   resolved、沒有未分類 feedback；HC-12 因 P2-01／P2-02 為 `needs-rework`，四個 resolved threads 保持
-  historical。PC-19 route 已在 CH-13 = `needs-rework`、HC-13 = `pending` 停止；PC-20 amendment 已 completed／historical，
-  PR-20 re-review 為唯一 current gate。
+  historical。PC-19 route 已在 CH-13 = `needs-rework`、HC-13 = `pending` 停止；PC-20 amendment／PR-20 re-review
+  至 DL-15=`3abbc71` completed、CH-14=`needs-rework`、HC-14=`pending` 均為 historical。唯一 current route 為
+  PC-22（completed／historical）→ PR-22（completed／approved／historical）→ IM-22（completed／historical）→
+  TE-19（completed／approved／historical）→ RV-19（completed／approved／historical）→ DL-17（active）→ CH-16 → HC-16。
 - **P2-01**：`PRRT_kwDOUFu0Cc6knaR9` 只要求 package canvas 的 legacy Model A
   `AuthRequester → HTTPRequest` compile-time request-type dependency；不得表達 Model C preparation、
   construction、ownership、dataflow 或 I/O。
@@ -535,11 +551,11 @@ direct-outside 與 in-root symlink-escape tests 證明 delivery／receipt-write 
 擴張 state/Swift/OAuth/other diagrams/runtime architecture scope 或重開 deferred ownership。既有 state desktop
 containment exact accepted non-pass 與所有其他 gates 維持不變。
 
-當前沒有 scope 或 human blocker；唯一 current gate 是 DL-16 active receipt-only delivery。不得自動跨越 CH-15；
-不 merge、不 release。PC-21 只可要求 standard producer 以 relative input/output／`--repo-root` 重建 normal-request
-與 auth-flow-lifecycle receipts，驗證 hash、9/9、0/0、relative provenance／無 absolute path及 byte identity；不得將
-receipt-only scope 擴張為任何 diagram/source/HTML、README/merge、Swift/OAuth、producer/tests、state/package/401、policy、
-topology、contract 或 long-lived-doc 回修。
+當前沒有 scope 或 human blocker；唯一 current gate 是 DL-17 active P5 delivery。不得自動跨越 CH-16；不 merge、不 release。
+PC-22 只可 P5-01 修正 stale current claims、P5-02 修改 401 source/output/receipt/visual；18 existing IDs/semantics、
+20 total、兩 guarded mutual-exclusive terminals、以及所有 no-caller-failure-return/no-payload/no-API/no-state/no-policy/
+no-ownership locks 必須維持。不得擴張為任何其他 diagram/source/HTML、README/merge、Swift/OAuth、producer/tests、
+state/package/normal/lifecycle 或 runtime 行為。
 
 ## Human Check
 
@@ -549,8 +565,8 @@ PC-19 承接；CH-12 的四個 resolved threads 不重開。PR #37 必須維持 
 
 HC-13 是 PC-19 的 pending historical human boundary；CH-13 `needs-rework` 已由 PC-20 承接，故不得跨越或
 重新啟動 HC-13。HC-14 是 PC-20 的 pending historical human boundary；CH-14 `needs-rework` 已由 PC-21 承接。
-HC-15 是唯一 current human boundary，只在 CH-15 completed 後等待 human 明示下一步；前後均不授權 merge、release 或
-future Swift implementation。
+HC-15 是 PC-21 的 pending historical human boundary，CH-15 `needs-rework` 已由 PC-22 承接。HC-16 是唯一 current
+human boundary，只在 CH-16 completed 後等待 human 明示下一步；前後均不授權 merge、release 或 future Swift implementation。
 
 ## Last Updated
 
@@ -769,7 +785,14 @@ feature merge 仍進行中；Plan-Creator 僅同步四份 formal planning artifa
 candidates、source、Git、GitHub 或 tests。
 
 2026-09-22 — human 直接授權 receipt-only PC-21：DL-15 已於 `3abbc71` completed，CH-14 = `needs-rework`，
-HC-14 = `pending`。唯一 P4-01 `PRRT_kwDOUFu0Cc6koqlS` 只允許 normal-request／auth-flow-lifecycle
-producer-generated receipts 重新產生。2026-09-23 human 已確認 PC-21同一 amendment、PR-21 re-review、IM-21、TE-18 與 RV-18 completed／approved／historical、DL-16 active，並授權在 exact receipt-only scope 內依既有 gates 直達 CH-15／HC-15，無需逐 gate confirmation；唯一 current route 為 DL-16 (active) →
-DL-16 → CH-15 → HC-15。只修改四份 formal planning artifacts；不修改 diagrams/source/HTML、README/merge candidates、
-Swift、OAuth、producer/tests、state/package/401、Git 或 GitHub，且不 merge、不 release。
+HC-14 = `pending`。P4-01 `PRRT_kwDOUFu0Cc6koqlS` 只允許 normal-request／auth-flow-lifecycle receipts
+重新產生。此為 historical PC-21 snapshot；DL-16 已於 2026-09-23 以 `bccc183` completed／visible，CH-15 後續為
+`needs-rework`，HC-15 = `pending` historical。
+
+2026-09-23 — human authorization 與 independent Planner ready verdict 建立 PC-22。P5-01
+`PRRT_kwDOUFu0Cc6kqRi3` 只修正 stale current claims、保留 history；P5-02
+`PRRT_kwDOUFu0Cc6kqRi9` 只允許 401 artifact set 表達 two guarded terminals，18 existing IDs/semantics 不變、
+total = 20，且不新增 caller failure return、payload、API、state/policy/ownership。PC-22 已 completed／historical、PR-22 completed／approved／historical、IM-22 completed／historical、TE-19 completed／approved／historical、RV-19 completed／approved／historical；唯一 current route 為 PC-22 (completed／historical) →
+PR-22 (completed／approved／historical) → IM-22 (completed／historical) → TE-19 (completed／approved／historical) → RV-19 (completed／approved／historical) → DL-17 (active) → CH-16 → HC-16。六 fixed closure threads 維持 resolved；只修改四份
+formal planning artifacts，不修改 diagrams/source/HTML、README/merge candidates、Swift、OAuth、producer/tests、
+state/package/normal/lifecycle、Git 或 GitHub，且不 merge、不 release。
