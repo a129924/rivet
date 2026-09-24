@@ -29,6 +29,18 @@ describe("GitDiffTemplate", () => {
       ["--- a/src/modified.ts", "+++ b/src/modified.ts"],
     ],
     [
+      "copied",
+      "src/copy.ts",
+      "src/source.ts",
+      ["copy from src/source.ts", "copy to src/copy.ts"],
+    ],
+    [
+      "typeChanged",
+      "src/type.ts",
+      undefined,
+      ["--- a/src/type.ts", "+++ b/src/type.ts"],
+    ],
+    [
       "renamed",
       "src/renamed.ts",
       "src/previous.ts",

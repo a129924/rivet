@@ -10,30 +10,29 @@ struct StaticIsolationTests {
     let products = try namedItems(in: package, named: "products")
     let targets = try namedItems(in: package, named: "targets")
     #expect(
-      Set(products.keys)
-        == ["GitHubIntegration", "RivetPRInbox", "RivetPRReader", "RivetPresentation"]
-    )
+      Set(products.keys) == [
+        "GitHubIntegration", "RivetPRInbox", "RivetPRReader",
+        "RivetPRReaderWebViewBridge", "RivetPresentation",
+      ])
     #expect(
-      Set(targets.keys)
-        == [
-          "GitHubIntegration",
-          "GitHubIntegrationTests",
-          "RivetPRInbox",
-          "RivetPRInboxTests",
-          "RivetPRReader",
-          "RivetPRReaderTests",
-          "RivetPresentation",
-          "RivetPresentationTests",
-        ]
-    )
+      Set(targets.keys) == [
+        "GitHubIntegration", "GitHubIntegrationTests", "RivetPRInbox", "RivetPRInboxTests",
+        "RivetPRReader", "RivetPRReaderTests", "RivetPRReaderWebViewBridge",
+        "RivetPRReaderWebViewBridgeTests", "RivetPresentation", "RivetPresentationTests",
+      ])
+    let bridgeName = "RivetPRReaderWebViewBridge"
+    #expect(targetNames(in: try #require(products[bridgeName])) == [bridgeName])
+    let bridgeTarget = try #require(targets[bridgeName])
+    #expect(bridgeTarget["path"] as? String == "Sources/PRReaderWebViewBridge")
+    #expect(dependencyNames(in: bridgeTarget) == ["RivetPRReader"])
+    let bridgeTests = try #require(targets["RivetPRReaderWebViewBridgeTests"])
+    #expect(Set(dependencyNames(in: bridgeTests)) == ["RivetPRReader", bridgeName])
+    #expect(dependencyNames(in: try #require(targets["RivetPresentation"])).isEmpty)
     let integrationProduct = try #require(products["GitHubIntegration"])
     #expect(targetNames(in: integrationProduct) == ["GitHubIntegration"])
     let integrationTarget = try #require(targets["GitHubIntegration"])
     #expect(integrationTarget["type"] as? String == "regular")
-    #expect(
-      integrationTarget["path"] as? String
-        == "Sources/BoundedContexts/GitHubIntegration"
-    )
+    #expect(integrationTarget["path"] as? String == "Sources/BoundedContexts/GitHubIntegration")
     #expect(rawDependencies(in: integrationTarget).isEmpty)
     let integrationTests = try #require(targets["GitHubIntegrationTests"])
     #expect(integrationTests["type"] as? String == "test")

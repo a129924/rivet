@@ -7,20 +7,29 @@
     "viewBox": [1080, 720]
   },
   "stages": [
-    { "label": "Swift 快照" },
-    { "label": "呈現入口" },
+    { "label": "Swift Reader bridge" },
+    { "label": "Adapter／Facade" },
     { "label": "核心協調" },
-    { "label": "宣告階段" },
+    { "label": "管線階段" },
     { "label": "Facade outcome" }
   ],
   "nodes": [
     {
       "id": "swift-snapshot",
       "type": "external",
-      "label": "Swift 快照",
-      "sublabel": "完整 DiffSnapshot",
+      "label": "Swift Reader bridge",
+      "sublabel": "六狀態 DiffSnapshot",
       "tag": "權威輸入",
       "stage": 0,
+      "row": 0
+    },
+    {
+      "id": "snapshot-adapter",
+      "type": "frontend",
+      "label": "DiffSnapshotAdapter",
+      "sublabel": "receiveSnapshot",
+      "tag": "callable 邊界",
+      "stage": 1,
       "row": 0
     },
     {
@@ -30,7 +39,7 @@
       "sublabel": "present(snapshot)",
       "tag": "呈現入口",
       "stage": 1,
-      "row": 0
+      "row": 1
     },
     {
       "id": "usecase",
@@ -126,19 +135,28 @@
   "flows": [
     {
       "from": "swift-snapshot",
-      "to": "facade",
+      "to": "snapshot-adapter",
       "label": "DiffSnapshot",
-      "classification": "完整有序快照",
+      "classification": "邊界契約；live transport 未實作",
       "variant": "emphasis",
-      "route": "straight"
+      "route": "straight",
+      "labelAt": [130, 200]
+    },
+    {
+      "from": "snapshot-adapter",
+      "to": "facade",
+      "label": "present(snapshot)",
+      "classification": "callable 呼叫",
+      "variant": "emphasis",
+      "route": "vertical-channel"
     },
     {
       "from": "facade",
       "to": "usecase",
-      "label": "present(snapshot)",
-      "classification": "公開 render 入口",
+      "label": "execute(snapshot)",
+      "classification": "Facade 委派",
       "variant": "emphasis",
-      "route": "straight"
+      "route": "vertical-channel"
     },
     {
       "from": "usecase",
@@ -234,9 +252,9 @@
       "dot": "cyan",
       "title": "邊界保持不變",
       "items": [
-        "Swift 是完整 DiffSnapshot 的權威來源",
+        "Swift bridge 由 Reader snapshot 交付完整六狀態 DiffSnapshot",
         "DiffFacade 是 Presentation 的公開 render 入口",
-        "此圖不定義任何 concrete parser、renderer 或 DOM"
+        "未交付 WKWebView transport、具體 Output 或 DOM"
       ]
     }
   ]

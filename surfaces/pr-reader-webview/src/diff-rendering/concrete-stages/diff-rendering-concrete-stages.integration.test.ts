@@ -76,6 +76,25 @@ describe("concrete diff rendering stages", () => {
           viewed: false,
         },
         {
+          fileId: "copied",
+          filename: "src/copied.ts",
+          previousFilename: "src/source.ts",
+          status: "copied",
+          patch: "@@ -1 +1 @@\n-old\n+new",
+          additions: 1,
+          deletions: 1,
+          viewed: false,
+        },
+        {
+          fileId: "typeChanged",
+          filename: "src/type.ts",
+          status: "typeChanged",
+          patch: "@@ -1 +1 @@\n-old\n+new",
+          additions: 1,
+          deletions: 1,
+          viewed: false,
+        },
+        {
           fileId: "renamed",
           filename: "src/renamed.ts",
           previousFilename: "src/previous.ts",
@@ -106,10 +125,17 @@ describe("concrete diff rendering stages", () => {
     if (renderResult.type === "error") {
       throw new Error(renderResult.message);
     }
-    expect(readRenderPlan(renderResult.value).entries).toHaveLength(4);
+    expect(readRenderPlan(renderResult.value).entries).toHaveLength(6);
     expect(
       readRenderPlan(renderResult.value).entries.map((entry) => entry.kind),
-    ).toEqual(["rendered", "rendered", "rendered", "rendered"]);
+    ).toEqual([
+      "rendered",
+      "rendered",
+      "rendered",
+      "rendered",
+      "rendered",
+      "rendered",
+    ]);
   });
 
   test("renders an empty patch as a line-by-line entry", () => {

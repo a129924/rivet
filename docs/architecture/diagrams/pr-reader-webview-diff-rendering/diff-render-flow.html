@@ -5024,49 +5024,50 @@
 
         <!-- Data Stages -->
         <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="0" x="16" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="100" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">01 / Swift 快照</text>
+        <text x="100" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">01 / Swift Reader bridge</text>
 
         <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="1" x="231" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="315" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">02 / 呈現入口</text>
+        <text x="315" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">02 / Adapter／Facade</text>
 
         <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="2" x="446" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
         <text x="530" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">03 / 核心協調</text>
 
         <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="3" x="661" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="745" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">04 / 宣告階段</text>
+        <text x="745" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">04 / 管線階段</text>
 
         <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="4" x="876" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
         <text x="960" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">05 / Facade outcome</text>
 
         <!-- Flow paths -->
-        <path data-edge-from="swift-snapshot" data-edge-to="facade" data-edge-label="DiffSnapshot" data-edge-key="0" data-composition-points="156,157;259,157" d="M 156 157 L 259 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="facade" data-edge-to="usecase" data-edge-label="present(snapshot)" data-edge-key="1" data-composition-points="371,157;474,157" d="M 371 157 L 474 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="usecase" data-edge-to="validator" data-edge-label="驗證" data-edge-key="2" data-composition-points="586,157;689,157" d="M 586 157 L 689 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="validator" data-edge-to="parser" data-edge-label="已驗證輸入" data-edge-key="3" data-composition-points="745,186;701,186;701,242;745,242" d="M 745 186 L 701 186 L 701 242 L 745 242" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="parser" data-edge-to="renderer" data-edge-label="已剖析輸入" data-edge-key="4" data-composition-points="745,300;701,300;701,356;745,356" d="M 745 300 L 701 300 L 701 356 L 745 356" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="renderer" data-edge-to="output" data-edge-label="RenderPlan" data-edge-key="5" data-composition-points="745,414;701,414;701,470;745,470" d="M 745 414 L 701 414 L 701 470 L 745 470" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="validator" data-edge-to="invalid-input-outcome" data-edge-label="invalid-input" data-edge-key="6" data-composition-points="801,157;904,157" d="M 801 157 L 904 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="parser" data-edge-to="parse-error-outcome" data-edge-label="parse-error" data-edge-key="7" data-composition-points="801,271;904,271" d="M 801 271 L 904 271" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="renderer" data-edge-to="render-error-outcome" data-edge-label="render-error" data-edge-key="8" data-composition-points="801,385;904,385" d="M 801 385 L 904 385" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="output" data-edge-to="output-error-outcome" data-edge-label="output-error" data-edge-key="9" data-composition-points="801,499;904,499" d="M 801 499 L 904 499" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="output" data-edge-to="success-outcome" data-edge-label="{ type: &quot;success&quot; }" data-edge-key="10" data-composition-points="801,499;801,668;904,668;904,613" d="M 801 499 L 801 668 L 904 668 L 904 613" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="swift-snapshot" data-edge-to="snapshot-adapter" data-edge-label="DiffSnapshot" data-edge-key="0" data-composition-points="156,157;259,157" d="M 156 157 L 259 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="snapshot-adapter" data-edge-to="facade" data-edge-label="present(snapshot)" data-edge-key="1" data-composition-points="315,186;271,186;271,242;315,242" d="M 315 186 L 271 186 L 271 242 L 315 242" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="facade" data-edge-to="usecase" data-edge-label="execute(snapshot)" data-edge-key="2" data-composition-points="371,271;415,271;415,157;474,157" d="M 371 271 L 415 271 L 415 157 L 474 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="usecase" data-edge-to="validator" data-edge-label="驗證" data-edge-key="3" data-composition-points="586,157;689,157" d="M 586 157 L 689 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="validator" data-edge-to="parser" data-edge-label="已驗證輸入" data-edge-key="4" data-composition-points="745,186;701,186;701,242;745,242" d="M 745 186 L 701 186 L 701 242 L 745 242" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="parser" data-edge-to="renderer" data-edge-label="已剖析輸入" data-edge-key="5" data-composition-points="745,300;701,300;701,356;745,356" d="M 745 300 L 701 300 L 701 356 L 745 356" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="renderer" data-edge-to="output" data-edge-label="RenderPlan" data-edge-key="6" data-composition-points="745,414;701,414;701,470;745,470" d="M 745 414 L 701 414 L 701 470 L 745 470" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="validator" data-edge-to="invalid-input-outcome" data-edge-label="invalid-input" data-edge-key="7" data-composition-points="801,157;904,157" d="M 801 157 L 904 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="parser" data-edge-to="parse-error-outcome" data-edge-label="parse-error" data-edge-key="8" data-composition-points="801,271;904,271" d="M 801 271 L 904 271" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="renderer" data-edge-to="render-error-outcome" data-edge-label="render-error" data-edge-key="9" data-composition-points="801,385;904,385" d="M 801 385 L 904 385" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="output" data-edge-to="output-error-outcome" data-edge-label="output-error" data-edge-key="10" data-composition-points="801,499;904,499" d="M 801 499 L 904 499" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="output" data-edge-to="success-outcome" data-edge-label="{ type: &quot;success&quot; }" data-edge-key="11" data-composition-points="801,499;801,668;904,668;904,613" d="M 801 499 L 801 668 L 904 668 L 904 613" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
 
         <!-- Nodes -->
-        <g id="node-swift-snapshot" data-node-id="swift-snapshot" data-node-label="Swift 快照" tabindex="0" role="button" aria-label="Focus Swift 快照, 完整 DiffSnapshot, 01 / Swift 快照" aria-pressed="false" data-node-kind="external" data-node-sublabel="完整 DiffSnapshot" data-node-tag="權威輸入" data-node-context="01 / Swift 快照">
-          <title>Swift 快照 · 完整 DiffSnapshot · 01 / Swift 快照 · 權威輸入</title>
+        <g id="node-swift-snapshot" data-node-id="swift-snapshot" data-node-label="Swift Reader bridge" tabindex="0" role="button" aria-label="Focus Swift Reader bridge, 六狀態 DiffSnapshot, 01 / Swift Reader bridge" aria-pressed="false" data-node-kind="external" data-node-sublabel="六狀態 DiffSnapshot" data-node-tag="權威輸入" data-node-context="01 / Swift Reader bridge">
+          <title>Swift Reader bridge · 六狀態 DiffSnapshot · 01 / Swift Reader bridge · 權威輸入</title>
           <rect x="44" y="128" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="44" y="128" width="112" height="58" rx="6" class="c-external" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(50 134) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="100" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Swift 快照</text>
-          <text data-detail="context" x="100" y="165" class="t-muted" font-size="7" text-anchor="middle">完整 DiffSnapshot</text>
+          <text data-node-label="" data-detail-anchor="" x="100" y="149" class="t-primary" font-size="9.1" font-weight="600" text-anchor="middle">Swift Reader bridge</text>
+          <text data-detail="context" x="100" y="165" class="t-muted" font-size="7" text-anchor="middle">六狀態 DiffSnapshot</text>
         <text data-detail="fine" x="100" y="175" class="t-external" font-size="7" text-anchor="middle">權威輸入</text>
         </g>
 
-        <g id="node-facade" data-node-id="facade" data-node-label="DiffFacade" tabindex="0" role="button" aria-label="Focus DiffFacade, present(snapshot), 02 / 呈現入口" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="present(snapshot)" data-node-tag="呈現入口" data-node-context="02 / 呈現入口">
-          <title>DiffFacade · present(snapshot) · 02 / 呈現入口 · 呈現入口</title>
+        <g id="node-snapshot-adapter" data-node-id="snapshot-adapter" data-node-label="DiffSnapshotAdapter" tabindex="0" role="button" aria-label="Focus DiffSnapshotAdapter, receiveSnapshot, 02 / Adapter／Facade" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="receiveSnapshot" data-node-tag="callable 邊界" data-node-context="02 / Adapter／Facade">
+          <title>DiffSnapshotAdapter · receiveSnapshot · 02 / Adapter／Facade · callable 邊界</title>
           <rect x="259" y="128" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="259" y="128" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(265 134) scale(0.6875)">
@@ -5075,9 +5076,24 @@
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="315" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">DiffFacade</text>
-          <text data-detail="context" x="315" y="165" class="t-muted" font-size="7" text-anchor="middle">present(snapshot)</text>
-        <text data-detail="fine" x="315" y="175" class="t-frontend" font-size="7" text-anchor="middle">呈現入口</text>
+          <text data-node-label="" data-detail-anchor="" x="315" y="149" class="t-primary" font-size="9.1" font-weight="600" text-anchor="middle">DiffSnapshotAdapter</text>
+          <text data-detail="context" x="315" y="165" class="t-muted" font-size="7" text-anchor="middle">receiveSnapshot</text>
+        <text data-detail="fine" x="315" y="175" class="t-frontend" font-size="7" text-anchor="middle">callable 邊界</text>
+        </g>
+
+        <g id="node-facade" data-node-id="facade" data-node-label="DiffFacade" tabindex="0" role="button" aria-label="Focus DiffFacade, present(snapshot), 02 / Adapter／Facade" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="present(snapshot)" data-node-tag="呈現入口" data-node-context="02 / Adapter／Facade">
+          <title>DiffFacade · present(snapshot) · 02 / Adapter／Facade · 呈現入口</title>
+          <rect x="259" y="242" width="112" height="58" rx="6" class="c-mask"/>
+          <rect x="259" y="242" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(265 248) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="315" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">DiffFacade</text>
+          <text data-detail="context" x="315" y="279" class="t-muted" font-size="7" text-anchor="middle">present(snapshot)</text>
+        <text data-detail="fine" x="315" y="289" class="t-frontend" font-size="7" text-anchor="middle">呈現入口</text>
         </g>
 
         <g id="node-usecase" data-node-id="usecase" data-node-label="DiffRenderUseCase" tabindex="0" role="button" aria-label="Focus DiffRenderUseCase, execute(snapshot), 03 / 核心協調" aria-pressed="false" data-node-kind="backend" data-node-sublabel="execute(snapshot)" data-node-tag="唯一協調者" data-node-context="03 / 核心協調">
@@ -5092,8 +5108,8 @@
         <text data-detail="fine" x="530" y="175" class="t-backend" font-size="7" text-anchor="middle">唯一協調者</text>
         </g>
 
-        <g id="node-validator" data-node-id="validator" data-node-label="驗證 Port" tabindex="0" role="button" aria-label="Focus 驗證 Port, validate(snapshot), 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="validate(snapshot)" data-node-tag="成功才前進" data-node-context="04 / 宣告階段">
-          <title>驗證 Port · validate(snapshot) · 04 / 宣告階段 · 成功才前進</title>
+        <g id="node-validator" data-node-id="validator" data-node-label="驗證 Port" tabindex="0" role="button" aria-label="Focus 驗證 Port, validate(snapshot), 04 / 管線階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="validate(snapshot)" data-node-tag="成功才前進" data-node-context="04 / 管線階段">
+          <title>驗證 Port · validate(snapshot) · 04 / 管線階段 · 成功才前進</title>
           <rect x="689" y="128" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="689" y="128" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 134) scale(0.6875)">
@@ -5104,8 +5120,8 @@
         <text data-detail="fine" x="745" y="175" class="t-backend" font-size="7" text-anchor="middle">成功才前進</text>
         </g>
 
-        <g id="node-parser" data-node-id="parser" data-node-label="剖析 Port" tabindex="0" role="button" aria-label="Focus 剖析 Port, parse(input), 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="parse(input)" data-node-tag="成功才前進" data-node-context="04 / 宣告階段">
-          <title>剖析 Port · parse(input) · 04 / 宣告階段 · 成功才前進</title>
+        <g id="node-parser" data-node-id="parser" data-node-label="剖析 Port" tabindex="0" role="button" aria-label="Focus 剖析 Port, parse(input), 04 / 管線階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="parse(input)" data-node-tag="成功才前進" data-node-context="04 / 管線階段">
+          <title>剖析 Port · parse(input) · 04 / 管線階段 · 成功才前進</title>
           <rect x="689" y="242" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="689" y="242" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 248) scale(0.6875)">
@@ -5116,8 +5132,8 @@
         <text data-detail="fine" x="745" y="289" class="t-backend" font-size="7" text-anchor="middle">成功才前進</text>
         </g>
 
-        <g id="node-renderer" data-node-id="renderer" data-node-label="渲染 Port" tabindex="0" role="button" aria-label="Focus 渲染 Port, createRenderPlan(input), 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="createRenderPlan(input)" data-node-tag="成功才前進" data-node-context="04 / 宣告階段">
-          <title>渲染 Port · createRenderPlan(input) · 04 / 宣告階段 · 成功才前進</title>
+        <g id="node-renderer" data-node-id="renderer" data-node-label="渲染 Port" tabindex="0" role="button" aria-label="Focus 渲染 Port, createRenderPlan(input), 04 / 管線階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="createRenderPlan(input)" data-node-tag="成功才前進" data-node-context="04 / 管線階段">
+          <title>渲染 Port · createRenderPlan(input) · 04 / 管線階段 · 成功才前進</title>
           <rect x="689" y="356" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="689" y="356" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 362) scale(0.6875)">
@@ -5128,8 +5144,8 @@
         <text data-detail="fine" x="745" y="403" class="t-backend" font-size="7" text-anchor="middle">成功才前進</text>
         </g>
 
-        <g id="node-output" data-node-id="output" data-node-label="輸出 Port" tabindex="0" role="button" aria-label="Focus 輸出 Port, output(plan), 04 / 宣告階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="output(plan)" data-node-tag="唯一 caller：UseCase" data-node-context="04 / 宣告階段">
-          <title>輸出 Port · output(plan) · 04 / 宣告階段 · 唯一 caller：UseCase</title>
+        <g id="node-output" data-node-id="output" data-node-label="輸出 Port" tabindex="0" role="button" aria-label="Focus 輸出 Port, output(plan), 04 / 管線階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="output(plan)" data-node-tag="唯一 caller：UseCase" data-node-context="04 / 管線階段">
+          <title>輸出 Port · output(plan) · 04 / 管線階段 · 唯一 caller：UseCase</title>
           <rect x="689" y="470" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="689" y="470" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 476) scale(0.6875)">
@@ -5216,57 +5232,62 @@
         </g>
 
         <!-- Flow labels -->
-        <g data-detail="context" data-edge-from="swift-snapshot" data-edge-to="facade" data-edge-label="DiffSnapshot" data-edge-key="0">
-          <rect x="172.1" y="136" width="70.8" height="27" rx="4" class="c-mask"/>
-          <text x="207.5" y="147" class="t-backend" font-size="8" text-anchor="middle">DiffSnapshot</text>
-        <text data-detail="fine" x="207.5" y="158" class="t-dim" font-size="7" text-anchor="middle">完整有序快照</text>
+        <g data-detail="context" data-edge-from="swift-snapshot" data-edge-to="snapshot-adapter" data-edge-label="DiffSnapshot" data-edge-key="0">
+          <rect x="48.05" y="189" width="163.9" height="27" rx="4" class="c-mask"/>
+          <text x="130" y="200" class="t-backend" font-size="8" text-anchor="middle">DiffSnapshot</text>
+        <text data-detail="fine" x="130" y="211" class="t-dim" font-size="7" text-anchor="middle">邊界契約；live transport 未實作</text>
         </g>
-        <g data-detail="context" data-edge-from="facade" data-edge-to="usecase" data-edge-label="present(snapshot)" data-edge-key="1">
-          <rect x="374.85" y="136" width="95.3" height="27" rx="4" class="c-mask"/>
-          <text x="422.5" y="147" class="t-backend" font-size="8" text-anchor="middle">present(snapshot)</text>
-        <text data-detail="fine" x="422.5" y="158" class="t-dim" font-size="7" text-anchor="middle">公開 render 入口</text>
+        <g data-detail="context" data-edge-from="snapshot-adapter" data-edge-to="facade" data-edge-label="present(snapshot)" data-edge-key="1">
+          <rect x="223.35" y="193" width="95.3" height="27" rx="4" class="c-mask"/>
+          <text x="271" y="204" class="t-backend" font-size="8" text-anchor="middle">present(snapshot)</text>
+        <text data-detail="fine" x="271" y="215" class="t-dim" font-size="7" text-anchor="middle">callable 呼叫</text>
         </g>
-        <g data-detail="context" data-edge-from="usecase" data-edge-to="validator" data-edge-label="驗證" data-edge-key="2">
+        <g data-detail="context" data-edge-from="facade" data-edge-to="usecase" data-edge-label="execute(snapshot)" data-edge-key="2">
+          <rect x="367.35" y="193" width="95.3" height="27" rx="4" class="c-mask"/>
+          <text x="415" y="204" class="t-backend" font-size="8" text-anchor="middle">execute(snapshot)</text>
+        <text data-detail="fine" x="415" y="215" class="t-dim" font-size="7" text-anchor="middle">Facade 委派</text>
+        </g>
+        <g data-detail="context" data-edge-from="usecase" data-edge-to="validator" data-edge-label="驗證" data-edge-key="3">
           <rect x="544.6" y="197" width="70.8" height="27" rx="4" class="c-mask"/>
           <text x="580" y="208" class="t-backend" font-size="8" text-anchor="middle">驗證</text>
         <text data-detail="fine" x="580" y="219" class="t-dim" font-size="7" text-anchor="middle">DiffSnapshot</text>
         </g>
-        <g data-detail="context" data-edge-from="validator" data-edge-to="parser" data-edge-label="已驗證輸入" data-edge-key="3">
+        <g data-detail="context" data-edge-from="validator" data-edge-to="parser" data-edge-label="已驗證輸入" data-edge-key="4">
           <rect x="670.5" y="193" width="61" height="27" rx="4" class="c-mask"/>
           <text x="701" y="204" class="t-muted" font-size="8" text-anchor="middle">已驗證輸入</text>
         <text data-detail="fine" x="701" y="215" class="t-dim" font-size="7" text-anchor="middle">success</text>
         </g>
-        <g data-detail="context" data-edge-from="parser" data-edge-to="renderer" data-edge-label="已剖析輸入" data-edge-key="4">
+        <g data-detail="context" data-edge-from="parser" data-edge-to="renderer" data-edge-label="已剖析輸入" data-edge-key="5">
           <rect x="670.5" y="307" width="61" height="27" rx="4" class="c-mask"/>
           <text x="701" y="318" class="t-muted" font-size="8" text-anchor="middle">已剖析輸入</text>
         <text data-detail="fine" x="701" y="329" class="t-dim" font-size="7" text-anchor="middle">success</text>
         </g>
-        <g data-detail="context" data-edge-from="renderer" data-edge-to="output" data-edge-label="RenderPlan" data-edge-key="5">
+        <g data-detail="context" data-edge-from="renderer" data-edge-to="output" data-edge-label="RenderPlan" data-edge-key="6">
           <rect x="670.5" y="421" width="61" height="27" rx="4" class="c-mask"/>
           <text x="701" y="432" class="t-muted" font-size="8" text-anchor="middle">RenderPlan</text>
         <text data-detail="fine" x="701" y="443" class="t-dim" font-size="7" text-anchor="middle">success</text>
         </g>
-        <g data-detail="context" data-edge-from="validator" data-edge-to="invalid-input-outcome" data-edge-label="invalid-input" data-edge-key="6">
+        <g data-detail="context" data-edge-from="validator" data-edge-to="invalid-input-outcome" data-edge-label="invalid-input" data-edge-key="7">
           <rect x="797.5" y="189" width="110" height="27" rx="4" class="c-mask"/>
           <text x="852.5" y="200" class="t-security" font-size="8" text-anchor="middle">invalid-input</text>
         <text data-detail="fine" x="852.5" y="211" class="t-dim" font-size="7" text-anchor="middle">Facade outcome；終止</text>
         </g>
-        <g data-detail="context" data-edge-from="parser" data-edge-to="parse-error-outcome" data-edge-label="parse-error" data-edge-key="7">
+        <g data-detail="context" data-edge-from="parser" data-edge-to="parse-error-outcome" data-edge-label="parse-error" data-edge-key="8">
           <rect x="797.5" y="303" width="110" height="27" rx="4" class="c-mask"/>
           <text x="852.5" y="314" class="t-security" font-size="8" text-anchor="middle">parse-error</text>
         <text data-detail="fine" x="852.5" y="325" class="t-dim" font-size="7" text-anchor="middle">Facade outcome；終止</text>
         </g>
-        <g data-detail="context" data-edge-from="renderer" data-edge-to="render-error-outcome" data-edge-label="render-error" data-edge-key="8">
+        <g data-detail="context" data-edge-from="renderer" data-edge-to="render-error-outcome" data-edge-label="render-error" data-edge-key="9">
           <rect x="797.5" y="417" width="110" height="27" rx="4" class="c-mask"/>
           <text x="852.5" y="428" class="t-security" font-size="8" text-anchor="middle">render-error</text>
         <text data-detail="fine" x="852.5" y="439" class="t-dim" font-size="7" text-anchor="middle">Facade outcome；終止</text>
         </g>
-        <g data-detail="context" data-edge-from="output" data-edge-to="output-error-outcome" data-edge-label="output-error" data-edge-key="9">
+        <g data-detail="context" data-edge-from="output" data-edge-to="output-error-outcome" data-edge-label="output-error" data-edge-key="10">
           <rect x="647.5" y="531" width="110" height="27" rx="4" class="c-mask"/>
           <text x="702.5" y="542" class="t-security" font-size="8" text-anchor="middle">output-error</text>
         <text data-detail="fine" x="702.5" y="553" class="t-dim" font-size="7" text-anchor="middle">Facade outcome；終止</text>
         </g>
-        <g data-detail="context" data-edge-from="output" data-edge-to="success-outcome" data-edge-label="{ type: &quot;success&quot; }" data-edge-key="10">
+        <g data-detail="context" data-edge-from="output" data-edge-to="success-outcome" data-edge-label="{ type: &quot;success&quot; }" data-edge-key="11">
           <rect x="799.95" y="623" width="105.1" height="27" rx="4" class="c-mask"/>
           <text x="852.5" y="634" class="t-backend" font-size="8" text-anchor="middle">{ type: &quot;success&quot; }</text>
         <text data-detail="fine" x="852.5" y="645" class="t-dim" font-size="7" text-anchor="middle">success</text>
@@ -5492,9 +5513,9 @@
           <h3>邊界保持不變</h3>
         </div>
         <ul>
-          <li>&bull; Swift 是完整 DiffSnapshot 的權威來源</li>
+          <li>&bull; Swift bridge 由 Reader snapshot 交付完整六狀態 DiffSnapshot</li>
           <li>&bull; DiffFacade 是 Presentation 的公開 render 入口</li>
-          <li>&bull; 此圖不定義任何 concrete parser、renderer 或 DOM</li>
+          <li>&bull; 未交付 WKWebView transport、具體 Output 或 DOM</li>
         </ul>
       </div>
     </div>
