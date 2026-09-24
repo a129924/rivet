@@ -101,6 +101,38 @@ struct RivetPRReaderStaticIsolationTests {
   }
 
   @Test
+  func returnIntroducesRegexLiteral() {
+    let source = #"""
+      func regex() -> Regex<Substring> {
+        return /import Foundation/
+      }
+      import Testing
+      """#
+
+    #expect(importedModuleRoots(in: source) == ["Testing"])
+  }
+
+  @Test
+  func identifierDivisionDoesNotMaskImports() {
+    let source = """
+      let ratio = value / import Foundation / other
+      import Testing
+      """
+
+    #expect(importedModuleRoots(in: source) == ["Foundation", "Testing"])
+  }
+
+  @Test
+  func numericDivisionDoesNotMaskImports() {
+    let source = """
+      let ratio = 6 / import WebKit / 2
+      import Testing
+      """
+
+    #expect(importedModuleRoots(in: source) == ["WebKit", "Testing"])
+  }
+
+  @Test
   func importRootExtractionIgnoresRawRegexLiterals() {
     let source = ##"""
       let raw = #/; import GitHubIntegration/#
@@ -437,6 +469,7 @@ private func ordinaryRegexLiteralReplacement(
 private func bareRegexCanStart(in source: String, at start: String.Index) -> Bool {
   var probe = start
   let expressionPrefixCharacters = "=([{,:;!?&|+-*%^~<>"
+  let expressionIntroducingKeywords: Set = ["return", "throw", "try", "await", "yield"]
 
   while probe > source.startIndex {
     let previous = source.index(before: probe)
@@ -448,7 +481,24 @@ private func bareRegexCanStart(in source: String, at start: String.Index) -> Boo
       probe = previous
       continue
     }
-    return expressionPrefixCharacters.contains(character)
+    if expressionPrefixCharacters.contains(character) {
+      return true
+    }
+
+    guard character.unicodeScalars.allSatisfy(isIdentifierContinuation) else {
+      return false
+    }
+
+    var identifierStart = previous
+    while identifierStart > source.startIndex {
+      let candidate = source.index(before: identifierStart)
+      guard source[candidate].unicodeScalars.allSatisfy(isIdentifierContinuation) else {
+        break
+      }
+      identifierStart = candidate
+    }
+
+    return expressionIntroducingKeywords.contains(String(source[identifierStart...previous]))
   }
 
   return true
