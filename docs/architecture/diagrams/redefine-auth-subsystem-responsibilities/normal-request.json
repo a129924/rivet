@@ -31,7 +31,7 @@
     { "id": "http-io", "from": "requester", "to": "transport", "y": 376, "label": "HTTP 輸入／輸出", "variant": "default" },
     { "id": "raw-response", "from": "transport", "to": "requester", "y": 410, "label": "原始 HTTPResponse", "variant": "return" },
     { "id": "return-raw", "from": "requester", "to": "auth-requester", "y": 444, "label": "原始 HTTPResponse", "variant": "return" },
-    { "id": "response-policy-input", "from": "auth-requester", "to": "auth-flow", "y": 478, "label": "轉交回應語意", "variant": "security" },
+    { "id": "response-policy-input", "from": "auth-requester", "to": "auth-flow", "y": 478, "label": "轉交原始 HTTPResponse", "variant": "security" },
     { "id": "finish-decision", "from": "auth-flow", "to": "auth-requester", "y": 510, "label": "終止語意決策", "variant": "return" },
     { "id": "terminal-response", "from": "auth-requester", "to": "caller", "y": 548, "label": "回傳終態 HTTPResponse", "variant": "return" }
   ],

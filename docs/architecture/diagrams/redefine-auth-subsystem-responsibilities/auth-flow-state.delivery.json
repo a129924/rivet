@@ -6,12 +6,12 @@
   "input": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/auth-flow-state.json",
   "output": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/auth-flow-state.html",
   "specification": {
-    "sha256": "db90b73c52f39fd757ddc8dfa2de12f00b50d5ae13ed4f5db18ed0a78f953720",
-    "bytes": 4292
+    "sha256": "c0f5898689523bef35512bcd5941528b61f5556f89aeb4e1b9eb332ca6befcc8",
+    "bytes": 4922
   },
   "artifact": {
-    "sha256": "a64883d191aa151110e2670b5369a9dd3764a9f627b174283942e3beba770fed",
-    "bytes": 708893
+    "sha256": "557b70bdea76ed515686ef21cfa87a30bc2716868589936522f3da37ed7302f3",
+    "bytes": 710549
   },
   "validation": {
     "checksPassed": 9,

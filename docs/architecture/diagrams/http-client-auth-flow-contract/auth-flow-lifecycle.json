@@ -147,10 +147,24 @@
     {
       "id": "refresh-decision",
       "from": "receive",
+      "to": "initial-send",
+      "route": "straight",
+      "label": "首次 401：具資格才可更新（交回 AuthRequester）",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [430, 270]
+    },
+    {
+      "id": "refresh-dispatch",
+      "from": "initial-send",
       "to": "start-finish",
-      "route": "left-channel",
-      "label": "首次 401：具資格才可更新",
-      "variant": "security"
+      "label": "派送至延後確定的憑證更新 I/O 邊界",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "top",
+      "via": [[556, 100], [20, 100], [20, 420], [402, 420]],
+      "labelAt": [100, 300]
     },
     {
       "id": "client-sends-initial-request",
@@ -185,7 +199,7 @@
       "fromSide": "left",
       "toSide": "top",
       "via": [[220, 479], [220, 220], [556, 220]],
-      "labelAt": [430, 210]
+      "labelAt": [440, 240]
     },
     {
       "id": "refresh-failure-terminal",

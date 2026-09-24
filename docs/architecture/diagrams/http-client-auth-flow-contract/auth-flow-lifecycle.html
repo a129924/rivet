@@ -5037,14 +5037,15 @@
         <path data-edge-from="make-flow" data-edge-to="auth-flow" data-edge-key="0" data-edge-id="creates" data-composition-points="149,157;193,157" d="M 149 157 L 193 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
         <path data-edge-from="auth-flow" data-edge-to="start" data-edge-key="1" data-edge-id="starts" data-composition-points="303,157;344.5,157" d="M 303 157 L 344.5 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
         <path data-edge-from="start" data-edge-to="initial-send" data-edge-key="2" data-edge-id="start-send" data-composition-points="459.5,157;497,157" d="M 459.5 157 L 497 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="receive" data-edge-to="start-finish" data-edge-label="首次 401：具資格才可更新" data-edge-key="3" data-edge-id="refresh-decision" data-composition-points="491,337;311,337;311,479;457,479" d="M 491 337 L 321 337 Q 311 337 311 347 L 311 469 Q 311 479 321 479 L 457 479" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="initial-send" data-edge-to="client-send" data-edge-key="4" data-edge-id="client-sends-initial-request" data-composition-points="615,157;651,157" d="M 615 157 L 651 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="client-send" data-edge-to="response" data-edge-key="5" data-edge-id="client-receives-response" data-composition-points="710,188;710,238" d="M 710 188 L 710 238" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="response" data-edge-to="receive" data-edge-key="6" data-edge-id="receives-response" data-composition-points="647.5,267;634.25,267;634.25,337;621,337" d="M 647.5 267 L 640.875 267 Q 634.25 267 634.25 273.625 L 634.25 330.375 Q 634.25 337 627.625 337 L 621 337" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="receive" data-edge-to="receive-finish" data-edge-key="7" data-edge-id="terminal-decision" data-composition-points="491,337;480,337;480,540;710,540;710,508" d="M 491 337 L 485.5 337 Q 480 337 480 342.5 L 480 530 Q 480 540 490 540 L 700 540 Q 710 540 710 530 L 710 508" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="start-finish" data-edge-to="receive" data-edge-label="更新結果經 AuthRequester 回到流程" data-edge-key="8" data-edge-id="refresh-success-result" data-composition-points="347,479;220,479;220,220;556,220;556,308" d="M 347 479 L 230 479 Q 220 479 220 469 L 220 230 Q 220 220 230 220 L 546 220 Q 556 220 556 230 L 556 308" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="receive" data-edge-to="resend" data-edge-label="更新成功：允許一次重試" data-edge-key="9" data-edge-id="refresh-failure-terminal" data-composition-points="556,366;556,398" d="M 556 366 L 556 398" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="resend" data-edge-to="client-send" data-edge-key="10" data-edge-id="client-sends-retry" data-composition-points="621,427;805,427;805,157;769,157" d="M 621 427 L 795 427 Q 805 427 805 417 L 805 167 Q 805 157 795 157 L 769 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="receive" data-edge-to="initial-send" data-edge-label="首次 401：具資格才可更新（交回 AuthRequester）" data-edge-key="3" data-edge-id="refresh-decision" data-composition-points="556,308;556,188" d="M 556 308 L 556 188" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="initial-send" data-edge-to="start-finish" data-edge-label="派送至延後確定的憑證更新 I/O 邊界" data-edge-key="4" data-edge-id="refresh-dispatch" data-composition-points="556,126;556,100;20,100;20,420;402,420;402,450" d="M 556 126 L 556 110 Q 556 100 546 100 L 30 100 Q 20 100 20 110 L 20 410 Q 20 420 30 420 L 392 420 Q 402 420 402 430 L 402 450" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="initial-send" data-edge-to="client-send" data-edge-key="5" data-edge-id="client-sends-initial-request" data-composition-points="615,157;651,157" d="M 615 157 L 651 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="client-send" data-edge-to="response" data-edge-key="6" data-edge-id="client-receives-response" data-composition-points="710,188;710,238" d="M 710 188 L 710 238" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="response" data-edge-to="receive" data-edge-key="7" data-edge-id="receives-response" data-composition-points="647.5,267;634.25,267;634.25,337;621,337" d="M 647.5 267 L 640.875 267 Q 634.25 267 634.25 273.625 L 634.25 330.375 Q 634.25 337 627.625 337 L 621 337" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="receive" data-edge-to="receive-finish" data-edge-key="8" data-edge-id="terminal-decision" data-composition-points="491,337;480,337;480,540;710,540;710,508" d="M 491 337 L 485.5 337 Q 480 337 480 342.5 L 480 530 Q 480 540 490 540 L 700 540 Q 710 540 710 530 L 710 508" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="start-finish" data-edge-to="receive" data-edge-label="更新結果經 AuthRequester 回到流程" data-edge-key="9" data-edge-id="refresh-success-result" data-composition-points="347,479;220,479;220,220;556,220;556,308" d="M 347 479 L 230 479 Q 220 479 220 469 L 220 230 Q 220 220 230 220 L 546 220 Q 556 220 556 230 L 556 308" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="receive" data-edge-to="resend" data-edge-label="更新成功：允許一次重試" data-edge-key="10" data-edge-id="refresh-failure-terminal" data-composition-points="556,366;556,398" d="M 556 366 L 556 398" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="resend" data-edge-to="client-send" data-edge-key="11" data-edge-id="client-sends-retry" data-composition-points="621,427;805,427;805,157;769,157" d="M 621 427 L 795 427 Q 805 427 805 417 L 805 167 Q 805 157 795 157 L 769 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
 
         <!-- States -->
         <g id="node-make-flow" data-node-id="make-flow" data-node-label="Auth 建立流程" tabindex="0" role="button" aria-label="Focus Auth 建立流程, 每次執行；初始語意前, 採用目標架構（尚未實作）" aria-pressed="false" data-node-kind="start" data-node-sublabel="每次執行；初始語意前" data-node-tag="目標架構入口" data-node-context="採用目標架構（尚未實作）">
@@ -5194,19 +5195,23 @@
 
 
 
-        <g data-detail="context" data-edge-from="receive" data-edge-to="start-finish" data-edge-label="首次 401：具資格才可更新" data-edge-key="3" data-edge-id="refresh-decision">
-          <rect x="246.2" y="387" width="129.60000000000002" height="16" rx="4" class="c-mask"/>
-          <text x="311" y="398" class="t-security" font-size="8" text-anchor="middle">首次 401：具資格才可更新</text>
+        <g data-detail="context" data-edge-from="receive" data-edge-to="initial-send" data-edge-label="首次 401：具資格才可更新（交回 AuthRequester）" data-edge-key="3" data-edge-id="refresh-decision">
+          <rect x="311.3" y="259" width="237.4" height="16" rx="4" class="c-mask"/>
+          <text x="430" y="270" class="t-security" font-size="8" text-anchor="middle">首次 401：具資格才可更新（交回 AuthRequester）</text>
+        </g>
+        <g data-detail="context" data-edge-from="initial-send" data-edge-to="start-finish" data-edge-label="派送至延後確定的憑證更新 I/O 邊界" data-edge-key="4" data-edge-id="refresh-dispatch">
+          <rect x="13.149999999999991" y="289" width="173.70000000000002" height="16" rx="4" class="c-mask"/>
+          <text x="100" y="300" class="t-security" font-size="8" text-anchor="middle">派送至延後確定的憑證更新 I/O 邊界</text>
         </g>
 
 
 
 
-        <g data-detail="context" data-edge-from="start-finish" data-edge-to="receive" data-edge-label="更新結果經 AuthRequester 回到流程" data-edge-key="8" data-edge-id="refresh-success-result">
-          <rect x="343.15" y="199" width="173.70000000000002" height="16" rx="4" class="c-mask"/>
-          <text x="430" y="210" class="t-backend" font-size="8" text-anchor="middle">更新結果經 AuthRequester 回到流程</text>
+        <g data-detail="context" data-edge-from="start-finish" data-edge-to="receive" data-edge-label="更新結果經 AuthRequester 回到流程" data-edge-key="9" data-edge-id="refresh-success-result">
+          <rect x="353.15" y="229" width="173.70000000000002" height="16" rx="4" class="c-mask"/>
+          <text x="440" y="240" class="t-backend" font-size="8" text-anchor="middle">更新結果經 AuthRequester 回到流程</text>
         </g>
-        <g data-detail="context" data-edge-from="receive" data-edge-to="resend" data-edge-label="更新成功：允許一次重試" data-edge-key="9" data-edge-id="refresh-failure-terminal">
+        <g data-detail="context" data-edge-from="receive" data-edge-to="resend" data-edge-label="更新成功：允許一次重試" data-edge-key="10" data-edge-id="refresh-failure-terminal">
           <rect x="496.1" y="369" width="119.80000000000001" height="16" rx="4" class="c-mask"/>
           <text x="556" y="380" class="t-security" font-size="8" text-anchor="middle">更新成功：允許一次重試</text>
         </g>
