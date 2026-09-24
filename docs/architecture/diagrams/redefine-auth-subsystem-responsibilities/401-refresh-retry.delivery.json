@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.json",
+  "output": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.html",
+  "specification": {
+    "sha256": "d02552be077f2373c002b9f36be08e32378283a4b2d0b1552093a34dfa7c8e67",
+    "bytes": 6546
+  },
+  "artifact": {
+    "sha256": "c816c54badfb9cdee4b5aa6d58f9c88594e5eac627576fffa761ae015fc1be1c",
+    "bytes": 714003
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

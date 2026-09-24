@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "docs/architecture/diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.json",
+  "output": "docs/architecture/diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.html",
+  "specification": {
+    "sha256": "adcf2c67d9506c0125d73dd4e57961697725c230fb14d5d8acae3d9cd429e58a",
+    "bytes": 5955
+  },
+  "artifact": {
+    "sha256": "4aac4afa934c4fb8a9df5b3b300f113ede2764f3c863353c3526d0085dc30507",
+    "bytes": 710568
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

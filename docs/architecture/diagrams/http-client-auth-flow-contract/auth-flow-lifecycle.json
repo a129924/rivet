@@ -2,77 +2,77 @@
   "schema_version": 1,
   "diagram_type": "lifecycle",
   "meta": {
-    "title": "RivetHTTPClient AuthFlow 合約生命週期",
+    "title": "RivetHTTPClient AuthFlow 目標合約生命週期",
     "quality_profile": "showcase",
-    "viewBox": [1040, 640],
+    "viewBox": [1000, 640],
     "legend": { "mode": "hidden" }
   },
   "lanes": [
-    { "id": "main", "label": "建立與初始轉換" },
-    { "id": "response", "label": "送出、raw 回應與後續轉換" },
-    { "id": "terminal", "label": "終態結果" }
+    { "id": "main", "label": "採用目標架構（尚未實作）" },
+    { "id": "response", "label": "回應輸入與語意決策" },
+    { "id": "terminal", "label": "終態與待定邊界" }
   ],
   "states": [
     {
       "id": "make-flow",
       "type": "start",
-      "label": "建立流程",
-      "sublabel": "Auth.makeFlow(for:)",
+      "label": "Auth 建立流程",
+      "sublabel": "每次執行；初始語意前",
       "lane": "main",
       "col": 0,
       "width": 110,
       "step": "01",
-      "tag": "入口"
+      "tag": "目標架構入口"
     },
     {
       "id": "auth-flow",
       "type": "active",
       "label": "AuthFlow",
-      "sublabel": "flow 保有認證決策",
+      "sublabel": "策略／狀態所有者",
       "lane": "main",
       "col": 1,
       "width": 110,
       "step": "02",
-      "tag": "合約"
+      "tag": "目標合約"
     },
     {
       "id": "start",
       "type": "decision",
-      "label": "start()",
-      "sublabel": "→ .send / .finish",
+      "label": "初始語意決策",
+      "sublabel": "無請求資料",
       "lane": "main",
       "col": 2,
-      "width": 115,
+      "width": 94,
       "step": "03",
-      "tag": "轉換"
+      "tag": "不建構請求"
     },
     {
       "id": "initial-send",
       "type": "active",
-      "label": ".send(HTTPRequest)",
-      "sublabel": "start() 的 .send",
+      "label": "AuthRequester",
+      "sublabel": "保有原始請求；依語意擇一派送",
       "lane": "main",
       "col": 3,
-      "width": 118,
+      "width": 150,
       "step": "04",
-      "tag": "start() 輸出"
+      "tag": "目標所有者／互斥派送"
     },
     {
       "id": "client-send",
       "type": "active",
-      "label": "AuthRequester",
-      "sublabel": "經 Requester 發送",
+      "label": "Requester",
+      "sublabel": "通用 HTTP 輸入／輸出",
       "lane": "main",
       "col": 4,
-      "width": 118,
+      "width": 94,
       "step": "05",
-      "tag": "internal"
+      "tag": "目標所有者"
     },
     {
       "id": "response",
       "type": "active",
-      "label": "raw HTTPResponse",
-      "sublabel": "所有 HTTP status 原樣保留",
+      "label": "原始 HTTPResponse",
+      "sublabel": "由 AuthRequester 轉交流程",
       "lane": "response",
       "col": 2,
       "width": 125,
@@ -82,55 +82,55 @@
     {
       "id": "receive",
       "type": "decision",
-      "label": "receive(response)",
-      "sublabel": "可產出 .send 或 .finish",
+      "label": "回應策略",
+      "sublabel": "正常回應／首次 401／更新結果",
       "lane": "response",
       "col": 1,
       "width": 130,
       "yOffset": 30,
-      "tag": "轉換"
+      "tag": "僅限 AuthFlow"
     },
     {
       "id": "resend",
       "type": "active",
-      "label": ".send(HTTPRequest)",
-      "sublabel": "receive() 的下一個 .send",
+      "label": "一次重試決策",
+      "sublabel": "僅更新成功後",
       "lane": "response",
       "col": 1,
       "width": 130,
       "yOffset": 120,
-      "tag": "receive() 輸出"
+      "tag": "目標限制"
     },
     {
       "id": "start-finish",
-      "type": "failure",
-      "label": ".finish",
-      "sublabel": "無 response → error",
+      "type": "external",
+      "label": "待定的憑證更新",
+      "sublabel": "更新結果待回傳流程",
       "lane": "terminal",
       "col": 0,
       "width": 110,
-      "tag": "start() 輸出"
+      "tag": "未命名／未實作"
     },
     {
       "id": "receive-finish",
-      "type": "success",
-      "label": ".finish",
-      "sublabel": "回傳最後 response",
+      "type": "neutral",
+      "label": "待定終態結果",
+      "sublabel": "流程終態",
       "lane": "terminal",
       "col": 2,
-      "width": 110,
-      "tag": "receive() 輸出"
+      "width": 140,
+      "tag": "正常／不具資格／第二次 401／更新失敗"
     },
     {
       "id": "requester-failure",
       "type": "failure",
-      "label": "Requester error",
-      "sublabel": "直接傳遞；不呼叫 receive()",
+      "label": "HTTPClientError 終態",
+      "sublabel": "Requester 傳輸失敗；非 AuthFlow 策略",
       "lane": "terminal",
       "col": 2,
-      "width": 130,
-      "yOffset": -140,
-      "tag": "終態"
+      "width": 150,
+      "yOffset": -100,
+      "tag": "既有 Model A 失敗路徑"
     }
   ],
   "transitions": [
@@ -145,10 +145,26 @@
       "toSide": "left"
     },
     {
-      "id": "start-finishes",
-      "from": "start",
+      "id": "refresh-decision",
+      "from": "receive",
+      "to": "initial-send",
+      "route": "straight",
+      "label": "首次 401：具資格才可更新（交回 AuthRequester）",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [430, 270]
+    },
+    {
+      "id": "refresh-dispatch",
+      "from": "initial-send",
       "to": "start-finish",
-      "route": "left-channel"
+      "label": "更新語意：派送至延後確定的憑證更新 I/O 邊界",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "top",
+      "via": [[556, 100], [20, 100], [20, 420], [402, 420]],
+      "labelAt": [340, 300]
     },
     {
       "id": "client-sends-initial-request",
@@ -161,20 +177,12 @@
       "to": "response"
     },
     {
-      "id": "requester-fails",
-      "from": "client-send",
-      "to": "requester-failure",
-      "fromSide": "right",
-      "toSide": "right",
-      "via": [[815, 157], [815, 339]]
-    },
-    {
       "id": "receives-response",
       "from": "response",
       "to": "receive"
     },
     {
-      "id": "receive-finishes",
+      "id": "terminal-decision",
       "from": "receive",
       "to": "receive-finish",
       "route": "bottom-channel",
@@ -182,7 +190,28 @@
       "toSide": "bottom",
       "via": [[480, 337], [480, 540], [710, 540]]
     },
-    { "id": "receive-resends", "from": "receive", "to": "resend" },
+    {
+      "id": "refresh-success-result",
+      "from": "start-finish",
+      "to": "receive",
+      "label": "更新結果經 AuthRequester 回到流程",
+      "variant": "emphasis",
+      "fromSide": "left",
+      "toSide": "top",
+      "via": [[220, 479], [220, 220], [556, 220]],
+      "labelAt": [440, 240]
+    },
+    {
+      "id": "refresh-failure-terminal",
+      "from": "receive",
+      "to": "resend",
+      "label": "更新成功：允許一次重試",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "labelAt": [556, 380]
+    },
     {
       "id": "client-sends-retry",
       "from": "resend",
@@ -190,6 +219,16 @@
       "route": "right-channel",
       "fromSide": "right",
       "toSide": "right"
+    },
+    {
+      "id": "transport-http-client-error",
+      "from": "client-send",
+      "to": "requester-failure",
+      "label": "傳輸 HTTPClientError",
+      "fromSide": "top",
+      "toSide": "right",
+      "via": [[710, 100], [850, 100], [850, 379]],
+      "labelAt": [920, 220]
     }
   ]
 }
