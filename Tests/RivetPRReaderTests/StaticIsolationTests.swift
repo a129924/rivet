@@ -5,15 +5,21 @@ import Testing
 struct RivetPRReaderStaticIsolationTests {
   @Test
   func manifestDeclaresLockedReaderTargetConfiguration() throws {
-    let manifest = try String(
-      contentsOf: repositoryRoot.appendingPathComponent("Package.swift"),
-      encoding: .utf8
-    )
+    let package = try packageDescription()
+    let products = try namedItems(in: package, named: "products")
+    let targets = try namedItems(in: package, named: "targets")
 
-    #expect(manifest.contains(".library(name: \"RivetPRReader\", targets: [\"RivetPRReader\"])"))
-    #expect(manifest.contains("name: \"RivetPRReader\""))
-    #expect(manifest.contains("path: \"Sources/BoundedContexts/PRReader/Core\""))
-    #expect(manifest.contains("name: \"RivetPRReaderTests\""))
+    let readerProduct = try #require(products["RivetPRReader"])
+    #expect(targetNames(in: readerProduct) == ["RivetPRReader"])
+
+    let readerTarget = try #require(targets["RivetPRReader"])
+    #expect(readerTarget["type"] as? String == "regular")
+    #expect(readerTarget["path"] as? String == "Sources/BoundedContexts/PRReader/Core")
+    #expect(rawDependencies(in: readerTarget).isEmpty)
+
+    let readerTests = try #require(targets["RivetPRReaderTests"])
+    #expect(readerTests["type"] as? String == "test")
+    #expect(dependencyNames(in: readerTests) == ["RivetPRReader"])
   }
 
   @Test
@@ -106,6 +112,16 @@ struct RivetPRReaderStaticIsolationTests {
       func regex() -> Regex<Substring> {
         return /import Foundation/
       }
+      import Testing
+      """#
+
+    #expect(importedModuleRoots(in: source) == ["Testing"])
+  }
+
+  @Test
+  func closureInIntroducesRegexLiteral() {
+    let source = #"""
+      let transform = { value in /import Foundation/ }
       import Testing
       """#
 
@@ -469,7 +485,7 @@ private func ordinaryRegexLiteralReplacement(
 private func bareRegexCanStart(in source: String, at start: String.Index) -> Bool {
   var probe = start
   let expressionPrefixCharacters = "=([{,:;!?&|+-*%^~<>"
-  let expressionIntroducingKeywords: Set = ["return", "throw", "try", "await", "yield"]
+  let expressionIntroducingKeywords: Set = ["return", "throw", "try", "await", "yield", "in"]
 
   while probe > source.startIndex {
     let previous = source.index(before: probe)
@@ -516,3 +532,66 @@ private let repositoryRoot = URL(fileURLWithPath: #filePath)
   .deletingLastPathComponent()
   .deletingLastPathComponent()
   .deletingLastPathComponent()
+
+private func packageDescription() throws -> [String: Any] {
+  let scratchDirectory = FileManager.default.temporaryDirectory
+    .appendingPathComponent("rivet-pr-reader-package-graph-\(UUID().uuidString)")
+  defer { try? FileManager.default.removeItem(at: scratchDirectory) }
+
+  let process = Process()
+  process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+  process.arguments = [
+    "swift",
+    "package",
+    "--scratch-path",
+    scratchDirectory.path,
+    "dump-package",
+  ]
+  process.currentDirectoryURL = repositoryRoot
+
+  let output = Pipe()
+  process.standardOutput = output
+  process.standardError = Pipe()
+  try process.run()
+  process.waitUntilExit()
+
+  guard process.terminationStatus == 0 else {
+    throw PackageDescriptionError.commandFailed(process.terminationStatus)
+  }
+
+  let data = output.fileHandleForReading.readDataToEndOfFile()
+  return try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+}
+
+private func namedItems(
+  in package: [String: Any],
+  named key: String
+) throws -> [String: [String: Any]] {
+  let items = try #require(package[key] as? [[String: Any]])
+  return try Dictionary(
+    uniqueKeysWithValues: items.map { item in
+      let name = try #require(item["name"] as? String)
+      return (name, item)
+    }
+  )
+}
+
+private func targetNames(in product: [String: Any]) -> [String] {
+  product["targets"] as? [String] ?? []
+}
+
+private func dependencyNames(in target: [String: Any]) -> [String] {
+  rawDependencies(in: target).compactMap { dependency in
+    ["byName", "target", "product"].lazy.compactMap { representation in
+      (dependency[representation] as? [Any])?.first as? String
+    }.first
+  }
+}
+
+private func rawDependencies(in target: [String: Any]) -> [[String: Any]] {
+  target["dependencies"] as? [[String: Any]] ?? []
+}
+
+private enum PackageDescriptionError: Error {
+  case commandFailed(Int32)
+}
