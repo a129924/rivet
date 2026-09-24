@@ -1093,7 +1093,8 @@ transition endpoint。唯一可寫 source fields 為：`meta.viewBox: [1040,640]
 Planner 提供的 candidate validation 為 showcase 9/9、0 errors、0 warnings、0 crossings、0 collisions，minimum
 label clearance = 7.3；其 temporary visual command 因 SIGABRT 未產生可採用證據。因此不得將 candidate 視為
 delivery 或 visual pass。PC-27 layout amendment 與 PR-27 re-review 均已 completed／approved／historical；IM-27
-已 completed／historical；TE-24、RV-24 均已 completed／approved／historical。DL-23 現為唯一 active gate。
+已 completed／historical；TE-24、RV-24 均已 completed／approved／historical。DL-23 已以 `fc37f04`
+completed／visible／historical；CH-21 現為唯一 active gate，HC-21 維持 pending human boundary。
 
 ### Route
 
@@ -1101,5 +1102,59 @@ delivery 或 visual pass。PC-27 layout amendment 與 PR-27 re-review 均已 com
 `6372a2a` 均為 completed／historical；CH-20=`needs-rework`、HC-20=`pending` 亦為 historical。唯一 current route 是：
 
 ```text
-PC-27 original contract (completed／historical) → PC-27 layout amendment (completed／historical) → PR-27 re-review (completed／approved／historical) → IM-27 (completed／historical) → TE-24 (completed／approved／historical) → RV-24 (completed／approved／historical) → DL-23 (active) → CH-21 → HC-21 (human boundary)
+PC-27 original contract (completed／historical) → PC-27 layout amendment (completed／historical) → PR-27 re-review (completed／approved／historical) → IM-27 (completed／historical) → TE-24 (completed／approved／historical) → RV-24 (completed／approved／historical) → DL-23 (`fc37f04` completed／visible／historical) → CH-21 (active) → HC-21 (pending／human boundary)
+```
+
+## PC-28 — Lifecycle Shared Terminal Neutral Deferred Outcome Rework
+
+### Goal
+
+只以中性、延後確定的終態表述消除 lifecycle shared terminal 的語意歧義。採用「中性 deferred
+terminal outcome」；不拆分 response terminal 與 deferred failure surface。
+
+### Exact contract
+
+`auth-flow-lifecycle.json` 唯一允許的 source semantic mutation 是
+`states[id=receive-finish].label: 終態回應 → 待定終態結果`。
+
+`receive-finish` 必須保留同一 state ID、`type: neutral`、lane、col、`width: 140`、既有
+`yOffset`（含其 absent/default 表達）、sublabel 與 tag。所有 11 個 state ID、13 個 transition ID、
+所有 transition endpoints、labels 與 geometry 都維持不變；特別是 `start-finish → receive`、
+`terminal-decision: receive → receive-finish`，以及
+`transport-http-client-error: client-send → requester-failure` 均不得漂移。
+
+此改寫不改 retry policy、`AuthFlow` policy ownership、original-request ownership、deferred I/O
+representation、API、payload、failure surface 或 transport terminal semantics。`待定終態結果` 不是成功、
+失敗或新 runtime state 的宣告，而是既有 shared neutral terminal 的 presentation。
+
+### In-Scope / Written / Modify
+
+- 四份 formal planning artifacts。
+- existing `auth-flow-lifecycle.json`、其 existing sibling generated HTML、standard producer-generated
+  receipt 與 artifact-local visual sidecars。
+
+### ReadOnly / Out-Of-Scope / Deleted
+
+- 所有其他 diagrams/docs、Swift/tests、OAuth、producer、Git/GitHub、commit/push、merge/release，以及未列
+  artifact 均為 ReadOnly／Out-Of-Scope。
+- **Deleted**：無；不得 delete、rename 或 move。
+
+### TestCase
+
+- source diff 只能含 `receive-finish.label` 的上述單一欄位；11 state IDs、13 transition IDs 及所有 locked
+  fields 必須相同。
+- standard lifecycle `validate → deliver` 必須為 showcase 9/9、0 errors、0 warnings；receipt 必須
+  source-matched，所有 input/output/artifact/provenance metadata 均為 repository-relative，且 hash 一致、無本機
+  absolute path。
+- 1440×900、1600×1000、1920×1080、2048×1320 lifecycle viewport 均須通過 visual check，並人工檢視 exact
+  delivered light/dark。若中性 label 造成 visual issue，fail-closed；不得以手改 HTML、例外或擴張 scope 交付。
+
+### Route
+
+本節 supersede 所有較早將 CH-21 稱為 current/active 的 snapshot。PC-27 original contract、layout amendment、
+PR-27、IM-27、TE-24、RV-24 與 DL-23 `fc37f04` 均為 completed／historical；CH-21=`needs-rework`、
+HC-21=`pending` 亦為 historical。唯一 current route：
+
+```text
+PC-28 (completed／historical) → PR-28 (completed／approved／historical) → IM-28 (completed／historical) → TE-25 (completed／approved／historical) → RV-25 (completed／approved／historical) → DL-24 (active) → CH-22 (pending) → HC-22 (pending／human boundary)
 ```

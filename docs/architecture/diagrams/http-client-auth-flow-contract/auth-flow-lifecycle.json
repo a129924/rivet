@@ -114,7 +114,7 @@
     {
       "id": "receive-finish",
       "type": "neutral",
-      "label": "終態回應",
+      "label": "待定終態結果",
       "sublabel": "流程終態",
       "lane": "terminal",
       "col": 2,

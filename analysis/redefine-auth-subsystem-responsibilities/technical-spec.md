@@ -622,7 +622,8 @@ TE-24 依 exact source 驗證。
 Planner 的 read-only candidate diagnostic 為 showcase 9/9、0 errors、0 warnings、0 crossings、0 collisions，
 minimum label clearance = 7.3。temporary visual command 的 SIGABRT 並未產生 delivery evidence；故這不是 visual
 pass，也不放寬 IM-27 的正式 deliver／receipt／四 viewport visual evidence requirement。PC-27 layout amendment 與
-PR-27 re-review 均 completed／approved／historical；IM-27、TE-24、RV-24 均已 completed／approved／historical；DL-23 是唯一 active gate。
+PR-27 re-review 均 completed／approved／historical；IM-27、TE-24、RV-24 均已 completed／approved／historical；DL-23 已以
+`fc37f04` completed／visible／historical，CH-21 是唯一 active gate，HC-21 維持 pending human boundary。
 
 **Written/Modify**：四份 formal planning artifacts；lifecycle JSON、其 existing sibling HTML、standard
 producer-generated receipt 與 artifact-local visual sidecars。**ReadOnly/Out-of-Scope**：normal/state/401/component/
@@ -638,8 +639,9 @@ package artifacts、long-lived docs、Swift/tests、OAuth、producer、Git/GitHu
 CH-20=`needs-rework`、HC-20=`pending` 亦 historical。唯一 current route：
 
 ```text
-PC-27 original contract (completed／historical) → PC-27 layout amendment (completed／historical) → PR-27 re-review (completed／approved／historical) → IM-27 (completed／historical) → TE-24 (completed／approved／historical) → RV-24 (completed／approved／historical) → DL-23 (active) → CH-21 → HC-21 (human boundary)
+PC-27 original contract (completed／historical) → PC-27 layout amendment (completed／historical) → PR-27 re-review (completed／approved／historical) → IM-27 (completed／historical) → TE-24 (completed／approved／historical) → RV-24 (completed／approved／historical) → DL-23 (`fc37f04` completed／visible／historical) → CH-21 (active) → HC-21 (pending／human boundary)
 ```
+
 DL-22 已依已完成的 IM-26／TE-23／RV-23 approval 建立並 push bounded topic commit；CH-20 現在重新取得
 thread state，未知 feedback 停止並交還 human。不得 merge/release。
 
@@ -861,5 +863,37 @@ PC-27 section 為唯一準據。本節 supersede 本檔任何較早的 CH-20 act
 `6372a2a`、CH-20=`needs-rework` 與 HC-20=`pending` 全為 historical。唯一 current route：
 
 ```text
-PC-27 original contract (completed／historical) → PC-27 layout amendment (completed／historical) → PR-27 re-review (completed／approved／historical) → IM-27 (completed／historical) → TE-24 (completed／approved／historical) → RV-24 (completed／approved／historical) → DL-23 (active) → CH-21 → HC-21 (human boundary)
+PC-27 original contract (completed／historical) → PC-27 layout amendment (completed／historical) → PR-27 re-review (completed／approved／historical) → IM-27 (completed／historical) → TE-24 (completed／approved／historical) → RV-24 (completed／approved／historical) → DL-23 (`fc37f04` completed／visible／historical) → CH-21 (active) → HC-21 (pending／human boundary)
+```
+
+### PC-28 — Shared Terminal Neutral Deferred Outcome
+
+PC-28 選擇最小的 neutral deferred terminal outcome，不新增 response terminal 或 deferred-failure
+surface。IM-28 的唯一 lifecycle source mutation 為
+`states[id=receive-finish].label: 終態回應 → 待定終態結果`。
+
+`receive-finish` 的 ID、`type: neutral`、lane、col、`width: 140`、既有 `yOffset`（含 absent/default
+表達）、sublabel 與 tag 均 locked。11 states、13 transitions、所有 transition ID/endpoints/labels/geometry
+均 locked；尤其 `refresh-success-result: start-finish → receive`、
+`terminal-decision: receive → receive-finish` 與
+`transport-http-client-error: client-send → requester-failure` 均不可改動。這只中性化既有 shared terminal
+presentation；不改 retry、policy owner、ownership、deferred I/O、API、payload、failure surface 或 transport terminal
+semantics。
+
+**Written/Modify**：四份 formal planning artifacts；existing lifecycle JSON、existing sibling generated HTML、
+standard producer receipt、artifact-local visual sidecars。**ReadOnly/Out-of-Scope**：所有其他 diagrams/docs、
+Swift/tests、OAuth、producer、Git/GitHub、commit/push、merge/release 與未列 paths。**Deleted**：無，不得
+delete/rename/move。
+
+**TE-25 TestCase**：diff 只能有該 label field；11/13 count 與所有 locked fields 必須相同。standard
+`validate → deliver` 必須 showcase 9/9、0 errors、0 warnings，receipt source-matched、hash-consistent 且 metadata
+全為 repository-relative、無本機 absolute path。lifecycle 1440×900、1600×1000、1920×1080、2048×1320 visual
+check 均 pass，並 manual inspect exact delivered light/dark。任何 label visual issue 均 fail-closed，不得手改 HTML、
+建立例外或擴張 scope。
+
+本節 supersede 本檔所有較早將 CH-21 稱為 current/active 的 snapshot。PC-27 route 全為 historical：
+CH-21=`needs-rework`、HC-21=`pending`。唯一 current route：
+
+```text
+PC-28 (completed／historical) → PR-28 (completed／approved／historical) → IM-28 (completed／historical) → TE-25 (completed／approved／historical) → RV-25 (completed／approved／historical) → DL-24 (active) → CH-22 (pending) → HC-22 (pending／human boundary)
 ```

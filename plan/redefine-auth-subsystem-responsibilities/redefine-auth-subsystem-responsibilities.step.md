@@ -2,36 +2,31 @@
 
 ## Current Phase
 
-### Current DL-23 Delivery — takes precedence
+### Current DL-24 Delivery — takes precedence
 
-`dl-23-active`。PC-26 route clarification、PR-26 re-review、IM-26、TE-23、RV-23 與 DL-22
-`6372a2a` 均 completed／approved／visible historical；CH-20=`needs-rework`、HC-20=`pending` 亦為 historical。
-human 已授權 PC-27。original PC-27 contract 與 initial PR-27 approval 均 completed／approved／historical：lifecycle 以
-`initial-send` 的互斥條件（不新增 state）表達 retained-original send 與 refresh dispatch 擇一；existing
-`requester-failure` 以唯一 `transport-http-client-error: client-send → requester-failure` 回復可達的
-`HTTPClientError` terminal；DL-22 TestCase 明示 lifecycle/normal 四 viewport pass，以及 state 1440=1035、1600=1109、
-1920=1109 containment non-pass、2048 pass。
+`dl-24-delivery-active`。PC-27 original contract、layout amendment、PR-27、IM-27、TE-24、RV-24 與
+DL-23 `fc37f04` 均 completed／historical；CH-21=`needs-rework`、HC-21=`pending` 均為 historical。
 
-PC-27 layout amendment 已 completed／historical。唯一 source allowlist 是 `meta.viewBox: [1040,640] → [1000,640]`、
-`start.width: 115 → 94`、`client-send.width: 118 → 94`、`requester-failure.yOffset: -140 → -100`、
-`refresh-dispatch.labelAt: [130,300] → [340,300]`、`transport-http-client-error.via:
-[[710,100],[850,100],[850,339]] → [[710,100],[850,100],[850,379]]`、以及
-`transport-http-client-error.labelAt: [850,220] → [920,220]`。`initial-send.width`／`requester-failure.width` 維持
-`150`；11 states／13 transitions、IDs、endpoints、semantic labels、ownership、retry、API、payload 與其他 fields 都不變。
-Planner candidate diagnostic 為 9/9、0 errors、0 warnings、0 crossings、0 collisions、minimum label clearance 7.3；temporary
-visual SIGABRT 不構成 evidence。PC-27 layout amendment 與 PR-27 re-review 均 completed／approved／historical；IM-27
-已 completed／historical；TE-24、RV-24 均已 completed／approved／historical；DL-23 是唯一 active gate。
+human 已授權 PC-28 的 shared terminal 最小 rework，並採用中性 deferred terminal outcome，不拆分 response
+terminal 與 deferred failure surface。PC-28 已完成 formal planning：lifecycle 唯一 source mutation 是
+`states[id=receive-finish].label: 終態回應 → 待定終態結果`。`receive-finish` 的 ID、`type: neutral`、lane、col、
+`width: 140`、既有 `yOffset`（含 absent/default 表達）、sublabel 與 tag 均 locked；11 states、13 transitions、
+所有 IDs/endpoints/labels/geometry，特別是 `start-finish → receive`、
+`terminal-decision: receive → receive-finish` 與
+`transport-http-client-error: client-send → requester-failure`，均不得漂移。
+
+只有四份 formal artifacts 以及 existing lifecycle JSON／sibling HTML／producer receipt／visual sidecars 可寫；
+所有其他 diagrams/docs、Swift/tests、OAuth、producer、Git/GitHub、commit/push、merge/release 與未列 paths ReadOnly。
+Deleted：無。PR-28 已獨立審查並 completed／approved／historical；IM-28 已依既定 single-field allowlist
+materialize lifecycle artifact set，completed／historical。TE-25 已獨立驗證既定 TestCase，completed／approved／historical。
+RV-25 已獨立審查 scope／contract／evidence no-drift，completed／approved／historical。DL-24 是唯一 active gate。
+任何 label visual issue 不得以手改 HTML、例外或 scope expansion 交付。
+
 唯一 current route：
 
 ```text
-PC-27 original contract (completed／historical) → PC-27 layout amendment (completed／historical) → PR-27 re-review (completed／approved／historical) → IM-27 (completed／historical) → TE-24 (completed／approved／historical) → RV-24 (completed／approved／historical) → DL-23 (active) → CH-21 → HC-21 (human boundary)
+PC-28 (completed／historical) → PR-28 (completed／approved／historical) → IM-28 (completed／historical) → TE-25 (completed／approved／historical) → RV-25 (completed／approved／historical) → DL-24 (active) → CH-22 (pending) → HC-22 (pending／human boundary)
 ```
-
-PR-27 re-review 已由獨立 Plan-Reviewer 確認上述 allowlist 是純 layout、candidate diagnostics 沒有被誤寫為
-delivery evidence，且 lifecycle source/output／formal artifact contract 一致；已 approved 並解除 IM-27 暫停。
-IM-27 已完成 lifecycle source 及 existing sibling generated/evidence paths 的 materialization，現為 historical；不得改
-normal/state source/output。TE-24、RV-24 均已 completed／approved／historical。DL-23 僅可 delivery，不得 merge、release
-或 GitHub thread action。
 
 ### Historical CH-20 Thread Closure
 
@@ -438,9 +433,17 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 | IM-27 | Independent Implementer | completed | 已依已核准 PC-27 contract 與 layout allowlist materialize lifecycle source、existing sibling generated HTML／receipt／visual evidence。 | PR-27 re-review completed／approved／historical。 | 只寫 lifecycle allowlist 與四份 formal artifacts；standard validate → deliver，receipt 不得手改；不得 Git/GH。 | completed／historical。 |
 | TE-24 | Independent Tester | completed | 已獨立 re-test lifecycle 11 states／13 transitions、exact mutual-condition／transport terminal、receipt/provenance、lifecycle／normal 四 viewport pass，及 state exact non-pass truth。 | IM-27 completed／historical。 | approved，已授權 RV-24；只 verify，不得生成 output/evidence。 | completed／approved／historical。 |
 | RV-24 | Independent Reviewer | completed | 已獨立審查 PC-27 scope、contract、evidence 與 no-drift。 | TE-24 completed／approved／historical。 | approved；已授權 DL-23。 | completed／approved／historical。 |
-| DL-23 | Implementer | active | 在 TE-24／RV-24 approved 後建立單一 bounded PC-27 topic commit 並 push 至既有 PR branch。 | TE-24、RV-24 completed／approved／historical。 | delivery visible；PR 保持 OPEN、ready；不開新 PR、不 merge、不 release。 | active。 |
-| CH-21 | Implementer | pending | 僅在 DL-23 delivery visible 後處理已分類且仍適用的 thread。 | DL-23 completed／visible。 | unknown/unclassified feedback 停止並交 HC-21；不得越過 scope。 | pending。 |
-| HC-21 | Human | pending | Review PC-27 delivered OPEN、ready-for-review PR #37。 | CH-21 completed。 | human boundary；不 merge、不 release。 | pending。 |
+| DL-23 | Implementer | completed | 已建立並 push 單一 bounded PC-27 topic commit `fc37f04` 至既有 PR #37 branch。 | TE-24、RV-24 completed／approved／historical。 | delivery visible；PR 保持 OPEN、ready；不開新 PR、不 merge、不 release。 | completed／visible／historical。 |
+| CH-21 | Implementer | needs-rework | 在 DL-23 visible 後收到 shared lifecycle terminal feedback。 | DL-23 `fc37f04` completed／visible／historical。 | 只由 PC-28 承接；不得直接 closure 或擴張 contract。 | needs-rework／historical。 |
+| HC-21 | Human | pending | Review PC-27 delivered OPEN、ready-for-review PR #37。 | CH-21 original closure path。 | PC-28 route 完成前不得跨越；不 merge、不 release。 | pending／historical。 |
+| PC-28 | Plan-Creator | completed | 建立 shared terminal neutral deferred outcome 的最小 formal rework。 | human 授權 shared terminal decision；CH-21 needs-rework historical。 | 只允許 `receive-finish.label` 單一 source field；11 states／13 transitions、全數 IDs/endpoints/labels/geometry 與 Model C contract locked。 | completed／historical；交 PR-28。 |
+| PR-28 | Independent Plan-Reviewer | completed | 已獨立審查 PC-28 single-field allowlist、neutral/deferred boundary、11/13 invariants、producer/visual fail-closed TestCase 與 route。 | PC-28 completed／historical；四份 artifacts 可讀。 | approved；IM-28 已成為唯一 active gate。 | completed／approved／historical；不得修改 planning artifacts。 |
+| IM-28 | Independent Implementer | completed | 已只將 `receive-finish.label` 由「終態回應」改為「待定終態結果」，並 standard materialize existing lifecycle artifact set。 | PR-28 completed／approved／historical。 | 不拆分 terminal；不改任何 other source field、diagram/doc、Swift、producer、Git/GH；不得手改 HTML/receipt。 | completed／historical。 |
+| TE-25 | Independent Tester | completed | 已獨立驗證 single-field diff、11 states／13 transitions、showcase/receipt/provenance、四 viewport 與 exact delivered light/dark。 | IM-28 completed／historical。 | approved；已交 RV-25，僅 verify，未寫 output/evidence。 | completed／approved／historical。 |
+| RV-25 | Independent Reviewer | completed | 已獨立審查 PC-28 finding 消除、neutral terminal non-drift、scope 與 evidence。 | TE-25 completed／approved／historical。 | approved；已交 DL-24。 | completed／approved／historical。 |
+| DL-24 | Implementer | active | 建立單一 bounded PC-28 topic commit 並 push 至既有 PR #37 branch。 | TE-25、RV-25 approved／historical。 | delivery visible；PR OPEN、ready；不開新 PR、不 merge、不 release。 | active。 |
+| CH-22 | Implementer | pending | 只在 DL-24 delivery visible 後重新取得並處理已分類、仍適用的 thread。 | DL-24 completed／visible。 | unknown/unclassified feedback 停止並交 HC-22；不得越過 scope。 | pending。 |
+| HC-22 | Human | pending | Review PC-28 delivered OPEN、ready-for-review PR #37。 | CH-22 completed。 | human boundary；不 merge、不 release。 | pending。 |
 
 ## PR #37 Thread Mapping
 
@@ -948,3 +951,15 @@ current route 為 PC-26 route clarification（completed／historical）→ PR-26
 IM-26（completed／historical）→ TE-23（completed／approved／historical）→ RV-23（completed／approved／historical）→
 DL-22（`6372a2a` completed／visible／historical）→ CH-20（active）→ HC-20（pending／human boundary）。CH-20 僅可重新
 取得並處理已分類且仍適用的 feedback/thread state；未知或未分類 feedback 停止並交還 HC-20 human review，不 merge、不 release。
+
+2026-09-24 — human 授權 PC-28 shared terminal 最小 rework，採用 Planner 建議的 neutral deferred terminal outcome，
+不拆分 response terminal 與 deferred failure surface。PC-28 completed／historical；CH-21 needs-rework、HC-21 pending
+均為 historical。唯一 source mutation 是 `receive-finish.label: 終態回應 → 待定終態結果`；ID、`type: neutral`、lane、
+col、width=140、既有 yOffset（含 absent/default 表達）、sublabel、tag、11 states、13 transitions、所有 transition
+IDs/endpoints/labels/geometry（含 `start-finish → receive`、`receive → receive-finish` 與 transport error terminal）均
+locked。IM-28 已 completed／historical；以下為 TE-25 active 的 historical snapshot：PC-28（completed／historical）→ PR-28（completed／approved／historical）→ IM-28（completed／historical）→ TE-25（當時 active／historical）→ RV-25 → DL-24 →
+CH-22 → HC-22。只允許四份 formal artifacts 與 existing lifecycle source/output/receipt/visual sidecars；其餘 diagrams/
+docs、Swift/tests、OAuth、producer、Git/GitHub、commit/push、merge/release ReadOnly。TE-25 completed／approved／historical，
+RV-25 已 completed／approved／historical；DL-24 是唯一 active gate。
+
+2026-09-24 — RV-25 已獨立審查並 completed／approved／historical。唯一 current route 為 PC-28（completed／historical）→ PR-28（completed／approved／historical）→ IM-28（completed／historical）→ TE-25（completed／approved／historical）→ RV-25（completed／approved／historical）→ DL-24（active）→ CH-22（pending）→ HC-22（pending／human boundary）。
