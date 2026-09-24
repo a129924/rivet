@@ -2,7 +2,7 @@
 
 ## Topic and Current Phase
 
-`pr-reader-webview-diff-snapshot-viewed-bridge`。PR-01 已由獨立 Plan-Reviewer 明示 `approved`；目前 IM-01、獨立 TE-01 已完成；RV-01 明示 `needs-rework`。Implementer 已完成受限文圖回修；獨立 TE-02 定向重驗發現架構 README 仍有一處舊主路徑，Implementer 已完成該單行修正，獨立 TE-03 定向重驗為 `approved`；RV-02 獨立重審為 `approved`；DL-01 commit 嘗試因 Swift pre-commit format／lint 失敗而停止，未建立 commit。Implementer 已完成受限修正，獨立 TE-04 定向重驗為 `approved`，RV-03 定向審查為 `approved`，DL-01 可重試；TE-02 與 RV-01 歷史 verdict 不變。四份 artifacts 僅在 feature worktree 建立，`dev` worktree 不得修改；其他 step status 不因本次 verdict 自動前進。
+`pr-reader-webview-diff-snapshot-viewed-bridge`。IM-01 已完成；PR-01、TE-01、TE-03、RV-02、TE-04、RV-03 已分別明示 `approved`；RV-01 與 TE-02 的歷史 `needs-rework` verdict 保留。DL-01 首次 commit 嘗試因 Swift pre-commit format／lint 失敗，未建立 commit；受限修正經獨立重驗後，topic commit `cc1292b` 已通過六項 pre-commit hooks，推送至 origin topic branch，並建立以 `dev` 為 base 的 draft PR [#43](https://github.com/a129924/rivet/pull/43)。PR 已確認 OPEN、isDraft，head 為 `feat/pr-reader-webview-diff-snapshot-viewed-bridge`；目前停在 HC-01 Human Review。四份 artifacts 僅在 feature worktree 建立，`dev` worktree 不得修改。
 
 ## Scope Register
 
@@ -27,8 +27,8 @@
 | RV-02 | approved | Reviewer | TE-03 後獨立重審 RV-01 文件／圖 finding、受限回修、ledger 歷史與 dev worktree，明示 verdict。 | BC 文件與架構 README 兩處均列 `Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.present → DiffRenderUseCase.execute`；dataflow JSON 與 HTML 有獨立 adapter 節點，Swift→adapter 僅表達 `DiffSnapshot` 邊界契約且標示 live transport 未實作，adapter→Facade 是 `present(snapshot)`，Facade→UseCase 是 `execute(snapshot)`。RV-01、TE-02 原 verdict 保留；回修路徑限於既定文件／圖與 step ledger，產品程式未再改；`git diff --check` 通過，dev worktree clean。TE-02 圖表 validation／HTML byte-match 與 TE-03 `approved` 證據足夠；Reviewer verdict `approved`，無剩餘 required fix。 |
 | TE-04 | approved | Tester | 對 DL-01 pre-commit 受限 Swift 修正獨立重跑 hook／Swift 測試、檢查 staged 與 unstaged diff、隔離斷言、行數、變動路徑及 dev worktree。 | feature worktree 實際 pre-commit hook 的 trailing-whitespace、end-of-file-fixer、swift format lint、GitHubIntegration consumer contract、SwiftLint、renderer check 六項皆 pass，hook 前後工作樹狀態相同；`swift test` 131 tests／17 suites pass；`git diff --cached --check`、`git diff --check` pass，無 unstaged 變更。五個 Swift 回修檔案均為 plan 授權路徑；static isolation exact product／target graph、bridge path／dependency 及 Presentation 無依賴斷言保留，該檔 799 行；dev worktree clean。Tester verdict `approved`，原 DL-01 失敗記錄與 TE/RV 歷史不變，待 Reviewer 定向確認。 |
 | RV-03 | approved | Reviewer | TE-04 後獨立審查 DL-01 pre-commit 受限修正的 staged Swift、斷言保留、範圍、ledger 與 dev worktree，明示 verdict。 | 已 staged 的 BridgeSession／WireContracts／兩個 bridge tests 保留前次審查語意，改動為 Swift 排版；GitHubIntegration static isolation 只壓縮 package graph 斷言排版，exact product／target 集合、bridge path／dependency 及 Presentation 無依賴斷言均保留，檔案 799 行。TE-04 實際六項 pre-commit hooks 與 Swift 131 tests 通過；staged／unstaged diff check 通過，dev worktree clean。先前 TE／RV verdict 及 DL-01 首次失敗事實保留。Reviewer verdict `approved`，無剩餘 required fix；本筆 ledger 更新需於 commit 重試前補 stage。 |
-| DL-01 | needs-rework | Implementer | 無重大問題且 RV-02 `approved` 後，依使用者授權與 commit 規範完成 topic commit、push、以 `dev` 為 base 開 draft PR。 | 首次 commit 嘗試被 pre-commit Swift format／SwiftLint 擋下，未建立 commit。Implementer 僅修正五個授權 Swift 檔案的格式及 static isolation 局部排版；待獨立定向重驗後才可重試 delivery。不得 merge 或 release。 |
-| HC-01 | pending | Human | 檢查 draft PR 的契約、邊界與驗證證據，決定後續處置。 | draft PR 建立後停止於 Human Review；目前未到此 boundary。 |
+| DL-01 | completed | Implementer | 無重大問題且 RV-02 `approved` 後，依使用者授權與 commit 規範完成 topic commit、push、以 `dev` 為 base 開 draft PR。 | 首次 commit 嘗試被 pre-commit Swift format／SwiftLint 擋下，當次未建立 commit；受限回修通過 TE-04／RV-03 後重試成功。topic commit `cc1292b` 通過六項 pre-commit hooks，已推送至 origin topic branch；draft PR [#43](https://github.com/a129924/rivet/pull/43) 已確認 OPEN／isDraft、base `dev`、head `feat/pr-reader-webview-diff-snapshot-viewed-bridge`。未 merge、未 release。 |
+| HC-01 | pending | Human | 檢查 draft PR 的契約、邊界與驗證證據，決定後續處置。 | draft PR [#43](https://github.com/a129924/rivet/pull/43) 已建立並停在 Human Review；尚無人類審查決定。 |
 
 ## RV-01 Bounded Rework Evidence
 
@@ -63,14 +63,19 @@
 - 獨立執行實際 pre-commit hook，六項均通過，且 hook 未修改工作樹；再重跑 `swift test`，131 tests／17 suites 通過。staged 與 unstaged diff checks 皆通過，無 unstaged 檔案。
 - 五個 Swift 回修檔案在已授權路徑內，static isolation 的 graph／dependency assertions 保留且檔案 799 行；`dev` worktree clean。此 `approved` 僅是 Tester 定向 verdict，不重寫 DL-01 首次失敗或 Reviewer gate。
 
+## DL-01 Delivery Evidence
+
+- 受限回修與 TE-04／RV-03 `approved` 後，topic commit `cc1292b` 成功；六項 pre-commit hooks 皆通過，origin topic branch 已推送。首次 hook 失敗與當次未建立 commit 的事實保留於上節。
+- draft PR [#43](https://github.com/a129924/rivet/pull/43) 已確認 OPEN／isDraft，base 為 `dev`、head 為 `feat/pr-reader-webview-diff-snapshot-viewed-bridge`。交付停在 HC-01，沒有 merge 或 release。
+
 ## Blockers
 
-目前沒有已確認的 scope blocker。PR-01 已由獨立 Plan-Reviewer 明示 `approved`；不得把此 planning verdict 當作 IM-01 完成或後續 Tester／Reviewer approval。若六狀態不能保真、需要變更 Core／Output／DOM／runtime transport 或發現無法安全映射的必要資料，須回報 scope gap，先回規劃或 human boundary，不可有損降級後宣稱完成。
+目前沒有已確認的 scope blocker；DL-01 已完成，HC-01 等待人類審查 draft PR。PR-01、TE 與 RV verdict 各自保留原 gate 意義，不以交付完成取代 Human Review。若六狀態不能保真、需要變更 Core／Output／DOM／runtime transport 或發現無法安全映射的必要資料，須回報 scope gap，先回規劃或 human boundary，不可有損降級後宣稱完成。
 
 ## Human Check
 
-Human 已確認本 Mission 的六狀態、任意 status previous path、Swift authority 連接與永久儲存另 topic，並要求無重大問題時 topic commit → push → draft PR → human review；只准在 feature worktree 實作。`HC-01` 仍待 draft PR 與獨立成果審查，不構成事先接受 implementation 或 merge。
+Human 已確認本 Mission 的六狀態、任意 status previous path、Swift authority 連接與永久儲存另 topic，並要求無重大問題時 topic commit → push → draft PR → human review；只准在 feature worktree 實作。`HC-01` 已有 draft PR 與獨立成果審查證據，仍待人類決定；不構成事先接受 implementation 或 merge。
 
 ## Last Updated
 
-2026-09-24；Plan-Creator 如實記錄獨立 Plan-Reviewer 的 PR-01 `approved`、required fixes 無。IM-01 已完成並交獨立 TE-01；TE-01 已由獨立 Tester 明示 `approved`；RV-01 明示 `needs-rework`；Implementer 已完成文圖受限回修，TE-02 定向重驗為 `needs-rework`，架構 README 前段箭頭區塊已修正，TE-03 定向重驗已明示 `approved`，RV-02 獨立重審明示 `approved`；DL-01 commit 嘗試被 pre-commit 擋下且沒有 commit，Implementer 已完成受限 Swift format／lint 回修，TE-04 獨立定向重驗明示 `approved`，RV-03 定向審查明示 `approved`，DL-01 可重試；HC-01 仍 pending。
+2026-09-24；保留 PR-01／TE-01／TE-03／RV-02／TE-04／RV-03 的 `approved`、RV-01／TE-02 的 `needs-rework` 歷史及 DL-01 首次 hook 失敗事實。DL-01 已以 commit `cc1292b`、origin push、OPEN draft PR #43 完成；目前停止於 HC-01 Human Review，尚未 merge 或 release。
