@@ -4,7 +4,7 @@
   "meta": {
     "title": "RivetHTTPClient AuthFlow 目標合約生命週期",
     "quality_profile": "showcase",
-    "viewBox": [1040, 640],
+    "viewBox": [1000, 640],
     "legend": { "mode": "hidden" }
   },
   "lanes": [
@@ -42,7 +42,7 @@
       "sublabel": "無請求資料",
       "lane": "main",
       "col": 2,
-      "width": 115,
+      "width": 94,
       "step": "03",
       "tag": "不建構請求"
     },
@@ -50,12 +50,12 @@
       "id": "initial-send",
       "type": "active",
       "label": "AuthRequester",
-      "sublabel": "只保有呼叫端原始請求",
+      "sublabel": "保有原始請求；依語意擇一派送",
       "lane": "main",
       "col": 3,
-      "width": 118,
+      "width": 150,
       "step": "04",
-      "tag": "目標所有者"
+      "tag": "目標所有者／互斥派送"
     },
     {
       "id": "client-send",
@@ -64,7 +64,7 @@
       "sublabel": "通用 HTTP 輸入／輸出",
       "lane": "main",
       "col": 4,
-      "width": 118,
+      "width": 94,
       "step": "05",
       "tag": "目標所有者"
     },
@@ -124,13 +124,13 @@
     {
       "id": "requester-failure",
       "type": "failure",
-      "label": "既有模型 A",
-      "sublabel": ".send(HTTPRequest)；非目標",
+      "label": "HTTPClientError 終態",
+      "sublabel": "Requester 傳輸失敗；非 AuthFlow 策略",
       "lane": "terminal",
       "col": 2,
-      "width": 130,
-      "yOffset": -140,
-      "tag": "歷史可追溯性"
+      "width": 150,
+      "yOffset": -100,
+      "tag": "既有 Model A 失敗路徑"
     }
   ],
   "transitions": [
@@ -159,12 +159,12 @@
       "id": "refresh-dispatch",
       "from": "initial-send",
       "to": "start-finish",
-      "label": "派送至延後確定的憑證更新 I/O 邊界",
+      "label": "更新語意：派送至延後確定的憑證更新 I/O 邊界",
       "variant": "security",
       "fromSide": "top",
       "toSide": "top",
       "via": [[556, 100], [20, 100], [20, 420], [402, 420]],
-      "labelAt": [100, 300]
+      "labelAt": [340, 300]
     },
     {
       "id": "client-sends-initial-request",
@@ -219,6 +219,16 @@
       "route": "right-channel",
       "fromSide": "right",
       "toSide": "right"
+    },
+    {
+      "id": "transport-http-client-error",
+      "from": "client-send",
+      "to": "requester-failure",
+      "label": "傳輸 HTTPClientError",
+      "fromSide": "top",
+      "toSide": "right",
+      "via": [[710, 100], [850, 100], [850, 379]],
+      "labelAt": [920, 220]
     }
   ]
 }
