@@ -4,7 +4,7 @@
   "meta": {
     "title": "模型 C：401 憑證更新與重試（採用目標架構／尚未實作）",
     "quality_profile": "showcase",
-    "viewBox": [1250, 780],
+    "viewBox": [1337, 780],
     "column_fit": "spread",
     "legend": { "mode": "hidden" },
     "views": [
@@ -38,10 +38,10 @@
   ],
   "segments": [
     { "from": 150, "to": 240, "label": "呼叫端入口與每次執行的流程建立" },
-    { "from": 246, "to": 426, "label": "首次 401 的資格分流（互斥）" },
-    { "from": 432, "to": 510, "label": "符合資格才派送憑證更新" },
-    { "from": 516, "to": 538, "label": "更新失敗即終態（互斥）" },
-    { "from": 544, "to": 710, "label": "只在更新成功後的一次重試與終態回傳" }
+    { "from": 246, "to": 426, "label": "首次 401：〔不具資格〕終態／〔具資格〕更新（互斥）" },
+    { "from": 432, "to": 510, "label": "〔具資格〕更新支線：派送與結果回傳" },
+    { "from": 516, "to": 538, "label": "〔更新失敗〕終態支線（不重試）" },
+    { "from": 544, "to": 710, "label": "〔更新成功〕一次重試支線與終態回傳" }
   ],
   "messages": [
     { "id": "caller-entry", "from": "caller", "to": "auth-requester", "y": 160, "label": "交付原始 HTTPRequest（本次執行入口）", "variant": "emphasis" },
@@ -50,18 +50,18 @@
     { "id": "initial-decision-input", "from": "auth-requester", "to": "auth-flow", "y": 244, "label": "請求初始語意（無請求資料）", "variant": "security" },
     { "id": "initial-send", "from": "auth-flow", "to": "auth-requester", "y": 272, "label": "初始傳送語意（無請求資料）", "variant": "return" },
     { "id": "initial-execution", "from": "auth-requester", "to": "requester", "y": 300, "label": "執行保留的原始請求", "variant": "default" },
-    { "id": "first-401", "from": "requester", "to": "auth-requester", "y": 328, "label": "原始 HTTPResponse：401", "variant": "return" },
-    { "id": "flow-receives-401", "from": "auth-requester", "to": "auth-flow", "y": 356, "label": "轉交 401 回應語意", "variant": "security" },
-    { "id": "refresh-decision", "from": "auth-flow", "to": "auth-requester", "y": 384, "label": "僅符合資格的 AuthFlow：更新；不具資格則終態", "variant": "return" },
-    { "id": "ineligible-terminal", "from": "auth-flow", "to": "auth-requester", "y": 412, "label": "不具資格：終態；不派送更新", "variant": "return" },
-    { "id": "dispatch-refresh", "from": "auth-requester", "to": "refresh-boundary", "y": 440, "label": "派送待定的憑證更新", "variant": "dashed" },
+    { "id": "first-401", "from": "requester", "to": "auth-requester", "y": 328, "label": "原始 HTTPResponse（首次 401）", "variant": "return" },
+    { "id": "flow-receives-401", "from": "auth-requester", "to": "auth-flow", "y": 356, "label": "轉交原始 HTTPResponse（首次 401）", "variant": "security" },
+    { "id": "refresh-decision", "from": "auth-flow", "to": "auth-requester", "y": 384, "label": "首次 401 的資格分流：具資格才可更新", "variant": "return" },
+    { "id": "ineligible-terminal", "from": "auth-flow", "to": "auth-requester", "y": 412, "label": "〔不具資格〕終態；不派送更新", "variant": "return" },
+    { "id": "dispatch-refresh", "from": "auth-requester", "to": "refresh-boundary", "y": 440, "label": "〔具資格〕派送待定的憑證更新", "variant": "dashed" },
     { "id": "refresh-complete", "from": "refresh-boundary", "to": "auth-requester", "y": 468, "label": "更新結果（合約延後確定）", "variant": "return" },
     { "id": "refresh-outcome", "from": "auth-requester", "to": "auth-flow", "y": 496, "label": "經延後確定的結果邊界交回流程", "variant": "security" },
-    { "id": "refresh-failure-terminal", "from": "auth-flow", "to": "auth-requester", "y": 524, "label": "更新失敗：終態；不取得重試許可", "variant": "return" },
-    { "id": "retry-permission", "from": "auth-flow", "to": "auth-requester", "y": 552, "label": "只有更新成功：一次重試；失敗終態", "variant": "return" },
+    { "id": "refresh-failure-terminal", "from": "auth-flow", "to": "auth-requester", "y": 524, "label": "〔更新失敗〕終態；不取得重試許可", "variant": "return" },
+    { "id": "retry-permission", "from": "auth-flow", "to": "auth-requester", "y": 552, "label": "〔更新成功〕一次重試許可", "variant": "return" },
     { "id": "retry-original", "from": "auth-requester", "to": "requester", "y": 580, "label": "僅重送原始請求", "variant": "emphasis" },
-    { "id": "retry-response", "from": "requester", "to": "auth-requester", "y": 608, "label": "原始 HTTPResponse", "variant": "return" },
-    { "id": "terminal-input", "from": "auth-requester", "to": "auth-flow", "y": 636, "label": "轉交重試回應語意", "variant": "security" },
+    { "id": "retry-response", "from": "requester", "to": "auth-requester", "y": 608, "label": "原始 HTTPResponse（重試結果）", "variant": "return" },
+    { "id": "terminal-input", "from": "auth-requester", "to": "auth-flow", "y": 636, "label": "轉交原始 HTTPResponse（重試結果）", "variant": "security" },
     { "id": "terminal-decision", "from": "auth-flow", "to": "auth-requester", "y": 664, "label": "終態決策：正常回應完成；第二次 401 不再更新，由 AuthRequester 回傳", "variant": "return" },
     { "id": "terminal-return", "from": "auth-requester", "to": "caller", "y": 692, "label": "回傳最終 HTTPResponse", "variant": "return" }
   ],
@@ -73,5 +73,23 @@
     { "participant": "requester", "from": 294, "to": 334, "type": "backend" },
     { "participant": "requester", "from": 574, "to": 614, "type": "backend" },
     { "participant": "refresh-boundary", "from": 434, "to": 474, "type": "external" }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "首次 401 的互斥 guard",
+      "items": [
+        "〔不具資格〕只走 ineligible-terminal，於此終態。",
+        "〔具資格〕才可走 refresh-decision → dispatch-refresh；兩支不得連續發生。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "更新結果的互斥 guard",
+      "items": [
+        "〔更新失敗〕只走 refresh-failure-terminal，於此終態。",
+        "〔更新成功〕才可走 retry-permission → retry-original；只授予一次。"
+      ]
+    }
   ]
 }

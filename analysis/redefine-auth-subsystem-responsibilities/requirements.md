@@ -1153,8 +1153,99 @@ representation、API、payload、failure surface 或 transport terminal semantic
 
 本節 supersede 所有較早將 CH-21 稱為 current/active 的 snapshot。PC-27 original contract、layout amendment、
 PR-27、IM-27、TE-24、RV-24 與 DL-23 `fc37f04` 均為 completed／historical；CH-21=`needs-rework`、
-HC-21=`pending` 亦為 historical。唯一 current route：
+HC-21=`pending` 亦為 historical。下列為 DL-24 visible 後的 PC-28 historical snapshot，已由 PC-29 承接並
+supersede，不是 current route：
 
 ```text
-PC-28 (completed／historical) → PR-28 (completed／approved／historical) → IM-28 (completed／historical) → TE-25 (completed／approved／historical) → RV-25 (completed／approved／historical) → DL-24 (active) → CH-22 (pending) → HC-22 (pending／human boundary)
+PC-28 (completed／historical) → PR-28 (completed／approved／historical) → IM-28 (completed／historical) → TE-25 (completed／approved／historical) → RV-25 (completed／approved／historical) → DL-24 (`ac43495` completed／visible／historical) → CH-22 (當時 active／historical) → HC-22 (當時 pending／human boundary／historical)
+```
+
+## PC-29 — 401 互斥條件分支與原始回應轉交回修
+
+PC-29 是 human 授權的最小 401 sequence 表達回修。它只消除兩種錯誤讀法：不具資格／更新失敗不能被讀成會線性流入 refresh dispatch／retry；首次與重試的回應必須以 raw `HTTPResponse` 交給 `AuthFlow`，不是把 semantic 401 response 交給 flow。這是既有 Model C 與已鎖定 retry policy 的視覺投影修正，不新增 policy、runtime behavior、API、payload、owner、state 或 transition。
+
+### Goal
+
+- `401-refresh-retry` 以可見的兩組互斥 guard 表達「不具資格即終態」對「具資格才派送更新」，以及「更新失敗即終態」對「更新成功才有一次重試」；任一終態支線都不得被讀為其後 dispatch／retry 的前序。
+- `AuthRequester → AuthFlow` 的 `flow-receives-401` 與 `terminal-input` 明示轉交 raw `HTTPResponse`；`AuthFlow` 因而仍是唯一 401／refresh／retry policy owner，`AuthRequester` 仍只是 semantic-action interpreter。
+
+### Non-Goal
+
+不改 401 flow 的 factory prefix、participants、original request ownership、deferred refresh boundary、caller terminal return、retry 次數、state/lifecycle topology、error/failure surface、Swift/runtime API、OAuth、producer 或任何其他 diagram。不得以新 participant、message、state、transition、payload、API 或 retry capability 代替 guard 表達。
+
+### In-Scope / Written / Modify
+
+- 四份 formal planning artifacts。
+- existing `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.json`，以及其 existing sibling generated HTML、standard producer-generated delivery receipt 與 artifact-local visual sidecars；不得新增 artifact path。
+
+### ReadOnly / Out-Of-Scope / Deleted
+
+- `auth-flow-lifecycle`、`auth-flow-state`、`normal-request`、component/package canvas、long-lived docs、Swift/tests、OAuth、producer、Git/GitHub、merge、release 與所有未列 path 均為 ReadOnly／Out-of-Scope。
+- **Deleted**：無；不得 delete、rename 或 move。
+
+### Exact 401 Source Contract
+
+`401-refresh-retry.json` 保留 6 個 participant IDs、7 個 activation records、`meta.viewBox: [1250,780]`、5 個 segment records 與全部 20 個既有 message IDs；不新增／刪除／重排 message。所有 participant、activation、message 的 `from`、`to`、`y`、`variant` 及未列 field 均 lock。state／event／edge count 的 impact 為 **無**：lifecycle 維持 11 states／13 transitions，state 維持 11 states／12 transitions，normal 維持 12 messages，且三者 source/output/evidence 都不可寫入。
+
+唯一允許的 message label mapping 為：
+
+| Message ID | Locked endpoints / geometry | Exact label |
+| --- | --- | --- |
+| `first-401` | `requester → auth-requester`；`y: 328`；`return` | `原始 HTTPResponse（首次 401）` |
+| `flow-receives-401` | `auth-requester → auth-flow`；`y: 356`；`security` | `轉交原始 HTTPResponse（首次 401）` |
+| `refresh-decision` | `auth-flow → auth-requester`；`y: 384`；`return` | `首次 401 的資格分流：具資格才可更新` |
+| `ineligible-terminal` | `auth-flow → auth-requester`；`y: 412`；`return` | `〔不具資格〕終態；不派送更新` |
+| `dispatch-refresh` | `auth-requester → refresh-boundary`；`y: 440`；`dashed` | `〔具資格〕派送待定的憑證更新` |
+| `refresh-failure-terminal` | `auth-flow → auth-requester`；`y: 524`；`return` | `〔更新失敗〕終態；不取得重試許可` |
+| `retry-permission` | `auth-flow → auth-requester`；`y: 552`；`return` | `〔更新成功〕一次重試許可` |
+| `retry-response` | `requester → auth-requester`；`y: 608`；`return` | `原始 HTTPResponse（重試結果）` |
+| `terminal-input` | `auth-requester → auth-flow`；`y: 636`；`security` | `轉交原始 HTTPResponse（重試結果）` |
+
+五個 existing segment 的 geometry 仍為 `[150,240]`、`[246,426]`、`[432,510]`、`[516,538]`、`[544,710]`；其 exact labels 依序為「呼叫端入口與每次執行的流程建立」、「首次 401：〔不具資格〕終態／〔具資格〕更新（互斥）」、「〔具資格〕更新支線：派送與結果回傳」、「〔更新失敗〕終態支線（不重試）」、「〔更新成功〕一次重試支線與終態回傳」。
+
+只可新增兩個 renderer-owned explanatory cards，不能新增 sequence message：
+
+1. `首次 401 的互斥 guard`：`〔不具資格〕只走 ineligible-terminal，於此終態。`；`〔具資格〕才可走 refresh-decision → dispatch-refresh；兩支不得連續發生。`
+2. `更新結果的互斥 guard`：`〔更新失敗〕只走 refresh-failure-terminal，於此終態。`；`〔更新成功〕才可走 retry-permission → retry-original；只授予一次。`
+
+說明卡、segment labels 與 guard-marked message labels共同是本 sequence schema 可驗證的 alternative projection；它們不代表新 event、branch API、state 或 runtime path。若此 exact source contract無法通過 showcase／visual gate，fail-closed 並交回 planning；不得自行改變 geometry、message count 或 locked semantics。
+
+### TestCase and Route
+
+- TE-26 必須驗證 20 message IDs/count、6 participants、7 activations、5 segments、two-card-only addition，以及上表 label/endpoints/y/variant；不具資格／更新失敗 branch 均明示 terminal 且與 dispatch/retry 互斥。`flow-receives-401`／`terminal-input` 只可表達 raw `HTTPResponse` handoff。
+- standard Archify `validate → deliver` 必須 showcase 9/9、0 errors、0 warnings；receipt source-match/hash/provenance 一致且只含 repository-relative metadata、無本機 absolute path。1440×900、1600×1000、1920×1080、2048×1320 均 visual-check pass，並人工檢視 exact delivered light/dark。
+- PC-28 至 DL-24 `ac43495`、CH-22=`needs-rework`、HC-22=`pending` 均為 historical。下列為 PC-29 initial planning／initial review 後、已被 layout amendment supersede 的 historical snapshot，不是 current route：
+
+```text
+PC-29 (completed／historical) → PR-29 (completed／approved／historical) → IM-29 (當時 active／historical) → TE-26 (當時 pending／historical) → RV-26 → DL-25 → CH-23 → HC-23
+```
+
+PR-29 initial review 已獨立審查 exact allowlist、counts、alternative projection 與 ReadOnly boundary，為 completed／approved／historical。initial snapshot 中的 IM-29 active 與 TE-26 pending 均已被下列 layout-amendment route supersede；CH-23 只能在 DL-25 visible 後重新取得當時已分類且仍適用的 thread；未知或未分類 feedback 停在 HC-23 human boundary，不 merge、不 release。
+
+### PC-29 Layout Amendment
+
+此 amendment 只將 `401-refresh-retry.json` 的 presentation canvas 放寬為唯一可改欄位：
+`meta.viewBox: [1250,780] → [1337,780]`。它 supersede PC-29 initial contract 中對該單一欄位的
+`[1250,780]` lock；不改任何 sequence semantic 或 schema field。
+
+Planner 的 read-only layout evidence 顯示 `[1336,780]` 仍有 `scrollHeight: 901`，因此不符合
+1440×900 containment；`[1337,780]` candidate 則為 showcase 9/9、0 errors、0 warnings，四個 viewport 的
+exact `scrollHeight` 依序為 900、1000、1080、1320，minimum text size = 7.651。這些是 planning
+candidate evidence，不是 delivery、receipt 或 visual-pass 結論。
+
+6 participant IDs、7 activation records、5 segment records、20 message IDs，以及每則 message 的
+`from`／`to`／`y`／`variant`／label 全部維持 locked；兩張 renderer-owned guard cards、互斥 guard
+projection、`AuthFlow` 的 policy ownership、exactly-one retry 與所有 ReadOnly／Non-Goal 均不變。除上述
+`meta.viewBox` 外，不得修改任何 diagram field。
+
+### Amended Route
+
+PC-29 initial planning、PR-29 initial review 與 PR-29 re-review 均為 completed／approved／historical。PR-29 re-review
+已確認 layout amendment 的唯一 `meta.viewBox` allowlist 與既有 PC-29 locks；IM-29 與 TE-26 已
+completed／historical，TE-26 verdict 為 `approved`。RV-26 initial review 僅因 PC-28 historicality 記述未對齊而
+`needs-rework`；RV-26 re-review 已 completed／approved／historical。DL-25 現為唯一 active gate；CH-23 與 HC-23
+維持 pending。唯一 current route 是：
+
+```text
+PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (active／唯一 current gate) → CH-23 (pending) → HC-23 (pending／human boundary)
 ```

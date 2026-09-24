@@ -2,31 +2,35 @@
 
 ## Current Phase
 
-### Current DL-24 Delivery — takes precedence
+### Current DL-25 Delivery — takes precedence
 
-`dl-24-delivery-active`。PC-27 original contract、layout amendment、PR-27、IM-27、TE-24、RV-24 與
-DL-23 `fc37f04` 均 completed／historical；CH-21=`needs-rework`、HC-21=`pending` 均為 historical。
+`dl-25-delivery-active`。PC-28、PR-28、IM-28、TE-25、RV-25 與 DL-24 `ac43495` 均 completed／historical；
+CH-22=`needs-rework`、HC-22=`pending` 均為 historical。PC-29 layout amendment 與 PR-29 re-review 亦為
+completed／historical；PR-29 re-review verdict 為 `approved`。
 
-human 已授權 PC-28 的 shared terminal 最小 rework，並採用中性 deferred terminal outcome，不拆分 response
-terminal 與 deferred failure surface。PC-28 已完成 formal planning：lifecycle 唯一 source mutation 是
-`states[id=receive-finish].label: 終態回應 → 待定終態結果`。`receive-finish` 的 ID、`type: neutral`、lane、col、
-`width: 140`、既有 `yOffset`（含 absent/default 表達）、sublabel 與 tag 均 locked；11 states、13 transitions、
-所有 IDs/endpoints/labels/geometry，特別是 `start-finish → receive`、
-`terminal-decision: receive → receive-finish` 與
-`transport-http-client-error: client-send → requester-failure`，均不得漂移。
-
-只有四份 formal artifacts 以及 existing lifecycle JSON／sibling HTML／producer receipt／visual sidecars 可寫；
-所有其他 diagrams/docs、Swift/tests、OAuth、producer、Git/GitHub、commit/push、merge/release 與未列 paths ReadOnly。
-Deleted：無。PR-28 已獨立審查並 completed／approved／historical；IM-28 已依既定 single-field allowlist
-materialize lifecycle artifact set，completed／historical。TE-25 已獨立驗證既定 TestCase，completed／approved／historical。
-RV-25 已獨立審查 scope／contract／evidence no-drift，completed／approved／historical。DL-24 是唯一 active gate。
-任何 label visual issue 不得以手改 HTML、例外或 scope expansion 交付。
+IM-29 與 TE-26 已 completed／historical；TE-26 verdict 為 `approved`。RV-26 initial review 僅因 PC-28 historicality
+記述未對齊而 `needs-rework`；其 re-review 已 completed／approved／historical。DL-25 是唯一 active gate，可建立一個
+bounded topic commit 並 push；delivery visible 前不得進入 CH-23 或 HC-23。
 
 唯一 current route：
 
 ```text
-PC-28 (completed／historical) → PR-28 (completed／approved／historical) → IM-28 (completed／historical) → TE-25 (completed／approved／historical) → RV-25 (completed／approved／historical) → DL-24 (active) → CH-22 (pending) → HC-22 (pending／human boundary)
+PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (active／唯一 current gate) → CH-23 (pending) → HC-23 (pending／human boundary)
 ```
+
+### Historical IM-29 Initial-Contract Snapshot
+
+initial `im-29-implementation-active` 是 PC-29 initial planning／initial review 後的 historical token；不構成 current gate。當時 IM-29 為 active、TE-26 為 pending，已被上方 layout-amendment route supersede。當時 IM-29 只能依已核准 layout amendment 的 `meta.viewBox: [1337,780]` 及其餘不變 locks 進行。
+
+human 已授權 PC-29：只讓 `401-refresh-retry` 將 ineligible／refresh-failure 表達為真正的互斥 guard branches，
+並將 initial/retry raw `HTTPResponse` 明確交給 `AuthFlow`。PC-29 initial planning 已完成。initial IM-29 僅可修改 existing
+401 source/output/receipt/visual evidence 與四份 formal artifacts：保留 6 participants、7 activations、20 existing
+message IDs、5 segments、`meta.viewBox: [1250,780]`，全部 endpoints/`y`/variants 不變。只可改 nine labels、five
+segment labels 並加入 two renderer-owned guard cards；lifecycle 11 states／13 transitions、state 11 states／12 transitions、
+normal 12 messages皆無 impact且 ReadOnly。guard cards/segments 不代表新 state/event/edge/message、policy/API/payload 或 runtime path。
+
+所有其他 diagrams/docs、Swift/tests、OAuth、producer、Git/GitHub、commit/push、merge/release 與未列 paths ReadOnly。
+Deleted：無。PC-29 與 PR-29 initial review 均 completed／historical，PR-29 initial verdict 為 approved；該 initial route 已 historical。
 
 ### Historical CH-20 Thread Closure
 
@@ -441,9 +445,18 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 | IM-28 | Independent Implementer | completed | 已只將 `receive-finish.label` 由「終態回應」改為「待定終態結果」，並 standard materialize existing lifecycle artifact set。 | PR-28 completed／approved／historical。 | 不拆分 terminal；不改任何 other source field、diagram/doc、Swift、producer、Git/GH；不得手改 HTML/receipt。 | completed／historical。 |
 | TE-25 | Independent Tester | completed | 已獨立驗證 single-field diff、11 states／13 transitions、showcase/receipt/provenance、四 viewport 與 exact delivered light/dark。 | IM-28 completed／historical。 | approved；已交 RV-25，僅 verify，未寫 output/evidence。 | completed／approved／historical。 |
 | RV-25 | Independent Reviewer | completed | 已獨立審查 PC-28 finding 消除、neutral terminal non-drift、scope 與 evidence。 | TE-25 completed／approved／historical。 | approved；已交 DL-24。 | completed／approved／historical。 |
-| DL-24 | Implementer | active | 建立單一 bounded PC-28 topic commit 並 push 至既有 PR #37 branch。 | TE-25、RV-25 approved／historical。 | delivery visible；PR OPEN、ready；不開新 PR、不 merge、不 release。 | active。 |
-| CH-22 | Implementer | pending | 只在 DL-24 delivery visible 後重新取得並處理已分類、仍適用的 thread。 | DL-24 completed／visible。 | unknown/unclassified feedback 停止並交 HC-22；不得越過 scope。 | pending。 |
-| HC-22 | Human | pending | Review PC-28 delivered OPEN、ready-for-review PR #37。 | CH-22 completed。 | human boundary；不 merge、不 release。 | pending。 |
+| DL-24 | Implementer | completed | 單一 bounded PC-28 topic commit `ac43495` 已 push 至既有 PR #37 branch，且 delivery visible。 | TE-25、RV-25 approved／historical。 | completed／visible／historical；不開新 PR、不 merge、不 release。 | completed／visible／historical。 |
+| CH-22 | Implementer | needs-rework | DL-24 visible 後收到 401 guard／raw-response feedback。 | DL-24 `ac43495` completed／visible／historical。 | 只由 PC-29 承接；不得直接 closure 或擴張 contract。 | needs-rework／historical。 |
+| HC-22 | Human | pending | PC-28 delivered OPEN、ready-for-review PR #37 的 historical human boundary。 | CH-22 original closure path。 | PC-29 route 完成前不得跨越；不 merge、不 release。 | pending／historical。 |
+| PC-29 | Plan-Creator | completed | 建立 401 互斥條件分支與 raw `HTTPResponse` handoff 的最小 formal rework。 | human 明確授權三項 scope；CH-22 needs-rework historical。 | 只鎖定 listed 401 source/output/evidence 與 four formal artifacts；20 messages、6 participants、7 activations、5 segments及所有 endpoints/y/variants locked；不改 policy、ownership、API、payload、state/transition count、其他 diagrams、Swift、Git/GH。 | completed／historical；交 PR-29。 |
+| PR-29 | Independent Plan-Reviewer | completed | 已獨立審查 PC-29 initial exact labels、two-card guard projection、counts、ReadOnly boundary、TestCase 與 route。 | PC-29 completed／historical。 | approved；initial review 已 completed，不得修改 planning artifacts。 | completed／approved／historical。 |
+| PR-29 re-review | Independent Plan-Reviewer | completed | 已獨立 re-review PC-29 layout amendment 的唯一 source allowlist、candidate evidence 與既有 PC-29 contract locks。 | PC-29 layout amendment completed／historical。 | approved；不得修改 planning artifacts。 | completed／approved／historical。 |
+| IM-29 | Independent Implementer | completed | 已依 approved layout amendment materialize 已鎖定的 401 artifact set。 | PR-29 re-review completed／approved／historical。 | 只可依 amended `meta.viewBox` allowlist standard materialize；不得手改 HTML/receipt、不得改其他 source 或 Git/GH。 | completed／historical。 |
+| TE-26 | Independent Tester | completed | 已完成 IM-29 的獨立 re-test。 | IM-29 completed／historical。 | approved；只 verify，未生成 output/evidence。 | completed／approved／historical。 |
+| RV-26 | Independent Reviewer | completed | initial review 僅發現 PC-28 historicality 記述未對齊；re-review 已獨立確認 PC-29 scope、contract、evidence 與 no-drift。 | TE-26 completed／approved／historical。 | approved；交 DL-25。 | completed／approved／historical。 |
+| DL-25 | Implementer | active | 在 TE-26 與 RV-26 re-review approved 後建立一個 bounded topic commit 並 push 至既有 PR #37 branch。 | TE-26 approved；RV-26 re-review approved。 | delivery visible 後才可 CH-23；不開新 PR、不 merge、不 release。 | active／唯一 current gate。 |
+| CH-23 | Implementer | pending | delivery visible 後重新取得當時已分類且仍適用的 feedback/thread state。 | DL-25 completed／visible。 | unknown/unclassified feedback 停在 HC-23；不得越過 scope。 | pending。 |
+| HC-23 | Human | pending | Review PC-29 delivered OPEN、ready-for-review PR #37。 | CH-23 completed。 | human boundary；不 merge、不 release。 | pending。 |
 
 ## PR #37 Thread Mapping
 
@@ -960,6 +973,32 @@ IDs/endpoints/labels/geometry（含 `start-finish → receive`、`receive → re
 locked。IM-28 已 completed／historical；以下為 TE-25 active 的 historical snapshot：PC-28（completed／historical）→ PR-28（completed／approved／historical）→ IM-28（completed／historical）→ TE-25（當時 active／historical）→ RV-25 → DL-24 →
 CH-22 → HC-22。只允許四份 formal artifacts 與 existing lifecycle source/output/receipt/visual sidecars；其餘 diagrams/
 docs、Swift/tests、OAuth、producer、Git/GitHub、commit/push、merge/release ReadOnly。TE-25 completed／approved／historical，
-RV-25 已 completed／approved／historical；DL-24 是唯一 active gate。
+RV-25 已 completed／approved／historical；DL-24 當時為唯一 active gate，此為 historical snapshot。
 
-2026-09-24 — RV-25 已獨立審查並 completed／approved／historical。唯一 current route 為 PC-28（completed／historical）→ PR-28（completed／approved／historical）→ IM-28（completed／historical）→ TE-25（completed／approved／historical）→ RV-25（completed／approved／historical）→ DL-24（active）→ CH-22（pending）→ HC-22（pending／human boundary）。
+2026-09-24 — RV-25 已獨立審查並 completed／approved／historical。當時的 current route（historical snapshot）為 PC-28（completed／historical）→ PR-28（completed／approved／historical）→ IM-28（completed／historical）→ TE-25（completed／approved／historical）→ RV-25（completed／approved／historical）→ DL-24（active）→ CH-22（pending）→ HC-22（pending／human boundary）。
+
+2026-09-24 — DL-24 bounded topic commit `ac43495` 已 push 且對既有 PR #37 visible。PC-28、PR-28、IM-28、TE-25、RV-25 與 DL-24 均為 completed／historical，DL-24 為 completed／visible／historical。下列為 DL-24 visible 後、已由 PC-29 承接並 supersede 的 historical snapshot，不是 current route：PC-28（completed／historical）→ PR-28（completed／approved／historical）→ IM-28（completed／historical）→ TE-25（completed／approved／historical）→ RV-25（completed／approved／historical）→ DL-24（`ac43495` completed／visible／historical）→ CH-22（當時 active／historical）→ HC-22（當時 pending／human boundary／historical）。CH-22 當時只可重新取得並處理已分類、仍適用的 thread；unknown 或 unclassified feedback 停止並交 HC-22 human boundary，不 merge、不 release。本次僅同步四份 formal planning artifacts；不改 contract、diagram、evidence、Git 或 GitHub。
+
+2026-09-24 — CH-22 收到三項已分類 feedback，human 授權 PC-29 最小 rework：401 sequence 的
+`ineligible-terminal`／`refresh-failure-terminal` 必須以真正互斥 guard branches 表達，不能線性流入
+`dispatch-refresh`／`retry-permission`；`flow-receives-401`／`terminal-input` 必須向 `AuthFlow` 轉交 raw
+`HTTPResponse`，不可標為 semantic 401 response。PC-29 已 completed／historical，固定 6 participants、7 activations、
+20 message IDs、5 segment geometries與全部 endpoint/y/variant；僅允許 nine message labels、five segment labels與 two
+renderer-owned guard cards。lifecycle 11 states／13 transitions、state 11 states／12 transitions、normal 12 messages均無 impact。
+PC-28 至 DL-24 `ac43495`、CH-22=`needs-rework`、HC-22=`pending` 均為 historical。下列是 PC-29 initial planning／initial review 後的 historical route：
+PC-29（completed／historical）→ PR-29（completed／approved／historical）→ IM-29（當時 active／historical）→ TE-26（當時 pending／historical）→ RV-26 → DL-25 → CH-23 → HC-23；當時 IM-29 是唯一 current gate，尚未進入 delivery、Git 或 GitHub thread action。
+
+2026-09-24 — Planner read-only evidence 確認 PC-29 的 401 layout 只需一個 pure presentation amendment：
+唯一 source allowlist 為 `meta.viewBox: [1250,780] → [1337,780]`。`[1336,780]` 在 1440×900 仍有
+`scrollHeight: 901`，不可採用；`[1337,780]` candidate 為 showcase 9/9、0 errors、0 warnings，四 viewport
+exact `scrollHeight` 為 900／1000／1080／1320，minimum text size = 7.651。candidate 未經 delivery 或 visual
+evidence，不得記為 pass。6 participant IDs、7 activation records、5 segment records、20 message IDs/count，
+及所有 message `from`／`to`／`y`／`variant`／label、兩張 renderer-owned guard cards、guard alternative
+projection、`AuthFlow` policy ownership 與 exactly-one retry 全部 locked。PC-29 layout amendment 為
+completed／historical；此段所記 PR-29 re-review active、IM-29 paused 與 TE-26=`needs-rework`／re-test pending
+是已 supersede 的 historical snapshot，不是 current route。
+
+2026-09-24 — PR-29 re-review 已獨立 completed／approved／historical，確認 layout amendment 的唯一
+`meta.viewBox: [1337,780]` allowlist 與其餘 PC-29 locks。下列是當時的 current route（historical snapshot）：PC-29 layout amendment（completed／historical）→ PR-29
+re-review（completed／approved／historical）→ IM-29（當時 active／historical）→ TE-26（當時 needs-rework／re-test pending）→ RV-26 →
+DL-25 → CH-23 → HC-23。當時不得進入 RV-26、delivery、Git 或 GitHub thread action。
