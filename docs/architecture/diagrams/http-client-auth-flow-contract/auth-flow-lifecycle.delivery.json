@@ -6,12 +6,12 @@
   "input": "docs/architecture/diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.json",
   "output": "docs/architecture/diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.html",
   "specification": {
-    "sha256": "8429ab64398711979bacf992c2bfb7ec8096cb396b4f8e92cf53f6a0de0cdaa3",
-    "bytes": 5080
+    "sha256": "c8ab8619af76f66822464006614630a2be697959ca7b3a77a2b7a9791dc15e7f",
+    "bytes": 5153
   },
   "artifact": {
-    "sha256": "11126aaf349973c7ed8db29e74dbaec1bdd92dee9cca1826b20e9b91e42206a7",
-    "bytes": 708066
+    "sha256": "1932776dc6cffffea3281ff3b35253b3a68a20cd07a55f5cf54c2687e1a3551e",
+    "bytes": 708548
   },
   "validation": {
     "checksPassed": 9,

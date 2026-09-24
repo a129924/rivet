@@ -411,7 +411,7 @@ HC-16 human review，不 merge、不 release。
 
 human 已直接授權 exact thread `PRRT_kwDOUFu0Cc6lAdHo` 的最小 P6 rework，且既有 direct progression authority 僅在本 scope
 內適用。PC-22 route 與 DL-18 `51ae037` completed／visible 是 historical；CH-16=`needs-rework`、HC-16=`pending`
-同為 historical，不重開其 architecture／P5 contract。PC-23／PR-23／IM-23／TE-20／RV-20／DL-19 已 completed／historical，PR-23／TE-20／RV-20 verdict=`approved`，DL-19=`6127b29` completed／visible；CH-17 因 exact ledger-only thread `PRRT_kwDOUFu0Cc6lAh5g` 為 `needs-rework`，HC-17=`pending`。唯一 current P6 lineage 為：
+同為 historical，不重開其 architecture／P5 contract。PC-23／PR-23／IM-23／TE-20／RV-20／DL-19 已 completed／historical，PR-23／TE-20／RV-20 verdict=`approved`，DL-19=`6127b29` completed／visible；CH-17 因 exact ledger-only thread `PRRT_kwDOUFu0Cc6lAh5g` 為 `needs-rework`，HC-17=`pending`。下列為 PC-24 前 historical P6 closure lineage，非 current route：
 
 ```text
 PC-23 (completed／historical) → PR-23 (completed／approved／historical) → IM-23 (completed／historical) → TE-20 (completed／approved／historical) → RV-20 (completed／approved／historical) → DL-19 (`6127b29` completed／visible／historical) → CH-17 (needs-rework) → HC-17 (pending)
@@ -440,6 +440,58 @@ fixed threads：`PRRT_kwDOUFu0Cc6knhr9`、`PRRT_kwDOUFu0Cc6knhsB`、`PRRT_kwDOUF
 `PRRT_kwDOUFu0Cc6kqRi3`、`PRRT_kwDOUFu0Cc6kqRi9`、`PRRT_kwDOUFu0Cc6k_x2f`、
 `PRRT_kwDOUFu0Cc6lAdHo`。重抓 feedback 後確認十個皆 resolved、無未分類 feedback，停止於 HC-17 human review；不 merge、
 不 release。
+
+### PC-24 — Lifecycle Policy-Return Projection + Component Edge Route Separation
+
+DL-19 `6127b29` completed／visible、CH-17=`needs-rework`、HC-17=`pending` 是 PC-24 前的 historical P6
+closure state。human 已完整授權 BDat `PRRT_kwDOUFu0Cc6lBDat` 與 BDaw `PRRT_kwDOUFu0Cc6lBDaw`；不重開
+architecture、Model C、ownership、retry policy 或 API。先前 PC-24 amendment／layout amendment 與其 completed／approved
+review 均為 historical；PC-24 transition-count amendment 已 completed／historical，PR-24 獨立 re-review 已
+completed／approved／historical，IM-24 已 completed／historical，TE-21 已 completed／approved／historical，RV-21 已 completed／approved／historical，DL-20 為 active。唯一 current route：
+
+```text
+PC-24 transition-count amendment (completed／historical) → PR-24 re-review (completed／approved／historical) → IM-24 (completed／historical) → TE-21 (completed／approved／historical) → RV-21 (completed／approved／historical) → DL-20 (active) → CH-18 → HC-18
+```
+
+- **BDat／PR-24 re-review completed／approved／historical；IM-24 completed／historical；TE-21 completed／approved／historical；RV-21 completed／approved／historical；DL-20 active**：needs-rework finding 的既有 planning amendment、layout amendment 與其 completed／approved
+  review 均為 historical；PC-24 transition-count amendment 與 PR-24 re-review 均已 completed／approved／historical，IM-24
+  已 completed／historical，TE-21 已 completed／approved／historical，RV-21 已 completed／approved／historical，DL-20 為 active。唯讀 source 已唯一識別 11 個 state IDs
+  與 11 個 transition IDs。可改動清單
+  窮盡如下：`refresh-success-result` 保留 ID／`from: start-finish`，僅將 `to: resend` 改為 `to: receive`，並將
+  label `成功結果回到流程` 改為精確 `更新結果經 AuthRequester 回到流程`；`refresh-failure-terminal` 保留 ID，僅將
+  `from: start-finish, to: receive-finish` 改為 `from: receive, to: resend`，並新增精確 label
+  `更新成功：允許一次重試`。因此 external update-results 只回到既有 `AuthFlow` policy input，僅 policy 產生
+  既有 terminal 或 one-time retry。
+
+  唯一可改 state 文案為 `start-finish.sublabel`：`更新失敗時終態` → `更新結果待回傳流程`；
+  `receive.sublabel`：`正常／首次 401 的資格判斷` → `正常回應／首次 401／更新結果`（`label: 回應策略`、
+  `tag: 僅限 AuthFlow` 不變）；`receive-finish.tag`：`正常／不具資格／第二次 401` →
+  `正常／不具資格／第二次 401／更新失敗`。`terminal-decision` 的 ID、`receive → receive-finish` 端點與所有
+  現有設定必須不變。除上述兩 edge 與三個 state text fields 外，所有 state ID/count、其餘 edge ID/from/to/label、
+  policy、event、API、payload、ownership、retry capability 均須 byte-identical；不得新增或移除任何 state／edge。
+
+  本次 layout-only 擴充的唯一新增 allowlist 是：`receive-finish.width` `110 → 140`；
+  `refresh-success-result.toSide` `right → top`、`via` 精確改為 `[[220,479],[220,220],[556,220]]`、`labelAt`
+  精確改為 `[430,210]`；`refresh-failure-terminal.toSide` `right → top`、移除 `via` 使 route straight、`labelAt`
+  精確改為 `[556,380]`。這些只屬 geometry/layout；既有 11 state IDs／11 transition IDs、既定 edge semantics、
+  `from/to`、labels，及 state policy、API、payload、ownership、retry invariants 必須保留。驗收須為 9/9、0 errors、
+  0 warnings、`properCrossings`／`ambiguousCorridors`／label issues 均為 0、minimum clearance 至少 16.1px，然後標準
+  deliver 與 visual evidence；不可改 component candidate。
+- **BDaw**：僅調整 component raw-response last route points：`[972,610] → [972,509] → [960,509]` 至
+  `[972,610] → [972,540] → [954,540]`。semantic label/endpoints、boxes、ownership、legacy Model A edge byte-identical。
+- **Written/Modify**：四份 formal artifacts；lifecycle JSON、既有 sibling generated HTML、standard producer receipt、
+  既有 artifact-local visual-check evidence sidecars（IM-24 必須 discover existing sibling names only）；
+  `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/scene.js`、其 `index.html`
+  與既有 local canvas evidence。其他 diagrams/docs/Swift/OAuth/producer/tests/未列 paths ReadOnly。
+- **TestCase**：lifecycle validate/deliver=9/9、0 errors、0 warnings、repository-relative receipt source/HTML hash、
+  four viewport/light-dark pass；component validate/build/enhance/a11y/temporary rebuild/visual 與所有 no-drift assertion。
+  不得新增或改動 product tests。
+- **Delivery／closure**：TE-21／RV-21 approved 後才 DL-20 single-topic commit + normal push 至既有 PR branch；visible
+  後 CH-18 才處理 exact 12 IDs：`PRRT_kwDOUFu0Cc6knaR9`、`PRRT_kwDOUFu0Cc6knaSA`、
+  `PRRT_kwDOUFu0Cc6knhr9`、`PRRT_kwDOUFu0Cc6knhsB`、`PRRT_kwDOUFu0Cc6knhsF`、`PRRT_kwDOUFu0Cc6koqlS`、
+  `PRRT_kwDOUFu0Cc6kqRi3`、`PRRT_kwDOUFu0Cc6kqRi9`、`PRRT_kwDOUFu0Cc6k_x2f`、`PRRT_kwDOUFu0Cc6lAdHo`、BDat、BDaw。
+  BDat／BDaw direct resolve；`PRRT_kwDOUFu0Cc6knaR9` comment + resolve；其餘 9 fixed IDs direct resolve。重抓 feedback
+  有未知 ID 即停在 HC-18；不 merge/release。
 
 ## Model Comparison
 
@@ -782,13 +834,13 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   PC-19 前 historical snapshot。PC-19 → PR-19 → IM-19 → TE-16 → RV-16 → DL-14 已完成，CH-13 =
   `needs-rework`、HC-13 = `pending`，亦為 historical snapshot；PC-20 route 亦於 DL-15 completed、CH-14
   needs-rework、HC-14 pending 後 historical；DL-16 `bccc183` completed／visible、CH-15 needs-rework、HC-15 pending
-  亦為 historical；DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；唯一 current route 是 PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（`6127b29` completed／visible／historical）→ CH-17（needs-rework）→ HC-17（pending）。不得將 IM-14 或 superseded DL-03 當作 current gate，也不得重開 architecture。
+  亦為 historical；DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；唯一 current route 是 PC-24 transition-count amendment（completed／historical）→ PR-24 re-review（completed／approved／historical）→ IM-24（completed／historical）→ TE-21（completed／approved／historical）→ RV-21（completed／approved／historical）→ DL-20（active）→ CH-18 → HC-18。不得將 IM-14 或 superseded DL-03 當作 current gate，也不得重開 architecture。
 - **PM-01 — Post-merge state truth**：`f277ac4`、`d2cefd4`、DL-12／CH-11 completed、HC-11
   `needs-rework`、PC-18／PR-18／IM-18／TE-15／RV-15／DL-13 completed、CH-12 completed（四個 thread
   已 resolve、無未分類 feedback）與 HC-12 `needs-rework` 如實記錄；這是 PC-19 前 historical snapshot。
   PC-19 至 DL-14 均已 completed，CH-13 = `needs-rework`、HC-13 = `pending`。PC-20 已在 DL-15
   `3abbc71` completed、CH-14 needs-rework、HC-14 pending 後 historical；DL-16 `bccc183` completed／visible、
-  CH-15 needs-rework、HC-15 pending 亦為 historical；DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；四份 artifacts 的唯一 current route 是 PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（`6127b29` completed／visible／historical）→ CH-17（needs-rework）→ HC-17（pending）。
+  CH-15 needs-rework、HC-15 pending 亦為 historical；DL-18 `51ae037` completed／visible、CH-16 needs-rework、HC-16 pending 亦為 historical；四份 artifacts 的唯一 current route 是 PC-24 transition-count amendment（completed／historical）→ PR-24 re-review（completed／approved／historical）→ IM-24（completed／historical）→ TE-21（completed／approved／historical）→ RV-21（completed／approved／historical）→ DL-20（active）→ CH-18 → HC-18。
 - **PM-02 — Producer-generated state receipt**：不手改 receipt；canonical-containment producer 以
   repository-relative arguments 產生 `auth-flow-state.delivery.json`，其中 input、output、artifact 與
   provenance path 均無絕對路徑，並與 state JSON／HTML SHA-256、showcase 9/9、0 errors、0 warnings 相符。
@@ -805,7 +857,7 @@ diagram、existing topic artifacts，以及任何不在上述 allowlist 的 repo
   `needs-rework`、HC-13 = `pending` 停止；PC-20 已於 DL-15 `3abbc71` completed、CH-14 =
   `needs-rework`、HC-14 = `pending` 後成為 historical；PC-21 亦已於 DL-16 `bccc183` completed／visible、
   CH-15 = `needs-rework`、HC-15 = `pending` 後成為 historical。唯一 current route 為
-  PC-23（completed／historical）→ PR-23（completed／approved／historical）→ IM-23（completed／historical）→ TE-20（completed／approved／historical）→ RV-20（completed／approved／historical）→ DL-19（`6127b29` completed／visible／historical）→ CH-17（needs-rework）→ HC-17（pending）；不 merge、不 release。
+  PC-24 transition-count amendment（completed／historical）→ PR-24 re-review（completed／approved／historical）→ IM-24（completed／historical）→ TE-21（completed／approved／historical）→ RV-21（completed／approved／historical）→ DL-20（active）→ CH-18 → HC-18；不 merge、不 release。
 - **P2-01 — Package legacy type dependency**：thread `PRRT_kwDOUFu0Cc6knaR9` 要求
   `http-client-package-structure` canvas 同樣明示 `AuthRequester → HTTPRequest` 僅為 legacy Model A
   編譯期 request-type dependency，非 Model C preparation／construction／ownership／dataflow／I/O。

@@ -83,7 +83,7 @@
       "id": "receive",
       "type": "decision",
       "label": "回應策略",
-      "sublabel": "正常／首次 401 的資格判斷",
+      "sublabel": "正常回應／首次 401／更新結果",
       "lane": "response",
       "col": 1,
       "width": 130,
@@ -105,7 +105,7 @@
       "id": "start-finish",
       "type": "external",
       "label": "待定的憑證更新",
-      "sublabel": "更新失敗時終態",
+      "sublabel": "更新結果待回傳流程",
       "lane": "terminal",
       "col": 0,
       "width": 110,
@@ -118,8 +118,8 @@
       "sublabel": "流程終態",
       "lane": "terminal",
       "col": 2,
-      "width": 110,
-      "tag": "正常／不具資格／第二次 401"
+      "width": 140,
+      "tag": "正常／不具資格／第二次 401／更新失敗"
     },
     {
       "id": "requester-failure",
@@ -179,22 +179,24 @@
     {
       "id": "refresh-success-result",
       "from": "start-finish",
-      "to": "resend",
-      "label": "成功結果回到流程",
+      "to": "receive",
+      "label": "更新結果經 AuthRequester 回到流程",
       "variant": "emphasis",
       "fromSide": "left",
-      "toSide": "right",
-      "via": [[300, 479], [300, 560], [805, 560], [805, 427]],
-      "labelAt": [590, 600]
+      "toSide": "top",
+      "via": [[220, 479], [220, 220], [556, 220]],
+      "labelAt": [430, 210]
     },
     {
       "id": "refresh-failure-terminal",
-      "from": "start-finish",
-      "to": "receive-finish",
+      "from": "receive",
+      "to": "resend",
+      "label": "更新成功：允許一次重試",
       "variant": "security",
       "fromSide": "bottom",
-      "toSide": "right",
-      "via": [[402, 580], [845, 580], [845, 479]]
+      "toSide": "top",
+      "route": "straight",
+      "labelAt": [556, 380]
     },
     {
       "id": "client-sends-retry",
