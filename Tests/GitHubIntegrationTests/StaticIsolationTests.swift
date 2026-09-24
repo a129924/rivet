@@ -9,8 +9,10 @@ struct StaticIsolationTests {
     let package = try packageDescription()
     let products = try namedItems(in: package, named: "products")
     let targets = try namedItems(in: package, named: "targets")
-
-    #expect(Set(products.keys) == ["GitHubIntegration", "RivetPRInbox", "RivetPresentation"])
+    #expect(
+      Set(products.keys)
+        == ["GitHubIntegration", "RivetPRInbox", "RivetPRReader", "RivetPresentation"]
+    )
     #expect(
       Set(targets.keys)
         == [
@@ -18,14 +20,14 @@ struct StaticIsolationTests {
           "GitHubIntegrationTests",
           "RivetPRInbox",
           "RivetPRInboxTests",
+          "RivetPRReader",
+          "RivetPRReaderTests",
           "RivetPresentation",
           "RivetPresentationTests",
         ]
     )
-
     let integrationProduct = try #require(products["GitHubIntegration"])
     #expect(targetNames(in: integrationProduct) == ["GitHubIntegration"])
-
     let integrationTarget = try #require(targets["GitHubIntegration"])
     #expect(integrationTarget["type"] as? String == "regular")
     #expect(
@@ -33,12 +35,10 @@ struct StaticIsolationTests {
         == "Sources/BoundedContexts/GitHubIntegration"
     )
     #expect(rawDependencies(in: integrationTarget).isEmpty)
-
     let integrationTests = try #require(targets["GitHubIntegrationTests"])
     #expect(integrationTests["type"] as? String == "test")
     #expect(dependencyNames(in: integrationTests) == ["GitHubIntegration"])
   }
-
   @Test
   func dependencyExtractionRecognizesAllPackageDescriptionDependencyForms() {
     let target =
@@ -49,7 +49,6 @@ struct StaticIsolationTests {
           ["product": ["ProductDependency", "Package", NSNull(), NSNull()]],
         ]
       ] as [String: Any]
-
     #expect(
       Set(dependencyNames(in: target))
         == ["ByNameDependency", "TargetDependency", "ProductDependency"]

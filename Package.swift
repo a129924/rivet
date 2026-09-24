@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS(.v15)],
     products: [
         .library(name: "RivetPRInbox", targets: ["RivetPRInbox"]),
+        .library(name: "RivetPRReader", targets: ["RivetPRReader"]),
         .library(name: "GitHubIntegration", targets: ["GitHubIntegration"]),
         .library(name: "RivetPresentation", targets: ["RivetPresentation"])
     ],
@@ -13,6 +14,10 @@ let package = Package(
         .target(
             name: "RivetPRInbox",
             path: "Sources/BoundedContexts/PRInbox"
+        ),
+        .target(
+            name: "RivetPRReader",
+            path: "Sources/BoundedContexts/PRReader/Core"
         ),
         .target(
             name: "GitHubIntegration",
@@ -26,6 +31,10 @@ let package = Package(
         .testTarget(
             name: "RivetPRInboxTests",
             dependencies: ["RivetPRInbox"]
+        ),
+        .testTarget(
+            name: "RivetPRReaderTests",
+            dependencies: ["RivetPRReader"]
         ),
         .testTarget(
             name: "GitHubIntegrationTests",
