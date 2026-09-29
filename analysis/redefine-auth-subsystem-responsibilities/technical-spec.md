@@ -955,9 +955,60 @@ existing HTML、receipt 與 visual evidence 只能由標準 delivery 從該 sour
 PR-29 initial、PR-29 re-review 均已 completed／approved／historical。PC-29 layout amendment 已 completed／historical；
 PR-29 re-review 已確認唯一 `meta.viewBox` allowlist 與所有既有 PC-29 locks。IM-29 與 TE-26 已
 completed／historical，TE-26 verdict 為 `approved`；RV-26 initial review 僅因 PC-28 historicality 記述未對齊而
-`needs-rework`，RV-26 re-review 已 completed／approved／historical。DL-25 為唯一 active gate；CH-23 與 HC-23 維持
-pending。唯一 current route：
+`needs-rework`，RV-26 re-review 已 completed／approved／historical。下列保留 PC-30 前的 historical
+snapshot，不是 current route：DL-25 `9aad10e` 已 completed／visible／historical；CH-23 當時為 active，HC-23
+當時為 pending human boundary：
 
 ```text
-PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (active／唯一 current gate) → CH-23 (pending) → HC-23 (pending／human boundary)
+PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (`9aad10e` completed／visible／historical) → CH-23 (當時 active／historical) → HC-23 (當時 pending／human boundary／historical)
 ```
+
+### PC-30 — Ledger 可見狀態與 Component 文件語言
+
+PC-30 是兩項 finding 的表述回修。不改變已採用的 Model C contract、任何 retry／ownership decision 或 component
+canvas topology。DL-25 `9aad10e` 是 completed／visible／historical；其後的已分類 feedback 使
+CH-23=`needs-rework`／historical、HC-23=`pending`／historical。新 route 開始前，四份 formal artifact 都必須
+可見這三項事實，並如實保留其前一個 historical snapshot：
+`DL-25 completed／visible → CH-23 active → HC-23 pending`；此 snapshot 不代表已完成 thread closure。
+
+**Non-Goal**：不改 canvas component／edge／content、keyboard、VoiceOver fallback、ARIA、contrast behavior 或 shared
+architecture-canvas template／producer；不改其他 diagram、Swift/tests、Git/GitHub、merge 或 release。
+
+`component-dependency/scene.js` 是不可變的 authored scene，且沒有 document-language field。raw build 的
+`<html lang="en">` 是由 shared architecture-canvas template 輸出，不是 scene metadata；它必須 ReadOnly。
+因此 final artifact contract 固定為：
+
+```text
+scene.js (unchanged)
+  → architecture-canvas validate + temporary raw build
+  → artifact-local enhance-document-language.js (one root-language replacement only)
+  → component-dependency/index.html (generated delivery)
+  → verify-document-language.js
+```
+
+raw build arguments 固定為 title／kicker `RivetHTTPClient — 認證責任目標`、subtitle
+`<b>AuthRequester</b> 持有原始請求 → <b>AuthFlow</b> 擁有策略／狀態 → <b>Requester</b> 執行通用輸入／輸出`，
+以及 slug `redefine-auth-subsystem-responsibilities-component-dependency`。
+
+raw input 沒有恰好一個預期的 `<html lang="en">` 時，`enhance-document-language.js` 必須 fail-closed；它只能將
+它替換為 `<html lang="zh-Hant">`。不得改變 stage behavior、keyboard handling、ARIA、styles、canvas pixels、
+`BOXES`／`EDGES`／`TEXTS`、labels、dependencies 或任何 visible content。`verify-document-language.js` 必須只
+assert delivered root-language invariant。`BUILD.md` 記錄精確的 validate → raw build → enhance → verify
+procedure，以及第二次完整 temporary run 的 final HTML byte-identical。不得改 shared template/producer，也不得
+direct edit final HTML。
+
+**Written/Modify**：四份 formal planning artifacts；`component-dependency/index.html` 作 deterministic generated
+output；只新增 artifact-local `BUILD.md`、`enhance-document-language.js`、`verify-document-language.js`。
+**ReadOnly/Out-of-Scope**：`scene.js`、所有 canvas semantics/content、global architecture-canvas template/scripts、
+其他 diagrams/docs、Swift/tests、OAuth、Git/GitHub、merge 與 release。**Deleted**：無。
+
+**TE-27 TestCase**：四份 formal artifact 對 DL-25／CH-23／HC-23 historical truth 與唯一 current route 一致；
+canvas validation 維持 5 bands／10 boxes／12 edges／0 errors／0 warnings；scene byte-identical；raw-to-final delta
+只能是 root `lang` value；verifier 確認恰有一個 `zh-Hant` document root、沒有 `en` root；重跑完整 pipeline
+產生 byte-identical final HTML；temporary raw outputs 不得納入 Git。delivered canvas 在
+1440×900、1600×1000、1920×1080、2048×1320 都無 visual drift，並 manual inspect 1440／2048 light/dark。
+language verifier 是唯一新增的 a11y assertion；keyboard、fallback 與其他 ARIA behavior 明確不改。
+
+**Route**：PC-30 completed／historical → PR-30 completed／approved／historical → IM-30 completed／historical → TE-27 initial verification needs-rework／historical → PC-30 ledger-only correction completed／historical → TE-27 re-test completed／approved／historical → RV-27 completed／approved／historical → DL-26 active／唯一 current gate → CH-24 → HC-24。
+PR-30 已在 implementation 前獨立 approve 此 mapping；IM-30 已依已核准 mapping materialize。對應 downstream gate
+前，不得 commit、push、thread resolution、merge 或 release。

@@ -1056,9 +1056,86 @@ Deleted：無。
 
 **Gates**：PC-29 layout amendment completed／historical；PR-29 re-review completed／approved／historical。IM-29 與
 TE-26 completed／historical，TE-26 verdict 為 `approved`。RV-26 initial review 僅因 PC-28 historicality 記述未對齊而
-`needs-rework`；RV-26 re-review completed／approved／historical。DL-25 為唯一 active gate；僅 delivery 可建立一個
-bounded topic commit 並 push。CH-23 與 HC-23 維持 pending，且 delivery visible 前不得進入。
+`needs-rework`；RV-26 re-review completed／approved／historical。下列保留 PC-30 前的 historical snapshot，
+不是 current route：DL-25 `9aad10e` 已 completed／visible／historical；CH-23 當時為 active，HC-23 當時為
+pending human boundary。CH-23 當時只可在 pushed delivery 可見後重新取得並處理已分類且仍適用的 feedback/thread state；
+未知或未分類 feedback 當時停止於 HC-23，不 merge、不 release。
 
 ```text
-PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (active／唯一 current gate) → CH-23 (pending) → HC-23 (pending／human boundary)
+PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (`9aad10e` completed／visible／historical) → CH-23 (當時 active／historical) → HC-23 (當時 pending／human boundary／historical)
+```
+
+## PC-30 — Ledger 可見狀態與 Component Canvas 根語言
+
+### Goal
+
+以最小、可重現的交付修正兩項已分類 feedback：四份 formal planning artifacts 必須可見
+DL-25 `9aad10e` completed／visible、CH-23 active、HC-23 pending 的當時 ledger state；component-dependency
+canvas 的 committed artifact document root 必須是 `zh-Hant`。前者作為 PC-30 前的 historical snapshot 保留，
+後者不改變 canvas 的架構內容或互動行為。
+
+### Non-Goal
+
+- 不重開 Model C、auth retry、original request ownership、deferred boundary、canvas edge／route、box、label 或任何
+  runtime behavior。
+- 不讓 `scene.js` 承擔 document-language metadata，也不修改 shared `architecture-canvas` template／scripts。
+- 不新增 keyboard、VoiceOver fallback、ARIA、contrast、visual layout 或 product Swift/test scope；本次 a11y 僅驗證
+  document root language。
+
+### In-Scope / Written / Modify
+
+- 四份 formal planning artifacts；其中記錄 PC-29／DL-25／CH-23／HC-23 的 historicality，建立
+  `PC-30 → PR-30 → IM-30 → TE-27 → RV-27 → DL-26 → CH-24 → HC-24`。
+- `component-dependency/index.html` 作 final generated delivery；新增 artifact-local `BUILD.md`、
+  `enhance-document-language.js` 與 `verify-document-language.js`。這三者只支援可重現的 root-language
+  transformation／assertion，沒有 canvas semantics。
+
+### ReadOnly / Out-of-Scope / Deleted
+
+- `component-dependency/scene.js`，包含 5 bands／10 boxes／12 edges、所有 component/edge/text/content；global
+  architecture-canvas template／producer；所有其他 diagrams/docs、Swift/tests、OAuth、Git/GitHub、merge、release。
+- **Deleted**：無；不得 delete、rename 或 move。
+
+### Source-to-Output Contract
+
+scene 沒有 language field；global template 的 raw build 固定產生 `<html lang="en">`。因此 IM-30 必須以
+artifact-local pipeline 取代 direct edit：
+
+```text
+unchanged scene.js
+  → validate
+  → temporary raw build (`<html lang="en">`)
+  → enhance-document-language.js（only-once `en → zh-Hant`；fail-closed）
+  → committed index.html
+  → verify-document-language.js
+```
+
+`BUILD.md` 必須固定 title、kicker、subtitle 與 slug 為現有 artifact 值，並要求第二次 complete pipeline 的
+final output 與 delivery byte-identical。raw temporary file 不得落入 Git。enhancer 不得變更除了 root `lang`
+value 以外的 final HTML bytes；預期 input 不恰好一次時 fail-closed。
+
+固定 arguments 為 title／kicker `RivetHTTPClient — 認證責任目標`、subtitle
+`<b>AuthRequester</b> 持有原始請求 → <b>AuthFlow</b> 擁有策略／狀態 → <b>Requester</b> 執行通用輸入／輸出`，
+以及 slug `redefine-auth-subsystem-responsibilities-component-dependency`。
+
+### TestCase and Gates
+
+- **PR-30**：獨立審查歷史 ledger 可見性、唯一 current route、source/output mapping、only-once enhancer、
+  exact allowlist、a11y／rebuild／visual test 與 ReadOnly boundary。
+- **TE-27**：確認 four-formal-artifact route 一致；canvas validate=5 bands／10 boxes／12 edges／0 errors／0 warnings；
+  scene hash 不變；raw/final 唯一 delta 是 root lang；verifier 確認恰一 `<html lang="zh-Hant">`、無 root
+  `lang="en"`；第二次 raw-build/enhance/verify 的 final bytes 相同；不追蹤 temporary raw output。
+- **Visual**：delivered index 在 1440×900、1600×1000、1920×1080、2048×1320 均無 visual drift，且 manual inspect
+  1440／2048 light/dark；不得因本次 root-language correction 建立 exception。
+- **RV-27**：僅在 TE-27 approved 後確認兩項 finding、no semantic/content drift、scope 與 evidence；approved 才可
+  DL-26。
+- **DL-26/CH-24**：DL-26 只建立一個 bounded topic commit/push 至既有 PR #37 branch。delivery visible 後，CH-24
+  只處理已分類且仍適用的 PC-30 thread；unknown/unclassified feedback 停在 HC-24。不得 merge 或 release。
+
+### Current Route
+
+PC-29、DL-25 `9aad10e`、CH-23=`needs-rework`、HC-23=`pending` 都是 historical。PC-30 完成後唯一 current route：
+
+```text
+PC-30 (completed／historical) → PR-30 (completed／approved／historical) → IM-30 (completed／historical) → TE-27 initial verification (needs-rework／historical) → PC-30 ledger-only correction (completed／historical) → TE-27 re-test (completed／approved／historical) → RV-27 (completed／approved／historical) → DL-26 (active／唯一 current gate) → CH-24 → HC-24
 ```

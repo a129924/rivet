@@ -2,20 +2,24 @@
 
 ## Current Phase
 
-### Current DL-25 Delivery — takes precedence
+### Current DL-26 — takes precedence
 
-`dl-25-delivery-active`。PC-28、PR-28、IM-28、TE-25、RV-25 與 DL-24 `ac43495` 均 completed／historical；
+`dl-26-active`。PC-28、PR-28、IM-28、TE-25、RV-25 與 DL-24 `ac43495` 均 completed／historical；
 CH-22=`needs-rework`、HC-22=`pending` 均為 historical。PC-29 layout amendment 與 PR-29 re-review 亦為
 completed／historical；PR-29 re-review verdict 為 `approved`。
 
 IM-29 與 TE-26 已 completed／historical；TE-26 verdict 為 `approved`。RV-26 initial review 僅因 PC-28 historicality
-記述未對齊而 `needs-rework`；其 re-review 已 completed／approved／historical。DL-25 是唯一 active gate，可建立一個
-bounded topic commit 並 push；delivery visible 前不得進入 CH-23 或 HC-23。
+記述未對齊而 `needs-rework`；其 re-review 已 completed／approved／historical。DL-25 `9aad10e` 已
+completed／visible／historical。CH-23 收到本次兩項已分類 feedback，故為 `needs-rework`／historical；HC-23 是
+pending／historical human boundary。PC-30 與 PR-30 均已 completed／approved／historical；IM-30 已 completed／historical。TE-27 initial
+verification 僅因缺少 PC-30 前的 CH-23 當時 active historical snapshot 而 `needs-rework`；本次 ledger-only correction 不取代獨立
+re-test。TE-27 re-test 與 RV-27 均已 completed／approved／historical；DL-26 是唯一 active current gate，只可建立既有 PC-30 scope 的單一 bounded topic commit 並 push 至既有 PR #37 branch。不得修改 Model C、canvas component/edge/content、其他 diagram、Swift、shared
+architecture-canvas template/producer、Git/GitHub、merge 或 release。
 
 唯一 current route：
 
 ```text
-PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (active／唯一 current gate) → CH-23 (pending) → HC-23 (pending／human boundary)
+PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (`9aad10e` completed／visible／historical) → CH-23 (needs-rework／historical) → HC-23 (pending／historical) → PC-30 (completed／historical) → PR-30 (completed／approved／historical) → IM-30 (completed／historical) → TE-27 initial verification (needs-rework／historical) → PC-30 ledger-only correction (completed／historical) → TE-27 re-test (completed／approved／historical) → RV-27 (completed／approved／historical) → DL-26 (active／唯一 current gate) → CH-24 → HC-24
 ```
 
 ### Historical IM-29 Initial-Contract Snapshot
@@ -454,9 +458,17 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 | IM-29 | Independent Implementer | completed | 已依 approved layout amendment materialize 已鎖定的 401 artifact set。 | PR-29 re-review completed／approved／historical。 | 只可依 amended `meta.viewBox` allowlist standard materialize；不得手改 HTML/receipt、不得改其他 source 或 Git/GH。 | completed／historical。 |
 | TE-26 | Independent Tester | completed | 已完成 IM-29 的獨立 re-test。 | IM-29 completed／historical。 | approved；只 verify，未生成 output/evidence。 | completed／approved／historical。 |
 | RV-26 | Independent Reviewer | completed | initial review 僅發現 PC-28 historicality 記述未對齊；re-review 已獨立確認 PC-29 scope、contract、evidence 與 no-drift。 | TE-26 completed／approved／historical。 | approved；交 DL-25。 | completed／approved／historical。 |
-| DL-25 | Implementer | active | 在 TE-26 與 RV-26 re-review approved 後建立一個 bounded topic commit 並 push 至既有 PR #37 branch。 | TE-26 approved；RV-26 re-review approved。 | delivery visible 後才可 CH-23；不開新 PR、不 merge、不 release。 | active／唯一 current gate。 |
-| CH-23 | Implementer | pending | delivery visible 後重新取得當時已分類且仍適用的 feedback/thread state。 | DL-25 completed／visible。 | unknown/unclassified feedback 停在 HC-23；不得越過 scope。 | pending。 |
-| HC-23 | Human | pending | Review PC-29 delivered OPEN、ready-for-review PR #37。 | CH-23 completed。 | human boundary；不 merge、不 release。 | pending。 |
+| DL-25 | Implementer | completed | 單一 bounded PC-29 topic commit `9aad10e` 已 push 至既有 PR #37 branch，且 delivery visible。 | TE-26 approved；RV-26 re-review approved。 | completed／visible／historical；不開新 PR、不 merge、不 release。 | completed／visible／historical。 |
+| CH-23 | Implementer | needs-rework | 在 `9aad10e` visible 後收到「DL-25／CH-23／HC-23 可見 ledger state」及「component canvas 根文件語言」兩項已分類 feedback。 | DL-25 `9aad10e` completed／visible／historical。 | 只由 PC-30 承接；不得直接 closure 或擴張 contract。 | needs-rework／historical。 |
+| HC-23 | Human | pending | PC-29 delivered OPEN、ready-for-review PR #37 的 historical human boundary。 | CH-23 original closure path。 | PC-30 route 完成前不得跨越；不 merge、不 release。 | pending／historical。 |
+| PC-30 | Plan-Creator | completed | 建立 DL-25／CH-23／HC-23 visible-state historicality 與 component canvas root `lang="zh-Hant"` 的最小 formal rework；並以 ledger-only correction 補回 DL-25 visible 後 CH-23 當時 active、HC-23 當時 pending 的 PC-30 前 snapshot。 | human 授權兩項精確 scope；DL-25 `9aad10e` completed／visible，CH-23 later needs-rework。 | 只寫四份 formal artifacts；不改 scene semantics、edge、canvas content 或 shared template/producer。ledger-only correction 不取代 TE-27 的獨立 re-test。 | completed／historical；交 PR-30。 |
+| PR-30 | Independent Plan-Reviewer | completed | 已獨立審查 PC-30 的 historical route、artifact-local source→raw build→language enhancement mapping、allowlist、a11y/rebuild/visual TestCase 與 ReadOnly boundary。 | PC-30 completed／historical。 | approved；不再是 current gate。 | completed／approved／historical。 |
+| IM-30 | Independent Implementer | completed | 已依 PC-30／PR-30 approved mapping materialize component canvas root language 與 existing ledger-visible delivery。 | PR-30 completed／approved／historical。 | completed／historical；不得 Git/GH。 | completed／historical。 |
+| TE-27 | Independent Tester | completed | initial verification 僅發現 step ledger 缺少 DL-25 visible 後 `CH-23` 當時 active／`HC-23` 當時 pending 的 PC-30 前 historical snapshot；ledger-only correction 後 re-test 已完成。 | IM-30 completed／historical。 | approved；只 verify，未生成 output/evidence。 | initial needs-rework／historical；re-test completed／approved／historical。 |
+| RV-27 | Independent Reviewer | completed | 已獨立審查兩項 PC-30 finding、scope／contract／workflow 與 Tester evidence。 | TE-27 re-test completed／approved／historical。 | approved；不再是 current gate。 | completed／approved／historical。 |
+| DL-26 | Implementer | active | 在 TE-27／RV-27 approved 後建立單一 bounded PC-30 topic commit 並 push 至既有 PR #37 branch。 | TE-27 approved；RV-27 approved。 | pushed delivery visible；PR 保持 OPEN、ready；不開新 PR、不 merge、不 release。 | active／唯一 current gate。 |
+| CH-24 | Implementer | pending | 僅在 DL-26 visible 後重新取得並處理已分類、仍適用的 PC-30 feedback/thread state。 | DL-26 completed／visible。 | precise known findings 才可 resolve；任何 unknown/unclassified feedback 停在 HC-24。 | pending。 |
+| HC-24 | Human | pending | Review PC-30 delivered OPEN、ready-for-review PR #37。 | CH-24 completed。 | human boundary；不 merge、不 release。 | pending／human boundary。 |
 
 ## PR #37 Thread Mapping
 
@@ -1002,3 +1014,20 @@ completed／historical；此段所記 PR-29 re-review active、IM-29 paused 與 
 `meta.viewBox: [1337,780]` allowlist 與其餘 PC-29 locks。下列是當時的 current route（historical snapshot）：PC-29 layout amendment（completed／historical）→ PR-29
 re-review（completed／approved／historical）→ IM-29（當時 active／historical）→ TE-26（當時 needs-rework／re-test pending）→ RV-26 →
 DL-25 → CH-23 → HC-23。當時不得進入 RV-26、delivery、Git 或 GitHub thread action。
+
+2026-09-29 — DL-25 `9aad10e` 已 completed／visible／historical。下列是它 visible 後、PC-30 開始前的
+historical snapshot：PC-29 layout amendment（completed／historical）→ PR-29 re-review（completed／approved／historical）→
+IM-29（completed／historical）→ TE-26（completed／approved／historical）→ RV-26 initial review（needs-rework／historical）→
+RV-26 re-review（completed／approved／historical）→ DL-25（`9aad10e` completed／visible／historical）→ CH-23（當時 active／historical）→
+HC-23（當時 pending／human boundary／historical）。此 snapshot 只記錄 delivery 後當時的 gate，並不表示 thread 已 closure。
+
+2026-09-29 — human 授權 PC-30 最小 rework。DL-25 `9aad10e` 是 completed／visible／historical；其後 CH-23 的
+兩項已分類 feedback（ledger visible-state 與 component canvas root document language）使 CH-23=`needs-rework`、
+HC-23=`pending` 均成為 historical。PC-30 只寫四份 formal planning artifacts：scene 沒有 language metadata，
+global architecture-canvas template 的 raw output `<html lang="en">` 為 ReadOnly；後續只能以 artifact-local、
+deterministic、fail-closed language enhancer 將 temporary raw build 的唯一 root language 轉為 `zh-Hant`，並以 verifier、
+rebuild identity 與 visual no-drift 證明。不得改 scene、canvas semantics/content、shared template/producer、其他 diagram、
+Swift、Git 或 GitHub。PC-30 與 PR-30 均已 completed／approved／historical；IM-30 已 completed／historical。TE-27 initial
+verification 僅因缺少上列 snapshot 而 needs-rework；本次 ledger-only correction completed 後，TE-27 re-test 已
+completed／approved／historical，RV-27 亦已 completed／approved／historical，DL-26 是唯一 current gate：PC-30 → PR-30（completed／approved／historical）→ IM-30（completed／historical）→ TE-27 initial verification（needs-rework／historical）→
+PC-30 ledger-only correction（completed／historical）→ TE-27 re-test（completed／approved／historical）→ RV-27（completed／approved／historical）→ DL-26（active／唯一 current gate）→ CH-24 → HC-24。
