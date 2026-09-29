@@ -275,6 +275,8 @@ function isCompleteGitDiffTemplatePreamble(source: string): boolean {
       sourceLine.startsWith("diff --git ") ||
       sourceLine.startsWith("rename from ") ||
       sourceLine.startsWith("rename to ") ||
+      sourceLine.startsWith("copy from ") ||
+      sourceLine.startsWith("copy to ") ||
       sourceLine.startsWith("--- ") ||
       sourceLine.startsWith("+++ "),
   );

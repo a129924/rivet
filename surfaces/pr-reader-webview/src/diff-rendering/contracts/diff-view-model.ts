@@ -1,4 +1,10 @@
-export type DiffFileStatus = "added" | "removed" | "modified" | "renamed";
+export type DiffFileStatus =
+  | "added"
+  | "removed"
+  | "modified"
+  | "renamed"
+  | "copied"
+  | "typeChanged";
 
 export interface DiffViewModel {
   readonly fileId: string;

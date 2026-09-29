@@ -1,5 +1,6 @@
 // @ts-expect-error Bun's test module lacks a local type declaration in this package.
 import { describe, expect, test } from "bun:test";
+import type { DiffFileStatus } from "../contracts/diff-view-model";
 import type { DiffSnapshot } from "../contracts/diff-snapshot";
 import { createDiffViewModelValidator } from "./diff-view-model-validator";
 
@@ -66,6 +67,26 @@ describe("createDiffViewModelValidator", () => {
   );
 
   test.each([
+    "added",
+    "removed",
+    "modified",
+    "renamed",
+    "copied",
+    "typeChanged",
+  ] as const)(
+    "preserves previous filename for %s",
+    (status: DiffFileStatus) => {
+      const result = createDiffViewModelValidator().validate({
+        ...validSnapshot,
+        files: [
+          { ...validSnapshot.files[0], status, previousFilename: "old.ts" },
+        ],
+      });
+      expect(result.type).toBe("success");
+    },
+  );
+
+  test.each([
     ["non-object snapshot", "not a snapshot"],
     ["empty snapshot identity", { ...validSnapshot, snapshotId: "" }],
     ["non-object file entry", { ...validSnapshot, files: ["not a file"] }],
@@ -80,7 +101,7 @@ describe("createDiffViewModelValidator", () => {
       "invalid status",
       {
         ...validSnapshot,
-        files: [{ ...validSnapshot.files[0], status: "copied" }],
+        files: [{ ...validSnapshot.files[0], status: "unknown" }],
       },
     ],
     [
@@ -92,18 +113,6 @@ describe("createDiffViewModelValidator", () => {
             ...validSnapshot.files[0],
             status: "renamed",
             previousFilename: "",
-          },
-        ],
-      },
-    ],
-    [
-      "previous filename for a non-renamed file",
-      {
-        ...validSnapshot,
-        files: [
-          {
-            ...validSnapshot.files[0],
-            previousFilename: "src/previous.ts",
           },
         ],
       },

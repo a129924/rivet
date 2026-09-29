@@ -106,6 +106,97 @@ describe("createDiffParser", () => {
     }
   });
 
+  test("parses copied source and metadata-only type change without inventing mode", () => {
+    const validation = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [
+        {
+          ...snapshot.files[0],
+          fileId: "copied",
+          filename: "copy.ts",
+          previousFilename: "source.ts",
+          status: "copied",
+        },
+        {
+          ...snapshot.files[0],
+          fileId: "type",
+          filename: "kind.ts",
+          status: "typeChanged",
+          patch: undefined,
+        },
+      ],
+    });
+    if (validation.type === "error") throw new Error(validation.message);
+    const parsed = createDiffParser().parse(validation.value);
+    expect(parsed.type).toBe("success");
+    if (parsed.type === "error") throw new Error(parsed.message);
+    const entries = readParsedDiffInput(parsed.value).entries;
+    expect(entries.map((entry) => entry.kind)).toEqual([
+      "parsed",
+      "metadata-unavailable",
+    ]);
+    expect(entries[0].file.previousFilename).toBe("source.ts");
+  });
+
+  test("parses a copied patch without a source filename", () => {
+    const validation = createDiffViewModelValidator().validate({
+      ...snapshot,
+      files: [
+        { ...snapshot.files[0], status: "copied", previousFilename: undefined },
+      ],
+    });
+    if (validation.type === "error") throw new Error(validation.message);
+    const parsed = createDiffParser().parse(validation.value);
+    expect(parsed.type).toBe("success");
+    if (parsed.type === "error") throw new Error(parsed.message);
+    expect(readParsedDiffInput(parsed.value).entries[0].kind).toBe("parsed");
+    expect(
+      readParsedDiffInput(parsed.value).entries[0].file.previousFilename,
+    ).toBeUndefined();
+  });
+
+  test.each([
+    "added",
+    "removed",
+    "modified",
+    "renamed",
+    "copied",
+    "typeChanged",
+  ] as const)(
+    "accepts patch presence variants for %s",
+    (status:
+      | "added"
+      | "removed"
+      | "modified"
+      | "renamed"
+      | "copied"
+      | "typeChanged") => {
+      for (const patchValue of [patch, "", undefined]) {
+        const validation = createDiffViewModelValidator().validate({
+          ...snapshot,
+          files: [
+            {
+              ...snapshot.files[0],
+              status,
+              previousFilename:
+                status === "renamed" || status === "copied"
+                  ? "previous.ts"
+                  : undefined,
+              patch: patchValue,
+            },
+          ],
+        });
+        if (validation.type === "error") throw new Error(validation.message);
+        const parsed = createDiffParser().parse(validation.value);
+        expect(parsed.type).toBe("success");
+        if (parsed.type === "error") throw new Error(parsed.message);
+        expect(readParsedDiffInput(parsed.value).entries[0].kind).toBe(
+          patchValue === undefined ? "metadata-unavailable" : "parsed",
+        );
+      }
+    },
+  );
+
   test("retains the validated pull request and snapshot identities", () => {
     const validationResult = createDiffViewModelValidator().validate({
       ...snapshot,

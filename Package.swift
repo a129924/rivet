@@ -7,6 +7,7 @@ let package = Package(
     products: [
         .library(name: "RivetPRInbox", targets: ["RivetPRInbox"]),
         .library(name: "RivetPRReader", targets: ["RivetPRReader"]),
+        .library(name: "RivetPRReaderWebViewBridge", targets: ["RivetPRReaderWebViewBridge"]),
         .library(name: "GitHubIntegration", targets: ["GitHubIntegration"]),
         .library(name: "RivetPresentation", targets: ["RivetPresentation"])
     ],
@@ -18,6 +19,11 @@ let package = Package(
         .target(
             name: "RivetPRReader",
             path: "Sources/BoundedContexts/PRReader/Core"
+        ),
+        .target(
+            name: "RivetPRReaderWebViewBridge",
+            dependencies: ["RivetPRReader"],
+            path: "Sources/PRReaderWebViewBridge"
         ),
         .target(
             name: "GitHubIntegration",
@@ -35,6 +41,11 @@ let package = Package(
         .testTarget(
             name: "RivetPRReaderTests",
             dependencies: ["RivetPRReader"]
+        ),
+        .testTarget(
+            name: "RivetPRReaderWebViewBridgeTests",
+            dependencies: ["RivetPRReaderWebViewBridge", "RivetPRReader"],
+            path: "Tests/RivetPRReaderWebViewBridgeTests"
         ),
         .testTarget(
             name: "GitHubIntegrationTests",

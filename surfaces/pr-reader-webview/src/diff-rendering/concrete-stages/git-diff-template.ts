@@ -42,10 +42,38 @@ function createUnifiedDiff(input: GitDiffTemplateInput): string {
     case "removed":
       return [header, `--- ${oldPath}`, "+++ /dev/null", patchLines].join("\n");
     case "modified":
+    case "typeChanged":
       return [header, `--- ${oldPath}`, `+++ ${newPath}`, patchLines].join(
         "\n",
       );
+    case "copied":
+      if (input.previousFilename !== undefined && patchLines.length === 0) {
+        return [
+          header,
+          `copy from ${serializeGitPath(previousFilename)}`,
+          `copy to ${serializeGitPath(input.filename)}`,
+          patchLines,
+        ].join("\n");
+      }
+      return input.previousFilename === undefined
+        ? [header, `--- ${oldPath}`, `+++ ${newPath}`, patchLines].join("\n")
+        : [
+            header,
+            `copy from ${serializeGitPath(previousFilename)}`,
+            `copy to ${serializeGitPath(input.filename)}`,
+            `--- ${oldPath}`,
+            `+++ ${newPath}`,
+            patchLines,
+          ].join("\n");
     case "renamed":
+      if (patchLines.length === 0) {
+        return [
+          header,
+          `rename from ${serializeGitPath(previousFilename)}`,
+          `rename to ${serializeGitPath(input.filename)}`,
+          patchLines,
+        ].join("\n");
+      }
       return [
         header,
         `rename from ${serializeGitPath(previousFilename)}`,

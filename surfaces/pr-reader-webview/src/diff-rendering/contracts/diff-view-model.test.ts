@@ -13,7 +13,10 @@ type Equal<Left, Right> =
 type Expect<Condition extends true> = Condition;
 
 type _status = Expect<
-  Equal<DiffFileStatus, "added" | "removed" | "modified" | "renamed">
+  Equal<
+    DiffFileStatus,
+    "added" | "removed" | "modified" | "renamed" | "copied" | "typeChanged"
+  >
 >;
 type _viewModel = Expect<
   Equal<

@@ -101,18 +101,13 @@ function validateFile(
     return undefined;
   }
 
-  let validatedPreviousFilename: string | undefined;
-  if (status === "renamed") {
-    if (
-      previousFilename !== undefined &&
-      !isRawNonEmptyString(previousFilename)
-    ) {
-      return undefined;
-    }
-    validatedPreviousFilename = previousFilename;
-  } else if (previousFilename !== undefined) {
+  if (
+    previousFilename !== undefined &&
+    !isRawNonEmptyString(previousFilename)
+  ) {
     return undefined;
   }
+  const validatedPreviousFilename = previousFilename;
 
   return Object.freeze({
     fileId,
@@ -157,6 +152,8 @@ function isDiffFileStatus(value: unknown): value is DiffFileStatus {
     value === "added" ||
     value === "removed" ||
     value === "modified" ||
-    value === "renamed"
+    value === "renamed" ||
+    value === "copied" ||
+    value === "typeChanged"
   );
 }
