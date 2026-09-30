@@ -5053,8 +5053,8 @@
         <path data-edge-from="output" data-edge-to="success-outcome" data-edge-label="{ type: &quot;success&quot; }" data-edge-key="11" data-composition-points="801,499;801,668;904,668;904,613" d="M 801 499 L 801 668 L 904 668 L 904 613" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
 
         <!-- Nodes -->
-        <g id="node-swift-snapshot" data-node-id="swift-snapshot" data-node-label="Swift Reader bridge" tabindex="0" role="button" aria-label="Focus Swift Reader bridge, 六狀態 DiffSnapshot, 01 / Swift Reader bridge" aria-pressed="false" data-node-kind="external" data-node-sublabel="六狀態 DiffSnapshot" data-node-tag="權威輸入" data-node-context="01 / Swift Reader bridge">
-          <title>Swift Reader bridge · 六狀態 DiffSnapshot · 01 / Swift Reader bridge · 權威輸入</title>
+        <g id="node-swift-snapshot" data-node-id="swift-snapshot" data-node-label="Swift Reader bridge" tabindex="0" role="button" aria-label="Focus Swift Reader bridge, fixture → 六狀態快照, 01 / Swift Reader bridge" aria-pressed="false" data-node-kind="external" data-node-sublabel="fixture → 六狀態快照" data-node-tag="權威輸入" data-node-context="01 / Swift Reader bridge">
+          <title>Swift Reader bridge · fixture → 六狀態快照 · 01 / Swift Reader bridge · 權威輸入</title>
           <rect x="44" y="128" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="44" y="128" width="112" height="58" rx="6" class="c-external" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(50 134) scale(0.6875)">
@@ -5062,7 +5062,7 @@
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="100" y="149" class="t-primary" font-size="9.1" font-weight="600" text-anchor="middle">Swift Reader bridge</text>
-          <text data-detail="context" x="100" y="165" class="t-muted" font-size="7" text-anchor="middle">六狀態 DiffSnapshot</text>
+          <text data-detail="context" x="100" y="165" class="t-muted" font-size="7" text-anchor="middle">fixture → 六狀態快照</text>
         <text data-detail="fine" x="100" y="175" class="t-external" font-size="7" text-anchor="middle">權威輸入</text>
         </g>
 
@@ -5144,15 +5144,15 @@
         <text data-detail="fine" x="745" y="403" class="t-backend" font-size="7" text-anchor="middle">成功才前進</text>
         </g>
 
-        <g id="node-output" data-node-id="output" data-node-label="輸出 Port" tabindex="0" role="button" aria-label="Focus 輸出 Port, output(plan), 04 / 管線階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="output(plan)" data-node-tag="唯一 caller：UseCase" data-node-context="04 / 管線階段">
-          <title>輸出 Port · output(plan) · 04 / 管線階段 · 唯一 caller：UseCase</title>
+        <g id="node-output" data-node-id="output" data-node-label="輸出 Port" tabindex="0" role="button" aria-label="Focus 輸出 Port, DOM output(plan), 04 / 管線階段" aria-pressed="false" data-node-kind="backend" data-node-sublabel="DOM output(plan)" data-node-tag="唯一 caller：UseCase" data-node-context="04 / 管線階段">
+          <title>輸出 Port · DOM output(plan) · 04 / 管線階段 · 唯一 caller：UseCase</title>
           <rect x="689" y="470" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="689" y="470" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 476) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="745" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">輸出 Port</text>
-          <text data-detail="context" x="745" y="507" class="t-muted" font-size="7" text-anchor="middle">output(plan)</text>
+          <text data-detail="context" x="745" y="507" class="t-muted" font-size="7" text-anchor="middle">DOM output(plan)</text>
         <text data-detail="fine" x="745" y="517" class="t-backend" font-size="7" text-anchor="middle">唯一 caller：UseCase</text>
         </g>
 
@@ -5233,9 +5233,9 @@
 
         <!-- Flow labels -->
         <g data-detail="context" data-edge-from="swift-snapshot" data-edge-to="snapshot-adapter" data-edge-label="DiffSnapshot" data-edge-key="0">
-          <rect x="48.05" y="189" width="163.9" height="27" rx="4" class="c-mask"/>
+          <rect x="45.599999999999994" y="189" width="168.8" height="27" rx="4" class="c-mask"/>
           <text x="130" y="200" class="t-backend" font-size="8" text-anchor="middle">DiffSnapshot</text>
-        <text data-detail="fine" x="130" y="211" class="t-dim" font-size="7" text-anchor="middle">邊界契約；live transport 未實作</text>
+        <text data-detail="fine" x="130" y="211" class="t-dim" font-size="7" text-anchor="middle">WKWebView live transport；已交付</text>
         </g>
         <g data-detail="context" data-edge-from="snapshot-adapter" data-edge-to="facade" data-edge-label="present(snapshot)" data-edge-key="1">
           <rect x="223.35" y="193" width="95.3" height="27" rx="4" class="c-mask"/>
@@ -5515,7 +5515,7 @@
         <ul>
           <li>&bull; Swift bridge 由 Reader snapshot 交付完整六狀態 DiffSnapshot</li>
           <li>&bull; DiffFacade 是 Presentation 的公開 render 入口</li>
-          <li>&bull; 未交付 WKWebView transport、具體 Output 或 DOM</li>
+          <li>&bull; WKWebView host 與 DOM Output 已呈現本地 fixture；Viewed 回到 Swift 記憶體權威</li>
         </ul>
       </div>
     </div>

@@ -11,14 +11,15 @@ struct StaticIsolationTests {
     let targets = try namedItems(in: package, named: "targets")
     #expect(
       Set(products.keys) == [
-        "GitHubIntegration", "RivetPRInbox", "RivetPRReader",
-        "RivetPRReaderWebViewBridge", "RivetPresentation",
+        "GitHubIntegration", "RivetPRInbox", "RivetPRReader", "RivetPRReaderWebViewBridge",
+        "RivetPRReaderHarnessRuntime", "RivetPRReaderHarness", "RivetPresentation",
       ])
     #expect(
       Set(targets.keys) == [
         "GitHubIntegration", "GitHubIntegrationTests", "RivetPRInbox", "RivetPRInboxTests",
-        "RivetPRReader", "RivetPRReaderTests", "RivetPRReaderWebViewBridge",
-        "RivetPRReaderWebViewBridgeTests", "RivetPresentation", "RivetPresentationTests",
+        "RivetPRReader", "RivetPRReaderTests", "RivetPRReaderWebViewBridge", "RivetPresentation",
+        "RivetPRReaderWebViewBridgeTests", "RivetPRReaderHarnessRuntime",
+        "RivetPRReaderHarnessRuntimeTests", "RivetPRReaderHarness", "RivetPresentationTests",
       ])
     let bridgeName = "RivetPRReaderWebViewBridge"
     #expect(targetNames(in: try #require(products[bridgeName])) == [bridgeName])
