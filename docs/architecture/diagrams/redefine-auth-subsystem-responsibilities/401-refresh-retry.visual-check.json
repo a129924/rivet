@@ -6,8 +6,8 @@
   "visualReview": "pending",
   "artifact": {
     "path": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/401-refresh-retry.html",
-    "sha256": "c816c54badfb9cdee4b5aa6d58f9c88594e5eac627576fffa761ae015fc1be1c",
-    "bytes": 714003
+    "sha256": "f97c8c950a844d0aa521c968fa901bc31152d3f8c8a661b466dea15049be007f",
+    "bytes": 714013
   },
   "state": {
     "detail": "read",

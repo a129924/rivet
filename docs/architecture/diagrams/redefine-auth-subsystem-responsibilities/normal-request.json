@@ -2,6 +2,7 @@
   "schema_version": 1,
   "diagram_type": "sequence",
   "meta": {
+    "document_language": "zh-Hant",
     "title": "模型 C：正常請求（採用目標架構／尚未實作）",
     "quality_profile": "showcase",
     "viewBox": [1080, 640],

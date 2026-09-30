@@ -6,8 +6,8 @@
   "visualReview": "pending",
   "artifact": {
     "path": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/auth-flow-state.html",
-    "sha256": "557b70bdea76ed515686ef21cfa87a30bc2716868589936522f3da37ed7302f3",
-    "bytes": 710549
+    "sha256": "4a31756a4e533f55b97a5ea35dfc2e5ef52473d2c2946e1fbb88cb5bd142a726",
+    "bytes": 710523
   },
   "state": {
     "detail": "read",

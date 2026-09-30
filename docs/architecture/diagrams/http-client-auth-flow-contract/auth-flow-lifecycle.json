@@ -47,6 +47,17 @@
       "tag": "不建構請求"
     },
     {
+      "id": "initial-finish",
+      "type": "neutral",
+      "label": "初始終態結果",
+      "sublabel": "結果／失敗介面待定",
+      "lane": "main",
+      "col": 0,
+      "width": 120,
+      "yOffset": 144,
+      "tag": "無 I/O／回應前提"
+    },
+    {
       "id": "initial-send",
       "type": "active",
       "label": "AuthRequester",
@@ -136,6 +147,16 @@
   "transitions": [
     { "id": "creates", "from": "make-flow", "to": "auth-flow" },
     { "id": "starts", "from": "auth-flow", "to": "start" },
+    {
+      "id": "initial-terminal",
+      "from": "start",
+      "to": "initial-finish",
+      "label": "初始終態（與派送互斥）",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [[402, 200], [58, 200], [58, 260], [94, 260]],
+      "labelAt": [248, 202]
+    },
     {
       "id": "start-send",
       "from": "start",

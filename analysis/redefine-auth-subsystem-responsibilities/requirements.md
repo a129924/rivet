@@ -1457,16 +1457,295 @@ resolve thread、merge 或 release。Deleted：無；不 delete、rename 或 mov
 - 只驗證四份 formal artifacts 的 consistency／scope／no-contract-drift；不新增 product test 或生成 diagram。
 - PR-32 approved 只引用既有獨立 review；TE-29 re-test approved 只引用本次獨立 Tester evidence，後續 pending gate 不是 historical。
 
-### Current Route
+### PC-33 前 Historical Route／Delivery Snapshot
+
+本小節及下方 CH-26 新 Feedback 只保存 PC-33 授權前的 historical snapshot；非 current route，未新增 approval 或 thread closure。2026-09-30 human 已授權 PC-33 最小圖表回修；當時 CH-26 needs-rework／HC-26 pending 的 scope 決定停點由 PC-33 承接。
 
 TE-29 re-test 已 completed／approved，依獨立 Tester evidence：四檔 diff scope、diff check、UTF-8、Markdown fences／table、hash／date／content preservation 均通過，dev clean、備份完整。
 TE-29／RV-29 啟動時 active／尚無 approved verdict 的記述已為 historical snapshot。
-RV-29 已 completed／approved，依獨立 Reviewer evidence：只有四份 formal artifacts 變更，facts／backup／schema、historicality／唯一 current route 正確，dev clean／diff check 通過。目前 DL-28 active，尚未 completed／visible。
-四份 artifacts 唯一 current route 為：
+RV-29 已 completed／approved，依獨立 Reviewer evidence：只有四份 formal artifacts 變更，facts／backup／schema、historicality／唯一 current route 正確，dev clean／diff check 通過。DL-28 已以 `738366c` completed／visible，local／origin／PR #37 head 一致，PR 維持 OPEN、ready。
+Delivery-before snapshot（historical）：當時 DL-28 active／尚未 completed／visible，CH-26 當時 pending，HC-26 當時 pending human boundary；此記述非 current route。
+Delivery-after snapshot（historical）：DL-28 `738366c` completed／visible → CH-26 當時 active → HC-26 當時 pending human boundary；此記述非 current route。
+四份 artifacts 當時唯一 current route（PC-33 前 historical snapshot）為：
 
 ```text
-TE-29 re-test (completed／approved／historical) → RV-29 (completed／approved／historical) → DL-28 (active／唯一 current gate) → CH-26 (pending) → HC-26 (pending／human boundary)
+TE-29 re-test (completed／approved／historical) → RV-29 (completed／approved／historical) → DL-28 (`738366c` completed／visible／historical) → CH-26 (needs-rework) → HC-26 (pending／human boundary：新 scope 決定)
 ```
 
-TE-29 re-test 與 RV-29 均已 approved，現進入 DL-28；delivery visible 後才進入 CH-26。
-HC-26 是 pending human boundary；不 merge、不 release。needs-rework 回交相應產出角色。
+CH-26 的獨立 Reviewer verdict 為 needs-rework → human-check：Codex 對 head 的 review 已於 2026-09-30T02:54:15Z 完成（COMMENTED），新增四條 P2 feedback；其中 diagram findings 超出 PC-32 scope。原 28 條 known-fixed classifications 保留，現有 32 條 thread 仍 unresolved，未執行 resolve。
+當時只同步 delivery／review facts；HC-26 當時 pending human boundary，等待新 scope 決定；當時尚未建立 PC-33。此 historical snapshot 保留 DL-28／CH-26 未提交 fact sync 的原始事實，不宣稱 closure 或 human final approval。
+
+### CH-26 新 Feedback（PC-33 前 Historical Snapshot）
+
+- `PRRT_kwDOUFu0Cc6nXmhX`：normal／401／state Archify HTML 的 root 與 SVG language 仍為 en；要求由標準 producer regeneration 改為 zh-Hant，尚未實作。
+- `PRRT_kwDOUFu0Cc6nXmhd`：DL-28 visible delivery 與 CH-26 route 的 ledger sync；此四檔 fact sync 記錄已查證狀態，尚未提交／push，thread 仍 unresolved。
+- `PRRT_kwDOUFu0Cc6nXmhf`：lifecycle 缺少 initial semantic finish outcome；target failure surface 仍 deferred，中性的 initial terminal topology 需新 human scope，尚未實作。
+- `PRRT_kwDOUFu0Cc6nXmhh`：state 的 initial waiting label 提及 retry，但 retry 已有獨立 waiting state；要求 initial-only label，尚未實作。
+
+## PC-33 — 最小圖表語言／初始終態回修契約
+
+### Goal／Human Authorization
+
+2026-09-30 human 明確授權：三份 Archify HTML／inline SVG 設為 `zh-Hant` 並重新產生 receipts；
+lifecycle 明確表達 initial semantic terminal outcome，failure surface 保持 deferred；
+state initial waiting label 僅描述首次回應。PC-33 承接 CH-26 的四條 P2 與未提交 DL-28／CH-26 fact sync，
+不重開已採用 Model C、retry policy、ownership 或任何 deferred API。
+
+### In-Scope／Modify
+
+1. normal／401／state 三份 source 僅新增獨立 `meta.document_language: "zh-Hant"`；
+   `meta.locale` 的既有 absent／en／zh-CN 行為保持不變。normal／401 messages、participants、
+   activations、guards、geometry 均保持不變。
+2. state 僅將 `waiting-response.label` 改為首次回應語意；既有 11 states／12 transitions、
+   state IDs、edges、retry waiting state、policy、geometry 保持不變。
+3. lifecycle 在 `start` 的初始語意決策加入真正互斥 alternative：
+   semantic send → 原有 `initial-send`；semantic terminal → 原有中性 `receive-finish`。
+   initial terminal path 不經 Requester／transport／HTTPResponse／receive policy，亦不暗示憑空回傳 response、
+   concrete error API 或既有 `HTTPClientError.authFlowFinishedWithoutResponse` 就是 target failure surface。
+   最小 node/edge wording 或 context 可明示「初始終態；結果／failure surface 延後確定」；
+   既有 response／refresh terminal、refresh decision → AuthRequester → deferred I/O、
+   transport HTTPClientError 與 legacy failure node 可達性保持不變。
+4. lifecycle 首選復用中性終態（11 states／新增 1 transition，合計 14 transitions）。
+   僅修正被診斷的相連 label／route；兩輪 focused repair 後仍未通過 showcase 時，
+   先交獨立 Reviewer 分類。若仍屬同一 initial terminal 表達問題，才可改用專用中性 initial terminal
+   （12 states／14 transitions），由 Reviewer 明示此 bounded fallback 可前進後實作並重驗；
+   不允許任意重排其他 nodes、改 retry policy 或將 target failure surface concrete 化。
+
+   IM-33 實際 focused repair diagnostics 為 10 → 6 → 4，有改善但兩輪後仍未通過 showcase；
+   剩餘四個 diagnostics 的 subject 均為 initial terminal，相交於 initial-send／refresh-dispatch／
+   receives-response／client-sends-retry。獨立 Reviewer（agent name：
+   `im33_initial_terminal_fallback_review`）已分類並明示 approved：可採用本契約既有專用中性
+   initial terminal fallback（12 states／14 transitions），屬原 scope，不改 gate。
+   此證據只准許 bounded fallback，不表示 IM-33 completed、fresh delivery 或 TE-30 pass。
+5. 由 repository-tracked、pinned、pre-generation producer overlay 產生語言正確的新 HTML 與 receipts；
+   不修改全域 Archify installation，也不對已生成 HTML／JSON 做字串後處理。
+
+### Written — 精確檔案 Allowlist
+
+四份 formal planning artifacts：
+
+- `analysis/redefine-auth-subsystem-responsibilities/requirements.md`
+- `analysis/redefine-auth-subsystem-responsibilities/technical-spec.md`
+- `plan/redefine-auth-subsystem-responsibilities/redefine-auth-subsystem-responsibilities.plan.md`
+- `plan/redefine-auth-subsystem-responsibilities/redefine-auth-subsystem-responsibilities.step.md`
+
+下表的 directory + basename 定義四個且僅四個 artifact stem；不授權整個 directory：
+
+| Directory | Basename |
+| --- | --- |
+| `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities` | `normal-request` |
+| `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities` | `401-refresh-retry` |
+| `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities` | `auth-flow-state` |
+| `docs/architecture/diagrams/http-client-auth-flow-contract` | `auth-flow-lifecycle` |
+
+每個 stem 僅允許既有九種 suffix：
+`.json`、`.html`、`.delivery.json`、`.visual-check.json`、`.visual-check.html`、
+`.visual-check.1440x900.light.png`、`.visual-check.1440x900.dark.png`、
+`.visual-check.2048x1320.light.png`、`.visual-check.2048x1320.dark.png`。
+HTML 中的 inline SVG 是語言驗證對象；不新增 standalone SVG 或其他 viewport／alternate artifact。
+
+Producer 新檔僅允許下列五個，集中於
+`docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/archify-producer/`：
+
+- `run.mjs`：pinned temporary runtime copy、pre-generation patch、canonical containment 與標準 CLI 委派。
+- `document-language.patch`：下方五個 upstream files 的最小 patch。
+- `upstream-pin.json`：producer-relative filenames／SHA-256 與 baseline provenance；不得存安裝位置。
+- `BUILD.md`：重建／測試命令、pin check、overlay 差異、receipt capture 與 failure policy。
+- `producer.test.mjs`：語言、schema/generated validator、pins、containment、stdout receipt 驗證。
+
+目前 Plan-Creator 只寫四份 formal artifacts；上述 diagram／producer 檔案必須等 PR-33 approved 後由獨立 Implementer 處理。
+
+### Technical Producer Contract
+
+Planner 查證的 patch targets 僅為：
+`schemas/sequence.schema.json`、`schemas/lifecycle.schema.json`、
+`renderers/shared/generated-validators.mjs`、
+`renderers/shared/cli.mjs`、`renderers/shared/utils.mjs`。
+兩個 typed schema 的 optional `meta.document_language` 僅接受 const `"zh-Hant"`；
+absence 保持現有 resolved locale 的 document language。不得為此增加 Viewer locale 或改 common locale enum。
+generated validators 必須從 generator 重新產生，不手改 generated validator。
+`writeDiagram` 傳遞 document language 至 root SVG attrs；`applyTemplate` 只覆寫 HTML root lang，
+i18n 仍由 resolved Viewer locale 決定。common schema、i18n、template、generator、package 與 CLI entry 是 ReadOnly。
+
+Planner 提供的已查證 baseline（package `2.16.0-dev.0`／skill `2.16`）；只作 upstream-relative pin，不記錄 installation path：
+
+| Upstream relative file | SHA-256 | Overlay scope |
+| --- | --- | --- |
+| `schemas/sequence.schema.json` | `1184b00d4847811cae6829affa1815ef4b42546cadc60c7a0cc2019315f3f7ea` | optional document_language const zh-Hant |
+| `schemas/lifecycle.schema.json` | `f0dbe72f612449b4dd5326a1cfd0057a6d2fa68e66c132da387ff2d427516088` | optional document_language const zh-Hant |
+| `renderers/shared/generated-validators.mjs` | `b7db8e42033c8357d4be47b3cd536e43a6e53d4572502a22537b5da0c8e9133f` | generator output only |
+| `renderers/shared/cli.mjs` | `a36a3e028b976454272c2aadcef777aa9343d07f118994005d850689213ac6a8` | writeDiagram document language／SVG attrs |
+| `renderers/shared/utils.mjs` | `20124265300eb286db184a053561005cc32b6128dc1bc1b3f9520ffa8d43a241` | root HTML lang only；i18n resolved locale unchanged |
+| `package.json` | `48c15b6102adea1882421544d3a3f0dad3aa8e355a3f535c48de13da5e6b6121` | ReadOnly |
+| `schemas/common.schema.json` | `ba6f6023450034a1f52f474fe887be23633f819d12570a0dc0f27a4743724d1a` | ReadOnly |
+| `scripts/generate-validators.mjs` | `a5f5f67d3cd4675b16fa620043a5463f3c15aad89afb1b0c7cf42cf35e883f9a` | ReadOnly |
+| `bin/archify.mjs` | `a73a0beac5eb023821ba4136daea1a9aa4125dde437941050762950c12e037d6` | ReadOnly |
+
+
+
+Manifest 必須記錄 Planner 已驗證的 upstream-relative baseline hashes，涵蓋五個 touched files 及
+package/common/generator/bin 的 ReadOnly pins；Implementer 在任何 copy／patch 前補齊實際載入 runtime
+dependency 的完整 relative-path/hash manifest，獨立 Reviewer 核對覆蓋。僅五個 touched-file hashes
+不得宣稱完整 reproducibility。每個 pin mismatch 在寫任何 artifact／receipt 前 fail-closed。
+Runtime 可在暫存處完整複製所需 Archify tree；repository 只追蹤上述五個 overlay files，
+不 vendor 整套工具。Patch 在 validate／deliver 前套用；BUILD 記錄 upstream version、patch scope 與 pin
+來源，不把本地 overlay 冒稱為 upstream support，也不將本機安裝路徑寫入產物／manifest／log。
+
+所有 input／output 以 repository-relative 參數在 feature repository root 執行。
+`--repo-root` 的 root/input/output 先做 canonical／realpath 解析；
+canonical input/output 必須位於 canonical root 內，明確 repo 外路徑或 repo 內 symlink 指向外部
+均須在任何 artifact／receipt write 前拒絕。這些現有安全 boundary 不因語言 overlay 改變。
+
+Final source 經 showcase validate 通過後 freeze，標準 deliver 直接產生 HTML；
+stdout JSON 同時以原始 bytes capture 到同一 receipt directory 暫存檔，驗證後 atomic rename 成
+`.delivery.json`。不手寫、替換或後處理 receipt bytes。Receipt 的 input/output/artifact.path／
+provenance/command metadata（若存在）只能使用 repository-relative 位置；
+hash 與 bytes 必須對應實際 final source/HTML。Visual evidence 由 final HTML 重新取得，不 rerender trusted HTML。
+
+### Non-Goal／Out-Of-Scope／ReadOnly／Deleted
+
+ReadOnly：所有 Swift／product tests／package manifest、OAuth、canonical architecture docs／indexes／BC、
+兩份 canvas 及其 scene/build/language tools、其餘 diagram/topic、全域 Archify installation 與未列檔案。
+本次不設計新 action/event/factory/failure API，不改 refresh/retry policy、credential boundary、
+request preparation owner，亦不把 deferred interface 寫成已實作。
+不發布 artifact.cafe、不 merge、不 release；不得清理 ignored／untracked 資料。
+Deleted：無；不得 delete／rename／move repository files。Producer runtime temporary files 只作隔離執行，
+不包含 repo 資料清理。規劃編寫不執行 Git/GitHub、測試或實作。
+
+### TestCase／Acceptance Evidence
+
+- **TC-33-01 Language**：三份 final HTML root 與 inline SVG language 為 `zh-Hant`；
+  authored 繁體中文保持不變；Viewer UI absence／en／zh-CN 行為維持原樣。
+  explicit document_language=zh-Hant + existing locale 組合可產生正確 root；
+  absence/default en、explicit en／zh-CN locale 的舊輸出語言與 Viewer strings 不回歸。
+- **TC-33-02 Producer**：無效 document_language（含 en／zh-CN／任意其他值）與 pin mismatch
+  fail-closed/no artifact or receipt output；sequence/lifecycle typed schema 與 generator 產生的 validator 一致。
+  完整 pins＋patch＋命令可重現 source/output language；不以 postprocessing 通過。
+- **TC-33-03 Semantics**：四 source 各通過 showcase 9/9、0 composition errors／warnings。
+  initial lifecycle terminal 為真 alternative、無 transport/HTTPResponse predecessor、failure surface deferred；
+  legacy transport failure 仍可達。normal/401 topology 與 state 11/12 unchanged，
+  state initial waiting 不提 retry；locked policy／ownership／raw response handoff 無漂移。
+- **TC-33-04 Provenance**：四 fresh deliver receipts 的 stdout bytes capture、source／HTML SHA-256／bytes
+  正確；canonical root containment 與兩種 repo 外路徑／symlink 拒絕案例通過；
+  metadata、全部待提交 diff／HTML／evidence 不含本機絕對位置、用户名、home 或 worktree 名稱。
+- **TC-33-05 Visual**：normal／401／lifecycle 在 1440×900、1600×1000、1920×1080、2048×1320
+  containment/capture pass；最小與最大 viewport light/dark manual inspection。
+  state 的既有 1440=1035、1600/1920=1109 containment non-pass 與 2048 pass 必須如實記錄，
+  readability/chrome/captures 不回歸，不宣稱全 pass、不新增例外。不得以 clipping/overflow hidden/縮字造假。
+- **TC-33-06 Scope/Workflow**：exact allowlist、dev clean、四份 artifacts facts／current route 一致；
+  DL-28 `738366c` completed/visible 與原 28 known-fixed＋32 unresolved 的當時分類保留為 historical evidence，
+  不提前宣稱本次 delivery、thread closure、human approval 或尚未執行的測試 pass。
+
+### IM-33 — Fresh Delivery 與人工視覺回修證據
+
+以下為上游 Implementer／獨立 Reviewer 的交接事實；不是 Plan-Creator 自行驗證或 gate approval。
+producer 五檔已建立，完整 manifest 為 743 pins；五個 upstream targets 的 patch 為 836320 bytes。
+上游回報 producer tests 7/7、fresh hashes 與 generated-validator check 通過。
+四 source 的 fresh validate／deliver 各為 showcase 9/9、composition errors／warnings = 0；
+raw stdout receipt 與 source／HTML hashes 已由上游核對。這些結果不取代 TE-30 的獨立驗證。
+
+Composition history 完整保留：shared terminal 原 candidate diagnostics 10 → 6 → 4，兩輪 focused repair
+仍失敗，經 `im33_initial_terminal_fallback_review` 明示 approved 後採用既有
+12 states／14 transitions 專用中性 initial terminal fallback。Fallback candidate 的 pre-delivery
+composition diagnostics 為 5 → 2 → 0，經兩輪修正後四 source 9/9。既有 lifecycle 11 nodes／13 edges
+及其 locked semantics 保留；只依原契約新增 initial terminal node／edge，不改 retry／refresh policy
+或 deferred failure surface。這兩組 composition rounds 不等同 post-delivery perceptual repair rounds。
+
+Normal／401／lifecycle 的四 viewport automated containment 均通過；
+state 保留 1440×900 height 1035、1600×1000／1920×1080 height 1109 containment non-pass，
+2048×1320 pass，不能宣稱 state visual 全 pass。
+獨立 Reviewer `im33_visual_terminal_overlap_review` 親自檢閱 exact-delivered
+2048 light、1440 dark 與 SVG，原始 FINAL verdict 為 needs-rework，並 approved bounded fix：
+lifecycle `initial-finish` rectangle [34,236,120,62] 遮住 response heading [72,252]，
+response rail y=264；首次人工 visual inspection failed。當時尚未進行 post-delivery perceptual repair
+（0 輪），不能以 automated containment pass 宣稱 manual visual pass 或 IM-33 completed。
+
+Reviewer 當時已直接交接 Implementer，核准第一個 post-delivery visual candidate 僅將
+`initial-finish.yOffset` 110 → 144，未預判成功。第一輪 fresh image 顯示 node 遮擋改善，
+但新的 initial-terminal edge x=94 垂直段仍穿過 heading，manual inspection failed。
+第二個且最後 visual round 僅修改新 initial-terminal route，
+`via = [[402,200],[58,200],[58,260],[94,260]]`；node yOffset 保持 144。
+Implementer `im33_diagram_implementation` 明示 completed handoff：第二輪 final exact-delivered
+最小／最大 viewport light/dark 共四張 manual inspection 通過，lifecycle 四 viewport automated checks 均 pass。
+既有 lifecycle 11 nodes／13 edges 與 HEAD deep-equal；其餘三 source／producer 自首次 delivery 後未再修改。
+不改 retry／refresh policy、failure surface deferred、其他既有 geometry、scope 或 pins；
+首次 inspection failed、第一輪 failed 與第二輪 pass 均保留，未超過兩輪上限。
+每次 source visual edit 後皆須 fresh validate → deliver、原始 receipt bytes capture／hash 核對、
+fresh visual-check 與 exact-delivered manual light/dark inspection。
+Post-delivery visual repair 最多兩輪；第二輪仍 failed，或需要改既有其他 geometry／scope／pins，
+即停止交獨立 Reviewer 分類。這是原 IM-33 的已核准 bounded handoff，未新增 cycle 或 contract design。
+
+Final lifecycle source SHA-256 為 `124582f618975eb3e15925f8b792f96dc4ff8d8a67e3b7993ef1d9638f7dd5c8`，6516 bytes；
+HTML SHA-256 為 `d06e2aba55fa3825a2700254318fd42e7ddc51e04a2d90584ee373ceab12bdf8`，712909 bytes。
+Implementer 回報完整 producer tests 7/7、四 source validate／deliver 9/9、hash／byte integrity、
+pins、scope 與當時 dev clean 回報通過；最新獨立 Tester 將 dev 狀態限於 tracked／staged clean，另有未追蹤 `.vscode/`。State 1035／1109 containment non-pass 與 2048 pass 維持既有例外。
+這些是 implementation completion evidence，不是獨立 test／result-review approval。
+
+IM-33 completed handoff 時的 historical snapshot：TE-30 當時 active，RV-30／DL-29／CH-27／HC-27 當時 pending。
+當時尚無 TE-30 verdict；最新獨立 test verdict 與 current route 見下節。
+
+### TE-30 — 獨立 Tester 完成交接
+
+獨立 Tester `te30_diagram_independent_validation` 的原始 FINAL verdict 為
+TE-30 completed／approved、required fix 無，RV-30 eligible；本節只引用該 evidence，不由 Plan-Creator 自核准。
+Tester 實際驗證 producer tests 7/7、四 source showcase validate 9/9、source／HTML hash 與 bytes、
+visual evidence 綁定、HTML root／inline SVG language、既有 nodes／edges 與 HEAD deep-equal、
+locked policy、current route、exact allowlist、diff 無本機絕對位置及 diff check 均通過。
+
+Sandbox Chrome 首次 SIGABRT 沒有產生有效 fresh visual evidence；之後獲准 escalation，
+以 exact HTML 在暫存位置重新執行 visual-check。Normal／401／lifecycle exit 0，
+四 viewport automated checks 均 pass；state exit 1，保留 1440 height 1035、
+1600／1920 height 1109 containment non-pass 與 2048 pass，readability／chrome／captures 通過。
+Tester 親自檢閱 16 張 repository captures 及 fresh 401 dark，未見 regression，manual inspection passed。
+Automated evidence 的 visualReview pending 原值保留，未將 manual inspection 結果改寫成該欄位 approval。
+
+Dev tracked／staged diff 為空，但 porcelain 有 `?? .vscode/`；只可稱 tracked／staged clean，
+不能宣稱 full worktree clean。不推測來源、不清理未追蹤資料。
+IM-33 completed 與全部 composition／visual repair history 保留。TE-30 完成交接時的 historical snapshot：
+TE-30 completed／approved，RV-30 當時 active，DL-29／CH-27／HC-27 當時 pending；當時尚無 RV-30 verdict。
+最新獨立 result-review verdict 與 current route 見下節，未宣稱 delivery visible 或 thread closure。
+
+### RV-30 — 獨立 Reviewer Gate 完成交接
+
+獨立 Reviewer `rv30_final_diagram_review` 原始 FINAL verdict 為 RV-30 approved、
+required fixes 無，可依既定契約前進 DL-29；Reviewer 未修改 ledger。本節只引用其獨立 verdict。
+
+Reviewer 以 HEAD `738366c` 核對 36 tracked paths＋5 producer files 符合 exact allowlist、
+staged empty／diff check 通過；獨立 producer tests 7/7、743 完整 pins／五 patch targets、
+generated-validator check、canonical containment 與 symlink fail-closed 通過。
+四 source validate 為 showcase 9/9、0 errors／warnings；source／HTML／receipt SHA-256 與 bytes 綁定、
+tracked metadata 無本機路徑；三 HTML root／inline SVG 為 zh-Hant，Viewer locale 原樣，
+lifecycle 既有 en 屬授權外，保持不變。
+
+既有 lifecycle 11 nodes／13 edges 逐項與 HEAD 一致，新中性 initial terminal 為互斥直達，
+不經 I/O／response policy，failure surface deferred；normal／401／state contract 無漂移。
+Reviewer 親閱 16 張 current captures，未見新增缺陷；normal／401／lifecycle 四 viewport pass，
+state 既有 1035／1109 三 containment non-pass 與 2048 pass、automated visualReview pending 保留。
+四 formal artifacts 的 contract／history／route 一致；dev tracked／staged clean，
+未追蹤 .vscode/ 保留，不宣稱 full clean。
+
+依此明示 verdict 同步 RV-30 completed／approved、DL-29 active；
+CH-27／HC-27 pending，未宣稱 DL-29 completed／visible、thread closure 或 human final approval。
+
+### Current Route／Dispatch Contract
+
+PC-33 planning 編寫 completed。規劃交接時 PR-33 active／尚未 approval 已為 historical snapshot。
+
+Human 已直接確認：`確認 PR-33 approved/completed，授權將 IM-33 設為 active。這是 human 對本次 gate 狀態同步的直接確認。` 本次依 human 確認同步 status；獨立 Plan-Reviewer 原始 verdict 為 approved、Required fix 無，IM-33 具備 planning eligibility。此同步不表示 implementation／test／result review 已通過。
+
+依 human 明確確認與獨立 verdict，PR-33 completed／approved，IM-33 completed handoff，TE-30 completed／approved；獨立 Reviewer 原始 FINAL 明示 RV-30 approved、required fixes 無，RV-30 completed／approved、DL-29 active。尚無 DL-29 completed／visible evidence。唯一 current route：
+
+```text
+PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (active) → CH-27 (pending) → HC-27 (pending／human boundary)
+```
+
+未進入的後續 steps 是 pending future route，不標為 historical。
+PR-33 必須由獨立 Plan-Reviewer 審查 scope、exact allowlist、minimal producer、pins、topology/fallback、
+tests 與 receipt contract，approved 後才進入獨立 Implementer。
+TE-30 由獨立 Tester 驗證全部 TestCase；RV-30 由獨立 Reviewer 核對 evidence、contract/ownership
+與 scope drift，approved 後才進入 DL-29。Plan-Creator 只同步有上游 evidence 的 status，不能自核准。
+DL-29 依 staged diff 提出單一 topic commit message，取得 human 明確確認後才 commit/push 至既有 feature
+branch；保留既有 PR #37 ready。Hook 例外只依已明確授權且仍適用的受限 exception，其他 failure 停止。
+Push visible 後 CH-27 重新取得 threads，只對已分類、證據可見的 known-fixed finding closure；
+非必要項目以說明留言後 resolve；unknown/unclassified feedback 停在 human boundary。
+HC-27 保持 pending human review；不 merge/release，不自動採用新 architecture 或擴張 scope。
