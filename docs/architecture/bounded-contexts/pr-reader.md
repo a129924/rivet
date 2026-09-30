@@ -33,11 +33,11 @@
 ## WebView Diff Rendering Boundary
 
 - Swift 對 WebView 提供完整且有序的 `DiffSnapshot`；它帶有 `pullRequestId`、`snapshotId` 與 `readonly DiffViewModel[] files`，每個檔案包含 snapshot-local `fileId`、檔案變更 metadata、可選 patch、增刪計數與 viewed 狀態。
-- WebView diff pipeline 的 Facade／UseCase orchestration 已有 runtime 實作。render 主路徑為 `Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output`；四個 Ports 由 `DiffRenderUseCase` 協調，且它是 Output Port 唯一 caller。`DiffFacade` 是 Presentation 的 render 入口，且不依賴 Output Port；`DiffSnapshotAdapter.receiveSnapshot` 是 callable 邊界，呼叫 Facade 一次並回傳既有 render outcome；Swift sink 與 adapter 之間尚無 live transport。
+- WebView diff pipeline 的 Facade／UseCase orchestration 已有 runtime 實作。render 主路徑為 `Swift bridge snapshot → WKWebView live transport → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → DOM Output`；四個 Ports 由 `DiffRenderUseCase` 協調，且它是 Output Port 唯一 caller。`DiffFacade` 是 Presentation 的 render 入口，且不依賴 Output Port；`DiffSnapshotAdapter.receiveSnapshot` 是 callable 邊界，呼叫 Facade 一次並回傳既有 render outcome。Swift sink 的同步返回只代表 host 接受交付；host 另行追蹤頁面世代、快照 DOM 完成、失敗與逾時。
 - Output 是獨立 stage，公開 outcome 區分 `invalid-input`、`parse-error`、`render-error` 與 `output-error`。
 - Swift-owned viewed authority 是此 bridge 的讀取與更新邊界；永久儲存機制尚未決定。WebView 僅以 `pullRequestId`、`snapshotId`、snapshot-local `fileId` 與 `viewed` 發送 best-effort `void` 單向通知；Swift 可忽略過期事件。此狹義例外不等待 acknowledgement、不 retry、不承諾可靠傳輸，且 WebView 不做 optimistic snapshot 更新。
-- Validator、Parser 與 Renderer 已有 internal concrete implementation，支援 added、removed、modified、renamed、copied、typeChanged 六狀態。`RivetPRReaderWebViewBridge` 以無碰撞 PR encoding、session snapshot ID 與 snapshot-local file registry 完整交付 Reader files；viewed event 須符合 PR、snapshot、file 三重 identity 才送往 Swift authority。Output、DOM、WKWebView host／live transport 與 viewed-state persistence 尚未實作。
-- 長期圖表以責任分工保持一致：architecture-canvas 只表達 ownership、編譯期依賴與 Swift／WebView boundary；同資料夾的 Archify `dataflow` 才表達既定 runtime render flow。兩者均不定義 concrete implementation。
+- Validator、Parser 與 Renderer 已有 internal concrete implementation，支援 added、removed、modified、renamed、copied、typeChanged 六狀態。`RivetPRReaderWebViewBridge` 以無碰撞 PR encoding、session snapshot ID 與 snapshot-local file registry 完整交付 Reader files；viewed event 須符合 PR、snapshot、file 三重 identity 才送往 Swift authority。fixture harness 提供具體 Output／DOM、WKWebView host 與雙向 live transport；Viewed 只存於該 harness 的記憶體，永久儲存尚未實作。host 先驗證頁面世代，bridge 再驗證三重 identity；authority 成功寫入後，host 在下一 main-actor turn 發布新快照，WebView 不做 optimistic update。
+- 長期圖表以責任分工保持一致：architecture-canvas 表達 ownership、編譯期依賴與 Swift／WebView boundary；同資料夾的 Archify `dataflow` 表達 fixture runtime render flow。兩者均不宣稱 GitHub source 或完整產品 Reader UI 已交付。
 
 ## Failure Contract
 

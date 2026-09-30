@@ -1,6 +1,6 @@
 # Rivet 架構規範
 
-本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline；PR Reader WebView diff 的 Facade／UseCase orchestration、Validator、Parser、Renderer internal concrete stages 與 `RivetHTTPClient` 的最小 HTTP 介面切片已有實作；Output、DOM、WKWebView host／live transport 與 viewed-state persistence 仍未實作；Swift Reader-to-WebView bridge 與 callable TS adapter 已實作。Root Swift package 另包含 non-BC `RivetPresentation` target，已實作原生 SwiftUI `PullRequestRow` leaf、display-ready Presentation input，以及提供 parent-owned 單選、焦點、鍵盤選取和安全 Open PR intent 的 `PullRequestList`。該 target 不依賴任何 Bounded Context，也不包含 Domain／Application mapper；完整 Inbox 的首列 fallback、Reader 導覽與 app menu 尚未實作。除本文件已列明的受限實作外，不宣稱其他產品能力已完成。
+本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline；PR Reader WebView diff 的 Facade／UseCase orchestration、Validator、Parser、Renderer internal concrete stages、fixture 驅動的 DOM Output 與 WKWebView host／live transport，以及 `RivetHTTPClient` 的最小 HTTP 介面切片已有實作；viewed-state persistence 仍未實作；Swift Reader-to-WebView bridge 與 callable TS adapter 已實作。Root Swift package 另包含 non-BC `RivetPresentation` target，已實作原生 SwiftUI `PullRequestRow` leaf、display-ready Presentation input，以及提供 parent-owned 單選、焦點、鍵盤選取和安全 Open PR intent 的 `PullRequestList`。該 target 不依賴任何 Bounded Context，也不包含 Domain／Application mapper；完整 Inbox 的首列 fallback、Reader 導覽與 app menu 尚未實作。除本文件已列明的受限實作外，不宣稱其他產品能力已完成。
 
 ## 架構方向
 
@@ -51,10 +51,14 @@ Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.pre
 
 PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有 runtime 實作。render 主路徑為 `Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output`；UseCase 擁有四個 stage Port 的協調責任，也是 Output Port 唯一 caller。DiffSnapshotAdapter 是 callable 入口，呼叫 Facade 一次並回傳 render outcome；ViewedStateChangeAdapter 仍僅為通知邊界宣告。
 
-公開 render outcome 區分 `invalid-input`、`parse-error`、`render-error` 與 `output-error`。`viewed` 的讀寫權威位於 Swift boundary，永久儲存機制尚未實作：WebView 只發送包含 PR、snapshot 與 snapshot-local file identity 的 best-effort `void` 單向 notification，不等待 acknowledgement、不 retry、不承諾可靠傳輸，也不修改 snapshot。Validator、Parser 與 Renderer 已有 internal concrete implementation；Swift bridge 依 Reader snapshot 產生完整六狀態 wire snapshot，callable adapter 回傳 Facade outcome；Output、DOM、WKWebView host／live transport 與 viewed-state persistence 尚未實作。
+公開 render outcome 區分 `invalid-input`、`parse-error`、`render-error` 與 `output-error`。`viewed` 的讀寫權威位於 Swift boundary，永久儲存機制尚未實作：WebView 只發送包含 PR、snapshot 與 snapshot-local file identity 的 best-effort `void` 單向 notification，不等待 acknowledgement、不 retry、不承諾可靠傳輸，也不修改 snapshot。Validator、Parser 與 Renderer 已有 internal concrete implementation；Swift bridge 依 Reader snapshot 產生完整六狀態 wire snapshot，callable adapter 回傳 Facade outcome。fixture harness 以本地 `PRContentSnapshot` 啟動 WKWebView，Swift sink 接受快照後由 TypeScript pipeline 及具體 DOM Output 呈現；host 另行追蹤當前頁面與快照的完成、失敗及逾時，Viewed 成功寫入 Swift 記憶體 authority 後再發布新快照。此 runtime 不取得 GitHub PR，亦不持久化 Viewed。
 
-- [PR Reader WebView Diff Pipeline](diagrams/pr-reader-webview-diff-rendering/index.html)：Swift／WebView 邊界、編譯期依賴、宣告的 Ports 與 ownership；此 canvas 不表達 runtime render dataflow。其 [重建與失敗回復規則](diagrams/pr-reader-webview-diff-rendering/BUILD.md) 明確區分兩次單檔 atomic rename 與可驗證的 backup/restore policy，不宣稱雙檔原子交付。
-- [PR Reader WebView Diff Dataflow](diagrams/pr-reader-webview-diff-rendering/diff-render-flow.html)：以同一組既定契約表達 runtime render dataflow；不新增 concrete implementation 或資料契約。
+- [PR Reader WebView Diff Pipeline](diagrams/pr-reader-webview-diff-rendering/index.html)：Swift／WebView 邊界、編譯期依賴、宣告的 Ports、fixture runtime 與 ownership；此 canvas 不表達 runtime render dataflow。其 [重建與失敗回復規則](diagrams/pr-reader-webview-diff-rendering/BUILD.md) 明確區分兩次單檔 atomic rename 與可驗證的 backup/restore policy，不宣稱雙檔原子交付。
+- [PR Reader WebView Diff Dataflow](diagrams/pr-reader-webview-diff-rendering/diff-render-flow.html)：表達已接通的 fixture → WKWebView → TypeScript pipeline → DOM runtime render dataflow；沿用既定資料契約。
+
+### Fixture runtime 人工驗收
+
+在 macOS 於 repository 根目錄執行 `swift run RivetPRReaderHarness`。視窗標示「本地 fixture」；依序確認六種檔案狀態、四個 patch 與兩個 metadata-only 提示。點選第一檔「標記 Viewed」，待 Swift 發布新快照後確認按鈕顯示「已 Viewed · 取消」；再點選取消並確認恢復。這只驗證本地 fixture 的 runtime 往返，不涉及 GitHub 資料或跨啟動儲存。
 
 ## 文件導覽
 

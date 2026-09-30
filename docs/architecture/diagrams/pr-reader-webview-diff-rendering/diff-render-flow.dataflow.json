@@ -18,7 +18,7 @@
       "id": "swift-snapshot",
       "type": "external",
       "label": "Swift Reader bridge",
-      "sublabel": "六狀態 DiffSnapshot",
+      "sublabel": "fixture → 六狀態快照",
       "tag": "權威輸入",
       "stage": 0,
       "row": 0
@@ -81,7 +81,7 @@
       "id": "output",
       "type": "backend",
       "label": "輸出 Port",
-      "sublabel": "output(plan)",
+      "sublabel": "DOM output(plan)",
       "tag": "唯一 caller：UseCase",
       "stage": 3,
       "row": 3
@@ -137,7 +137,7 @@
       "from": "swift-snapshot",
       "to": "snapshot-adapter",
       "label": "DiffSnapshot",
-      "classification": "邊界契約；live transport 未實作",
+      "classification": "WKWebView live transport；已交付",
       "variant": "emphasis",
       "route": "straight",
       "labelAt": [130, 200]
@@ -254,7 +254,7 @@
       "items": [
         "Swift bridge 由 Reader snapshot 交付完整六狀態 DiffSnapshot",
         "DiffFacade 是 Presentation 的公開 render 入口",
-        "未交付 WKWebView transport、具體 Output 或 DOM"
+        "WKWebView host 與 DOM Output 已呈現本地 fixture；Viewed 回到 Swift 記憶體權威"
       ]
     }
   ]
