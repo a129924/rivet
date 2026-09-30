@@ -2,11 +2,11 @@
 
 ## Current Phase
 
-PC-33 completed；human 已直接確認 PR-33 approved／completed 並授權既定 gates 正常前進。IM-33 completed handoff、TE-30 completed／approved；獨立 Reviewer 原始 FINAL 明示 RV-30 approved、required fixes 無，RV-30 completed／approved、DL-29 active。尚無 DL-29 completed／visible evidence。
+PC-33 completed；PR-33 completed／approved、IM-33 completed handoff、TE-30／RV-30 completed／approved。Delivery 原始 FINAL 明示 DL-29 `175965784597b224781e31600a8352f8e6dd75de` completed／visible；CH-27 獨立 Reviewer needs-rework，四 formal post-delivery fact sync 尚待獨立審查，HC-27 pending。未宣稱 closure pass 或 latest bot review 完成。
 DL-28 `738366c` completed／visible 與 CH-26 needs-rework／HC-26 當時 pending 的 fact sync 保留為 historical evidence；human 已授權新 scope，由 PC-33 承接。唯一 current route：
 
 ```text
-PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (active) → CH-27 (pending) → HC-27 (pending／human boundary)
+PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (`1759657` completed／visible) → CH-27 (needs-rework／未完成) → HC-27 (pending／human boundary)
 ```
 
 ## Historical Phase Snapshots — PC-32 前
@@ -1416,8 +1416,30 @@ state 既有 1035／1109 三 containment non-pass 與 2048 pass、automated visu
 四 formal artifacts 的 contract／history／route 一致；dev tracked／staged clean，
 未追蹤 .vscode/ 保留，不宣稱 full clean。
 
-依此明示 verdict 同步 RV-30 completed／approved、DL-29 active；
-CH-27／HC-27 pending，未宣稱 DL-29 completed／visible、thread closure 或 human final approval。
+RV-30 完成交接時的 historical snapshot：依其明示 verdict 同步 RV-30 completed／approved、DL-29 當時 active；
+CH-27／HC-27 當時 pending，當時尚無 DL-29 completed／visible evidence，未宣稱 thread closure 或 human final approval。
+
+### DL-29 Delivery／CH-27 Post-Delivery Snapshot
+
+Delivery 原始 FINAL 明示 DL-29 completed／visible，commit
+`175965784597b224781e31600a8352f8e6dd75de`，message：
+`docs(auth): 修正圖表語言與初始終態並同步驗證紀錄`。
+該次 non-force push exit 0；local／origin／remote branch／PR #37 SHA 一致，
+PR OPEN／ready、CLEAN／MERGEABLE、checks []，41 paths；feature clean，
+dev 的未追蹤 .vscode/ 保留。Human 已直接授權此 commit 的 known SwiftLint
+`--no-verify` exception，未改 Swift；此紀錄不是後續 commit 的概括 exception。
+
+CH-27 獨立 Reviewer 原始 FINAL 為 needs-rework，必要 scope 僅四 formal artifacts 的
+post-delivery fact sync；本次依此修正 stale delivery 狀態，尚待獨立 Reviewer 審查同步 diff，
+未新增 PC cycle，未自核准。CH-27 未完成／needs-rework，HC-27 pending。
+
+GitHub 最後提供的 snapshot 為 50 threads／32 unresolved、無新 feedback；
+bot 對 1759657 為 Running，since `2026-09-30T07:33:51.914333Z`，
+summary updated `2026-09-30T07:33:54Z`；該 snapshot 最新 submitted review 仍為 738366c。
+這些只描述當時 snapshot，不能當作目前 live state 或宣稱 latest bot review 完成。
+三條新 threads nXmhX／nXmhf／nXmhh 已分類 visible-fixed；
+nXmhd 的 DL-28 已 historical／visible-fixed、待 supersession comment，但當時最新 DL-29 ledger 尚未同步；
+其餘 28 threads 本輪 closure 未驗。未宣稱 closure pass、thread resolved 或新增 approval。
 
 ### Current Route／Dispatch Contract
 
@@ -1425,10 +1447,10 @@ PC-33 planning 編寫 completed。規劃交接時 PR-33 active／尚未 approval
 
 Human 已直接確認：`確認 PR-33 approved/completed，授權將 IM-33 設為 active。這是 human 對本次 gate 狀態同步的直接確認。` 本次依 human 確認同步 status；獨立 Plan-Reviewer 原始 verdict 為 approved、Required fix 無，IM-33 具備 planning eligibility。此同步不表示 implementation／test／result review 已通過。
 
-依 human 明確確認與獨立 verdict，PR-33 completed／approved，IM-33 completed handoff，TE-30 completed／approved；獨立 Reviewer 原始 FINAL 明示 RV-30 approved、required fixes 無，RV-30 completed／approved、DL-29 active。尚無 DL-29 completed／visible evidence。唯一 current route：
+PR-33 completed／approved、IM-33 completed handoff、TE-30／RV-30 completed／approved 保留；依 Delivery 原始 FINAL，DL-29 `175965784597b224781e31600a8352f8e6dd75de` completed／visible。CH-27 獨立 Reviewer 原始 FINAL needs-rework，本次四檔 fact sync 尚待獨立 review；HC-27 pending。唯一 current route：
 
 ```text
-PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (active) → CH-27 (pending) → HC-27 (pending／human boundary)
+PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (`1759657` completed／visible) → CH-27 (needs-rework／未完成) → HC-27 (pending／human boundary)
 ```
 
 未進入的後續 steps 是 pending future route，不標為 historical。
@@ -1499,8 +1521,8 @@ historicality／唯一 current route 正確，dev clean／diff check 通過。�
 | IM-33 | Implementer | completed | 僅 exact allowlist 內實作 source／pre-generation overlay／fresh outputs 與 receipts。 | PR-33 completed／approved；human 直接授權 IM-33 active 與既定 gates 正常前進。 | 明示 completed handoff、完整 pin manifest 與 source/output/receipt/visual evidence。 | im33_diagram_implementation 明示 completed handoff；五檔 producer／743 pins／836320-byte 五-target patch、tests 7/7、四 source validate/deliver 9/9／0 errors／0 warnings、hash/bytes/pins/scope 通過；當時 dev clean 回報由最新 Tester 限定為 tracked/staged clean、另有 ?? .vscode/。Composition 10→6→4 後 approved fallback、5→2→0；首次人工 inspection failed、post-delivery round 1 failed、round 2 final 四張 manual inspection passed；詳見 evidence 小節。Completion 本身不是 TE-30／RV-30 approval。 |
 | TE-30 | Tester | completed | 獨立驗證 TC-33-01 至 TC-33-06。 | IM-33 明示 completed 與完整 evidence。 | 明示 approved 或 required rework；state 三 non-pass 如實記錄。 | te30_diagram_independent_validation 原始 FINAL approved、required fix 無、RV-30 eligible；7/7 producer tests、四 source 9/9、hash/bytes/visual binding/language/HEAD deep-equal/policy/route/allowlist/diff check 通過。Fresh visual normal/401/lifecycle 四 viewport pass；state existing non-pass 保留，manual inspection pass、automated visualReview pending 不改。Dev tracked/staged clean，porcelain 有 ?? .vscode/；詳見 TE-30 evidence 小節。 |
 | RV-30 | Reviewer | completed | 獨立成果 review、policy/ownership/failure deferred、scope/provenance。 | TE-30 completed／approved 的獨立 evidence。 | 明示 approved 後才可 DL-29。 | rv30_final_diagram_review 原始 FINAL approved、required fixes 無、DL-29 eligible；獨立 7/7 producer tests、743 pins／五 patch targets、四 source 9/9、receipt/hash/bytes/language/scope/HEAD policy consistency、16 張 current captures 通過。State 既有 non-pass／automated visualReview pending 與 dev untracked .vscode/ 限制保留；詳見 RV-30 evidence 小節。Reviewer 未改 ledger。 |
-| DL-29 | Implementer | active | staged diff convention/message、human confirmed topic commit／push。 | RV-30 approved；human 明確確認本次 commit message；既有 push 授權。 | feature branch delivery visible、local/origin/PR head 一致且 PR ready。 | 依獨立 Reviewer approved verdict 進入既定 delivery gate；尚無本次 completed／visible evidence，不將 DL-28 hash 冒稱為 DL-29。Commit 前仍依既定 human confirmation contract。 |
-| CH-27 | Implementer | pending | visible delivery 後重新抓取／分類 threads，依 evidence 留言／resolve。 | DL-29 completed／visible，所處理 feedback 已分類且證據可見。 | 已授權 findings resolved、重新抓取沒有新未分類 feedback；否則停 human boundary。 | 待執行；32 unresolved 是當時 historical snapshot，未宣稱目前 closure。 |
+| DL-29 | Implementer | completed | staged diff convention/message、human confirmed topic commit／push。 | RV-30 approved；human 明確確認本次 commit message；既有 push 授權。 | feature branch delivery visible、local/origin/PR head 一致且 PR ready。 | Delivery 原始 FINAL completed／visible：175965784597b224781e31600a8352f8e6dd75de；message docs(auth): 修正圖表語言與初始終態並同步驗證紀錄；non-force push exit 0，local/origin/remote branch/PR #37 SHA 一致、OPEN ready、CLEAN/MERGEABLE、checks []，41 paths，feature clean、dev untracked .vscode/ 保留。Human 已直接授權此 commit known SwiftLint no-verify exception，未改 Swift；不概括到後續 commit。 |
+| CH-27 | Implementer | needs-rework | visible delivery 後重新抓取／分類 threads，依 evidence 留言／resolve。 | DL-29 completed／visible，所處理 feedback 已分類且證據可見。 | 已授權 findings resolved、重新抓取沒有新未分類 feedback；否則停 human boundary。 | 獨立 Reviewer 原始 FINAL needs-rework；必要修正僅四 formal post-delivery fact sync，現同步 diff 尚待獨立 review，未完成。最後提供 snapshot 50 threads/32 unresolved、無新 feedback；bot 1759657 Running、最新 submitted review 仍738366c；三新 threads visible-fixed、nXmhd 待 supersession comment、其餘28本輪closure未驗，詳見snapshot小節。不宣稱closure或latest bot完成。 |
 | HC-27 | Human | pending | Review delivered ready PR 與未解除的 human boundary。 | CH-27 evidence 或新的 scope／blocker human decision。 | human 明確決定；不得 merge/release。 | 待 human review，未 approved。 |
 
 ## Blockers — PC-33
@@ -1509,7 +1531,8 @@ Planning 所需 scope/path/pin baseline 已由 human／Planner 明示，未自�
 PR-33 review 已 completed／approved，human 直接確認；上游已產出完整 743-pin manifest 與 producer／fresh delivery evidence。
 Lifecycle initial terminal 遮擋 response heading 的 finding 與 Reviewer needs-rework／approved bounded fix 保留為修正歷史；
 Implementer 第二輪 final manual inspection 通過並明示 completed handoff；獨立 Tester 與 Reviewer 已分別 completed／approved，required fixes 無。
-DL-29 active，尚無 completed／visible evidence；state 三 containment non-pass 與 automated visualReview pending 如實保留。
+DL-29 已 completed／visible；CH-27 needs-rework 的必要修正僅四 formal post-delivery fact sync，本次同步尚待獨立 Reviewer 審查與既定後續 message boundary。
+最後 GitHub snapshot 的 bot 仍 Running、closure 未完成，不當作 latest live claim；state 三 containment non-pass 與 automated visualReview pending 如實保留。
 Dev tracked／staged clean，但有未追蹤 .vscode/；不能宣稱 full clean，不推測或清理。
 Shared terminal 兩輪 composition repair 的停點已由獨立 Reviewer 核准既有 fallback 承接；
 fallback 兩輪 pre-delivery composition repair 後為 0 diagnostics，不隱藏此前失敗。
@@ -1519,7 +1542,7 @@ pin mismatch、scope 漂移或未知 feedback 依本契約停止相應 phase 並
 ## Human Check — PC-33
 
 HC-26 的新 scope 決定已由本次 human 授權承接；不是 final architecture approval 或 thread closure。
-HC-27 pending。DL-29 前須取得 human 對具體 staged topic commit message 的明確確認。
+HC-27 pending。DL-29 的具體 staged topic commit message 與 known SwiftLint no-verify exception 已獲 human 明確授權；後續 commit 仍依既定 message confirmation boundary。
 不 merge、不 release。
 
 ## Last Updated
@@ -1536,4 +1559,6 @@ HC-27 pending。DL-29 前須取得 human 對具體 staged topic commit message �
 
 2026-09-30 — Historical test handoff snapshot：依 te30_diagram_independent_validation 原始 FINAL approved／required fix 無，僅同步四份 formal artifacts：TE-30 completed／approved、RV-30 當時 active，DL-29／CH-27／HC-27 當時 pending；保留 state non-pass、automated visualReview pending、sandbox SIGABRT 後獲准 fresh visual rerun 及 dev tracked/staged clean／?? .vscode/ 的限制。未執行 Git、tests 或實作，當時未宣稱 RV-30 approved。
 
-2026-09-30 — 依 rv30_final_diagram_review 原始 FINAL approved／required fixes 無，僅同步四份 formal artifacts：RV-30 completed／approved、DL-29 active，CH-27／HC-27 pending；保留所有 composition／visual history、state non-pass、automated visualReview pending、dev tracked/staged clean／untracked .vscode/ 限制。未執行 Git、tests 或實作，未宣稱 DL-29 completed／visible。
+2026-09-30 — Historical result-review handoff snapshot：依 rv30_final_diagram_review 原始 FINAL approved／required fixes 無，僅同步四份 formal artifacts：RV-30 completed／approved、DL-29 當時 active，CH-27／HC-27 當時 pending；保留所有 composition／visual history、state non-pass、automated visualReview pending、dev tracked/staged clean／untracked .vscode/ 限制。未執行 Git、tests 或實作，當時未宣稱 DL-29 completed／visible。
+
+2026-09-30 — 依 Delivery 原始 FINAL 及 CH-27 獨立 Reviewer needs-rework，僅同步四 formal artifacts 的 post-delivery facts：DL-29 175965784597b224781e31600a8352f8e6dd75de completed／visible、ready PR；CH-27 needs-rework／未完成、HC-27 pending。GitHub 50 threads／32 unresolved 與 bot Running 僅記當時 snapshot；本次同步 diff 尚待獨立 review，後續 commit 仍須既定 message boundary。未執行 Git、tests、圖表／producer／Swift 修改，未新增 cycle 或 approval。

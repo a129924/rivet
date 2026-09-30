@@ -1724,8 +1724,30 @@ state 既有 1035／1109 三 containment non-pass 與 2048 pass、automated visu
 四 formal artifacts 的 contract／history／route 一致；dev tracked／staged clean，
 未追蹤 .vscode/ 保留，不宣稱 full clean。
 
-依此明示 verdict 同步 RV-30 completed／approved、DL-29 active；
-CH-27／HC-27 pending，未宣稱 DL-29 completed／visible、thread closure 或 human final approval。
+RV-30 完成交接時的 historical snapshot：依其明示 verdict 同步 RV-30 completed／approved、DL-29 當時 active；
+CH-27／HC-27 當時 pending，當時尚無 DL-29 completed／visible evidence，未宣稱 thread closure 或 human final approval。
+
+### DL-29 Delivery／CH-27 Post-Delivery Snapshot
+
+Delivery 原始 FINAL 明示 DL-29 completed／visible，commit
+`175965784597b224781e31600a8352f8e6dd75de`，message：
+`docs(auth): 修正圖表語言與初始終態並同步驗證紀錄`。
+該次 non-force push exit 0；local／origin／remote branch／PR #37 SHA 一致，
+PR OPEN／ready、CLEAN／MERGEABLE、checks []，41 paths；feature clean，
+dev 的未追蹤 .vscode/ 保留。Human 已直接授權此 commit 的 known SwiftLint
+`--no-verify` exception，未改 Swift；此紀錄不是後續 commit 的概括 exception。
+
+CH-27 獨立 Reviewer 原始 FINAL 為 needs-rework，必要 scope 僅四 formal artifacts 的
+post-delivery fact sync；本次依此修正 stale delivery 狀態，尚待獨立 Reviewer 審查同步 diff，
+未新增 PC cycle，未自核准。CH-27 未完成／needs-rework，HC-27 pending。
+
+GitHub 最後提供的 snapshot 為 50 threads／32 unresolved、無新 feedback；
+bot 對 1759657 為 Running，since `2026-09-30T07:33:51.914333Z`，
+summary updated `2026-09-30T07:33:54Z`；該 snapshot 最新 submitted review 仍為 738366c。
+這些只描述當時 snapshot，不能當作目前 live state 或宣稱 latest bot review 完成。
+三條新 threads nXmhX／nXmhf／nXmhh 已分類 visible-fixed；
+nXmhd 的 DL-28 已 historical／visible-fixed、待 supersession comment，但當時最新 DL-29 ledger 尚未同步；
+其餘 28 threads 本輪 closure 未驗。未宣稱 closure pass、thread resolved 或新增 approval。
 
 ### Current Route／Dispatch Contract
 
@@ -1733,10 +1755,10 @@ PC-33 planning 編寫 completed。規劃交接時 PR-33 active／尚未 approval
 
 Human 已直接確認：`確認 PR-33 approved/completed，授權將 IM-33 設為 active。這是 human 對本次 gate 狀態同步的直接確認。` 本次依 human 確認同步 status；獨立 Plan-Reviewer 原始 verdict 為 approved、Required fix 無，IM-33 具備 planning eligibility。此同步不表示 implementation／test／result review 已通過。
 
-依 human 明確確認與獨立 verdict，PR-33 completed／approved，IM-33 completed handoff，TE-30 completed／approved；獨立 Reviewer 原始 FINAL 明示 RV-30 approved、required fixes 無，RV-30 completed／approved、DL-29 active。尚無 DL-29 completed／visible evidence。唯一 current route：
+PR-33 completed／approved、IM-33 completed handoff、TE-30／RV-30 completed／approved 保留；依 Delivery 原始 FINAL，DL-29 `175965784597b224781e31600a8352f8e6dd75de` completed／visible。CH-27 獨立 Reviewer 原始 FINAL needs-rework，本次四檔 fact sync 尚待獨立 review；HC-27 pending。唯一 current route：
 
 ```text
-PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (active) → CH-27 (pending) → HC-27 (pending／human boundary)
+PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (`1759657` completed／visible) → CH-27 (needs-rework／未完成) → HC-27 (pending／human boundary)
 ```
 
 未進入的後續 steps 是 pending future route，不標為 historical。
