@@ -2,7 +2,18 @@
 
 ## Current Phase
 
-### Current DL-26 — takes precedence
+TE-29 re-test 與 RV-29 已分別由獨立 Tester／Reviewer completed／approved。
+目前 DL-28 active，尚未 completed／visible；CH-26／HC-26 pending，不屬於 historical snapshot。唯一 current route：
+
+```text
+TE-29 re-test (completed／approved／historical) → RV-29 (completed／approved／historical) → DL-28 (active／唯一 current gate) → CH-26 (pending) → HC-26 (pending／human boundary)
+```
+
+## Historical Phase Snapshots — PC-32 前
+
+### Historical DL-26 — Delivery-Before Snapshot
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
 
 `dl-26-active`。PC-28、PR-28、IM-28、TE-25、RV-25 與 DL-24 `ac43495` 均 completed／historical；
 CH-22=`needs-rework`、HC-22=`pending` 均為 historical。PC-29 layout amendment 與 PR-29 re-review 亦為
@@ -19,10 +30,12 @@ architecture-canvas template/producer、Git/GitHub、merge 或 release。
 唯一 current route：
 
 ```text
-PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (`9aad10e` completed／visible／historical) → CH-23 (needs-rework／historical) → HC-23 (pending／historical) → PC-30 (completed／historical) → PR-30 (completed／approved／historical) → IM-30 (completed／historical) → TE-27 initial verification (needs-rework／historical) → PC-30 ledger-only correction (completed／historical) → TE-27 re-test (completed／approved／historical) → RV-27 (completed／approved／historical) → DL-26 (active／唯一 current gate) → CH-24 → HC-24
+PC-29 layout amendment (completed／historical) → PR-29 re-review (completed／approved／historical) → IM-29 (completed／historical) → TE-26 (completed／approved／historical) → RV-26 initial review (needs-rework／historical) → RV-26 re-review (completed／approved／historical) → DL-25 (`9aad10e` completed／visible／historical) → CH-23 (needs-rework／historical) → HC-23 (pending／historical) → PC-30 (completed／historical) → PR-30 (completed／approved／historical) → IM-30 (completed／historical) → TE-27 initial verification (needs-rework／historical) → PC-30 ledger-only correction (completed／historical) → TE-27 re-test (completed／approved／historical) → RV-27 (completed／approved／historical) → DL-26 (當時 active／historical) → CH-24 (當時 pending／historical) → HC-24 (當時 pending／human boundary／historical)
 ```
 
 ### Historical IM-29 Initial-Contract Snapshot
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
 
 initial `im-29-implementation-active` 是 PC-29 initial planning／initial review 後的 historical token；不構成 current gate。當時 IM-29 為 active、TE-26 為 pending，已被上方 layout-amendment route supersede。當時 IM-29 只能依已核准 layout amendment 的 `meta.viewBox: [1337,780]` 及其餘不變 locks 進行。
 
@@ -37,6 +50,8 @@ normal 12 messages皆無 impact且 ReadOnly。guard cards/segments 不代表新 
 Deleted：無。PC-29 與 PR-29 initial review 均 completed／historical，PR-29 initial verdict 為 approved；該 initial route 已 historical。
 
 ### Historical CH-20 Thread Closure
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
 
 下列 CH-20 記述僅保存 PC-27 前的 historical snapshot；不構成 current gate。
 
@@ -65,6 +80,8 @@ PC-26 route clarification (completed／historical) → PR-26 re-review (complete
 
 ### PC-26 Layout Amendment Allowlist
 
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
+
 PC-26 semantic contract 維持不變。下列是唯一新增的 presentation allowlist：所有 endpoints、labels、variant、
 semantic fields、11 個 state ID、12 個 transition ID、policy、ownership、API、payload 與 retry invariant 都 locked。
 
@@ -90,6 +107,8 @@ corridors、5px minimum label clearance. PC-26 layout amendment, route clarifica
 historical evidence. IM-26 no-op resume、TE-23 re-test and RV-23 independent review are completed／approved／historical; DL-22 `6372a2a` is completed／visible／historical and CH-20 is active for thread closure.
 
 ### PC-26 Route Clarification — `refresh-failure.route`
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
 
 TE-23 read-only 檢查發現 HEAD baseline 的 `refresh-failure.route = bottom-channel`，但已驗證 9/9 candidate 與
 current source 皆為 `unset/auto`。本 clarification 只將 `refresh-failure.route = unset/auto`（不是
@@ -174,6 +193,8 @@ existing topic artifacts；不鎖定 deferred action/decoration/failure/async/re
 
 ## In-Scope
 
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
+
 本 ledger 追蹤 Phase 1 planning、PR-01／PR-02 historical rework、PR-03 initial final
 replacement Plan Review gate、verification/delivery wording correction 的 PR-04 re-review、
 核准後的 documentation/diagram delivery、independent verification/review、topic delivery
@@ -250,7 +271,13 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 
 無刪除授權。
 
-## Ledger
+## Historical Ledger — PC-30 及更早步驟
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
+
+下表保留 HEAD `40f439c` 文件內的 delivery-before ledger snapshot。其 DL-26 active／CH-24 pending
+不是 push 後的狀態；push 後的 DL-26 completed／visible、CH-24 當時 active、HC-24 當時 pending
+另見 PC-31 前 historical snapshot。現行 TE-29 與後續步驟見 Current Phase／PC-32 Execution Ledger。
 
 | ID | Owner role | Status | Work | Entry condition | Completion condition | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -472,6 +499,8 @@ runtime、generic retry policy、concurrent 401 recovery 或不在 approved allo
 
 ## PR #37 Thread Mapping
 
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
+
 | Thread | Required mapping | Resolve condition |
 | --- | --- | --- |
 | T01 | requirements、technical spec 與 canonical document 的 matrix：`AuthRequester`「Builds original request = 否」。 | corrected matrix delivery visible。 |
@@ -529,6 +558,8 @@ IM-14 只可更新 stale 401 delivery receipt，不能修改 source／output sem
 
 ## Locked Contract Checklist
 
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
+
 - [x] 現行 `.send(HTTPRequest)` contract 為 legacy Model A，不是 adopted target。
 - [x] adopted Model C：`AuthFlow` 只擁有 auth policy/state/retry decision，能理解
   `HTTPResponse`，但沒有 original request、arbitrary request construction 或 I/O
@@ -564,6 +595,8 @@ IM-14 只可更新 stale 401 delivery receipt，不能修改 source／output sem
   TE-10 僅驗證且絕不生成 output/evidence。
 
 ## TestCase
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
 
 - **TC-01**：PC-01 only-created paths 為四份 artifacts；沒有 long-lived docs、diagram、
   Swift、test 或 manifest 寫入。
@@ -664,7 +697,9 @@ IM-14 只可更新 stale 401 delivery receipt，不能修改 source／output sem
   source/output；不改 source，delivery visible 後才 reply／resolve；README／bounded-contexts conflict 僅作 comment
   disposition，並須確認 OAuth runtime description 與 Model C auth canonical conclusion 共存、沒有 long-lived-doc architecture change。
 
-## Blockers
+## Historical Blocker Snapshots
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
 
 IM-07／IM-08 的 state-delivery failures 均為 historical truth：standard `deliver` 的 all-checks
 requirement 不變；alternate-materialization 的 public validate／deliver／render 在 `[850,307]`
@@ -691,7 +726,9 @@ CH-17／HC-17 的 P6 route 已是 historical；不得再作為 current P6 state 
 completed／historical；IM-25 為 no-op acceptance。TE-22／RV-22 已 completed／approved／historical；DL-21 `df18404` 已 completed／visible／historical；當前唯一 gate 是 CH-19，
 它只處理當時已分類的 allowed feedback/thread state。CH-19 completed 前不得進入 HC-19、merge 或 release。
 
-## Human Check
+## Historical Human Check Snapshots
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
 
 HC-11 是 canonical-containment replacement workflow 的 historical human boundary；其 `needs-rework`
 已由 PC-18 承接。HC-12 是 PC-18 的 historical human boundary，已因 P2-01／P2-02 為 `needs-rework` 並由
@@ -704,7 +741,9 @@ historical human boundary。HC-17 是 PC-23 的 pending historical human boundar
 human boundary。HC-19 是目前 route 的 eventual human boundary，僅在 CH-19 completed 後等待 human 明示下一步；前後均不授權
 merge、release 或 future Swift implementation。
 
-## Last Updated
+## Historical Update Log — 至 HEAD 40f439c
+
+> Historical snapshot：本節的 workflow route、gate 與執行狀態只記錄各步驟當時的情況，非目前 route／gate，也不因這個標示新增 approval 或 thread closure。既有技術契約與 factual evidence 保持原義。
 
 2026-09-18 — PR-01／PR-02／TE-01／RV-01／RV-03 與 current PR #37 comment preflight =
 `needs-rework`；PC-02／PC-03／PC-04／PC-05／PC-06／PC-07／PC-08、IM-01／IM-02／IM-04／
@@ -1030,4 +1069,136 @@ rebuild identity 與 visual no-drift 證明。不得改 scene、canvas semantics
 Swift、Git 或 GitHub。PC-30 與 PR-30 均已 completed／approved／historical；IM-30 已 completed／historical。TE-27 initial
 verification 僅因缺少上列 snapshot 而 needs-rework；本次 ledger-only correction completed 後，TE-27 re-test 已
 completed／approved／historical，RV-27 亦已 completed／approved／historical，DL-26 是唯一 current gate：PC-30 → PR-30（completed／approved／historical）→ IM-30（completed／historical）→ TE-27 initial verification（needs-rework／historical）→
-PC-30 ledger-only correction（completed／historical）→ TE-27 re-test（completed／approved／historical）→ RV-27（completed／approved／historical）→ DL-26（active／唯一 current gate）→ CH-24 → HC-24。
+PC-30 ledger-only correction（completed／historical）→ TE-27 re-test（completed／approved／historical）→ RV-27（completed／approved／historical）→ DL-26（當時 active／historical）→ CH-24（當時 pending／historical）→ HC-24（當時 pending／human boundary／historical）。
+
+## PC-31 — DL-26／CH-24／HC-24 可見交付狀態回修（Historical Snapshot）
+
+### Goal 與當時的範圍
+
+PC-31 只將已發生的 DL-26 completed／visible、CH-24 當時 active、HC-24 當時 pending 狀態納入四份
+formal planning artifacts 的可見交付，回應 `PRRT_kwDOUFu0Cc6m85u0`。這是 ledger historicality／delivery
+traceability 回修；Model C、retry policy、original-request ownership 與 deferred boundary 均保持 locked。
+
+### PC-31 前 Historical Snapshot
+
+`40f439c` 已 push 且對既有 PR #37 visible。下列只記錄 PC-31 開始前的事實，非 current route，
+也不表示 CH-24 closure completed 或 HC-24 human approval：
+
+```text
+DL-26 (`40f439c` completed／visible／historical) → CH-24 (當時 active／historical) → HC-24 (當時 pending／human boundary／historical)
+```
+
+### In-Scope／Written／Modify 與 Non-Goal
+
+當時只可寫四份 formal planning artifacts 的 snapshot、phase／role status、route 與 delivery-traceability
+文字。所有 diagram/source/HTML/receipt/visual evidence、component canvas／language tools、Swift/tests、OAuth、
+producer、long-lived docs、Git/GitHub、merge、release 及未列 path 均為 ReadOnly／Out-of-Scope。
+Deleted：無；不得 delete、rename 或 move。PC-31 不處理或 resolve thread。
+
+### TestCase 與執行結果（Historical Snapshot）
+
+TE-28／RV-28 只檢查四份 planning artifacts 的一致性、scope 與 no-contract-drift；不生成、重建或驗證
+diagram/canvas，不新增 product test。驗收要求四份 artifacts 保留上述 snapshot，且不得把 CH-24／HC-24
+誤列 current gate、completed closure 或 human approval。
+
+PC-31 planning 與 snapshot-status amendment 均 completed；PR-31 已由獨立 Plan-Reviewer
+completed／approved；IM-31 no-op re-test completed；TE-28 re-test completed／approved。
+RV-28 的 needs-rework 僅指出早期 route/gate 文字仍可能被誤讀為現況，由 PC-32 承接。
+下列是 PC-32 前 historical route，不構成新的 approval：
+
+```text
+PC-31 (completed／historical) → PR-31 (completed／approved／historical) → IM-31 (completed／no-op re-test／historical) → TE-28 (completed／approved／historical) → RV-28 (needs-rework／historical) → DL-27／CH-25／HC-25 (未進入的 historical downstream route)
+```
+
+## PC-32 — Early Route/Gate Historicality 與受限文本重建
+
+### Goal
+
+統一四份 formal planning artifacts 早期無時間限定的 current-route／active-gate 宣告，讓每個 workflow
+單元在自己的段落或小節明確呈現 historical snapshot，並維持唯一 current route。只修正 planning wording，
+不重開 architecture、path、contract、Model C、retry policy、ownership、deferred representation 或 API。
+
+### 已發生的 Review／Implementation History
+
+PC-32 completed；PR-32 initial review 的 needs-rework 是 historical；其 re-review 已依獨立
+Plan-Reviewer verdict completed／approved。IM-32 已 completed／no-op。
+TE-29 initial verification 為 needs-rework／historical，指出機械 historical marker 造成斷句與過度標示；
+independent integrity review likewise needs-rework。Human 於 2026-09-30 明確授權四份 artifacts 的受限重建。
+這些歷史 verdict 不構成重建後的 approval。TE-29 re-test 與 RV-29 的新 approved verdict 分別引用獨立 Tester 與 Reviewer evidence。
+
+### In-Scope／Written／Modify
+
+- 僅本 topic 的 requirements、technical spec、plan 與 step ledger 四份 formal planning artifacts。
+- 以 HEAD `40f439c` 原文逐文件恢復受損歷史文本，保留 PC-31／PC-32 的 scope、事實、review evidence 與 route。
+- 只限定 workflow route/gate 單元；可用明確的局部 historical section 表達語境，不對每個 active、pending、
+  test 或 evidence 機械追加 marker。Historical 標示不改寫原有 date、hash、status 或 approval evidence。
+- 重建前保存四份現況、HEAD 原文與完整 diff，保留可恢復性；不新增 cycle。
+
+### Non-Goal／Out-of-Scope／ReadOnly／Deleted
+
+所有 production、Swift/tests、OAuth、diagram/source/HTML/receipt/visual evidence、canvas language tools、producer、
+long-lived docs 與未列 path 均 ReadOnly／Out-of-Scope。此 planning write 不操作 Git/GitHub，不 commit、push、
+resolve thread、merge 或 release。Deleted：無；不 delete、rename 或 move repository files。
+
+### TestCase
+
+- TE-29 re-test 逐段驗證可讀性、Markdown 結構與 factual preservation；舊 workflow 單元須有清楚的局部
+  historical 語境，沒有競爭的裸 current-route／active-gate 宣告，不靠單一全域免責語掩蓋落差。
+- 比較 HEAD 與備份，確認 architecture/evidence 未刪失；PC-31 snapshot 仍是 DL-26 `40f439c`
+  completed／visible／historical、CH-24 當時 active、HC-24 當時 pending human boundary。
+- 只驗證四份 formal artifacts 的 consistency／scope／no-contract-drift；不新增 product test 或生成 diagram。
+- PR-32 approved 只引用既有獨立 review；TE-29 re-test approved 只引用本次獨立 Tester evidence，後續 pending gate 不是 historical。
+
+### Current Route
+
+TE-29 re-test 已 completed／approved，依獨立 Tester evidence：四檔 diff scope、diff check、UTF-8、Markdown fences／table、hash／date／content preservation 均通過，dev clean、備份完整。
+TE-29／RV-29 啟動時 active／尚無 approved verdict 的記述已為 historical snapshot。
+RV-29 已 completed／approved，依獨立 Reviewer evidence：只有四份 formal artifacts 變更，facts／backup／schema、historicality／唯一 current route 正確，dev clean／diff check 通過。目前 DL-28 active，尚未 completed／visible。
+四份 artifacts 唯一 current route 為：
+
+```text
+TE-29 re-test (completed／approved／historical) → RV-29 (completed／approved／historical) → DL-28 (active／唯一 current gate) → CH-26 (pending) → HC-26 (pending／human boundary)
+```
+
+TE-29 re-test 與 RV-29 均已 approved，現進入 DL-28；delivery visible 後才進入 CH-26。
+HC-26 是 pending human boundary；不 merge、不 release。needs-rework 回交相應產出角色。
+
+## PC-31 Historical Ledger 與 PC-32 Execution Ledger
+
+PC-31 至 HC-25 的列為 historical snapshot；PC-32／PR-32／IM-32 記錄已發生的狀態。
+TE-29 re-test 與 RV-29 completed／approved 為 historical evidence；DL-28 是唯一 active gate，
+CH-26／HC-26 是 pending 後續步驟。
+
+| ID | Owner role | Status | Work | Entry condition | Completion condition | Evidence |
+| --- | --- | --- | --- | --- | --- | --- |
+| PC-31 | Plan-Creator | completed | 建立 DL-26／CH-24／HC-24 visible delivery-state 的最小 formal rework，處理 `PRRT_kwDOUFu0Cc6m85u0`。 | human 明確授權；DL-26／CH-24／HC-24 只作 PC-31-before historical snapshot。 | 只寫四份 formal planning artifacts；不改 diagram/source/HTML/receipt/evidence、component/language tools、Swift/tests、OAuth、producer、Git/GH。 | completed／historical；交 PR-31。 |
+| PR-31 | Independent Plan-Reviewer | completed | 已獨立審查 PC-31 exact Written／ReadOnly／Deleted、historical snapshot、唯一 route 與 no-contract-drift。 | PC-31 completed／historical。 | approved；不得修改 planning artifacts。 | completed／approved／historical。 |
+| IM-31 | Independent Implementer | completed | 僅 materialize 已核准的四份 formal planning artifacts visible-state delivery；re-test 已 completed，且為 no-op。 | PR-31 completed／approved／historical。 | completed／historical；不得改任何 diagram/source/HTML/receipt/evidence、Swift/tests、Git/GH。 | completed／no-op re-test／historical；交 TE-28。 |
+| TE-28 | Independent Tester | completed | 已驗證四份 formal artifacts 對 DL-26 completed／visible、CH-24 當時 active、HC-24 當時 pending 的 historical truth 與 current route 一致。 | IM-31 re-test completed／historical。 | approved；只 verify planning artifacts；未生成、重建或驗證 artifact，未新增 product test。 | completed／approved／historical。 |
+| RV-28 | Independent Reviewer | needs-rework | 獨立確認 PC-31 finding、scope、route 及 no-contract-drift。 | TE-28 completed／approved／historical。 | finding 僅為早期無時間限定 current-route／active-gate wording；由 PC-32 承接。 | completed／needs-rework／historical；不是 current gate。 |
+| DL-27 | Implementer | superseded | 原 PC-31 topic delivery。 | RV-28 原需 approved。 | RV-28 needs-rework 後不進入。 | pending route／historical；由 PC-32 route 取代。 |
+| CH-25 | Implementer | superseded | 原 PC-31 delivery 後 thread closure。 | DL-27 原需 completed／visible。 | 不進入。 | pending route／historical。 |
+| HC-25 | Human | superseded | 原 PC-31 human boundary。 | CH-25 原需 completed。 | 不進入。 | pending human boundary／historical。 |
+| PC-32 | Plan-Creator | completed | 將早期 workflow route/gate 單元明示為 historical snapshot，依 HEAD 受限重建受損文本並保留 PC-31／PC-32 facts。 | human 明確授權；RV-28 needs-rework historical；2026-09-30 明確授權四份 artifacts 受限重建。 | 僅四份 formal planning artifacts；各 workflow 單元有清楚的段落或小節 historical context，不追加逐句 marker；不改 contract 或 technical artifact。 | completed；既有 PR-32 approval 與 IM-32 no-op 為 historical，本次重建交獨立 TE-29 re-test，非自核准。 |
+| PR-32 | Independent Plan-Reviewer | completed | 初次審查的 needs-rework 已 historical；獨立 re-review PC-32 每段 historicality 標示、PC-31 factual snapshot preservation、唯一 route 與 no-contract-drift。 | PC-32 completed。 | approved；approval evidence 僅為獨立 Plan-Reviewer verdict；不得修改 planning artifacts。 | completed／approved／historical。 |
+| IM-32 | Independent Implementer | completed | 已以 no-op materialization 完成已核准的四份 formal planning artifacts wording。 | PR-32 completed／approved，且 approval evidence 僅為獨立 Plan-Reviewer verdict。 | 未改任何 technical artifact；未執行 Git/GitHub。 | completed／no-op／historical；交 TE-29。 |
+| TE-29 | Independent Tester | completed | 初次驗證 needs-rework／historical；re-test 已獨立完成受限重建的可讀性、局部 historical context、PC-31 snapshot 與唯一 route 驗證。 | IM-32 completed／no-op／historical；四份受限重建已完成交接。 | approved；只 verify planning artifacts，未生成 diagram 或 product test。 | independent Tester re-test approved：四檔 diff scope、diff check、UTF-8／fences／table、hash／date／content preservation 全通過，dev clean、備份完整；completed／approved／historical。 |
+| RV-29 | Independent Reviewer | completed | 已獨立審查 TE-29 evidence、scope、workflow 與 no-contract-drift。 | TE-29 re-test completed／approved，依獨立 Tester verdict。 | approved；只授權進入 DL-28。 | independent Reviewer approved：僅四檔變更，facts／backup／schema、historicality／唯一 current route 正確，dev clean／diff check 通過；completed／approved／historical。 |
+| DL-28 | Implementer | active | 在 RV-29 approved 後建立單一 bounded topic commit/push。 | RV-29 completed／approved，依獨立 Reviewer verdict。 | delivery visible 前不得進入 CH-26；不 merge、不 release。 | active／唯一 current gate；尚未 completed／visible。 |
+| CH-26 | Implementer | pending | delivery visible 後重新取得並處理已分類且仍適用的 thread。 | DL-28 completed／visible。 | unknown/unclassified feedback 停在 HC-26；不得自行擴張 scope。 | pending。 |
+| HC-26 | Human | pending | Review PC-32 delivered OPEN、ready-for-review PR #37。 | CH-26 completed。 | human boundary；不 merge、不 release。 | pending／human boundary。 |
+
+## Last Updated
+
+2026-09-30 — Human 授權四份 formal planning artifacts 受限重建；已保存現況、HEAD 原文與 diff。
+重建恢復歷史文本並保留 PC-31／PC-32；重建交接當時 TE-29 re-test active／未 approved，現為 historical snapshot。
+
+2026-09-30 — 獨立 Tester 的 TE-29 re-test approved：四檔 diff scope、diff check、UTF-8／fences／table、
+hash／date／content preservation 均通過，dev clean、備份完整。只同步四份 formal artifacts：
+當時 route（historical snapshot）：TE-29 completed／approved／historical → RV-29 當時 active → DL-28 當時 pending → CH-26 當時 pending → HC-26 當時 pending。
+當時 RV-29 尚未 approved，未進入 delivery／thread closure。
+
+2026-09-30 — 獨立 Reviewer 的 RV-29 approved：僅四檔變更，facts／backup／schema、
+historicality／唯一 current route 正確，dev clean／diff check 通過。只同步四份 formal artifacts：
+TE-29 completed／approved／historical → RV-29 completed／approved／historical → DL-28 active → CH-26 pending → HC-26 pending。
+DL-28 尚未 completed／visible；未進入 thread closure。
