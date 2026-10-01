@@ -2,11 +2,19 @@
 
 ## Current Phase
 
-PC-33 completed；PR-33 completed／approved、IM-33 completed handoff、TE-30／RV-30 completed／approved。Delivery 原始 FINAL 明示 DL-29 `175965784597b224781e31600a8352f8e6dd75de` completed／visible；CH-27 獨立 Reviewer needs-rework，四 formal post-delivery fact sync 尚待獨立審查，HC-27 pending。未宣稱 closure pass 或 latest bot review 完成。
-DL-28 `738366c` completed／visible 與 CH-26 needs-rework／HC-26 當時 pending 的 fact sync 保留為 historical evidence；human 已授權新 scope，由 PC-33 承接。唯一 current route：
+PC-34 creation completed；依獨立 pr34_minimal_rework_plan_review 原始 FINAL approved／required fix 無，
+及 Human 直接確認，PR-34 completed／approved；引用 im34_bounded_diagram_receipt_fix 原始 FINAL，
+IM-34 completed handoff 為當時 snapshot；獨立 te31_bounded_diagram_receipt_validation 原始 FINAL
+initial needs-rework／required fix 1 屬 TC-34-03 的紀錄保留。
+IM-34 rework completed／TE-31 re-test active 保留為前次 handoff snapshot。
+TE-31 re-test completed／approved → RV-31 active 保留為前次 handoff snapshot。
+現依獨立 rv31_bounded_final_review 原始 FINAL completed／approved、required fix 無，
+RV-31 completed／approved → DL-30 active；PR-34 approved／IM-34 rework completed／TE-31 re-test approved 保持。
+TE-31 initial needs-rework 保留，CH-28／HC-28 pending；未新增 cycle，未宣稱 delivery／closure 完成。
+Human 已授權三項最小 rework，Planner approved sufficiency 只放行 creation。PC-33 與 CH-27 needs-rework／HC-27 pending 的 route 保留為 historical、由新 cycle supersede；未宣稱其 closure。唯一 current route：
 
 ```text
-PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (`1759657` completed／visible) → CH-27 (needs-rework／未完成) → HC-27 (pending／human boundary)
+PC-34 completed → PR-34 completed／approved → IM-34 rework completed → TE-31 initial needs-rework（保留）／re-test completed／approved → RV-31 completed／approved → DL-30 active → CH-28 pending → HC-28 pending
 ```
 
 ## Historical Phase Snapshots — PC-32 前
@@ -1176,6 +1184,8 @@ CH-26 的獨立 Reviewer verdict 為 needs-rework → human-check：Codex 對 he
 
 ## PC-33 — 最小圖表語言／初始終態回修契約
 
+> 本節為 PC-34 前 historical snapshot；其中 current route／gate／待同步狀態只描述當時情況，已由 PC-34 新 cycle supersede。保留 CH-27 needs-rework、HC-27 pending 與全部原始證據，不代表 closure 或新增 approval。
+
 ### Goal／Human Authorization
 
 2026-09-30 human 明確授權：三份 Archify HTML／inline SVG 設為 `zh-Hant` 並重新產生 receipts；
@@ -1441,13 +1451,13 @@ summary updated `2026-09-30T07:33:54Z`；該 snapshot 最新 submitted review �
 nXmhd 的 DL-28 已 historical／visible-fixed、待 supersession comment，但當時最新 DL-29 ledger 尚未同步；
 其餘 28 threads 本輪 closure 未驗。未宣稱 closure pass、thread resolved 或新增 approval。
 
-### Current Route／Dispatch Contract
+### Historical Route／Dispatch Contract — PC-33
 
 PC-33 planning 編寫 completed。規劃交接時 PR-33 active／尚未 approval 已為 historical snapshot。
 
 Human 已直接確認：`確認 PR-33 approved/completed，授權將 IM-33 設為 active。這是 human 對本次 gate 狀態同步的直接確認。` 本次依 human 確認同步 status；獨立 Plan-Reviewer 原始 verdict 為 approved、Required fix 無，IM-33 具備 planning eligibility。此同步不表示 implementation／test／result review 已通過。
 
-PR-33 completed／approved、IM-33 completed handoff、TE-30／RV-30 completed／approved 保留；依 Delivery 原始 FINAL，DL-29 `175965784597b224781e31600a8352f8e6dd75de` completed／visible。CH-27 獨立 Reviewer 原始 FINAL needs-rework，本次四檔 fact sync 尚待獨立 review；HC-27 pending。唯一 current route：
+PR-33 completed／approved、IM-33 completed handoff、TE-30／RV-30 completed／approved 保留；依 Delivery 原始 FINAL，DL-29 `175965784597b224781e31600a8352f8e6dd75de` completed／visible。CH-27 獨立 Reviewer 原始 FINAL needs-rework，當時四檔 fact sync 尚待獨立 review；HC-27 pending。以下為 PC-34 前 historical route：
 
 ```text
 PC-33 (completed／historical) → PR-33 (completed／approved／historical) → IM-33 (completed／handoff) → TE-30 (completed／approved) → RV-30 (completed／approved) → DL-29 (`1759657` completed／visible) → CH-27 (needs-rework／未完成) → HC-27 (pending／human boundary)
@@ -1510,9 +1520,9 @@ historicality／唯一 current route 正確，dev clean／diff check 通過。�
 2026-09-30 — DL-28 `738366c` completed／visible，獨立 Implementer 確認 local／origin／PR #37 head 一致，PR OPEN、ready。Delivery-after historical snapshot：DL-28 completed／visible → CH-26 當時 active → HC-26 當時 pending human boundary。
 其後獨立 Reviewer 將四條新 P2 分類為 CH-26 needs-rework → human-check；目前 route 為 CH-26 needs-rework → HC-26 pending human boundary（新 scope 決定）。原 28 條 known-fixed classifications 保留，全部 32 條 thread 仍 unresolved；本次只同步四份 planning artifacts，未 resolve、未建立 PC-33。
 
-## PC-33 Execution Ledger
+## PC-33 Historical Execution Ledger
 
-本表為 current execution route；後續 pending steps 不代表已核准或已完成。
+本表為 PC-34 前 historical execution route；CH-27 needs-rework／HC-27 pending 原值保留，由新 cycle supersede，不宣稱其 completed 或 approved。
 
 | ID | Owner role | Status | Work | Entry condition | Completion condition | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -1525,7 +1535,7 @@ historicality／唯一 current route 正確，dev clean／diff check 通過。�
 | CH-27 | Implementer | needs-rework | visible delivery 後重新抓取／分類 threads，依 evidence 留言／resolve。 | DL-29 completed／visible，所處理 feedback 已分類且證據可見。 | 已授權 findings resolved、重新抓取沒有新未分類 feedback；否則停 human boundary。 | 獨立 Reviewer 原始 FINAL needs-rework；必要修正僅四 formal post-delivery fact sync，現同步 diff 尚待獨立 review，未完成。最後提供 snapshot 50 threads/32 unresolved、無新 feedback；bot 1759657 Running、最新 submitted review 仍738366c；三新 threads visible-fixed、nXmhd 待 supersession comment、其餘28本輪closure未驗，詳見snapshot小節。不宣稱closure或latest bot完成。 |
 | HC-27 | Human | pending | Review delivered ready PR 與未解除的 human boundary。 | CH-27 evidence 或新的 scope／blocker human decision。 | human 明確決定；不得 merge/release。 | 待 human review，未 approved。 |
 
-## Blockers — PC-33
+## Historical Blockers — PC-33
 
 Planning 所需 scope/path/pin baseline 已由 human／Planner 明示，未自行新增 architecture decision。
 PR-33 review 已 completed／approved，human 直接確認；上游已產出完整 743-pin manifest 與 producer／fresh delivery evidence。
@@ -1539,13 +1549,13 @@ fallback 兩輪 pre-delivery composition repair 後為 0 diagnostics，不隱藏
 Post-delivery visual repair 最多兩輪；第二輪仍 failed，或需改既有其他 geometry／scope／pins，停止交獨立 Reviewer 分類；
 pin mismatch、scope 漂移或未知 feedback 依本契約停止相應 phase 並交 Dispatcher triage。
 
-## Human Check — PC-33
+## Historical Human Check — PC-33
 
 HC-26 的新 scope 決定已由本次 human 授權承接；不是 final architecture approval 或 thread closure。
 HC-27 pending。DL-29 的具體 staged topic commit message 與 known SwiftLint no-verify exception 已獲 human 明確授權；後續 commit 仍依既定 message confirmation boundary。
 不 merge、不 release。
 
-## Last Updated
+## Historical Last Updated — PC-33
 
 2026-09-30 — Planning 交接時 historical snapshot：PC-33 planning 編寫 completed／PR-33 當時 active。四檔保留 DL-28／CH-26 facts，
 將先前 route 局部標為 historical snapshot，新增已授權三項圖表回修與五檔 producer contract。
@@ -1562,3 +1572,159 @@ HC-27 pending。DL-29 的具體 staged topic commit message 與 known SwiftLint 
 2026-09-30 — Historical result-review handoff snapshot：依 rv30_final_diagram_review 原始 FINAL approved／required fixes 無，僅同步四份 formal artifacts：RV-30 completed／approved、DL-29 當時 active，CH-27／HC-27 當時 pending；保留所有 composition／visual history、state non-pass、automated visualReview pending、dev tracked/staged clean／untracked .vscode/ 限制。未執行 Git、tests 或實作，當時未宣稱 DL-29 completed／visible。
 
 2026-09-30 — 依 Delivery 原始 FINAL 及 CH-27 獨立 Reviewer needs-rework，僅同步四 formal artifacts 的 post-delivery facts：DL-29 175965784597b224781e31600a8352f8e6dd75de completed／visible、ready PR；CH-27 needs-rework／未完成、HC-27 pending。GitHub 50 threads／32 unresolved 與 bot Running 僅記當時 snapshot；本次同步 diff 尚待獨立 review，後續 commit 仍須既定 message boundary。未執行 Git、tests、圖表／producer／Swift 修改，未新增 cycle 或 approval。
+
+## PC-34 — Execution Ledger
+
+PC-34 formal creation completed；creation 交接時 PR-34 active／未取得獨立 verdict 為當時 snapshot。
+現依獨立 pr34_minimal_rework_plan_review 原始 FINAL approved／required fix 無與 Human 直接確認，
+PR-34 completed／approved；IM-34 active 為當時 snapshot，
+IM-34 completed／TE-31 active 為當時交接 snapshot；獨立 Tester initial needs-rework／required fix 1，
+以及 IM-34 rework active／TE-31 re-test pending 保留為初次交接 snapshot。
+IM-34 rework completed／TE-31 re-test active 保留為前次 handoff snapshot；
+TE-31 re-test completed／approved → RV-31 active 保留為前次 handoff snapshot；
+現依獨立 rv31_bounded_final_review 原始 FINAL completed／approved、required fix 無，
+RV-31 completed／approved → DL-30 active；TE-31 initial needs-rework 保留；
+本表為唯一 current route，後續 pending steps 不等於 approval。
+Goal／Non-Goal／In-Scope／Out-Of-Scope／ReadOnly／Written／Deleted／Modify／TestCase
+依 PC-34 execution plan 的 literal allowlist 與 TC-34-01 至 TC-34-06；
+本次只改四 formal；回修限既有 TC-34-03 producer tokenizer／regression，兩圖 outputs 保留，現交 DL-30 preparation。
+
+| ID | Owner role | Status | Work | Entry condition | Completion condition | Evidence |
+| --- | --- | --- | --- | --- | --- | --- |
+| PC-34 | Plan-Creator | completed | 建立三項最小 rework 契約、exact allowlist、驗收與 current route。 | Human「授權上述最小 rework 範圍」；pc34_minimal_rework_preflight approved sufficiency。 | 四 formal creation 與 bounded handoff。 | 本次僅四 formal 局部修訂；保留歷史、未實作／測試／自審／commit／push。Creation completed 不是 approval。 |
+| PR-34 | Plan-Reviewer | completed | 獨立審查三 scope、allowlist、TestCase、history／route／contract 一致。 | PC-34 completed，四 formal 存在可讀。 | 明示 approved 或 required fix；approved 後才可 IM-34。 | pr34_minimal_rework_plan_review 原始 FINAL approved／required fix 無；Human 直接確認 PR-34 approved／completed。本次只同步 facts，不是 implementation／tests／visual／closure approval。 |
+| IM-34 | Implementer | completed | TC-34-03 bounded rework completed：既有 producer tokenizer／regression；兩 sources／HTML／receipts／visual bytes 保留。 | PR-34 completed／approved 與 Human 原 scope／正常 workflow 授權；TE-31 required fix 1。 | 最小回修 completed handoff，交 TE-31 re-test；不新增 cycle。 | im34_bounded_diagram_receipt_fix 原始 FINAL rework completed；backtick delimiter／regression、三 unsafe red→green、三 relative accept／raw bytes preservation、producer 10/10 均為 Implementer self-verification，不是 TE-31 approval；詳細證據見 technical-spec／execution plan。 |
+| TE-31 | Tester | completed | Initial independent validation needs-rework 保留；focused re-test completed／approved，驗證 command coverage／related producer regression／其他 bytes unchanged。 | IM-34 bounded rework completed handoff。 | 獨立 Tester 明示 re-test verdict。 | te31_recovery_focused_retest 原始 FINAL approved／required fix 無；producer 10/10、110 unsafe 拒絕／33 relative 接受、buffer bytes preserved、18 artifacts 與 initial fixture byte-equal、524 ReadOnly HEAD-equal。Initial finding 與全部歷史限制保留，詳見 technical-spec／execution plan。 |
+| RV-31 | Reviewer | completed | 獨立成果 review／bounded scope／contract／evidence。 | TE-31 re-test completed／approved 明示驗證交接。 | 明示 approved 或 required rework；approved 才可 DL-30。 | rv31_bounded_final_review 原始 FINAL approved／required fix 無；producer 10/10、source semantics／hashes／language／18 artifacts／scope／readonly／visual history 證據見 technical-spec／execution plan；不取代 delivery 或 human final。 |
+| DL-30 | Implementer | active | Exact staged diff／message preparation；human confirmed message 後才可 commit／non-force push 至既有 ready PR。 | RV-31 completed／approved；commit 前另需新 message 的 human 明確確認。 | Delivery visible、local／origin／PR head fresh 一致。 | 依 rv31_bounded_final_review 原始 FINAL approved 交 preparation；尚未 completed／visible、尚無本次 delivery SHA；DL-29 no-verify exception 不覆蓋本 commit。 |
+| CH-28 | Implementer | pending | Visible 後 fresh review／threads closure，限已分類且 evidence visible findings。 | DL-30 completed／visible。 | 已授權 findings closure、fresh re-fetch 無未分類 feedback；否則 human boundary。 | 33 known-fixed 未 closed／三新已分類未 resolve 僅為 Planner snapshot；不得預先宣稱 resolved。 |
+| HC-28 | Human | pending | Review final delivered ready PR。 | CH-28 evidence 或新的 scope／blocker human decision。 | Human 明示 final 決定。 | 未 approved；不 merge／release。 |
+
+### Blockers — PC-34
+
+Planner sufficiency 無 missing inputs／required fix；creation 不存在待補 scope。
+獨立 PR-34 approved／required fix 無與 Human gate 確認保留；
+IM-34 initial completed handoff 證據保留；TE-31 原始 FINAL initial needs-rework／required fix 1，
+command tokenizer 未拒絕 backtick 包覆 unsafe paths，保留為初次 finding。
+現依獨立 te31_recovery_focused_retest 原始 FINAL，TE-31 re-test completed／approved、required fix 無，
+IM-34 rework completed 保持；RV-31 active／尚無 verdict 為當時 handoff snapshot。
+現依獨立 rv31_bounded_final_review 原始 FINAL，RV-31 completed／approved、required fix 無，
+DL-30 active；新的 staged exact message 尚待 human confirmation，delivery／closure 未完成。
+回修仍屬既有 TC-34-03，不擴 contract；approval 引用獨立 Tester，不由 Implementer self-verification 取代。
+State 三既有 containment non-pass 與 automated visualReview pending 必須如實記錄；
+不可新增 exception 或將人工 pass 寫進自動欄位。Dev 未追蹤 .vscode/ 保留。
+遇 scope 不明／超 allowlist／需改 readonly 或 locked contract，交 Dispatcher；
+auto-review 拒絕即停止回報原 action／reason。Bounded repair 停點依 execution plan 及既有 Archify contract，
+不自行增加輪次或 fallback。
+
+### Human Check — PC-34
+
+Human 已授權三 finding 最小 rework 並依既定 gates 前進；2026-10-01 又直接確認
+「確認 PR-34 approved／completed，授權同步 IM-34 active。」這是本次 gate factsync 依據，並非 final approval。
+DL-30 staged exact message 仍須新的 human confirmation，DL-29 no-verify 例外只屬歷史 commit。
+HC-28 pending final；CH-27 needs-rework／HC-27 pending 保留 historical，未宣稱 closure 或 human final pass。
+
+### 已查證輸入與來源
+
+以下均引用 Dispatcher 的 human 授權與 `pc34_minimal_rework_preflight` Planner FINAL snapshot（2026-09-30），並非 Plan-Creator 重新執行 Git/GitHub 或測試：
+human 最新明示「授權上述最小 rework 範圍」，完整對應三條 finding；
+Planner verdict 為 approved sufficiency、無 missing inputs／required fix，僅允許 creation，不是 PR-34 approval。
+Feature branch `docs/redefine-auth-subsystem-responsibilities` 的 local／origin／PR #37 head 同為
+`22ff1e039ea7c22c701cc21319303e78a4ec0664`；feature clean，PR OPEN／ready／CLEAN、checks []。
+Review `PRR_kwDOUFu0Cc8AAAABP68FTg` 已 completed（08:12:18Z），54 threads／36 unresolved；
+原 33 known-fixed 仍未 closed，三新 finding 已分類、未 resolve。Dev 只為 tracked／staged clean，
+未追蹤 `.vscode/` 保留。這些是具來源的時間點事實，後續須 fresh 查證，不能推論 closure。
+Producer PC-34 baseline：743 pins、既有五 patch targets 不變；
+`document-language.patch` 為 835272 bytes、SHA-256
+`13fdd35be8205a0c0c3f8baa86a7ed1a2eb2caff84d0948193bb6208208098e5`；
+`upstream-pin.json` SHA-256
+`24057319e7e9bec052ff68f3efb0ddc2395dae4bff92a8edc545995ac1cfdd43`。
+IM-33 原始 836320-byte historical report 保留原文，不倒改為本次真值。
+
+### Current Route／Dispatch Contract — PC-34
+
+```text
+PC-34 completed → PR-34 completed／approved → IM-34 rework completed → TE-31 initial needs-rework（保留）／re-test completed／approved → RV-31 completed／approved → DL-30 active → CH-28 pending → HC-28 pending
+```
+
+PC-34 creation 交接時 PR-34 active／尚無獨立 verdict 為當時 snapshot。
+2026-10-01 Human 直接確認：「確認 PR-34 approved／completed，授權同步 IM-34 active。」
+獨立 `pr34_minimal_rework_plan_review` 原始 FINAL approved／required fix 無；
+scope／allowlist／TC-34-01 至 TC-34-06／route／history／boundaries 一致，PC-34 足以受限 IM-34。
+依 Human 確認同步 PR-34 completed／approved、IM-34 active 為當時 gate snapshot。
+IM-34 completed handoff → TE-31 active 為當時 implementation 交接 snapshot。
+現引用獨立 `te31_bounded_diagram_receipt_validation` 原始 FINAL needs-rework／required fix 1：
+TC-34-03 command tokenizer 未拒絕 backtick 包覆的 unsafe path。
+IM-34 rework active／TE-31 re-test pending 為 Tester 初次交接 snapshot。
+當時引用 im34_bounded_diagram_receipt_fix 原始 FINAL rework completed handoff（historical snapshot）：
+IM-34 rework completed、TE-31 initial needs-rework 保留／re-test active；PR-34 approved 保持，
+不開新 cycle、不改契約，RV-31 及後續 pending。回修限既有 producer tokenizer／regression，
+兩 sources／HTML／delivery receipts／visual evidence bytes 保留，re-test 以相關 producer fix 與其他 bytes unchanged 為主。
+當時引用獨立 te31_recovery_focused_retest 原始 FINAL（historical handoff snapshot）：TE-31 re-test completed／approved、required fix 無，
+交 RV-31 active；IM-34 rework completed、PR-34 approved 保持，DL-30／CH-28／HC-28 pending。
+TE-31 initial needs-rework 與此前 re-test active 為 historical snapshots；核准來源為獨立 Tester，非 Human 新確認。
+現引用獨立 rv31_bounded_final_review 原始 FINAL：RV-31 completed／approved、required fix 無，
+交 DL-30 active，限 exact staged diff／message preparation；PR-34 approved、IM-34 rework completed、TE-31 re-test approved 保持。
+CH-28／HC-28 pending；DL-30 尚未 completed／visible、尚無本次 delivery SHA，未宣稱 thread closure。
+Reviewer approval 來源為獨立 Reviewer，非 Human 新確認；新的 message confirmation 與 no-verify boundary 保持。
+RV-31 approved 後才交 DL-30。Pending future steps 不是 approval 或執行 evidence。
+DL-30 必須依 staged exact diff 與 git-commit-convention 提出具體單一 topic message，
+取得新的 human 明確確認後才 commit／non-force push；DL-29 的 no-verify exception 不覆蓋新 commit。
+Push visible 後 CH-28 才 fresh review／threads closure；只能處理已分類且可見證據支持的 findings，
+unknown feedback 交 Dispatcher 分類／human boundary。HC-28 等 human final，不 merge／release。
+CH-27 needs-rework／HC-27 pending 已由本 cycle 承接、標為 historical；沒有將其改為 completed 或 approved。
+
+### Last Updated — PC-34
+
+2026-09-30 — 依 Human 最小 rework 授權與 Planner approved sufficiency 建立四 formal bounded cycle；
+當時 PC-34 creation completed、PR-34 active，其餘 pending，為 creation 交接 snapshot。只四 formal 局部寫入，
+未實作／測試／自審／Git／GitHub，未提前 approval；交獨立 Plan-Reviewer。
+
+2026-10-01 — Human 直接確認「確認 PR-34 approved／completed，授權同步 IM-34 active。」
+引用獨立 pr34_minimal_rework_plan_review 原始 FINAL approved／required fix 無，
+當時僅四 formal current-state 同步 PR-34 completed／approved → IM-34 active；
+當時 TE-31／RV-31／DL-30／CH-28／HC-28 pending，為 gate-sync historical snapshot。Scope 與技術契約未改，
+未實作／測試／視覺驗證／closure／Git／GitHub，未自審 gate 或宣稱後續 approval。
+
+2026-10-01 — 引用 im34_bounded_diagram_receipt_fix 原始 FINAL completed handoff，
+當時只同步四 formal evidence／current-state：IM-34 completed → TE-31 active，為 initial implementation handoff snapshot；
+RV-31／DL-30／CH-28／HC-28 pending。Lifecycle language-only HEAD deep-equal、
+state 12／13 neutral terminal 與還原 branch HEAD deep-equal、metadata red→green 70 unsafe／21 relative、
+producer 9/9、raw receipts／final hashes、composition 1→1→0 與首次 visual failed／round1 pass、
+八 final captures／state non-pass／visualReview pending、743 pins／524 readonly 及 scope snapshot
+均引用 Implementer evidence，詳細數值見 technical-spec／execution plan。
+未執行測試／Git／GitHub或實作，未自審，未產生 TE-31／RV-31／visual／closure approval。
+
+2026-10-01 — 引用獨立 te31_bounded_diagram_receipt_validation 原始 FINAL needs-rework／required fix 1，
+當時只四 formal factsync：IM-34 rework active、TE-31 initial needs-rework／re-test pending，為 initial finding snapshot；
+PR-34 approved 保持，RV-31／DL-30／CH-28／HC-28 pending。Finding 為既有 TC-34-03
+backtick command-token unsafe paths 漏拒絕；回修只 producer tokenizer／regression，
+兩 sources／HTML／receipts／visual bytes 全保留，不改契約或開 cycle。
+Tester 80 unsafe／24 relative bytes-preserved、其餘 TC bounded evidence與首次 temp Chrome SIGABRT
+後正常 escalation pass 見 technical-spec／execution plan；未宣稱 TE-31 approved。
+未執行 Git／測試／實作或自審 gate，交 Implementer bounded rework。
+
+2026-10-01 07:59:49 UTC（clock 工具讀取的前次續接同步時點，historical snapshot）— 依 Dispatcher 已提供的
+im34_bounded_diagram_receipt_fix 原始 FINAL rework completed handoff，補完中斷的四 formal factsync；
+requirements／technical-spec／execution plan 已寫內容保留，本次只補 step phase／ledger／blockers／route／更新紀錄。
+IM-34 rework completed → TE-31 initial needs-rework 保留／re-test active；PR-34 approved 保持，
+RV-31／DL-30／CH-28／HC-28 pending。Producer 10/10 與 red→green 僅引用 Implementer self-verification，
+546 protected files combined SHA-256 僅屬回修前後區間證據，非後續 factsync 的 immutable claim；詳見 execution plan。
+未執行 Git／tests／實作／GitHub／獨立審查，未新增 cycle、contract 或任何 approval；獨立 re-test verdict 尚未取得。
+
+2026-10-01 08:05:47 UTC（clock 工具讀取的前次同步時點，historical snapshot）— 引用獨立 te31_recovery_focused_retest
+原始 FINAL re-test completed／approved、required fix 無，只四 formal factsync：TE-31 initial needs-rework 保留，
+現交 RV-31 active；PR-34 approved／IM-34 rework completed 保持，DL-30／CH-28／HC-28 pending。
+Tester producer 10/10、110 unsafe／33 relative bytes-preserved、18 artifacts byte-equal、524 ReadOnly HEAD-equal，
+及 25 allowlist／23 changed／743 pins／五 targets／patch manifest／index／dev snapshot 詳見 technical-spec／execution plan。
+TC-34-01／02／05 只因 exact unchanged bytes 承接初驗；保留全部歷史與 exceptions，無新圖表／viewport／人工重閱宣稱。
+核准來源為獨立 Tester 原始 FINAL，非 Human 新確認；未執行 tests／實作／Git／GitHub／自審，
+未新增 cycle／scope，未宣稱 RV-31、delivery 或 thread closure 完成。
+
+2026-10-01 08:13:09 UTC（clock 工具讀取的本次同步時點）— 引用獨立 rv31_bounded_final_review
+原始 FINAL completed／approved、required fix 無，只四 formal factsync：RV-31 completed／approved → DL-30 active。
+PR-34 approved／IM-34 rework completed／TE-31 re-test approved 保持，initial needs-rework／歷史／exceptions 保留。
+Reviewer producer 10/10、bounded source／hash／language／18 artifacts／25 allowlist／23 changed／526 tracked HEAD-equal
+（含兩份 unchanged contact sheets，與 Tester 524 ReadOnly 不同分組）、pins／patch／index／visual 證據見 technical-spec／execution plan。
+CH-28／HC-28 pending；DL-30 未 completed／visible、未填未知 SHA、未 thread closure；新 message confirmation 與 no-verify boundary 保持。
+核准來源為獨立 Reviewer，非 Human 新確認；未執行 Git／tests／實作／GitHub／自審，未新增 cycle／scope 或 future approval。

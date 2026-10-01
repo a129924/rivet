@@ -15,7 +15,8 @@
   ],
   "states": [
     { "id": "flow-created", "type": "start", "label": "Auth 建立流程", "sublabel": "每次執行；初始語意前", "lane": "main", "col": 0, "step": "01", "tag": "目標架構入口" },
-    { "id": "initial-decision", "type": "active", "label": "初始決策", "sublabel": "傳送語意；無請求資料", "lane": "main", "col": 1, "step": "02", "tag": "不建構請求" },
+    { "id": "initial-decision", "type": "active", "label": "初始決策", "sublabel": "傳送／初始終態互斥", "lane": "main", "col": 1, "step": "02", "tag": "無請求資料；不建構請求" },
+    { "id": "initial-terminal", "type": "neutral", "label": "初始終態結果", "sublabel": "結果／失敗介面待定", "lane": "main", "col": 0, "yOffset": 144, "tag": "無 I/O／回應前提" },
     { "id": "waiting-response", "type": "waiting", "label": "等待首次回應", "sublabel": "AuthRequester 交付回應", "lane": "main", "col": 2, "step": "03", "tag": "回應輸入" },
     { "id": "response-policy", "type": "decision", "label": "回應策略", "sublabel": "初始／重試 HTTPResponse／更新結果的流程狀態判斷", "lane": "main", "col": 3, "width": 190, "yOffset": 74, "step": "04", "tag": "流程所有者" },
     { "id": "terminal-response", "type": "success", "label": "終態回應", "sublabel": "回傳正常／重試成功結果", "lane": "main", "col": 4, "step": "05", "tag": "終態" },
@@ -29,6 +30,7 @@
   "transitions": [
     { "id": "create-flow", "from": "flow-created", "to": "initial-decision" },
     { "id": "initial-send", "from": "initial-decision", "to": "waiting-response" },
+    { "id": "initial-terminal-decision", "from": "initial-decision", "to": "initial-terminal", "label": "初始終態（與傳送互斥）", "fromSide": "bottom", "toSide": "right", "labelAt": [201, 230] },
     { "id": "receive-response", "from": "waiting-response", "to": "response-policy", "fromSide": "bottom", "toSide": "left", "via": [[402, 210], [440, 210], [440, 231]] },
     { "id": "normal-terminal", "from": "response-policy", "to": "terminal-response", "route": "top-channel", "fromSide": "top", "toSide": "top", "channelY": 96 },
     { "id": "first-401-decision", "from": "response-policy", "to": "first-401", "label": "初始回應為 401：資格判斷", "variant": "security", "fromSide": "left", "toSide": "top", "via": [[440, 231], [440, 320], [402, 320]], "labelAt": [420, 340] },

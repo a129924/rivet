@@ -5036,16 +5036,17 @@
         <!-- Transition paths -->
         <path data-edge-from="flow-created" data-edge-to="initial-decision" data-edge-key="0" data-edge-id="create-flow" data-composition-points="153,157;189,157" d="M 153 157 L 189 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
         <path data-edge-from="initial-decision" data-edge-to="waiting-response" data-edge-key="1" data-edge-id="initial-send" data-composition-points="307,157;343,157" d="M 307 157 L 343 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="waiting-response" data-edge-to="response-policy" data-edge-key="2" data-edge-id="receive-response" data-composition-points="402,188;402,210;440,210;440,231;461,231" d="M 402 188 L 402 200 Q 402 210 412 210 L 430 210 Q 440 210 440 220 L 440 221 Q 440 231 450 231 L 461 231" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="response-policy" data-edge-to="terminal-response" data-edge-key="3" data-edge-id="normal-terminal" data-composition-points="556,200;556,96;710,96;710,126" d="M 556 200 L 556 106 Q 556 96 566 96 L 700 96 Q 710 96 710 106 L 710 126" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="response-policy" data-edge-to="first-401" data-edge-label="初始回應為 401：資格判斷" data-edge-key="4" data-edge-id="first-401-decision" data-composition-points="461,231;440,231;440,320;402,320;402,360" d="M 461 231 L 450 231 Q 440 231 440 241 L 440 310 Q 440 320 430 320 L 412 320 Q 402 320 402 330 L 402 360" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="first-401" data-edge-to="refresh-boundary" data-edge-label="具資格的更新語意" data-edge-key="5" data-edge-id="dispatch-refresh" data-composition-points="402,418;402,434;556,434;556,418" d="M 402 418 L 402 426 Q 402 434 410 434 L 548 434 Q 556 434 556 426 L 556 418" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="first-401" data-edge-to="ineligible-401" data-edge-label="不具資格／不具更新能力" data-edge-key="6" data-edge-id="ineligible-terminal" data-composition-points="402,418;402,450" d="M 402 418 L 402 450" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="refresh-boundary" data-edge-to="response-policy" data-edge-label="更新結果交回 AuthFlow 策略" data-edge-key="7" data-edge-id="refresh-result" data-composition-points="556,360;556,262" d="M 556 360 L 556 262" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="response-policy" data-edge-to="refresh-failed" data-edge-label="更新失敗：終態" data-edge-key="8" data-edge-id="refresh-failure" data-composition-points="461,231;440,231;440,300;320,300;320,542;480,542;480,479;497,479" d="M 461 231 L 450 231 Q 440 231 440 241 L 440 290 Q 440 300 430 300 L 330 300 Q 320 300 320 310 L 320 532 Q 320 542 330 542 L 470 542 Q 480 542 480 532 L 480 487.5 Q 480 479 488.5 479 L 497 479" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="response-policy" data-edge-to="waiting-for-retry-response" data-edge-label="更新成功：一次重試許可" data-edge-key="9" data-edge-id="refresh-success" data-composition-points="651,231;790,231;790,389;773,389" d="M 651 231 L 780 231 Q 790 231 790 241 L 790 380.5 Q 790 389 781.5 389 L 773 389" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="waiting-for-retry-response" data-edge-to="response-policy" data-edge-key="10" data-edge-id="retry-response-policy" data-composition-points="647,389;630,389;630,170;556,170;556,200" d="M 647 389 L 638.5 389 Q 630 389 630 380.5 L 630 180 Q 630 170 620 170 L 566 170 Q 556 170 556 180 L 556 200" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="response-policy" data-edge-to="second-401" data-edge-key="11" data-edge-id="second-401-terminal" data-composition-points="556,262;556,320;850,320;850,479;769,479" d="M 556 262 L 556 310 Q 556 320 566 320 L 840 320 Q 850 320 850 330 L 850 469 Q 850 479 840 479 L 769 479" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="initial-decision" data-edge-to="initial-terminal" data-edge-label="初始終態（與傳送互斥）" data-edge-key="2" data-edge-id="initial-terminal-decision" data-composition-points="248,188;248,301;153,301" d="M 248 188 L 248 291 Q 248 301 238 301 L 153 301" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="waiting-response" data-edge-to="response-policy" data-edge-key="3" data-edge-id="receive-response" data-composition-points="402,188;402,210;440,210;440,231;461,231" d="M 402 188 L 402 200 Q 402 210 412 210 L 430 210 Q 440 210 440 220 L 440 221 Q 440 231 450 231 L 461 231" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="response-policy" data-edge-to="terminal-response" data-edge-key="4" data-edge-id="normal-terminal" data-composition-points="556,200;556,96;710,96;710,126" d="M 556 200 L 556 106 Q 556 96 566 96 L 700 96 Q 710 96 710 106 L 710 126" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="response-policy" data-edge-to="first-401" data-edge-label="初始回應為 401：資格判斷" data-edge-key="5" data-edge-id="first-401-decision" data-composition-points="461,231;440,231;440,320;402,320;402,360" d="M 461 231 L 450 231 Q 440 231 440 241 L 440 310 Q 440 320 430 320 L 412 320 Q 402 320 402 330 L 402 360" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="first-401" data-edge-to="refresh-boundary" data-edge-label="具資格的更新語意" data-edge-key="6" data-edge-id="dispatch-refresh" data-composition-points="402,418;402,434;556,434;556,418" d="M 402 418 L 402 426 Q 402 434 410 434 L 548 434 Q 556 434 556 426 L 556 418" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="first-401" data-edge-to="ineligible-401" data-edge-label="不具資格／不具更新能力" data-edge-key="7" data-edge-id="ineligible-terminal" data-composition-points="402,418;402,450" d="M 402 418 L 402 450" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="refresh-boundary" data-edge-to="response-policy" data-edge-label="更新結果交回 AuthFlow 策略" data-edge-key="8" data-edge-id="refresh-result" data-composition-points="556,360;556,262" d="M 556 360 L 556 262" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="response-policy" data-edge-to="refresh-failed" data-edge-label="更新失敗：終態" data-edge-key="9" data-edge-id="refresh-failure" data-composition-points="461,231;440,231;440,300;320,300;320,542;480,542;480,479;497,479" d="M 461 231 L 450 231 Q 440 231 440 241 L 440 290 Q 440 300 430 300 L 330 300 Q 320 300 320 310 L 320 532 Q 320 542 330 542 L 470 542 Q 480 542 480 532 L 480 487.5 Q 480 479 488.5 479 L 497 479" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="response-policy" data-edge-to="waiting-for-retry-response" data-edge-label="更新成功：一次重試許可" data-edge-key="10" data-edge-id="refresh-success" data-composition-points="651,231;790,231;790,389;773,389" d="M 651 231 L 780 231 Q 790 231 790 241 L 790 380.5 Q 790 389 781.5 389 L 773 389" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="waiting-for-retry-response" data-edge-to="response-policy" data-edge-key="11" data-edge-id="retry-response-policy" data-composition-points="647,389;630,389;630,170;556,170;556,200" d="M 647 389 L 638.5 389 Q 630 389 630 380.5 L 630 180 Q 630 170 620 170 L 566 170 Q 556 170 556 180 L 556 200" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="response-policy" data-edge-to="second-401" data-edge-key="12" data-edge-id="second-401-terminal" data-composition-points="556,262;556,320;850,320;850,479;769,479" d="M 556 262 L 556 310 Q 556 320 566 320 L 840 320 Q 850 320 850 330 L 850 469 Q 850 479 840 479 L 769 479" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
 
         <!-- States -->
         <g id="node-flow-created" data-node-id="flow-created" data-node-label="Auth 建立流程" tabindex="0" role="button" aria-label="Focus Auth 建立流程, 每次執行；初始語意前, 正常策略路徑" aria-pressed="false" data-node-kind="start" data-node-sublabel="每次執行；初始語意前" data-node-tag="目標架構入口" data-node-context="正常策略路徑">
@@ -5062,8 +5063,8 @@
         <text data-detail="fine" x="94" y="177" class="t-frontend" font-size="7" text-anchor="middle">目標架構入口</text>
         </g>
 
-        <g id="node-initial-decision" data-node-id="initial-decision" data-node-label="初始決策" tabindex="0" role="button" aria-label="Focus 初始決策, 傳送語意；無請求資料, 正常策略路徑" aria-pressed="false" data-node-kind="active" data-node-sublabel="傳送語意；無請求資料" data-node-tag="不建構請求" data-node-context="正常策略路徑">
-          <title>初始決策 · 傳送語意；無請求資料 · 正常策略路徑 · 不建構請求</title>
+        <g id="node-initial-decision" data-node-id="initial-decision" data-node-label="初始決策" tabindex="0" role="button" aria-label="Focus 初始決策, 傳送／初始終態互斥, 正常策略路徑" aria-pressed="false" data-node-kind="active" data-node-sublabel="傳送／初始終態互斥" data-node-tag="無請求資料；不建構請求" data-node-context="正常策略路徑">
+          <title>初始決策 · 傳送／初始終態互斥 · 正常策略路徑 · 無請求資料；不建構請求</title>
           <rect x="189" y="126" width="118" height="62" rx="7" class="c-mask"/>
           <rect x="189" y="126" width="118" height="62" rx="7" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(290 132) scale(0.6875)">
@@ -5071,8 +5072,21 @@
           </g>
         <text data-detail="fine" x="199" y="140" class="t-backend" font-size="7" font-weight="700">02</text>
           <text data-node-label="" data-detail-anchor="" x="248" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">初始決策</text>
-          <text data-detail="context" x="248" y="163" class="t-muted" font-size="7" text-anchor="middle">傳送語意；無請求資料</text>
-        <text data-detail="fine" x="248" y="177" class="t-backend" font-size="7" text-anchor="middle">不建構請求</text>
+          <text data-detail="context" x="248" y="163" class="t-muted" font-size="7" text-anchor="middle">傳送／初始終態互斥</text>
+        <text data-detail="fine" x="248" y="177" class="t-backend" font-size="7" text-anchor="middle">無請求資料；不建構請求</text>
+        </g>
+
+        <g id="node-initial-terminal" data-node-id="initial-terminal" data-node-label="初始終態結果" tabindex="0" role="button" aria-label="Focus 初始終態結果, 結果／失敗介面待定, 正常策略路徑" aria-pressed="false" data-node-kind="neutral" data-node-sublabel="結果／失敗介面待定" data-node-tag="無 I/O／回應前提" data-node-context="正常策略路徑">
+          <title>初始終態結果 · 結果／失敗介面待定 · 正常策略路徑 · 無 I/O／回應前提</title>
+          <rect x="35" y="270" width="118" height="62" rx="7" class="c-mask"/>
+          <rect x="35" y="270" width="118" height="62" rx="7" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="neutral" class="semantic-sigil s-external" transform="translate(136 276) scale(0.6875)">
+            <rect x="3" y="3" width="10" height="10" rx="2"/>
+            <circle cx="8" cy="8" r="1.2" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="94" y="291" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">初始終態結果</text>
+          <text data-detail="context" x="94" y="307" class="t-muted" font-size="7" text-anchor="middle">結果／失敗介面待定</text>
+        <text data-detail="fine" x="94" y="321" class="t-muted" font-size="7" text-anchor="middle">無 I/O／回應前提</text>
         </g>
 
         <g id="node-waiting-response" data-node-id="waiting-response" data-node-label="等待首次回應" tabindex="0" role="button" aria-label="Focus 等待首次回應, AuthRequester 交付回應, 正常策略路徑" aria-pressed="false" data-node-kind="waiting" data-node-sublabel="AuthRequester 交付回應" data-node-tag="回應輸入" data-node-context="正常策略路徑">
@@ -5196,29 +5210,33 @@
         <!-- Transition labels -->
 
 
+        <g data-detail="context" data-edge-from="initial-decision" data-edge-to="initial-terminal" data-edge-label="初始終態（與傳送互斥）" data-edge-key="2" data-edge-id="initial-terminal-decision">
+          <rect x="141.1" y="219" width="119.80000000000001" height="16" rx="4" class="c-mask"/>
+          <text x="201" y="230" class="t-muted" font-size="8" text-anchor="middle">初始終態（與傳送互斥）</text>
+        </g>
 
 
-        <g data-detail="context" data-edge-from="response-policy" data-edge-to="first-401" data-edge-label="初始回應為 401：資格判斷" data-edge-key="4" data-edge-id="first-401-decision">
+        <g data-detail="context" data-edge-from="response-policy" data-edge-to="first-401" data-edge-label="初始回應為 401：資格判斷" data-edge-key="5" data-edge-id="first-401-decision">
           <rect x="355.2" y="329" width="129.60000000000002" height="16" rx="4" class="c-mask"/>
           <text x="420" y="340" class="t-security" font-size="8" text-anchor="middle">初始回應為 401：資格判斷</text>
         </g>
-        <g data-detail="context" data-edge-from="first-401" data-edge-to="refresh-boundary" data-edge-label="具資格的更新語意" data-edge-key="5" data-edge-id="dispatch-refresh">
+        <g data-detail="context" data-edge-from="first-401" data-edge-to="refresh-boundary" data-edge-label="具資格的更新語意" data-edge-key="6" data-edge-id="dispatch-refresh">
           <rect x="494.8" y="435" width="90.4" height="16" rx="4" class="c-mask"/>
           <text x="540" y="446" class="t-security" font-size="8" text-anchor="middle">具資格的更新語意</text>
         </g>
-        <g data-detail="context" data-edge-from="first-401" data-edge-to="ineligible-401" data-edge-label="不具資格／不具更新能力" data-edge-key="6" data-edge-id="ineligible-terminal">
+        <g data-detail="context" data-edge-from="first-401" data-edge-to="ineligible-401" data-edge-label="不具資格／不具更新能力" data-edge-key="7" data-edge-id="ineligible-terminal">
           <rect x="190.1" y="429" width="119.80000000000001" height="16" rx="4" class="c-mask"/>
           <text x="250" y="440" class="t-security" font-size="8" text-anchor="middle">不具資格／不具更新能力</text>
         </g>
-        <g data-detail="context" data-edge-from="refresh-boundary" data-edge-to="response-policy" data-edge-label="更新結果交回 AuthFlow 策略" data-edge-key="7" data-edge-id="refresh-result">
+        <g data-detail="context" data-edge-from="refresh-boundary" data-edge-to="response-policy" data-edge-label="更新結果交回 AuthFlow 策略" data-edge-key="8" data-edge-id="refresh-result">
           <rect x="295.3" y="279" width="139.4" height="16" rx="4" class="c-mask"/>
           <text x="365" y="290" class="t-security" font-size="8" text-anchor="middle">更新結果交回 AuthFlow 策略</text>
         </g>
-        <g data-detail="context" data-edge-from="response-policy" data-edge-to="refresh-failed" data-edge-label="更新失敗：終態" data-edge-key="8" data-edge-id="refresh-failure">
+        <g data-detail="context" data-edge-from="response-policy" data-edge-to="refresh-failed" data-edge-label="更新失敗：終態" data-edge-key="9" data-edge-id="refresh-failure">
           <rect x="209.7" y="399" width="80.60000000000001" height="16" rx="4" class="c-mask"/>
           <text x="250" y="410" class="t-security" font-size="8" text-anchor="middle">更新失敗：終態</text>
         </g>
-        <g data-detail="context" data-edge-from="response-policy" data-edge-to="waiting-for-retry-response" data-edge-label="更新成功：一次重試許可" data-edge-key="9" data-edge-id="refresh-success">
+        <g data-detail="context" data-edge-from="response-policy" data-edge-to="waiting-for-retry-response" data-edge-label="更新成功：一次重試許可" data-edge-key="10" data-edge-id="refresh-success">
           <rect x="760.1" y="279" width="119.80000000000001" height="16" rx="4" class="c-mask"/>
           <text x="820" y="290" class="t-backend" font-size="8" text-anchor="middle">更新成功：一次重試許可</text>
         </g>

@@ -81,16 +81,23 @@ export function verifyReceipt(bytes, root, input, output) {
     if (receipt[key]?.sha256 !== sha256(actual) || receipt[key]?.bytes !== actual.length)
       throw new Error('Delivery receipt bytes/hash mismatch: ' + key);
   }
-  const checkPaths = (value, key = '') => {
-    if (typeof value === 'string' && (/^(input|output|path|.*[Pp]ath)$/.test(key)) &&
-      (path.isAbsolute(value) || value.split(/[\\/]/).includes('..')))
-      throw new Error('Receipt metadata path is not repository-relative.');
-    if (Array.isArray(value)) value.forEach(v => checkPaths(v, key));
-    else if (value && typeof value === 'object') Object.entries(value).forEach(([k, v]) => checkPaths(v, k));
+  const checkPaths = value => {
+    if (typeof value === 'string') {
+      // Inspect every string, independent of field names. Command strings also
+      // carry paths as quote/backtick-framed arguments or option=value tokens.
+      const tokens = value.split(/[\s"'`=,;()[\]{}]+/);
+      if (tokens.some(token => /^[\\/]/.test(token) || /^[a-zA-Z]:/.test(token) ||
+        token.split(/[\\/]/).includes('..')))
+        throw new Error('Receipt metadata path is not repository-relative.');
+    } else if (Array.isArray(value)) value.forEach(checkPaths);
+    else if (value && typeof value === 'object') {
+      for (const [key, nested] of Object.entries(value)) {
+        checkPaths(key);
+        checkPaths(nested);
+      }
+    }
   };
   checkPaths(receipt);
-  if (/(?:\/Users\/|\/home\/|rivet\.worktrees|rivet-archify-runtime-)/.test(bytes.toString('utf8')))
-    throw new Error('Receipt contains local machine metadata.');
   return receipt;
 }
 export async function run(args, options = {}) {

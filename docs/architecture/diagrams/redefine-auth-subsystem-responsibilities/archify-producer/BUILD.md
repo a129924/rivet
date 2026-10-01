@@ -60,6 +60,9 @@ Delivery 委派標準 deliver，將 stdout 原始 bytes 直接寫進 receipt 同
 成功 exit 後檢查 JSON identity、showcase 9/9、zero errors/warnings、實際 source/HTML bytes 與 SHA-256、
 repository-relative path metadata 及無本機位置，再同目錄 atomic rename 成 .delivery.json。
 stdout/HTML/receipt 不做字串後處理；stdout receipt 原始 bytes 與 sidecar 完全一致。
+Metadata 驗證走訪任意深度的 objects／arrays 與所有 string（含非 path key、array strings、
+provenance cwd／root／temp 及 command 引數）；拒絕 POSIX absolute、Windows drive／UNC／rooted
+及 slash／backslash parent traversal，不依欄位名稱或特定機器前綴黑名單。檢查不改寫原始 bytes。
 HTML commit 與 receipt commit 是兩次獨立 atomic rename，非雙檔 transaction。Receipt 驗證失敗時
 wrapper exit nonzero、保留前一 receipt，trusted HTML 可能已由 upstream 完成 commit，須停止交付並重新核查；
 不將不完整 evidence 宣稱通過。暫存 cleanup 僅限本次自己建立的 runtime/capture，

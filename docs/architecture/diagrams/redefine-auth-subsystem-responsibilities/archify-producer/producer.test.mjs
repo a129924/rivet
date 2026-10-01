@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
+import childProcess from 'node:child_process';
+import { syncBuiltinESMExports } from 'node:module';
 import { createHash } from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { prepareRuntime, verifyPins, contained, verifyReceipt, run } from './run.mjs';
@@ -139,6 +141,63 @@ test('canonical input/output/root symlink boundaries and traversal defenses are 
     assert.equal(contained(fs.realpathSync(rootAlias), 'input.json', true), path.join(root, 'input.json'));
   } finally { fs.rmSync(outside, { recursive: true, force: true }); }
 });
+test('receipt metadata rejects unsafe paths recursively, including command arguments and arbitrary keys', () => {
+  const input = 'docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/normal-request.json';
+  const output = input.replace(/\.json$/, '.html');
+  const original = fs.readFileSync(path.join(repository, input.replace(/\.json$/, '.delivery.json')));
+  const preserved = Buffer.from(original);
+  const receipt = verifyReceipt(original, repository, input, output);
+  const placements = [
+    value => ({ provenance: { cwd: value } }),
+    value => ({ provenance: { root: value } }),
+    value => ({ provenance: { temp: value } }),
+    value => ({ provenance: { nested: { records: [{ anything: value }] } } }),
+    value => ({ metadata: { nested: [[value]] } }),
+    value => ({ commandMetadata: { argv: ['node', '--source=' + value] } }),
+    value => ({ commandMetadata: { command: 'node tool.mjs --root "' + value + '"' } })
+  ];
+  const unsafe = ['/outside/local', 'C:\\outside\\local', 'D:/outside/local',
+    'C:drive-relative', '\\\\server\\share\\local', '//server/share/local',
+    '\\outside\\local', '../outside', 'nested/../outside', 'nested\\..\\outside'];
+  for (const value of unsafe) {
+    for (const place of placements) {
+      const bytes = Buffer.from(JSON.stringify({ ...receipt, ...place(value) }));
+      assert.throws(() => verifyReceipt(bytes, repository, input, output), /relative/, JSON.stringify(place(value)));
+    }
+  }
+  for (const value of ['docs/relative/file.json', './docs/file.json', 'nested\\relative\\file.json']) {
+    for (const place of placements) {
+      const bytes = Buffer.from(JSON.stringify({ ...receipt, ...place(value) }));
+      const before = Buffer.from(bytes);
+      verifyReceipt(bytes, repository, input, output);
+      assert.deepEqual(bytes, before);
+    }
+  }
+  assert.deepEqual(original, preserved);
+});
+test('backtick-framed command paths reject unsafe values and preserve valid relative metadata bytes', () => {
+  const input = 'docs/architecture/diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.json';
+  const output = input.replace(/\.json$/, '.html');
+  const original = fs.readFileSync(path.join(repository, input.replace(/\.json$/, '.delivery.json')));
+  const before = Buffer.from(original);
+  const receipt = verifyReceipt(original, repository, input, output);
+  const framed = value => Buffer.from(JSON.stringify({ ...receipt,
+    commandMetadata: { command: 'node tool.mjs --arg=`' + value + '`' } }));
+  // These are metadata strings only; the test never executes these commands.
+  const accepted = [];
+  for (const value of ['/outside/local', 'C:\\outside\\local', '../outside']) {
+    try { verifyReceipt(framed(value), repository, input, output); accepted.push(value); }
+    catch (error) { assert.match(error.message, /relative/); }
+  }
+  assert.deepEqual(accepted, [], 'Unsafe backtick-framed paths must be rejected.');
+  for (const value of ['docs/relative/file.json', './docs/file.json', 'nested\\relative\\file.json']) {
+    const bytes = framed(value);
+    const preserved = Buffer.from(bytes);
+    verifyReceipt(bytes, repository, input, output);
+    assert.deepEqual(bytes, preserved);
+  }
+  assert.deepEqual(original, before);
+});
 test('standard deliver captures exact producer stdout bytes and verifies bound hashes/counts', () => {
   fs.writeFileSync(path.join(fixtures, 'valid.json'), JSON.stringify(normal));
   const result = invoke(['deliver', 'sequence', 'valid.json', 'valid.html', '--repo-root', '.', '--quality', 'showcase', '--json']);
@@ -166,4 +225,38 @@ test('standard deliver captures exact producer stdout bytes and verifies bound h
   const lifecycleHTML = fs.readFileSync(path.join(fixtures, 'lifecycle.html'), 'utf8');
   assert.match(lifecycleHTML, /<html lang="zh-Hant"/);
   assert.match(lifecycleHTML, /<svg[^>]*lang="zh-Hant"/);
+});
+test('unsafe delivery stdout metadata fails closed and preserves the previous receipt bytes', async () => {
+  const previous = fs.readFileSync(path.join(fixtures, 'valid.delivery.json'));
+  const actualSpawn = childProcess.spawnSync;
+  const previousCwd = process.cwd();
+  let injected = false;
+  childProcess.spawnSync = (...args) => {
+    const result = actualSpawn(...args);
+    if (args[1]?.[0]?.endsWith('/bin/archify.mjs') && args[1][1] === 'deliver' && result.status === 0) {
+      // Simulate untrusted producer stdout only in this private test fixture.
+      const capture = fs.readdirSync(fixtures).find(name => name.startsWith('.archify-receipt-'));
+      const raw = JSON.parse(fs.readFileSync(path.join(fixtures, capture)));
+      raw.provenance = { nested: [{ arbitrary: '\\\\server\\share\\local' }] };
+      fs.ftruncateSync(args[2].stdio[1], 0);
+      fs.writeSync(args[2].stdio[1], Buffer.from(JSON.stringify(raw)), 0, undefined, 0);
+      injected = true;
+    }
+    return result;
+  };
+  syncBuiltinESMExports();
+  process.chdir(fixtures);
+  try {
+    await assert.rejects(run(['deliver', 'sequence', 'valid.json', 'valid.html',
+      '--repo-root', '.', '--quality', 'showcase', '--json']), /relative/);
+    assert.equal(injected, true);
+    assert.deepEqual(fs.readFileSync('valid.delivery.json'), previous);
+    assert.equal(fs.readdirSync('.').some(name => name.startsWith('.archify-')), false);
+    // HTML may already have committed upstream; this is not a two-file transaction.
+    assert.equal(fs.existsSync('valid.html'), true);
+  } finally {
+    process.chdir(previousCwd);
+    childProcess.spawnSync = actualSpawn;
+    syncBuiltinESMExports();
+  }
 });
