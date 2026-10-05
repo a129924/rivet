@@ -2,25 +2,25 @@
 
 ## Current Phase
 
-Human 已授權 diagnostic sanitizer／相關測試最小新增範圍；Planner approved sufficiency
-只放行 PC-35 creation；creation 時 PR-35 active／未 approved 為 historical snapshot。
-現依獨立 pr35_diagnostic_sanitizer_review approved／required fix 無，PR-35 completed／approved，
-IM-35 active 為前次 gate-sync historical snapshot。現依 Dispatcher 傳遞 Implementer completed handoff，
-IM-35 completed → TE-32 active 為前次 handoff historical snapshot。現依 Dispatcher 傳遞獨立 Tester
-TE-32 approved／completed、required fix 無，交 RV-32 active 為前次 test handoff historical snapshot。
-現依獨立 Reviewer RV-32 approved／completed、required fix 無，交 DL-31 active，僅 staging／message
-preparation；CH-29／HC-29 pending，未 delivery visible／closure，新 message 仍需 Human 確認。
+Human 已授權最小 StaticIsolationTests 責任拆分，不提高 SwiftLint 800 上限。
+Planner static_isolation_split_preflight approved 只放行 creation；PC-37 completed → PR-37 active
+為 creation historical snapshot。現引用 Dispatcher 傳遞獨立 pr37_test_split_review approved／no-fix，
+PR-37 completed／approved → IM-37 active 為前次 planning handoff historical snapshot。
+IM-37 completed → TE-34 active 為前次 implementation handoff historical snapshot；self-verification 不是 test approval。
+TE-34 completed／approved → RV-34 active 為前次 test handoff historical snapshot。
+現引用 Dispatcher 傳遞獨立 Reviewer approved／no-fix：RV-34 completed／approved → DL-33 active；TC-37-07 完整 hooks 尚待 actual delivery。
 
 ```text
-PC-35 completed → PR-35 completed／approved → IM-35 completed → TE-32 completed／approved → RV-32 completed／approved → DL-31 active → CH-29 pending → HC-29 pending
+PC-37 completed → PR-37 completed／approved → IM-37 completed → TE-34 completed／approved → RV-34 completed／approved → DL-33 active → CH-31 pending → HC-31 pending
 ```
 
-DL-30 b830bb481d43ba552548859ecae9ae60511f783e completed／visible 與 Human
-接受單次偏離事實保留。CH-28 新 scope finding 停於 human-check 是 historical snapshot，
-已由本次新增 scope 授權承接，非 CH-28 completed／closure；HC-28 原 pending 保留。
-TE-31 initial needs-rework／re-test approved、RV-31 approved 及歷史 exceptions 不倒改。
-既有四 formal 未提交 factsync 保留，本次 planning 亦未 commit／push。唯一 current route 見上；
-下方 PC-34 全節及更早 route 都為 historical，不代表新 gate／approval。
+DL-31 ba6422c8dbc1a74e56a0573573fdd1bf47177ae8 completed／visible 保持。
+DL-32 正常 hook 被既有 801＞800 SwiftLint failure 阻擋，未 completed／未 commit／push visible，
+由 PC-37 授權承接；原 staged 十檔保留，PC-36 六 implementation files bytes 保護。
+PC-36／DL-31 factsync 仍 local；原 approvals／歷史 exceptions 保持，沒有新 threads closure。
+下方 PC-36 與更早各 cycle 全節 route／active-gate 為 historical snapshot，唯一 current route 見上。
+本輪正常完整 hooks 必須通過，新 exact message 仍須 Human 確認，不沿用舊 message／no-verify，
+禁止 hooksPath override。最終停 HC-31，不 merge／release。
 
 ## Historical Phase Snapshots — PC-32 前
 
@@ -1578,7 +1578,435 @@ HC-27 pending。DL-29 的具體 staged topic commit message 與 known SwiftLint 
 
 2026-09-30 — 依 Delivery 原始 FINAL 及 CH-27 獨立 Reviewer needs-rework，僅同步四 formal artifacts 的 post-delivery facts：DL-29 175965784597b224781e31600a8352f8e6dd75de completed／visible、ready PR；CH-27 needs-rework／未完成、HC-27 pending。GitHub 50 threads／32 unresolved 與 bot Running 僅記當時 snapshot；本次同步 diff 尚待獨立 review，後續 commit 仍須既定 message boundary。未執行 Git、tests、圖表／producer／Swift 修改，未新增 cycle 或 approval。
 
-## PC-35 — Diagnostic Sanitizer 最小回修（Current Contract）
+## PC-37 — StaticIsolationTests 最小責任拆分（Current Contract）
+
+### Goal
+
+Human 已授權最小 StaticIsolationTests 冗餘／責任拆分以恢復正常 commit hooks，不提高
+SwiftLint 800 行限制、不降低 isolation coverage。Explorer 未確證可安全刪除的冗餘，
+因此採原封移動單一既有 Keychain 測試；不虛造需要新增行為測試的 RED。
+Planner static_isolation_split_preflight 正式 approved 只表示 sufficiency，不是 PR-37 approval。
+
+### In-Scope
+
+1. 將 keychainAdapterUsesTheCommonLegacyBaseQueryForEveryOperation 原封移到同 directory
+   的 StaticIsolationTests+Keychain.swift，仍是 extension StaticIsolationTests 的同一 @Test。
+2. 原檔只移除該完整 @Test 區塊；新檔只加入 Foundation／Testing imports、該 extension，
+   及與原檔一致的 file-private repositoryRoot，以 #filePath 連續三次 deletingLastPathComponent。
+3. 四 formal 記錄受限 scope、測試／normal-hook 驗收、歷史／local visibility 與新 route。
+   PC-36 六 implementation files 不再修改，只保留已獨立 approved 的既有 bytes 供後續交付。
+
+### Out-Of-Scope
+
+不修改 production Swift、Package.swift／target graph、scanner／其他 helper 或其 visibility、
+dependency、SwiftLint configuration／800 上限、format／lint／Git hooks configuration。
+不得刪除測試／assertion／snippet、改測試 identity、重新命名 suite 或變更 isolation 能力。
+不修改 ownership／retry policy／deferred contract、任何 diagram／receipt／layout；
+不使用 --no-verify 或 hooksPath override，不 merge／release。
+
+### ReadOnly
+
+既有六 PC-36 implementation files bytes 保護；component scene、四 Archify source／HTML／receipts／
+visual、其他 canvas、canonical architecture prose、global skills／patch／pin／dependencies 均不改。
+原 StaticIsolationTests 除移出單一 @Test 外，其他 code／scanner／helper bytes 保持；其他 tests 不改。
+dev 不實作／改檔，未追蹤 .vscode/、temp evidence 與使用者資料保留。
+原十檔已 staged snapshot 保留，不 reset／unstage；Dispatcher 提供 staged diff SHA-256：
+64d22be4843a09f25eebff5c03cb4093b7f89eef41d48de5ae3fc0c6d7859686。
+此 hash 是 PC-37 前 snapshot，不假稱 formal 新同步後 index／worktree 永遠不變。
+
+### Written
+
+本輪 Plan-Creator 只四 formal；Implementer 只兩 tests。待 delivery union 為 literal twelve paths：
+既有 PC-36 十檔與本次兩檔，非允許再次修改六 PC-36 implementation files。
+
+- analysis/redefine-auth-subsystem-responsibilities/requirements.md
+- analysis/redefine-auth-subsystem-responsibilities/technical-spec.md
+- plan/redefine-auth-subsystem-responsibilities/redefine-auth-subsystem-responsibilities.plan.md
+- plan/redefine-auth-subsystem-responsibilities/redefine-auth-subsystem-responsibilities.step.md
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/archify-producer/run.mjs
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/archify-producer/producer.test.mjs
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/enhance-document-language.js
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/verify-document-language.js
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/BUILD.md
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/index.html
+- Tests/GitHubIntegrationTests/StaticIsolationTests.swift
+- Tests/GitHubIntegrationTests/StaticIsolationTests+Keychain.swift
+
+### Deleted
+
+無；新增一份同 directory 測試 extension，不刪檔。
+
+### Modify
+
+僅在 PR-37 獨立 approved 後，於既有 feature worktree 進行兩檔純 refactor。
+移動 @Test 的 name／signature／throws／body／required snippets／forbidden markers／全部 #expect
+原封保持；不可改 helper visibility 或 import scanner。新 file-private repositoryRoot 與原檔
+使用相同 #filePath 三次 deletingLastPathComponent，兩檔同 directory，必須解析到同 repository root。
+先保存完整移動區塊與 29 個 qualified discovery identities baseline，再原封移動及驗證；
+既有 pre-refactor normal hook failure 是 pre-RED，不虛造新行為 RED。
+
+RV-34 approved 後，Delivery Implementer 才明確整理原 staged／新 unstaged formal 與兩 tests 差異，
+依 git-commit-convention 重新審查完整 staged diff 語意邊界、提出新的 exact message，
+Human 確認後才正常 commit／non-force push。舊 PC-36 message confirmation 不套用新 scope。
+若建議拆成兩個 commits，各自需語意審查與 Human message 確認，不由 Dispatcher 自行決定。
+正常完整 hooks 必須通過；再次失敗須停止及分類，不以 --no-verify／hooksPath override 繞過。
+
+### Non-Goal
+
+不追求一般測試重構、刪除尚未證明冗餘或改 lint policy。PC-36 既有 implementation／
+TE-33／RV-33 approvals 保持；native VoiceOver／Increase Contrast／inactive 待驗、
+Arrow keys 既有 viewer pan、state containment non-pass／automated visualReview pending 不提升。
+沒有新 delivery visible 或 thread closure；beyond-scope／unknown feedback 仍交 human boundary。
+
+### TestCase
+
+| ID | 必須驗證的證據 |
+| --- | --- |
+| TC-37-01 | 前後完整 29 qualified StaticIsolationTests discovery identity set 相同且不重複，不只比較 count；不能以其他 target 同名 suite 代替。 |
+| TC-37-02 | 移動 @Test name／signature／throws／body／snippets／assertions 與保存 baseline exact；原檔只去該完整區塊，新檔 repositoryRoot 三次 deleting 與原同 root。 |
+| TC-37-03 | 執行 qualified GitHubIntegrationTests.StaticIsolationTests suite，全部 29 tests pass；保留 runner identity／結果證據，避免其他 target 同名 tests。 |
+| TC-37-04 | GitHubIntegrationTests target regression pass，不擴張至無關產品修改。 |
+| TC-37-05 | 既有 scripts format／lint pass；兩檔都低於 800 行，lint／800／hooks configuration 不變。 |
+| TC-37-06 | 六 PC-36 implementation bytes 保持，十二檔 delivery union／protected others／dev／user files 保護；四 formal 唯一 route／history／local vs visible 正確。 |
+| TC-37-07 | Human 新 exact message 確認後正常完整 commit hooks 全通過；任何再次 failure 停止分類，不使用 --no-verify 或 hooksPath override。 |
+
+### Execution Ledger — PC-37
+
+| ID | Owner role | Status | 完成條件 | 驗證證據／待取得依據 |
+| --- | --- | --- | --- | --- |
+| PC-37 | Plan-Creator | completed | 建立 Human 授權最小 split、十二檔 delivery union、TC-37-01～07 與唯一 route。 | Human 新 scope、Explorer 無可刪確證冗餘、Planner static_isolation_split_preflight approved sufficiency；creation 不是 approval。 |
+| PR-37 | Plan-Reviewer | completed | 獨立審查原封 split／identity／helper／normal hooks／scope 與 history。 | Dispatcher 傳遞 pr37_test_split_review approved／no-fix；已確認 29 identities、TC-37-01～07、十二檔 delivery union、normal hooks／no-verify 禁止與歷史區隔。 |
+| IM-37 | Implementer | completed | PR-37 approved 後只兩 tests，保存 baseline／原封移動。 | Dispatcher 傳遞正式 completed／兩檔 self-verification，見下方證據；不是 TE-34 approval。 |
+| TE-34 | Tester | completed | 獨立驗證 qualified 29 identities／suite／target regression／lint／protected bytes。 | Dispatcher 傳遞獨立 approved／no-fix，TC-37-01～06 pass；TC-37-07 完整 normal hooks 待 actual delivery，見下方 evidence。 |
+| RV-34 | Reviewer | completed | 獨立確認 coverage／scope／protected facts／normal-hook readiness 不漂移。 | Dispatcher 傳遞獨立 approved／no-fix；own exact checks／TE transcript carry-forward／Reviewer 環境限制見下方 evidence。 |
+| DL-33 | Implementer | active | 新完整 staged semantic check／Human 新 message 確認／正常 hooks pass／non-force push visible。 | RV-34 completed／approved，交 stage／message preparation；TC-37-07 actual hooks pending；舊 message 不沿用，禁止 no-verify／hooksPath override，再次 failure 停止。 |
+| CH-31 | Implementer | pending | Visible／fresh matching review 後 evidence-backed reply／resolve，re-fetch 全 threads。 | 待 delivery／review／classification；無新 closure evidence。 |
+| HC-31 | Human | pending | 最終 delivered ready PR review。 | 待 CH-31 evidence 與 Human 決定；不 merge／release。 |
+
+### Current Route／Gates
+
+```text
+PC-37 completed → PR-37 completed／approved → IM-37 completed → TE-34 completed／approved → RV-34 completed／approved → DL-33 active → CH-31 pending → HC-31 pending
+```
+
+PC-37 completed → PR-37 active 是 creation historical snapshot。
+現引用 Dispatcher 傳遞獨立 pr37_test_split_review 正式 approved／no-fix；
+PR-37 completed／approved → IM-37 active 為前次 planning handoff historical snapshot。
+IM-37 completed → TE-34 active 為前次 implementation handoff historical snapshot；self-verification 不是 TE-34 approval。
+TE-34 completed／approved → RV-34 active 為前次 test handoff historical snapshot。
+現引用 Dispatcher 傳遞獨立 Reviewer approved／no-fix：RV-34 completed／approved → DL-33 active；
+已確認 29 identities／TC-37-01～07／十二檔 delivery union／正常 hooks 禁止 no-verify 與歷史區隔。
+TC-37-01～06 獨立 pass，RV-34 approved；尚無 actual delivery／closure verdict，各 pending／checkbox 不構成 approval。
+TC-37-07 正常完整 commit hooks 尚待 delivery／Human 新 message，不假稱已全 hooks pass。
+獨立 PR-37 approved 才 IM-37；獨立 TE-34 result 後交 RV-34；RV-34 approved 後才 DL-33。
+不逐 gate 重問 Human，但新 exact staged message confirmation／normal hook stop／final HC-31
+仍是明確 boundary。Push visible 後 fresh matching-head review／classification 才 evidence-backed
+CH-31 reply／resolve，re-fetch 全 threads，不假稱 closure；最後停 HC-31，不 merge／release。
+
+### Sources／Historical Delivery Boundary
+
+Dispatcher 提供：HEAD ba6422c8dbc1a74e56a0573573fdd1bf47177ae8 保持 visible；
+DL-32 正常 commit exit 1、SwiftLint exit 2，唯一已知 failure 是
+Tests/GitHubIntegrationTests/StaticIsolationTests.swift 801 行超過 800，其餘五項 checks pass。
+尚未 commit／push；原十檔 staged snapshot 與 PC-36 implementation 保留，
+formal factsync 仍 local，未以新文字冒充遠端可見。Human 最新授權本次最小責任拆分，不准提高 800。
+DL-32 的正常 hook blocker／未 completed／未 visible 是 superseded historical snapshot，
+由 PC-37 承接；CH-30／HC-30 仍 historical pending，未偽造 thread closure／Human approval。
+下方 PC-36 契約／approvals／所有 route、active-gate 與未交付文字只記錄其當時 historical snapshot，
+非 current route；其 technical facts 與 native pending 保留。
+
+### Blockers／Human Check／Last Updated
+
+2026-10-05 — PC-37 completed；引用獨立 pr37_test_split_review approved／no-fix，
+依 Dispatcher 傳遞獨立 Reviewer approved／no-fix，僅同步 RV-34 completed／approved → DL-33 active，CH-31／HC-31 pending。
+TC-37-01～06 pass；TC-37-07 完整 hooks 仍待 actual delivery／新 message 確認。Plan-Creator 只寫四 formal，
+未實作、測試、stage、commit／push、remote action 或自審。
+若需改 helper visibility／scanner／production／manifest／其他 path、discovery identities 或 coverage
+弱化／repositoryRoot 不同即停；測試環境 failure 交 Tester 分類，不以推論 pass。
+審批拒絕即停止該寫入、回報原始拒絕理由，不繞過。
+Human 新 message confirmation 與 HC-31 boundaries 保持；沒有本輪 hook-bypass 授權。
+
+### IM-37 — Completed Handoff／Self-Verification Evidence
+
+Dispatcher 傳遞 IM-37 正式 completed：只改兩 test files，original 801→750 行、new 60 行。
+完整 29 qualified identities 前後相同且無 duplicates；original 只去移動區塊，new @Test
+body／markers／assertions 與 baseline exact，兩份 repositoryRoot 同根。
+Implementer self-verification：focused suite 29 pass；target 76 tests／8 suites pass，
+format／lint／consumer checks exit 0，consumer 8 pass。此證據不是 TE-34 approval。
+548 other tracked files implementation-before／after byte-equal，包含當時四 formal、六 PC-36
+implementation files、configs／hooks／production；factsync 合法改四 formal，不假稱永遠 immutable。
+原 staged snapshot SHA-256 64d22be4843a09f25eebff5c03cb4093b7f89eef41d48de5ae3fc0c6d7859686
+保持；dev 未追蹤 .vscode/ 保留。Evidence locator：os.tmpdir() 下 rivet-im37-zlHvyP 的
+baseline before／after、discovery、after-result／checks logs，未新增 tracked evidence。
+此 handoff 當時交 TE-34 active，為 historical snapshot；最新獨立 verdict 見下節。
+TC-37-07 正常完整 commit hooks 尚待 delivery 與 Human 新 message
+確認，不能將 self-verification scripts pass 宣稱為完整 hooks 已通過。未新 commit／push／resolve。
+
+### TE-34 — Independent Verification Evidence
+
+現引用 Dispatcher 傳遞獨立 Tester 正式 approved／no-fix：TE-34 completed／approved，
+TC-37-01～06 pass；TC-37-07 仍 pending actual normal delivery hooks，不宣稱完整 hooks 已通過。
+完整 29 qualified identities exact、無 duplicate；只移動完整 @Test 區塊，
+original 750／new 60 行；body／markers／assertions 保持，repositoryRoot canonical 相同。
+Tester actual focused suite 29 tests／1 suite pass，target 76 tests／8 suites pass；
+scripts format／lint／consumer exit 0，lint 68 files／0 violations，consumer 8 pass。
+544 protected baseline files Tester-before／after byte-equal；原 staged snapshot
+64d22be4843a09f25eebff5c03cb4093b7f89eef41d48de5ae3fc0c6d7859686 保持，
+dev 未追蹤 .vscode/ 保留，無 core.hooksPath 設定。
+以上是獨立 Tester evidence，不是 Plan-Creator verdict；本次授權 factsync 合法改四 formal，
+不把 protected baseline 宣稱為永遠 immutable。此 handoff 當時交 RV-34 active，為 historical snapshot；最新 review verdict 見下節。
+Native VoiceOver／Increase Contrast／inactive、Arrow viewer pan 與舊 state non-pass／visual pending
+保持；尚未新 commit／push／thread closure。正常完整 hooks 待 Human 新 message 確認後 delivery，
+不得使用 --no-verify／hooksPath override。
+
+### RV-34 — Independent Result Review Evidence
+
+引用 Dispatcher 傳遞獨立 Reviewer 正式 approved／no-fix：RV-34 completed／approved，
+允許 DL-33 exact staging／new message 準備。Reviewer own checks：原封完整 @Test move，
+750／60 行、repositoryRoot 同根；544 protected files／六 PC-36 implementation bytes／index 不變。
+Reviewer 核對 TE-34 actual transcript（a4929a、session 85031 exit 0）：29 identities 無 duplicates、
+suite 29／1、target 76／8、scripts exit 0；採該獨立 Tester 證據 carry-forward。
+TE-34 未落盤 logs 明確保持 unavailable，不以 IM-37 self-verification logs 冒充 TE-34 logs。
+Reviewer 自行 discovery attempt 因環境／sandbox 失敗，不宣稱 reviewer 重跑 pass；
+此限制與可信 TE-34 transcript carry-forward 由獨立 Reviewer 明示，Plan-Creator 未自行判定。
+
+TC-37-07 actual 完整正常 commit hooks 仍 pending，須新 full staged semantic check／exact message
+Human 確認後才執行；不得使用 --no-verify／hooksPath override，任何再次 failure 停止分類。
+DL-33 active 僅 stage／message preparation，未新 commit／push／visible／threads closure。
+CH-31／HC-31 pending；native 待驗、Arrow viewer pan、舊 state non-pass／visual pending 保持。
+本次四 formal state sync 合法更新 baseline 中的文件，不宣稱 protected bytes 永遠 immutable。
+
+## PC-36 — Receipt 冒號前綴驗證／Component Canvas 等價可及性（Historical Snapshot）
+
+> 本節所有 route／active-gate／status wording 僅記錄 PC-37 前 historical snapshot，非 current gate。
+> DL-32 normal hooks failure 未 completed／visible；由上方 PC-37 最小 split 承接，原 PC-36 技術證據／native pending 保持。
+
+
+### Goal
+
+Human 已授權最小新增 scope：receipt colon-prefix validation／相關 tests 與 component canvas
+等價 accessibility；不改 ownership 或 layout。依 Planner receipt_canvas_minimal_preflight
+approved sufficiency 建立 PC-36；該 verdict 只放行 creation，不是 PR-36 approved。
+Receipt 不得以冒號前綴繞過本機路徑防護；canvas 不依 mouse 才能取得完整既有架構語意。
+
+### In-Scope
+
+1. Producer 只修 verifyReceipt 的 metadata 路徑識別與既有 producer regression tests。
+2. Component artifact 的既有 enhancer／verifier／BUILD 契約與生成 index.html，提供
+   完整、靜態、可見且 accessible 的 scene-equivalent semantic DOM。
+3. 四 formal 同步受限 scope／TC／route／historicality／local-versus-visible；既有 local factsync 保留。
+   CH-29 的新增 necessary findings 由本 cycle 承接，CH-29 historical human-check，
+   HC-29 historical pending；不宣稱 completed／threads closure。
+
+### Out-Of-Scope
+
+不改 ownership／retry policy／deferred contract、scene geometry／文字／edge route、viewer runtime
+或 global template。不得 deliver／重生 Archify outputs、手改 index.html 或 receipt、
+新增 tracked screenshots／receipts／viewports／檔案、patch／pin／dependency。
+不是 Swift implementation，不修改上游 Swift；不建立新的 artifact exception。
+
+### ReadOnly
+
+component scene.js 全 byte-equal：5 bands／10 boxes／12 edges、W／H、geometry、全部文字、
+ownership 與 routes 不變。其他 canvas、四份 Archify source／HTML／receipts／visual
+均 ReadOnly；state 已接受 containment non-pass／automated visualReview pending 保留。
+Producer BUILD、743 pins／五 targets／patch、upstream-pin.json、document-language.patch、
+global Archify／architecture-canvas、Swift／Tests／Package.swift、canonical prose、其他 topic
+以及 allowlist 外既有檔案均 ReadOnly。dev 不實作／改檔，未追蹤 .vscode/ 與使用者資料保留。
+Implementation 前建立 protected baseline；factsync 與 implementation 變更區間分開記錄。
+
+### Written
+
+Literal ten-file allowlist；不新增 tracked files：
+
+- `analysis/redefine-auth-subsystem-responsibilities/requirements.md`
+- `analysis/redefine-auth-subsystem-responsibilities/technical-spec.md`
+- `plan/redefine-auth-subsystem-responsibilities/redefine-auth-subsystem-responsibilities.plan.md`
+- `plan/redefine-auth-subsystem-responsibilities/redefine-auth-subsystem-responsibilities.step.md`
+- `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/archify-producer/run.mjs`
+- `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/archify-producer/producer.test.mjs`
+- `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/enhance-document-language.js`
+- `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/verify-document-language.js`
+- `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/BUILD.md`
+- `docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/index.html`
+
+### Deleted
+
+無。
+
+### Modify
+
+Plan-Creator 只改前四 formal；獨立 PR-36 approved 後，Implementer 只於既有 feature worktree
+修改後六檔。index.html 僅由既有 validate → raw build → artifact enhancer → verifier pipeline
+生成，不手改；temp evidence 可保存於 temp，不加入 Git。
+
+Receipt：識別例如 cwd:/outside/synthetic 的冒號前綴 POSIX，及 Windows drive／UNC／rooted
+路徑；遞迴涵蓋任意 metadata keys／values／nested arrays／command tokens。保留既有
+recursive path 防護、合法 relative 與 colon-nonpath positives；不得 blanket 禁冒號。
+Unsafe receipt fail-closed、nonzero，保留舊 receipt；raw stdout bytes 不 postprocess，
+PC-35 diagnostic sanitizer 不回退，不改 runtime／exports／其他 contract。
+
+Canvas：artifact-local enhancer 從 raw 完整 generated scene 產生 static semantic DOM，
+涵蓋所有 10 nodes 的 name／responsibility／about／既有可見 text、12 directed edges 的
+source／target／existing label，以及 context／caveats：legacy type、deferred decoration、
+Model C 已採用尚未實作。無 label 的 edge 不造 ownership 或新語意。
+只允許 static DOM／必要 artifact-local a11y attributes 與不破壞原 canvas 的 CSS；
+不改 scene／viewer runtime／global template。等價內容須可見、可由鍵盤及 AX tree 讀取，
+不得 hidden／display:none／aria-hidden 隱藏該等價內容。
+Verifier 獨立驗證完整性與 escape 安全；移除嚴格允許的 a11y／root-lang delta 後，
+raw／final byte-equal，scene bytes 不變。保留 duplicate／missing marker fail-closed、
+同目錄 temporary file／atomic rename 與兩次完整 fresh build byte-identical。
+
+### Non-Goal
+
+不將 AuthRequester 指派為 selected／decorated preparation owner、不添加 auth interface、
+不改 retry／refresh ownership 或 lifecycle topology、不重開 Model C contract。
+Browser AX／keyboard evidence 不等於 native VoiceOver pass；無原生證據時 VoiceOver 待驗，
+不得記通過。四 viewport 新 canvas evidence 不提升既有 state non-pass／visual pending。
+
+### TestCase
+
+| ID | 必須驗證的證據 |
+| --- | --- |
+| TC-36-01 | 冒號前綴 POSIX 在任意 key／nested object／array／command metadata 拒絕，不依固定 key 或本機前綴。 |
+| TC-36-02 | Windows drive／UNC／rooted、既有 traversal／backtick 與 PC-35 diagnostic regressions 均保持。 |
+| TC-36-03 | 合法 relative／colon-nonpath 接受，receipt Buffer bytes unchanged；unsafe nonzero／fail-closed、舊 receipt preserved。 |
+| TC-36-04 | Canvas 等價 DOM 完整 10 nodes／12 directed edges／context caveats、HTML escape safe；duplicate／missing markers fail-closed；鍵盤／AX tree 不需 mouse 可讀，無 native VoiceOver 證據則待驗。 |
+| TC-36-05 | validate 0 errors／0 warnings → raw build → enhance → verify，兩次 fresh build byte-identical；除 allowed a11y／root-lang delta 外 raw／final 及 scene bytes 相同。 |
+| TC-36-06 | 1440×900、1600×1000、1920×1080、2048×1320 驗證；1440／2048 light／dark 人工確認無 layout／ownership drift、互動保持，screenshots／evidence 僅 temp。 |
+| TC-36-07 | Literal ten-file allowlist、protected baseline、四 formal 唯一 current route／歷史／visible vs local／human boundaries 一致。 |
+
+### Execution Ledger — PC-36
+
+| ID | Owner role | Status | 完成條件 | 驗證證據／待取得依據 |
+| --- | --- | --- | --- | --- |
+| PC-36 | Plan-Creator | completed | 建立 Human 授權的兩項最小回修契約、十檔 allowlist、TC-36-01～07 與唯一 route。 | Human scope 授權、Planner receipt_canvas_minimal_preflight approved sufficiency、本次四 formal 寫入；不是 planning approval。 |
+| PR-36 | Plan-Reviewer | completed | 獨立審查 receipt／equivalent DOM 邊界、scope／TC／history／route／human boundaries。 | pr36_receipt_canvas_review 正式 approved／required fix 無，全四 formal／完整 diff review 完成；不是後續 gate approval。 |
+| IM-36 | Implementer | completed | PR-36 approved 後限六 implementation files、產物僅 pipeline 生成；完整 handoff。 | Dispatcher 傳遞正式 completed；producer 11/11、source-derived 10／12、two fresh builds、543 protected bytes unchanged，見下方 IM-36 self-verification evidence；不是 TE-33 approval。 |
+| TE-33 | Tester | completed | 獨立驗證 TC-36-01～07、receipt raw bytes／canvas raw-final allowed delta／protected bytes。 | Dispatcher 傳遞 te33_recovery_verify 正式 approved／completed、required fix 無；完整獨立 evidence 見下節，native 項目仍待驗。 |
+| RV-33 | Reviewer | completed | 獨立確認兩必要 findings 消除、evidence／scope／ownership／layout 不漂移。 | Dispatcher 傳遞 rv33_receipt_canvas_review 正式 approved／completed、required fix 無；獨立 evidence 見下節。 |
+| DL-32 | Implementer | active | RV-33 approved 後 staged exact diff／新 message Human 確認、topic commit／non-force push visible。 | RV-33 completed／approved；交 exact staging／message 準備，待新 Human 確認；本輪無 no-verify exception，禁止 hooksPath override。 |
+| CH-30 | Implementer | pending | Visible／fresh matching review 後 evidence-backed reply／resolve；re-fetch 無未分類 feedback。 | 待 delivery／fresh review／closure evidence，不假稱 resolve 完成。 |
+| HC-30 | Human | pending | Review 最終 delivered ready PR。 | 待 CH-30 evidence 與 Human 明示 final 決定；不 merge／release。 |
+
+
+### Current Route／Gates
+
+```text
+PC-36 completed → PR-36 completed／approved → IM-36 completed → TE-33 completed／approved → RV-33 completed／approved → DL-32 active → CH-30 pending → HC-30 pending
+```
+
+PC-36 creation completed；當時 PR-36 active／未 approved 為 creation historical snapshot。
+現引用獨立 pr36_receipt_canvas_review 明示 approved、required fix 無，完整四 formal／diff review 已完成，
+PR-36 completed／approved → IM-36 active 為前次 planning handoff historical snapshot。
+IM-36 completed → TE-33 active 為前次 implementation handoff historical snapshot；
+Implementer self-verification 不是 TE-33／RV-33 approval。
+現依 Dispatcher 傳遞獨立 te33_recovery_verify 正式 approved／completed、required fix 無，
+TE-33 completed／approved → RV-33 active 為前次 test handoff historical snapshot。
+現引用 Dispatcher 傳遞獨立 rv33_receipt_canvas_review 正式 approved／completed、required fix 無，
+RV-33 completed／approved → DL-32 active；delivery／closure 尚未 completed。
+不逐 gate 再詢問 Human；新 staged exact diff／git-commit-convention message 仍需新的
+Human 明示確認才 commit／non-force push。正常 hooks 先跑；舊 no-verify exception 不沿用，
+新增本次 exception 需 Human 明示。禁止 hooksPath override，不修改上游 Swift。
+Push visible／fresh matching-head review／classification 後才 CH-30 evidence-backed reply／resolve，
+重新抓取所有 threads；新未分類／超 scope finding 回報，不假稱 closure。HC-30 final human review，
+不 merge／release。Pending future steps 不是 approval。
+
+### Sources／Historical Human-Check
+
+Dispatcher 傳遞 Reviewer snapshot：actual head ba6422c8dbc1a74e56a0573573fdd1bf47177ae8
+已 visible；59 threads／41 unresolved、matching review Completed，submitted
+2026-10-05T04:19:45Z。這只是獨立 Reviewer 最後 snapshot，非 Plan-Creator 新 live 查詢。
+兩條新增 findings 為 PRRT_kwDOUFu0Cc6o51NR／PRRT_kwDOUFu0Cc6o51NT，
+涉及 receipt colon-prefix 防護與 component canvas 等價可及性，由本次 authorized scope 承接。
+CH-29 historical human-check／HC-29 historical pending 保留，不改 completed。
+DL-31、DL-30 已交付與本輪／歷史 hook exception 的原事實保留；沒有 new reply／resolve evidence。
+既有 DL-31 delivery factsync 與本次 PC-36 四 formal 都仍 local、未新 commit／push，
+不得宣稱這些文字已遠端可見或新 findings 已閉合。
+
+### Blockers／Human Check／Last Updated
+
+2026-10-05 creation snapshot：PC-36 completed，當時 PR-36 active，後續 pending。
+前次 planning handoff snapshot：pr36_receipt_canvas_review approved／required fix 無，當時 IM-36 active。
+2026-10-05 最新引用 Dispatcher 傳遞獨立 rv33_receipt_canvas_review 正式 approved／completed、required fix 無，
+只同步四 formal：RV-33 completed／approved → DL-32 active，CH-30／HC-30 pending。
+PR-36／TE-33 approved、十檔 allowlist、local factsync／history 保持；VoiceOver／Increase Contrast／inactive
+原生待驗保留。result-review approval 來自獨立 Reviewer，不是 Plan-Creator 判定；尚無 delivery／closure approval。
+
+### IM-36 — Completed Handoff／Self-Verification Evidence
+
+2026-10-05 Dispatcher 傳遞 Implementer 正式 completed：只六 implementation files 變更，
+四 formal 在 implementation-before／after 區間未動；549 tracked baseline 中其餘 543 byte-equal。
+此區間包括當時四 formal，本次授權 factsync 會合法改四 formal，不能誤稱永遠 immutable。
+Producer colon metadata／unsafe stdout 舊 receipt protection 兩項 RED failures → GREEN 11/11。
+Canvas static semantic DOM source-derived 10 nodes／12 edges／全部 context，HTML escaped；
+獨立 verifier 不 import enhancer，檢查 strict projection／CSS／markers，移除 allowed delta 後 raw bytes 相同。
+6 tamper rejects、4 bad-marker cases 既有 output preserved、escape fixture pass；
+兩次 fresh build validate 0 errors／0 warnings、byte-identical，generated index SHA-256：
+2bd759c3366fcdb3033ebd0c213bf1c21ad79df6a8f7b13df6183d2b3b30c81e。
+四 viewport no overflow；1440／2048 dark／light 人工檢查無 drift／obstruction。
+AX full content、Tab focus、PageDown scroll 0→96、PageUp→0、End→2342、Home→0，canvas hash unchanged。
+Arrow keys 由原 viewer pan 接管，不能宣稱 arrow-scroll pass；native VoiceOver／Increase Contrast／
+inactive 待驗，browser AX 不代 native pass。全部數據是 Implementer self-verification，不是 TE-33 approval。
+Temp evidence locator：os.tmpdir() 下 rivet-im36-WDXJii 的 baseline／protected／raw repeat／screens／
+.playwright-cli／harness；不記本機絕對路徑或新增 tracked evidence。Plan-Creator 未重跑驗證。
+此 self-verification handoff 當時交 TE-33 active，為 historical snapshot；最新獨立 verdict 見下節。
+未新 commit／push／resolve，state 舊 non-pass／visual pending 保留。
+Scope／locked decision／path 不明、需改 ReadOnly 或新增 tracked artifact 即停。
+審批拒絕即停該寫入並回報原始 action／reason，不繞過。VoiceOver native 待驗保持，
+新 commit message／特定 no-verify exception／final Human Check boundaries 維持。
+Plan-Creator 未實作、跑測試、審查自己產出或操作 Git／GitHub。
+
+### TE-33 — Server Recovery／Independent Verification Evidence
+
+Server restart 中斷舊 Tester；當時僅有 producer 11/11 的片段，未落盤的舊 temp 為空，
+不能冒充正式 gate approval。現引用 Dispatcher 傳遞新獨立 te33_recovery_verify 正式 verdict：
+TE-33 approved／completed、required fix 無；Plan-Creator 只記錄交接，不重跑驗證或產生 verdict。
+獨立 temp evidence locator：os.tmpdir() 下 rivet-te33-independent-QfOIXh，未新增 tracked evidence。
+
+獨立驗證 TC-36-01～07：actual producer suite 11/11；90 unsafe metadata cases 全拒絕，
+42 relative／colon-nonpath positives 全接受且 raw bytes unchanged；suite 的 unsafe stdout
+nonzero／舊 receipt preservation 與 PC-35 diagnostic regressions 通過。
+兩次 fresh canvas validate 均 0 errors／0 warnings，build → enhance → verify byte-identical，
+index SHA-256：
+2bd759c3366fcdb3033ebd0c213bf1c21ad79df6a8f7b13df6183d2b3b30c81e。
+等價 DOM 完整 10 nodes／12 directed edges／context，6 tamper rejects、4 bad-marker cases、
+escape fixture 與既有 output preservation 通過；strict allowed delta／scene bytes 不變。
+Browser AX 包含完整等價內容、Tab focus、PageDown 0→96、PageUp→0、End→2342、Home→0，
+canvas hash unchanged；Arrow keys 僅既有 viewer pan，不宣稱 arrow-scroll pass。
+四 viewport no overflow；1440／2048 dark／light 由獨立 Tester 親自 view，無 drift／obstruction。
+
+Tester-before／after 區間全部 549 tracked files byte-equal；539 與 HEAD byte-equal，
+十檔 allowlist 符合、index empty、dev tracked clean／未追蹤 .vscode/ 保留。
+該區間包含當時四 formal，本次 factsync 合法改四 formal，不把 baseline 宣稱為永遠 immutable。
+VoiceOver／Increase Contrast／inactive 仍待原生驗證；browser evidence 不代 native pass。
+TE-33 approval 當時只放行 RV-33 active，為 test handoff historical snapshot；最新 review verdict 見下節。
+當時尚無 result-review approval；目前仍未新 delivery visible 或 thread closure。
+
+### RV-33 — Independent Result Review Evidence
+
+2026-10-05 引用 Dispatcher 傳遞獨立 rv33_receipt_canvas_review 正式 verdict：
+RV-33 approved／completed、required fix 無。Plan-Creator 只同步已明示 verdict，不自行放行。
+Reviewer actual producer suite 11/11；另獨立 24 unsafe metadata cases 全拒絕，
+20 relative／colon-nonpath positives 全接受且 Buffer bytes unchanged。
+Reviewer 自行 raw → final verifier pass；generated index 與 TE-33 兩次 fresh output byte-equal，
+SHA-256：2bd759c3366fcdb3033ebd0c213bf1c21ad79df6a8f7b13df6183d2b3b30c81e。
+Reviewer 已核對 Tester logs／browser AX／keyboard evidence，並親自 view 1440 dark、2048 light：
+無 layout／ownership drift；其餘 exact-byte evidence carry-forward，不假稱全部視窗重新驗證。
+539 tracked files HEAD byte-equal，僅十檔 allowlist changed、index empty、diff check pass；
+dev 未追蹤 .vscode/ 保留。scope／native pending／history／local-versus-visible 無漂移。
+
+RV-33 approval 只放行 DL-32 active 的 exact staging／message 準備。
+新 commit message 仍須 Human 明示確認；本輪尚無 no-verify exception，禁止 hooksPath override，
+不修改上游 Swift。四 formal 同步及六 implementation files 仍 local，未新 commit／push／resolve。
+CH-30／HC-30 pending；native VoiceOver／Increase Contrast／inactive 與既有 state non-pass／
+visual pending 不提升，Arrow keys 僅既有 viewer pan。未宣稱 delivery visible 或 thread closure。
+
+## PC-35 — Diagnostic Sanitizer 最小回修（Historical Snapshot）
+
+> 本節 route／active gate／狀態措辭只記錄 PC-36 前 historical snapshot，非 current route／gate。
+> CH-29 新 finding 後停於 human-check、HC-29 pending，由上方 PC-36 授權 cycle 承接；不宣稱 closure。
+> DL-31 ba6422c visible、已查證交付／hook exception／歷史限制與未提交 factsync 原事實保留。
 
 ### Goal
 
@@ -1658,14 +2086,14 @@ non-pass／automated visualReview pending／歷史 evidence 照實保留，不�
 | IM-35 | Implementer | completed | PR-35 approved 後，只修兩 producer files diagnostic sanitizer 與 regressions，完整 bounded handoff。 | Dispatcher 傳遞 Implementer completed；11/11、72 fixtures、547 protected bytes unchanged 為 self-verification，見下方 evidence；不是獨立 test approval。 |
 | TE-32 | Tester | completed | 獨立驗證 TC-35-01～06 與 unchanged bytes，明示 verdict。 | 獨立 Tester approved／completed、required fix 無；120 CLI negatives／6 controls、producer 11/11、543 protected bytes unchanged，見下方 TE-32 evidence；不是 RV-32 approval。 |
 | RV-32 | Reviewer | completed | 獨立成果審查必要 finding 已消除、no scope／contract drift；明示 verdict。 | 獨立 Reviewer approved／completed、required fix 無；11/11、48 CLI negatives／6 controls、543 protected bytes unchanged，見下方 RV-32 evidence；不是 delivery／final human approval。 |
-| DL-31 | Implementer | active | RV-32 approved 後 staged exact diff／新 message 確認、topic commit／non-force push visible。 | RV-32 completed／approved 已取得；現限 staging／message preparation，待新 Human exact message confirmation；舊 no-verify 不沿用，禁止 hooksPath override，未 delivery visible。 |
-| CH-29 | Implementer | pending | Push visible／fresh matching-head review 後 evidence-backed reply／resolve，重新抓取無新未分類 feedback。 | 待 delivery 與 fresh review／threads evidence；目前未留言／resolve，不能假稱 closure。 |
+| DL-31 | Implementer | completed | RV-32 approved 後 staged exact diff／新 message 確認、topic commit／non-force push visible。 | ba6422c8dbc1a74e56a0573573fdd1bf47177ae8 completed／visible；2026-10-05 Human 本輪單次 no-verify，無 hooksPath override，六檔確認版、local／tracking／remote／PR head 一致；詳見下方 delivery evidence。 |
+| CH-29 | Implementer | active | Push visible／fresh matching-head review 後 evidence-backed reply／resolve，重新抓取無新未分類 feedback。 | DL-31 completed／visible；待新 head review／threads evidence，本次新 formal factsync 尚 local，未留言／resolve，不宣稱 closure。 |
 | HC-29 | Human | pending | 最終已交付 ready PR 的 human review。 | 待 CH-29 evidence 與 Human 明示 final 決定；不 merge／release。 |
 
 ### Current Route／Gates
 
 ```text
-PC-35 completed → PR-35 completed／approved → IM-35 completed → TE-32 completed／approved → RV-32 completed／approved → DL-31 active → CH-29 pending → HC-29 pending
+PC-35 completed → PR-35 completed／approved → IM-35 completed → TE-32 completed／approved → RV-32 completed／approved → DL-31 completed／visible → CH-29 active → HC-29 pending
 ```
 
 PC-35 creation completed；creation 時 PR-35 active／未 approved 為 historical snapshot。
@@ -1674,13 +2102,16 @@ PR-35 approved → IM-35 active 為前次 gate-sync historical snapshot。
 IM-35 completed → TE-32 active 為前次 implementation handoff historical snapshot；
 Implementer self-verification 不構成獨立 test／result-review approval。
 TE-32 completed／approved → RV-32 active 為前次 test handoff historical snapshot。
-現依 Dispatcher 傳遞獨立 Reviewer RV-32 completed／approved、required fix 無，只同步
-RV-32 completed／approved → DL-31 active；僅進入 staging／message preparation，未 delivery visible。
+RV-32 completed／approved → DL-31 active 為 pre-delivery historical snapshot。
+現依 Dispatcher 已查證交付，DL-31 ba6422c8dbc1a74e56a0573573fdd1bf47177ae8 completed／visible，
+交 CH-29 active → HC-29 pending；未宣稱新 head review／threads closure 完成。
 獨立 Tester TE-32 approved 後才 RV-32；獨立 Reviewer RV-32 approved 後才 DL-31。
 DL-31 依新 staged diff／git-commit-convention 提出新的 exact message，取得 Human 明示
 確認後才 commit／non-force push。舊 no-verify 授權不沿用；正常 hooks 先跑，新增 exception
 須對本次特定 commit 明示授權。絕不自行加入 hooksPath override，不修改上游 Swift。
-四檔 factsync／本次 planning 均仍 local，未新 commit／push；不能宣稱遠端已可見。
+四檔 factsync／planning 當時 local 未 commit／push 為 pre-delivery historical snapshot；
+已由 DL-31 交付的六檔版本 visible。本次 2026-10-05 新四 formal factsync 仍 local、未新 commit／push，
+不能當作遠端可見證據；Human 本輪 no-verify 單次授權不覆蓋未來新 commit。
 Push visible 與 fresh matching-head review／thread classification 後才處理 CH-29：
 必要事項有 visible evidence 才 resolve；非必要項目留言說明後 resolve；重新抓取確認，
 新未分類／超 scope finding 回報 Dispatcher／human boundary，不假稱 closure。
@@ -1697,7 +2128,8 @@ matching review PRR_kwDOUFu0Cc8AAAABQHvrZg 於 2026-10-01T08:30:41Z submitted CO
 bot Completed；57 threads／39 unresolved，不能當作永遠 fresh 或 closure evidence。
 Necessary finding PRRT_kwDOUFu0Cc6n3RbR 指向 run.mjs:180 的四個 Unix prefix
 sanitizer；Reviewer 的任意 Unix／Windows 三個合成案例仍洩漏診斷路徑。
-Current-route feedback PRRT_kwDOUFu0Cc6n3RbX 已 local 修正、仍 pending-visible；
+Current-route feedback PRRT_kwDOUFu0Cc6n3RbX 當時 local 修正／pending-visible 為 CH-28 historical snapshot；
+原修正已納入 DL-31 交付版本；本次 delivery factsync 則仍 local，未完成 reply／resolve。
 PRRT_kwDOUFu0Cc6n3Rbe 對 state guards 的 feedback 為 nonessential，Reviewer 指出
 state L21／L28／L36 guards 與 spec L117–120 一致；後續證據 reply／resolve，尚未執行。
 DL-30 已推送與接受偏離事實保留於下方 PC-34 historical section，不能以新 route 抹除。
@@ -1712,8 +2144,10 @@ DL-30 已推送與接受偏離事實保留於下方 PC-34 historical section，�
 RV-32／DL-31／CH-29／HC-29 pending，未新增 test approval／delivery-visible 宣稱。
 前次 test handoff snapshot：獨立 Tester TE-32 completed／approved、required fix 無，當時 RV-32 active、
 DL-31／CH-29／HC-29 pending，未新增 result-review approval／delivery-visible 宣稱。
-最新依獨立 Reviewer RV-32 completed／approved、required fix 無，只同步四 formal，交 DL-31 active；
-CH-29／HC-29 pending，PR-35 approved／IM-35 completed／TE-32 approved 保持；未新增 delivery-visible／closure 宣稱。
+前次 result-review handoff snapshot：RV-32 completed／approved、required fix 無，當時 DL-31 active、
+CH-29／HC-29 pending，未新增 delivery-visible／closure 宣稱。
+2026-10-05 最新依 Dispatcher 已查證交付，只同步四 formal：DL-31 completed／visible → CH-29 active → HC-29 pending。
+PR-35 approved／IM-35 completed／TE-32 approved／RV-32 approved 保持；未新增 matching-head review completed／threads closure。
 
 ### IM-35 — Completed Handoff／Self-Verification Evidence
 
@@ -1749,9 +2183,29 @@ Reviewer 自身 producer 11/11；48 真 CLI negative cases 全部遮蔽、stdout
 543 protected tracked files 與 baseline 及 HEAD byte-equal；dev clean／index empty 為 review snapshot。
 Reviewer evidence 不替代 delivery visible 或 Human final；state containment non-pass、automated
 visualReview pending 與全部歷史限制保留，不重新生成圖表或宣稱新的 visual pass。
-現交 DL-31 active，僅 staging／exact message preparation；新 exact message 仍需 Human 確認，
+當時交 DL-31 active，僅 staging／exact message preparation；當時新 exact message 仍需 Human 確認，
 舊 no-verify 不沿用，禁止 hooksPath override，不修改上游 Swift。
-CH-29／HC-29 pending；未新 commit／push／resolve，不填未知 delivery SHA。
+當時 CH-29／HC-29 pending、未新 commit／push／resolve，為 pre-delivery historical snapshot。
+
+### DL-31 — Published Delivery／CH-29 Handoff
+
+2026-10-05 引用 Dispatcher 已查證 Implementer delivery：
+commit ba6422c8dbc1a74e56a0573573fdd1bf47177ae8，parent b830bb481d43ba552548859ecae9ae60511f783e；
+exact message「fix(archify-producer): 遮蔽診斷中的本機路徑」，六檔確認版均在 literal allowlist。
+Human 本輪明示單次 no-verify 授權後，實際 command（僅記錄，不執行）為：
+~~~text
+git commit --no-verify -m 'fix(archify-producer): 遮蔽診斷中的本機路徑'
+~~~
+無 -c／hooksPath override；前次正常 hook 因既有 SwiftLint 801 > 800 失敗，其他五項 Passed，
+不修改上游 Swift。此例外僅此 commit，不能沿用至本次新 factsync 或任何未來 commit。
+Normal non-force push 至 origin 的 docs/redefine-auth-subsystem-responsibilities，exit 0；
+local／tracking／actual remote／PR #37 head 一致。PR OPEN／ready、CLEAN／checks [] 為交付 snapshot，
+feature 當時 clean，543 protected files 與 implementation baseline byte-equal；dev tracked／index clean，
+未追蹤 .vscode/ 保留。Plan-Creator 未重跑 Git／tests／GitHub，僅引用已查證證據。
+DL-31 completed／visible → CH-29 active → HC-29 pending；matching 新 head review 是否 completed 尚未查證，
+沒有 threads closure 證據，不宣稱 replied／resolved。State non-pass／automated visualReview pending 保留。
+本次新四 formal delivery factsync 仍 local、未新 commit／push，不能當作遠端已 visible。
+不 merge／release；需要新增 commit 時重新 staged-diff／exact message Human 確認，no-verify 不沿用。
 Scope、locked contract 或 evidence 不明、需動 ReadOnly／generated artifact 或超六檔即停。
 自動審批拒絕即停止該寫入並回報原始 action／拒絕理由，不繞過。
 未執行實作／tests／Git／GitHub；新 commit message 確認及 final Human Check 保持。

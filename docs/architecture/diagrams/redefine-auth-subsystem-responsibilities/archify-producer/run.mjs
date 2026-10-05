@@ -86,7 +86,7 @@ export function verifyReceipt(bytes, root, input, output) {
       // Inspect every string, independent of field names. Command strings also
       // carry paths as quote/backtick-framed arguments or option=value tokens.
       const tokens = value.split(/[\s"'`=,;()[\]{}]+/);
-      if (tokens.some(token => /^[\\/]/.test(token) || /^[a-zA-Z]:/.test(token) ||
+      if (tokens.some(token => /(?:^|:)[\\/]/.test(token) || /(?:^|:)[a-zA-Z]:/.test(token) ||
         token.split(/[\\/]/).includes('..')))
         throw new Error('Receipt metadata path is not repository-relative.');
     } else if (Array.isArray(value)) value.forEach(checkPaths);

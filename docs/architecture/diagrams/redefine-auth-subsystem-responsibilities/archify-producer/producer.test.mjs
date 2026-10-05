@@ -203,10 +203,13 @@ test('receipt metadata rejects unsafe paths recursively, including command argum
     value => ({ provenance: { temp: value } }),
     value => ({ provenance: { nested: { records: [{ anything: value }] } } }),
     value => ({ metadata: { nested: [[value]] } }),
+    value => ({ metadata: { nested: [{ [value]: 'relative/file.json' }] } }),
     value => ({ commandMetadata: { argv: ['node', '--source=' + value] } }),
     value => ({ commandMetadata: { command: 'node tool.mjs --root "' + value + '"' } })
   ];
-  const unsafe = ['/outside/local', 'C:\\outside\\local', 'D:/outside/local',
+  const unsafe = ['cwd:/outside/synthetic', 'custom:/synthetic/local', 'nested:cwd:/synthetic/local',
+    'prefix:C:\\outside\\local', 'prefix:\\\\server\\share\\local',
+    'prefix:\\outside\\local', '/outside/local', 'C:\\outside\\local', 'D:/outside/local',
     'C:drive-relative', '\\\\server\\share\\local', '//server/share/local',
     '\\outside\\local', '../outside', 'nested/../outside', 'nested\\..\\outside'];
   for (const value of unsafe) {
@@ -215,7 +218,8 @@ test('receipt metadata rejects unsafe paths recursively, including command argum
       assert.throws(() => verifyReceipt(bytes, repository, input, output), /relative/, JSON.stringify(place(value)));
     }
   }
-  for (const value of ['docs/relative/file.json', './docs/file.json', 'nested\\relative\\file.json']) {
+  for (const value of ['docs/relative/file.json', './docs/file.json', 'nested\\relative\\file.json',
+    'cwd:docs/relative.json', 'status:ready', 'time:12:30', 'urn:synthetic:record']) {
     for (const place of placements) {
       const bytes = Buffer.from(JSON.stringify({ ...receipt, ...place(value) }));
       const before = Buffer.from(bytes);
@@ -287,7 +291,7 @@ test('unsafe delivery stdout metadata fails closed and preserves the previous re
       // Simulate untrusted producer stdout only in this private test fixture.
       const capture = fs.readdirSync(fixtures).find(name => name.startsWith('.archify-receipt-'));
       const raw = JSON.parse(fs.readFileSync(path.join(fixtures, capture)));
-      raw.provenance = { nested: [{ arbitrary: '\\\\server\\share\\local' }] };
+      raw.provenance = { nested: [{ arbitrary: 'cwd:/outside/synthetic' }] };
       fs.ftruncateSync(args[2].stdio[1], 0);
       fs.writeSync(args[2].stdio[1], Buffer.from(JSON.stringify(raw)), 0, undefined, 0);
       injected = true;
