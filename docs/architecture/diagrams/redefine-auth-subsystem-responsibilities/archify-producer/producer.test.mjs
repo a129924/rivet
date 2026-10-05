@@ -23,6 +23,56 @@ const state = JSON.parse(fs.readFileSync(path.join(repository,
   'docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/auth-flow-state.json')));
 const invoke = args => spawnSync(process.execPath, [path.join(producer, 'run.mjs'), ...args],
   { cwd: fixtures, encoding: 'utf8', maxBuffer: 10000000 });
+// Inject synthetic filesystem failures into the real CLI entry/catch without
+// reading a machine path or invoking a generator. Diagnostic text is data only.
+const diagnostic = (message, schema = false) => spawnSync(process.execPath,
+  ['--input-type=module', '-e', `
+    import fs from 'node:fs';
+    import { pathToFileURL } from 'node:url';
+    const originalRealpath = fs.realpathSync;
+    fs.realpathSync = (...args) => {
+      if (!String(args[0]).endsWith('__synthetic_root__')) return originalRealpath(...args);
+      const error = new Error(process.env.SYNTHETIC_DIAGNOSTIC);
+      if (process.env.SYNTHETIC_SCHEMA === 'yes') error.archifyDiagnostics = [];
+      throw error;
+    };
+    process.argv[1] = process.env.PRODUCER_ENTRY;
+    process.argv.push('--repo-root', '__synthetic_root__');
+    await import(pathToFileURL(process.argv[1]));
+  `], { cwd: fixtures, encoding: 'utf8', env: { ...process.env,
+    PRODUCER_ENTRY: path.join(producer, 'run.mjs'), SYNTHETIC_DIAGNOSTIC: message,
+    SYNTHETIC_SCHEMA: schema ? 'yes' : 'no' } });
+test('CLI diagnostics redact arbitrary POSIX and Windows paths, including quoted spaces', () => {
+  const paths = ['/outside/local', '/opt/synthetic/input.json', '/',
+    'C:\\synthetic\\input.json', 'D:/synthetic/input.json',
+    '\\\\server\\share\\input.json', '\\synthetic\\input.json',
+    '/outside/synthetic directory/input.json', 'C:\\synthetic directory\\input.json'];
+  for (const value of paths) {
+    for (const message of [
+      'ENOENT: open ' + value,
+      'ENOENT: open "' + value + '"; safe context',
+      "ENOENT: open '" + value + "'; safe context",
+      'ENOENT: open `' + value + '`; safe context',
+      'ENOENT: source=' + value,
+      'ENOENT: [' + value + ']',
+      'ENOENT: source->' + value,
+      'ENOENT: first line\n' + value
+    ]) {
+      const result = diagnostic(message);
+      assert.equal(result.status, 1);
+      assert.equal(result.stdout, '');
+      assert.match(result.stderr, /^ENOENT: /);
+      assert.match(result.stderr, /\[local path\]/);
+      assert.equal(result.stderr.includes(value), false, 'Synthetic path must be absent.');
+      if (message.endsWith('safe context')) assert.match(result.stderr, /safe context/);
+    }
+  }
+  const relative = 'Upstream pin mismatch: renderers/shared/utils.mjs';
+  assert.equal(diagnostic(relative).stderr, relative + '\n');
+  const schema = diagnostic('Unsafe schema context /outside/synthetic source.json', true);
+  assert.equal(schema.status, 1);
+  assert.equal(schema.stderr, 'Source schema validation failed.\n');
+});
 test.after(() => {
   fs.rmSync(runtime, { recursive: true, force: true });
   fs.rmSync(fixtures, { recursive: true, force: true });

@@ -172,12 +172,23 @@ export async function run(args, options = {}) {
     fs.rmSync(runtime, { recursive: true, force: true });
   }
 }
+function sanitizeDiagnostic(message) {
+  // Paths in quoted diagnostics may contain spaces. Preserve the surrounding
+  // diagnostic, but redact through the matching quote, not just one word.
+  const redact = text => text.replace(/(^|[^a-zA-Z0-9_.\\/-])(?:[a-zA-Z]:[\\/]|[\\/])[^\r\n]*/g,
+    '$1[local path]');
+  const quoted = String(message).replace(/(["'`])([^\r\n]*?)\1/g,
+    (_, quote, content) => quote + redact(content) + quote);
+  // Unquoted paths with spaces have no reliable end delimiter. Fail closed
+  // through the line end while retaining the safe error prefix.
+  return redact(quoted);
+}
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { process.exitCode = await run(process.argv.slice(2)); }
   catch (error) {
     // Safe bounded diagnostics; never persist tool installation/runtime paths.
     const message = error.archifyDiagnostics ? 'Source schema validation failed.' :
-      String(error.message).replace(/(?:\/Users\/|\/home\/|\/private\/|\/var\/)[^\s"']+/g, '[local path]');
+      sanitizeDiagnostic(error.message);
     console.error(message);
     process.exitCode = 1;
   }
