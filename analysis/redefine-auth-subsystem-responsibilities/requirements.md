@@ -1869,7 +1869,7 @@ Arrow keys 既有 viewer pan、state containment non-pass／automated visualRevi
 ### Current Route／Gates
 
 ```text
-PC-37 completed → PR-37 completed／approved → IM-37 completed → TE-34 completed／approved → RV-34 completed／approved → DL-33 active → CH-31 pending → HC-31 pending
+PC-37 completed → PR-37 completed／approved → IM-37 completed → TE-34 completed／approved → RV-34 completed／approved → DL-33 completed／visible → CH-31 active → HC-31 pending
 ```
 
 PC-37 completed → PR-37 active 是 creation historical snapshot。
@@ -1877,10 +1877,13 @@ PC-37 completed → PR-37 active 是 creation historical snapshot。
 PR-37 completed／approved → IM-37 active 為前次 planning handoff historical snapshot。
 IM-37 completed → TE-34 active 為前次 implementation handoff historical snapshot；self-verification 不是 TE-34 approval。
 TE-34 completed／approved → RV-34 active 為前次 test handoff historical snapshot。
-現引用 Dispatcher 傳遞獨立 Reviewer approved／no-fix：RV-34 completed／approved → DL-33 active；
+RV-34 completed／approved → DL-33 active 為前次 review handoff historical snapshot。
+現依 Dispatcher actual delivery：DL-33 62462476 completed／visible → CH-31 active → HC-31 pending；
 已確認 29 identities／TC-37-01～07／十二檔 delivery union／正常 hooks 禁止 no-verify 與歷史區隔。
-TC-37-01～06 獨立 pass，RV-34 approved；尚無 actual delivery／closure verdict，各 pending／checkbox 不構成 approval。
-TC-37-07 正常完整 commit hooks 尚待 delivery／Human 新 message，不假稱已全 hooks pass。
+TC-37-01～06 獨立 pass，RV-34 approved；TC-37-07 現依 actual normal commit 六完整 hooks Passed。
+Human 新 exact message 已確認、正常 commit／push exit 0，未使用 no-verify／-c／hooksPath override。
+尚無 fresh matching-head review／closure verdict，pending／checkbox 不構成 approval。
+本次新四 formal factsync 仍 local、未再 commit／push，不冒充遠端可見狀態。
 獨立 PR-37 approved 才 IM-37；獨立 TE-34 result 後交 RV-34；RV-34 approved 後才 DL-33。
 不逐 gate 重問 Human，但新 exact staged message confirmation／normal hook stop／final HC-31
 仍是明確 boundary。Push visible 後 fresh matching-head review／classification 才 evidence-backed
@@ -1901,8 +1904,9 @@ DL-32 的正常 hook blocker／未 completed／未 visible 是 superseded histor
 ### Blockers／Human Check／Last Updated
 
 2026-10-05 — PC-37 completed；引用獨立 pr37_test_split_review approved／no-fix，
-依 Dispatcher 傳遞獨立 Reviewer approved／no-fix，僅同步 RV-34 completed／approved → DL-33 active，CH-31／HC-31 pending。
-TC-37-01～06 pass；TC-37-07 完整 hooks 仍待 actual delivery／新 message 確認。Plan-Creator 只寫四 formal，
+依 Dispatcher actual delivery evidence，只同步 DL-33 62462476 completed／visible → CH-31 active → HC-31 pending。
+TC-37-01～06 pass，TC-37-07 actual 完整正常 hooks Passed；fresh review／threads closure 尚待後續。
+本次四 formal 新 factsync 仍 local、未再 commit／push。Plan-Creator 只寫四 formal，
 未實作、測試、stage、commit／push、remote action 或自審。
 若需改 helper visibility／scanner／production／manifest／其他 path、discovery identities 或 coverage
 弱化／repositoryRoot 不同即停；測試環境 failure 交 Tester 分類，不以推論 pass。
@@ -1910,6 +1914,9 @@ TC-37-01～06 pass；TC-37-07 完整 hooks 仍待 actual delivery／新 message 
 Human 新 message confirmation 與 HC-31 boundaries 保持；沒有本輪 hook-bypass 授權。
 
 ### IM-37 — Completed Handoff／Self-Verification Evidence
+
+> Delivery-before historical snapshot：本節 pending hooks／未 commit／push／visible 等措辭只描述當時。
+> 目前 DL-33 已 completed／visible、完整 normal hooks actual pass；最新事實見 DL-33 小節，原 evidence 不重寫。
 
 Dispatcher 傳遞 IM-37 正式 completed：只改兩 test files，original 801→750 行、new 60 行。
 完整 29 qualified identities 前後相同且無 duplicates；original 只去移動區塊，new @Test
@@ -1926,6 +1933,9 @@ TC-37-07 正常完整 commit hooks 尚待 delivery 與 Human 新 message
 確認，不能將 self-verification scripts pass 宣稱為完整 hooks 已通過。未新 commit／push／resolve。
 
 ### TE-34 — Independent Verification Evidence
+
+> Delivery-before historical snapshot：本節 pending hooks／未 commit／push／visible 等措辭只描述當時。
+> 目前 DL-33 已 completed／visible、完整 normal hooks actual pass；最新事實見 DL-33 小節，原 evidence 不重寫。
 
 現引用 Dispatcher 傳遞獨立 Tester 正式 approved／no-fix：TE-34 completed／approved，
 TC-37-01～06 pass；TC-37-07 仍 pending actual normal delivery hooks，不宣稱完整 hooks 已通過。
@@ -1944,6 +1954,9 @@ Native VoiceOver／Increase Contrast／inactive、Arrow viewer pan 與舊 state 
 
 ### RV-34 — Independent Result Review Evidence
 
+> Delivery-before historical snapshot：本節 pending hooks／未 commit／push／visible 等措辭只描述當時。
+> 目前 DL-33 已 completed／visible、完整 normal hooks actual pass；最新事實見 DL-33 小節，原 evidence 不重寫。
+
 引用 Dispatcher 傳遞獨立 Reviewer 正式 approved／no-fix：RV-34 completed／approved，
 允許 DL-33 exact staging／new message 準備。Reviewer own checks：原封完整 @Test move，
 750／60 行、repositoryRoot 同根；544 protected files／六 PC-36 implementation bytes／index 不變。
@@ -1958,6 +1971,36 @@ Human 確認後才執行；不得使用 --no-verify／hooksPath override，任�
 DL-33 active 僅 stage／message preparation，未新 commit／push／visible／threads closure。
 CH-31／HC-31 pending；native 待驗、Arrow viewer pan、舊 state non-pass／visual pending 保持。
 本次四 formal state sync 合法更新 baseline 中的文件，不宣稱 protected bytes 永遠 immutable。
+
+### DL-33 — Completed／Visible Delivery Facts
+
+Dispatcher 傳遞 actual delivery completed／visible：commit
+62462476efe2ea2a31a019a6d7776f8637bd0fbd，parent
+ba6422c8dbc1a74e56a0573573fdd1bf47177ae8。已獲 Human 確認的 exact message：
+
+```text
+fix(auth-diagrams): 強化收據驗證與圖表可及性並拆分隔離測試
+```
+
+Normal git commit／non-force push exit 0；六項完整 hooks 全 Passed：
+trim、EOF、swiftformat、consumer、SwiftLint、renderer。
+TC-37-07 actual pass；沒有 --no-verify、-c 或 hooksPath override。
+Literal twelve-path delivery union 為唯一 changes；local HEAD／tracking／actual remote ref／
+PR #37 head 均一致。Delivery snapshot：PR OPEN／ready、MERGEABLE／CLEAN、checks []。
+此 snapshot 不代表 fresh matching-head review completed，亦不是 CH-31 approval／thread closure。
+
+Delivery 後 feature clean／index empty；538 non-union tracked files 對 parent byte-equal，
+544 IM-baseline protected files、既有六 PC-36 implementation bytes 保持，generated index SHA-256
+2bd759c3366fcdb3033ebd0c213bf1c21ad79df6a8f7b13df6183d2b3b30c81e 保持。
+dev tracked clean、未追蹤 .vscode/ 保留。上述均為 Dispatcher 傳遞的 delivery evidence，
+不是 Plan-Creator 新 Git／GitHub 查詢，baseline 僅對該驗證區間有效。
+
+Current gate CH-31 active，HC-31 pending；fresh matching-head review／thread classification
+與 evidence-backed reply／resolve 尚待後續，沒有新 threads closure。
+本次四 formal delivery-after factsync 仍 local、未再 commit／push，不能當作遠端可見狀態文字；
+62462476 內已交付的 planning／implementation bytes visible 與本次新增 factsync 必須區分。
+Native VoiceOver／Increase Contrast／inactive 待驗、Arrow viewer pan、既有 state non-pass／
+automated visualReview pending 保持。不 merge／release。
 
 ## PC-36 — Receipt 冒號前綴驗證／Component Canvas 等價可及性（Historical Snapshot）
 
