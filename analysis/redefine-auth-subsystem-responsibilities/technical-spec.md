@@ -1554,7 +1554,7 @@ Enhancer read／output errors 與 VM failure stack 的 diagnostic sanitizer，�
 ### Current Route／Gates
 
 ```text
-PC-38 completed → PR-38 completed／approved → IM-38 completed → TE-35 completed／approved → RV-35 completed／approved → DL-34 active → CH-32 pending → HC-32 pending
+PC-38 completed → PR-38 completed／approved → IM-38 completed → TE-35 completed／approved → RV-35 completed／approved → DL-34 completed／visible → CH-32 active → HC-32 pending
 ```
 
 Creation completed 不等於 planning approval；PC-38 completed → PR-38 active 為 historical snapshot。
@@ -1562,8 +1562,9 @@ Creation completed 不等於 planning approval；PC-38 completed → PR-38 activ
 已審查：PR-38 completed／approved → IM-38 active 是前次 planning handoff historical snapshot。
 IM-38 completed → TE-35 active 為前次 implementation handoff historical snapshot；self-verification 不是 test approval。
 TE-35 completed／approved → RV-35 active 為前次 test handoff historical snapshot。
-現引用 Dispatcher 獨立 rv35_receipt_diag_review approved／no-fix：RV-35 completed／approved → DL-34 active；
-actual delivery full hooks／新 exact message／closure 仍 pending。獨立 Tester TE-35
+RV-35 completed／approved → DL-34 active 為前次 review handoff historical snapshot。
+現依 Dispatcher actual delivery：DL-34 c875dee4 completed／visible → CH-32 active → HC-32 pending；
+Human 新 exact message 已確認、normal full hooks Passed；fresh matching review／closure 仍 pending。獨立 Tester TE-35
 及 Reviewer RV-35 後才 delivery。Normal hooks 必須通過，新完整 staged semantic check／exact
 message 仍需 Human 明示確認；舊 confirmation／exception 不沿用，不逐 gate 問 Human。
 Fresh matching-head review／thread classification 後才 CH-32 evidence-backed reply／resolve，
@@ -1579,19 +1580,24 @@ CH-31 新 necessary scope 後為 historical human-check，HC-31 historical pendi
 不是本 Plan-Creator live 查詢；temp locator os.tmpdir() 下 rivet-ch31-final-review-20261005。
 Pinned CLI successful deliver envelope numeric schemaVersion 1 已由 Planner 核對 global SHA／manifest，
 不是新增 pin／自行放寬 schema。下方 PC-37／更早所有 route、active gate、local／pending 字句
-均為有限時 historical snapshot；PC-38 新四 formal creation 仍 local，未再 commit／push。
+均為有限時 historical snapshot；PC-38 原 creation 已隨 DL-34 交付，
+本次新增四 formal delivery-after factsync 仍 local、未再 commit／push。
 
 ### Blockers／Human Check／Last Updated
 
 2026-10-05 — 引用獨立 pr38_receipt_diagnostics_review approved／no-fix，只同步
-RV-35 completed／approved → DL-34 active，CH-32／HC-32 pending；依獨立 rv35_receipt_diag_review approved／no-fix，
-不是 Plan-Creator approval；actual delivery full hooks／新 exact message／closure 仍 pending。
+DL-34 c875dee4 completed／visible → CH-32 active → HC-32 pending，依 Dispatcher actual delivery evidence；
+Human message 已確認、normal 六完整 hooks Passed，無 no-verify／-c／hooksPath override，
+fresh matching review／closure 待後續，本次新四 formal factsync 仍 local、未再 commit／push。
 本次只四 formal state sync，未自審、實作、
 測試、stage／Git／remote。若缺必要輸入、需改 ReadOnly／新增 path／contract 或 source-type
 驗證無法可信完成即停止，交獨立角色分類；審批拒絕即停寫入、回報原始理由，不繞過。
 New exact message／normal hooks failure／scope drift／final HC-32 boundaries 保持。
 
 ### IM-38 — Completed Handoff／Self-Verification Evidence
+
+> Delivery-before historical snapshot：本節 pending hooks／message／未 commit／push／visible 等字句只描述當時。
+> Actual DL-34 已 completed／visible、normal full hooks Passed；最新事實見 DL-34 小節，原 evidence 保留。
 
 Dispatcher 傳遞 IM-38 正式 completed：只三 implementation files，未 stage／commit／push／resolve。
 RED 14 tests：11 pass／3 fail（traversal、schemaVersion 999、enhancer read leak）；
@@ -1611,6 +1617,9 @@ raw sources／receipt exact stdout／canvas verifier；不新增 tracked evidenc
 state non-pass／automated visualReview pending 不提升；尚未新 delivery visible／threads closure。
 
 ### TE-35 — Independent Verification Evidence
+
+> Delivery-before historical snapshot：本節 pending hooks／message／未 commit／push／visible 等字句只描述當時。
+> Actual DL-34 已 completed／visible、normal full hooks Passed；最新事實見 DL-34 小節，原 evidence 保留。
 
 現引用 Dispatcher 傳遞獨立 te35_receipt_diag_verify 正式 approved／no-fix：
 TE-35 completed／approved，當時交 RV-35 active 為 historical snapshot；最新 result-review verdict 見下節。
@@ -1632,6 +1641,9 @@ Native VoiceOver／Increase Contrast／inactive、Arrow viewer pan、state non-p
 
 ### RV-35 — Independent Result Review Evidence
 
+> Delivery-before historical snapshot：本節 pending hooks／message／未 commit／push／visible 等字句只描述當時。
+> Actual DL-34 已 completed／visible、normal full hooks Passed；最新事實見 DL-34 小節，原 evidence 保留。
+
 現引用 Dispatcher 傳遞獨立 rv35_receipt_diag_review approved／no-fix：
 RV-35 completed／approved，允許 DL-34 exact staging／new message preparation。
 Reviewer own producer suite 15/15 exit 0、diff check pass、543 HEAD-protected files byte-equal。
@@ -1643,6 +1655,33 @@ diagnostic 安全／normal output byte-equal index 等 contract 一致，無 req
 commit／push visible 或 thread closure。上述仍 pending，正常 hooks／新 exact message boundary
 及 no-verify／hooksPath override 禁止保持。Readonly／native 待驗／既有 visual non-pass 不升級，
 four formal factsync 仍 local；Plan-Creator 不實作／測試／自審／操作 Git 或 remote。
+
+### DL-34 — Completed／Visible Delivery Facts
+
+Dispatcher 傳遞 actual delivery completed／visible：commit
+c875dee414a3a0d2beb685195d09564ff94eac02，parent
+c86effbbff2adb5c7093beb70a0ae1c0878b09d6；Human 已確認 exact message：
+
+```text
+fix(auth-diagrams): 驗證收據路徑與型別並遮蔽增強器診斷
+```
+
+Normal git commit／non-force push 均 exit 0，六完整 hooks 全 Passed；
+未使用 --no-verify、-c 或 hooksPath override。Only seven approved files 交付。
+Local HEAD／tracking／actual origin／PR #37 head 一致，delivery snapshot：
+PR OPEN／ready、MERGEABLE／CLEAN、checks []。
+此 snapshot 不代表 fresh matching-head review completed／pass，未宣稱 thread closure。
+Delivery 後 feature clean／index empty，543 parent-protected files byte-equal，
+existing canvas index SHA 保持，dev tracked clean／未追蹤 .vscode/ 保留。
+以上是 Dispatcher 傳遞 facts，不是 Plan-Creator 新 Git／GitHub 查詢；baseline 僅屬該區間，
+本次合法四 formal factsync 不受其限制。
+
+Current gate CH-32 active，HC-32 pending，fresh review／classification／reply／resolve／re-fetch
+待後續，不以 delivery／checks [] 替代 closure evidence。PC-38 既有 planning／implementation
+bytes 已隨 c875dee4 交付；本次新增四 formal delivery-after factsync 仍 local、未再 commit／push，
+不能當作遠端可見狀態文字。若再 commit，仍須新 exact message Human 確認、normal full hooks，
+不 bypass、不因僅 docs head 自行新建 scope cycle。Native VoiceOver／Increase Contrast／inactive、
+Arrow viewer pan、state non-pass／automated visualReview pending 保持，不 merge／release。
 
 ## PC-37 — StaticIsolationTests 最小責任拆分（Historical Snapshot）
 
