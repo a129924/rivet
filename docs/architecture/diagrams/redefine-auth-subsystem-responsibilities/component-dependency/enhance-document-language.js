@@ -47,8 +47,18 @@ function semanticContent(raw) {
 }
 
 function fail(message) {
-  console.error(`document-language enhancement failed: ${message}`);
+  console.error(`document-language enhancement failed: ${sanitizeDiagnostic(message)}`);
   process.exit(1);
+}
+
+function sanitizeDiagnostic(message) {
+  // A quoted path may include spaces or newlines: redact its whole content.
+  // Unquoted paths have no trustworthy end delimiter, so redact to line end.
+  const absolute = /(^|[^a-zA-Z0-9_.\\/-])(?:[a-zA-Z]:[\\/]|[\\/])/;
+  const quoted = String(message).replace(/(["'`])([\s\S]*?)\1/g,
+    (_, quote, content) => quote + (absolute.test(content) ? '[local path]' : content) + quote);
+  return quoted.replace(/(^|[^a-zA-Z0-9_.\\/-])(?:[a-zA-Z]:[\\/]|[\\/])[^\r\n]*/g,
+    '$1[local path]');
 }
 
 function argumentsForInvocation() {
@@ -103,9 +113,12 @@ try {
   fail(`input could not be read: ${error.message}`);
 }
 
-assertExactRawRoot(raw);
-
-const finalHtml = raw.replace(RAW_ROOT, FINAL_ROOT).replace('</body>', semanticContent(raw) + '</body>');
-
-writeAtomically(output, finalHtml);
-console.log('document language and ten-node/twelve-edge equivalent semantics enhanced');
+try {
+  assertExactRawRoot(raw);
+  const finalHtml = raw.replace(RAW_ROOT, FINAL_ROOT).replace('</body>', semanticContent(raw) + '</body>');
+  writeAtomically(output, finalHtml);
+  console.log('document language and ten-node/twelve-edge equivalent semantics enhanced');
+} catch (error) {
+  // Do not let VM errors expose source snippets or local stack filenames.
+  fail(`scene enhancement was not published: ${error.message}`);
+}

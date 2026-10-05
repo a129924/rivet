@@ -68,8 +68,15 @@ export function prepareRuntime(upstream, manifest = JSON.parse(fs.readFileSync(p
     return runtime;
   } catch (error) { fs.rmSync(runtime, { recursive: true, force: true }); throw error; }
 }
-export function verifyReceipt(bytes, root, input, output) {
+export function verifyReceipt(bytes, root, input, output, invocationType) {
   const receipt = JSON.parse(bytes.toString('utf8'));
+  const source = JSON.parse(fs.readFileSync(contained(root, input, true), 'utf8'));
+  if (receipt.schemaVersion !== 1)
+    throw new Error('Delivery receipt schema version mismatch.');
+  if (!['sequence', 'lifecycle'].includes(source.diagram_type) ||
+    receipt.type !== source.diagram_type ||
+    (invocationType !== undefined && invocationType !== source.diagram_type))
+    throw new Error('Delivery receipt/source/invocation type mismatch.');
   if (!receipt.ok || receipt.command !== 'deliver' || receipt.input !== input || receipt.output !== output)
     throw new Error('Delivery receipt identity mismatch.');
   const validation = receipt.validation;
@@ -87,7 +94,7 @@ export function verifyReceipt(bytes, root, input, output) {
       // carry paths as quote/backtick-framed arguments or option=value tokens.
       const tokens = value.split(/[\s"'`=,;()[\]{}]+/);
       if (tokens.some(token => /(?:^|:)[\\/]/.test(token) || /(?:^|:)[a-zA-Z]:/.test(token) ||
-        token.split(/[\\/]/).includes('..')))
+        token.split(/[:\\/]/).includes('..')))
         throw new Error('Receipt metadata path is not repository-relative.');
     } else if (Array.isArray(value)) value.forEach(checkPaths);
     else if (value && typeof value === 'object') {
@@ -133,6 +140,7 @@ export async function run(args, options = {}) {
   try {
     if (command !== 'visual-check') {
       const diagram = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+      if (diagram.diagram_type !== typeOrInput) throw new Error('Source/invocation type mismatch.');
       const { validateSchema } = await import(pathToFileURL(path.join(runtime, 'renderers/shared/validator.mjs')));
       validateSchema(typeOrInput, diagram); // Invalid language fails before any output/capture file.
       if (diagram.meta?.output) contained(root, diagram.meta.output);
@@ -162,7 +170,7 @@ export async function run(args, options = {}) {
       return result.status ?? 1;
     }
     const bytes = fs.readFileSync(raw);
-    verifyReceipt(bytes, root, input, output);
+    verifyReceipt(bytes, root, input, output, typeOrInput);
     if (contained(root, receiptRelative) !== receiptPath) throw new Error('Receipt alias changed before commit.');
     fs.renameSync(raw, receiptPath); // Original stdout bytes, same-directory filesystem atomic rename.
     process.stdout.write(bytes);

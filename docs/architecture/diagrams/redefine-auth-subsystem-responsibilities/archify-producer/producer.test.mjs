@@ -205,13 +205,17 @@ test('receipt metadata rejects unsafe paths recursively, including command argum
     value => ({ metadata: { nested: [[value]] } }),
     value => ({ metadata: { nested: [{ [value]: 'relative/file.json' }] } }),
     value => ({ commandMetadata: { argv: ['node', '--source=' + value] } }),
-    value => ({ commandMetadata: { command: 'node tool.mjs --root "' + value + '"' } })
+    value => ({ commandMetadata: { command: 'node tool.mjs --root "' + value + '"' } }),
+    value => ({ commandMetadata: { command: 'node tool.mjs --root=`' + value + '`' } }),
+    value => ({ commandMetadata: { command: "node tool.mjs --root='" + value + "'" } })
   ];
   const unsafe = ['cwd:/outside/synthetic', 'custom:/synthetic/local', 'nested:cwd:/synthetic/local',
     'prefix:C:\\outside\\local', 'prefix:\\\\server\\share\\local',
     'prefix:\\outside\\local', '/outside/local', 'C:\\outside\\local', 'D:/outside/local',
     'C:drive-relative', '\\\\server\\share\\local', '//server/share/local',
-    '\\outside\\local', '../outside', 'nested/../outside', 'nested\\..\\outside'];
+    '\\outside\\local', '../outside', 'nested/../outside', 'nested\\..\\outside',
+    'cwd:../outside', 'root:..\\outside', 'nested:cwd:../outside',
+    'nested:cwd:docs/../outside', 'root:docs\\..\\outside'];
   for (const value of unsafe) {
     for (const place of placements) {
       const bytes = Buffer.from(JSON.stringify({ ...receipt, ...place(value) }));
@@ -280,18 +284,126 @@ test('standard deliver captures exact producer stdout bytes and verifies bound h
   assert.match(lifecycleHTML, /<html lang="zh-Hant"/);
   assert.match(lifecycleHTML, /<svg[^>]*lang="zh-Hant"/);
 });
+test('receipt envelope version and type bind to the actual contained source', () => {
+  for (const input of [
+    'docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/normal-request.json',
+    'docs/architecture/diagrams/http-client-auth-flow-contract/auth-flow-lifecycle.json'
+  ]) {
+    const output = input.replace(/\.json$/, '.html');
+    const original = fs.readFileSync(path.join(repository, input.replace(/\.json$/, '.delivery.json')));
+    const receipt = verifyReceipt(original, repository, input, output);
+    for (const [key, values] of [
+      ['schemaVersion', [999, '1', null, undefined]],
+      ['type', [receipt.type === 'sequence' ? 'lifecycle' : 'sequence', 'unknown', null, undefined]]
+    ]) for (const value of values) {
+      const bad = { ...receipt, [key]: value };
+      assert.throws(() => verifyReceipt(Buffer.from(JSON.stringify(bad)), repository, input, output), /schema|type/i);
+    }
+    const preserved = Buffer.from(original);
+    assert.throws(() => verifyReceipt(original, repository, input, output,
+      receipt.type === 'sequence' ? 'lifecycle' : 'sequence'), /type/i);
+    assert.deepEqual(original, preserved);
+  }
+  const original = JSON.parse(fs.readFileSync(path.join(fixtures, 'valid.delivery.json')));
+  const actual = fs.readFileSync(path.join(fixtures, 'valid.json'));
+  try {
+    for (const source of ['{invalid', JSON.stringify({}), JSON.stringify({ diagram_type: 'unknown' })]) {
+      fs.writeFileSync(path.join(fixtures, 'valid.json'), source);
+      assert.throws(() => verifyReceipt(Buffer.from(JSON.stringify(original)), fixtures, 'valid.json', 'valid.html'));
+    }
+  } finally { fs.writeFileSync(path.join(fixtures, 'valid.json'), actual); }
+});
+test('run rejects a source/invocation discriminator mismatch before any artifact publication', () => {
+  fs.writeFileSync(path.join(fixtures, 'wrong-invocation.json'), JSON.stringify(normal));
+  const previous = Buffer.from('previous output');
+  fs.writeFileSync(path.join(fixtures, 'wrong-invocation.html'), previous);
+  const result = invoke(['deliver', 'lifecycle', 'wrong-invocation.json', 'wrong-invocation.html', '--repo-root', '.']);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Source\/invocation type mismatch/);
+  assert.deepEqual(fs.readFileSync(path.join(fixtures, 'wrong-invocation.html')), previous);
+  assert.equal(fs.existsSync(path.join(fixtures, 'wrong-invocation.delivery.json')), false);
+});
+
+const component = path.join(repository, 'docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency');
+const enhance = path.join(component, 'enhance-document-language.js');
+const rawCanvas = path.join(fixtures, 'canvas-raw.html');
+test('enhancer normal generation preserves exact existing final bytes and readonly verifier contract', () => {
+  const skill = path.join(os.homedir(), '.codex/skills/architecture-canvas/scripts');
+  const scene = path.join(component, 'scene.js');
+  assert.equal(spawnSync(process.execPath, [path.join(skill, 'validate.js'), scene]).status, 0);
+  const built = spawnSync(process.execPath, [path.join(skill, 'build.js'), '--scene', scene, '--out', rawCanvas,
+    '--title', 'RivetHTTPClient — 認證責任目標', '--kicker', 'RivetHTTPClient — 認證責任目標',
+    '--sub', '<b>AuthRequester</b> 持有原始請求 → <b>AuthFlow</b> 擁有策略／狀態 → <b>Requester</b> 執行通用輸入／輸出',
+    '--slug', 'redefine-auth-subsystem-responsibilities-component-dependency'], { encoding: 'utf8' });
+  assert.equal(built.status, 0, built.stderr);
+  const final = path.join(fixtures, 'canvas-final.html');
+  const result = spawnSync(process.execPath, [enhance, '--input', rawCanvas, '--output', final], { encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(fs.readFileSync(final), fs.readFileSync(path.join(component, 'index.html')));
+  const verified = spawnSync(process.execPath, [path.join(component, 'verify-document-language.js'),
+    '--raw', rawCanvas, '--final', final], { encoding: 'utf8' });
+  assert.equal(verified.status, 0, verified.stderr);
+});
+test('enhancer read, output and VM diagnostics redact paths without publishing failed output', () => {
+  const output = path.join(fixtures, 'preserved-canvas.html');
+  const before = Buffer.from('previous output');
+  fs.writeFileSync(output, before);
+  const missing = path.join(fixtures, 'missing synthetic directory', 'input.html');
+  const readFailure = spawnSync(process.execPath, [enhance, '--input', missing, '--output', output], { encoding: 'utf8' });
+  assert.equal(readFailure.status, 1);
+  assert.equal(readFailure.stderr.includes(missing), false);
+  assert.deepEqual(fs.readFileSync(output), before);
+  const directoryOutput = path.join(fixtures, 'existing output directory');
+  fs.mkdirSync(directoryOutput);
+  fs.writeFileSync(path.join(directoryOutput, 'preserved'), before);
+  const outputFailure = spawnSync(process.execPath, [enhance, '--input', rawCanvas, '--output', directoryOutput], { encoding: 'utf8' });
+  assert.equal(outputFailure.status, 1);
+  assert.equal(outputFailure.stderr.includes(fixtures), false);
+  assert.deepEqual(fs.readFileSync(path.join(directoryOutput, 'preserved')), before);
+  const messages = [
+    'safe prefix: /outside/synthetic path/file.js',
+    'safe prefix: "C:\\synthetic directory\\file.js"; safe context',
+    'safe prefix: \\synthetic\\file.js',
+    'safe prefix: \\\\server\\share\\file.js',
+    'safe prefix: first line\n/opt/synthetic/file.js\nD:/synthetic/file.js',
+    'safe prefix: "/outside/synthetic\nmultiline path/file.js"; safe context',
+    'safe prefix: relative/file.js'
+  ];
+  for (const boundary of ['read', 'output', 'vm']) for (const message of messages) {
+    const result = spawnSync(process.execPath, ['-e', `
+      const fs = require('fs'), vm = require('vm');
+      const originalRead = fs.readFileSync, originalOpen = fs.openSync;
+      const fail = () => { const e = new Error(process.env.SYNTHETIC_DIAGNOSTIC); e.stack += '\\n at /outside/stack.js'; throw e; };
+      if (process.env.BOUNDARY === 'read') fs.readFileSync = (...args) =>
+        args[0] === process.env.RAW_INPUT ? fail() : originalRead(...args);
+      if (process.env.BOUNDARY === 'output') fs.openSync = (...args) =>
+        String(args[0]).endsWith('.document-language.tmp') ? fail() : originalOpen(...args);
+      if (process.env.BOUNDARY === 'vm') vm.runInNewContext = fail;
+      process.argv = [process.execPath, process.env.ENHANCER_ENTRY, '--input', process.env.RAW_INPUT, '--output', process.env.FINAL_OUTPUT];
+      require(process.env.ENHANCER_ENTRY);
+    `], { encoding: 'utf8', env: { ...process.env, ENHANCER_ENTRY: enhance, RAW_INPUT: rawCanvas,
+      FINAL_OUTPUT: output, SYNTHETIC_DIAGNOSTIC: message, BOUNDARY: boundary } });
+    assert.equal(result.status, 1);
+    assert.equal(result.stdout, '');
+    assert.match(result.stderr, /document-language enhancement failed:/);
+    assert.equal(/\/outside|\/opt|[CD]:[\\/]|\\synthetic|\\server/.test(result.stderr), false, boundary + ': ' + result.stderr);
+    if (message.includes('relative/file.js')) assert.match(result.stderr, /relative\/file\.js/);
+    assert.deepEqual(fs.readFileSync(output), before);
+  }
+});
 test('unsafe delivery stdout metadata fails closed and preserves the previous receipt bytes', async () => {
   const previous = fs.readFileSync(path.join(fixtures, 'valid.delivery.json'));
   const actualSpawn = childProcess.spawnSync;
   const previousCwd = process.cwd();
   let injected = false;
+  let mutation;
   childProcess.spawnSync = (...args) => {
     const result = actualSpawn(...args);
     if (args[1]?.[0]?.endsWith('/bin/archify.mjs') && args[1][1] === 'deliver' && result.status === 0) {
       // Simulate untrusted producer stdout only in this private test fixture.
       const capture = fs.readdirSync(fixtures).find(name => name.startsWith('.archify-receipt-'));
       const raw = JSON.parse(fs.readFileSync(path.join(fixtures, capture)));
-      raw.provenance = { nested: [{ arbitrary: 'cwd:/outside/synthetic' }] };
+      mutation(raw);
       fs.ftruncateSync(args[2].stdio[1], 0);
       fs.writeSync(args[2].stdio[1], Buffer.from(JSON.stringify(raw)), 0, undefined, 0);
       injected = true;
@@ -301,13 +413,23 @@ test('unsafe delivery stdout metadata fails closed and preserves the previous re
   syncBuiltinESMExports();
   process.chdir(fixtures);
   try {
-    await assert.rejects(run(['deliver', 'sequence', 'valid.json', 'valid.html',
-      '--repo-root', '.', '--quality', 'showcase', '--json']), /relative/);
-    assert.equal(injected, true);
-    assert.deepEqual(fs.readFileSync('valid.delivery.json'), previous);
-    assert.equal(fs.readdirSync('.').some(name => name.startsWith('.archify-')), false);
-    // HTML may already have committed upstream; this is not a two-file transaction.
-    assert.equal(fs.existsSync('valid.html'), true);
+    for (const [change, failure] of [
+      [raw => { raw.provenance = { nested: [{ arbitrary: 'cwd:/outside/synthetic' }] }; }, /relative/],
+      [raw => { raw.provenance = { nested: [{ arbitrary: 'cwd:../outside' }] }; }, /relative/],
+      [raw => { raw.commandMetadata = { command: 'node tool.mjs --arg=`root:..\\outside`' }; }, /relative/],
+      [raw => { raw.schemaVersion = 999; }, /schema/],
+      [raw => { raw.type = 'lifecycle'; }, /type/]
+    ]) {
+      mutation = change;
+      injected = false;
+      await assert.rejects(run(['deliver', 'sequence', 'valid.json', 'valid.html',
+        '--repo-root', '.', '--quality', 'showcase', '--json']), failure);
+      assert.equal(injected, true);
+      assert.deepEqual(fs.readFileSync('valid.delivery.json'), previous);
+      assert.equal(fs.readdirSync('.').some(name => name.startsWith('.archify-')), false);
+      // HTML may already have committed upstream; this is not a two-file transaction.
+      assert.equal(fs.existsSync('valid.html'), true);
+    }
   } finally {
     process.chdir(previousCwd);
     childProcess.spawnSync = actualSpawn;

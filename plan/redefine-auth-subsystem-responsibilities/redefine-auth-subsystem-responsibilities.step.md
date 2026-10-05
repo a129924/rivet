@@ -2,27 +2,24 @@
 
 ## Current Phase
 
-Human 已授權最小 StaticIsolationTests 責任拆分，不提高 SwiftLint 800 上限。
-Planner static_isolation_split_preflight approved 只放行 creation；PC-37 completed → PR-37 active
-為 creation historical snapshot。現引用 Dispatcher 傳遞獨立 pr37_test_split_review approved／no-fix，
-PR-37 completed／approved → IM-37 active 為前次 planning handoff historical snapshot。
-IM-37 completed → TE-34 active 為前次 implementation handoff historical snapshot；self-verification 不是 test approval。
-TE-34 completed／approved → RV-34 active 為前次 test handoff historical snapshot。
-RV-34 completed／approved → DL-33 active 為前次 review handoff historical snapshot。
-現依 Dispatcher actual delivery：DL-33 62462476 completed／visible、TC-37-07 完整正常 hooks pass → CH-31 active → HC-31 pending。
+Human 已授權 receipt 冒號前綴 traversal、receipt schema／type 與 enhancer diagnostics 三項最小回修。
+Planner receipt_diagnostics_schema_preflight approved sufficiency、無 missing 只放行 creation；
+PC-38 completed → PR-38 active 為 creation historical snapshot。
+PR-38 completed／approved → IM-38 active 為前次 planning handoff historical snapshot。
+IM-38 completed → TE-35 active 為前次 implementation handoff historical snapshot；self-verification 不是 test approval。
+TE-35 completed／approved → RV-35 active 為前次 test handoff historical snapshot。
+現引用 Dispatcher 獨立 rv35_receipt_diag_review approved／no-fix：RV-35 completed／approved → DL-34 active。
 
 ```text
-PC-37 completed → PR-37 completed／approved → IM-37 completed → TE-34 completed／approved → RV-34 completed／approved → DL-33 completed／visible → CH-31 active → HC-31 pending
+PC-38 completed → PR-38 completed／approved → IM-38 completed → TE-35 completed／approved → RV-35 completed／approved → DL-34 active → CH-32 pending → HC-32 pending
 ```
 
-DL-31 ba6422c8dbc1a74e56a0573573fdd1bf47177ae8 completed／visible 保持。
-DL-32 正常 hook 被既有 801＞800 SwiftLint failure 阻擋，未 completed／未 commit／push visible，
-由 PC-37 授權承接；原 staged 十檔當時保留、PC-36 六 implementation files bytes 保護。
-PC-36／DL-31 factsync 已隨 DL-33 交付；本次新增四 formal delivery-after factsync 仍 local、未再 commit／push。
-原 approvals／歷史 exceptions 保持，尚無 fresh matching-head review／threads closure evidence。
-下方 PC-36 與更早各 cycle 全節 route／active-gate 為 historical snapshot，唯一 current route 見上。
-DL-33 Human 新 exact message 已確認、normal commit／push exit 0，六 hooks Passed，無 no-verify／-c／hooksPath override。
-新 factsync 未再 commit／push；後續若需新 commit 仍須新 message 確認。最終停 HC-31，不 merge／release。
+Dispatcher 提供 published HEAD c86effb，先前四 formal factsync 已 commit／push visible；
+DL-33 62462476 normal 六 hooks Passed／completed／visible 保持。
+CH-31 新 necessary scope 後停 historical human-check、HC-31 historical pending，本次 scope 授權承接；
+沒有 CH-31 completed／threads closure。PC-38 新 creation 仍 local、未新 commit／push。
+下方 PC-37 及更早 route／active-gate／local wording 均 historical snapshot；唯一 current route 見上。
+新 exact message 仍須 Human 確認、正常 hooks 不 bypass，最後停 HC-32，不 merge／release。
 
 ## Historical Phase Snapshots — PC-32 前
 
@@ -1580,7 +1577,209 @@ HC-27 pending。DL-29 的具體 staged topic commit message 與 known SwiftLint 
 
 2026-09-30 — 依 Delivery 原始 FINAL 及 CH-27 獨立 Reviewer needs-rework，僅同步四 formal artifacts 的 post-delivery facts：DL-29 175965784597b224781e31600a8352f8e6dd75de completed／visible、ready PR；CH-27 needs-rework／未完成、HC-27 pending。GitHub 50 threads／32 unresolved 與 bot Running 僅記當時 snapshot；本次同步 diff 尚待獨立 review，後續 commit 仍須既定 message boundary。未執行 Git、tests、圖表／producer／Swift 修改，未新增 cycle 或 approval。
 
-## PC-37 — StaticIsolationTests 最小責任拆分（Current Contract）
+## PC-38 — Receipt 防護與 Enhancer 診斷最小回修（Current Contract）
+
+### Goal
+
+Human 已授權三項最小 scope：receipt 冒號前綴 traversal 防護、receipt schema／type 驗證，
+及 component enhancer diagnostic sanitizer。Planner receipt_diagnostics_schema_preflight
+正式 approved sufficiency、無 missing，只放行 creation，不是 PR-38 planning approval。
+不改 diagram／ownership／layout，恢復可信 receipt 與不洩漏本機路徑的 fail-closed 診斷。
+
+### In-Scope
+
+1. Receipt 遞迴 metadata tokens：冒號 prefix 後 ../ 或 ..\\ 必拒，含 nested prefix、
+   internal traversal、keys／values／arrays／command quoted／backtick／option=value framing。
+2. Receipt schemaVersion strict numeric 1，type 與 actual contained source.diagram_type
+   相同且為有效 sequence／lifecycle；actual invocation 與 schema-validated source 不能不一致。
+3. Enhancer diagnostic boundary 涵蓋 read／output catch 與 VM failure stack，
+   只安全遮蔽 diagnostic，不改成功 artifact bytes／atomic output 契約。
+4. 四 formal scope／tests／route／historicality／visible vs local 同步。
+
+### Out-Of-Scope
+
+不修改 CLI、global skill、producer runtime pin／patch／dependency 或新增 schema dependency；
+不修改 generated diagram／HTML／receipt／canvas scene／layout／CSS／ownership、verifier／BUILD。
+不修改 Swift／Tests／Package.swift、lint／800 限制／hooks；不改 retry／deferred architecture。
+不手動 postprocess JSON／HTML、不重生 repository index／viewport evidence、不增 tracked 檔案。
+不得用 --no-verify／hooksPath override，不 merge／release。
+
+### ReadOnly
+
+所有 Archify source／HTML／receipts／visual、所有 canvas scene／index／verifier／BUILD／其他 canvas；
+global skills、producer BUILD、743 pins／五 targets／manifest／patch、canonical prose／其他 topics、
+Swift／Tests／Package.swift／lint／hooks 保持。成功 enhancer HTML／semantics／CSS／ownership／
+layout／atomic normal contract 不改；既有 state 三 containment non-pass／visualReview pending 保留。
+原生 VoiceOver／Increase Contrast／inactive 待驗、Arrow viewer pan 不提升。
+Implementer 建立 protected baseline，驗證區間與四 formal 合法 state sync 分開；
+dev 不改檔，未追蹤 .vscode/、temp／使用者檔案保留。
+
+### Written
+
+Literal seven-file allowlist；四 formal 僅 Plan-Creator，後三檔僅 Implementer，不新增 tracked files：
+
+- analysis/redefine-auth-subsystem-responsibilities/requirements.md
+- analysis/redefine-auth-subsystem-responsibilities/technical-spec.md
+- plan/redefine-auth-subsystem-responsibilities/redefine-auth-subsystem-responsibilities.plan.md
+- plan/redefine-auth-subsystem-responsibilities/redefine-auth-subsystem-responsibilities.step.md
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/archify-producer/run.mjs
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/archify-producer/producer.test.mjs
+- docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/component-dependency/enhance-document-language.js
+
+### Deleted
+
+無。
+
+### Modify
+
+Receipt 保留 absolute POSIX／Windows drive／UNC／rooted、backtick／原 containment／symlink 防護，
+unsafe nested-prefix 或 internal-traversal tokens fail-closed；合法 cwd:docs/relative.json、
+status:ready、time:12:30、urn:synthetic:record 保持可接受，不 blanket 禁冒號。
+成功 receipt Buffer／raw stdout bytes 不改、不後處理 JSON；unsafe run 不 publish receipt，
+保留舊 receipt bytes／temporary cleanup。上游 HTML 可能已寫入：不虛稱 HTML／receipt 雙檔交易原子性。
+
+Receipt envelope schemaVersion 僅 strict numeric 1，依 pinned CLI successful deliver envelope；
+source.schema_version 是另一欄位，不可混同。Receipt type 必須等於 actual contained source 的
+有效 diagram_type（sequence／lifecycle），並核對 actual invocation；不得從 receipt 自推
+expected type、從 filename 猜測，source parse failure／missing 或 invalid discriminator fail-closed。
+以既有 runtime／schema contract 為依據，不改 schema dependency／pins／CLI。
+
+Enhancer read／output errors 與 VM failure stack 的 diagnostic sanitizer，不依本機 prefix blacklist，
+涵蓋任意 POSIX／Windows drive／UNC／rooted、quoted spaces／multiline paths。
+真 CLI read／output failure 與 synthetic diagnostic 都 nonzero、不洩漏路徑、
+舊 output 不覆寫；保留 safe relative diagnostic 的可讀文字，不執行 metadata／diagnostic 字串。
+成功 temp raw → enhance → ReadOnly verifier 可驗證與既有 index byte-equal，
+不生成 repository index 或其他 artifacts。
+
+### Non-Goal
+
+不重開任何已鎖定 architecture／retry policy／ownership／representation decision。
+不以 sanitize 後字串修補 receipt provenance，不以 receipt 自身 type 證明正確，
+不刪 coverage／降低 validation。沒有新的 artifact exception、native accessibility pass 或 thread closure。
+本輪只有 bounded diagnostic／receipt producer fixes，不延伸至一般 renderer 重構。
+
+### TestCase
+
+| ID | 必須驗證的證據 |
+| --- | --- |
+| TC-38-01 | Colon-prefix traversal matrix 覆蓋 ../／..\\、nested prefixes／internal traversal、keys／values／nested arrays／quoted／backtick／option=value command framing，全拒絕；relative／colon-nonpath positives 接受且 Buffer byte-equal。 |
+| TC-38-02 | 有效 sequence／lifecycle envelope 接受、raw bytes unchanged；cross type、missing／invalid type、schemaVersion 999／string／null／missing 拒絕。Expected type 取 actual contained source／invocation，不由 receipt 或 filename 猜；source parse／discriminator 不合法 fail-closed。 |
+| TC-38-03 | Actual run stdout injection 驗證新增 unsafe 類別 nonzero、不 publish receipt／舊 bytes 不變／temp cleanup；如 upstream HTML 已寫入須真實記錄，非雙檔 transaction。 |
+| TC-38-04 | Real enhancer CLI read／output errors 與 synthetic VM／multiline diagnostic，stdout／stderr 無 absolute paths、nonzero、舊 output unchanged；安全 relative 文字保留，不執行字串。 |
+| TC-38-05 | Valid temp raw → final byte-equal existing index，ReadOnly verifier pass；repository index 不重生，無新 viewport／tracked artifact。 |
+| TC-38-06 | 全 producer tests regressions，保留 pins／runtime／absolute／backtick／document-language hashes／containment／symlink contract。 |
+| TC-38-07 | Exact seven-path allowlist／protected others／dev／user data，四 formal history／唯一 route／visible vs local 一致；Human 新 exact message 後正常完整 delivery hooks，不 bypass。 |
+
+### Execution Ledger — PC-38
+
+| ID | Owner role | Status | 完成條件 | 驗證證據／待取得依據 |
+| --- | --- | --- | --- | --- |
+| PC-38 | Plan-Creator | completed | 建立 Human 三項 scope、七檔 allowlist、TC-38-01～07 與唯一 route。 | Human scope 授權、Planner receipt_diagnostics_schema_preflight approved sufficiency／無 missing；本次 creation 不是 review approval。 |
+| PR-38 | Plan-Reviewer | completed | 獨立審查 receipt traversal／schema-type／diagnostics、scope／tests／visibility／history。 | Dispatcher 傳遞 pr38_receipt_diagnostics_review approved／no-fix，完整 611-line diff／current contract 已獨立審查。 |
+| IM-38 | Implementer | completed | PR-38 approved 後 only 三 implementation files，bounded RED／GREEN 與交接。 | Dispatcher 傳遞 completed／三檔 handoff／self-verification，見下節；未 stage 或重生 artifacts，不是 TE-35 approval。 |
+| TE-35 | Tester | completed | 獨立驗證 TC-38-01～07 的 receipt／diagnostic／byte-equal／protected evidence。 | Dispatcher 傳遞 te35_receipt_diag_verify 正式 approved／no-fix；獨立證據見下節，actual delivery full hooks 仍待 DL-34／新 message。 |
+| RV-35 | Reviewer | completed | 獨立確認三 findings、type truth／scope／Readonly／visibility 不漂移。 | Dispatcher 傳遞 rv35_receipt_diag_review approved／no-fix；own checks／TE-35 evidence carry-forward 見下節。 |
+| DL-34 | Implementer | active | 新 staged semantic check／Human exact message／normal hooks／commit／non-force push visible。 | RV-35 completed／approved，交 exact staging／message preparation；actual hooks／visible delivery pending，無新 message confirmation，禁止 no-verify／hooksPath override。 |
+| CH-32 | Implementer | pending | Visible／fresh matching review／classification 後 reply／resolve，re-fetch threads。 | 無新 closure evidence，unknown／超 scope 回報。 |
+| HC-32 | Human | pending | 最終 delivered ready PR review。 | 待 CH-32 evidence 與 Human final 決定；不 merge／release。 |
+
+### Current Route／Gates
+
+```text
+PC-38 completed → PR-38 completed／approved → IM-38 completed → TE-35 completed／approved → RV-35 completed／approved → DL-34 active → CH-32 pending → HC-32 pending
+```
+
+Creation completed 不等於 planning approval；PC-38 completed → PR-38 active 為 historical snapshot。
+現依 Dispatcher 傳遞獨立 pr38_receipt_diagnostics_review approved／no-fix，完整 611-line diff／current contract
+已審查：PR-38 completed／approved → IM-38 active 是前次 planning handoff historical snapshot。
+IM-38 completed → TE-35 active 為前次 implementation handoff historical snapshot；self-verification 不是 test approval。
+TE-35 completed／approved → RV-35 active 為前次 test handoff historical snapshot。
+現引用 Dispatcher 獨立 rv35_receipt_diag_review approved／no-fix：RV-35 completed／approved → DL-34 active；
+actual delivery full hooks／新 exact message／closure 仍 pending。獨立 Tester TE-35
+及 Reviewer RV-35 後才 delivery。Normal hooks 必須通過，新完整 staged semantic check／exact
+message 仍需 Human 明示確認；舊 confirmation／exception 不沿用，不逐 gate 問 Human。
+Fresh matching-head review／thread classification 後才 CH-32 evidence-backed reply／resolve，
+re-fetch threads；新 unknown／超 scope feedback 停止回報，不假稱 closure。最後停 HC-32。
+
+### Sources／Historical Snapshot／Visibility
+
+Dispatcher 提供 published HEAD c86effb（四 formal factsync 已 commit／push），不得仍宣稱該版
+factsync local。DL-33 62462476 completed／visible、normal 六 hooks Passed 事實保留；
+CH-31 新 necessary scope 後為 historical human-check，HC-31 historical pending，
+由本次 Human scope 授權承接，不將 CH-31 寫成 completed 或 threads closed。
+舊 submitted review 對應 62462476、65 threads／47 unresolved 只為 Reviewer snapshot，
+不是本 Plan-Creator live 查詢；temp locator os.tmpdir() 下 rivet-ch31-final-review-20261005。
+Pinned CLI successful deliver envelope numeric schemaVersion 1 已由 Planner 核對 global SHA／manifest，
+不是新增 pin／自行放寬 schema。下方 PC-37／更早所有 route、active gate、local／pending 字句
+均為有限時 historical snapshot；PC-38 新四 formal creation 仍 local，未再 commit／push。
+
+### Blockers／Human Check／Last Updated
+
+2026-10-05 — 引用獨立 pr38_receipt_diagnostics_review approved／no-fix，只同步
+RV-35 completed／approved → DL-34 active，CH-32／HC-32 pending；依獨立 rv35_receipt_diag_review approved／no-fix，
+不是 Plan-Creator approval；actual delivery full hooks／新 exact message／closure 仍 pending。
+本次只四 formal state sync，未自審、實作、
+測試、stage／Git／remote。若缺必要輸入、需改 ReadOnly／新增 path／contract 或 source-type
+驗證無法可信完成即停止，交獨立角色分類；審批拒絕即停寫入、回報原始理由，不繞過。
+New exact message／normal hooks failure／scope drift／final HC-32 boundaries 保持。
+
+### IM-38 — Completed Handoff／Self-Verification Evidence
+
+Dispatcher 傳遞 IM-38 正式 completed：只三 implementation files，未 stage／commit／push／resolve。
+RED 14 tests：11 pass／3 fail（traversal、schemaVersion 999、enhancer read leak）；
+final GREEN 15/15，syntax／diff check pass。210 unsafe placements 拒絕、70 relative／colon-nonpath
+positives 接受且 Buffer unchanged；5 actual deliver stdout injections fail-closed、old receipt bytes
+preserved／capture cleanup。HTML 可能上游已寫，不宣稱兩檔 transaction。
+Enhancer real read／output errors 加 21 synthetic cases、三 diagnostic boundaries 均 nonzero，
+舊 output preserved／無 absolute leak／safe relative readable。Temp raw → final canvas 與 existing
+index exact byte-equal，ReadOnly verifier pass，未重生 repository index／viewport。
+550 tracked baseline 中 547 untouched byte-equal，含當時四 formal；本次合法 factsync 不受此區間
+限制，不假稱永遠 immutable。Index empty、dev 未追蹤 .vscode/ 保留。
+Temp evidence locator：os.tmpdir() 下 rivet-im38-0fdJwV 的 baseline／protected／RED／GREEN、
+raw sources／receipt exact stdout／canvas verifier；不新增 tracked evidence。
+全部是 Implementer self-verification，非 TE-35／RV-35 approval；當時交 TE-35 active 為 historical snapshot，
+最新獨立 Tester verdict 見下節。
+新 exact message Human confirmation／normal full hooks／no bypass 保持，原 native 待驗、
+state non-pass／automated visualReview pending 不提升；尚未新 delivery visible／threads closure。
+
+### TE-35 — Independent Verification Evidence
+
+現引用 Dispatcher 傳遞獨立 te35_receipt_diag_verify 正式 approved／no-fix：
+TE-35 completed／approved，當時交 RV-35 active 為 historical snapshot；最新 result-review verdict 見下節。
+Tester actual producer suite 15/15；224 unsafe cases 全拒絕、140 positives 接受且 Buffer unchanged，
+30 envelope negatives／6 source-type probes 通過。7 actual stdout injections 拒絕，
+old receipt preserved／capture cleanup；HTML 可能 upstream 已寫，不宣稱兩檔 transaction。
+4 actual source CLI cases：parse failure／missing 或 invalid discriminator／missing source 均 nonzero，
+舊 HTML／receipt preserved。Enhancer actual read／output errors 加 27 synthetic cases／三 boundaries
+均 nonzero、無 absolute path leak、old output preserved／safe relative readable。
+Temp canvas exact byte-equal existing index、ReadOnly verifier pass，無 repository regeneration。
+543 protected baseline files HEAD byte-equal；七檔 allowlist、syntax／diff check pass、index empty，
+dev 未追蹤 .vscode/ 保留。此驗證區間 baseline 不禁止本次合法四 formal factsync。
+Evidence locator：os.tmpdir() 下 rivet-te35-CL5Xxl 的 producer-tests.log／producer-tests-result.json、
+independent.mjs／result、source-cli.mjs／result 及 raw temp；未新增 tracked evidence。
+上述為獨立 Tester 證據，Plan-Creator 未重跑或自行核准；actual delivery full hooks 仍 pending，
+須 Human 新 exact message 確認後正常執行，不使用 no-verify／hooksPath override。
+Native VoiceOver／Increase Contrast／inactive、Arrow viewer pan、state non-pass／visualReview pending
+保持；沒有新 delivery visible／thread closure。
+
+### RV-35 — Independent Result Review Evidence
+
+現引用 Dispatcher 傳遞獨立 rv35_receipt_diag_review approved／no-fix：
+RV-35 completed／approved，允許 DL-34 exact staging／new message preparation。
+Reviewer own producer suite 15/15 exit 0、diff check pass、543 HEAD-protected files byte-equal。
+TE-35 logs／helpers／results 經 Reviewer 確認可信，carry-forward 224 unsafe／140 positive／
+30 envelope negatives／6 source-type／7 stdout／4 source CLI／27 diagnostic probes 證據，
+不假稱 Reviewer 重跑全部 probes。Trusted source schema／type、成功 raw Buffer 不後處理、
+diagnostic 安全／normal output byte-equal index 等 contract 一致，無 required fix。
+此 approval 僅放行 delivery preparation，不代表 message Human confirmed、actual full hooks pass、
+commit／push visible 或 thread closure。上述仍 pending，正常 hooks／新 exact message boundary
+及 no-verify／hooksPath override 禁止保持。Readonly／native 待驗／既有 visual non-pass 不升級，
+four formal factsync 仍 local；Plan-Creator 不實作／測試／自審／操作 Git 或 remote。
+
+## PC-37 — StaticIsolationTests 最小責任拆分（Historical Snapshot）
+
+> 本節所有 current route／active gate／local factsync／pending／未交付文字只記錄 PC-38 前的 historical snapshot。
+> Published c86effb 已交付先前四 formal factsync；CH-31 新 scope 停 human-check、HC-31 pending，由 PC-38 承接，未完成 thread closure。
 
 ### Goal
 
