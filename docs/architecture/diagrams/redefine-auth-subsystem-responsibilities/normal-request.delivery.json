@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/normal-request.json",
+  "output": "docs/architecture/diagrams/redefine-auth-subsystem-responsibilities/normal-request.html",
+  "specification": {
+    "sha256": "743012bf7f3a1302b56c4842bd175d3d9608ea13039f6f183eb2861ccf4e6b78",
+    "bytes": 3481
+  },
+  "artifact": {
+    "sha256": "45e26e30346a64a78fbb247f29c7d01c7f567ac156d6c7372646ce43e33354a8",
+    "bytes": 705967
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

@@ -12,8 +12,8 @@ node "$CANVAS_SKILL/scripts/build.js" \
   --scene scene.js \
   --out "$RAW_DIR/index.html" \
   --title "RivetHTTPClient — 設定式介面結構" \
-  --kicker "RIVETHTTPCLIENT — CONFIGURED REQUEST API" \
-  --sub "<b>Configuration</b> → 受限 base URL／relative path 合成 → <b>HTTPURL</b> → <b>HTTPRequest</b> → <b>Requester</b> → <b>Transport</b>" \
+  --kicker "RivetHTTPClient — 設定式請求 API" \
+  --sub "<b>Configuration</b> → 受限基礎 URL／相對路徑合成 → <b>HTTPURL</b> → <b>HTTPRequest</b> → <b>Requester</b> → <b>Transport</b>" \
   --slug http-client-package-structure
 node enhance-accessibility.js \
   --input "$RAW_DIR/index.html" \
