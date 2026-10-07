@@ -42,7 +42,7 @@ GitHub 的 [loopback redirect 官方說明](https://docs.github.com/en/apps/oaut
 | Archify 結構 | sequence showcase `9/9`、0 errors、0 warnings；final deliver 通過。 |
 | Archify 桌面 containment | **failed**：四個尺寸皆有垂直 overflow；`1440×900` 的 scrollHeight 為 `1645`，`2048×1320` 為 `1773`。captures 已保存；獨立 Reviewer 已親看最小 light／最大 dark，確認視覺 gate needs-rework，分類為不阻 Draft 的殘留。達兩輪 focused correction 上限，未繼續修圖，未宣稱整體圖驗收通過。 |
 | Graphify | 前序唯讀檢查確認 pinned `0.9.73`；未找到可用既有 graph，採限定來源查讀，不建圖或刷新。 |
-| PR Lens | pending：需 topic commit 的真實 base/head 後，由獨立 Reviewer 製作 external local change map；不上傳資產。 |
+| PR Lens | 獨立 Reviewer 的 initial local map validate/render exit 0；actual base `622abf6` → head `77be780`，1 static light SVG，manifest head 相符。最終證據 commit 後需刷新外部 map；不上傳資產。 |
 
 環境：2026-10-07，macOS `26.5.2`（`25F84`）、Xcode `26.6`（`17F113`）、Apple Swift `6.3.3`，arm64。真實實測日期、code 是否存在與 state 是否相符都尚無證據。
 
@@ -88,3 +88,17 @@ Delivery receipt 的規格 SHA-256 為 `55f81f859f7b01a144e65df17cf8c87abe45e3ba
 2026-10-07 — correctness／scope review 未發現重大程式問題；serial queue、單次終結、listener／timer／connections 清理、有限 HTTP 讀取及 callback／CLI 的安全輸出符合 E001 契約。僅新增 E001 與同 topic artifacts，未修改 root package、產品 API 或 docs。依獨立 Tester 核心證據，**bounded Draft delivery approved**，可依已授權流程建立 topic commit 與 Draft PR，並交 human review。
 
 Reviewer 已親看 1440×900 light 與 2048×1320 dark 截圖；流程與結論超出首屏，四尺寸 containment failure 為真實殘留，**正式 Archify 視覺 gate 仍 needs-rework**。此輔助圖缺陷不影響 runner 或核心 callback 證據，因此不阻 Draft；本結論不是完整 topic approval，不改寫凍結 receipts，也不宣稱真實 OAuth 成功。真實 App／GUI／授權仍未驗證。
+
+## PR Lens 與 Graphify 交付證據
+
+獨立 Reviewer 使用 PR Lens CLI `0.11.0`，依真實 base `622abf662d73afd7e887c7684630663fcaae4a6f` 與 topic commit `77be7808220e26232b7a2a5e910f8831c9651589` 的 bounded diff，製作 local 概念變更圖；`validate` 與 `render --theme light --no-config` 均 exit `0`。圖呈現新增 runner／ProbeCore／tests、既有系統 browser 與未變更 root package；root 沒有 E001 dependency，不新增或推論產品 compile 關係。
+
+外部暫存的 topic-relative 目錄 `github-oauth-redirect-feasibility/pr-lens/` 保存 `graph.json`、`review-receipt.json`、`rendered/manifest.json`、`rendered/drawn.graph.json` 與 `rendered/e001-context-light-29d63bbc70d0c5e20cfeca9a4e4002d0.svg`。manifest 確認 actual head；SVG 為 1304×388、9555 bytes；JSON 保留 11 file refs，static SVG 沒有可點的檔案連結。這是 comprehension map，不能代替 correctness review、真實授權或正式圖視覺驗收。最終 docs-only 交付證據 commit 後刷新外部 map 至最終 head，不再寫 repo 造成遞迴 commit。
+
+Graphify 每次 CLI 設 `GRAPHIFY_NO_AUTO_REFRESH=1`；pinned version `0.9.73`。沒有既有 graph，採 bounded source reads，不建圖、安裝、刷新 skills 或修改 hooks/config。工具產物不 commit／upload／attach／publish，Draft PR 由已授權的交付流程建立。
+
+## Draft PR 與人類 review
+
+[Draft PR #45](https://github.com/a129924/rivet/pull/45) 指向 `dev`，實作 commit 為 `77be7808220e26232b7a2a5e910f8831c9651589`；全部既有 pre-commit hooks 通過。交付證據以同 topic docs-only commit 同步，外部 PR Lens map 隨後對齊最終 head。
+
+目前等待人類 review。真實 OAuth 仍未執行／未驗證，Archify desktop containment 仍 needs-rework；本 Draft 不代表完整 topic 完成，不自動 merge 或移除 worktree。
