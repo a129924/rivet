@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "experiments/E001/diagrams/oauth-redirect-flow.json",
+  "output": "experiments/E001/diagrams/oauth-redirect-flow.html",
+  "specification": {
+    "sha256": "55f81f859f7b01a144e65df17cf8c87abe45e3ba259c196d3dc3ae187d14db19",
+    "bytes": 2564
+  },
+  "artifact": {
+    "sha256": "0757306592a67ad92337cbb8d58e9155f81c25a6fb18fa61cb3f759e91b6f08a",
+    "bytes": 700053
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
