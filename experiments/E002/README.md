@@ -1,6 +1,8 @@
 # E002：PKCE token exchange 與 credential 相容性驗證
 
-目前成果：獨立 Reviewer 已對 runner＋[v3 sequence](diagrams/pkce-token-exchange-v3.html) 明示 approved；四張 captures 實看可讀平衡、語意正確。A001 approved，追加使用 1／2（原 2／2、累計 3／4），HC-DIAGRAM 解除。真實 OAuth 0／2、四軸未驗證；S06 commit `819184f6ddebe05090608a11da602a67e247b5df` 已完成、六項正常 hooks 全通過；S07 PR Lens approved。本文件為 S08 收尾 commit 前／push 前 snapshot，S09 最終 map coverage 與 S10 push pending，後續以 PR／remote 證據為準。
+目前真實結果（2／2 授權已用盡）：正向 exchange、六欄 schema／public bundle、一次 API 成功；反向 PKCE 與 overall 無法判定，runner exit1。L02 獨立 Reviewer 已明示 evidence-record approved／無 required fix，允許保存證據；此 approval 不代表 PKCE 成功或正式採用。禁止自行第三次授權。來源 runner 為 `d87407fbdc739a5e564e8777f149a9fbc3f0e1b0`；本頁是 L03 證據 commit 前 snapshot，L04 final map／L05 同 PR #47 push／human review 尚待。
+
+歷史交付 snapshot（真實測量前）：獨立 Reviewer 已對 runner＋[v3 sequence](diagrams/pkce-token-exchange-v3.html) 明示 approved；四張 captures 實看可讀平衡、語意正確。A001 approved，追加使用 1／2（原 2／2、累計 3／4），HC-DIAGRAM 解除。真實 OAuth 0／2、四軸未驗證；S06 commit `819184f6ddebe05090608a11da602a67e247b5df` 已完成、六項正常 hooks 全通過；S07 PR Lens approved。本文件為 S08 收尾 commit 前／push 前 snapshot，S09 最終 map coverage 與 S10 push pending，後續以 PR／remote 證據為準。
 
 ## 目標、原因與事前判準
 
@@ -46,13 +48,13 @@ ephemeral session 關閉 cache／cookie persistence。code／state／verifier／
 
 | 軸 | 真實結果 |
 | --- | --- |
-| 正向 exchange | 未執行／未驗證 |
-| schema 相容性 | 未執行／未驗證 |
-| API | 未執行／未驗證 |
-| 反向 PKCE | 未執行／未驗證 |
-| 總體 | 無法判定；HC-LIVE pending |
+| 正向 exchange | 成功：取得非空 access token |
+| schema 相容性 | 成功：六欄嚴格相容且可建 public bundle |
+| API | 成功：唯一一次 GET /user 回 200 且 user shape 有效 |
+| 反向 PKCE | 無法判定：反向回應／錯誤未確認，無法歸因 |
+| 總體 | 無法判定；兩次授權已完成，PKCE 原因仍缺證據 |
 
-真實授權使用量 0／2。mock 不代表 GitHub／App 支援的實證。相容性只表示回應符合既有六欄且可建 public bundle，不宣稱執行 internal decoder。
+真實授權使用量 2／2，未追加重試。先前 mock 證據維持獨立，不能代替本次真實測量。相容性只表示回應符合既有六欄且可建 public bundle，不宣稱執行 internal decoder。
 
 TDD red：RFC7636 vector 在 placeholder 回傳 verifier 時測試 exit 1；green：實際 SHA-256／base64url 後通過。局部 22 Swift Testing tests（含參數化案例）通過：六欄缺漏／型別／expiry／空 scope、callback 缺漏／重複／錯誤／空 code、form reserved characters、正反兩次獨立授權／每 code 單次交換、HTTP 200 OAuth error、無 baseline／network 停止、反向意外 token、未知錯誤、safeReport sentinel 不外洩、bounded HTTP header、listener timeout／cancel／cleanup。所有 callbacks synthetic，未開實際 browser／外部 HTTP。
 
@@ -123,3 +125,23 @@ S06 commit：`819184f6ddebe05090608a11da602a67e247b5df`，message `chore(oauth):
 S07 獨立 Reviewer approved：pinned PR Lens 0.11.0 local validate／render exit 0，manifest 已讀（3 lanes／8 nodes／8 edges／3 walkthrough steps／1 SVG）。map 真實 coverage：base `a4828938389c7fbfabaffa8c6ca11e0ddbe4b64f` → head `819184f6ddebe05090608a11da602a67e247b5df`；graph SHA-256 `24bf5c1ebc591b17b93b56b69136c54c283a8e506053f09096a33da8e3c83422`。產物僅 repo 外 topic scratch，以下是 scratch-relative 路徑文字，不是 repository 連結：`pr-lens/819184f6/graph.json`、`pr-lens/819184f6/rendered/overview-light-3310335da44d6334c6755d1c8cd2c36b.svg`、同目錄 `manifest.json`。不 upload／發布。
 
 本頁與帳本是 S08 metadata 收尾 commit 前／push 前 snapshot，不能預寫本文件自身 commit SHA；形成新 head 後交 S09 Reviewer 更新 map 或明示 coverage，再按 S10 non-force push／human review 路由。舊「尚未 commit」／「PR Lens deferred」均為歷史，不代表目前狀態。v3／A05 approved、追加1／2（總3／4）不變；真 OAuth0／2、四軸未驗證，HC-LIVE／HC-REVIEW pending。
+
+## 真實 OAuth 測量（2026-10-07）
+
+使用者明確要求開始真實 OAuth，提供 E001 App 的公開 Client ID，並在本機 Terminal 的 runner 隱藏提示輸入 secret；兩次系統瀏覽器授權由人類處理。執行 feature worktree 既有 commit `d87407fbdc739a5e564e8777f149a9fbc3f0e1b0` 的已建置 runner，參數為人類提供的 Client ID 與 `--timeout-seconds 180`；未改 runner／判準，無額外 scope 或重試。build exit0。
+
+正向 exchange 成功；JSON 六欄符合本地嚴格 DTO 並可建立 public bundle；唯一一次 `GET /user` 回 200 且有效 id／login。反向使用新 state／challenge／code 與錯誤 verifier，回應落在「反向回應／錯誤未確認，無法歸因」，總體無法判定、exit1。依固定 runner 控制流程，此分類表示兩次授權與交換均已到達；並不支持將反向拒絕原因歸為 PKCE，不能當成 PKCE 失敗。
+
+[遮蔽 stdout](evidence/2026-10-07-live-safe-report.txt) 與 [receipt](evidence/2026-10-07-live-receipt.json) 保存四軸、exit、runner commit、上限與報告 hash／bytes，不含 code／state／verifier／token／secret／userinfo／完整 URL／原始 body。原始反向回應依資料邊界只留記憶體，程序已結束，不能追補其 error code／status。若需改善分類，須先另定有限診斷與新授權預算；本輪不改既定判準或自動第三次授權。
+
+外層日期腳本用了錯誤 executable 路徑，start／end 時間文字未寫入；不影響 runner 測量。receipt 的時間只取外層檔案建立時間，約 06:53:54–06:54:27 UTC（14:53:54–14:54:27 Asia/Taipei），明示非精確 OAuth 事件時間。App 全域 expiring-token 設定未另查證；本次 offline_access 請求與實際六欄相容性有證據，不能外推全部 App／正式部署或 secret 配送。
+
+本輪有效完成兩案例的執行與遮蔽紀錄，總體無法判定；L02 獨立 Reviewer evidence-record approved／無 required fix，HC-LIVE 的人工操作已完成，PKCE 證據缺口保留為 human-check。上述舊 0／2、未實測與 pending 敘述均是前序歷史，不改寫原證據；長期架構與圖保持唯讀。
+
+## L02 獨立證據核准與 L03 commit 前 snapshot
+
+Dispatcher 轉交 L02 獨立 Reviewer 明示 evidence-record `approved`／無 required fix：本輪 exchange／schema／API 成功、PKCE／overall 無法判定、exit1，2／2 授權已用盡；固定 stdout 與 receipt 一致，時間僅外層檔案 proxy、未偽造精確 OAuth 事件時間或反向 HTTP status／error。此 approval 允許證據紀錄沿原 commit／push 授權交付同 PR，不解除第三次授權／正式採用 human-check。
+
+前序已發生：S08 docs commit `d87407fbdc739a5e564e8777f149a9fbc3f0e1b0`／正常六 hooks 通過；S09 final PR Lens local approved，base `a4828938389c7fbfabaffa8c6ca11e0ddbe4b64f` → 同 d874 head，graph SHA `32fafe4242513d39d1f20bf0cd39e5302d1495907ebe44c1ba0675c82158f61f`；S10 已 non-force push、[Draft PR #47](https://github.com/a129924/rivet/pull/47) 目標 dev，前序 remote／PR head verified d874。上述屬已發生證據，新證據 commit SHA 尚未存在，不預寫。
+
+L03 僅 README／ledger／遮蔽 stdout／receipt 四檔；runner／圖／產品／E001／長期文件不改，保留 27 mock tests 與 v3 approved 證據，不重跑真 OAuth。形成新 head 後 L04 Reviewer 刷新 PR Lens coverage，L05 再 non-force push 同 branch 並更新既有 PR #47 的實測狀態，不新增 PR 或 merge。HC-LIVE（PKCE 原因缺口）／HC-REVIEW 保持 human-check／pending。
