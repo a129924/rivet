@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "E001：OAuth 重導向驗證",
+    "quality_profile": "showcase",
+    "animation": "none",
+    "column_fit": "spread",
+    "viewBox": [
+      1000,
+      480
+    ]
+  },
+  "participants": [
+    {
+      "id": "probe",
+      "type": "backend",
+      "label": "驗證程式",
+      "sublabel": "結果判定與清理"
+    },
+    {
+      "id": "listener",
+      "type": "backend",
+      "label": "本機 listener",
+      "sublabel": "127.0.0.1"
+    },
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "系統瀏覽器"
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub",
+      "sublabel": "OAuth App"
+    }
+  ],
+  "messages": [
+    {
+      "id": "ready",
+      "from": "listener",
+      "to": "probe",
+      "y": 170,
+      "label": "動態 port 就緒；產生 state",
+      "variant": "security"
+    },
+    {
+      "id": "open",
+      "from": "probe",
+      "to": "browser",
+      "y": 210,
+      "label": "開啟授權 URL"
+    },
+    {
+      "id": "authorize",
+      "from": "browser",
+      "to": "github",
+      "y": 250,
+      "label": "登入並同意授權",
+      "variant": "emphasis"
+    },
+    {
+      "id": "redirect",
+      "from": "github",
+      "to": "browser",
+      "y": 290,
+      "label": "重導向至 loopback callback",
+      "variant": "return"
+    },
+    {
+      "id": "callback",
+      "from": "browser",
+      "to": "listener",
+      "y": 330,
+      "label": "GET /oauth/callback：code、state",
+      "variant": "security"
+    },
+    {
+      "id": "validate",
+      "from": "listener",
+      "to": "probe",
+      "y": 370,
+      "label": "驗證 code/state；終結並清理",
+      "variant": "security"
+    },
+    {
+      "id": "result",
+      "from": "listener",
+      "to": "browser",
+      "y": 395,
+      "label": "安全結果頁",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "實測已成功",
+      "items": [
+        "2026-10-07：code 非空、state 相符、exit 0。",
+        "未交換 token；產品登入仍待獨立實作。"
+      ]
+    }
+  ]
+}

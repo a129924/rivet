@@ -60,3 +60,9 @@ Facade（layer 外的 application composition root）
 OAuth technical failure 不跨越成 shared BC failure contract；未來由 consuming BC 的 local Infra 映射為該 BC 自己的 failure contract。
 
 初次 OAuth sign-in、authorization code + PKCE、callback、logout／revoke 與 multi-account 必須以獨立 topic 處理。本文件 supersede `github-integration-auth-boundary` 的 PAT-only、REST-only authorizer 方向；該歷史 topic 僅保留 traceability，沒有被改寫或刪除。
+
+## E001 受限可行性依據
+
+[實驗 E001：GitHub OAuth 重導向可行性驗證](../../experiments/E001/README.md) 已於 2026-10-07 完成一次真實 GitHub OAuth App → 系統瀏覽器 → IPv4 loopback callback 測試。遮蔽後結果為 `code_present=true`、`state_matches=true`、程序 `exit_code=0`，人類亦確認成功 callback 頁；未保存 code/state 或完整授權 URL。
+
+此依據僅證明 E001 獨立 runner 的此次 redirect/code/state 流程可行。實驗未交換 token，未驗證 token acquisition、refresh、Keychain 或產品登入；實際 port 與瀏覽器版本未記錄，不補造數值。本次不鎖定產品 callback architecture，正式 authorization 與 app 整合仍須由後續獨立 topic 處理，既有 shared token lifecycle 與雙 Client 責任決策保持。

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "revision": "PR #45 review-fix iteration 1",
+  "date": "2026-10-07",
+  "sourceHeadBeforeFix": "6a1b1c79ee6080859eac84f881526f8466a97d22",
+  "correctionRounds": 1,
+  "current": {
+    "specification": {
+      "sha256": "06dedf4e20ba5741d282bea3259a0a6f564f9809a95d1ab808361b2f9ac303ee",
+      "bytes": 2177
+    },
+    "artifact": {
+      "sha256": "4c0042cb60ee85673319cff5f70adcd03fee87673ac74ece1be909db6a97484e",
+      "bytes": 698500
+    },
+    "deliveryReceipt": "oauth-redirect-flow.delivery.json",
+    "visualReceipt": "oauth-redirect-flow.visual-check.json",
+    "visualReview": "passed",
+    "visualReviewer": "independent Reviewer PRR-05",
+    "visualReviewDate": "2026-10-07",
+    "inspectedCaptures": [
+      "oauth-redirect-flow.visual-check.1440x900.light.png",
+      "oauth-redirect-flow.visual-check.1440x900.dark.png",
+      "oauth-redirect-flow.visual-check.2048x1320.light.png",
+      "oauth-redirect-flow.visual-check.2048x1320.dark.png"
+    ]
+  },
+  "supersedes": {
+    "gitRevision": "6a1b1c79ee6080859eac84f881526f8466a97d22",
+    "specification": {
+      "sha256": "55f81f859f7b01a144e65df17cf8c87abe45e3ba259c196d3dc3ae187d14db19",
+      "bytes": 2564
+    },
+    "artifact": {
+      "sha256": "0757306592a67ad92337cbb8d58e9155f81c25a6fb18fa61cb3f759e91b6f08a",
+      "bytes": 700053
+    },
+    "containment": "failed",
+    "correctionRounds": 2,
+    "history": "原 JSON／HTML／receipts／captures 保留於 gitRevision；失敗紀錄保留於 topic ledger，不追溯改為成功。"
+  }
+}
