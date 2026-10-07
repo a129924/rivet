@@ -47,4 +47,4 @@ Pinned CLI `0.11.0`，僅 local validate/render。獨立 Reviewer 從實際 `git
 
 必要 callback cases、listener 動態 port／loopback、逾時清理、CLI exit behavior 與有限 HTTP 讀取的代表測試。測試只驗證獨立 package，不因無關範圍擴張 root suite。本機測試通過後由 Reviewer 檢查未觸及 ReadOnly paths、未洩漏敏感值、工具 receipts 與真實授權狀態。
 
-未提供 Client ID；真實 OAuth App 註冊、登入與授權未執行。Draft PR 可交付工具，但必須明示真實可行性未驗證。實測成功也只證明此次 redirect/code/state 流程，不證明 token、refresh 或產品整合。
+2026-10-07 人類提供測試 App Client ID，要求啟動 E001 並確認成功頁；真實 callback code 非空、state 相符、process exit 0，證據記於 E001 README。PR 的實測狀態依此更新為成功；此結果只證明此次 redirect/code/state 流程，不證明 token、refresh 或產品整合。Archify 視覺殘留不受影響。

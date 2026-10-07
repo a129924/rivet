@@ -26,7 +26,7 @@
 
 2026-10-07 使用者接受計畫，明示先建立 feature worktree 並只在該 worktree 實作；沒有重大問題時直接 commit by topic → push → open Draft PR → human review。此授權包含本 topic 的 bounded commit/push/Draft PR，commit 仍須依 staged diff 檢查語意邊界；不重新要求例行 commit 確認。
 
-Client ID 尚未提供，GitHub App 註冊、登入與授權由人類完成。真實授權為 deferred human-check，不阻止獨立驗證工具實作、自動化測試與 Draft PR 交付。不得將 deferred 記為實測完成；重大 blocker 或 scope/contract drift 仍停止自動前進。
+初次交付時 Client ID 尚未提供，真實授權以 deferred human-check 交付。2026-10-07 人類提供測試 App Client ID 並要求啟動；真實 browser callback code 非空、state 相符、process exit 0，人類亦確認成功頁，HC-LIVE 已完成。詳細遮蔽證據見 E001 README；PR review 與 Archify 殘留仍待處理，成功不擴張為 token 或產品登入驗證。
 
 ## 依據
 

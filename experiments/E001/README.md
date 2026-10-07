@@ -19,7 +19,7 @@
 3. 在系統瀏覽器親自完成登入與授權。Runner 先綁定 `127.0.0.1` 的動態 port，listener 就緒後以 Security framework 產生 32 bytes 隨機 state，再開啟授權頁。
 4. 依終端安全結果記錄實測狀態。不要複製完整 authorization URL、callback query、code 或 state 到檔案、PR 或聊天。
 
-GitHub 的 [loopback redirect 官方說明](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#loopback-redirect-urls) 允許 runtime 使用不同 port；本次註冊無顯式 port 的 callback，runtime 使用 `http://127.0.0.1:<動態 port>/oauth/callback`。官方規則支援此方式，真實 App 與瀏覽器實測仍必須另行完成。
+GitHub 的 [loopback redirect 官方說明](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#loopback-redirect-urls) 允許 runtime 使用不同 port；本次註冊無顯式 port 的 callback，runtime 使用 `http://127.0.0.1:<動態 port>/oauth/callback`。官方規則支援此方式；2026-10-07 已完成一次真實 App／系統瀏覽器 redirect 實測，結果見下節。
 
 `--client-id` 必填且非空；`--timeout-seconds` 為正整數，預設 `180`。未知、重複或無效 CLI 參數不開瀏覽器。listener 啟動上限 `10` 秒，每條 connection header 讀取上限 `8 KiB`、等待上限 `5` 秒。按 Ctrl-C 可中止並清理資源。
 
@@ -36,7 +36,7 @@ GitHub 的 [loopback redirect 官方說明](https://docs.github.com/en/apps/oaut
 
 | 項目 | 狀態與證據 |
 | --- | --- |
-| 真實 OAuth 可行性 | **未執行／未驗證**。Client ID 尚未提供，未註冊測試 App、未登入或完成真實授權。 |
+| 真實 OAuth 可行性 | **成功**：2026-10-07 使用人類提供的測試 OAuth App Client ID，系統瀏覽器返回非空 code、state 相符，程序 exit 0；人類亦確認 callback 頁顯示相同安全成功訊息。未交換 token。 |
 | 本機自動化 | 獨立 Tester 的 `swift build --package-path experiments/E001` 與 `swift test --package-path experiments/E001` 均 exit 0；15 tests、3 suites 於 1.008 秒通過。全部使用 browser stub／模擬 callback，不是真實授權。 |
 | Swift 格式與 lint | E001 recursive `swift format` 與 `swiftlint lint --strict --no-cache`：9 個 Swift 檔案、0 violations。 |
 | Archify 結構 | sequence showcase `9/9`、0 errors、0 warnings；final deliver 通過。 |
@@ -44,7 +44,7 @@ GitHub 的 [loopback redirect 官方說明](https://docs.github.com/en/apps/oaut
 | Graphify | 前序唯讀檢查確認 pinned `0.9.73`；未找到可用既有 graph，採限定來源查讀，不建圖或刷新。 |
 | PR Lens | 獨立 Reviewer 的 initial local map validate/render exit 0；actual base `622abf6` → head `77be780`，1 static light SVG，manifest head 相符。最終證據 commit 後需刷新外部 map；不上傳資產。 |
 
-環境：2026-10-07，macOS `26.5.2`（`25F84`）、Xcode `26.6`（`17F113`）、Apple Swift `6.3.3`，arm64。真實實測日期、code 是否存在與 state 是否相符都尚無證據。
+環境：2026-10-07，macOS `26.5.2`（`25F84`）、Xcode `26.6`（`17F113`）、Apple Swift `6.3.3`，arm64。真實實測成功結果於 2026-10-07 11:14:21（Asia/Taipei）／03:14:21 UTC 觀測；code_present=true、state_matches=true、exit_code=0。
 
 ## 自動化驗證
 
@@ -73,7 +73,7 @@ TDD 證據：首先以尚未實作的 callback stub 執行 `swift test --package
 - topic／E001 可交付文字檔未發現本機絕對路徑 marker。delivery receipt 的規格／HTML SHA-256 和 bytes 完全相符，visual receipt 也指向相同 HTML；四張 captures 與 contact sheet 存在。
 - 已檢視最小 light 與最大 dark 截圖：流程下半部超出首屏，與四尺寸 overflowY receipt 一致。未修改、rerender 或重啟圖修正；圖視覺 gate 不算通過，由獨立 Reviewer 分類。
 
-Tester 分列結論：核心自動化 **approved**；Archify desktop 驗收 **needs-rework**；真實 GitHub 授權仍 **未執行／未驗證**。Tester 不決定 topic／Draft PR gate。
+交付前 Tester 分列結論（歷史結果；後續真實實測見下節）：核心自動化 **approved**；Archify desktop 驗收 **needs-rework**；真實 GitHub 授權仍 **未執行／未驗證**。Tester 不決定 topic／Draft PR gate。
 
 ## 流程圖與限制
 
@@ -83,7 +83,7 @@ Delivery receipt 的規格 SHA-256 為 `55f81f859f7b01a144e65df17cf8c87abe45e3ba
 
 真實實測後只更新「成功／失敗／未完成」、環境日期、code 是否存在、state 是否相符及安全失敗分類。實測成功也僅證明此次 redirect/code/state 流程。Desktop 圖缺陷已由獨立 Reviewer 分類為 nonblocking Draft residual，正式視覺驗收仍 needs-rework，待人類 review；正式 planning 與九欄位執行契約見 `plan/github-oauth-redirect-feasibility/`，不得以輔助工具狀態改寫 OAuth 實驗結果。
 
-## 獨立 Reviewer 結論
+## 交付前獨立 Reviewer 結論（歷史）
 
 2026-10-07 — correctness／scope review 未發現重大程式問題；serial queue、單次終結、listener／timer／connections 清理、有限 HTTP 讀取及 callback／CLI 的安全輸出符合 E001 契約。僅新增 E001 與同 topic artifacts，未修改 root package、產品 API 或 docs。依獨立 Tester 核心證據，**bounded Draft delivery approved**，可依已授權流程建立 topic commit 與 Draft PR，並交 human review。
 
@@ -101,4 +101,14 @@ Graphify 每次 CLI 設 `GRAPHIFY_NO_AUTO_REFRESH=1`；pinned version `0.9.73`�
 
 [Draft PR #45](https://github.com/a129924/rivet/pull/45) 指向 `dev`，實作 commit 為 `77be7808220e26232b7a2a5e910f8831c9651589`；全部既有 pre-commit hooks 通過。交付證據以同 topic docs-only commit 同步，外部 PR Lens map 隨後對齊最終 head。
 
-目前等待人類 review。真實 OAuth 仍未執行／未驗證，Archify desktop containment 仍 needs-rework；本 Draft 不代表完整 topic 完成，不自動 merge 或移除 worktree。
+目前等待 PR 人類 review。真實 OAuth redirect/code/state 已於 2026-10-07 驗證成功；Archify desktop containment 仍 needs-rework。本 Draft 不代表完整 topic 或產品登入完成，不自動 merge 或移除 worktree。
+
+## 真實 OAuth 人工驗證結果
+
+- 觀測時間：2026-10-07 11:14:21（Asia/Taipei），即 03:14:21 UTC。
+- 執行版本：實作 commit `77be7808220e26232b7a2a5e910f8831c9651589`，啟動時 branch HEAD 為 `51dca1eab42cc3748c3ad39e687139dd617f6c8f`；後者僅新增交付文件，runtime 程式未變更。
+- 命令：`experiments/E001/.build/debug/oauth-redirect-probe --client-id <Client-ID> --timeout-seconds 180`，從 feature worktree 執行；使用人類提供的真實測試 App Client ID，不是 browser stub。
+- 程式先開啟系統瀏覽器並等待，隨後輸出「OAuth 重導向驗證成功：收到非空 code，state 相符。未交換 token。」；process exit code 為 `0`。
+- 人類亦回報 callback 頁顯示同一成功訊息；code_present=true、state_matches=true。這是終結結果證據，沒有保存 code、state、完整 callback query 或 authorization URL。
+- 結論：本次 GitHub OAuth App → 系統瀏覽器 → IPv4 loopback callback 的 redirect/code/state 流程驗證成功。沒有交換 access token，不能推論 token acquisition、refresh、Keychain 或正式 app 整合已驗證。
+- 限制：實際動態 port 與瀏覽器品牌／版本未記錄，不以推測補值；重現仍須使用自己的測試 App 設定。Archify desktop 殘留與 PR human review 不因本次成功自動通過。

@@ -29,7 +29,7 @@
 5. 獨立 Reviewer 檢查 correctness、scope、文件、敏感值、視覺證據，給出 verdict。Graphify 無 graph 時以 targeted reads fallback。
 6. 無重大 blocker 且 Reviewer approved 後，授權 Implementer 依 git-commit-convention 檢查 staged diff、單一 topic commit；不重複要求已授權的例行 commit 確認。
 7. 有實際 base/head commits 後獨立 Reviewer 製作 external PR Lens local map、validate/render；不可用或缺 provenance 如實記錄，必要時直接 diff review。
-8. 授權 Implementer non-force push、開 Draft PR（base dev），PR 清楚說明核心測試與真實可行性未驗證；停止於 human review。不 merge、release 或處理未授權 review comments。
+8. 授權 Implementer non-force push、開 Draft PR（base dev），PR 清楚說明核心測試與真實實測狀態；未實測時標為未驗證，實測後依證據更新；停止於 human review。不 merge、release 或處理未授權 review comments。
 
 ## TestCase
 
@@ -48,6 +48,6 @@
 
 scope/path/contract drift、未解除重大 blocker 或未授權行為即停止。工具 diagnostics 不得偽造成功，交獨立 Reviewer 判斷其是否影響交付。
 
-真實 OAuth 授權為獨立 deferred human-check：Client ID 未提供，不阻本次驗證工具 Draft PR。使用者最後的 commit/push/Draft PR 授權覆蓋原計畫不含發布與例行 human commit confirmation 的限制；不覆蓋真實登入、架構新決策或 merge。
+真實 OAuth 授權為獨立 human-check；初次交付時因缺少 Client ID deferred，不阻驗證工具 Draft PR。2026-10-07 人類提供 Client ID、要求啟動並確認成功頁，HC-LIVE 依真實 callback 與 exit 0 證據完成；詳細結果記於 E001 README。使用者最後的 commit/push/Draft PR 授權覆蓋原計畫不含發布與例行 human commit confirmation 的限制；不覆蓋真實登入、架構新決策或 merge。
 
 本次不修改 docs；未驗證研究不回寫長期真相。之後真實成功或提出產品整合需另行依授權確定長期文件與 topic。
