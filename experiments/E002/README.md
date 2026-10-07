@@ -16,10 +16,10 @@
 | --- | --- |
 | In-Scope | 獨立 SwiftPM runner、S256／state、token exchange、本地 DTO → public bundle、一次 /user、mock、遮蔽證據與一張 sequence。 |
 | Out-Of-Scope | refresh rotation、Keychain、產品 UI／client、secret 部署、Graphify 建圖、發布。 |
-| ReadOnly | 根 Package／Sources／Tests、E001、docs／settings；dev 全部檔案唯讀。 |
+| ReadOnly | 根 Package／Sources／Tests、E001、docs／settings；唯一例外是實證審查後允許附加 OAuth 長期文件受限結論，dev 全部檔案唯讀。 |
 | Written | E002 package／Sources／Tests／README／diagrams、同 topic 四檔。 |
 | Deleted | 無。 |
-| Modify | 僅上述 E002 與正式 topic artifacts；未實測不改長期架構文件。 |
+| Modify | 僅上述 E002 與正式 topic artifacts；實證與獨立審查成立後，允許 append OAuth 長期文件的受限結論，本次已依該條件附加。 |
 | Goal | 四軸有效測量與安全、可重現的遮蔽證據。 |
 | Non-Goal | 正式採用、secret 配送、schema 放寬、公開 internal DTO。 |
 | TestCase | 正向新 code＋正 verifier；反向另一組新 code＋錯 verifier；T03–T09 局部 mock 與 T10 交付檢查。 |
@@ -136,7 +136,7 @@ S07 獨立 Reviewer approved：pinned PR Lens 0.11.0 local validate／render exi
 
 外層日期腳本用了錯誤 executable 路徑，start／end 時間文字未寫入；不影響 runner 測量。receipt 的時間只取外層檔案建立時間，約 06:53:54–06:54:27 UTC（14:53:54–14:54:27 Asia/Taipei），明示非精確 OAuth 事件時間。App 全域 expiring-token 設定未另查證；本次 offline_access 請求與實際六欄相容性有證據，不能外推全部 App／正式部署或 secret 配送。
 
-本輪有效完成兩案例的執行與遮蔽紀錄，總體無法判定；L02 獨立 Reviewer evidence-record approved／無 required fix，HC-LIVE 的人工操作已完成，PKCE 證據缺口保留為 human-check。上述舊 0／2、未實測與 pending 敘述均是前序歷史，不改寫原證據；長期架構與圖保持唯讀。
+本輪有效完成兩案例的執行與遮蔽紀錄，總體無法判定；L02 獨立 Reviewer evidence-record approved／無 required fix，HC-LIVE 的人工操作已完成，PKCE 證據缺口保留為 human-check。上述舊 0／2、未實測與 pending 敘述均是前序歷史，不改寫原證據；實證與 L02 審查已成立，本次依 conditional Modify 附加 [長期文件受限依據](../../docs/architecture/github-oauth-dual-client.md#e002-受限交換與-credential-相容性依據)，既有架構與圖不改。
 
 ## L02 獨立證據核准與 L03 commit 前 snapshot
 
@@ -144,4 +144,8 @@ Dispatcher 轉交 L02 獨立 Reviewer 明示 evidence-record `approved`／無 re
 
 前序已發生：S08 docs commit `d87407fbdc739a5e564e8777f149a9fbc3f0e1b0`／正常六 hooks 通過；S09 final PR Lens local approved，base `a4828938389c7fbfabaffa8c6ca11e0ddbe4b64f` → 同 d874 head，graph SHA `32fafe4242513d39d1f20bf0cd39e5302d1495907ebe44c1ba0675c82158f61f`；S10 已 non-force push、[Draft PR #47](https://github.com/a129924/rivet/pull/47) 目標 dev，前序 remote／PR head verified d874。上述屬已發生證據，新證據 commit SHA 尚未存在，不預寫。
 
-L03 僅 README／ledger／遮蔽 stdout／receipt 四檔；runner／圖／產品／E001／長期文件不改，保留 27 mock tests 與 v3 approved 證據，不重跑真 OAuth。形成新 head 後 L04 Reviewer 刷新 PR Lens coverage，L05 再 non-force push 同 branch 並更新既有 PR #47 的實測狀態，不新增 PR 或 merge。HC-LIVE（PKCE 原因缺口）／HC-REVIEW 保持 human-check／pending。
+歷史 L03 證據 commit 僅 README／ledger／遮蔽 stdout／receipt 四檔；當時 runner／圖／產品／E001／長期文件不改，保留 27 mock tests 與 v3 approved 證據，不重跑真 OAuth。形成新 head 後 L04 Reviewer 刷新 PR Lens coverage，L05 再 non-force push 同 branch 並更新既有 PR #47 的實測狀態，不新增 PR 或 merge。HC-LIVE（PKCE 原因缺口）／HC-REVIEW 保持 human-check／pending。
+
+## PR #47 必要 review fix
+
+獨立 Reviewer triage `needs-rework`：唯一必要 P2 thread `PRRT_kwDOUFu0Cc6pztA_` 要求把已核准正向三項回寫長期文件。conditional Modify 的實證／審查條件已成立；本次僅附加受限 E002 依據，保留整份原文件 bytes，PKCE／overall 無法判定、2／2 上限與限制不變。獨立 Tester 已通過 append-only／連結／receipt／三檔 allowlist 驗證；R03 獨立 Reviewer approved，唯一 P2 已完成且無新 findings。本段為 R04 commit 前 snapshot，尚未為此修正 commit／push／reply／resolve。

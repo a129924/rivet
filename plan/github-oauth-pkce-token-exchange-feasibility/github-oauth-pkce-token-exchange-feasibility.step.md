@@ -3,8 +3,8 @@
 - Topic：`github-oauth-pkce-token-exchange-feasibility`
 - Branch：`chore/github-oauth-pkce-token-exchange-feasibility`
 - Base dev／origin/dev：`a4828938389c7fbfabaffa8c6ca11e0ddbe4b64f`。
-- Current phase：L02 evidence-record approved；L03 證據 commit 準備，2／2 授權已用盡。
-- Current step：L03，status=pending，owner=Implementer；此為證據 commit 前 snapshot，L04／L05 pending。
+- Current phase：PR #47 必要 P2 文件回修已獨立核准，R04 commit 前 snapshot；2／2 授權不增加。
+- Current step：R04，status=in-progress，owner=Implementer；R02 通過、R03 approved，本次 commit／push／reply／resolve 尚未發生。
 - Formal upstream verdict：approved；Dispatcher 轉交獨立 Plan-Reviewer 四檔審查（2026-10-07），無 required fix。
 - 前序：使用者批准 processed-plan 與 feature-only／commit／push／human review 授權；對話稿經獨立審查，非正式四檔 gate。
 - 最後更新：2026-10-07，Implementer 記錄 Dispatcher 轉交 L02 獨立 Reviewer evidence-record approved／無 required fix；舊交付 snapshot 保留歷史。
@@ -109,7 +109,7 @@ S06 已 commit `819184f6ddebe05090608a11da602a67e247b5df`、正常六 hooks 全�
 
 外層日期腳本用了錯誤 executable 路徑，start／end 時間文字未寫入；不影響 runner 測量。receipt 的時間只取外層檔案建立時間，約 06:53:54–06:54:27 UTC（14:53:54–14:54:27 Asia/Taipei），明示非精確 OAuth 事件時間。App 全域 expiring-token 設定未另查證；本次 offline_access 請求與實際六欄相容性有證據，不能外推全部 App／正式部署或 secret 配送。
 
-本輪有效完成兩案例的執行與遮蔽紀錄，總體無法判定；L02 evidence-record approved／無 required fix，HC-LIVE 的人工操作已完成，PKCE 證據缺口保留為 human-check。上述舊 0／2、未實測與 pending 敘述均是前序歷史，不改寫原證據；長期架構與圖保持唯讀。
+本輪有效完成兩案例的執行與遮蔽紀錄，總體無法判定；L02 evidence-record approved／無 required fix，HC-LIVE 的人工操作已完成，PKCE 證據缺口保留為 human-check。上述舊 0／2、未實測與 pending 敘述均是前序歷史；R01 必要 P2 已依 conditional Modify 附加 OAuth 長期文件受限依據，原架構／圖與證據不變。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據 | Verdict |
 | --- | --- | --- | --- | --- | --- |
@@ -122,3 +122,23 @@ S06 已 commit `819184f6ddebe05090608a11da602a67e247b5df`、正常六 hooks 全�
 ### L02 approved 與證據 commit 前 snapshot
 
 L02 evidence-record approved／無 required fix 由 Dispatcher 轉交；PKCE／overall 的 human-check 僅阻第三授權／採用，不阻本輪如實證據 commit／push。正向三軸成功、反向無法歸因、2／2、exit1 與時間外層 proxy 保持，不追補未保存原 body／status／error。前序 S08 commit d874／S09 final map approved／S10 Draft PR #47 pushed 已發生；L03 新commit尚未發生，不預寫自身SHA。僅四檔，source／image／長期docs／dev唯讀；L04／L05及HC-REVIEW pending。
+
+## PR #47 必要 review fix（R01）
+
+使用者明確授權 comment review → necessary fix → commit → push → reply／resolve；獨立 Reviewer triage needs-rework，唯一必要 P2：thread `PRRT_kwDOUFu0Cc6pztA_`／comment `PRRC_kwDOUFu0Cc76mlcF` 要求將已核准正向三項回寫長期文件。既有 conditional Modify 已滿足，不重開 planning；非必要留言可 resolve，Copilot quota informational 無 thread 不處理。
+
+前序已發生：L03 證據 commit `03c436ef50b2bedcb6bdcf6387c16c4b70c6b050`；L04 獨立 evidence-delivery approved、PR Lens final head matching；L05 non-force push／PR #47 body 更新，現 PR Ready。舊 L03–L05 pending 是 commit 前 snapshot，不預寫本次新 SHA。
+
+允許僅 `docs/architecture/github-oauth-dual-client.md` append、E002 README、此 ledger；原長期文件 bytes 保留。只寫本次正向 exchange／六欄 public bundle／一次 API 成功與 PKCE unknown 限制，不新增架構／secret／raw body；source／tests／圖／E001／dev唯讀，無真 OAuth 或第三授權。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| R01 | completed | Implementer | 依唯一必要 P2 append 長期受限依據並同步 README／ledger。 | 原文件 prefix bytes 保留；實證指向 d874 runner／安全 stdout／receipt，未改判準。 | null |
+| R02 | completed | Tester | 文件 append-only／連結／diff allowlist／敏感輸出與來源證據驗證。 | root Tester：三檔 allowlist、原 8128 bytes prefix、三個連結、stdout hash／bytes、receipt 三成功與 PKCE／overall unknown／2of2、diff check 與敏感路徑 marker 通過；dev clean。 | null |
+| R03 | completed | Reviewer | 獨立確認 required fix 與 scope／contract，明示 verdict。 | Dispatcher 轉交獨立 Reviewer approved：唯一 P2 已完成，受限三項正向與未判定限制準確，三檔 scope，無新 findings。 | approved |
+| R04 | in-progress | Implementer | approved 後單 topic staged semantic check／正常 hooks commit／non-force push 同 PR。 | 此為 commit 前 snapshot；commit 後先交 Reviewer 更新 final map，push／reply／resolve 仍待後續實際證據，不預寫 SHA。 | null |
+| R05 | pending | Implementer | 已推送 fix 後 reply＋resolve 必要 thread；非必要依 triage處理，不新增PR／merge。 | 尚未發生。 | null |
+
+### R02 獨立 Tester 交接
+
+2026-10-07 — root Tester 驗證三份文件 diff；長期文件原 8128 bytes 完整 prefix 保留，三個證據相對連結可讀，receipt 與原 stdout SHA／342 bytes 一致。正向三項成功、PKCE／overall 無法判定與授權 2／2 保持；沒有 source／tests／圖／live evidence 或 untracked 新檔變更，新增 diff 無本機絕對路徑／token marker，git diff --check 通過，dev clean 且 HEAD 未變。不重跑真實授權或新增測試；交獨立 Reviewer 判 required fix，未自評 approval。
