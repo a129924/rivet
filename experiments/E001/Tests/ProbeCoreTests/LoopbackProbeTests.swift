@@ -7,56 +7,76 @@ import Testing
 struct LoopbackProbeTests {
   @Test func localCallbackAndCleanup() async throws {
     let urls = URLBox()
-    let outcome = try await run { url, opened in
+    let outcome = try await run { url, session in
       urls.set(url)
-      opened(true)
-      Task {
-        do {
-          let callback = try Self.callbackURL(url)
-          #expect(callback.host == "127.0.0.1")
-          #expect((callback.port ?? 0) > 0)
-          let (data, response) = try await URLSession.shared.data(from: callback)
-          #expect((response as? HTTPURLResponse)?.statusCode == 200)
-          let body = try #require(String(bytes: data, encoding: .utf8))
-          #expect(!body.contains("test-code"))
-        } catch { Issue.record("本機 callback request 失敗。") }
-      }
+      do {
+        let callback = try Self.callbackURL(url)
+        #expect(callback.host == "127.0.0.1")
+        #expect((callback.port ?? 0) > 0)
+        let (data, response) = try await session.data(from: callback)
+        #expect((response as? HTTPURLResponse)?.statusCode == 200)
+        let body = try #require(String(bytes: data, encoding: .utf8))
+        #expect(!body.contains("test-code"))
+      } catch { Issue.record("本機 callback request 失敗。") }
     }
     #expect(outcome == .success)
     let authorizationURL = try #require(urls.get())
     let callback = try Self.callbackURL(authorizationURL)
     do {
-      _ = try await URLSession.shared.data(from: callback)
+      _ = try await URLSession.shared.data(for: URLRequest(url: callback, timeoutInterval: 2))
       Issue.record("終結後 listener 仍接受 connection。")
     } catch {
       // Connection refusal confirms the listener was closed; this is a simulated callback only.
     }
   }
 
+  @Test func waitsForClientWorkAfterProbeCompletion() async throws {
+    let finished = CompletionCount()
+    let outcome = try await run { url, session in
+      _ = try await session.data(from: Self.callbackURL(url))
+      try await Task.sleep(for: .milliseconds(150))
+      finished.increment()
+    }
+    #expect(outcome == .success)
+    #expect(finished.value == 1)
+  }
+
+  @Test func clientFailureIsJoinedAndPropagated() async {
+    await #expect(throws: ClientError.self) {
+      try await run(timeout: 1) { _, _ in throw ClientError.expected }
+    }
+  }
+
+  @Test func startupFailureDoesNotWaitForMissingBrowserCallback() async throws {
+    let invoked = CompletionCount()
+    let outcome = try await run(limits: .init(startupSeconds: 0, headerSeconds: 5)) { _, _ in
+      invoked.increment()
+    }
+    #expect(outcome == .listenerFailure)
+    #expect(invoked.value == 0)
+  }
+
   @Test func unrelatedRequestsKeepWaiting() async throws {
-    let outcome = try await run { url, opened in
-      opened(true)
-      Task {
-        do {
-          let callback = try Self.callbackURL(url)
-          var wrongPath = try #require(URLComponents(url: callback, resolvingAgainstBaseURL: false))
-          wrongPath.path = "/favicon.ico"
-          let (_, notFound) = try await URLSession.shared.data(from: #require(wrongPath.url))
-          #expect((notFound as? HTTPURLResponse)?.statusCode == 404)
-          var post = URLRequest(url: callback)
-          post.httpMethod = "POST"
-          let (_, wrongMethod) = try await URLSession.shared.data(for: post)
-          #expect((wrongMethod as? HTTPURLResponse)?.statusCode == 405)
-          _ = try await URLSession.shared.data(from: callback)
-        } catch { Issue.record("404／405 後的本機 callback 失敗。") }
-      }
+    let outcome = try await run { url, session in
+      do {
+        let callback = try Self.callbackURL(url)
+        var wrongPath = try #require(URLComponents(url: callback, resolvingAgainstBaseURL: false))
+        wrongPath.path = "/favicon.ico"
+        let (_, notFound) = try await session.data(from: #require(wrongPath.url))
+        #expect((notFound as? HTTPURLResponse)?.statusCode == 404)
+        var post = URLRequest(url: callback)
+        post.httpMethod = "POST"
+        let (_, wrongMethod) = try await session.data(for: post)
+        #expect((wrongMethod as? HTTPURLResponse)?.statusCode == 405)
+        _ = try await session.data(from: callback)
+      } catch { Issue.record("404／405 後的本機 callback 失敗。") }
     }
     #expect(outcome == .success)
   }
 
   @Test func timeoutAndBrowserFailure() async throws {
-    #expect(try await run(timeout: 1) { _, opened in opened(true) } == .timeout)
-    #expect(try await run { _, opened in opened(false) } == .browserFailure)
+    #expect(try await run(timeout: 1) == .timeout)
+    #expect(try await run(browserOpens: false) == .browserFailure)
   }
 
   @Test func interruptTerminatesOnce() async throws {
@@ -82,39 +102,60 @@ struct LoopbackProbeTests {
 
   @Test func incompleteAndOversizedConnectionsDoNotBlockCallback() async throws {
     let limits = LoopbackProbe.Limits(startupSeconds: 10, headerSeconds: 0.15)
-    let outcome = try await run(limits: limits) { url, opened in
-      opened(true)
-      Task {
-        do {
-          let callback = try Self.callbackURL(url)
-          #expect(Self.waitForSocketClose(port: try #require(callback.port), oversized: false))
-          #expect(Self.waitForSocketClose(port: try #require(callback.port), oversized: true))
-          _ = try await URLSession.shared.data(from: callback)
-        } catch { Issue.record("有限 HTTP read 後的本機 callback 失敗。") }
-      }
+    let outcome = try await run(limits: limits) { url, session in
+      do {
+        let callback = try Self.callbackURL(url)
+        #expect(Self.waitForSocketClose(port: try #require(callback.port), oversized: false))
+        #expect(Self.waitForSocketClose(port: try #require(callback.port), oversized: true))
+        _ = try await session.data(from: callback)
+      } catch { Issue.record("有限 HTTP read 後的本機 callback 失敗。") }
     }
     #expect(outcome == .success)
   }
 
   private func run(
-    timeout: Int = 3, limits: LoopbackProbe.Limits = .init(),
-    browser: @escaping LoopbackProbe.BrowserOpener
+    timeout: Int = 3, limits: LoopbackProbe.Limits = .init(), browserOpens: Bool = true,
+    client: @escaping @Sendable (URL, URLSession) async throws -> Void = { _, _ in }
   ) async throws -> ProbeOutcome? {
     let configuration = try ProbeConfiguration(arguments: [
       "--client-id", "test-client", "--timeout-seconds", "\(timeout)",
     ])
     let events = AsyncStream<ProbeOutcome>.makeStream()
+    let browserURLs = AsyncStream<URL>.makeStream()
+    let sessionConfiguration = URLSessionConfiguration.ephemeral
+    sessionConfiguration.timeoutIntervalForRequest = 2
+    sessionConfiguration.timeoutIntervalForResource = 5
+    let session = URLSession(configuration: sessionConfiguration)
+    // 在 test context 建立並保留 Task，讓 Swift Testing 的 assertions 屬於目前測試。
+    let clientTask = Task {
+      var iterator = browserURLs.stream.makeAsyncIterator()
+      guard let url = await iterator.next() else { return }
+      try await client(url, session)
+    }
     let probe = LoopbackProbe(
-      configuration: configuration, limits: limits, openBrowser: browser,
+      configuration: configuration, limits: limits,
+      openBrowser: { url, opened in
+        if browserOpens { browserURLs.continuation.yield(url) }
+        opened(browserOpens)
+      },
       completion: {
+        // 啟動失敗時沒有 browser callback；finish 解除 client 的等待，再 join。
+        browserURLs.continuation.finish()
         events.continuation.yield($0)
         events.continuation.finish()
       })
-    defer { withExtendedLifetime(probe) {} }
+    defer {
+      session.invalidateAndCancel()
+      withExtendedLifetime(probe) {}
+    }
     probe.start()
     var iterator = events.stream.makeAsyncIterator()
-    return await iterator.next()
+    let outcome = await iterator.next()
+    try await clientTask.value
+    return outcome
   }
+
+  private enum ClientError: Error { case expected }
 
   private static func callbackURL(_ authorizationURL: URL) throws -> URL {
     let query = try #require(

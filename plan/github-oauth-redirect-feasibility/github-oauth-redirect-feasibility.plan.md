@@ -13,11 +13,11 @@
 | Goal | 交付可執行且可重現的 OAuth redirect/code/state 驗證工具；真實授權成功後留下遮蔽結果證據。 |
 | Non-Goal | 不宣稱 token、refresh、產品登入或產品 callback architecture 已驗證；不鎖定未授權架構。 |
 | In-Scope | E001 獨立 package、runner、必要測試、README、四份正式 artifacts、一張 Archify sequence、受限 Graphify／PR Lens 證據。 |
-| Out-Of-Scope | token exchange、Client Secret、產品整合、root package／產品 API／docs 修改、Graphify 建圖、工具安裝、工具上傳／發布、auto-merge。 |
-| ReadOnly | 既有產品 Sources/Tests、root Package.swift、docs/、歷史 topics、.vscode/、skills、既有 configs；Git 狀態僅依已授權交付操作變更。 |
-| Written | 本 topic 四份 artifacts；experiments/E001/ 的 Package.swift、Sources/、Tests/、README.md、diagrams/ 下規格／HTML／receipts／captures；PR Lens 僅外部暫存產物。 |
+| Out-Of-Scope | token exchange、Client Secret、產品整合、root package／產品 API／其他 docs 修改、Graphify 建圖、工具安裝、工具上傳／發布、auto-merge。 |
+| ReadOnly | 既有產品 Sources/Tests、root Package.swift、docs/（僅排除下述唯一 append 文件）、歷史 topics、.vscode/、skills、既有 configs；Git 狀態僅依已授權交付操作變更。 |
+| Written | 本 topic 四份 artifacts；本次 review-fix 可新增 diagrams/ 的新 revision candidate 與生成 evidence、寫入唯一 docs/architecture/github-oauth-dual-client.md 的受限 append 內容；experiments/E001/ 的 Package.swift、Sources/、Tests/、README.md、diagrams/ 下規格／HTML／receipts／captures；PR Lens 僅外部暫存產物。 |
 | Deleted | 無；不得刪除、搬移或更名既有 tracked file。 |
-| Modify | 本 topic 與 E001 新建檔案的必要修正、實測結果與 ledger 更新；不得修改 ReadOnly。 |
+| Modify | 原契約內本 topic／E001 必要修正；本次 review-fix 限四份 artifacts、E001 README.md、diagrams/ 生成文件與 receipts/captures、Tests/ProbeCoreTests/LoopbackProbeTests.swift；唯一長期文件 docs/architecture/github-oauth-dual-client.md 只 append「E001 受限可行性依據」。不得修改 runtime／其他 ReadOnly。 |
 | TestCase | 下節的 callback、CLI、listener／HTTP、清理、敏感值、圖驗收、provenance 與 path allowlist。 |
 
 ## Implementation Sequence
@@ -50,4 +50,25 @@ scope/path/contract drift、未解除重大 blocker 或未授權行為即停止�
 
 真實 OAuth 授權為獨立 human-check；初次交付時因缺少 Client ID deferred，不阻驗證工具 Draft PR。2026-10-07 人類提供 Client ID、要求啟動並確認成功頁，HC-LIVE 依真實 callback 與 exit 0 證據完成；詳細結果記於 E001 README。使用者最後的 commit/push/Draft PR 授權覆蓋原計畫不含發布與例行 human commit confirmation 的限制；不覆蓋真實登入、架構新決策或 merge。
 
-本次不修改 docs；未驗證研究不回寫長期真相。之後真實成功或提出產品整合需另行依授權確定長期文件與 topic。
+本次依 review-fix 授權只 append 唯一長期文件的受限 E001 真實成功依據；未驗證假設不寫成架構真相。產品整合、callback 架構與其他 docs 仍須另行 topic／授權。
+
+## PR-Comment-Review-and-Fix 契約（新 amendment 待審）
+
+PR #45 現為 Ready，保留原 S02 approval 與初次 Draft-only delivery verdict，不重開 Draft、不追溯放行失敗的圖 gate。此次流程為 amendment planning → 獨立 Plan-Reviewer → Implementer → Tester → 獨立 Reviewer → topic commit/non-force push → 回覆／resolve 指定 threads → human review；任何步驟不可推定上一 gate approved。
+
+- 圖修訂只改新 candidate 的真實狀態與 diagnosed layout，最多兩輪 focused correction；須新 validate/deliver receipts、四個 desktop containment/captures 與人工視覺 acceptance 全通過。可因未解除診斷 bounded read renderer，不修改工具、不安裝、不手改 trusted HTML。預算耗盡仍 failed 即 blocker，不默刪圖／無限重啟。
+- 唯一 docs append 以 E001 README、2026-10-07 code/state=true、exit 0 記錄可重現受限依據與限制；不將 experiment callback 路徑升格產品 architecture，不新建架構圖。
+- 只修既有 test helper 的 client Task await/join 與 startup-failure 有限退出；測試成功／error assertions 均在 test 返回前完成，失敗不掛住。不得改 E001 runtime、產品或再次開 OAuth 授權。
+- 新修訂只更新允許文件；Deleted 仍無。既有真實成功、舊圖 failed receipts/hash 與兩輪歷史保留；新 receipts 清楚標 superseding revision。PR Lens 如需刷新仍僅 external local actual diff，不 upload；Graphify 維持 no-auto-refresh、no graph 的 bounded source fallback。
+- 結果須由獨立 Reviewer approved 才能 topic commit/push；依已明示授權回覆各 thread 的處置與證據後 resolve。保留 PR Ready 狀態，停止 human review，不 merge／release。
+
+### Review-Fix 驗收與 Threads
+
+| Thread ID | 必要修正與驗收 |
+| --- | --- |
+| PRRT_kwDOUFu0Cc6pvn8F | Archify 新 revision 所有四 desktop 通過 containment，9 showcase checks／deliver 與獨立視覺審查完成；初次 Draft-only approval 不等於正式 acceptance。 |
+| PRRT_kwDOUFu0Cc6pvn8J | 唯一長期 docs append 連結 README、記真實成功與 limits；其他 docs／既有架構不變。 |
+| PRRT_kwDOUFu0Cc6pvn8N | JSON 與新 generated HTML 圖卡都反映已驗證成功，不留「尚未執行」；生成 receipts 對應 accepted bytes。 |
+| PRRT_kwDOUFu0Cc6pvqq3 | client Task join/await，所有 assertions 在 test 返回前完成，錯誤／startup-failure 有限退出，E001 測試通過；不改 runtime。 |
+
+上述 threads 由主 agent gh GraphQL 查證於 head `6a1b1c7` 皆 unresolved、not outdated；不捏造 comment URLs。規劃 amendment 通過前不得開始這些修改。

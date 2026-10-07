@@ -37,10 +37,10 @@ GitHub 的 [loopback redirect 官方說明](https://docs.github.com/en/apps/oaut
 | 項目 | 狀態與證據 |
 | --- | --- |
 | 真實 OAuth 可行性 | **成功**：2026-10-07 使用人類提供的測試 OAuth App Client ID，系統瀏覽器返回非空 code、state 相符，程序 exit 0；人類亦確認 callback 頁顯示相同安全成功訊息。未交換 token。 |
-| 本機自動化 | 獨立 Tester 的 `swift build --package-path experiments/E001` 與 `swift test --package-path experiments/E001` 均 exit 0；15 tests、3 suites 於 1.008 秒通過。全部使用 browser stub／模擬 callback，不是真實授權。 |
+| 本機自動化 | 本次 review-fix 獨立 Tester 的 E001 build/test exit 0，18 tests／3 suites 於 1.014 秒通過；startup-failure targeted 重跑 5 次皆 exit 0，約 4–5 毫秒完成。client work 已 await，error／missing callback 有限退出。初次 15-test 證據保留於歷史段落；全部自動化為 browser stub／模擬 callback。 |
 | Swift 格式與 lint | E001 recursive `swift format` 與 `swiftlint lint --strict --no-cache`：9 個 Swift 檔案、0 violations。 |
-| Archify 結構 | sequence showcase `9/9`、0 errors、0 warnings；final deliver 通過。 |
-| Archify 桌面 containment | **failed**：四個尺寸皆有垂直 overflow；`1440×900` 的 scrollHeight 為 `1645`，`2048×1320` 為 `1773`。captures 已保存；獨立 Reviewer 已親看最小 light／最大 dark，確認視覺 gate needs-rework，分類為不阻 Draft 的殘留。達兩輪 focused correction 上限，未繼續修圖，未宣稱整體圖驗收通過。 |
+| Archify 結構 | 新 revision sequence showcase `9/9`、0 errors、0 warnings；final deliver 通過，圖卡反映 2026-10-07 已成功實測。 |
+| Archify 桌面 containment | **新 revision passed**：1440×900、1600×1000、1920×1080、2048×1320 均無 X／Y overflow，light/dark captures 已保存；PRR-05 已獨立親看四張 PNG，**新 revision 正式視覺 acceptance passed**。初次 failed 與兩輪修正歷史保留於 Git／ledger，本次另授權的 review-fix 使用 1 輪 focused correction。 |
 | Graphify | 前序唯讀檢查確認 pinned `0.9.73`；未找到可用既有 graph，採限定來源查讀，不建圖或刷新。 |
 | PR Lens | 獨立 Reviewer 的 initial local map validate/render exit 0；actual base `622abf6` → head `77be780`，1 static light SVG，manifest head 相符。最終證據 commit 後需刷新外部 map；不上傳資產。 |
 
@@ -61,7 +61,7 @@ swiftlint lint --strict --no-cache \
 
 TDD 證據：首先以尚未實作的 callback stub 執行 `swift test --package-path experiments/E001 --filter CallbackTests`，合法 code/state 被判為 `.invalidCallback`，1 個測試失敗；實作判定後 10 個測試通過；補上真實 loopback runtime 與受限 HTTP cases 後，15 個測試通過。測試用的 code/state 是合成資料，不是真實授權結果。
 
-## 獨立 Tester 證據
+## 初次獨立 Tester 證據（歷史）
 
 2026-10-07 在 feature worktree 複核：
 
@@ -79,9 +79,9 @@ TDD 證據：首先以尚未實作的 callback stub 執行 `swift test --package
 
 [OAuth sequence 圖](diagrams/oauth-redirect-flow.html)、[規格](diagrams/oauth-redirect-flow.json)、[delivery receipt](diagrams/oauth-redirect-flow.delivery.json)、[desktop receipt](diagrams/oauth-redirect-flow.visual-check.json)、[light/dark contact sheet](diagrams/oauth-redirect-flow.visual-check.html)。規格已凍結，圖採 static/classic；作者內容繁體中文，Archify 固定 Viewer UI 與 HTML lang 使用 English fallback。
 
-Delivery receipt 的規格 SHA-256 為 `55f81f859f7b01a144e65df17cf8c87abe45e3ba259c196d3dc3ae187d14db19`（2564 bytes），HTML SHA-256 為 `0757306592a67ad92337cbb8d58e9155f81c25a6fb18fa61cb3f759e91b6f08a`（700053 bytes）。結構通過與 desktop failure 分開記錄，不能以 deliver 通過推定視覺通過。
+新 revision 的 delivery receipt：規格 SHA-256 `06dedf4e20ba5741d282bea3259a0a6f564f9809a95d1ab808361b2f9ac303ee`（2177 bytes），HTML SHA-256 `4c0042cb60ee85673319cff5f70adcd03fee87673ac74ece1be909db6a97484e`（698500 bytes）。[Revision provenance](diagrams/oauth-redirect-flow.revision.json) 記錄 superseded commit 與 hashes；初次規格 SHA `55f81f85…`、HTML SHA `07573065…` 與四尺寸 overflow 的 receipts/captures 保留於 commit `6a1b1c79ee6080859eac84f881526f8466a97d22`，不追溯改為成功。新 deterministic／containment 與獨立 PRR-05 人工視覺審查分別完成；新 revision 正式 acceptance passed。
 
-真實實測後只更新「成功／失敗／未完成」、環境日期、code 是否存在、state 是否相符及安全失敗分類。實測成功也僅證明此次 redirect/code/state 流程。Desktop 圖缺陷已由獨立 Reviewer 分類為 nonblocking Draft residual，正式視覺驗收仍 needs-rework，待人類 review；正式 planning 與九欄位執行契約見 `plan/github-oauth-redirect-feasibility/`，不得以輔助工具狀態改寫 OAuth 實驗結果。
+真實實測成功僅證明此次 redirect/code/state 流程。新圖已修正先前 desktop overflow 與過時狀態卡；本次 PRR-04 獨立測試 approved，PRR-05 成果與正式視覺 acceptance approved；不以初次 Draft-only verdict 放行。正式 planning 與九欄位執行契約見 `plan/github-oauth-redirect-feasibility/`，不得以輔助工具狀態改寫 OAuth 實驗結果。
 
 ## 交付前獨立 Reviewer 結論（歷史）
 
@@ -97,11 +97,11 @@ Reviewer 已親看 1440×900 light 與 2048×1320 dark 截圖；流程與結論�
 
 Graphify 每次 CLI 設 `GRAPHIFY_NO_AUTO_REFRESH=1`；pinned version `0.9.73`。沒有既有 graph，採 bounded source reads，不建圖、安裝、刷新 skills 或修改 hooks/config。工具產物不 commit／upload／attach／publish，Draft PR 由已授權的交付流程建立。
 
-## Draft PR 與人類 review
+## PR 與人類 review
 
-[Draft PR #45](https://github.com/a129924/rivet/pull/45) 指向 `dev`，實作 commit 為 `77be7808220e26232b7a2a5e910f8831c9651589`；全部既有 pre-commit hooks 通過。交付證據以同 topic docs-only commit 同步，外部 PR Lens map 隨後對齊最終 head。
+[PR #45（目前 Ready）](https://github.com/a129924/rivet/pull/45) 指向 `dev`，實作 commit 為 `77be7808220e26232b7a2a5e910f8831c9651589`；全部既有 pre-commit hooks 通過。交付證據以同 topic docs-only commit 同步，外部 PR Lens map 隨後對齊最終 head。
 
-目前等待 PR 人類 review。真實 OAuth redirect/code/state 已於 2026-10-07 驗證成功；Archify desktop containment 仍 needs-rework。本 Draft 不代表完整 topic 或產品登入完成，不自動 merge 或移除 worktree。
+PR #45 已由人類設為 Ready，現處理四項 review fixes。真實 OAuth redirect/code/state 已於 2026-10-07 驗證成功；新 Archify desktop containment 與 PRR-05 獨立正式視覺 acceptance 均 passed。完整 topic／產品登入未因實驗成功而完成，不自動 merge 或移除 worktree。
 
 ## 真實 OAuth 人工驗證結果
 
@@ -111,4 +111,38 @@ Graphify 每次 CLI 設 `GRAPHIFY_NO_AUTO_REFRESH=1`；pinned version `0.9.73`�
 - 程式先開啟系統瀏覽器並等待，隨後輸出「OAuth 重導向驗證成功：收到非空 code，state 相符。未交換 token。」；process exit code 為 `0`。
 - 人類亦回報 callback 頁顯示同一成功訊息；code_present=true、state_matches=true。這是終結結果證據，沒有保存 code、state、完整 callback query 或 authorization URL。
 - 結論：本次 GitHub OAuth App → 系統瀏覽器 → IPv4 loopback callback 的 redirect/code/state 流程驗證成功。沒有交換 access token，不能推論 token acquisition、refresh、Keychain 或正式 app 整合已驗證。
-- 限制：實際動態 port 與瀏覽器品牌／版本未記錄，不以推測補值；重現仍須使用自己的測試 App 設定。Archify desktop 殘留與 PR human review 不因本次成功自動通過。
+- 限制：實際動態 port 與瀏覽器品牌／版本未記錄，不以推測補值；重現仍須使用自己的測試 App 設定。Archify 正式 acceptance 與 PR human review 不因本次 OAuth 成功自動通過。
+
+## PR Review-Fix Implementer 證據（交接歷史）
+
+2026-10-07 — 依 PRR-02 approved 的 amendment，只修測試 helper、E001 README／sequence generated evidence 與唯一允許的長期 docs append。runtime 沒有更動，未再次啟動真實授權。
+
+- `waitsForClientWorkAfterProbeCompletion` red：原 helper 在 probe 完成後立即返回，延遲 client work 的計數仍為 `0`（預期 `1`），1 test failed；red 收尾也 join 該 task，沒有留下背景工作。修正後 helper 保留 client Task，在 test context 建立、以 browser URL 啟動工作，依序 await probe outcome 與 client Task，HTTP assertions 在 test 返回前完成。
+- 使用既有 `Limits` 注入的 startup failure 沒有 browser callback，completion 關閉 URL stream 讓 client 有限退出並 join；client error 由已 await 的 Task 傳回，request/resource 等待分別限 2／5 秒。沒有新增 runtime API／hook 或 mock framework。
+- 本次 E001 build/test exit `0`，18 tests／3 suites passed（1.011 秒）；新增 delayed client／error propagation／missing callback 三個代表案例。局部 Swift format lint passed，strict SwiftLint 9 files／0 violations。另以暫時負向 assertion probe 核對 client Task issue 仍歸屬目前測試；probe bytes 隨後還原，不交付故意失敗的測試。
+- 新 sequence 只壓縮 authored timeline、合併結果與清理語意、移除重複成功條件卡，保留主流程與安全結果頁；沒有手改 HTML、縮字、裁切、overflow hidden 或 runtime CSS。新 candidate 每改必 validate，1 輪 focused correction 後 deliver，四 desktop containment/captures passed，獨立視覺審查 pending。
+- [E001 受限長期依據](../../docs/architecture/github-oauth-dual-client.md#e001-受限可行性依據) 只 append 已驗證結果與 no-token／產品整合限制，沒有更改既有架構決策。
+
+下一步：獨立 Tester 核對 18 tests、有限退出、receipts／hashes／四 desktop 與 path allowlist；獨立 Reviewer 檢視 light/dark 圖及四項 thread 修正後，才決定本次正式 acceptance／commit readiness。
+
+## PRR-04 獨立 Tester 證據（交接歷史）
+
+2026-10-07 — 僅在指定 feature worktree 執行 E001 review-fix 驗證，未修改實作、canonical JSON／HTML、docs append 或其他 owner 的歷史結果，未再次啟動真實 OAuth。
+
+- `swift build --package-path experiments/E001`：exit `0`；`swift test --package-path experiments/E001`：exit `0`，18 tests／3 suites（1.014 秒）passed。新 delayed-client test 等待 150 ms 後才返回並確認計數為 1；client error test 約 1 秒後 joined／propagated；startup failure 未呼叫 browser opener 且正常完成。
+- `swift test --skip-build --package-path experiments/E001 --filter startupFailureDoesNotWaitForMissingBrowserCallback`：targeted 重跑 5 次，全部 exit `0`，每次約 4–5 ms。未觀察到零秒 startup timer 與 listener ready 的競逐造成 failure 或掛住；此證據為本環境有限重跑，沒有更改 runtime injection。
+- `swift format lint --strict --recursive experiments/E001/Package.swift experiments/E001/Sources experiments/E001/Tests` 與 `swiftlint lint --strict --no-cache experiments/E001/Package.swift experiments/E001/Sources experiments/E001/Tests`：exit `0`，SwiftLint 9 files／0 violations；`git diff --check` 通過。
+- Archify `validate sequence experiments/E001/diagrams/oauth-redirect-flow.json --quality showcase --json`：exit `0`，9/9 showcase、0 composition errors／warnings。獨立 `visual-check experiments/E001/diagrams/oauth-redirect-flow.html --repo-root . --json`：exit `0`，四尺寸 scrollWidth／Height 分別等於 1440×900、1600×1000、1920×1080、2048×1320，全部無 X／Y overflow；四張 light/dark captures 齊。僅刷新驗證 sidecars，HTML／JSON 未 rerender 或修改；自動 receipt 維持 `visualReview: pending`。
+- 已核對規格 2177 bytes／SHA-256 `06dedf4e20ba5741d282bea3259a0a6f564f9809a95d1ab808361b2f9ac303ee`，HTML 698500 bytes／SHA-256 `4c0042cb60ee85673319cff5f70adcd03fee87673ac74ece1be909db6a97484e`，delivery／visual／revision receipts 完全相符；superseded spec／HTML 的 hashes 與 bytes 也符合 Git 舊版本。
+- Amendment allowlist 符合，runtime、產品、root packages 與其他 docs 無 diff。唯一長期 docs append 的既有 bytes 完整保留為前綴，新增 817 bytes；沒有刪除。dev worktree 仍僅原有 `.vscode/launch.json`，本次未寫入 dev；E001 `.build/` 仍被既有 ignore 排除。
+- 可交付文字檔未發現本機絕對路徑或完整 authorization URL marker；測試檔未殘留暫時負向 assertion。親看最小 light／最大 dark captures，主流程與成功／no-token 卡均在首屏；正式視覺 acceptance 由獨立 Reviewer PRR-05 決定。
+
+**PRR-04 verdict：approved，限本次獨立測試、scope hygiene、receipts 與自動 containment。** 未發現驗證 blocker；不授予 PRR-05、commit 或完整 topic approval。已有真實 OAuth 成功證據保留，Tester 本輪沒有重跑真實授權。
+
+## PRR-05 獨立 Reviewer 結論
+
+2026-10-07 — **approved**。四項 review required fixes 已完成：新圖四 desktop containment 與正式視覺 acceptance、真實成功的唯一長期 docs append、圖卡過時狀態修正，以及 client Task await／error／missing callback 有限退出。client Task 在測試 context 建立，probe outcome 與 client work 都完成後 test 才返回；唯一 docs append 不改既有架構決策，runtime／產品未更動。
+
+**visual_review: passed；correction_rounds: 1。** Reviewer 親看 1440×900 和 2048×1320 的 light/dark 四張 PNG，流程與成功／no-token 卡首屏完整可讀，沒有遮擋或裁切；另外兩種 desktop 尺寸依 receipt 確認 containment 通過。spec／HTML 的 SHA-256、bytes 與 delivery／visual／revision receipts 相符，9/9 showcase、0 errors/warnings。人工驗收記於 revision receipt，自動 visual-check 的 pending 保持原義；舊圖失敗不追溯改為通過。
+
+可依已授權流程同 topic commit/push 並回覆、resolve 四指定 threads；PR #45 保持 Ready，停止於 human review。真實 OAuth 已驗證成功僅限 redirect/code/state，不推論 token 或產品整合。PR Lens final commit 後只更新外部 map，不新增 repository 圖或偽造 commit provenance。

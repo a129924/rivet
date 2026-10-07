@@ -8,7 +8,7 @@
     "column_fit": "spread",
     "viewBox": [
       1000,
-      1060
+      480
     ]
   },
   "participants": [
@@ -16,7 +16,7 @@
       "id": "probe",
       "type": "backend",
       "label": "驗證程式",
-      "sublabel": "loopback listener"
+      "sublabel": "結果判定與清理"
     },
     {
       "id": "listener",
@@ -38,32 +38,25 @@
   ],
   "messages": [
     {
-      "id": "bind",
-      "from": "probe",
-      "to": "listener",
-      "y": 180,
-      "label": "綁定 loopback 動態 port"
-    },
-    {
       "id": "ready",
       "from": "listener",
       "to": "probe",
-      "y": 270,
-      "label": "listener 就緒；產生 state",
+      "y": 170,
+      "label": "動態 port 就緒；產生 state",
       "variant": "security"
     },
     {
       "id": "open",
       "from": "probe",
       "to": "browser",
-      "y": 370,
+      "y": 210,
       "label": "開啟授權 URL"
     },
     {
       "id": "authorize",
       "from": "browser",
       "to": "github",
-      "y": 470,
+      "y": 250,
       "label": "登入並同意授權",
       "variant": "emphasis"
     },
@@ -71,7 +64,7 @@
       "id": "redirect",
       "from": "github",
       "to": "browser",
-      "y": 570,
+      "y": 290,
       "label": "重導向至 loopback callback",
       "variant": "return"
     },
@@ -79,7 +72,7 @@
       "id": "callback",
       "from": "browser",
       "to": "listener",
-      "y": 670,
+      "y": 330,
       "label": "GET /oauth/callback：code、state",
       "variant": "security"
     },
@@ -87,22 +80,15 @@
       "id": "validate",
       "from": "listener",
       "to": "probe",
-      "y": 770,
-      "label": "判定 code 非空、state 相符",
+      "y": 370,
+      "label": "驗證 code/state；終結並清理",
       "variant": "security"
-    },
-    {
-      "id": "cleanup",
-      "from": "probe",
-      "to": "listener",
-      "y": 870,
-      "label": "終結一次；清理資源"
     },
     {
       "id": "result",
       "from": "listener",
       "to": "browser",
-      "y": 970,
+      "y": 395,
       "label": "安全結果頁",
       "variant": "return"
     }
@@ -110,16 +96,10 @@
   "cards": [
     {
       "dot": "emerald",
-      "title": "成功條件",
+      "title": "實測已成功",
       "items": [
-        "真實 GitHub 授權返回、code 非空且 state 相符。"
-      ]
-    },
-    {
-      "dot": "amber",
-      "title": "目前驗證狀態",
-      "items": [
-        "真實授權尚未執行；本機測試不能代替實測。"
+        "2026-10-07：code 非空、state 相符、exit 0。",
+        "未交換 token；產品登入仍待獨立實作。"
       ]
     }
   ]
