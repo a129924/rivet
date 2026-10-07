@@ -43,4 +43,4 @@ Out-Of-Scope：refresh rotation、Keychain、正式登入 UI、REST／GraphQL cl
 
 2026-10-07 — 使用者明確批准「追加最多兩輪圖修復，維持原驗收標準（建議）」。此為限定的預算追加，不延期或豁免 mandatory 圖驗收、不改 OAuth scope。原兩輪失敗與既有證據缺口保留；原預算 2／2 已用盡，追加預算使用 1／2（原 2／2、累計 3／4），總計最多四輪。
 
-A001 獨立 Plan-Reviewer approved／無 required fix；A05 獨立 Reviewer 已對 runner＋v3 完整交付明示 approved，四 captures 實看可讀平衡、語意正確，HC-DIAGRAM 已解除。v1／v2 失敗與 provenance 缺口保留為歷史，不阻 v3 matching 來源交付。真實授權仍 0／2，HC-LIVE pending；既有 commit／push 授權有效，但未 commit／push，須待成果 gate 放行。
+A001 獨立 Plan-Reviewer approved／無 required fix；A05 獨立 Reviewer 已對 runner＋v3 完整交付明示 approved，四 captures 實看可讀平衡、語意正確，HC-DIAGRAM 已解除。v1／v2 失敗與 provenance 缺口保留為歷史，不阻 v3 matching 來源交付。真實授權仍 0／2，HC-LIVE pending；既有 commit／push 授權有效；S06 commit 819184f6ddebe05090608a11da602a67e247b5df 已完成／六 hooks 通過、S07 PR Lens approved。當前為 S08 metadata 收尾 commit 前／push 前 snapshot，S09 final coverage 與 S10 push pending，未預寫新 SHA。

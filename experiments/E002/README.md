@@ -1,6 +1,6 @@
 # E002：PKCE token exchange 與 credential 相容性驗證
 
-目前成果：獨立 Reviewer 已對 runner＋[v3 sequence](diagrams/pkce-token-exchange-v3.html) 明示 approved；四張 captures 實看可讀平衡、語意正確。A001 approved，追加使用 1／2（原 2／2、累計 3／4），HC-DIAGRAM 解除。真實 OAuth 0／2、四軸未驗證；目前 S06 commit 準備，尚未 commit／push。
+目前成果：獨立 Reviewer 已對 runner＋[v3 sequence](diagrams/pkce-token-exchange-v3.html) 明示 approved；四張 captures 實看可讀平衡、語意正確。A001 approved，追加使用 1／2（原 2／2、累計 3／4），HC-DIAGRAM 解除。真實 OAuth 0／2、四軸未驗證；S06 commit `819184f6ddebe05090608a11da602a67e247b5df` 已完成、六項正常 hooks 全通過；S07 PR Lens approved。本文件為 S08 收尾 commit 前／push 前 snapshot，S09 最終 map coverage 與 S10 push pending，後續以 PR／remote 證據為準。
 
 ## 目標、原因與事前判準
 
@@ -66,7 +66,7 @@ TDD red：RFC7636 vector 在 placeholder 回傳 verifier 時測試 exit 1；gree
 
 作者文字繁體中文；省略 unsupported meta.locale，固定 Viewer UI／HTML lang fallback English。圖失敗不改寫四個真實 OAuth 軸。
 
-Graphify 無既存可用 graph，僅 targeted source fallback，未建圖／provider／cache／install／改設定。PR Lens 等真實不同 base/head topic commit 才由 Reviewer 在 repo 外做 local validate/render；目前 deferred，先 direct bounded diff。未 upload／發布。
+Graphify 無既存可用 graph，僅 targeted source fallback，未建圖／provider／cache／install／改設定。PR Lens 等真實不同 base/head topic commit 才由 Reviewer 在 repo 外做 local validate/render；當時 deferred，先 direct bounded diff；現已在 S07 完成，見下方 coverage。未 upload／發布。
 
 獨立 Tester 已完成分項驗證，成果 Reviewer／human review 尚待；圖子項目前 blocked／needs-rework 待角色分類。後續真實成功仍不代表產品正式採用或 secret 配送方式已決定。
 
@@ -114,4 +114,12 @@ root Tester 重新執行 v3 showcase validate 與 visual-check，均 exit 0；�
 
 2026-10-07 — Dispatcher 轉交獨立 Reviewer 明示 `approved`：runner＋v3、四 screenshots 已實看；字標可讀、桌面上下平衡、語意正確，未縮字／裁切／隱藏 overflow／修改 renderer。A001 Plan-Reviewer approved、A04 Tester completed、A05 成果 approved，HC-DIAGRAM 解除。自動 receipts 的 visualReview=pending 保留原值，獨立視覺 approval 記於此與帳本，不竄改工具 receipts。v1／v2 失敗停點與缺口是歷史，不阻新 v3 的完整來源交付。
 
-進入 S06：依人類既有 commit by topic 授權進行 staged diff 語意檢查；commit／push 尚未發生，PR Lens 仍等真實 base／head。真實 OAuth0／2／HC-LIVE pending 不變。
+歷史 S06 準備 snapshot：當時依人類既有授權進行 staged diff 語意檢查，commit／push 尚未發生；後續已完成 S06／S07，見下方現狀。真實 OAuth0／2／HC-LIVE pending 不變。
+
+## S06／S07 已發生證據與 S08 收尾 snapshot
+
+S06 commit：`819184f6ddebe05090608a11da602a67e247b5df`，message `chore(oauth): 新增 E002 PKCE credential 相容性驗證工具`。trailing whitespace、EOF、swift format、GitHubIntegration consumer contract、SwiftLint、renderer check 六項正常 hooks 全 Passed，未 skip；36 個檔案僅 E002＋四 topic artifacts，feature／dev clean、dev HEAD 仍為 base，凍結 20 圖檔 SHA 未變。
+
+S07 獨立 Reviewer approved：pinned PR Lens 0.11.0 local validate／render exit 0，manifest 已讀（3 lanes／8 nodes／8 edges／3 walkthrough steps／1 SVG）。map 真實 coverage：base `a4828938389c7fbfabaffa8c6ca11e0ddbe4b64f` → head `819184f6ddebe05090608a11da602a67e247b5df`；graph SHA-256 `24bf5c1ebc591b17b93b56b69136c54c283a8e506053f09096a33da8e3c83422`。產物僅 repo 外 topic scratch，以下是 scratch-relative 路徑文字，不是 repository 連結：`pr-lens/819184f6/graph.json`、`pr-lens/819184f6/rendered/overview-light-3310335da44d6334c6755d1c8cd2c36b.svg`、同目錄 `manifest.json`。不 upload／發布。
+
+本頁與帳本是 S08 metadata 收尾 commit 前／push 前 snapshot，不能預寫本文件自身 commit SHA；形成新 head 後交 S09 Reviewer 更新 map 或明示 coverage，再按 S10 non-force push／human review 路由。舊「尚未 commit」／「PR Lens deferred」均為歷史，不代表目前狀態。v3／A05 approved、追加1／2（總3／4）不變；真 OAuth0／2、四軸未驗證，HC-LIVE／HC-REVIEW pending。

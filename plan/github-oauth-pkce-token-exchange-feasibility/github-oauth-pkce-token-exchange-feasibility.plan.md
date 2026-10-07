@@ -4,7 +4,7 @@
 - Branch：`chore/github-oauth-pkce-token-exchange-feasibility`
 - Base dev／origin/dev：`a4828938389c7fbfabaffa8c6ca11e0ddbe4b64f`。
 - 配對文件：[requirements](../../analysis/github-oauth-pkce-token-exchange-feasibility/requirements.md)、[technical-spec](../../analysis/github-oauth-pkce-token-exchange-feasibility/technical-spec.md)、[step](github-oauth-pkce-token-exchange-feasibility.step.md)。
-- 原正式 Plan-Reviewer gate：approved；code-bounded Reviewer approved，原圖 human-check 為歷史。A001 獨立 Plan-Reviewer approved／無 required fix；A05 runner＋v3 成果 Reviewer approved、HC-DIAGRAM 解除；目前 S06 stage／semantic check／commit 準備，尚未 commit／push。
+- 原正式 Plan-Reviewer gate：approved；code-bounded Reviewer approved，原圖 human-check 為歷史。A001 獨立 Plan-Reviewer approved／無 required fix；A05 runner＋v3 成果 Reviewer approved、HC-DIAGRAM 解除；S06 commit 819184f6ddebe05090608a11da602a67e247b5df 已完成／六正常 hooks 通過，S07 PR Lens approved；目前 S08 收尾前 snapshot、S09 final map 與 S10 push pending。
 
 ## Swift 實作契約
 
@@ -66,4 +66,4 @@ Archify 最多兩輪 focused repair，連續兩次最佳 error count 未改善�
 
 原 showcase 九項、零 errors／warnings、四 desktop 無 overflow、最小／最大 light／dark captures、獨立實際視覺 acceptance 全部不變。每追加輪皆記診斷與實際計數；兩次連續未改善最佳 objective error count，或追加兩輪耗盡仍未達標，停止 human-check，不自行加輪或豁免。
 
-HC-LIVE 仍 pending、真授權 0／2；code-bounded approval 不冒稱整體 approved。A05 成果 Reviewer 已明示 approved；正式圖入口為 experiments/E002/diagrams/pkce-token-exchange-v3.html，原失敗／缺口保留為歷史。沿原 S06 起的 commit → PR Lens → non-force push → human review 路由；既有人類授權保留，目前未 commit／push，dev 仍唯讀。
+HC-LIVE 仍 pending、真授權 0／2；code-bounded approval 不冒稱整體 approved。A05 成果 Reviewer 已明示 approved；正式圖入口為 experiments/E002/diagrams/pkce-token-exchange-v3.html，原失敗／缺口保留為歷史。沿原 S06 起的 commit → PR Lens → non-force push → human review 路由；既有人類授權保留，S06 819184f6ddebe05090608a11da602a67e247b5df 已 commit、S07 approved；S08 收尾／push 前，S09 final coverage 與 S10 push pending，dev 仍唯讀。
