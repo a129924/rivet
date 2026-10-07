@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:rivet}",
+            "name": "Debug RivetPRReaderHarness",
+            "target": "RivetPRReaderHarness",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug RivetPRReaderHarness"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:rivet}",
+            "name": "Release RivetPRReaderHarness",
+            "target": "RivetPRReaderHarness",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release RivetPRReaderHarness"
+        }
+    ]
+}
