@@ -6,11 +6,11 @@
 - Branch：`feat/github-graphql-infra-foundation`
 - Feature worktree：`../rivet.worktrees/agent-20261007-github-graphql-infra-foundation`
 - Base：`a4828938389c7fbfabaffa8c6ca11e0ddbe4b64f`，來自dev；DraftPR base：dev。
-- Current phase：`delivery`
-- Current step：`delivery`／`in-progress`
+- Current phase：`human-boundary`
+- Current step：`human-review`／`pending`
 - Upstream verdict：`approved`
 - Current verdict：`approved`
-- Last updated：2026-10-07 — 限定修復獨立 Tester pass、Reviewer approved／無 required fix；產品及圖 approval 保留，依 Human 既有條件式授權恢復 delivery。先核對 staged semantic／message 與 634 檔 hash；本輪尚未執行 true commit hook，不提前宣告 commit／push／PR。
+- Last updated：2026-10-07 — Topic feat commit 1d41c523b7bb268b5414471728d6182d734e3ad6 完整原 hooks pass，634 檔內容 hash 不變，已 push；Draft PR https://github.com/a129924/rivet/pull/46 回讀 OPEN／isDraft true／base dev／head feat/github-graphql-infra-foundation。最小 ledger delivery docs commit 與 external map final-head refresh 由交接證據記錄，不把本文件 SHA 自我引用；Human review pending，無 human approval／merge／release。
 
 ## Steps
 
@@ -22,8 +22,8 @@
 | docs-writeback | completed | Implementer | 按boundedallowlist回寫internal交付狀態；canonicaldiagrams依skill驗證，deferred能力不誤標已交付。 | 六份 docs 及 canonical canvas／lifecycle 狀態同步。Canvas 0 errors／warnings；Archify 9/9 showcase 0 errors／warnings，4 desktop containment pass、light／dark captures 成功；Implementer 實際檢視紀錄於 canvas-visual-review.md。v1–v5 unchanged，不 publish。 |
 | verification | completed | Tester | 接收Implementerhandoff，獨立完成測試矩陣／consumer／isolation／rootchecks／diagram驗證。 | 修正前獨立 pass 保留：root 163／21、focused 69／6、consumer 8／1、format／lint 0、diagram validate pass。P2 fix 後 Dispatcher 傳回獨立 Tester recheck pass：新增 2 tests、focused 71／6、root 165／21、consumer 8／1、format 0、lint 96 files／0 violations、diff 0、dev clean。 限定修復獨立 Tester pass：normal／polluted consumer 8／1、15 local variables unset、archive 解開 634 files hash match、normal／polluted true feature index hash 不變、manual consumer hook 8／1、root 165／21、format／lint 96 files 0、bash -n／diff 0。manual hook 正常 index refresh 只改 bytes，logical 634 paths／40 staged／634 content match。 |
 | outcome-review | completed | Reviewer | 依Testerevidence獨立審查scope／contract／取消／retry／concurrency／docs並明示verdict。 | 保留歷史 `needs-rework`：唯一 P2 非 HTTP URLResponse crash。private session adapter 與真 chain regression 後，2026-10-07 Dispatcher 傳回 Reviewer recheck `approved`：P2 解除、無新 finding，normal chunks／errors／cancellation 保留。非自審通過。 限定修復獨立 Reviewer 正式 approved／無 required fix，可恢復 delivery；原 GraphQL code／diagram approval 保留。 |
-| delivery | in-progress | Implementer | plan／test／outcomegates完成且無重大blocker；依預先conditionalauthorization檢查stagedtopicsemantic與message、commit／push／DraftPR；pr-lens僅external-scratchlocalmap。 | 歷史首次 Staged 39 files，單一 topic／原 allowlist；message：feat(github-integration): 建立內部 GitHub GraphQL Query 基礎。兩次 commit 被 consumer hook Apollo revision 38c202227d0f09508e573dcf22f54885cfb0c5d4 的 unable to read tree 阻擋；無 commit。format／SwiftLint hooks pass，renderer feature frozen dependency setup 後 hook pass。相同 consumer wrapper standalone 8／1 pass；不將它當成 hook pass，不刪 shared cache、不 skip hooks、不修改 scripts／config。PR Lens 0.11.0 已確認但 final-head map 尚未產生；Graphify 0.9.73 bounded查找仍無 usable graph，不 build。 限定修復獨立 approved 後現為 exact 40 files，恢復已授權 delivery；true commit hooks 尚未執行。 |
-| human-review | pending | Human | 接收DraftPR與actualevidence作最終review；不自動merge／release。 | pending；PR未建立。 |
+| delivery | completed | Implementer | plan／test／outcomegates完成且無重大blocker；依Human條件式授權執行topiccommit／push／DraftPR；pr-lens僅external-scratchlocalmap。 | 歷史兩次 hook checkout failures 與後續 diagnostic index 污染保留於下方；限定修復正式 Tester／Reviewer approved 後，實際 feat commit 1d41c523b7bb268b5414471728d6182d734e3ad6，message：feat(github-integration): 建立內部 GitHub GraphQL Query 基礎。完整 whitespace／end-file／format／consumer／SwiftLint／renderer hooks 全 pass，634 working-file hashes 未變，push 精確 origin featurebranch成功。Draft PR #46 https://github.com/a129924/rivet/pull/46 回讀 OPEN／Draft／base dev a482893…／head feat… 1d41c523…。PR Lens 0.11.0 先以實際 feat HEAD validate／render pass：4 lanes／9 nodes／8 edges／1 flow／6 walkthrough steps／2 SVGs；final-head map刷新在 external evidence記錄，無 repo config／upload。Graphify0.9.73無 usable existing graph，非graphcheck完成。 |
+| human-review | pending | Human | 接收DraftPR與actualevidence作最終review；不自動merge／release。 | Draft PR https://github.com/a129924/rivet/pull/46，Human decision pending；assigned_role null，不再自動 dispatch。 |
 
 ## Locked Decisions與既有Evidence
 
@@ -42,7 +42,7 @@
 ## Blockers
 
 - 正式 Plan-Reviewer 已 approved；無 planning blocker。
-- Delivery：原 hook／後續 index 污染的 Human 限定修復已經獨立 Tester／Reviewer 通過，無 required fix；尚須 true commit hooks 實際通過，未執行前不當作完成。
+- Delivery：限定修復獨立 approved 後 true commit hooks 已全部通過，topic commit／push／Draft PR 完成；無已知新增 code／delivery blocker，停 Human review。
 - Reviewer P2 已由獨立 recheck `approved` 解除；歷史 `needs-rework` 保留，不以 Implementer tests 代替 verdict。
 - 沒有已知新增scopegap；graph缺漏僅工具evidencegap，不作架構blocker或新前置gate。
 
@@ -67,14 +67,14 @@
 ```json
 {
   "topic": "github-graphql-infra-foundation",
-  "phase": "delivery",
+  "phase": "human-boundary",
   "artifacts": [
     {"path": "analysis/github-graphql-infra-foundation/requirements.md", "status": "present"},
     {"path": "analysis/github-graphql-infra-foundation/technical-spec.md", "status": "present"},
     {"path": "plan/github-graphql-infra-foundation/github-graphql-infra-foundation.plan.md", "status": "present"},
     {"path": "plan/github-graphql-infra-foundation/github-graphql-infra-foundation.step.md", "status": "present"}
   ],
-  "current_step": {"id": "delivery", "status": "in-progress"},
+  "current_step": {"id": "human-review", "status": "pending"},
   "locked_decisions": [
     "internal foundation，同一GitHubIntegration target，跨targetGraphQL使用deferred",
     "internalfetchQuery/SingleResponseFormat，唯一internalApolloGraphQLExecuting，現有concreteprovider",
@@ -83,7 +83,7 @@
   ],
   "upstream_verdict": "approved",
   "blockers": [],
-  "assigned_role": "Implementer",
-  "next_objective": "依 Human 既有授權完成 topic commit／完整 true hooks／push／Draft PR，PR Lens final-head local map；實際 PR 回寫 ledger 後交 Human Review 停止"
+  "assigned_role": null,
+  "next_objective": "Human review Draft PR https://github.com/a129924/rivet/pull/46；終態交接，不再自動派遣／merge／release"
 }
 ```
