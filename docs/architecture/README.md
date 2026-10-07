@@ -4,6 +4,8 @@
 
 ## 架構方向
 
+`GitHubIntegration` 現已交付 internal-only GraphQL Query foundation，集中 request-local Bearer、parser 前 HTTP status 分類、401-only 一次 recovery 與 technical error／取消處理，重用既有 OAuthTokenProvider。Apollo-specific vocabulary 只位於 integration 的 GraphQL 子目錄；不對外公開 client，不改 BC Core／UseCase／Port。下文原 deferred 狀態中，GraphQL integration／401／retry 已由本次 internal foundation 取代；跨 target GraphQL 使用、REST、OAuth concrete adapters、BC adapters 與產品登入仍未交付。
+
 Rivet 未來採用 monorepo 與輕量 DDD。
 
 核心的 compile-time dependency 方向如下：

@@ -16,6 +16,7 @@
 - `GitHubIntegration` 是已實作的 non-BC shared GitHub-specific integration module；目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及 public、`Sendable`、async 的 `GitHubAccessTokenProvider` token-acquisition contract。後者尚無 PAT 或 OAuth conformer，且不處理 lifecycle、request、transport、401 recovery 或 retry。未來只有各 BC Infra 可依賴其 deferred GitHub REST／GraphQL raw transport、authentication mechanism、共通 request headers／API version、pagination、rate limit、retry、GitHub error technical classification 與 shared configuration；它不進入 Core、UseCase 或 Port，也不依賴任何 BC。endpoint-specific media type、DTO translation、BC failure mapping 與 business meaning 留在各 BC Infra。
 - `GitHubIntegration` 另已交付 OAuth credential lifecycle runtime：adapter-facing `OAuthCredentialStore`／`OAuthTokenFetcher` ports 與 actor-isolated `OAuthTokenProvider` 負責 restore、expiry-first refresh、rotation persistence、snapshot version 與 single-flight。client 只取得 `TokenSnapshot(accessToken, version)`；Keychain／OAuth HTTP adapters、REST／GraphQL client integration、401 classification 與 retry 仍為獨立 deferred topic。
 - Presentation Session 是 UI 狀態，不是假裝成 Bounded Context。
+- `GitHubIntegration/GraphQL/` 已實作 internal-only Query foundation：concrete client 與 Apollo-bound executor、request-local Bearer、parser 前 HTTP 分類、401-only 一次 recovery、有限 technical outcomes 與取消正規化。它重用現有 provider，不新增 public capability；跨 target 使用及 BC adapters 仍延後。上述實作狀態更新 supersede 前述 GraphQL integration／401／retry 全部 deferred 的舊狀態，REST 與 OAuth adapters 仍未交付。
 
 ## 工作方法
 
