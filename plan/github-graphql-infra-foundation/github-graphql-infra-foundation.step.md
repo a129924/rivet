@@ -6,11 +6,11 @@
 - Branch：`feat/github-graphql-infra-foundation`
 - Feature worktree：`../rivet.worktrees/agent-20261007-github-graphql-infra-foundation`
 - Base：`a4828938389c7fbfabaffa8c6ca11e0ddbe4b64f`，來自dev；DraftPR base：dev。
-- Current phase：`pr-comment-review-and-fix`
-- Current step：`pr-comment-review-and-fix`／`pending`
+- Current phase：`human-boundary`
+- Current step：`human-review`／`pending`
 - Upstream verdict：`approved`（docs-only 獨立 recheck；原 code／diagram approval 保留）
-- Current verdict：`null`
-- Last updated：2026-10-07 — Dispatcher 傳回獨立 Tester pass 與 Reviewer docs-only recheck approved／無 required fix；原 code／diagram approval 保留。依 Human 本輪明示授權進入限定 commit／push／reply／resolve；實際完整 hooks 與遠端操作尚待執行，不預填成功。
+- Current verdict：`approved`
+- Last updated：2026-10-07 — 四檔 docs 修正 commit 01fd4d09df03cfb5ba8f4d8c053f990b26380c3f 完整既有 hooks pass、634 working contents hashes 不變，已精確 push。PR #46 Ready／OPEN；指定兩項 threads 實際回讀 resolved、unresolved 0。最小本 ledger 交付紀錄提交與最終 remote／local readback 由交接證據記錄，不作 HEAD 自我引用；Human review pending，無 merge／release。
 
 ## Steps
 
@@ -23,8 +23,8 @@
 | verification | completed | Tester | 接收Implementerhandoff，獨立完成測試矩陣／consumer／isolation／rootchecks／diagram驗證。 | 修正前獨立 pass 保留：root 163／21、focused 69／6、consumer 8／1、format／lint 0、diagram validate pass。P2 fix 後 Dispatcher 傳回獨立 Tester recheck pass：新增 2 tests、focused 71／6、root 165／21、consumer 8／1、format 0、lint 96 files／0 violations、diff 0、dev clean。 限定修復獨立 Tester pass：normal／polluted consumer 8／1、15 local variables unset、archive 解開 634 files hash match、normal／polluted true feature index hash 不變、manual consumer hook 8／1、root 165／21、format／lint 96 files 0、bash -n／diff 0。manual hook 正常 index refresh 只改 bytes，logical 634 paths／40 staged／634 content match。 |
 | outcome-review | completed | Reviewer | 依Testerevidence獨立審查scope／contract／取消／retry／concurrency／docs並明示verdict。 | 保留歷史 `needs-rework`：唯一 P2 非 HTTP URLResponse crash。private session adapter 與真 chain regression 後，2026-10-07 Dispatcher 傳回 Reviewer recheck `approved`：P2 解除、無新 finding，normal chunks／errors／cancellation 保留。非自審通過。 限定修復獨立 Reviewer 正式 approved／無 required fix，可恢復 delivery；原 GraphQL code／diagram approval 保留。 |
 | delivery | completed | Implementer | plan／test／outcomegates完成且無重大blocker；依Human條件式授權執行topiccommit／push／DraftPR；pr-lens僅external-scratchlocalmap。 | 歷史兩次 hook checkout failures 與後續 diagnostic index 污染保留於下方；限定修復正式 Tester／Reviewer approved 後，實際 feat commit 1d41c523b7bb268b5414471728d6182d734e3ad6，message：feat(github-integration): 建立內部 GitHub GraphQL Query 基礎。完整 whitespace／end-file／format／consumer／SwiftLint／renderer hooks 全 pass，634 working-file hashes 未變，push 精確 origin featurebranch成功。Draft PR #46 https://github.com/a129924/rivet/pull/46 回讀 OPEN／Draft／base dev a482893…／head feat… 1d41c523…。PR Lens 0.11.0 先以實際 feat HEAD validate／render pass：4 lanes／9 nodes／8 edges／1 flow／6 walkthrough steps／2 SVGs；final-head map刷新在 external evidence記錄，無 repo config／upload。Graphify0.9.73無 usable existing graph，非graphcheck完成。 |
-| human-review | pending | Human | 接收DraftPR與actualevidence作最終review；不自動merge／release。 | Draft PR https://github.com/a129924/rivet/pull/46，Human decision pending；assigned_role null，不再自動 dispatch。 |
-| pr-comment-review-and-fix | pending | Implementer | 獨立 Tester／Reviewer 通過後完成授權 commit／push／reply／resolve；不把原 code approval 當本次文件 approval。 | Implementer 完成指定三份 docs。獨立 Tester pass：四檔 28 insertions／20 deletions、diff check／static contracts／繁體／allowlist／dev HEAD 不變；無新增 runtime tests。Reviewer docs-only recheck 正式 approved、無新 finding／required fix，原 code／diagram approval 保留。完整 commit hooks 與 reply／resolve 尚待實際執行。 |
+| human-review | pending | Human | 接收 Ready PR 與 actual evidence 作最終 review；不自動 merge／release。 | Ready PR https://github.com/a129924/rivet/pull/46，Human decision pending；assigned_role null，不再自動 dispatch。 |
+| pr-comment-review-and-fix | completed | Implementer | 獨立 Tester／Reviewer 通過後完成授權 commit／push／reply／resolve；不把原 code approval 當本次文件 approval。 | 獨立 Tester pass：四檔 28 insertions／20 deletions、diff check／static contracts／繁體／allowlist／dev HEAD 不變；無新增 runtime tests。Reviewer docs-only recheck 正式 approved、無新 finding／required fix，原 code／diagram approval 保留。實際 docs commit 01fd4d09… 完整 hooks pass、634 content hashes 不變並已 push；兩項 threads resolved 的實際來源與 reply 證據見下方。 |
 
 ## Locked Decisions與既有Evidence
 
@@ -61,8 +61,10 @@
 - Reviewer 經 Dispatcher 正式回傳 `needs-rework`（文件），原 GraphQL code／diagram approval 保留。Human 已明選兩項 recommended fixes；僅 docs/architecture/README.md、docs/design-principles.md、docs/architecture/diagrams/github-oauth-dual-client-architecture/canvas-visual-review.md 及本 ledger 可寫，不改 architecture／API／target／provider／runtime 或 BC docs。
 - [繁體用字](https://github.com/a129924/rivet/pull/46#discussion_r4204319403)：thread PRRT_kwDOUFu0Cc6pzdYG／comment PRRC_kwDOUFu0Cc76mNKr；只將 visual-review 文案改為「截圖」，沒有重建圖、改 screenshots／receipts。
 - [已交付與 deferred 敘述](https://github.com/a129924/rivet/pull/46#discussion_r4204322955)：thread PRRT_kwDOUFu0Cc6pzd9j／comment PRRC_kwDOUFu0Cc76mOCL；直接修 architecture README 7／47／48／79／81 與 design principles 16／17／19 的互斥說法，去除 GraphQL 狀態 supersede 補述。明示 internal-only Query 與 HTTP 401 最多一次 recovery 已交付；REST、跨 target GraphQL 使用、OAuth concrete adapters、BC adapters、一般 retry／rate limit policy 仍延後。legacy GitHubAccessTokenProvider 本身不擁有 lifecycle／401／retry 的正確說明保留。
-- 本輪 Implementer readback／diff check：僅上述四份文件，無新增檔案／runtime／tests／圖內容變更；未跑新 runtime tests，不宣稱新增 compile／integration evidence。兩項 threads 尚未回覆／resolve；先獨立 Tester／Reviewer，再依 Human 授權 commit／push、回覆精確兩項 comments 並 resolve。完整既有 commit hooks 不得 skip；不 merge／release，不推論最終 human approval。
+- 修正階段 Implementer readback／diff check 歷史：僅上述四份文件，無新增檔案／runtime／tests／圖內容變更；未跑新 runtime tests，不宣稱新增 compile／integration evidence。當時兩項 threads 尚未回覆／resolve，先獨立 Tester／Reviewer，再依 Human 授權執行交付。完整既有 commit hooks 不得 skip；不 merge／release，不推論最終 human approval。
 - 2026-10-07 Dispatcher 傳回獨立 Tester 上述限定驗證 pass，Reviewer docs-only recheck 正式 `approved`，無新 finding／required fix。歷史文件 `needs-rework` 保留；不是 Implementer 自審通過。Human 已明示 commit → push → resolve，僅指定兩項討論，PR 現為 Ready／OPEN；最終 Human review 仍 pending。
+- 實際交付：`docs(github-graphql): 同步已交付能力與繁體用字`，commit [01fd4d09](https://github.com/a129924/rivet/commit/01fd4d09df03cfb5ba8f4d8c053f990b26380c3f)，四檔 27 insertions／18 deletions（含 gate evidence 更新）；whitespace、end-file、Swift format、consumer contract、SwiftLint、renderer 六項既有 hooks 全 pass，634 tracked working-content hashes 前後一致，精確 push origin feature branch 成功。
+- Push 後 fresh readback：繁體 thread PRRT_kwDOUFu0Cc6pzdYG 已由 `Copilot` resolve，isResolved true；依派遣規則不重複 reply／resolve。架構 thread PRRT_kwDOUFu0Cc6pzd9j 當時仍 unresolved，即使 outdated 亦未直接略過：先附實際 commit 的 [reply](https://github.com/a129924/rivet/pull/46#discussion_r4204487694)（PRRC_kwDOUFu0Cc76m2QO）並回讀內容成功，再 resolve；readback isResolved true、resolvedBy a129924。全部兩項 threads 回讀 resolved，unresolved count 0，沒有新增 actionable thread。
 
 ## Human Check
 
@@ -76,14 +78,14 @@
 ```json
 {
   "topic": "github-graphql-infra-foundation",
-  "phase": "pr-comment-review-and-fix",
+  "phase": "human-boundary",
   "artifacts": [
     {"path": "analysis/github-graphql-infra-foundation/requirements.md", "status": "present"},
     {"path": "analysis/github-graphql-infra-foundation/technical-spec.md", "status": "present"},
     {"path": "plan/github-graphql-infra-foundation/github-graphql-infra-foundation.plan.md", "status": "present"},
     {"path": "plan/github-graphql-infra-foundation/github-graphql-infra-foundation.step.md", "status": "present"}
   ],
-  "current_step": {"id": "pr-comment-review-and-fix", "status": "pending"},
+  "current_step": {"id": "human-review", "status": "pending"},
   "locked_decisions": [
     "internal foundation，同一GitHubIntegration target，跨targetGraphQL使用deferred",
     "internalfetchQuery/SingleResponseFormat，唯一internalApolloGraphQLExecuting，現有concreteprovider",
@@ -92,7 +94,7 @@
   ],
   "upstream_verdict": "approved",
   "blockers": [],
-  "assigned_role": "Implementer",
-  "next_objective": "依本輪明確授權，以四檔 staged diff 檢查語意後 commit／push，實際回覆並 resolve 指定兩項討論；完整 hooks 不跳過，完成後停 Human review，不 merge／release"
+  "assigned_role": null,
+  "next_objective": "Human review Ready PR https://github.com/a129924/rivet/pull/46；docs-only comments 已修且指定 threads resolved，終態交接，不再自動派遣／merge／release"
 }
 ```
