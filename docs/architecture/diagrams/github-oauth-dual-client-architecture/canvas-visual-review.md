@@ -1,6 +1,6 @@
 # Canvas 視覺檢視
 
-2026-10-07 在 feature worktree 依 architecture-canvas 重建 canonical index.html；scene 驗證為 5 bands、15 boxes、16 edges、0 errors、0 warnings。以獨立暫存 Chrome profile 直接載入本機檔案，未發布 artifact.cafe。下列深色截图均為 1440 × 900，已逐張實際檢視。
+2026-10-07 在 feature worktree 依 architecture-canvas 重建 canonical index.html；scene 驗證為 5 bands、15 boxes、16 edges、0 errors、0 warnings。以獨立暫存 Chrome profile 直接載入本機檔案，未發布 artifact.cafe。下列深色截圖均為 1440 × 900，已逐張實際檢視。
 
 | 證據 | 縮放／平移 | 可證明的範圍 | 檢視結果 |
 | --- | --- | --- | --- |
