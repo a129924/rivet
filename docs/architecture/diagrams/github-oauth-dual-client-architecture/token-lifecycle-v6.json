@@ -6,9 +6,9 @@
     "quality_profile": "showcase",
     "viewBox": [980, 566],
     "views": [
-      { "id": "main", "label": "主要路徑", "focus": ["request", "snapshot", "dispatch", "response", "complete"], "note": "用戶端只取得有效 TokenSnapshot、加入 Bearer，並保有自己的原工作。" },
+      { "id": "main", "label": "主要路徑", "focus": ["request", "snapshot", "dispatch", "response", "complete"], "note": "internal GraphQL Query 已交付；REST 與跨 target 使用延後。用戶端只取得有效快照並保有原工作。" },
       { "id": "recovery", "label": "401 復原", "focus": ["response", "refresh", "retry"], "note": "401 是唯一回應狀態復原觸發；提供者回傳新版快照，原用戶端只重送一次。" },
-      { "id": "terminal", "label": "終止結果", "focus": ["refresh", "retry", "reauth", "technical-pre-rotation", "post-rotation-persistence"], "note": "永久失敗與第二次 401 需要重新登入；輪替前後的技術失敗有不同憑證邊界。" }
+      { "id": "terminal", "label": "終止結果", "focus": ["refresh", "retry", "reauth", "technical-pre-rotation", "post-rotation-persistence"], "note": "無憑證與第二次 401 為 authenticationRequired；輪替前後技術失敗保留 provider stage。產品登入延後。" }
     ]
   },
   "lanes": [
@@ -16,14 +16,14 @@
     { "id": "recovery", "label": "提供者復原與終止結果" }
   ],
   "states": [
-    { "id": "request", "type": "start", "label": "REST／GraphQL", "sublabel": "保有原請求／操作", "lane": "main", "col": 0, "step": "01", "tag": "用戶端" },
+    { "id": "request", "type": "start", "label": "REST／GraphQL", "sublabel": "REST／跨 target 延後", "lane": "main", "col": 0, "step": "01", "tag": "internal Query 已交付" },
     { "id": "snapshot", "type": "active", "label": "有效 TokenSnapshot", "sublabel": "到期時提供者先更新", "lane": "main", "col": 1, "step": "02", "tag": "有效期內" },
     { "id": "dispatch", "type": "active", "label": "加入 Bearer 後送出", "sublabel": "各自傳輸路由", "lane": "main", "col": 2, "step": "03", "tag": "原工作" },
     { "id": "response", "type": "decision", "label": "收到 401？", "sublabel": "403 不觸發更新", "lane": "main", "col": 3, "step": "04", "tag": "判定" },
     { "id": "complete", "type": "success", "label": "交還回應", "sublabel": "非 401 交由本地基礎設施", "lane": "main", "col": 4, "step": "05", "tag": "完成" },
     { "id": "refresh", "type": "active", "label": "取得新版快照", "sublabel": "過期版本快速路徑／單飛", "lane": "recovery", "col": 1, "yOffset": 26, "width": 108, "tag": "提供者" },
     { "id": "retry", "type": "decision", "label": "原工作重送一次", "sublabel": "新版快照；不再復原", "lane": "recovery", "col": 2, "yOffset": 94, "width": 108, "tag": "用戶端" },
-    { "id": "reauth", "type": "failure", "label": "需要重新登入", "sublabel": "無憑證／永久失敗／二次 401", "lane": "recovery", "col": 0, "yOffset": 72, "tag": "需要重新驗證" },
+    { "id": "reauth", "type": "failure", "label": "需要重新登入", "sublabel": "無憑證／二次 401", "lane": "recovery", "col": 0, "yOffset": 72, "tag": "產品登入延後" },
     { "id": "technical-pre-rotation", "type": "failure", "label": "技術失敗", "sublabel": "輪替前；保留憑證", "lane": "recovery", "col": 0, "yOffset": -60, "tag": "輪替前" },
     { "id": "post-rotation-persistence", "type": "failure", "label": "輪替後落盤失敗", "sublabel": "可見技術失敗；延後協調", "lane": "recovery", "col": 2, "yOffset": -60, "tag": "延後協調" }
   ],

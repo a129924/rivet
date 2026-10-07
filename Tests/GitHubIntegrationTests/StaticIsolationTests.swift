@@ -34,10 +34,11 @@ struct StaticIsolationTests {
     let integrationTarget = try #require(targets["GitHubIntegration"])
     #expect(integrationTarget["type"] as? String == "regular")
     #expect(integrationTarget["path"] as? String == "Sources/BoundedContexts/GitHubIntegration")
-    #expect(rawDependencies(in: integrationTarget).isEmpty)
+    #expect(Set(dependencyNames(in: integrationTarget)) == ["Apollo", "ApolloAPI"])
     let integrationTests = try #require(targets["GitHubIntegrationTests"])
     #expect(integrationTests["type"] as? String == "test")
-    #expect(dependencyNames(in: integrationTests) == ["GitHubIntegration"])
+    #expect(
+      Set(dependencyNames(in: integrationTests)) == ["GitHubIntegration", "Apollo", "ApolloAPI"])
   }
   @Test
   func dependencyExtractionRecognizesAllPackageDescriptionDependencyForms() {
@@ -357,6 +358,10 @@ struct StaticIsolationTests {
       "Contracts/OAuthCredentialStore.swift",
       "Contracts/OAuthTokenFetcher.swift",
       "Contracts/TokenSnapshot.swift",
+      "GraphQL/GitHubGraphQLClient.swift",
+      "GraphQL/ApolloGraphQLClient.swift",
+      "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
+      "GraphQL/GitHubGraphQLClientError.swift",
       "OAuth/GitHubOAuthEndpoints.swift",
       "Providers/OAuthTokenProvider.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
@@ -380,7 +385,16 @@ struct StaticIsolationTests {
         "Apollo",
         "ApolloAPI",
       ]
-      #expect(imports.isDisjoint(with: forbiddenImports))
+      let apolloFiles: Set = [
+        "GraphQL/GitHubGraphQLClient.swift",
+        "GraphQL/ApolloGraphQLClient.swift",
+        "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
+      ]
+      let forbiddenForFile =
+        apolloFiles.contains(path)
+        ? forbiddenImports.subtracting(["Apollo", "ApolloAPI"])
+        : forbiddenImports
+      #expect(imports.isDisjoint(with: forbiddenForFile))
 
       if path == "Stores/KeychainTokenStore.swift" {
         #expect(imports == ["Foundation", "Security"])

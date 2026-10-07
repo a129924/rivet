@@ -2,7 +2,9 @@
 
 本目錄的責任／依賴 canvas 為 [index.html](index.html)；它只表達元件責任與依賴，不表達 runtime sequence。
 
-Canvas 已標示 `OAuthTokenProvider`、`TokenSnapshot`、`OAuthCredentialStore` 與 `OAuthTokenFetcher` 為已交付；Keychain credential adapter、bare-HTTP fetcher adapter、client integration 與 retry 仍為 deferred。它不改寫下列 canonical token-lifecycle artifact 的 client retry 設計狀態。
+Canvas 標示 OAuth provider／adapter ports 與 internal GraphQL Query／401-only 一次復原為已交付；跨 target GraphQL 使用、REST、Keychain credential adapter 與 bare-HTTP fetcher adapter 仍延後。長期 composition root 與雙 client 的責任、依賴不變。
+
+Canonical lifecycle 同步標示 internal Query 的交付狀態；產品登入仍延後，provider restore／refresh／persist 保留技術階段。作者內容採繁體中文；Archify 固定 Viewer UI 與 HTML lang 依 skill fallback 為 English。
 
 ## Canonical Token Lifecycle
 
