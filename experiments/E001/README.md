@@ -146,3 +146,20 @@ PR #45 已由人類設為 Ready，現處理四項 review fixes。真實 OAuth re
 **visual_review: passed；correction_rounds: 1。** Reviewer 親看 1440×900 和 2048×1320 的 light/dark 四張 PNG，流程與成功／no-token 卡首屏完整可讀，沒有遮擋或裁切；另外兩種 desktop 尺寸依 receipt 確認 containment 通過。spec／HTML 的 SHA-256、bytes 與 delivery／visual／revision receipts 相符，9/9 showcase、0 errors/warnings。人工驗收記於 revision receipt，自動 visual-check 的 pending 保持原義；舊圖失敗不追溯改為通過。
 
 可依已授權流程同 topic commit/push 並回覆、resolve 四指定 threads；PR #45 保持 Ready，停止於 human review。真實 OAuth 已驗證成功僅限 redirect/code/state，不推論 token 或產品整合。PR Lens final commit 後只更新外部 map，不新增 repository 圖或偽造 commit provenance。
+
+## PRR-06／PRR-07 Review-Fix 交付證據
+
+2026-10-07 — [fix commit `5a0423f`](https://github.com/a129924/rivet/commit/5a0423f4fda5769d4a0deaa97b01226cd36d4fd6)（完整 SHA `5a0423f4fda5769d4a0deaa97b01226cd36d4fd6`）已 non-force push 至 `origin/chore/github-oauth-redirect-feasibility`，origin／PR #45 head 核對一致。精確 staged allowlist 為 17 個檔案，語意限定四項 E001 required fixes 與正式契約／驗證證據。既有 whitespace、EOF、Swift format、GitHubIntegration consumer contract、SwiftLint 與 renderer commit hooks 全部 Passed，未跳過。
+
+四項 threads 皆先成功回覆實際 fix commit 與各自驗證證據，再 resolve：
+
+| 修正 | Thread | 回覆 URL | 狀態 |
+| --- | --- | --- | --- |
+| visual | `PRRT_kwDOUFu0Cc6pvn8F` | [修正回覆](https://github.com/a129924/rivet/pull/45#discussion_r4202854988) | resolved |
+| docs | `PRRT_kwDOUFu0Cc6pvn8J` | [修正回覆](https://github.com/a129924/rivet/pull/45#discussion_r4202855197) | resolved |
+| status | `PRRT_kwDOUFu0Cc6pvn8N` | [修正回覆](https://github.com/a129924/rivet/pull/45#discussion_r4202855368) | resolved |
+| task | `PRRT_kwDOUFu0Cc6pvqq3` | [修正回覆](https://github.com/a129924/rivet/pull/45#discussion_r4202855540) | resolved |
+
+重新查證共 4 threads／4 resolved／0 unresolved。PR 說明已同步 18 tests／3 suites、PRR-04／PRR-05 approved、新圖正式視覺 passed、唯一受限 docs append 與四項 fixes；保留真實 redirect/code/state 成功及 no-token／產品登入 deferred。PR #45 為 OPEN／Ready，未另開 Draft，未 merge／release。
+
+本節與 ledger 的真實交付證據以同 topic docs-only commit 隨後同步；不在文件內杜撰該 commit 自身 SHA。最終 head 產生後，PR Lens 只刷新外部 local map，不再將 final map hash 寫回 repo 形成遞迴 commit。Graphify 持續使用 no-graph bounded source fallback，不建圖／刷新／上傳。停於 human review，feature worktree 保留。

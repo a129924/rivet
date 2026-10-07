@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-pr-comment-review-and-fix／independent verification。PR #45 現為 Ready；獨立 Reviewer triage 明示 needs-rework 四項有效建議。Plan-Creator 已修訂四份 bounded formal artifacts，PRR-02 新獨立 planning review approved；PRR-03 實作完成，PRR-04 獨立測試 approved，PRR-05 獨立成果與正式視覺審查 approved；待 PRR-06 commit/push 與 PRR-07 reply/resolve。舊 S02 approved、核心 verification 與 Draft-only S05 verdict 保留；HC-LIVE 真實成功保留，新 revision 正式圖 acceptance passed。初次 human-review snapshot 與失敗歷史見下節。
+human-review。PR #45 現為 OPEN／Ready；PRR-02 planning approved、PRR-03 四項 fixes 完成、PRR-04 獨立測試 approved、PRR-05 獨立成果／正式視覺 approved。PRR-06 fix commit 已 non-force push，PRR-07 四 threads 已逐一 reply/resolve，查證 4 resolved／0 unresolved。舊 S02 approved、核心 verification 與 Draft-only S05 verdict 保留；HC-LIVE 真實成功保留，新 revision 正式圖 acceptance passed。初次 human-review snapshot 與失敗歷史見下節。
 
 ## Ledger
 
@@ -21,7 +21,7 @@ pr-comment-review-and-fix／independent verification。PR #45 現為 Ready；獨
 
 ## Verdicts
 
-此次 review triage：needs-rework 的四項 required fixes 已解除；PRR-02 planning approved、PRR-03 實作完成、PRR-04 獨立測試 approved、PRR-05 獨立成果與正式視覺審查 approved。新圖 formal acceptance passed；可交 PRR-06／PRR-07 bounded delivery，PR 保持 Ready，仍停於 human review。以下為原始 gate 結果，保留歷史，不能代替新 gate。
+此次 review triage：needs-rework 的四項 required fixes 已解除；PRR-02 planning approved、PRR-03 實作完成、PRR-04 獨立測試 approved、PRR-05 獨立成果與正式視覺審查 approved。新圖 formal acceptance passed；PRR-06／PRR-07 bounded delivery 已完成，PR 保持 OPEN／Ready，停於 human review。以下為原始 gate 結果，保留歷史，不能代替新 gate。
 
 S02：approved（execution_plan_reviewer 正式 re-review）。S04：核心自動化 approved；圖驗收 needs-rework。S05：approved，僅限 bounded Draft delivery；沒有重大 code/scope blocker。S03 核心完成、圖驗收 needs-rework；desktop issue 已由 S05 分類為 nonblocking Draft residual，正式圖驗收仍未通過。HC-LIVE 真實 redirect/code/state 實測成功；仍不存在完整 topic approval；各角色只能更新自己有證據的工作，Dispatcher 不算 gate。
 
@@ -38,6 +38,8 @@ S02：approved（execution_plan_reviewer 正式 re-review）。S04：核心自�
 使用者已接受計畫並授權只在 feature worktree 實作、無重大問題直接 topic commit → push → Draft PR → human review。本授權不允許 dev worktree 改檔、auto-merge/release、工具上傳或新架構決策。HC-LIVE 與 HC-PR 分開追蹤，deferred 不等於成功。
 
 ## Last Updated
+
+2026-10-07 — swift_implementer 完成 PRR-06／PRR-07：fix `5a0423f` non-force push、四 replies／4 resolved／0 unresolved，PR OPEN／Ready，停於人類 review。下列本次交付證據以同 topic docs-only commit 同步。
 
 2026-10-07 — reviewer 完成 PRR-05，bounded correctness/scope 與新 revision 正式視覺 acceptance approved；四項 required fixes 無 blocker，待 commit/push、thread reply/resolve 與 human review。
 
@@ -106,8 +108,8 @@ Graphify invocation 設 `GRAPHIFY_NO_AUTO_REFRESH=1`，version 為 `0.9.73`；�
 | PRR-03 | Implementer | completed | 修 test helper、新圖 candidate／正式 deliver、唯一 docs append 與 README。 | 只改本次限定 paths；圖最多兩輪，失敗即 blocker；完整實作交接。 | swift_implementer：client Task retained/join、test context／error／missing callback bounded；red delayed-client count 0≠1，green 18 tests／3 suites。唯一 docs append、README、新 sequence 1 focused correction；9/9 showcase、deliver／四桌面 containment passed；人工 review pending，不改 runtime／不再授權。 |
 | PRR-04 | Tester | completed | E001 tests 與圖 receipts／四 desktop containment 驗證。 | Task completion/error／startup-failure 有限退出，local package tests 通過，圖 artifacts 與 hashes 可追溯。 | tester：approved（本次 bounded verification）。獨立 build/test exit 0；18 tests／3 suites 1.014 秒；startup-failure 5 次 targeted repeats 全 passed；format／strict SwiftLint 9 files 0 violations。獨立 Archify validate 9/9、0 errors/warnings，visual-check 四尺寸無 overflow；HTML／spec hashes 未變，old revision provenance 相符。docs 817-byte append 前綴完整、path allowlist 通過；PRR-05 formal visual review 仍 pending。完整命令見 E001 README「PRR-04 獨立 Tester 證據」。 |
 | PRR-05 | Reviewer | completed | 獨立成果／視覺／scope／四 thread 審查。 | formal 圖 acceptance 與 fixes 完成，明示 verdict；approved 才交付。 | reviewer：approved（2026-10-07），四個 required fixes 已完成；client Task join/error/no-callback 有限退出、唯一 docs append、成功狀態卡及 scope 正確。親看四張 light/dark PNG，四 desktop receipt／hashes 相符；新 revision visual_review passed，1 correction round。完整證據見下節，舊 S05 與 failed revision 不代替或追溯改寫。 |
-| PRR-06 | Implementer | pending | staged semantic review、topic commit/non-force push。 | 已授權且無 blocker，單一 topic commit，PR 保持 Ready。 | 待真實 SHA／push，未另開 Draft。 |
-| PRR-07 | Implementer | pending | 依授權 reply／resolve 四指定 threads。 | 對應修正與驗證證據，確認 resolved，不宣稱圖未通過為成功。 | 待 reply／resolution evidence。 |
+| PRR-06 | Implementer | completed | staged semantic review、topic commit/non-force push。 | 已授權且無 blocker，單一 topic commit，PR 保持 Ready。 | fix commit `5a0423f4fda5769d4a0deaa97b01226cd36d4fd6`；精確 17-path staged 語意／diff check 通過，全部既有 commit hooks Passed；non-force push，origin／PR head 相符、OPEN／Ready，未另開 Draft。 |
+| PRR-07 | Implementer | completed | 依授權 reply／resolve 四指定 threads。 | 對應修正與驗證證據，確認 resolved，不宣稱圖未通過為成功。 | 四指定 threads 全部先 reply 成功再 resolve；重新查證共 4／resolved 4／unresolved 0，回覆 URLs 見本次交付證據。PR body 已更新 18 tests／正式圖 passed／Ready。 |
 | PRR-HC | Human | pending | 接續 PR #45 human review。 | 人類 review／決策，無自動 merge。 | 待 bounded fixes 完成。 |
 
 ### Review Provenance
@@ -155,3 +157,18 @@ Tester：依 E001 README 的 scoped build/test/format/lint 命令再驗，核對
 - 四 threads 的圖 containment、唯一長期依據、過時狀態卡與 client Task await required fixes 均有對應成果。runtime、產品、root package、其他 docs 與 dev 未改；沒有新增敏感值、上傳或 publication。Graphify 無 graph 採 bounded source fallback；PR Lens 本輪未提交產物不偽造 final SHA，final commit 後只刷新外部 map。
 
 下一步交 Implementer PRR-06：staged 語意檢查、同 topic commit/non-force push；之後 PRR-07 依已授權流程逐 thread 回覆實際成果與驗證證據、確認 resolve。PR #45 保持 Ready；本 verdict 不代替人類 PR review，不 merge/release/remove worktree，不新增產品登入或 token 驗證。
+
+## PRR-06／PRR-07 Bounded Delivery Evidence
+
+2026-10-07 — fix commit `5a0423f4fda5769d4a0deaa97b01226cd36d4fd6`（[commit](https://github.com/a129924/rivet/commit/5a0423f4fda5769d4a0deaa97b01226cd36d4fd6)）完成精確 17-path allowlist 與 staged 單一語意檢查，全部既有 hooks Passed：whitespace、EOF、Swift format、GitHubIntegration consumer、SwiftLint、renderer。non-force push 後 origin 與 PR45 actual head 同步；PR #45 OPEN／Ready，不重開 Draft。
+
+| 修正 | Thread | 實際回覆 | 結果 |
+| --- | --- | --- | --- |
+| visual | `PRRT_kwDOUFu0Cc6pvn8F` | [修正回覆](https://github.com/a129924/rivet/pull/45#discussion_r4202854988) | resolved |
+| docs | `PRRT_kwDOUFu0Cc6pvn8J` | [修正回覆](https://github.com/a129924/rivet/pull/45#discussion_r4202855197) | resolved |
+| status | `PRRT_kwDOUFu0Cc6pvn8N` | [修正回覆](https://github.com/a129924/rivet/pull/45#discussion_r4202855368) | resolved |
+| task | `PRRT_kwDOUFu0Cc6pvqq3` | [修正回覆](https://github.com/a129924/rivet/pull/45#discussion_r4202855540) | resolved |
+
+四項皆先確認 REST reply 成功才 GraphQL resolve；重新查證 4 threads、4 resolved、0 unresolved。PR body 由最新內容更新為 18 tests／3 suites、本次獨立 Reviewer approved、Archify 正式 passed、四項 bounded fixes 與唯一 docs append，保留真實成功與 tool fallback。沒有觸及其他 threads 或執行 merge／release，沒有再次啟動 OAuth。
+
+README 與本 ledger 的 delivery evidence 另以同 topic docs-only commit 同步，仍跑完整既有 hooks；該 commit 的 SHA 由 commit 後 Git／遠端確認，不在自身內容杜撰。final head 後交獨立 Reviewer 刷新 external local PR Lens，不再寫 repo 造成遞迴 commit。PRR-HC／HC-PR 保持 pending，停於 human review。
