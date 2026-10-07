@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "validate",
+  "stage": "render",
+  "type": "sequence",
+  "input": "experiments/E002/diagrams/pkce-token-exchange.json",
+  "error": "Sequence layout validation failed:\n- Message \"拒絕與受控歸因；任何 token 則失敗\" sits outside the readable timeline — keep y between 160 and 477.",
+  "diagnostics": [
+    {
+      "code": "layout/constraint",
+      "severity": "error",
+      "message": "Message \"拒絕與受控歸因；任何 token 則失敗\" sits outside the readable timeline — keep y between 160 and 477.",
+      "subject": {
+        "diagramType": "sequence"
+      },
+      "evidence": {},
+      "supportedFixes": []
+    }
+  ]
+}

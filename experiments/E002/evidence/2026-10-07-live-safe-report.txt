@@ -1,0 +1,6 @@
+最多兩次新授權；結果只輸出遮蔽分類。按 Ctrl-C 中止。
+exchange=成功, schema=成功, API=成功, PKCE=無法判定, overall=無法判定
+exchange：正向交換取得非空 token
+schema：schema 六欄相容且可建 public bundle
+API：API 200 且 user shape 有效
+PKCE：反向回應／錯誤未確認，無法歸因
