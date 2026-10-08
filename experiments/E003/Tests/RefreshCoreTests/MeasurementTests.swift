@@ -122,6 +122,18 @@ private actor MockIO: ProbeIO {
   #expect(result.overall == .indeterminate)
 }
 
+@Test(arguments: [200, 400])
+func readableOtherOldOAuthErrorFails(status: Int) async {
+  let mock = MockIO(
+    oldReuse: HTTPResult(
+      status: status, body: Data("{\"error\":\"incorrect_client_credentials\"}".utf8)))
+  let result = await Experiment.run(transport: mock)
+  #expect(result.oldRefresh == .failed)
+  #expect(result.oldRefreshStatus == status)
+  #expect(result.overall == .failed)
+  #expect(await mock.refreshTokens.count == 2)
+}
+
 @Test func unexpectedTokenFromOldRefreshFails() async {
   let mock = MockIO(
     oldReuse: HTTPResult(

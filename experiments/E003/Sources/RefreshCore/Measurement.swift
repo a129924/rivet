@@ -56,6 +56,7 @@ public enum MeasurementReason: String, Sendable {
   case rotationUnknown = "refresh 呼叫未取得可判讀回應，rotation 狀態未知"
   case unexpectedToken = "舊 refresh token 重用仍取得 token"
   case rejectionUnconfirmed = "舊 refresh token 拒絕原因未確認"
+  case unexpectedOldRefreshError = "舊 refresh token 回傳非預期 OAuth error"
 }
 
 public struct Measurement: Sendable {
@@ -163,8 +164,11 @@ enum ResponseCheck {
       return !value.isEmpty
     }
     if hasToken { return (.failed, .unexpectedToken) }
-    return object["error"] as? String == "bad_refresh_token"
-      ? (.success, .rejectedOldRefresh) : (.indeterminate, .rejectionUnconfirmed)
+    guard let error = object["error"] as? String, !error.isEmpty else {
+      return (.indeterminate, .rejectionUnconfirmed)
+    }
+    return error == "bad_refresh_token"
+      ? (.success, .rejectedOldRefresh) : (.failed, .unexpectedOldRefreshError)
   }
 
   static func scopes(_ raw: String) -> Set<String> {

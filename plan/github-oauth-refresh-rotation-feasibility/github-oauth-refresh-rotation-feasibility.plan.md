@@ -3,7 +3,7 @@
 - Topic：`github-oauth-refresh-rotation-feasibility`；branch：`chore/github-oauth-refresh-rotation-feasibility`。
 - 作業位置：由 dev 基線建立的 E003 feature worktree；dev worktree 完全唯讀。實際 base/head SHA 由後續 Git 角色查證，不預寫。
 - 配對文件：[requirements](../../analysis/github-oauth-refresh-rotation-feasibility/requirements.md)、[technical-spec](../../analysis/github-oauth-refresh-rotation-feasibility/technical-spec.md)、[step](github-oauth-refresh-rotation-feasibility.step.md)。
-- Formal planning verdict：原 E003 計畫與 PR #48 thread 3 bounded amendment 均已獲獨立 Plan-Reviewer `approved`，required fixes 無；原 runner 成果 Reviewer 亦已 `approved`。amendment 的 R04／R05 仍 pending，PR #48 已標記 Ready，人類審查仍 pending。
+- Formal planning verdict：原 E003 計畫與 PR #48 thread 3 bounded amendment 均已獲獨立 Plan-Reviewer `approved`，required fixes 無；R04 Tester、R05 成果 Reviewer、R07 PR Lens Reviewer 亦已明示 `approved`，R06 commit／push 已完成。PR #48 OPEN／Ready；首輪四條 threads 已 resolved。截至本次文件修訂，第二輪 threads 5／6 待處理，最終以 PR thread 即時狀態為準；S09／HC-REVIEW 人類審查仍 pending。
 
 ## swift-implementation Contract
 
@@ -34,12 +34,12 @@ T01：初始 `/user` HTTP 200、有有效 user ID。T02：新 token pair 均非�
 
 最多一次新授權、callback 180 秒、正向 refresh 一次、舊 token 重用一次，無自動重試。正向 refresh request 已送出而 response 遺失時 rotation 未知並停止；舊 token 意外取得新 token 時記失敗且停止使用。secret／token／user ID／原始回應不落盤；僅記遮蔽有限證據。真實授權與遠端 rotation 不可本機回滾，結束時只釋放記憶體，不宣稱 revoke。
 
-HC-LIVE：2026-10-08 已在 feature worktree 完成一次本機隱藏 secret 輸入與人工 browser 授權；runner exit 0、T01–T04 與 overall 均成功，遮蔽證據及限制見 [E003 README](../../experiments/E003/README.md)。這只支持本次 refresh／rotation 測量，不擴張為產品自動刷新或遠端撤銷。HC-REVIEW：PR #48 開立時為 Draft，現已由使用者標記 Ready，仍待人類實際審查。受限長期結論回寫依下節 amendment 的已核准範圍執行；R04／R05 尚待獨立驗證／審查。
+HC-LIVE：2026-10-08 已在 feature worktree 完成一次本機隱藏 secret 輸入與人工 browser 授權；runner exit 0、T01–T04 與 overall 均成功，遮蔽證據及限制見 [E003 README](../../experiments/E003/README.md)。這只支持本次 refresh／rotation 測量，不擴張為產品自動刷新或遠端撤銷。HC-REVIEW：PR #48 開立時為 Draft，本次修訂時 OPEN／Ready；首輪四條 threads 已 resolved，第二輪 threads 5／6 截至本次修訂待處理，最終以 PR thread 即時狀態為準；仍待人類實際審查。受限長期結論回寫已依下節 amendment 完成 R02–R07，未擴大架構決策。
 
-## PR #48 thread 3：長期文件回寫 amendment（R02 approved；R03 完成）
+## PR #48 thread 3：長期文件回寫 amendment（R02–R07 完成）
 
 PR review 指出已完成 E003 的受限實證尚未回寫長期文件。此 amendment 只允許在 `docs/architecture/github-oauth-dual-client.md` 的 E001／E002 受限依據後附加 E003 小節：連結 E003 README，記 2026-10-08 單次測量 T01–T04 各成功、overall／exit 0，以及 T04 是 HTTP 200 body `bad_refresh_token` 且無新 token。結論限本次 App／帳號的 refresh exchange、六欄 public bundle、同一身分與舊 refresh token 拒絕；不改 BC／產品架構、不改 diagrams、不重跑真 OAuth。
 
 由獨立 Plan-Reviewer 明示 amendment `approved` 後，Implementer 才可 append 該小節。**R03 增量 allowlist** 僅四份 topic planning artifacts 與 `docs/architecture/github-oauth-dual-client.md` 的唯一 append；E003 README 僅供唯讀連結。Tester 對 R03 前後增量驗證原 docs bytes 保留、README 相對連結、敏感值缺席與該 allowlist，獨立 Reviewer 判定 docs 語意及限制。
 
-**整個 PR-comment fix diff** 可另含原 E003 Written／Modify 契約下的 source／tests／README／diagram receipts（含 E003 `.delivery.json`）之其他 threads 修正；目前 E003 source／tests 已修正、README 已同步並新增 `.delivery.json`，局部 32 tests 與 strict format／lint 通過，仍須獨立 Tester／Reviewer 驗證。這些變更須以自身 diff 另行驗證與審查，不從 R03 docs approval 取得放行。所有待交付修正獲對應 Reviewer `approved` 後，依既有 topic 授權與 staged diff 語意檢查作同 topic commit、non-force push 更新既有 PR #48；新 head 的 PR Lens coverage 由 Reviewer 核對或明示缺口。S09／HC-REVIEW 仍待人類實際 review；本 amendment 不等於所有 PR threads 或人類 review 已完成。
+**整個 PR-comment fix diff** 另含原 E003 Written／Modify 契約下的 source／tests／README／diagram receipts（含 E003 `.delivery.json`）之首輪其他 threads 修正；R04 Tester 以 32 tests、strict format／lint 與限定 allowlist 明示 `approved`，R05 獨立 Reviewer 對四 threads 最終明示 `approved`、無 required fix。R06 已依 staged diff 作同 topic commit、non-force push 更新既有 PR #48；R07 Reviewer 對當時 head `ac69b96` 的 PR Lens coverage 明示 `approved`。首輪四條 threads 已回覆並 resolved；第二輪 threads 5／6 待處理，其中 thread 6 指出本 plan 的過時狀態文字，本次僅更正狀態。後續修正與審查不得預寫為完成；S09／HC-REVIEW 仍待人類實際 review。
