@@ -49,7 +49,7 @@ public enum MeasurementReason: String, Sendable {
   case invalidCredential = "有效回應的 credential 欄位或值不符"
   case invalidUser = "API status 或 user shape 不符"
   case changedIdentity = "新 access token 的 user ID 不一致"
-  case unknownOAuthError = "OAuth error 無法歸因"
+  case oauthRejected = "OAuth error 可判讀且未取得預期 token"
   case freshRefreshRejected = "初始有效的 refresh token 被明確拒絕"
   case httpUnavailable = "HTTP 回應不足以判定"
   case interrupted = "網路、逾時或取消阻止測量"
@@ -131,11 +131,11 @@ enum ResponseCheck {
         credential: nil, verdict: successfulHTTP ? .failed : .indeterminate,
         reason: successfulHTTP ? .invalidCredential : .httpUnavailable)
     }
-    if let error = object["error"] as? String {
+    if let error = object["error"] as? String, !error.isEmpty {
       if refreshing && error == "bad_refresh_token" {
         return CredentialCheck(credential: nil, verdict: .failed, reason: .freshRefreshRejected)
       }
-      return CredentialCheck(credential: nil, verdict: .indeterminate, reason: .unknownOAuthError)
+      return CredentialCheck(credential: nil, verdict: .failed, reason: .oauthRejected)
     }
     guard (200...299).contains(response.status) else {
       return CredentialCheck(credential: nil, verdict: .indeterminate, reason: .httpUnavailable)
@@ -190,7 +190,6 @@ public enum Experiment {
       let authorization = try await transport.authorize(
         state: PKCE.random(), challenge: PKCE.challenge(verifier))
       let response = try await transport.exchange(authorization: authorization, verifier: verifier)
-      result.initialStatus = response.status
       let check = ResponseCheck.credential(response)
       guard let credential = check.credential else {
         result.initial = check.verdict

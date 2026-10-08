@@ -3,7 +3,7 @@
 - Topic：`github-oauth-refresh-rotation-feasibility`；branch：`chore/github-oauth-refresh-rotation-feasibility`。
 - 作業位置：由 dev 基線建立的 E003 feature worktree；dev worktree 完全唯讀。實際 base/head SHA 由後續 Git 角色查證，不預寫。
 - 配對文件：[requirements](../../analysis/github-oauth-refresh-rotation-feasibility/requirements.md)、[technical-spec](../../analysis/github-oauth-refresh-rotation-feasibility/technical-spec.md)、[step](github-oauth-refresh-rotation-feasibility.step.md)。
-- Formal planning verdict：2026-10-08 獨立 Plan-Reviewer 明示 `approved`，required fixes 無；獨立成果 Reviewer 亦已明示 `approved`，無 required fix。Draft PR human review 仍 pending。
+- Formal planning verdict：原 E003 計畫與 PR #48 thread 3 bounded amendment 均已獲獨立 Plan-Reviewer `approved`，required fixes 無；原 runner 成果 Reviewer 亦已 `approved`。amendment 的 R04／R05 仍 pending，PR #48 已標記 Ready，人類審查仍 pending。
 
 ## swift-implementation Contract
 
@@ -13,10 +13,10 @@
 | Non-Goal | 不證明產品自動刷新、正式 credential lifecycle、遠端撤銷、E002 PKCE 成功或正式採用。 |
 | In-Scope | 一次新授權、初始與新 access token 各一次 `/user`、一次正向 refresh、一次舊 refresh token 重用、六欄／bundle 相容、局部測試、README、一張 Archify sequence、受限 Graphify／PR Lens。 |
 | Out-Of-Scope | Keychain／持久化、`OAuthTokenProvider`、並行／single-flight、REST／GraphQL client、401 recovery／retry、舊 access token、真實到期、logout／revoke、多帳號、E002 PKCE 補測、Graphify 建圖、工具發布、merge／release。 |
-| ReadOnly | root Package.swift／Sources／Tests、E001／E002、既有 docs／architecture／skills／設定；dev worktree 所有檔案。既有 graph、PR 設定只讀。 |
-| Written | 四份同 slug artifacts；`experiments/E003` 的 Package.swift、Sources／Tests、README、diagrams JSON／HTML／receipts／captures；PR Lens 僅 repo 外暫存。 |
+| ReadOnly | root Package.swift／Sources／Tests、E001／E002、既有 docs（下述唯一 append 文件除外）、architecture diagrams／skills／設定；dev worktree 所有檔案。既有 graph、PR 設定只讀。 |
+| Written | 四份同 slug artifacts；`experiments/E003` 的 Package.swift、Sources／Tests、README、diagrams JSON／HTML／receipts／captures；amendment 允許在 `docs/architecture/github-oauth-dual-client.md` 附加一小節；PR Lens 僅 repo 外暫存。 |
 | Deleted | 無。 |
-| Modify | 僅本 topic 四份 artifacts 與新 E003 檔案；其他既有檔案如需變更，先回 planning 判定 scope。 |
+| Modify | 僅本 topic 四份 artifacts 與 E003；amendment 經獨立 Plan-Reviewer `approved` 後，唯一既有文件變更為 `docs/architecture/github-oauth-dual-client.md` 的 E003 受限依據 append，不改原段落／圖／架構決策。其餘既有檔案仍須先回 planning 判定 scope。 |
 | TestCase | T01 初始 `/user`、T02 正向 refresh／bundle、T03 新 `/user` 同身分、T04 舊 refresh token 明確拒絕；另有局部模擬、敏感值、圖與 diff allowlist 驗證。 |
 
 ## 執行與交接
@@ -34,4 +34,12 @@ T01：初始 `/user` HTTP 200、有有效 user ID。T02：新 token pair 均非�
 
 最多一次新授權、callback 180 秒、正向 refresh 一次、舊 token 重用一次，無自動重試。正向 refresh request 已送出而 response 遺失時 rotation 未知並停止；舊 token 意外取得新 token 時記失敗且停止使用。secret／token／user ID／原始回應不落盤；僅記遮蔽有限證據。真實授權與遠端 rotation 不可本機回滾，結束時只釋放記憶體，不宣稱 revoke。
 
-HC-LIVE：2026-10-08 已在 feature worktree 完成一次本機隱藏 secret 輸入與人工 browser 授權；runner exit 0、T01–T04 與 overall 均成功，遮蔽證據及限制見 [E003 README](../../experiments/E003/README.md)。這只支持本次 refresh／rotation 測量，不擴張為產品自動刷新或遠端撤銷。HC-REVIEW：Draft PR #48 已建立，仍待人類實際審查。若實測與獨立審查後需回寫持久結論，另行處理 `docs/` 受限變更，不預先修改架構真相。
+HC-LIVE：2026-10-08 已在 feature worktree 完成一次本機隱藏 secret 輸入與人工 browser 授權；runner exit 0、T01–T04 與 overall 均成功，遮蔽證據及限制見 [E003 README](../../experiments/E003/README.md)。這只支持本次 refresh／rotation 測量，不擴張為產品自動刷新或遠端撤銷。HC-REVIEW：PR #48 開立時為 Draft，現已由使用者標記 Ready，仍待人類實際審查。受限長期結論回寫依下節 amendment 的已核准範圍執行；R04／R05 尚待獨立驗證／審查。
+
+## PR #48 thread 3：長期文件回寫 amendment（R02 approved；R03 完成）
+
+PR review 指出已完成 E003 的受限實證尚未回寫長期文件。此 amendment 只允許在 `docs/architecture/github-oauth-dual-client.md` 的 E001／E002 受限依據後附加 E003 小節：連結 E003 README，記 2026-10-08 單次測量 T01–T04 各成功、overall／exit 0，以及 T04 是 HTTP 200 body `bad_refresh_token` 且無新 token。結論限本次 App／帳號的 refresh exchange、六欄 public bundle、同一身分與舊 refresh token 拒絕；不改 BC／產品架構、不改 diagrams、不重跑真 OAuth。
+
+由獨立 Plan-Reviewer 明示 amendment `approved` 後，Implementer 才可 append 該小節。**R03 增量 allowlist** 僅四份 topic planning artifacts 與 `docs/architecture/github-oauth-dual-client.md` 的唯一 append；E003 README 僅供唯讀連結。Tester 對 R03 前後增量驗證原 docs bytes 保留、README 相對連結、敏感值缺席與該 allowlist，獨立 Reviewer 判定 docs 語意及限制。
+
+**整個 PR-comment fix diff** 可另含原 E003 Written／Modify 契約下的 source／tests／README／diagram receipts（含 E003 `.delivery.json`）之其他 threads 修正；目前 E003 source／tests 已修正、README 已同步並新增 `.delivery.json`，局部 32 tests 與 strict format／lint 通過，仍須獨立 Tester／Reviewer 驗證。這些變更須以自身 diff 另行驗證與審查，不從 R03 docs approval 取得放行。所有待交付修正獲對應 Reviewer `approved` 後，依既有 topic 授權與 staged diff 語意檢查作同 topic commit、non-force push 更新既有 PR #48；新 head 的 PR Lens coverage 由 Reviewer 核對或明示缺口。S09／HC-REVIEW 仍待人類實際 review；本 amendment 不等於所有 PR threads 或人類 review 已完成。

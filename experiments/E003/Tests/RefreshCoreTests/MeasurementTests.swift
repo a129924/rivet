@@ -218,6 +218,26 @@ func invalidCredentialValuesFail(body: Data) {
   #expect(await mock.closed)
 }
 
+@Test func readableExchangeOAuthErrorFailsWithoutInitialUserStatus() async {
+  let mock = MockIO(
+    initial: HTTPResult(
+      status: 401, body: Data("{\"error\":\"incorrect_client_credentials\"}".utf8)))
+  let result = await Experiment.run(transport: mock)
+  #expect(result.initial == .failed)
+  #expect(result.initialReason == .oauthRejected)
+  #expect(result.initialStatus == nil)
+  #expect(await mock.userTokens.isEmpty)
+}
+
+@Test func failedExchangeDoesNotClaimInitialUserStatus() async {
+  let mock = MockIO(initial: HTTPResult(status: 200, body: Data("{}".utf8)))
+  let result = await Experiment.run(transport: mock)
+  #expect(result.initial == .failed)
+  #expect(result.initialStatus == nil)
+  #expect(await mock.userTokens.isEmpty)
+  #expect(result.safeReport.contains("T01=失敗, http=未取得"))
+}
+
 @Test func oldRefreshRejectionCanArriveWithNonSuccessHTTPStatus() async {
   let mock = MockIO(
     oldReuse: HTTPResult(status: 400, body: Data("{\"error\":\"bad_refresh_token\"}".utf8)))
@@ -232,6 +252,20 @@ func invalidCredentialValuesFail(body: Data) {
   let result = await Experiment.run(transport: mock)
   #expect(result.initial == .success)
   #expect(result.refresh == .failed)
+  #expect(result.overall == .failed)
+  #expect(await mock.refreshTokens.count == 1)
+  #expect(await mock.userTokens.count == 1)
+}
+
+@Test(arguments: [200, 401])
+func readableRefreshOAuthErrorIsFailure(status: Int) async {
+  let mock = MockIO(
+    rotated: HTTPResult(
+      status: status, body: Data("{\"error\":\"incorrect_client_credentials\"}".utf8)))
+  let result = await Experiment.run(transport: mock)
+  #expect(result.initial == .success)
+  #expect(result.refresh == .failed)
+  #expect(result.refreshStatus == status)
   #expect(result.overall == .failed)
   #expect(await mock.refreshTokens.count == 1)
   #expect(await mock.userTokens.count == 1)

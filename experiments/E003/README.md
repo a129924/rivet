@@ -15,6 +15,8 @@
 | T03 新 token 使用 | 新 `/user` 為 HTTP 200，user ID 與 T01 相同。 | 成功，HTTP 200 |
 | T04 舊 token 重用 | 唯一一次舊 refresh token 重用得到 `error=bad_refresh_token`，未取得新 token。 | 成功，HTTP 200 內含明確 OAuth error |
 
+初始 exchange 未完成時，T01 的 HTTP status 留「未取得」；正向 refresh 若回可解析 OAuth error，T02 記「失敗」。
+
 四項皆符合才記「成功」；有效前置與可判讀回應違反預期記「失敗」；App 設定、credentials、人工授權、網路或回應不足以歸因時記「無法判定」。T04 不以泛用 HTTP 錯誤或網路失敗冒充拒絕證據。T04 的前置是 T02 成功；T03 可判讀的失敗仍保留 T04 的唯一一次測量。
 
 本次不測產品自動刷新、`OAuthTokenProvider`、Keychain、持久化、401 recovery、並行、真實到期、舊 access token、撤銷或 E002 PKCE 反向案例。`GitHubIntegration` 是 BC 外共用整合模組，本實驗沒有新增 BC 或 public API。
@@ -54,10 +56,10 @@ T04 的 HTTP 200 是 OAuth response 的 transport status；成功判準依 body 
 
 ## 局部驗證與圖
 
-2026-10-08 在 feature worktree：`swift test --package-path experiments/E003` 通過 **29 個 Swift Testing tests**；局部 `swift format lint --strict --recursive` 通過，`swiftlint lint --strict` 對 11 個 Swift 檔案回報 0 violations。測試使用 mock／本地 loopback，不開 GitHub 授權瀏覽器或交換真實 token。TDD red 起點為尚無 E003 測量型別與 refresh 傳輸的編譯失敗；加入 E003 測量後轉為 green；T02 前已取消但誤標 rotation 未知的局部測試亦先 red 後 green。
+2026-10-08 在 feature worktree：`swift test --package-path experiments/E003` 通過 **32 個 Swift Testing tests**；局部 `swift format lint --strict --recursive` 通過，`swiftlint lint --strict` 對 11 個 Swift 檔案回報 0 violations。測試使用 mock／本地 loopback，不開 GitHub 授權瀏覽器或交換真實 token。TDD red 起點為尚無 E003 測量型別與 refresh 傳輸的編譯失敗；加入 E003 測量後轉為 green；T02 前已取消但誤標 rotation 未知的局部測試亦先 red 後 green；PR review 指出的可解析 OAuth error 與 T01 HTTP status 歸屬另以回歸測試先 red 後 green。
 
-[正式 v2 sequence 圖](diagrams/refresh-rotation-v2.html) 描述初始基準、refresh 與舊 token 重用；作者文字繁體中文，固定 Viewer UI／HTML lang 依工具 fallback 為英文。v2 `showcase` 驗證 9／9、0 errors／warnings；`deliver` 的 spec SHA-256 為 `a4b183915429b852d121163b286fd3df359e10e4cc0f37a002a31f352008d028`（3455 bytes），HTML SHA-256 為 `d9fd6d7182741809aed3b406d70a2ec1fff13e27cfa628f643eb1932e4f2ffe0`（704263 bytes）。[visual-check receipt](diagrams/refresh-rotation-v2.visual-check.json) 四種桌面尺寸 1440×900、1600×1000、1920×1080、2048×1320 均無 overflow，最小／最大明暗 captures 已保存；工具 `visualReview=pending`，獨立 Reviewer 已逐一檢視四張 capture 並判定可讀。正式僅保留 v2 圖；其布局已修正參與者過度集中與段落範圍。
+[正式 v2 sequence 圖](diagrams/refresh-rotation-v2.html) 描述初始基準、refresh 與舊 token 重用；作者文字繁體中文，固定 Viewer UI／HTML lang 依工具 fallback 為英文。v2 `showcase` 驗證 9／9、0 errors／warnings；[deliver receipt](diagrams/refresh-rotation-v2.delivery.json) 已提交，其 spec SHA-256 為 `a4b183915429b852d121163b286fd3df359e10e4cc0f37a002a31f352008d028`（3455 bytes），HTML SHA-256 為 `d9fd6d7182741809aed3b406d70a2ec1fff13e27cfa628f643eb1932e4f2ffe0`（704263 bytes）。[visual-check receipt](diagrams/refresh-rotation-v2.visual-check.json) 四種桌面尺寸 1440×900、1600×1000、1920×1080、2048×1320 均無 overflow，最小／最大明暗 captures 已保存；工具 `visualReview=pending`，獨立 Reviewer 已逐一檢視四張 capture 並判定可讀。正式僅保留 v2 圖；其布局已修正參與者過度集中與段落範圍。
 
 Graphify 沒有可用的既存 graph，已改用有界的 `rg` 與來源檢查；未建圖、安裝或呼叫 provider。PR Lens 已依真實 base/head topic commit 在 repository 外建立本地變更圖，使用 pinned 0.11.0 validate／render 並經獨立 Reviewer 核對。兩者均不構成程式或真實 OAuth 驗收。
 
-HC-LIVE：本次單次人工授權與遠端測量已完成；HC-REVIEW：Draft PR #48 仍待人類審查。局部測試或圖驗證不擴大真實實驗的結論邊界。
+HC-LIVE：本次單次人工授權與遠端測量已完成；HC-REVIEW：PR #48 已標記 Ready for review，仍待人類審查。局部測試或圖驗證不擴大真實實驗的結論邊界。

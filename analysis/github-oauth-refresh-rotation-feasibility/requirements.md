@@ -1,7 +1,7 @@
 # E003：GitHub OAuth refresh exchange 與 rotation 相容性驗證 — Requirements
 
 - Topic：`github-oauth-refresh-rotation-feasibility`；實驗 ID：`E003`。
-- 狀態：使用者接受對話計畫並授權 feature worktree 交付；正式 Plan-Reviewer verdict 尚未取得。
+- 狀態：原 E003 計畫與 PR #48 thread 3 的 bounded amendment 均已獲獨立 Plan-Reviewer `approved`；R03 唯一 docs append 已完成，R04 Tester 尚待。PR #48 目前 Ready，人類審查仍 pending。
 - 日期：2026-10-08。
 - 配對文件：[technical-spec](technical-spec.md)、[plan](../../plan/github-oauth-refresh-rotation-feasibility/github-oauth-refresh-rotation-feasibility.plan.md)、[step](../../plan/github-oauth-refresh-rotation-feasibility/github-oauth-refresh-rotation-feasibility.step.md)。
 
@@ -36,4 +36,8 @@
 
 使用者明示先建立 feature worktree，僅在該 worktree 實作，不改 dev worktree；無重大問題時依 topic commit、push、開指向 dev 的 Draft PR，停止於 human review。實測仍需操作者本機隱藏輸入 secret、人工瀏覽器授權及 App／callback 環境確認；尚無這些前置證據時 HC-LIVE 維持 pending，不冒稱成功，也不阻已驗證 runner 的 Draft PR 交付。
 
-真實成功與獨立成果審查成立後，仍成立的受限結論才可由另行確認的文件變更回寫長期 `docs/`；本次契約不預授權修改既有架構文件。
+2026-10-08 單次實測的 T01–T04 與 overall 均成功，遮蔽證據及限制見 [E003 README](../../experiments/E003/README.md)。此結果只支持本次 App／帳號的 refresh exchange、public bundle 相容、同一 user ID 與舊 refresh token 明確拒絕，不代表產品自動刷新、遠端撤銷或 E002 反向 PKCE 已驗證。
+
+PR #48 thread 3 指出完成後仍成立的受限結論未回寫長期文件。此次 bounded amendment 經獨立 Plan-Reviewer 最終 `approved`、required fixes 無；R03 已只在 `docs/architecture/github-oauth-dual-client.md` 附加 E003 受限依據一小節並連結 README，原文件 bytes 保留，未改既有責任邊界、產品架構決策或 diagrams。R04 獨立驗證及後續成果審查 pending；既有 S09／HC-REVIEW 人類審查仍 pending。
+
+此 docs gate 的 R03 變更清單只含四份 topic planning artifacts 與上述唯一 docs append；E003 README 是證據連結目標，不是 R03 可修改檔。PR #48 其他 threads 對既有 E003 source／tests／README／diagram receipts 的修正仍依原 E003 Written／Modify 契約分別驗證與審查，不藉本 amendment 擴大 docs gate。

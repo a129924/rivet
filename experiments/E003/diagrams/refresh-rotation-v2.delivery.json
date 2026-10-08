@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "experiments/E003/diagrams/refresh-rotation-v2.json",
+  "output": "experiments/E003/diagrams/refresh-rotation-v2.html",
+  "specification": {
+    "sha256": "a4b183915429b852d121163b286fd3df359e10e4cc0f37a002a31f352008d028",
+    "bytes": 3455
+  },
+  "artifact": {
+    "sha256": "d9fd6d7182741809aed3b406d70a2ec1fff13e27cfa628f643eb1932e4f2ffe0",
+    "bytes": 704263
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
