@@ -20,6 +20,7 @@ private actor MockIO: ProbeIO {
   let oldReuse: HTTPResult
   let users: [HTTPResult]
   let loseRefresh: Bool
+  let interruptBeforeRefreshSend: Bool
   let cancelAfterInitialUser: Bool
   private(set) var authorizeCount = 0
   private(set) var exchangeCount = 0
@@ -40,6 +41,7 @@ private actor MockIO: ProbeIO {
       HTTPResult(status: 200, body: Data("{\"id\":123,\"login\":\"person\"}".utf8)),
     ],
     loseRefresh: Bool = false,
+    interruptBeforeRefreshSend: Bool = false,
     cancelAfterInitialUser: Bool = false
   ) {
     self.initial = initial
@@ -47,6 +49,7 @@ private actor MockIO: ProbeIO {
     self.oldReuse = oldReuse
     self.users = users
     self.loseRefresh = loseRefresh
+    self.interruptBeforeRefreshSend = interruptBeforeRefreshSend
     self.cancelAfterInitialUser = cancelAfterInitialUser
   }
 
@@ -59,6 +62,7 @@ private actor MockIO: ProbeIO {
     return initial
   }
   func refresh(token: String) async throws -> HTTPResult {
+    if interruptBeforeRefreshSend { throw ProbeFailure.interrupted }
     refreshTokens.append(token)
     if loseRefresh && refreshTokens.count == 1 { throw ProbeFailure.network }
     return refreshTokens.count == 1 ? rotated : oldReuse
@@ -113,6 +117,43 @@ private actor MockIO: ProbeIO {
   #expect(await mock.refreshTokens.count == 1)
   #expect(await mock.userTokens.count == 1)
   #expect(await mock.closed)
+}
+
+@Test func interruptedBeforeRefreshSendDoesNotClaimRotation() async {
+  let mock = MockIO(interruptBeforeRefreshSend: true)
+  let result = await Experiment.run(transport: mock)
+  #expect(result.initial == .success)
+  #expect(result.refresh == .indeterminate)
+  #expect(result.refreshReason == .interrupted)
+  #expect(await mock.refreshTokens.isEmpty)
+}
+
+@Test func liveRefreshPreflightCancellationIsInterrupted() async throws {
+  let config = try ProbeConfiguration(arguments: ["--client-id", "client-sentinel"])
+  let live = LiveIO(configuration: config, secret: "secret-sentinel", openBrowser: { _, _ in })
+  let result = await Task {
+    withUnsafeCurrentTask { $0?.cancel() }
+    do {
+      _ = try await live.refresh(token: "refresh-sentinel")
+      return false
+    } catch {
+      return (error as? ProbeFailure) == .interrupted
+    }
+  }.value
+  #expect(result)
+  await live.close()
+}
+
+@Test func unreadableSuccessfulRefreshResponseIsIndeterminate() async {
+  let mock = MockIO(rotated: HTTPResult(status: 200, body: Data("truncated".utf8)))
+  let result = await Experiment.run(transport: mock)
+  #expect(result.initial == .success)
+  #expect(result.refresh == .indeterminate)
+  #expect(result.refreshReason == .rotationUnknown)
+  #expect(result.refreshStatus == 200)
+  #expect(result.overall == .indeterminate)
+  #expect(await mock.refreshTokens.count == 1)
+  #expect(await mock.userTokens.count == 1)
 }
 
 @Test func unreadableOldRejectionIsIndeterminate() async {

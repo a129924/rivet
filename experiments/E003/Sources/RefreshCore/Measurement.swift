@@ -127,6 +127,9 @@ enum ResponseCheck {
 
   static func credential(_ response: HTTPResult, refreshing: Bool = false) -> CredentialCheck {
     guard let object = object(response.body) else {
+      if refreshing {
+        return CredentialCheck(credential: nil, verdict: .indeterminate, reason: .rotationUnknown)
+      }
       let successfulHTTP = (200...299).contains(response.status)
       return CredentialCheck(
         credential: nil, verdict: successfulHTTP ? .failed : .indeterminate,
@@ -231,7 +234,9 @@ public enum Experiment {
     do {
       response = try await transport.refresh(token: initial.refreshToken)
     } catch {
-      result.refreshReason = .rotationUnknown
+      result.refreshReason =
+        (error as? ProbeFailure) == .interrupted
+        ? .interrupted : .rotationUnknown
       return result
     }
     result.refreshStatus = response.status

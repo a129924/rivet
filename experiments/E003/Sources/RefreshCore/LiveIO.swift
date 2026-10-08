@@ -130,8 +130,8 @@ public final class LiveIO: ProbeIO, @unchecked Sendable {
   }
 
   private func send(_ request: URLRequest) async throws -> HTTPResult {
+    guard !Task.isCancelled else { throw ProbeFailure.interrupted }
     do {
-      try Task.checkCancellation()
       let (data, response) = try await session.data(for: request)
       guard let response = response as? HTTPURLResponse else { throw ProbeFailure.network }
       return HTTPResult(status: response.statusCode, body: data)
