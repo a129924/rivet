@@ -2,7 +2,7 @@
 
 ## 狀態與目的
 
-**真實 OAuth 測量：未執行，四項結果均無法判定。** 本 README 記錄 runner 與局部證據；SwiftPM 測試、Archify 圖和 PR Lens 不能代替遠端實測。E002 的正向 code exchange、六欄 credential 與 `/user` 證據保持獨立，其 PKCE 反向與總體結論仍為「無法判定」。
+**真實 OAuth 測量：2026-10-08 單次執行，T01–T04 均成功。** 本 README 區分遠端實測與 runner 的局部證據；SwiftPM 測試、Archify 圖和 PR Lens 不能代替遠端實測。E002 的正向 code exchange、六欄 credential 與 `/user` 證據保持獨立，其 PKCE 反向與總體結論仍為「無法判定」。
 
 目標是在一次新授權後，確認 GitHub.com OAuth App refresh token 可交換出新 token pair、建立既有 public `GitHubOAuthCredentialBundle`、維持相同 user ID，且舊 refresh token 重用得到 `bad_refresh_token`。[GitHub 官方授權文件](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#refreshing-an-access-token-with-a-refresh-token)
 
@@ -10,10 +10,10 @@
 
 | 案例 | 成功條件 | 真實狀態 |
 | --- | --- | --- |
-| T01 初始基準 | 新授權後初始 `/user` 為 HTTP 200，user ID 有效。 | 未執行 |
-| T02 正向刷新 | 新 access／refresh token 非空且各自更換；六欄、正期限、bearer、scope 集合與 public bundle 相容。 | 未執行 |
-| T03 新 token 使用 | 新 `/user` 為 HTTP 200，user ID 與 T01 相同。 | 未執行 |
-| T04 舊 token 重用 | 唯一一次舊 refresh token 重用得到 `error=bad_refresh_token`，未取得新 token。 | 未執行 |
+| T01 初始基準 | 新授權後初始 `/user` 為 HTTP 200，user ID 有效。 | 成功，HTTP 200 |
+| T02 正向刷新 | 新 access／refresh token 非空且各自更換；六欄、正期限、bearer、scope 集合與 public bundle 相容。 | 成功，HTTP 200 |
+| T03 新 token 使用 | 新 `/user` 為 HTTP 200，user ID 與 T01 相同。 | 成功，HTTP 200 |
+| T04 舊 token 重用 | 唯一一次舊 refresh token 重用得到 `error=bad_refresh_token`，未取得新 token。 | 成功，HTTP 200 內含明確 OAuth error |
 
 四項皆符合才記「成功」；有效前置與可判讀回應違反預期記「失敗」；App 設定、credentials、人工授權、網路或回應不足以歸因時記「無法判定」。T04 不以泛用 HTTP 錯誤或網路失敗冒充拒絕證據。T04 的前置是 T02 成功；T03 可判讀的失敗仍保留 T04 的唯一一次測量。
 
@@ -35,12 +35,29 @@ swift run --package-path experiments/E003 oauth-refresh-probe --client-id <Clien
 
 secret、code、state、verifier、token、user ID、完整 URL 與原始 request／response／error 只留記憶體。stdout／stderr 僅有固定分類、HTTP status 與分項 verdict；若需保存實測證據，只保存遮蔽輸出與環境／日期／限制，不保存原始資料。browser／OS 留痕不在 runner 控制範圍。
 
+## 2026-10-08 真實執行證據
+
+操作者在 feature worktree 使用已建置的 E003 runner、E002 OAuth App 的 Client ID、本機 TTY 隱藏輸入的 secret，完成一次瀏覽器授權。命令採 `--timeout-seconds 180`；runner exit code 為 `0`。外層腳本記錄開始 `2026-10-08T03:58:33Z`、結束 `2026-10-08T03:58:45Z`；這是程序外層時間，並非各 HTTP 事件的時間戳。此次沒有自動重試。
+
+以下為 runner 的完整遮蔽 stdout（461 bytes，SHA-256 `8c3d86d2030a7e0b681529a73ce957aa350dbe55322c36ecdb10d8d50adbc2ca`）：
+
+```text
+最多一次新授權、一次正向 refresh、一次舊 refresh token 重用；結果只輸出遮蔽分類。按 Ctrl-C 中止。
+T01=成功, http=200, reason=初始六欄相容且 API 200、user ID 有效
+T02=成功, http=200, reason=新 token pair、六欄、scope 與 public bundle 相容
+T03=成功, http=200, reason=新 access token 的 user ID 一致
+T04=成功, http=200, reason=舊 refresh token 回傳 bad_refresh_token 且無新 token
+overall=成功
+```
+
+T04 的 HTTP 200 是 OAuth response 的 transport status；成功判準依 body 中的明確 `bad_refresh_token` 且沒有新 token，不以 status 200 本身推論。此結果只支持本次 App／帳號的一次 refresh exchange、public bundle 相容與舊 refresh token 拒絕。App 全域 expiring-token 設定沒有另行查證；E002 反向 PKCE 的「無法判定」維持獨立。產品自動刷新、持久化、並行與遠端 revoke 仍不在本次驗證範圍。
+
 ## 局部驗證與圖
 
 2026-10-08 在 feature worktree：`swift test --package-path experiments/E003` 通過 **29 個 Swift Testing tests**；局部 `swift format lint --strict --recursive` 通過，`swiftlint lint --strict` 對 11 個 Swift 檔案回報 0 violations。測試使用 mock／本地 loopback，不開 GitHub 授權瀏覽器或交換真實 token。TDD red 起點為尚無 E003 測量型別與 refresh 傳輸的編譯失敗；加入 E003 測量後轉為 green；T02 前已取消但誤標 rotation 未知的局部測試亦先 red 後 green。
 
 [正式 v2 sequence 圖](diagrams/refresh-rotation-v2.html) 描述初始基準、refresh 與舊 token 重用；作者文字繁體中文，固定 Viewer UI／HTML lang 依工具 fallback 為英文。v2 `showcase` 驗證 9／9、0 errors／warnings；`deliver` 的 spec SHA-256 為 `a4b183915429b852d121163b286fd3df359e10e4cc0f37a002a31f352008d028`（3455 bytes），HTML SHA-256 為 `d9fd6d7182741809aed3b406d70a2ec1fff13e27cfa628f643eb1932e4f2ffe0`（704263 bytes）。[visual-check receipt](diagrams/refresh-rotation-v2.visual-check.json) 四種桌面尺寸 1440×900、1600×1000、1920×1080、2048×1320 均無 overflow，最小／最大明暗 captures 已保存；工具 `visualReview=pending`，獨立 Reviewer 已逐一檢視四張 capture 並判定可讀。正式僅保留 v2 圖；其布局已修正參與者過度集中與段落範圍。
 
-Graphify 沒有可用的既存 graph，已改用有界的 `rg` 與來源檢查；未建圖、安裝或呼叫 provider。PR Lens 需等真實 base/head topic commit 才能在 repository 外建立本地變更圖，目前 pending。兩者均不構成程式或真實 OAuth 驗收。
+Graphify 沒有可用的既存 graph，已改用有界的 `rg` 與來源檢查；未建圖、安裝或呼叫 provider。PR Lens 已依真實 base/head topic commit 在 repository 外建立本地變更圖，使用 pinned 0.11.0 validate／render 並經獨立 Reviewer 核對。兩者均不構成程式或真實 OAuth 驗收。
 
-HC-LIVE：App／credentials／人工授權尚待；HC-REVIEW：Draft PR 開立後交人類審查。上述未完成狀態不因局部測試或圖驗證通過而改寫。
+HC-LIVE：本次單次人工授權與遠端測量已完成；HC-REVIEW：Draft PR #48 仍待人類審查。局部測試或圖驗證不擴大真實實驗的結論邊界。

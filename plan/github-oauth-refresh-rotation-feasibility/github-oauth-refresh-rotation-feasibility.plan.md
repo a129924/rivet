@@ -3,7 +3,7 @@
 - Topic：`github-oauth-refresh-rotation-feasibility`；branch：`chore/github-oauth-refresh-rotation-feasibility`。
 - 作業位置：由 dev 基線建立的 E003 feature worktree；dev worktree 完全唯讀。實際 base/head SHA 由後續 Git 角色查證，不預寫。
 - 配對文件：[requirements](../../analysis/github-oauth-refresh-rotation-feasibility/requirements.md)、[technical-spec](../../analysis/github-oauth-refresh-rotation-feasibility/technical-spec.md)、[step](github-oauth-refresh-rotation-feasibility.step.md)。
-- Formal planning verdict：2026-10-08 獨立 Plan-Reviewer 明示 `approved`，required fixes 無；成果 Reviewer verdict 仍待取得。
+- Formal planning verdict：2026-10-08 獨立 Plan-Reviewer 明示 `approved`，required fixes 無；獨立成果 Reviewer 亦已明示 `approved`，無 required fix。Draft PR human review 仍 pending。
 
 ## swift-implementation Contract
 
@@ -34,4 +34,4 @@ T01：初始 `/user` HTTP 200、有有效 user ID。T02：新 token pair 均非�
 
 最多一次新授權、callback 180 秒、正向 refresh 一次、舊 token 重用一次，無自動重試。正向 refresh request 已送出而 response 遺失時 rotation 未知並停止；舊 token 意外取得新 token 時記失敗且停止使用。secret／token／user ID／原始回應不落盤；僅記遮蔽有限證據。真實授權與遠端 rotation 不可本機回滾，結束時只釋放記憶體，不宣稱 revoke。
 
-HC-LIVE：App／client credentials／callback、TTY 隱藏 secret 與人工 browser 授權尚待確認，runner 可先受限交付 Draft PR，但真實測量維持 pending。HC-REVIEW：Draft PR 後停止於 human review。若實測與獨立審查後需回寫持久結論，另行處理 `docs/` 受限變更，不預先修改架構真相。
+HC-LIVE：2026-10-08 已在 feature worktree 完成一次本機隱藏 secret 輸入與人工 browser 授權；runner exit 0、T01–T04 與 overall 均成功，遮蔽證據及限制見 [E003 README](../../experiments/E003/README.md)。這只支持本次 refresh／rotation 測量，不擴張為產品自動刷新或遠端撤銷。HC-REVIEW：Draft PR #48 已建立，仍待人類實際審查。若實測與獨立審查後需回寫持久結論，另行處理 `docs/` 受限變更，不預先修改架構真相。

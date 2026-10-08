@@ -1,7 +1,7 @@
 # E003 — Technical Spec
 
 - Topic：`github-oauth-refresh-rotation-feasibility`。
-- Locked decisions 來自使用者接受的 E003 對話計畫；正式 Plan-Reviewer verdict pending。
+- Locked decisions 來自使用者接受的 E003 對話計畫；2026-10-08 獨立 Plan-Reviewer 明示 `approved`，無 required fix。
 - 配對文件：[requirements](requirements.md)、[plan](../../plan/github-oauth-refresh-rotation-feasibility/github-oauth-refresh-rotation-feasibility.plan.md)、[step](../../plan/github-oauth-refresh-rotation-feasibility/github-oauth-refresh-rotation-feasibility.step.md)。
 
 ## 獨立 runner 與資料流
