@@ -292,7 +292,10 @@ public enum Experiment {
       }
     } catch {
       result.newUserReason = .interrupted
-      return result
+      let cancelled =
+        Task.isCancelled || error is CancellationError
+        || (error as? ProbeFailure) == .interrupted
+      if cancelled { return result }
     }
 
     do {

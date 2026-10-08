@@ -22,6 +22,8 @@ private actor MockIO: ProbeIO {
   let loseRefresh: Bool
   let interruptBeforeRefreshSend: Bool
   let cancelAfterInitialUser: Bool
+  let loseRefreshedUser: Bool
+  let cancelAfterRefreshedUser: Bool
   private(set) var authorizeCount = 0
   private(set) var exchangeCount = 0
   private(set) var refreshTokens: [String] = []
@@ -42,7 +44,9 @@ private actor MockIO: ProbeIO {
     ],
     loseRefresh: Bool = false,
     interruptBeforeRefreshSend: Bool = false,
-    cancelAfterInitialUser: Bool = false
+    cancelAfterInitialUser: Bool = false,
+    loseRefreshedUser: Bool = false,
+    cancelAfterRefreshedUser: Bool = false
   ) {
     self.initial = initial
     self.rotated = rotated
@@ -51,6 +55,8 @@ private actor MockIO: ProbeIO {
     self.loseRefresh = loseRefresh
     self.interruptBeforeRefreshSend = interruptBeforeRefreshSend
     self.cancelAfterInitialUser = cancelAfterInitialUser
+    self.loseRefreshedUser = loseRefreshedUser
+    self.cancelAfterRefreshedUser = cancelAfterRefreshedUser
   }
 
   func authorize(state: String, challenge: String) async throws -> Authorization {
@@ -71,6 +77,10 @@ private actor MockIO: ProbeIO {
     userTokens.append(accessToken)
     if cancelAfterInitialUser && userTokens.count == 1 {
       withUnsafeCurrentTask { $0?.cancel() }
+    }
+    if userTokens.count == 2 {
+      if cancelAfterRefreshedUser { withUnsafeCurrentTask { $0?.cancel() } }
+      if loseRefreshedUser || cancelAfterRefreshedUser { throw ProbeFailure.network }
     }
     return users[userTokens.count - 1]
   }
@@ -107,6 +117,29 @@ private actor MockIO: ProbeIO {
   #expect(result.oldRefresh == .success)
   #expect(result.overall == .failed)
   #expect(await mock.refreshTokens.count == 2)
+}
+
+@Test func refreshedUserNetworkFailureStillMeasuresOldRefresh() async {
+  let mock = MockIO(loseRefreshedUser: true)
+  let result = await Experiment.run(transport: mock)
+  #expect(result.refresh == .success)
+  #expect(result.newUser == .indeterminate)
+  #expect(result.newUserReason == .interrupted)
+  #expect(result.newUserStatus == nil)
+  #expect(result.oldRefresh == .success)
+  #expect(result.overall == .indeterminate)
+  #expect(await mock.refreshTokens.count == 2)
+}
+
+@Test func refreshedUserCancellationSkipsOldRefresh() async {
+  let mock = MockIO(cancelAfterRefreshedUser: true)
+  let probe = Task { await Experiment.run(transport: mock) }
+  let result = await probe.value
+  #expect(result.refresh == .success)
+  #expect(result.newUser == .indeterminate)
+  #expect(result.newUserReason == .interrupted)
+  #expect(result.oldRefresh == .indeterminate)
+  #expect(await mock.refreshTokens.count == 1)
 }
 
 @Test func lostRefreshResponseStopsWithoutRetry() async {
