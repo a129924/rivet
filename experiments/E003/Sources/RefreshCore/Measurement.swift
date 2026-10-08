@@ -120,6 +120,12 @@ struct CredentialCheck {
   let reason: MeasurementReason
 }
 
+enum UserCheck {
+  case valid(Int64)
+  case invalid
+  case unavailable
+}
+
 enum ResponseCheck {
   static func object(_ body: Data) -> [String: Any]? {
     (try? JSONSerialization.jsonObject(with: body)) as? [String: Any]
@@ -150,14 +156,17 @@ enum ResponseCheck {
     return CredentialCheck(credential: credential, verdict: .success, reason: .validRefresh)
   }
 
-  static func userID(_ response: HTTPResult) -> Int64? {
-    guard response.status == 200, let object = object(response.body),
+  static func userID(_ response: HTTPResult) -> UserCheck {
+    guard response.status == 200, let object = object(response.body) else {
+      return .unavailable
+    }
+    guard
       let number = object["id"] as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID(),
       number.doubleValue > 0, number.doubleValue.rounded() == number.doubleValue,
       number.doubleValue < Double(Int64.max),
       let login = object["login"] as? String, !login.isEmpty
-    else { return nil }
-    return number.int64Value
+    else { return .invalid }
+    return .valid(number.int64Value)
   }
 
   static func oldRefresh(_ response: HTTPResult) -> (Verdict, MeasurementReason) {
@@ -207,9 +216,17 @@ public enum Experiment {
       initialCredential = credential
       let user = try await transport.user(accessToken: credential.accessToken)
       result.initialStatus = user.status
-      guard let identifier = ResponseCheck.userID(user) else {
+      let identifier: Int64
+      switch ResponseCheck.userID(user) {
+      case .valid(let value):
+        identifier = value
+      case .invalid:
         result.initial = .failed
         result.initialReason = .invalidUser
+        return result
+      case .unavailable:
+        result.initial = .indeterminate
+        result.initialReason = .httpUnavailable
         return result
       }
       result.initial = .success
@@ -262,12 +279,16 @@ public enum Experiment {
       try Task.checkCancellation()
       let user = try await transport.user(accessToken: credential.accessToken)
       result.newUserStatus = user.status
-      if let refreshedID = ResponseCheck.userID(user) {
+      switch ResponseCheck.userID(user) {
+      case .valid(let refreshedID):
         result.newUser = refreshedID == userID ? .success : .failed
         result.newUserReason = refreshedID == userID ? .sameIdentity : .changedIdentity
-      } else {
+      case .invalid:
         result.newUser = .failed
         result.newUserReason = .invalidUser
+      case .unavailable:
+        result.newUser = .indeterminate
+        result.newUserReason = .httpUnavailable
       }
     } catch {
       result.newUserReason = .interrupted

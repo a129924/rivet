@@ -271,6 +271,51 @@ func invalidCredentialValuesFail(body: Data) {
   #expect(await mock.closed)
 }
 
+@Test func unreadableInitialUserIsIndeterminate() async {
+  let mock = MockIO(users: [HTTPResult(status: 200, body: Data("truncated".utf8))])
+  let result = await Experiment.run(transport: mock)
+  #expect(result.initial == .indeterminate)
+  #expect(result.initialReason == .httpUnavailable)
+  #expect(result.initialStatus == 200)
+  #expect(result.overall == .indeterminate)
+  #expect(await mock.refreshTokens.isEmpty)
+}
+
+@Test func genericInitialUserHTTPErrorIsIndeterminate() async {
+  let mock = MockIO(users: [HTTPResult(status: 503, body: Data("{}".utf8))])
+  let result = await Experiment.run(transport: mock)
+  #expect(result.initial == .indeterminate)
+  #expect(result.initialReason == .httpUnavailable)
+  #expect(result.initialStatus == 503)
+  #expect(await mock.refreshTokens.isEmpty)
+}
+
+@Test func unreadableRefreshedUserStillMeasuresOldRefresh() async {
+  let mock = MockIO(users: [
+    HTTPResult(status: 200, body: Data("{\"id\":123,\"login\":\"person\"}".utf8)),
+    HTTPResult(status: 200, body: Data("truncated".utf8)),
+  ])
+  let result = await Experiment.run(transport: mock)
+  #expect(result.newUser == .indeterminate)
+  #expect(result.newUserReason == .httpUnavailable)
+  #expect(result.newUserStatus == 200)
+  #expect(result.oldRefresh == .success)
+  #expect(result.overall == .indeterminate)
+  #expect(await mock.refreshTokens.count == 2)
+}
+
+@Test func invalidRefreshedUserStillFailsAndMeasuresOldRefresh() async {
+  let mock = MockIO(users: [
+    HTTPResult(status: 200, body: Data("{\"id\":123,\"login\":\"person\"}".utf8)),
+    HTTPResult(status: 200, body: Data("{\"id\":true,\"login\":\"person\"}".utf8)),
+  ])
+  let result = await Experiment.run(transport: mock)
+  #expect(result.newUser == .failed)
+  #expect(result.newUserReason == .invalidUser)
+  #expect(result.oldRefresh == .success)
+  #expect(await mock.refreshTokens.count == 2)
+}
+
 @Test func readableExchangeOAuthErrorFailsWithoutInitialUserStatus() async {
   let mock = MockIO(
     initial: HTTPResult(
