@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Rivet — GitHub OAuth 雙用戶端架構</title>
+<title>GitHub OAuth 雙 Client 責任與依賴</title>
 <script>
   // Dark is the style's default — the OS preference deliberately does not
   // override it, since these diagrams are authored and reviewed as dark. A
@@ -152,8 +152,8 @@
 <div id="stage"><canvas id="c"></canvas></div>
 
 <div id="plate">
-  <div class="k">RIVET — GITHUB OAUTH 架構</div>
-  <div class="n"><b>共享快照</b> → <b>獨立用戶端</b> → <b>各自傳輸</b></div>
+  <div class="k">GITHUB OAUTH — 責任與依賴</div>
+  <div class="n">共享權杖生命週期；原工作所有權留在用戶端</div>
 </div>
 
 <div id="hint">
@@ -307,7 +307,7 @@ const BANDS = [
 
 const BOXES = [
   { id: 'facade', plane: 'composition', band: 'band-composition', x: 210, y: 260, w: 1160, h: 70, r: 10,
-    name: '外觀層 — 層級外的應用程式組裝根節點', about: '後續由應用程式組裝根節點建立已交付的 OAuthTokenProvider，並注入尚未交付的兩個 GitHub 用戶端。',
+    name: '外觀層 — 層級外的應用程式組裝根節點', about: '後續由應用程式組裝根節點建立已交付的 OAuthTokenProvider，並注入用戶端；internal GraphQL 已交付，REST 與產品組裝延後。',
     texts: [['bl', 454, 288, '外觀層 — 層級外的應用程式組裝根節點'], ['bs', 454, 310, '後續組裝 HTTP／轉接器與已交付提供者；用戶端注入仍延後']] },
 
   { id: 'rest-client', plane: 'clients', band: 'band-clients', x: 230, y: 500, w: 500, h: 88, r: 10, dash: true,
@@ -321,8 +321,8 @@ const BOXES = [
     name: 'GithubIntegration', about: '所有限界上下文之外、已交付轉接器使用介面的 GitHub 專屬共享整合模組；不擁有限界上下文的 Port、DTO 或失敗對應。',
     texts: [['bl', 254, 808, 'GithubIntegration'], ['bs', 254, 830, '限界上下文外的 GitHub 專屬共享整合；已交付轉接器使用介面'], ['bn', 254, 852, '不擁有限界上下文的 Port、DTO 或失敗對應']] },
   { id: 'provider', plane: 'integration', band: 'band-integration', x: 670, y: 780, w: 510, h: 126, r: 10, dash: true,
-    name: 'OAuthTokenProvider', about: '已交付的唯一生命週期擁有者，封裝 OAuth 憑證狀態、版本、輪替持久化與單飛；不處理用戶端重試。',
-    texts: [['bl', 694, 808, 'OAuthTokenProvider — 已交付'], ['bs', 694, 830, '記憶體快照 · 還原 · 到期判定 · 更新'], ['bs', 694, 846, '輪替持久化 · 版本 · 相同版本單飛'], ['bs', 694, 862, '不符合 GitHubAccessTokenProvider'], ['bn', 694, 884, '不持有 HTTPRequest／Apollo；不處理重試']] },
+    name: 'OAuthTokenProvider', about: '已交付的唯一生命週期擁有者，封裝 OAuth 憑證狀態、版本、輪替持久化與單飛；分類更新失敗並停止未知輪替；不處理用戶端重試。',
+    texts: [['bl', 694, 808, 'OAuthTokenProvider — 已交付'], ['bs', 694, 830, '記憶體快照 · 還原 · 到期判定 · 更新'], ['bs', 694, 846, '輪替持久化 · 版本 · 相同版本單飛'], ['bs', 694, 862, '明確失效需授權；未知輪替停止'], ['bn', 694, 884, '不持有 HTTPRequest／Apollo；不處理重試']] },
   { id: 'snapshot', plane: 'integration', band: 'band-integration', x: 230, y: 910, w: 390, h: 74, r: 10, dash: true,
     name: 'TokenSnapshot', about: '已交付的不可變、Equatable、Sendable 用戶端輸入，只暴露存取權杖與版本。',
     texts: [['bl', 254, 938, 'TokenSnapshot — 已交付'], ['bs', 254, 960, '存取權杖 + 版本；不暴露更新權杖']] },
@@ -330,8 +330,8 @@ const BOXES = [
     name: 'OAuthCredentialStore', about: '已交付的供轉接器使用介面，可讀寫完整 OAuth 憑證組合；Keychain 轉接器尚未交付。',
     texts: [['bl', 694, 948, 'OAuthCredentialStore — 已交付'], ['bs', 694, 970, '完整憑證組合；轉接器延後']] },
   { id: 'fetcher', plane: 'integration', band: 'band-integration', x: 950, y: 920, w: 230, h: 64, r: 10, dash: true,
-    name: 'OAuthTokenFetcher', about: '已交付的供轉接器使用介面，更新後回傳完整 OAuth 憑證組合；純 HTTP 轉接器尚未交付。',
-    texts: [['bl', 974, 948, 'OAuthTokenFetcher — 已交付'], ['bs', 974, 970, '完整憑證組合；HTTP 轉接器延後']] },
+    name: 'OAuthTokenFetcher', about: '已交付的供轉接器使用介面，更新後回傳完整 OAuth 憑證組合；internal GitHubOAuthHTTPTokenFetcher 實作此 port，使用 typed failure 與 generic HTTPClient。',
+    texts: [['bl', 974, 948, 'OAuthTokenFetcher — 已交付'], ['bs', 974, 970, 'typed error；內部 HTTP 已交付']] },
 
   { id: 'http-client', plane: 'foundation', band: 'band-foundation', x: 230, y: 1170, w: 330, h: 88, r: 10,
     name: 'RivetHTTPClient', about: '通用、純粹、不認識 GitHub 的 HTTP 基礎；不帶 OAuth 生命週期策略。',
@@ -348,7 +348,7 @@ const BOXES = [
     texts: [['bl', 254, 1478, 'Keychain'], ['bs', 254, 1500, 'OAuth 轉接器延後'], ['bn', 254, 1522, '外部系統']] },
   { id: 'oauth-endpoint', plane: 'outside', band: 'band-outside', x: 570, y: 1450, w: 270, h: 82, r: 10,
     name: 'GitHub OAuth 端點', about: '後續由純 HTTP 取得器轉接器呼叫的權杖端點，回傳完整輪替後的 OAuth 憑證組合。',
-    texts: [['bl', 594, 1478, 'GitHub OAuth 端點'], ['bs', 594, 1500, 'HTTP 轉接器延後'], ['bn', 594, 1522, '外部系統']] },
+    texts: [['bl', 594, 1478, 'GitHub OAuth 端點'], ['bs', 594, 1500, 'internal refresh 已交付'], ['bn', 594, 1522, '外部系統']] },
   { id: 'github-rest-api', plane: 'outside', band: 'band-outside', x: 910, y: 1450, w: 220, h: 82, r: 10,
     name: 'GitHub REST API', about: '只由 REST 用戶端使用的 REST 路徑，可能回傳 401。',
     texts: [['bl', 934, 1478, 'GitHub REST API'], ['bs', 934, 1500, 'REST 路徑'], ['bn', 934, 1522, '外部系統']] },
@@ -387,7 +387,7 @@ const TEXTS = [
   { s: 'bn', x: 160, y: 1644, t: '不變量：OAuthTokenProvider 不持有請求／操作；REST 與 Apollo GraphQL 用戶端不互相呼叫。' },
   { s: 'bn', x: 160, y: 1664, t: '不變量：HTTPClient 不驅動流程；內部 AuthRequester 僅驅動通用 AuthFlow，不承擔 GitHub OAuth 生命週期。' },
   { s: 'bn', x: 160, y: 1684, t: '不變量：403、儲存庫權限與資源可見性不是權杖更新訊號。' },
-  { s: 'bn', x: 160, y: 1704, t: '已交付 OAuth 提供者與 internal GraphQL Query／401 復原；跨 target、REST、OAuth 轉接器延後。' }
+  { s: 'bn', x: 160, y: 1704, t: '已交付 OAuth 提供者與 internal GraphQL Query／401 復原；internal HTTP 更新已交付；跨 target、REST、Keychain 延後。' }
 ];
 
 const SWATCHES = [
