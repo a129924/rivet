@@ -349,24 +349,26 @@ func invalidCredentialValuesFail(body: Data) {
   #expect(await mock.refreshTokens.count == 2)
 }
 
-@Test func readableExchangeOAuthErrorFailsWithoutInitialUserStatus() async {
+@Test func readableExchangeOAuthErrorLeavesInitialUserUnmeasured() async {
   let mock = MockIO(
     initial: HTTPResult(
       status: 401, body: Data("{\"error\":\"incorrect_client_credentials\"}".utf8)))
   let result = await Experiment.run(transport: mock)
-  #expect(result.initial == .failed)
-  #expect(result.initialReason == .oauthRejected)
+  #expect(result.initial == .indeterminate)
+  #expect(result.initialReason == .notExecuted)
   #expect(result.initialStatus == nil)
   #expect(await mock.userTokens.isEmpty)
+  #expect(result.overall == .indeterminate)
 }
 
-@Test func failedExchangeDoesNotClaimInitialUserStatus() async {
+@Test func malformedExchangeLeavesInitialUserUnmeasured() async {
   let mock = MockIO(initial: HTTPResult(status: 200, body: Data("{}".utf8)))
   let result = await Experiment.run(transport: mock)
-  #expect(result.initial == .failed)
+  #expect(result.initial == .indeterminate)
+  #expect(result.initialReason == .notExecuted)
   #expect(result.initialStatus == nil)
   #expect(await mock.userTokens.isEmpty)
-  #expect(result.safeReport.contains("T01=失敗, http=未取得"))
+  #expect(result.safeReport.contains("T01=無法判定, http=未取得"))
 }
 
 @Test func oldRefreshRejectionCanArriveWithNonSuccessHTTPStatus() async {

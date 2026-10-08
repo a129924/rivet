@@ -206,12 +206,7 @@ public enum Experiment {
       let authorization = try await transport.authorize(
         state: PKCE.random(), challenge: PKCE.challenge(verifier))
       let response = try await transport.exchange(authorization: authorization, verifier: verifier)
-      let check = ResponseCheck.credential(response)
-      guard let credential = check.credential else {
-        result.initial = check.verdict
-        result.initialReason = check.reason
-        return result
-      }
+      guard let credential = ResponseCheck.credential(response).credential else { return result }
       _ = credential.bundle(receivedAt: response.receivedAt)
       initialCredential = credential
       let user = try await transport.user(accessToken: credential.accessToken)

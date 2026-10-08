@@ -15,7 +15,7 @@
 | T03 新 token 使用 | 新 `/user` 為 HTTP 200，user ID 與 T01 相同。 | 成功，HTTP 200 |
 | T04 舊 token 重用 | 唯一一次舊 refresh token 重用得到 `error=bad_refresh_token`，未取得新 token。 | 成功，HTTP 200 內含明確 OAuth error |
 
-初始 exchange 未完成時，T01 的 HTTP status 留「未取得」；正向 refresh 若回可解析 OAuth error，T02 記「失敗」。T01／T03 的 `/user` 若只有泛用非 200 HTTP 狀態或不可解析 body，記「無法判定」；HTTP 200 且可解析但 user shape 無效，記「失敗」。
+初始 exchange 未完成時，T01 記「無法判定／前序條件未成立，未執行」，HTTP status 留「未取得」；正向 refresh 若回可解析 OAuth error，T02 記「失敗」。T01／T03 的 `/user` 若只有泛用非 200 HTTP 狀態或不可解析 body，記「無法判定」；HTTP 200 且可解析但 user shape 無效，記「失敗」。
 
 四項皆符合才記「成功」；有效前置與可判讀回應違反預期記「失敗」；App 設定、credentials、人工授權、網路或回應不足以歸因時記「無法判定」。T02 request 送出前的取消記為 interrupted；送出後回應遺失或不可解析時，rotation 狀態未知，記為無法判定並停止。T04 不以泛用 HTTP 錯誤或網路失敗冒充拒絕證據；可解析的其他非空 OAuth `error` 明確不符舊 token 拒絕判準，記為失敗；無法解析或缺乏錯誤證據仍為無法判定。T04 的前置是 T02 成功；T03 可判讀的失敗或非取消的網路失敗仍保留 T04 的唯一一次測量，取消則停止。
 
@@ -56,7 +56,7 @@ T04 的 HTTP 200 是 OAuth response 的 transport status；成功判準依 body 
 
 ## 局部驗證與圖
 
-2026-10-08 在 feature worktree：`swift test --package-path experiments/E003` 通過 **42 個 Swift Testing tests**；局部 `swift format lint --strict --recursive` 通過，`swiftlint lint --strict` 對 Sources／Tests 的 10 個 Swift 檔案回報 0 violations。測試使用 mock／本地 loopback，不開 GitHub 授權瀏覽器或交換真實 token。TDD red 起點為尚無 E003 測量型別與 refresh 傳輸的編譯失敗；加入 E003 測量後轉為 green；T02 前已取消但誤標 rotation 未知的局部測試亦先 red 後 green；PR review 指出的可解析 OAuth error 與 T01 HTTP status 歸屬另以回歸測試先 red 後 green；T04 可解析其他 OAuth error 的分類也以 HTTP 200／400 案例先 red 後 green；先前 preflight cancellation 與不可解析 refresh 回應新增三個先 red 後 green 的回歸測試；本輪 `/user` 證據不足分類新增四個回歸測試，其中三個先 red 後 green，一個保護既有可判讀失敗行為；本輪 T03 網路失敗繼續 T04 的測試先 red 後 green，取消停止的測試保護既有邊界。
+2026-10-08 在 feature worktree：`swift test --package-path experiments/E003` 通過 **42 個 Swift Testing tests**；局部 `swift format lint --strict --recursive` 通過，`swiftlint lint --strict` 對 Sources／Tests 的 10 個 Swift 檔案回報 0 violations。測試使用 mock／本地 loopback，不開 GitHub 授權瀏覽器或交換真實 token。TDD red 起點為尚無 E003 測量型別與 refresh 傳輸的編譯失敗；加入 E003 測量後轉為 green；T02 前已取消但誤標 rotation 未知的局部測試亦先 red 後 green；PR review 指出的可解析 OAuth error 與 T01 HTTP status 歸屬另以回歸測試先 red 後 green；T04 可解析其他 OAuth error 的分類也以 HTTP 200／400 案例先 red 後 green；先前 preflight cancellation 與不可解析 refresh 回應新增三個先 red 後 green 的回歸測試；本輪 `/user` 證據不足分類新增四個回歸測試，其中三個先 red 後 green，一個保護既有可判讀失敗行為；本輪 T03 網路失敗繼續 T04 的測試先 red 後 green，取消停止的測試保護既有邊界；本輪調整兩個既有 exchange 前置失敗測試，先 red 後 green，確認未執行的 T01 保持無法判定。
 
 [正式 v2 sequence 圖](diagrams/refresh-rotation-v2.html) 描述初始基準、refresh 與舊 token 重用；作者文字繁體中文，固定 Viewer UI／HTML lang 依工具 fallback 為英文。v2 `showcase` 驗證 9／9、0 errors／warnings；[deliver receipt](diagrams/refresh-rotation-v2.delivery.json) 已提交，其 spec SHA-256 為 `a4b183915429b852d121163b286fd3df359e10e4cc0f37a002a31f352008d028`（3455 bytes），HTML SHA-256 為 `d9fd6d7182741809aed3b406d70a2ec1fff13e27cfa628f643eb1932e4f2ffe0`（704263 bytes）。[visual-check receipt](diagrams/refresh-rotation-v2.visual-check.json) 四種桌面尺寸 1440×900、1600×1000、1920×1080、2048×1320 均無 overflow，最小／最大明暗 captures 已保存；工具 `visualReview=pending`，獨立 Reviewer 已逐一檢視四張 capture 並判定可讀。正式僅保留 v2 圖；其布局已修正參與者過度集中與段落範圍。
 
