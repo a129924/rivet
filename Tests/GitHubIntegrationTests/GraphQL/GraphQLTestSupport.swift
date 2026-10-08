@@ -134,11 +134,17 @@ actor GraphQLTokenFetcher: OAuthTokenFetcher {
     self.gate = gate
   }
 
-  func refresh(_ credential: Credential) async throws(any Error & Sendable) -> Credential {
+  func refresh(_ credential: Credential) async throws(OAuthTokenRefreshError) -> Credential {
     calls += 1
     if let gate { await gate.enter() }
     wasCancelled = Task.isCancelled
-    if let error { throw error }
+    if let error {
+      if let classified = error as? OAuthTokenRefreshError { throw classified }
+      if error is CancellationError || (error as? URLError)?.code == .cancelled {
+        throw .cancelled(stage: .beforeRequest)
+      }
+      throw .knownTechnicalFailure
+    }
     return graphQLCredential("replacement")
   }
 }

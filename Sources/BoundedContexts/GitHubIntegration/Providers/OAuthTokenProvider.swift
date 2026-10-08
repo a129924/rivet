@@ -2,6 +2,7 @@ import Foundation
 
 public enum OAuthTokenProviderError: Error, Sendable {
   case missingCredential
+  case authenticationRequired
   case restore(underlying: any Error & Sendable)
   case refresh(underlying: any Error & Sendable)
   case persist(underlying: any Error & Sendable)
@@ -161,7 +162,7 @@ public actor OAuthTokenProvider {
       do {
         rotatedCredential = try await fetcher.refresh(credentialToRefresh)
       } catch {
-        throw .refresh(underlying: error)
+        throw classifyRefreshFailure(error)
       }
 
       do {
@@ -183,6 +184,26 @@ public actor OAuthTokenProvider {
         continue
       }
       return publish(rotatedCredential)
+    }
+  }
+
+  private func classifyRefreshFailure(
+    _ failure: OAuthTokenRefreshError
+  ) -> OAuthTokenProviderError {
+    switch failure {
+    case .credentialRejected:
+      unavailableError = .authenticationRequired
+      return .authenticationRequired
+    case .rotationIndeterminate:
+      let error = OAuthTokenProviderError.refresh(underlying: failure)
+      unavailableError = error
+      return error
+    case .cancelled(stage: .afterRequestStarted):
+      // The current demand is cancelled; later demands receive technical uncertainty.
+      unavailableError = .refresh(underlying: OAuthTokenRefreshError.rotationIndeterminate)
+      return .refresh(underlying: failure)
+    case .clientConfiguration, .knownTechnicalFailure, .cancelled(stage: .beforeRequest):
+      return .refresh(underlying: failure)
     }
   }
 
