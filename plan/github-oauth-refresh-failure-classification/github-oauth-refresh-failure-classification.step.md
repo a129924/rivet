@@ -2,7 +2,7 @@
 
 Topic：github-oauth-refresh-failure-classification
 Branch：feat/github-oauth-refresh-failure-classification
-Current phase：topic-commit
+Current phase：human-review
 最後更新：2026-10-08
 
 | ID | Status | Owner | 完成條件 | Evidence／verdict |
@@ -12,9 +12,9 @@ Current phase：topic-commit
 | swift-implementation | completed | Implementer | 依九欄契約完成 code／tests／docs／diagrams，提供 TDD evidence | TDD red：rejection test exit1／4 issues；green：54 focused tests。PRInbox amendment 後 102 tests／7 suites pass；consumer 9 tests pass。code／docs／canvas／v7 完成，交獨立驗證 |
 | verification | completed | Tester | 執行 TC01–TC12、品質檢查與 artifact evidence | 獨立 Tester verdict approved：187 tests／23 suites、consumer 9／2、format、SwiftLint 133 files／0 violations、Node 24.19.0 renderer、diffcheck 全 exit0；allowlist 22 modified／17 new／0 deleted |
 | code-review | completed | Reviewer | 獨立審查成果及 scope／contract，明示 verdict | 獨立 Reviewer verdict approved；actual diff／docs／圖表人工檢視／receipts 一致，無 required fix、blocked 或 scope drift |
-| topic-commit | in-progress | Implementer | staged 語意檢查／message 後按 human direct authorization commit | Human 2026-10-08 明確要求直接 commit by topic；不另重問同一授權 |
-| push-draft-pr | pending | Implementer | push feature branch、建立 dev-base Draft PR | Human 2026-10-08 已明確授權；不由 PR Lens 執行 publication |
-| human-review | pending | Human | 檢視 Draft PR 與成果 | 最終停點，不 merge |
+| topic-commit | completed | Implementer | staged 語意檢查／message 後按 human direct authorization commit | Human direct authorization 下完成 staged 語意檢查；功能 commit 1a40919cd06fe0f977854c2ce9431ac40944b457，六項 pre-commit hooks 全 Passed |
+| push-draft-pr | completed | Implementer | push feature branch、建立 dev-base Draft PR | feature branch push 成功；[Draft PR #50](https://github.com/a129924/rivet/pull/50)，base dev，依 Human 明確授權由 gh 建立 |
+| human-review | pending | Human | 檢視 Draft PR 與成果 | [Draft PR #50](https://github.com/a129924/rivet/pull/50) 待 Human review；不 merge |
 
 ## Blockers
 
@@ -32,6 +32,12 @@ PRInbox 全 manifest 字串禁令造成 false positive；exact-path amendment �
 
 ## 圖表與環境證據
 
-Canvas scene：5 bands／15 boxes／16 edges，0 errors／0 warnings；三張 canonical screenshot 已實看。Archify v7：showcase 9／9、composition 0 errors／0 warnings；四種桌面尺寸 containment 與 light／dark captures pass，receipt 維持 visualReview pending；Implementer 實際檢視另記 canvas-visual-review，仍需獨立 Reviewer。
+Canvas scene：5 bands／15 boxes／16 edges，0 errors／0 warnings；三張 canonical screenshot 已實看。Archify v7：showcase 9／9、composition 0 errors／0 warnings；四種桌面尺寸 containment 與 light／dark captures pass，receipt 維持 visualReview pending；Implementer 實際檢視另記 canvas-visual-review；獨立 Reviewer 亦實看 captures 並核准，auto receipt 原值不改。
 
 Swift 6.3.3／Xcode 26.6、Bun 1.4.0、SwiftLint 0.65.1。初期 Node v26.10.0 偏離 baseline；已使用本機既有 Node 24.19.0 command-scoped PATH 補跑 renderer checks，exit0。未改 global toolchain／config。Graphify 無可用既有 graph，依 skill 採 targeted source fallback，不 build／install／refresh。
+
+## Publication 與本機審查圖
+
+PR Lens 使用實際 bounded code commit diff（dev 6c65a3e → 1a40919），外部 scratch graph／render validate exit0：3 lanes、9 nodes、9 edges、5 walkthrough steps、1 SVG；manifest headSha 與功能 commit 相同。未發布 hosted assets、未改 repository PR Lens config。本段帳本是同 topic 的後續 docs commit，不改 runtime，PR Lens 的來源明確限定為上述功能 commit。
+
+獨立 Tester verification approved、獨立 Reviewer code-review approved；無 required fix、blocked 或 scope drift。未執行真實 OAuth／revoke，runtime 證據為本機 injected transport 與 deterministic tests；E001–E003 historical evidence 未改。Feature worktree 保留供 Human review，dev worktree 的 tracked 狀態持續 clean、HEAD 維持基準。
