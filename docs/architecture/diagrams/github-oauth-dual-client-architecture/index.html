@@ -152,8 +152,8 @@
 <div id="stage"><canvas id="c"></canvas></div>
 
 <div id="plate">
-  <div class="k">RIVET — GITHUB OAUTH 雙用戶端架構</div>
-  <div class="n">組裝 → 共享權杖生命週期 → 原工作所有權留在用戶端</div>
+  <div class="k">RIVET — GITHUB OAUTH 架構</div>
+  <div class="n"><b>共享快照</b> → <b>獨立用戶端</b> → <b>各自傳輸</b></div>
 </div>
 
 <div id="hint">
@@ -314,8 +314,8 @@ const BOXES = [
     name: 'GitHub REST 用戶端', about: '由外觀層注入純 HTTP 傳送器／請求執行器與權杖提供者，保有自己的原 HTTPRequest 並只重送該請求。',
     texts: [['bl', 254, 528, 'GitHub REST 用戶端'], ['bs', 254, 550, '純 HTTP 執行器 + 權杖提供者'], ['bn', 254, 572, '保有 HTTPRequest；401 後只重送一次']] },
   { id: 'graphql-client', plane: 'clients', band: 'band-clients', x: 800, y: 500, w: 390, h: 88, r: 10, dash: true,
-    name: 'GitHub GraphQL 用戶端', about: '以 Apollo 只重送自己的操作；不呼叫 REST 用戶端。',
-    texts: [['bl', 824, 528, 'GitHub GraphQL 用戶端'], ['bs', 824, 550, '權杖提供者 + Apollo'], ['bn', 824, 572, '不經 REST 路徑；保有原操作']] },
+    name: 'GitHub GraphQL 用戶端', about: '已交付 internal-only Apollo Query foundation，401 時只重送原 Query 一次；跨 target 使用仍延後。',
+    texts: [['bl', 824, 528, 'GitHub GraphQL 用戶端'], ['bs', 824, 550, '已交付 internal Query + Apollo'], ['bn', 824, 572, '401 復原一次；跨 target 延後']] },
 
   { id: 'github-integration', plane: 'integration', band: 'band-integration', x: 230, y: 780, w: 390, h: 92, r: 10, dash: true,
     name: 'GithubIntegration', about: '所有限界上下文之外、已交付轉接器使用介面的 GitHub 專屬共享整合模組；不擁有限界上下文的 Port、DTO 或失敗對應。',
@@ -387,7 +387,7 @@ const TEXTS = [
   { s: 'bn', x: 160, y: 1644, t: '不變量：OAuthTokenProvider 不持有請求／操作；REST 與 Apollo GraphQL 用戶端不互相呼叫。' },
   { s: 'bn', x: 160, y: 1664, t: '不變量：HTTPClient 不驅動流程；內部 AuthRequester 僅驅動通用 AuthFlow，不承擔 GitHub OAuth 生命週期。' },
   { s: 'bn', x: 160, y: 1684, t: '不變量：403、儲存庫權限與資源可見性不是權杖更新訊號。' },
-  { s: 'bn', x: 160, y: 1704, t: '已交付 OAuth 提供者／介面；OAuth 轉接器、用戶端 401 復原／重試與 HTTP 傳送器均延後。' }
+  { s: 'bn', x: 160, y: 1704, t: '已交付 OAuth 提供者與 internal GraphQL Query／401 復原；跨 target、REST、OAuth 轉接器延後。' }
 ];
 
 const SWATCHES = [
