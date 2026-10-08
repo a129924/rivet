@@ -76,3 +76,9 @@ OAuth technical failure 不跨越成 shared BC failure contract；未來由 cons
 本次正向 code exchange 取得非空 access token；回應符合本地嚴格六欄 DTO（`access_token`、`refresh_token`、`expires_in`、`refresh_token_expires_in`、`token_type`、`scope`），且可建立 public `GitHubOAuthCredentialBundle`；唯一一次 `GET /user` 回 200 且具有效 id／非空 login。結論僅支持本次 App／請求的初次交換、六欄相容性與 API 成功，不宣稱執行產品 internal decoder、refresh／rotation、Keychain 或 client integration。
 
 反向使用另一組新 state／challenge／code 與合法但不匹配的 verifier，固定分類為回應／錯誤未確認，PKCE 與 overall 無法判定、exit1。兩次授權預算 2／2 已用盡；原始反向 body 未保存且程序已結束，不能追補 HTTP status／error 或據此推論 PKCE 拒絕原因。receipt 時間僅為外層檔案建立時間 proxy，非精確交換事件時間。本次不鎖定正式採用或 secret 部署方式，不改 shared lifecycle／雙 Client 的既有架構決策。
+
+## E003 受限 refresh／rotation 實證
+
+[實驗 E003](../../experiments/E003/README.md) 於 2026-10-08 沿用 E002 OAuth App，以一次新授權取得 refreshable credential，完成單次遠端 refresh／rotation 測量；runner exit 0，遮蔽結果為 T01–T04 與 overall 均成功。T01 初始 access token 的 `GET /user` 回 HTTP 200 且有有效身分；T02 一次 refresh 取得各自更換的非空 access／refresh token、有效六欄與可建立的 public `GitHubOAuthCredentialBundle`；T03 新 access token 的 `/user` 回 HTTP 200 且身分一致。T04 唯一一次重用舊 refresh token 的 HTTP status 為 200，但 body 含明確 `bad_refresh_token` 且無新 token；拒絕判準來自 body，不能由 HTTP 200 單獨推論。
+
+此證據只支持本次 App／帳號的 refresh exchange、credential 相容性、身分一致與舊 refresh token 拒絕，不表示產品 `OAuthTokenProvider` 自動刷新、持久化、並行、401 recovery、正式 OAuth adapter 或遠端 revoke 已驗證。App 全域 expiring-token 設定未另行查證；E002 反向 PKCE 與 overall「無法判定」結論保持獨立。E003 的遮蔽 stdout、程序外層時間與單次實驗限制保存在實驗 README；repository 證據未保存 secret、code、token、user ID 或原始回應；browser／OS 留痕不在 runner 控制範圍。本次實證不改變上述 shared lifecycle 與雙 Client 的責任決策。
