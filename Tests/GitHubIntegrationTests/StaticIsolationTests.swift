@@ -369,6 +369,8 @@ struct StaticIsolationTests {
       "OAuth/GitHubOAuthEndpoints.swift",
       "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift",
+      "REST/GitHubHTTPClient.swift",
+      "REST/GitHubHTTPClientError.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift",
       "Stores/KeychainTokenStore.swift",
@@ -399,6 +401,7 @@ struct StaticIsolationTests {
         apolloFiles.contains(path)
         ? forbiddenImports.subtracting(["Apollo", "ApolloAPI"])
         : path == "OAuth/GitHubOAuthHTTPTokenFetcher.swift"
+          || path == "REST/GitHubHTTPClient.swift"
           ? forbiddenImports.subtracting(["RivetHTTPClient"]) : forbiddenImports
       #expect(imports.isDisjoint(with: forbiddenForFile))
 
