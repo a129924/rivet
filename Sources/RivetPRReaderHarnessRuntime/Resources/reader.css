@@ -1,0 +1,20 @@
+:root { color-scheme: light dark; font: 14px -apple-system, BlinkMacSystemFont, sans-serif; }
+body { margin: 0; color: #1e293b; background: #f8fafc; }
+header { padding: 20px 28px; background: #1e293b; color: white; }
+h1 { margin: 0 0 4px; font-size: 22px; }
+header p { margin: 0; color: #cbd5e1; }
+main { padding: 24px 28px; max-width: 1200px; margin: auto; }
+.diff-file { background: white; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 18px; overflow: hidden; }
+.file-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; }
+.file-header h2 { flex: 1; font-size: 15px; margin: 0; overflow-wrap: anywhere; }
+.file-status { font-weight: 700; color: #475569; }
+.file-counts { font-variant-numeric: tabular-nums; }
+.additions { color: #166534; }.deletions { color: #991b1b; }
+.viewed-button { border: 1px solid #94a3b8; background: white; color: #1e293b; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+.viewed-button:disabled { opacity: .5; cursor: wait; }
+.metadata-note { margin: 0; padding: 18px; color: #475569; background: #f1f5f9; }
+.patch { overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.patch table { border-collapse: collapse; width: 100%; }.patch td { white-space: pre; padding: 1px 8px; }
+.patch .d2h-ins { background: #dcfce7; }.patch .d2h-del { background: #fee2e2; }
+.patch .d2h-file-header { display: none; }
+@media (prefers-color-scheme: dark) { body { background: #0f172a; color: #e2e8f0; }.diff-file { background: #1e293b; border-color: #475569; }.file-header { border-color: #475569; }.file-status,.metadata-note { color: #cbd5e1; }.metadata-note { background: #334155; }.viewed-button { background: #334155; color: #e2e8f0; }.patch .d2h-ins { background: #14532d; }.patch .d2h-del { background: #7f1d1d; } }

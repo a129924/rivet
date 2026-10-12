@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "observedDate": "2026-10-07",
+  "runnerCommit": "d87407fbdc739a5e564e8777f149a9fbc3f0e1b0",
+  "realOAuth": true,
+  "authorizationAttempts": 2,
+  "authorizationLimit": 2,
+  "callbackTimeoutSeconds": 180,
+  "httpTimeoutSeconds": 30,
+  "exitCode": 1,
+  "exchange": "成功",
+  "schema": "成功",
+  "api": "成功",
+  "pkce": "無法判定",
+  "overall": "無法判定",
+  "safeReport": {
+    "path": "experiments/E002/evidence/2026-10-07-live-safe-report.txt",
+    "sha256": "44dce7d2e0329d472d428c14311569b5c3c8a30a155788626d975ef4da056ac1",
+    "bytes": 342
+  },
+  "timeEvidence": {
+    "kind": "外層檔案建立時間，非交換事件時間戳",
+    "startApproxUTC": "2026-10-07T06:53:54.807443+00:00",
+    "endApproxUTC": "2026-10-07T06:54:27.015936+00:00",
+    "timestampCommandFailed": true
+  },
+  "limitations": [
+    "外層腳本日期指令路徑錯誤，精確事件時間未記錄",
+    "反向固定分類無法確認拒絕原因，原始回應只在記憶體且程序已結束，不能追補",
+    "成功僅支持本次 App 的正向交換、六欄相容性及一次 API；未證明錯誤 verifier 的 PKCE 拒絕",
+    "App 全域 expiring-token 設定未另行查證；請求包含 offline_access",
+    "browser／OS 留痕未驗證，未主張安全記憶體抹除"
+  ]
+}

@@ -1,6 +1,6 @@
 # GitHub PR API Catalog
 
-本目錄是 Rivet 各 Domain BC 未來進行 GitHub Infra REST／GraphQL 外部協定工作時的 API 參考。`GitHubIntegration` 是 BC 外、已實作的 shared GitHub-specific integration module，不是 Supporting BC；目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及 public、`Sendable`、async 的 `GitHubAccessTokenProvider` token-acquisition contract。後者尚無 PAT 或 OAuth conformer，且不處理 lifecycle、request、transport、401 recovery 或 retry。另已交付 public、process-local、non-persistent 的 `InMemoryGitHubTokenStore`，以及保存單一 access token 的 `KeychainTokenStore`。OAuth credential lifecycle 則已由 `OAuthTokenProvider` actor 與 public `OAuthCredentialStore`／`OAuthTokenFetcher` ports 交付；它只向 client 回傳 `TokenSnapshot(accessToken, version)`，不執行 OAuth HTTP、Keychain credential persistence、request authorization、401 classification 或 retry。authorizer、GitHub raw transport、共通 request headers／API version mechanism、pagination、rate-limit handling、retry／transient-failure handling、GitHub error technical classification、shared configuration、OAuth adapters 與 client integration 仍是 deferred mechanism responsibility。各 BC Infra 則各自擁有 endpoint-specific media type、REST／GraphQL external-to-BC translation、將該 technical classification 映射為 BC failure contract，以及 business meaning。本目錄不定義 BC data model 或 authentication 實作；其餘 Swift contract 決策必須留給對應的 implementation topic。
+本目錄是 Rivet 各 Domain BC 未來進行 GitHub Infra REST／GraphQL 外部協定工作時的 API 參考。`GitHubIntegration` 是 BC 外、已實作的 shared GitHub-specific integration module，不是 Supporting BC；目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及 public、`Sendable`、async 的 `GitHubAccessTokenProvider` token-acquisition contract。後者尚無 PAT 或 OAuth conformer，且不處理 lifecycle、request、transport、401 recovery 或 retry。另已交付 public、process-local、non-persistent 的 `InMemoryGitHubTokenStore`，以及保存單一 access token 的 `KeychainTokenStore`。OAuth credential lifecycle 則已由 `OAuthTokenProvider` actor 與 public `OAuthCredentialStore`／`OAuthTokenFetcher` ports 交付；它只向 client 回傳 `TokenSnapshot(accessToken, version)`，不執行 OAuth HTTP、Keychain credential persistence、request authorization、401 classification 或 retry。authorizer、GitHub raw transport、共通 request headers／API version mechanism、pagination、rate-limit handling、retry／transient-failure handling、GitHub error technical classification、shared configuration、初次 OAuth 授權整合與跨 target client integration 仍是 deferred mechanism responsibility。各 BC Infra 則各自擁有 endpoint-specific media type、REST／GraphQL external-to-BC translation、將該 technical classification 映射為 BC failure contract，以及 business meaning。本目錄不定義 BC data model 或 authentication 實作；其餘 Swift contract 決策必須留給對應的 implementation topic。
 
 最後官方校驗：2026-09-03（GitHub.com）。
 
@@ -32,7 +32,7 @@
 ## 共通規則
 
 - REST list endpoints 使用 `page`／`per_page` 與 Link header；GraphQL connection 使用 cursor 與 `pageInfo`。不要假設單頁結果完整。
-- GitHub REST／GraphQL 的共通 API version、共通 request header、authorizer、pagination、rate-limit handling、retry／transient-failure handling、OAuth adapters 與 client integration，仍是 `GitHubIntegration` deferred 的 mechanism responsibility。已交付的 OAuth provider 僅管理 credential lifecycle；endpoint-specific media type、HTTP/401 policy 與 retry 仍由各 BC Infra 的後續 topic 決定。文件只保留 endpoint 特有的 media type 與限制。
+- GitHub REST／GraphQL 的共通 API version、共通 request header、authorizer、pagination、rate-limit handling、retry／transient-failure handling、初次 OAuth 授權整合與跨 target client integration，仍是 `GitHubIntegration` deferred 的 mechanism responsibility。已交付的 OAuth provider 僅管理 credential lifecycle；endpoint-specific media type、HTTP/401 policy 與 retry 仍由各 BC Infra 的後續 topic 決定。文件只保留 endpoint 特有的 media type 與限制。
 - `viewerViewedState` 是 GitHub API 回傳的遠端 PR file 資料；本 catalog 不定義本機持久化、同步或 Rivet UI 的狀態採用規則。
 - 原稿中的 `review-involves:@me` 未在本次官方 search qualifier 參考中確認，因此不列為可採用 query。
 
@@ -43,3 +43,5 @@
 - [Search qualifiers](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/filtering-and-searching-issues-and-pull-requests)
 - [GraphQL Pull requests](https://docs.github.com/en/graphql/reference/pulls)
 - [GraphQL endpoint and request method](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api)
+
+GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic HTTPClient 執行固定 refresh POST；public `OAuthTokenFetcher.refresh` 使用 typed `OAuthTokenRefreshError`。只有可信純 error 的憑證拒絕映射為 `.authenticationRequired`；設定錯誤維持 `.refresh` 且可再次嘗試。輪替未知與遠端已接受後的 persistence failure 停止該 provider，保留 store。這些 GitHub-specific 分類屬於 GitHubIntegration；通用 HTTPClient 與各 BC 的業務 failure 邊界維持。[完整契約](../architecture/github-oauth-dual-client.md)記錄取消與過期行為。

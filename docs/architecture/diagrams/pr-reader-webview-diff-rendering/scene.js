@@ -1,8 +1,8 @@
 const W = 1480, H = 1538;
 
-// 此圖只呈現已鎖定 declarations 的層級所有權、編譯期依賴與 Swift／WebView
-// 邊界。虛線表示 Rivet 擁有的 TypeScript 抽象；實線表示 Swift 或 WebView
-// 介面。既定 runtime render dataflow 由同資料夾的 Archify artifact 表達。
+// 此圖呈現已交付 fixture runtime 與既定 Port 的層級所有權、編譯期依賴
+// 及 Swift／WebView 邊界。虛線表示 Rivet 擁有的 TypeScript 抽象；實線
+// 表示 Swift 或 WebView 介面。runtime dataflow 由 Archify artifact 表達。
 const PLANES = {
   swift: { c: "#94A3B8", label: "Swift 外部邊界" },
   presentation: { c: "#7DD3FC", label: "呈現層" },
@@ -13,33 +13,33 @@ const PLANES = {
 
 const BANDS = [
   { id: "band-swift", plane: "swift", x: 160, y: 200, w: 1260, h: 150, alpha: 0.5,
-    hdr: { x: 184, y: 230, t: "SWIFT — 快照與已檢視狀態權威" }, tagr: { x: 1396, y: 230, t: "外部世界", alpha: 0.6 } },
+    hdr: { x: 184, y: 230, t: "SWIFT — FIXTURE HOST 與已檢視狀態權威" }, tagr: { x: 1396, y: 230, t: "本地 runtime", alpha: 0.6 } },
   { id: "band-presentation", plane: "presentation", x: 160, y: 430, w: 1260, h: 160, alpha: 0.5, dash: true,
-    hdr: { x: 184, y: 460, t: "呈現層 — WEBVIEW 公開入口" }, tagr: { x: 1396, y: 460, t: "RIVET 擁有 — 僅有宣告", alpha: 0.6 } },
+    hdr: { x: 184, y: 460, t: "呈現層 — WKWEBVIEW 與 DOM" }, tagr: { x: 1396, y: 460, t: "已交付 fixture runtime", alpha: 0.6 } },
   { id: "band-core", plane: "core", x: 160, y: 670, w: 1260, h: 160, alpha: 0.5, dash: true,
-    hdr: { x: 184, y: 700, t: "核心 — 協調責任" }, tagr: { x: 1396, y: 700, t: "RIVET 擁有 — 僅有宣告", alpha: 0.6 } },
+    hdr: { x: 184, y: 700, t: "核心 — 協調責任" }, tagr: { x: 1396, y: 700, t: "RIVET 擁有 — 已有協調實作", alpha: 0.6 } },
   { id: "band-pipeline", plane: "pipeline", x: 160, y: 910, w: 1260, h: 190, alpha: 0.5, dash: true,
-    hdr: { x: 184, y: 940, t: "管線 — 四個 STAGE PORT" }, tagr: { x: 1396, y: 940, t: "RIVET 擁有 — 僅有宣告", alpha: 0.6 } },
+    hdr: { x: 184, y: 940, t: "管線 — 四個 STAGE PORT" }, tagr: { x: 1396, y: 940, t: "RIVET 擁有 — 已有協調實作", alpha: 0.6 } },
   { id: "band-boundary", plane: "boundary", x: 160, y: 1180, w: 1260, h: 250, alpha: 0.5, dash: true,
-    hdr: { x: 184, y: 1210, t: "SWIFT／WEBVIEW 邊界契約" }, tagr: { x: 1396, y: 1210, t: "RIVET 擁有 — 不含具體 BRIDGE", alpha: 0.6 } },
+    hdr: { x: 184, y: 1210, t: "SWIFT／WEBVIEW 邊界契約" }, tagr: { x: 1396, y: 1210, t: "RIVET 擁有 — callable 契約", alpha: 0.6 } },
 ];
 
 const BOXES = [
   { id: "swift-snapshot", plane: "swift", band: "band-swift", x: 200, y: 260, w: 520, h: 70, r: 10,
-    name: "Swift 快照發送端", about: "Swift 提供完整、有序且帶 PR 與快照身分的 DiffSnapshot。",
-    texts: [["bl", 224, 288, "Swift 快照發送端"], ["bs", 224, 310, "完整 DiffSnapshot · PR · 快照 · 有序檔案"]] },
+    name: "Swift Reader bridge／host", about: "fixture host 透過 bridge 將 Reader snapshot 轉為六狀態 DiffSnapshot，並交付 WKWebView。",
+    texts: [["bl", 224, 288, "Swift Reader bridge／host"], ["bs", 224, 310, "本地 fixture · 六狀態 · 有序檔案"]] },
   { id: "swift-viewed", plane: "swift", band: "band-swift", x: 800, y: 260, w: 580, h: 70, r: 10,
-    name: "Swift 已檢視狀態權威", about: "Swift 持久化已檢視狀態，並可安全忽略過期通知。",
-    texts: [["bl", 824, 288, "Swift 已檢視狀態權威"], ["bs", 824, 310, "唯一持久化權威 · 可忽略過期通知"]] },
+    name: "Swift 已檢視狀態權威", about: "harness 記憶體 authority 擁有 Viewed；host 驗證頁面世代，bridge 驗證三重 identity。",
+    texts: [["bl", 824, 288, "Swift 已檢視狀態權威"], ["bs", 824, 310, "記憶體讀寫 · 頁面世代及三重 identity"]] },
   { id: "facade", plane: "presentation", band: "band-presentation", x: 200, y: 490, w: 600, h: 78, r: 10, dash: true,
     name: "DiffFacade", about: "呈現層的公開契約，宣告 render 與已檢視狀態通知入口。",
     texts: [["bl", 224, 518, "DiffFacade"], ["bs", 224, 540, "present(snapshot) · requestViewedStateChange(change)"], ["bn", 224, 558, "不依賴 Output Port"]] },
   { id: "webview", plane: "presentation", band: "band-presentation", x: 870, y: 490, w: 510, h: 78, r: 10,
-    name: "WebView 呈現層", about: "使用 DiffFacade 公開契約的 WebView 呈現介面。",
-    texts: [["bl", 894, 518, "WebView 呈現層"], ["bs", 894, 540, "使用 Facade 的公開入口與結果"]] },
+    name: "WKWebView／DOM Output", about: "WKWebView 載入本地資產；TypeScript pipeline 經具體 DOM Output 顯示 diff 與 Viewed 控制。",
+    texts: [["bl", 894, 518, "WKWebView／DOM Output"], ["bs", 894, 540, "本地資產 · diff DOM · Viewed 控制"]] },
   { id: "usecase", plane: "core", band: "band-core", x: 200, y: 730, w: 1180, h: 78, r: 10, dash: true,
     name: "DiffRenderUseCase", about: "唯一依賴並協調四個 stage Port，且是 Output Port 唯一 caller。",
-    texts: [["bl", 224, 758, "DiffRenderUseCase"], ["bs", 224, 780, "四個 stage Port 的唯一協調者 · Output Port 唯一 caller"], ["bn", 224, 798, "不定義具體 stage 實作或組裝"]] },
+    texts: [["bl", 224, 758, "DiffRenderUseCase"], ["bs", 224, 780, "四個 stage Port 的唯一協調者 · Output Port 唯一 caller"], ["bn", 224, 798, "由既有 concrete stages 實作 Port"]] },
   { id: "validator-port", plane: "pipeline", band: "band-pipeline", x: 190, y: 980, w: 270, h: 82, r: 10, dash: true,
     name: "驗證 Port", about: "宣告 DiffSnapshot 驗證與 invalid-input failure 的 Port。",
     texts: [["bl", 214, 1008, "驗證 Port"], ["bs", 214, 1030, "DiffSnapshot 驗證"], ["bn", 214, 1048, "invalid-input"]] },
@@ -50,11 +50,11 @@ const BOXES = [
     name: "渲染 Port", about: "宣告不透明 RenderPlan 與 render-error failure 的 Port。",
     texts: [["bl", 814, 1008, "渲染 Port"], ["bs", 814, 1030, "不透明 RenderPlan"], ["bn", 814, 1048, "render-error"]] },
   { id: "output-port", plane: "pipeline", band: "band-pipeline", x: 1090, y: 980, w: 270, h: 82, r: 10, dash: true,
-    name: "輸出 Port", about: "宣告獨立 output-error failure 的 Port；只有 UseCase 呼叫它。",
-    texts: [["bl", 1114, 1008, "輸出 Port"], ["bs", 1114, 1030, "Output Port"], ["bn", 1114, 1048, "output-error"]] },
+    name: "輸出 Port", about: "宣告獨立 output-error failure 的 Port；UseCase 是唯一 caller，fixture runtime 有 DOM conformer。",
+    texts: [["bl", 1114, 1008, "輸出 Port"], ["bs", 1114, 1030, "DOM Output conformer"], ["bn", 1114, 1048, "output-error"]] },
   { id: "snapshot-adapter", plane: "boundary", band: "band-boundary", x: 190, y: 1250, w: 360, h: 84, r: 10, dash: true,
-    name: "DiffSnapshotAdapter", about: "只宣告 Swift 快照輸入邊界，不包含具體 bridge。",
-    texts: [["bl", 214, 1278, "DiffSnapshotAdapter"], ["bs", 214, 1300, "receiveSnapshot(snapshot): void"], ["bn", 214, 1318, "Swift 輸入邊界"]] },
+    name: "DiffSnapshotAdapter", about: "TS callable adapter 呼叫 DiffFacade.present 並回傳 render outcome。",
+    texts: [["bl", 214, 1278, "DiffSnapshotAdapter"], ["bs", 214, 1300, "receiveSnapshot(snapshot): DiffRenderOutcome"], ["bn", 214, 1318, "TS callable 輸入邊界"]] },
   { id: "snapshot-contract", plane: "boundary", band: "band-boundary", x: 590, y: 1250, w: 360, h: 84, r: 10, dash: true,
     name: "DiffSnapshot", about: "完整 render input envelope，帶 PR、snapshot identity 與有序檔案集合。",
     texts: [["bl", 614, 1278, "DiffSnapshot"], ["bs", 614, 1300, "pullRequestId · snapshotId · files"], ["bn", 614, 1318, "fileId 只在 snapshot 內唯一"]] },
@@ -82,13 +82,13 @@ const EDGES = [
 
 const TEXTS = [
   { s: "title", x: 160, y: 86, t: "PR Reader — WebView 差異宣告邊界" },
-  { s: "sub", x: 160, y: 118, t: "層級所有權、編譯期依賴與 Swift／WebView 邊界" },
+  { s: "sub", x: 160, y: 118, t: "fixture runtime 的所有權、編譯期依賴與 Swift／WebView 邊界" },
   { s: "tag", x: 160, y: 146, runs: [{ t: "呈現層", fill: C.sky }, { t: " · ", fill: "#4A5462" }, { t: "核心", fill: C.violet }, { t: " · ", fill: "#4A5462" }, { t: "Stage Ports", fill: C.orange }, { t: " · ", fill: "#4A5462" }, { t: "邊界契約", fill: C.cyan }] },
   { s: "legend", x: 1082, y: 86, t: "虛線 — Rivet 擁有的抽象" },
   { s: "legend", x: 1082, y: 110, t: "實線 — Swift 或 WebView 介面" },
   { s: "legend", x: 1143, y: 134, t: "顏色 — 所屬責任平面" },
-  { s: "bn", x: 160, y: 1480, t: "此圖只表達所有權、編譯期依賴與 Swift／WebView 邊界。" },
-  { s: "bn", x: 160, y: 1500, t: "既定 render dataflow 由同資料夾的 Archify dataflow artifact 表達。" },
+  { s: "bn", x: 160, y: 1480, t: "WKWebView host 與 DOM Output 已接通本地 fixture；不取得 GitHub PR。" },
+  { s: "bn", x: 160, y: 1500, t: "render dataflow 由同資料夾的 Archify artifact 表達；Viewed 不跨啟動保存。" },
 ];
 
 const SWATCHES = [

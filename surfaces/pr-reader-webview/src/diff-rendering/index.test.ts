@@ -18,7 +18,10 @@ type Expect<Condition extends true> = Condition;
 
 type _facade = Expect<DiffFacade extends object ? true : false>;
 type _status = Expect<
-  Equal<DiffFileStatus, "added" | "removed" | "modified" | "renamed">
+  Equal<
+    DiffFileStatus,
+    "added" | "removed" | "modified" | "renamed" | "copied" | "typeChanged"
+  >
 >;
 type _outcome = Expect<DiffRenderOutcome extends object ? true : false>;
 type _viewModel = Expect<DiffViewModel extends object ? true : false>;

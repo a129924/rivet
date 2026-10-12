@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "E003：OAuth refresh 與舊 token 重用驗證",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      650
+    ],
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "operator",
+      "type": "external",
+      "label": "操作者"
+    },
+    {
+      "id": "probe",
+      "type": "backend",
+      "label": "E003 實驗工具"
+    },
+    {
+      "id": "oauth",
+      "type": "security",
+      "label": "GitHub OAuth"
+    },
+    {
+      "id": "api",
+      "type": "cloud",
+      "label": "GitHub API"
+    }
+  ],
+  "segments": [
+    {
+      "from": 160,
+      "to": 385,
+      "label": "建立初始基準"
+    },
+    {
+      "from": 390,
+      "to": 515,
+      "label": "刷新並比對身分"
+    },
+    {
+      "from": 520,
+      "to": 605,
+      "label": "驗證舊 refresh token"
+    }
+  ],
+  "messages": [
+    {
+      "id": "start",
+      "from": "operator",
+      "to": "probe",
+      "y": 178,
+      "label": "授權一次",
+      "variant": "default"
+    },
+    {
+      "id": "authorize",
+      "from": "probe",
+      "to": "oauth",
+      "y": 210,
+      "label": "offline_access、state、S256",
+      "variant": "security"
+    },
+    {
+      "id": "callback",
+      "from": "oauth",
+      "to": "probe",
+      "y": 242,
+      "label": "callback code、state",
+      "variant": "return"
+    },
+    {
+      "id": "initial-exchange",
+      "from": "probe",
+      "to": "oauth",
+      "y": 274,
+      "label": "交換初始 credential",
+      "variant": "emphasis"
+    },
+    {
+      "id": "initial-token",
+      "from": "oauth",
+      "to": "probe",
+      "y": 306,
+      "label": "初始六欄 token 回應",
+      "variant": "return"
+    },
+    {
+      "id": "initial-user",
+      "from": "probe",
+      "to": "api",
+      "y": 338,
+      "label": "GET /user：初始 token",
+      "variant": "default"
+    },
+    {
+      "id": "initial-id",
+      "from": "api",
+      "to": "probe",
+      "y": 370,
+      "label": "user ID 基準",
+      "variant": "return"
+    },
+    {
+      "id": "refresh",
+      "from": "probe",
+      "to": "oauth",
+      "y": 402,
+      "label": "refresh_token 交換一次",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rotated",
+      "from": "oauth",
+      "to": "probe",
+      "y": 434,
+      "label": "新 token pair 與六欄",
+      "variant": "return"
+    },
+    {
+      "id": "new-user",
+      "from": "probe",
+      "to": "api",
+      "y": 466,
+      "label": "GET /user：新 token",
+      "variant": "default"
+    },
+    {
+      "id": "same-id",
+      "from": "api",
+      "to": "probe",
+      "y": 498,
+      "label": "比較 user ID",
+      "variant": "return"
+    },
+    {
+      "id": "old-reuse",
+      "from": "probe",
+      "to": "oauth",
+      "y": 530,
+      "label": "重用舊 refresh token 一次",
+      "variant": "security"
+    },
+    {
+      "id": "old-rejection",
+      "from": "oauth",
+      "to": "probe",
+      "y": 562,
+      "label": "bad_refresh_token、無新 token",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "成功判準",
+      "items": [
+        "新 pair 可建既有 bundle，user ID 相同",
+        "舊 refresh token 明確拒絕"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "停止條件",
+      "items": [
+        "refresh 回應遺失即停；rotation 狀態未知"
+      ]
+    }
+  ]
+}

@@ -24,6 +24,8 @@
 
 ## Failure Contract
 
+`GitHubIntegration` 已提供 internal-only GraphQL Query foundation；它不是 Inbox 可直接呼叫的跨 target capability。Inbox 的 GitHub adapter、operation、DTO、failure mapping 與 client integration 仍延後，Core／UseCase／Port 的既有隔離不變。
+
 PR Inbox 只對外表達自身語意，例如待審閱佇列暫時不可取得；其 local Infra GitHub adapter 不得將 GitHub DTO、HTTP status、token 或技術層 failure 洩漏至 Inbox core Port，跨越 Port 前必須映射為 Inbox failure contract。
 
 ## 延後能力

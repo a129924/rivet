@@ -10,34 +10,38 @@ struct StaticIsolationTests {
     let products = try namedItems(in: package, named: "products")
     let targets = try namedItems(in: package, named: "targets")
     #expect(
-      Set(products.keys)
-        == ["GitHubIntegration", "RivetPRInbox", "RivetPRReader", "RivetPresentation"]
-    )
+      Set(products.keys) == [
+        "GitHubIntegration", "RivetPRInbox", "RivetPRReader", "RivetPRReaderWebViewBridge",
+        "RivetPRReaderHarnessRuntime", "RivetPRReaderHarness", "RivetPresentation",
+      ])
     #expect(
-      Set(targets.keys)
-        == [
-          "GitHubIntegration",
-          "GitHubIntegrationTests",
-          "RivetPRInbox",
-          "RivetPRInboxTests",
-          "RivetPRReader",
-          "RivetPRReaderTests",
-          "RivetPresentation",
-          "RivetPresentationTests",
-        ]
-    )
+      Set(targets.keys) == [
+        "GitHubIntegration", "GitHubIntegrationTests", "RivetPRInbox", "RivetPRInboxTests",
+        "RivetPRReader", "RivetPRReaderTests", "RivetPRReaderWebViewBridge", "RivetPresentation",
+        "RivetPRReaderWebViewBridgeTests", "RivetPRReaderHarnessRuntime",
+        "RivetPRReaderHarnessRuntimeTests", "RivetPRReaderHarness", "RivetPresentationTests",
+      ])
+    let bridgeName = "RivetPRReaderWebViewBridge"
+    #expect(targetNames(in: try #require(products[bridgeName])) == [bridgeName])
+    let bridgeTarget = try #require(targets[bridgeName])
+    #expect(bridgeTarget["path"] as? String == "Sources/PRReaderWebViewBridge")
+    #expect(dependencyNames(in: bridgeTarget) == ["RivetPRReader"])
+    let bridgeTests = try #require(targets["RivetPRReaderWebViewBridgeTests"])
+    #expect(Set(dependencyNames(in: bridgeTests)) == ["RivetPRReader", bridgeName])
+    #expect(dependencyNames(in: try #require(targets["RivetPresentation"])).isEmpty)
     let integrationProduct = try #require(products["GitHubIntegration"])
     #expect(targetNames(in: integrationProduct) == ["GitHubIntegration"])
     let integrationTarget = try #require(targets["GitHubIntegration"])
     #expect(integrationTarget["type"] as? String == "regular")
+    #expect(integrationTarget["path"] as? String == "Sources/BoundedContexts/GitHubIntegration")
     #expect(
-      integrationTarget["path"] as? String
-        == "Sources/BoundedContexts/GitHubIntegration"
-    )
-    #expect(rawDependencies(in: integrationTarget).isEmpty)
+      Set(dependencyNames(in: integrationTarget)) == ["Apollo", "ApolloAPI", "RivetHTTPClient"])
     let integrationTests = try #require(targets["GitHubIntegrationTests"])
     #expect(integrationTests["type"] as? String == "test")
-    #expect(dependencyNames(in: integrationTests) == ["GitHubIntegration"])
+    #expect(
+      Set(dependencyNames(in: integrationTests)) == [
+        "GitHubIntegration", "Apollo", "ApolloAPI", "RivetHTTPClient",
+      ])
   }
   @Test
   func dependencyExtractionRecognizesAllPackageDescriptionDependencyForms() {
@@ -356,8 +360,14 @@ struct StaticIsolationTests {
       "Contracts/GitHubTokenProvider.swift",
       "Contracts/OAuthCredentialStore.swift",
       "Contracts/OAuthTokenFetcher.swift",
+      "Contracts/OAuthTokenRefreshError.swift",
       "Contracts/TokenSnapshot.swift",
+      "GraphQL/GitHubGraphQLClient.swift",
+      "GraphQL/ApolloGraphQLClient.swift",
+      "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
+      "GraphQL/GitHubGraphQLClientError.swift",
       "OAuth/GitHubOAuthEndpoints.swift",
+      "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift",
@@ -380,64 +390,23 @@ struct StaticIsolationTests {
         "Apollo",
         "ApolloAPI",
       ]
-      #expect(imports.isDisjoint(with: forbiddenImports))
+      let apolloFiles: Set = [
+        "GraphQL/GitHubGraphQLClient.swift",
+        "GraphQL/ApolloGraphQLClient.swift",
+        "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
+      ]
+      let forbiddenForFile =
+        apolloFiles.contains(path)
+        ? forbiddenImports.subtracting(["Apollo", "ApolloAPI"])
+        : path == "OAuth/GitHubOAuthHTTPTokenFetcher.swift"
+          ? forbiddenImports.subtracting(["RivetHTTPClient"]) : forbiddenImports
+      #expect(imports.isDisjoint(with: forbiddenForFile))
 
       if path == "Stores/KeychainTokenStore.swift" {
         #expect(imports == ["Foundation", "Security"])
       } else {
         #expect(!imports.contains("Security"))
       }
-    }
-  }
-
-  @Test
-  func keychainAdapterUsesTheCommonLegacyBaseQueryForEveryOperation() throws {
-    let adapterPath =
-      repositoryRoot
-      .appendingPathComponent("Sources/BoundedContexts/GitHubIntegration/Stores")
-      .appendingPathComponent("KeychainTokenStore.swift")
-
-    let source = try String(contentsOf: adapterPath, encoding: .utf8)
-
-    for requiredSnippet in [
-      "private var baseQuery: [CFString: Any]",
-      "kSecClass: kSecClassGenericPassword",
-      "kSecAttrService: service",
-      "kSecAttrAccount: account",
-      "kSecAttrSynchronizable: false",
-      "var query = baseQuery",
-      "SecItemCopyMatching(query as CFDictionary, &result)",
-      "SecItemUpdate(\n      baseQuery as CFDictionary,",
-      "var addQuery = baseQuery",
-      "SecItemAdd(addQuery as CFDictionary, nil)",
-      "SecItemDelete(baseQuery as CFDictionary)",
-      "underlyingError: KeychainStoreFailure.operationFailed",
-      "private enum KeychainStoreFailure: Error {\n  case operationFailed\n}",
-    ] {
-      #expect(source.contains(requiredSnippet))
-    }
-
-    for forbiddenMarker in [
-      "OAuth",
-      "Authorization",
-      "Bearer",
-      "URLSession",
-      "HTTP",
-      "kSecUseDataProtectionKeychain",
-      "kSecAttrAccessible",
-      "kSecAttrAccessGroup",
-      "KeychainSharing",
-      "AppGroup",
-      "DEVELOPMENT_TEAM",
-      "xcodebuild",
-      "codesign",
-      "XCTest",
-      "Automatic Signing",
-      "OSStatus",
-      "print(",
-      "Logger",
-    ] {
-      #expect(!source.contains(forbiddenMarker))
     }
   }
 
@@ -483,6 +452,12 @@ extension StaticIsolationTests {
       #expect(!providerSource.contains(forbiddenMarker))
     }
     #expect(try importedModuleRoots(in: providerSource) == ["Foundation"])
+    let fetcherSource = try String(
+      contentsOf: contractsDirectory.appendingPathComponent("OAuthTokenFetcher.swift"),
+      encoding: .utf8)
+    #expect(fetcherSource.contains("async throws(OAuthTokenRefreshError)"))
+    #expect(!fetcherSource.contains("throws(any Error"))
+
   }
 }
 

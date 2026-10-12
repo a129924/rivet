@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "GitHub OAuth 更新失敗與權杖生命週期",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      650
+    ],
+    "views": [
+      {
+        "id": "main",
+        "label": "原工作",
+        "focus": [
+          "query",
+          "snapshot",
+          "dispatch",
+          "response",
+          "complete"
+        ],
+        "note": "已交付 internal GraphQL Query；REST、跨 target 與產品登入仍延後。"
+      },
+      {
+        "id": "recovery",
+        "label": "401 復原",
+        "focus": [
+          "response",
+          "refresh",
+          "retry"
+        ],
+        "note": "回報實際 snapshot；成功後只重送原 Query 一次。"
+      },
+      {
+        "id": "failure",
+        "label": "失敗分類",
+        "focus": [
+          "refresh",
+          "retryable",
+          "reauth",
+          "unknown",
+          "persist"
+        ],
+        "note": "snapshot／replacement 共用分類；取消 caller 不取消 shared refresh。可信回應仍決定狀態；無回應的送出後取消、輪替未知與落盤失敗停止 provider。"
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "用戶端原工作"
+    },
+    {
+      "id": "recovery",
+      "label": "提供者與一次復原"
+    },
+    {
+      "id": "terminal",
+      "label": "輪替狀態與停止"
+    }
+  ],
+  "states": [
+    {
+      "id": "query",
+      "type": "start",
+      "label": "呼叫 GraphQL Query",
+      "sublabel": "REST／跨 target 延後",
+      "lane": "main",
+      "col": 0,
+      "step": "01"
+    },
+    {
+      "id": "snapshot",
+      "type": "active",
+      "label": "取得有效快照",
+      "sublabel": "過期先更新並保存",
+      "lane": "main",
+      "col": 1,
+      "step": "02"
+    },
+    {
+      "id": "dispatch",
+      "type": "active",
+      "label": "加入 Bearer 送出",
+      "sublabel": "保有原 Query",
+      "lane": "main",
+      "col": 2,
+      "step": "03"
+    },
+    {
+      "id": "response",
+      "type": "decision",
+      "label": "是否收到 401？",
+      "sublabel": "403 不觸發更新",
+      "lane": "main",
+      "col": 3,
+      "step": "04"
+    },
+    {
+      "id": "complete",
+      "type": "success",
+      "label": "交付回應",
+      "sublabel": "非 401 交還呼叫端",
+      "lane": "main",
+      "col": 4,
+      "step": "05"
+    },
+    {
+      "id": "refresh",
+      "type": "active",
+      "label": "取得新版快照",
+      "sublabel": "實際版本／單飛更新",
+      "lane": "recovery",
+      "col": 1
+    },
+    {
+      "id": "retry",
+      "type": "decision",
+      "label": "原 Query 重送一次",
+      "sublabel": "不再復原",
+      "lane": "recovery",
+      "col": 2,
+      "width": 108
+    },
+    {
+      "id": "retryable",
+      "type": "failure",
+      "label": "可再次更新",
+      "sublabel": "明確未輪替／過期耗盡",
+      "lane": "recovery",
+      "col": 0,
+      "yOffset": -80
+    },
+    {
+      "id": "reauth",
+      "type": "failure",
+      "label": "需要重新授權",
+      "sublabel": "憑證失效／第二次 401",
+      "lane": "recovery",
+      "col": 0,
+      "yOffset": 70
+    },
+    {
+      "id": "persist",
+      "type": "failure",
+      "label": "落盤失敗停止",
+      "sublabel": "遠端輪替已接受",
+      "lane": "terminal",
+      "col": 2
+    },
+    {
+      "id": "unknown",
+      "type": "failure",
+      "label": "輪替未知停止",
+      "sublabel": "技術失敗；保留儲存",
+      "lane": "terminal",
+      "col": 1
+    }
+  ],
+  "transitions": [
+    {
+      "id": "query-snapshot",
+      "from": "query",
+      "to": "snapshot"
+    },
+    {
+      "id": "authorize",
+      "from": "snapshot",
+      "to": "dispatch"
+    },
+    {
+      "id": "receive",
+      "from": "dispatch",
+      "to": "response"
+    },
+    {
+      "id": "non-401",
+      "from": "response",
+      "to": "complete"
+    },
+    {
+      "id": "first-401",
+      "from": "response",
+      "to": "refresh",
+      "label": "只有 401",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "replacement",
+      "from": "refresh",
+      "to": "retry",
+      "variant": "emphasis",
+      "via": [
+        [
+          635,
+          307
+        ],
+        [
+          635,
+          250
+        ],
+        [
+          710,
+          250
+        ]
+      ],
+      "route": "right-channel",
+      "toSide": "top"
+    },
+    {
+      "id": "retry-ok",
+      "from": "retry",
+      "to": "complete",
+      "variant": "emphasis"
+    },
+    {
+      "id": "second-401",
+      "from": "retry",
+      "to": "reauth",
+      "label": "第二次 401",
+      "variant": "security",
+      "via": [
+        [
+          860,
+          307
+        ],
+        [
+          860,
+          560
+        ],
+        [
+          300,
+          560
+        ],
+        [
+          300,
+          377
+        ]
+      ]
+    },
+    {
+      "id": "credential-rejected",
+      "from": "refresh",
+      "to": "reauth",
+      "label": "明確失效",
+      "variant": "security",
+      "labelDy": 11,
+      "labelAt": [
+        440,
+        340
+      ]
+    },
+    {
+      "id": "known-technical",
+      "from": "refresh",
+      "to": "retryable"
+    },
+    {
+      "id": "later-call",
+      "from": "retryable",
+      "to": "refresh",
+      "label": "後續呼叫",
+      "variant": "emphasis",
+      "labelAt": [
+        520,
+        260
+      ]
+    },
+    {
+      "id": "unknown-rotation",
+      "from": "refresh",
+      "to": "unknown",
+      "variant": "security"
+    },
+    {
+      "id": "persist-failed",
+      "from": "refresh",
+      "to": "persist",
+      "variant": "security"
+    }
+  ],
+  "cards": []
+}

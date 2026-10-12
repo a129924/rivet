@@ -7,8 +7,15 @@ let package = Package(
     products: [
         .library(name: "RivetPRInbox", targets: ["RivetPRInbox"]),
         .library(name: "RivetPRReader", targets: ["RivetPRReader"]),
+        .library(name: "RivetPRReaderWebViewBridge", targets: ["RivetPRReaderWebViewBridge"]),
+        .library(name: "RivetPRReaderHarnessRuntime", targets: ["RivetPRReaderHarnessRuntime"]),
+        .executable(name: "RivetPRReaderHarness", targets: ["RivetPRReaderHarness"]),
         .library(name: "GitHubIntegration", targets: ["GitHubIntegration"]),
         .library(name: "RivetPresentation", targets: ["RivetPresentation"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/apollographql/apollo-ios.git", exact: "2.1.2"),
+        .package(path: "packages/RivetHTTPClient")
     ],
     targets: [
         .target(
@@ -20,7 +27,28 @@ let package = Package(
             path: "Sources/BoundedContexts/PRReader/Core"
         ),
         .target(
+            name: "RivetPRReaderWebViewBridge",
+            dependencies: ["RivetPRReader"],
+            path: "Sources/PRReaderWebViewBridge"
+        ),
+        .target(
+            name: "RivetPRReaderHarnessRuntime",
+            dependencies: ["RivetPRReader", "RivetPRReaderWebViewBridge"],
+            path: "Sources/RivetPRReaderHarnessRuntime",
+            resources: [.process("Resources")]
+        ),
+        .executableTarget(
+            name: "RivetPRReaderHarness",
+            dependencies: ["RivetPRReaderHarnessRuntime"],
+            path: "Sources/RivetPRReaderHarness"
+        ),
+        .target(
             name: "GitHubIntegration",
+            dependencies: [
+                .product(name: "Apollo", package: "apollo-ios"),
+                .product(name: "ApolloAPI", package: "apollo-ios"),
+                .product(name: "RivetHTTPClient", package: "RivetHTTPClient")
+            ],
             path: "Sources/BoundedContexts/GitHubIntegration"
         ),
         .target(
@@ -37,8 +65,23 @@ let package = Package(
             dependencies: ["RivetPRReader"]
         ),
         .testTarget(
+            name: "RivetPRReaderWebViewBridgeTests",
+            dependencies: ["RivetPRReaderWebViewBridge", "RivetPRReader"],
+            path: "Tests/RivetPRReaderWebViewBridgeTests"
+        ),
+        .testTarget(
+            name: "RivetPRReaderHarnessRuntimeTests",
+            dependencies: ["RivetPRReaderHarnessRuntime", "RivetPRReader", "RivetPRReaderWebViewBridge"],
+            path: "Tests/RivetPRReaderHarnessRuntimeTests"
+        ),
+        .testTarget(
             name: "GitHubIntegrationTests",
-            dependencies: ["GitHubIntegration"]
+            dependencies: [
+                "GitHubIntegration",
+                .product(name: "Apollo", package: "apollo-ios"),
+                .product(name: "ApolloAPI", package: "apollo-ios"),
+                .product(name: "RivetHTTPClient", package: "RivetHTTPClient")
+            ]
         ),
         .testTarget(
             name: "RivetPresentationTests",

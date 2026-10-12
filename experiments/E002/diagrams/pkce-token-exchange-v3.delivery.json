@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "experiments/E002/diagrams/pkce-token-exchange-v3.json",
+  "output": "experiments/E002/diagrams/pkce-token-exchange-v3.html",
+  "specification": {
+    "sha256": "5409368a7f6634e179828dbedc5470e076908cbfa2460b560211171fd8ef77f3",
+    "bytes": 3170
+  },
+  "artifact": {
+    "sha256": "80a34db39be77b245dc2784ae9b40a89b69402323b75437fd4ce3a8571651214",
+    "bytes": 701257
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

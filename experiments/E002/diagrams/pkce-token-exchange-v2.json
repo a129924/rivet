@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "E002：PKCE 交換與相容性驗證",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      560
+    ],
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "runner",
+      "type": "backend",
+      "label": "E002 runner",
+      "sublabel": "敏感資料僅在記憶體"
+    },
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "系統瀏覽器",
+      "sublabel": "人工授權"
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub.com",
+      "sublabel": "OAuth App 與 API"
+    }
+  ],
+  "segments": [
+    {
+      "from": 155,
+      "to": 375,
+      "label": "正向：交換、schema、API 分軸"
+    },
+    {
+      "from": 385,
+      "to": 515,
+      "label": "反向：僅交換成功且無網路阻礙才進入"
+    }
+  ],
+  "messages": [
+    {
+      "id": "open-positive",
+      "from": "runner",
+      "to": "browser",
+      "y": 180,
+      "label": "開啟新授權：S256、state、offline_access",
+      "variant": "default"
+    },
+    {
+      "id": "consent-positive",
+      "from": "browser",
+      "to": "github",
+      "y": 210,
+      "label": "人工授權",
+      "variant": "default"
+    },
+    {
+      "id": "callback-positive",
+      "from": "github",
+      "to": "runner",
+      "y": 240,
+      "label": "loopback callback：驗證 state 與新 code",
+      "variant": "return"
+    },
+    {
+      "id": "exchange-positive",
+      "from": "runner",
+      "to": "github",
+      "y": 270,
+      "label": "POST code、正確 verifier、client_secret",
+      "variant": "default"
+    },
+    {
+      "id": "token-positive",
+      "from": "github",
+      "to": "runner",
+      "y": 300,
+      "label": "回應：六欄 schema → public bundle",
+      "variant": "return"
+    },
+    {
+      "id": "user-request",
+      "from": "runner",
+      "to": "github",
+      "y": 330,
+      "label": "GET /user（僅一次）",
+      "variant": "default"
+    },
+    {
+      "id": "user-result",
+      "from": "github",
+      "to": "runner",
+      "y": 360,
+      "label": "200 與有效 id／login",
+      "variant": "return"
+    },
+    {
+      "id": "open-negative",
+      "from": "runner",
+      "to": "browser",
+      "y": 400,
+      "label": "新 state、challenge 與另一組 code",
+      "variant": "default"
+    },
+    {
+      "id": "consent-negative",
+      "from": "browser",
+      "to": "github",
+      "y": 430,
+      "label": "第二次人工授權",
+      "variant": "default"
+    },
+    {
+      "id": "exchange-negative",
+      "from": "runner",
+      "to": "github",
+      "y": 460,
+      "label": "POST 新 code、錯誤 verifier、相同 secret",
+      "variant": "default"
+    },
+    {
+      "id": "reject-negative",
+      "from": "github",
+      "to": "runner",
+      "y": 490,
+      "label": "拒絕與受控歸因；任何 token 則失敗",
+      "variant": "return"
+    }
+  ]
+}

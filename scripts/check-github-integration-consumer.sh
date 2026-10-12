@@ -47,6 +47,9 @@ fi
 
 (
   cd "$fixture_dir"
+  while IFS= read -r git_local_var; do
+    unset "$git_local_var"
+  done < <(git rev-parse --local-env-vars)
   swift test --scratch-path "$RIVET_CONSUMER_BUILD_PATH"
 )
 

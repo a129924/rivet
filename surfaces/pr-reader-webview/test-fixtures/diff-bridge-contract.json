@@ -1,0 +1,61 @@
+{
+  "pullRequestId": "rivet-pr-v1:1:a:1:b:1",
+  "snapshotId": "00000000-0000-0000-0000-000000000001:1",
+  "files": [
+    {
+      "fileId": "f:0",
+      "filename": "new.swift",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "viewed": false,
+      "patch": "@@ -0,0 +1 @@\n+new"
+    },
+    {
+      "fileId": "f:1",
+      "filename": "gone.swift",
+      "status": "removed",
+      "additions": 0,
+      "deletions": 1,
+      "viewed": true,
+      "patch": "@@ -1 +0,0 @@\n-old"
+    },
+    {
+      "fileId": "f:2",
+      "filename": "change.swift",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "viewed": false,
+      "previousFilename": "before.swift",
+      "patch": ""
+    },
+    {
+      "fileId": "f:3",
+      "filename": "renamed.swift",
+      "status": "renamed",
+      "additions": 1,
+      "deletions": 1,
+      "viewed": true,
+      "previousFilename": "original.swift",
+      "patch": "@@ -1 +1 @@\n-old\n+new"
+    },
+    {
+      "fileId": "f:4",
+      "filename": "copy.swift",
+      "status": "copied",
+      "additions": 1,
+      "deletions": 1,
+      "viewed": false,
+      "previousFilename": "source.swift"
+    },
+    {
+      "fileId": "f:5",
+      "filename": "kind.swift",
+      "status": "typeChanged",
+      "additions": 1,
+      "deletions": 1,
+      "viewed": true
+    }
+  ]
+}
