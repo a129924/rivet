@@ -5,6 +5,7 @@ internal enum GitHubGraphQLClientError: Error, Sendable, Equatable {
     case persist
   }
 
+  case invalidAuthorizationToken
   case authenticationRequired
   case credentialLifecycle(stage: CredentialLifecycleStage)
   case httpStatus(Int)

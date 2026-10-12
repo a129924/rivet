@@ -44,6 +44,13 @@ public enum AuthorizationHeader {
     to headers: [String: String]
   ) throws(AuthorizationHeaderError) -> [String: String] {
     let value = try bearerValue(token: token)
+    return replacingAuthorization(value: value, in: headers)
+  }
+
+  internal static func replacingAuthorization(
+    value: String,
+    in headers: [String: String]
+  ) -> [String: String] {
     var result = headers.filter { !isAuthorization($0.key) }
     result["Authorization"] = value
     return result

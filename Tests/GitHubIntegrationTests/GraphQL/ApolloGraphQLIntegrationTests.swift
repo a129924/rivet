@@ -180,4 +180,35 @@ struct ApolloGraphQLIntegrationTests {
     }
     #expect(replacements == ["Bearer replacement", "Bearer replacement"])
   }
+
+  @Test
+  func invalidInitialTokenNeverSendsOrRecovers() async throws {
+    let session = GraphQLSession()
+    let fetcher = GraphQLTokenFetcher()
+    let provider = OAuthTokenProvider(
+      store: GraphQLCredentialStore(credential: graphQLCredential("invalid token")),
+      fetcher: fetcher, now: { graphQLTestDate })
+    await #expect(throws: GitHubGraphQLClientError.invalidAuthorizationToken) {
+      try await GitHubGraphQLClient(
+        provider: provider, executor: ApolloGraphQLClient(session: session)
+      ).fetch(query: ProbeQuery(value: "same"))
+    }
+    #expect(await session.requests.count == 0)
+    #expect(await fetcher.calls == 0)
+  }
+
+  @Test
+  func invalidReplacementStopsBeforeRetrySendOrExtraRecovery() async throws {
+    let session = GraphQLSession(replies: [.init(401, "")])
+    let fetcher = GraphQLTokenFetcher(replacementToken: "invalid replacement")
+    let provider = OAuthTokenProvider(
+      store: GraphQLCredentialStore(), fetcher: fetcher, now: { graphQLTestDate })
+    await #expect(throws: GitHubGraphQLClientError.invalidAuthorizationToken) {
+      try await GitHubGraphQLClient(
+        provider: provider, executor: ApolloGraphQLClient(session: session)
+      ).fetch(query: ProbeQuery(value: "same"))
+    }
+    #expect(await session.requests.count == 1)
+    #expect(await fetcher.calls == 1)
+  }
 }
