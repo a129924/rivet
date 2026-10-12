@@ -36,25 +36,27 @@ internal final class GitHubHTTPClient: Sendable {
       throw GitHubHTTPClientError.invalidRequest
     }
     let usedSnapshot = try await atAsyncBoundary { try await provider.snapshot() }
-    let initialRequest = BearerAuth(token: usedSnapshot.accessToken.rawValue)
-      .applying(to: originalRequest)
-    let initialResponse = try await atAsyncBoundary {
-      try await httpClient.execute(initialRequest)
-    }
+    let initialResponse = try await send(originalRequest, using: usedSnapshot)
     guard initialResponse.statusCode == 401 else { return initialResponse }
 
     let replacementSnapshot = try await atAsyncBoundary {
       try await provider.replacementSnapshot(afterUnauthorized: usedSnapshot)
     }
-    let retryRequest = BearerAuth(token: replacementSnapshot.accessToken.rawValue)
-      .applying(to: originalRequest)
-    let retryResponse = try await atAsyncBoundary {
-      try await httpClient.execute(retryRequest)
-    }
+    let retryResponse = try await send(originalRequest, using: replacementSnapshot)
     guard retryResponse.statusCode != 401 else {
       throw GitHubHTTPClientError.authenticationRequired
     }
     return retryResponse
+  }
+
+  private func send(
+    _ originalRequest: HTTPRequest, using snapshot: TokenSnapshot
+  ) async throws -> HTTPResponse {
+    let request = BearerAuth(token: snapshot.accessToken.rawValue)
+      .applying(to: originalRequest)
+    return try await atAsyncBoundary {
+      try await httpClient.execute(request)
+    }
   }
 
   private static func isAllowed(_ request: HTTPRequest) -> Bool {
