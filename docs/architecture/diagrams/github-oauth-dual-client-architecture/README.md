@@ -2,19 +2,21 @@
 
 本目錄的責任／依賴 canvas 為 [index.html](index.html)；它只表達元件責任與依賴，不表達 runtime sequence。
 
-Canvas 標示 OAuth provider／adapter ports 與 internal GraphQL Query／401-only 一次復原為已交付；跨 target GraphQL 使用、REST、Keychain credential adapter 仍延後。長期 composition root 與雙 client 的責任、依賴不變。
+Canvas 標示 OAuth provider／adapter ports、internal GraphQL Query 與 REST GET／401-only 一次復原為已交付；跨 target client 使用、完整 REST、Keychain credential adapter 仍延後。長期 composition root 與雙 client 的責任、依賴不變。
 
-Canonical lifecycle 同步標示 internal Query 的交付狀態；產品登入仍延後，provider restore／refresh／persist 保留技術階段。作者內容採繁體中文；Archify 固定 Viewer UI 與 HTML lang 依 skill fallback 為 English。
+Canonical lifecycle 同步標示 internal Query 與 REST GET 的交付狀態；產品登入仍延後，provider restore／refresh／persist 保留技術階段。作者內容採繁體中文；Archify 固定 Viewer UI 與 HTML lang 依 skill fallback 為 English。
 
 ## Canonical Token Lifecycle
 
 本 topic 唯一的 canonical token lifecycle 是：
 
-- 規格：[token-lifecycle-v7.json](token-lifecycle-v7.json)
-- 已交付圖表：[token-lifecycle-v7.html](token-lifecycle-v7.html)
-- 交付與視覺檢查 receipt：`token-lifecycle-v7.delivery.json` 與 `token-lifecycle-v7.visual-check.json`
+- 規格：[token-lifecycle-v10.json](token-lifecycle-v10.json)
+- 已交付圖表：[token-lifecycle-v10.html](token-lifecycle-v10.html)
+- 交付與視覺檢查 receipt：`token-lifecycle-v10.delivery.json` 與 `token-lifecycle-v10.visual-check.json`
 
-後續 lifecycle delivery 只可使用 `token-lifecycle-v7.json` 作為輸入。
+後續 lifecycle delivery 只可使用 `token-lifecycle-v10.json` 作為輸入。
+
+本次 v8 showcase validation 通過，但 1440×900 visual-check 有 1px 垂直 overflow；v9 同樣通過 validation，但有 24px overflow。兩者保留為 rejected evidence，不得作為 canonical，也不得覆寫。v10 showcase 9／9、composition 0 errors／0 warnings；四種桌面尺寸 containment pass，light／dark captures 已人工檢視。
 
 delivery receipt 的 `input` 與 `output` 僅作 repository-relative path normalization；其餘工具輸出欄位、specification／artifact SHA-256、bytes 與 validation 保持原值。
 
@@ -31,3 +33,5 @@ delivery receipt 的 `input` 與 `output` 僅作 repository-relative path normal
 `token-lifecycle-v5.json`、`token-lifecycle-v5.html` 與其 receipts 是 v5 immutable rejected evidence。v5 通過 showcase validation、delivery 與 visual-check，但仍含非必要英文作者文案；不得作為後續 delivery input，也不得覆寫或刪除。
 
 `token-lifecycle-v6.*` 保留為先前已驗證交付的 immutable historical evidence；不得覆寫或刪除。本次 v7 增加 typed refresh 分類、輪替未知停止與已知技術失敗再次更新路徑。
+
+`token-lifecycle-v7.*` 保留為上一版已驗證交付的 immutable historical evidence；不得覆寫或刪除。

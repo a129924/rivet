@@ -369,6 +369,8 @@ struct StaticIsolationTests {
       "OAuth/GitHubOAuthEndpoints.swift",
       "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift",
+      "REST/GitHubHTTPClient.swift",
+      "REST/GitHubHTTPClientError.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift",
       "Stores/KeychainTokenStore.swift",
@@ -402,6 +404,7 @@ struct StaticIsolationTests {
       let httpClientFiles: Set = [
         "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
         "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
+        "REST/GitHubHTTPClient.swift",
       ]
       if httpClientFiles.contains(path) {
         forbiddenForFile.remove("RivetHTTPClient")

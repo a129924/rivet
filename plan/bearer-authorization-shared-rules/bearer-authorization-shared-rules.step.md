@@ -110,4 +110,60 @@ S2／S5 審查後，唯一由 Plan-Creator 僅將 verdict 原文及證據引用�
 
 ## 最後更新
 
-2026-10-12T16:32:12+08:00（Asia/Taipei），Plan-Creator：僅記錄獨立 Reviewer 明示 approved、原文結論及證據引用；S5 completed，保留 S1–S4 與全部驗證歷史。交 Implementer 執行已授權 topic commit／push／Draft PR，之後 human review；目前尚未執行交付，未 merge／release。
+2026-10-12T16:52:30+08:00（Asia/Taipei），Plan-Creator：僅記錄 PR #53 衝突整合的獨立 Reviewer approved；保留原 S1–S5 及本次失敗→修復→重驗歷史。下一步為已授權的整合 merge commit（正常 hooks）／push，保持 PR Ready，之後 human review；本次整合 commit／push 尚未執行，不 merge PR／release。
+
+## PR #53 衝突整合驗證
+
+- 驗證時間：2026-10-12T16:47:52+08:00（Asia/Taipei）；角色：獨立 Tester `tester`。
+- Feature 父 SHA：`a49c4447a29329e25904130c348a1d28811ed63f`；合入 dev SHA：`0c5298604df9886b18abedafccbbc16d8168e4ba`。驗證對象為 merge 尚未 commit 的 feature worktree 最終 tree。
+- 保留 S1–S5 completed 與全部歷史證據；原 Reviewer approval 僅屬原成果，本次衝突整合 Reviewer：pending，不能沿用原 approved。
+- `git ls-files -u`：exit 0、輸出空，無未合併 path；驗證開始前 `git diff --stat` 輸出空，無 unstaged diff。
+- `git diff --check` 與 `git diff --cached --check`：皆 exit 0。
+- `scripts/check-swift-format.sh`：exit 0；`scripts/check-swiftlint.sh`：exit 0，110 files／0 violations。
+- `swift test`：exit 1，編譯階段失敗、未執行 tests；新 dev 的 `Sources/BoundedContexts/GitHubIntegration/REST/GitHubHTTPClient.swift:55` 呼叫 throwing `BearerAuth(token:)` 缺少 `try`。
+- `scripts/check-github-integration-consumer.sh`：exit 1，同一編譯錯誤、未執行 tests；另出現既有 `JSONSemanticDecodingError.Kind` Sendable warning，非此整合的新變更。
+- 分類：source-breaking initializer 與新 dev REST consumer 的整合錯誤。Tester 未修改產品或測試；明示交 Implementer bounded 回修，再重驗失敗檢查與受影響品質檢查。
+- Package source 未較先前 85 tests 通過版本改動，未重複 standalone package；renderer 未變，未重複 broad checks；實際 commit hooks 仍須正常執行。
+- 外部原始 logs：`bearer-merge-root.log`、`bearer-merge-consumer.log`、`bearer-merge-format.log`、`bearer-merge-lint.log`。
+- 本次結果：needs-rework；停止於 Implementer 回修，不宣稱修復完成或本次 Reviewer approved，未 commit／push。
+
+### PR #53 合併後 consumer compatibility bounded 回修
+
+- 時間：2026-10-12T16:49:18+08:00（Asia/Taipei）；角色：Implementer。
+- 本次修復 PR 衝突的授權涵蓋新 dev consumer 與既有已接受 source-breaking initializer 的必要相容修復；不重新規劃原 Mission，不新增 REST 能力或改變 lifecycle／recovery policy。保留 S1–S5 原狀態及全部歷史證據；本次整合驗證與 Reviewer 仍待重驗。
+- 本次手工修改僅限新 dev 的 `Sources/BoundedContexts/GitHubIntegration/REST/GitHubHTTPClient.swift`、`Tests/GitHubIntegrationTests/REST/GitHubHTTPClientTests.swift`、`Tests/GitHubIntegrationTests/REST/GitHubHTTPTransportTests.swift` 與本帳本；先前 StaticIsolation 衝突解決及其他 upstream auto-merge 保留。
+- `send` 將 `try BearerAuth` 建立與 Request 套用移入既有 `atAsyncBoundary`，使用原有 map 將本地驗證失敗映射 `.executionFailed`，保留取消優先與 token-free 錯誤；direct transport 測試建立端補 `try`。沒有修改 error enum、provider、retry 或新增 fixture support。
+- Red：先新增兩項相容回歸，再執行 `swift test --filter 'GitHubHTTPClientTests|GitHubHTTPTransportTests'`，exit 1；source:55 缺少 throwing initializer 的 `try`，編譯失敗且未執行 tests。
+- Green：相同命令 exit 0，16 tests／2 suites；初始非法 Token `.executionFailed`、send 0／fetcher 0；401 後非法 replacement `.executionFailed`、send 1／fetcher 1，沒有 retry send 或額外 recovery。既有取消、401、raw status 與 redirect 回歸亦通過。局部 log 無 warning／error。
+- 僅對三個相容修復 Swift 檔執行 `swift format format --in-place`；最終 format／lint、root 與 consumer 失敗檢查交獨立 Tester 重驗。
+- 外部原始 logs：`bearer-merge-compat-red.log`、`bearer-merge-compat-green.log`。
+- 明示交 Tester 進行本次整合重驗，之後交獨立 Reviewer；尚未 commit／push，不沿用原 approval 宣稱本次整合已 approved。
+
+- 本次最新使用者 fix PR 衝突授權下的必要 consumer 相容例外，精準包含上述三 REST paths 與既有 D-doc `docs/architecture/github-oauth-dual-client.md`；後者僅修正 Bearer 段的「REST 接入仍延後」為已存在 REST caller 的 throwing 建立及既有 `.executionFailed` 映射。正式原 allowlist 與其他三份 planning 檔不修改，歷史決策與證據保留；沒有擴充 REST 能力。
+
+### PR #53 bounded compatibility fix 後獨立重驗
+
+- 時間：2026-10-12T16:50:58+08:00（Asia/Taipei）；角色：獨立 Tester `tester`。Feature 父 SHA 與 merge dev SHA 同上一節，merge 尚未 commit／push。
+- 保留上一節的編譯失敗與 Implementer red／green 歷史；本節不重置 S1–S5，也不沿用原 Reviewer approval。本次整合 Reviewer 已獨立重新審查並明示 approved，見下方專屬審查紀錄。
+- `swift test`：exit 0，210 tests／27 suites；含整合後 StaticIsolation、REST、直接 GraphQL Interceptor、Apollo chain 與既有取消／401 recovery 回歸。
+- `scripts/check-github-integration-consumer.sh`：exit 0，9 tests／2 suites；consumer scratch 清理正常。僅出現既有 `JSONSemanticDecodingError.Kind` Sendable warning，無新編譯錯誤；root log 無 warning／error。
+- `scripts/check-swift-format.sh`：exit 0；`scripts/check-swiftlint.sh`：exit 0，110 files／0 violations。
+- REST `invalidInitialTokenFailsBeforeSendOrRecovery` 通過：`.executionFailed`、transport Request 0、fetcher 0、token-free diagnostics；`invalidReplacementStopsBeforeRetryOrExtraRecovery` 通過：`.executionFailed`、transport Request 1、fetcher 1，無 retry send 或額外 recovery。
+- 原 GraphQL `invalidInitialTokenNeverSendsOrRecovers` 與 `invalidReplacementStopsBeforeRetrySendOrExtraRecovery` 亦通過，維持 `.invalidAuthorizationToken` 與原 0／0、1／1 行為。
+- 驗證開始前 `git ls-files -u` 輸出空，無未合併 paths；`git diff --stat` 輸出空，無 unstaged diff；`git diff --check` 與 `git diff --cached --check` 皆 exit 0。
+- 未重複未受影響的 standalone package／renderer broad checks；實際 commit hooks 仍須正常執行。Tester 僅追加本帳本，未修改產品／測試。
+- 外部原始 logs：`bearer-merge-fixed-root.log`、`bearer-merge-fixed-consumer.log`、`bearer-merge-fixed-format.log`、`bearer-merge-fixed-lint.log`。
+- 本次最終驗證結果：通過，先前編譯 blocker 已解除；明示可交獨立 Reviewer 審查此 bounded conflict integration。此處不宣稱本次 Reviewer approved，未 commit／push。
+
+### PR #53 衝突整合獨立 Reviewer 紀錄
+
+- 時間：2026-10-12T16:52:30+08:00（Asia/Taipei）；記錄角色：Plan-Creator。
+- 審查角色：獨立 Reviewer；agent `plan_reviewer`，由 Observer 交接本次明示結果。
+- Verdict 原文：`approved`；findings：無需修正。本次為針對衝突整合最終 tree 的獨立重新審查，非沿用原 S5 approval。
+- 審查證據：比較最終 tree 與兩 parents，確認 StaticIsolation 精準三檔 RivetHTTPClient exceptions、REST sourcePaths 與 Apollo 限制；上游其他 paths 為自動 merge。
+- 審查者確認：REST 必要 `try` 移入既有 `atAsyncBoundary`，沿用原 `.executionFailed` mapping；取消、目的地、redirect 及 401 policy 不變。兩項新增 REST invalid-token 測試有效，分別 send／recovery 0／0 與 1／1。
+- 審查者確認：GraphQL 與 package 成果未被覆寫，docs 保留契約；三個 REST paths 與 D-doc 的必要相容例外已記入本帳本，未擴充 REST 能力。
+- 證據引用：本帳本「PR #53 bounded compatibility fix 後獨立重驗」及外部暫存 logs `bearer-merge-fixed-root.log`、`bearer-merge-fixed-consumer.log`、`bearer-merge-fixed-format.log`、`bearer-merge-fixed-lint.log`。Reviewer 已讀 Tester 原始 logs，確認 root 210 tests／27 suites、consumer 9 tests／2 suites、lint 110 files／0 violations；format exit 0 依 Tester 明示交接。無 unmerged paths。
+- 狀態：本次衝突整合 Reviewer approved；先前編譯失敗與等待本次獨立審查的 blocker 已解除。保留原 S1–S5 及本次失敗→修復→重驗全部歷史，不以新結論覆寫歷史時點紀錄。
+- Next：交 Implementer 依既有 Human 授權執行整合 merge commit，正常執行 hooks，然後 push 並保持 PR #53 Ready，再交 human review；本次整合 merge commit／push 尚未執行，不新增 message 確認 blocker，不 merge PR／release。
+- Plan-Creator 僅忠實記錄審查者 verdict 與證據引用，未重判、修改其他檔案、測試或執行 Git mutation。
