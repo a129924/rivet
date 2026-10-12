@@ -14,7 +14,8 @@ let package = Package(
         .library(name: "RivetPresentation", targets: ["RivetPresentation"])
     ],
     dependencies: [
-        .package(url: "https://github.com/apollographql/apollo-ios.git", exact: "2.1.2")
+        .package(url: "https://github.com/apollographql/apollo-ios.git", exact: "2.1.2"),
+        .package(path: "packages/RivetHTTPClient")
     ],
     targets: [
         .target(
@@ -45,7 +46,8 @@ let package = Package(
             name: "GitHubIntegration",
             dependencies: [
                 .product(name: "Apollo", package: "apollo-ios"),
-                .product(name: "ApolloAPI", package: "apollo-ios")
+                .product(name: "ApolloAPI", package: "apollo-ios"),
+                .product(name: "RivetHTTPClient", package: "RivetHTTPClient")
             ],
             path: "Sources/BoundedContexts/GitHubIntegration"
         ),
@@ -77,7 +79,8 @@ let package = Package(
             dependencies: [
                 "GitHubIntegration",
                 .product(name: "Apollo", package: "apollo-ios"),
-                .product(name: "ApolloAPI", package: "apollo-ios")
+                .product(name: "ApolloAPI", package: "apollo-ios"),
+                .product(name: "RivetHTTPClient", package: "RivetHTTPClient")
             ]
         ),
         .testTarget(

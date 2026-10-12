@@ -34,11 +34,14 @@ struct StaticIsolationTests {
     let integrationTarget = try #require(targets["GitHubIntegration"])
     #expect(integrationTarget["type"] as? String == "regular")
     #expect(integrationTarget["path"] as? String == "Sources/BoundedContexts/GitHubIntegration")
-    #expect(Set(dependencyNames(in: integrationTarget)) == ["Apollo", "ApolloAPI"])
+    #expect(
+      Set(dependencyNames(in: integrationTarget)) == ["Apollo", "ApolloAPI", "RivetHTTPClient"])
     let integrationTests = try #require(targets["GitHubIntegrationTests"])
     #expect(integrationTests["type"] as? String == "test")
     #expect(
-      Set(dependencyNames(in: integrationTests)) == ["GitHubIntegration", "Apollo", "ApolloAPI"])
+      Set(dependencyNames(in: integrationTests)) == [
+        "GitHubIntegration", "Apollo", "ApolloAPI", "RivetHTTPClient",
+      ])
   }
   @Test
   func dependencyExtractionRecognizesAllPackageDescriptionDependencyForms() {
@@ -357,12 +360,14 @@ struct StaticIsolationTests {
       "Contracts/GitHubTokenProvider.swift",
       "Contracts/OAuthCredentialStore.swift",
       "Contracts/OAuthTokenFetcher.swift",
+      "Contracts/OAuthTokenRefreshError.swift",
       "Contracts/TokenSnapshot.swift",
       "GraphQL/GitHubGraphQLClient.swift",
       "GraphQL/ApolloGraphQLClient.swift",
       "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
       "GraphQL/GitHubGraphQLClientError.swift",
       "OAuth/GitHubOAuthEndpoints.swift",
+      "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift",
@@ -393,7 +398,8 @@ struct StaticIsolationTests {
       let forbiddenForFile =
         apolloFiles.contains(path)
         ? forbiddenImports.subtracting(["Apollo", "ApolloAPI"])
-        : forbiddenImports
+        : path == "OAuth/GitHubOAuthHTTPTokenFetcher.swift"
+          ? forbiddenImports.subtracting(["RivetHTTPClient"]) : forbiddenImports
       #expect(imports.isDisjoint(with: forbiddenForFile))
 
       if path == "Stores/KeychainTokenStore.swift" {
@@ -446,6 +452,12 @@ extension StaticIsolationTests {
       #expect(!providerSource.contains(forbiddenMarker))
     }
     #expect(try importedModuleRoots(in: providerSource) == ["Foundation"])
+    let fetcherSource = try String(
+      contentsOf: contractsDirectory.appendingPathComponent("OAuthTokenFetcher.swift"),
+      encoding: .utf8)
+    #expect(fetcherSource.contains("async throws(OAuthTokenRefreshError)"))
+    #expect(!fetcherSource.contains("throws(any Error"))
+
   }
 }
 

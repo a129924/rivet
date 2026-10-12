@@ -230,3 +230,116 @@ struct GitHubGraphQLClientTests {
     #expect(await fetcher.calls == 1)
   }
 }
+
+extension GitHubGraphQLClientTests {
+  @Test(arguments: [false, true])
+  func classifiedFailuresMapDuringExpiryAndUnauthorizedRecovery(_ initiallyExpired: Bool) async {
+    for failure in [
+      OAuthTokenRefreshError.credentialRejected, .clientConfiguration, .rotationIndeterminate,
+    ] {
+      let now = initiallyExpired ? graphQLTestDate.addingTimeInterval(200) : graphQLTestDate
+      let store = GraphQLCredentialStore()
+      let fetcher = GraphQLTokenFetcher(error: failure)
+      let provider = OAuthTokenProvider(store: store, fetcher: fetcher, now: { now })
+      let executor = GraphQLStubExecutor(statuses: [401])
+      let expected: GitHubGraphQLClientError
+      if case .credentialRejected = failure {
+        expected = .authenticationRequired
+      } else {
+        expected = .credentialLifecycle(stage: .refresh)
+      }
+      await #expect(throws: expected) {
+        try await GitHubGraphQLClient(provider: provider, executor: executor)
+          .fetch(query: ProbeQuery(value: "same"))
+      }
+      #expect(await fetcher.calls == 1)
+      #expect(await store.saves == 0)
+      #expect(await executor.tokens.count == (initiallyExpired ? 0 : 1))
+    }
+  }
+
+  @Test
+  func postStartCancellationOnlyCancelsCurrentCallThenReturnsTechnicalFailure() async {
+    let fetcher = GraphQLTokenFetcher(
+      error: OAuthTokenRefreshError.cancelled(stage: .afterRequestStarted))
+    let provider = OAuthTokenProvider(
+      store: GraphQLCredentialStore(), fetcher: fetcher, now: { graphQLTestDate })
+    let executor = GraphQLStubExecutor(statuses: [401])
+    let client = GitHubGraphQLClient(provider: provider, executor: executor)
+    await #expect(throws: CancellationError.self) {
+      try await client.fetch(query: ProbeQuery(value: "same"))
+    }
+    await #expect(throws: GitHubGraphQLClientError.credentialLifecycle(stage: .refresh)) {
+      try await client.fetch(query: ProbeQuery(value: "same"))
+    }
+    #expect(await fetcher.calls == 1)
+    #expect(await executor.tokens.count == 1)
+  }
+
+  @Test(arguments: SharedRefreshOutcome.allCases)
+  func cancelledCallerDoesNotChangeUncancelledWaitersActualRefreshResult(
+    _ outcome: SharedRefreshOutcome
+  ) async throws {
+    let refreshGate = GraphQLGate()
+    let joinedGate = GraphQLGate()
+    let store = GraphQLCredentialStore()
+    let fetcher = GraphQLTokenFetcher(error: outcome.failure, gate: refreshGate)
+    let provider = OAuthTokenProvider(
+      store: store, fetcher: fetcher, now: { graphQLTestDate },
+      onInFlightTaskJoin: { await joinedGate.enter() })
+    let executorA = GraphQLStubExecutor(statuses: [401])
+    let callerA = Task {
+      try await GitHubGraphQLClient(provider: provider, executor: executorA)
+        .fetch(query: ProbeQuery(value: "caller-a"))
+    }
+    await refreshGate.waitForArrival()
+    let executorB = GraphQLStubExecutor()
+    let callerB = Task {
+      try await GitHubGraphQLClient(provider: provider, executor: executorB)
+        .fetch(query: ProbeQuery(value: "caller-b"))
+    }
+    await joinedGate.waitForArrival()
+    callerA.cancel()
+    await joinedGate.open()
+    await refreshGate.open()
+    await #expect(throws: CancellationError.self) { try await callerA.value }
+    switch outcome {
+    case .success:
+      _ = try await callerB.value
+      #expect(await store.saves == 1)
+      #expect(await executorB.tokens == ["replacement"])
+      #expect(try await provider.snapshot().accessToken.rawValue == "replacement")
+    case .rejected:
+      await #expect(throws: GitHubGraphQLClientError.authenticationRequired) {
+        try await callerB.value
+      }
+      #expect(await store.saves == 0)
+      #expect(await executorB.tokens.isEmpty)
+    case .configuration, .indeterminate:
+      await #expect(throws: GitHubGraphQLClientError.credentialLifecycle(stage: .refresh)) {
+        try await callerB.value
+      }
+      #expect(await store.saves == 0)
+      #expect(await executorB.tokens.isEmpty)
+    }
+    #expect(await fetcher.calls == 1)
+    #expect(await fetcher.wasCancelled == false)
+    #expect(await executorA.tokens.count == 1)
+  }
+}
+
+enum SharedRefreshOutcome: CaseIterable, Sendable {
+  case success
+  case rejected
+  case configuration
+  case indeterminate
+
+  var failure: OAuthTokenRefreshError? {
+    switch self {
+    case .success: nil
+    case .rejected: .credentialRejected
+    case .configuration: .clientConfiguration
+    case .indeterminate: .rotationIndeterminate
+    }
+  }
+}
