@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "AuthorizationHeader 純轉換流程",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      520
+    ]
+  },
+  "stages": [
+    {
+      "label": "輸入"
+    },
+    {
+      "label": "驗證"
+    },
+    {
+      "label": "純資料"
+    },
+    {
+      "label": "替換"
+    },
+    {
+      "label": "回傳"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "credential-input",
+      "type": "external",
+      "label": "Token 字串",
+      "sublabel": "呼叫端明確傳入",
+      "stage": 0,
+      "row": 0
+    },
+    {
+      "id": "bearer-validation",
+      "type": "backend",
+      "label": "字元文法驗證",
+      "sublabel": "RFC 6750 b64token",
+      "stage": 1,
+      "row": 0
+    },
+    {
+      "id": "bearer-value",
+      "type": "backend",
+      "label": "Bearer value",
+      "sublabel": "Bearer 與原始 Token",
+      "stage": 2,
+      "row": 0
+    },
+    {
+      "id": "header-replacement",
+      "type": "backend",
+      "label": "替換 Authorization",
+      "sublabel": "移除變體，再加入單一欄位",
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "headers-result",
+      "type": "external",
+      "label": "新的 Headers",
+      "sublabel": "其他鍵值逐字保留",
+      "stage": 4,
+      "row": 0
+    },
+    {
+      "id": "invalid-credential",
+      "type": "backend",
+      "label": "invalidToken",
+      "sublabel": "錯誤不攜帶 Token",
+      "stage": 1,
+      "row": 2
+    },
+    {
+      "id": "original-headers",
+      "type": "external",
+      "label": "原始 Headers",
+      "sublabel": "Dictionary 輸入保持不變",
+      "stage": 2,
+      "row": 2
+    }
+  ],
+  "flows": [
+    {
+      "id": "token-to-validation",
+      "from": "credential-input",
+      "to": "bearer-validation",
+      "label": "原始 Token",
+      "variant": "emphasis"
+    },
+    {
+      "id": "valid-to-value",
+      "from": "bearer-validation",
+      "to": "bearer-value",
+      "label": "合法字元",
+      "variant": "emphasis"
+    },
+    {
+      "id": "value-to-replacement",
+      "from": "bearer-value",
+      "to": "header-replacement",
+      "label": "格式化 value",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "id": "headers-to-replacement",
+      "from": "original-headers",
+      "to": "header-replacement",
+      "label": "既有鍵值",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "via": [
+        [
+          745,
+          385
+        ]
+      ]
+    },
+    {
+      "id": "replacement-to-output",
+      "from": "header-replacement",
+      "to": "headers-result",
+      "label": "單一授權欄位",
+      "variant": "emphasis"
+    },
+    {
+      "id": "invalid-to-error",
+      "from": "bearer-validation",
+      "to": "invalid-credential",
+      "label": "拒絕非法輸入",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "唯一格式規則",
+      "items": [
+        "bearerValue 驗證並回傳字串；applyingBearer 重用同一實作。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "限定替換",
+      "items": [
+        "只匹配 ASCII 大小寫變體；不改 Token、其他鍵值或原始輸入。"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "使用界線",
+      "items": [
+        "無網路或認證狀態；既有 consumers 尚未整合。Viewer UI／HTML lang 使用 English fallback。"
+      ]
+    }
+  ]
+}

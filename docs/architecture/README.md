@@ -49,6 +49,12 @@ Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.pre
 - GitHub.com OAuth App 的 authorization 與 token URL descriptor 已實作為 `GitHubIntegration` integration-local、internal-only 定義；它們僅描述固定 HTTPS URL，本身不實作 HTTP/request execution、payload、token exchange/refresh 或 credential lifecycle。
 - 此 boundary 決定 supersede `github-integration-auth-boundary`／PR #17 的 Supporting BC 敘述；該舊決定僅保留為歷史 traceability。
 
+### AuthorizationHeader 純轉換
+
+同一 `RivetHTTPClient` product 提供 public、無狀態的 `AuthorizationHeader`：`bearerValue(token:)` 依 RFC 6750 b64token 字元文法產生 `Bearer <token>`；`applyingBearer(token:to:)` 只使用 `[String: String]`，以 ASCII 大小寫不敏感方式移除 Authorization 變體，再寫入單一 `Authorization`，保留其他 key 拼字與 value，且不修改原始輸入。非法 token 以不帶 token 資訊的 `AuthorizationHeaderError.invalidToken` 同步拋出；不 trim、解碼、檢查到期或持有 credential state。
+
+此元件沒有 transport／OAuth 依賴或外部 side effect；既有 `BearerAuth`、REST／GraphQL consumers 尚未遷移，原有契約不變。[AuthorizationHeader 轉換流程](diagrams/authorization-header/authorization-header-flow.html) 僅描述純資料轉換；作者內容繁體中文，固定 Viewer UI／HTML lang 使用 English fallback。
+
 ## PR Reader WebView Diff Pipeline
 
 PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有 runtime 實作。render 主路徑為 `Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.present → DiffRenderUseCase.execute → Validator → Parser → Renderer → Output`；UseCase 擁有四個 stage Port 的協調責任，也是 Output Port 唯一 caller。DiffSnapshotAdapter 是 callable 入口，呼叫 Facade 一次並回傳 render outcome；ViewedStateChangeAdapter 仍僅為通知邊界宣告。
