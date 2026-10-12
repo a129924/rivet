@@ -2,9 +2,9 @@
 
 ## Current Phase
 
-delivery；current_step：AH-06，status：in-progress，owner：Implementer → Human，upstream_verdict：AH-05 approved。
+human-review；current_step：AH-06，status：human-check，owner：Human，upstream_verdict：AH-05 approved。
 
-P 已建立且獲獨立 Plan-Reviewer approved。Implementer 已完成 S／T／D／M 並提供下列 handoff；獨立 Tester 已完成 AH-04，獨立 Reviewer 已完成 AH-05 並明示 approved；commit／push／Draft PR 尚未進行。
+P 已建立且獲獨立 Plan-Reviewer approved。AH-03／AH-04 已完成，AH-05 明示 approved；功能 topic 已 commit／push，Draft PR #51 已建立。現在等待 Human review，不自動 merge。
 
 範圍／代號／TC 定義引用 [plan](authorization-header.plan.md)；API 與 grammar 引用 [technical-spec](../../analysis/authorization-header/technical-spec.md)。各 step 九欄是全域 allowlist 的子集，不允許由引用擴張寫入範圍。
 
@@ -17,7 +17,7 @@ P 已建立且獲獨立 Plan-Reviewer approved。Implementer 已完成 S／T／D
 | AH-03 | completed | Implementer | 完成限定 S／T／D／M，更新實際狀態並提供 bounded diff／完成 handoff。 | 2026-10-12 S／T／D／M 已完成；focused green 9 tests passed；Archify 9/9 showcase 與四尺寸 containment passed，Implementer 已人工檢視四張截圖。詳見 handoff。 |
 | AH-04 | completed | Tester | 獨立執行 TC-01 至 TC-06，保存分開命令結果、圖表 receipts 與人工 inspection。 | 2026-10-12 五項 commands exit 0；focused 9、package 81、root 187 tests passed；Archify fresh 9/9、四尺寸 containment 與獨立人工 visual_review passed。詳下列 handoff；不是 AH-05 verdict。 |
 | AH-05 | completed | Reviewer | 獨立核對 source／tests／docs／證據與 drift；完成 TC-07；明示 verdict。 | 2026-10-12 獨立成果 review approved，沒有 findings；TC-07 如實採 direct diff／source fallback，詳下列 handoff。 |
-| AH-06 | in-progress | Implementer → Human | 僅於 AH-05 approved 後依既有授權 commit by topic、non-force push、開以 dev 為 base 的 Draft PR；Human review 待決。 | 尚無 commit SHA／push／Draft PR URL；人類 review pending。 |
+| AH-06 | human-check | Implementer → Human | 僅於 AH-05 approved 後依既有授權 commit by topic、non-force push、開以 dev 為 base 的 Draft PR；Human review 待決。 | 功能 commit 74c7cde692ca2a6f95c93ba0a5db4e3b74dc3218 已 non-force push；Draft PR #51 已建立、base dev；delivery evidence 見下段，Human review pending。 |
 
 ## 每 Step 九欄契約
 
@@ -116,12 +116,20 @@ AH-04 完成，可交 AH-05 獨立 Reviewer；本 handoff 不是 correctness rev
 ## AH-06 Delivery Evidence
 
 - 2026-10-12 首次 topic commit 的 whitespace、EOF、Swift format、GitHubIntegration consumer、SwiftLint hooks 通過；renderer hook 因 fresh worktree 尚無本地 biome 而 exit 127，commit 未建立，未 bypass hooks。
-- 依既有 docs/toolchain.md，在 feature worktree 的 surfaces/pr-reader-webview 執行 bun install --frozen-lockfile，exit 0；只恢復既有鎖定 dev dependencies，沒有修改 manifest／lockfile、安裝新 global runtime 或升級工具。待重跑完整 commit hooks。
+- 依既有 docs/toolchain.md，在 feature worktree 的 surfaces/pr-reader-webview 執行 bun install --frozen-lockfile，exit 0；只恢復既有鎖定 dev dependencies，沒有修改 manifest／lockfile、安裝新 global runtime 或升級工具。後續重試已完整通過全部 hooks，見下段。
 - 單一 topic staged diff 已依 git-commit-convention 核對；message 為「feat(http-client): 新增無狀態 AuthorizationHeader」，沿用使用者本輪直接 commit 授權。
+- Topic feature commit：74c7cde692ca2a6f95c93ba0a5db4e3b74dc3218，message 為「feat(http-client): 新增無狀態 AuthorizationHeader」。完整 whitespace、EOF、Swift format、GitHubIntegration consumer contract、SwiftLint、renderer check hooks 全部 passed；沒有 bypass。
+- 已 non-force push 至 origin/feat/authorization-header，tracking branch 正確；dev worktree 維持乾淨、無產品寫入。
+- Draft PR：https://github.com/a129924/rivet/pull/51，base dev、head feat/authorization-header、Draft，Human review pending。
+- PR Lens：實際 topic commit 存在後，獨立 Reviewer 使用 base 4805061a0d8d08d7690c0acd288a374860fa71c8 → head 74c7cde692ca2a6f95c93ba0a5db4e3b74dc3218 重新補真實 provenance；pinned CLI validate／render 均 exit 0。外部 pr-lens/graph.json、provenance.json、rendered/manifest.json 與 overview-light-2d7a1481d62915ba890e31f953242905.svg 已產生；沒有上傳、附加或發布。
+- PR Lens 一張 light view，2 lanes／4 nodes／2 edges；僅測試→新增 API 與既有 BearerAuth→HTTPHeaders 的 source-backed 關係，不宣稱 consumers 已整合。先前 working-tree validate failure 是歷史，當前 committed map passed。
+- Graphify：保留無 existing graph 的 targeted source fallback，不建圖或 refresh。
+- 本次 ledger delivery evidence 將以同 topic 的 docs commit 保存並 non-force push；僅更新交付事實，不改功能／測試／圖表，既有驗證與成果 verdict 保持適用。Draft PR 後的下一個產品動作由 Human review 決定。
+
 
 ## Blockers
 
-- 無已知產品決策缺口。AH-02 planning approved、AH-04 verification completed、AH-05 correctness review approved；AH-06 delivery 尚待執行。
+- 無未解除 implementation blocker。AH-02 planning approved、AH-04 verification completed、AH-05 correctness review approved；AH-06 已交付 Draft PR，等待 Human review。
 - AH-03／AH-04／AH-05 evidence 已分開記錄。任何後續 failure、allowlist gap 或 locked decision 衝突如實列出。
 - Archify 不通過交 needs-rework；PR Lens／Graphify 可依 plan 如實 fallback，不能把 fallback 記成 tool passed。
 
@@ -135,4 +143,4 @@ Dispatcher 交接環境證據：Swift 6.3.3、Graphify 0.9.73、PR Lens 0.11.0 �
 
 ## Last Updated
 
-2026-10-12 — 獨立 Reviewer 完成 AH-05，明示 approved／無 findings；TC-07 工具限制與 fallback 如實記錄。AH-06 pending；未 commit／push／開 Draft PR。
+2026-10-12 — Implementer 記錄 topic commit／non-force push／Draft PR #51 與 committed PR Lens passed；AH-06 human-check，等待 Human review。
