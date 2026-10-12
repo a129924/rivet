@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "dataflow",
+  "input": "docs/architecture/diagrams/authorization-header/authorization-header-flow.json",
+  "output": "docs/architecture/diagrams/authorization-header/authorization-header-flow.html",
+  "specification": {
+    "sha256": "e9262ad997c07655e9140a8a7a4bf79ab215ac0704340fdd8069445a14b3fe4c",
+    "bytes": 3491
+  },
+  "artifact": {
+    "sha256": "1dd8d983b679d4ac2e402dfcd1ec86bce1108babfca42fa7a9a3647c62b3c92e",
+    "bytes": 703064
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
