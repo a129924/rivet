@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "docs/architecture/diagrams/github-oauth-dual-client-architecture/token-lifecycle-v8.json",
+  "output": "docs/architecture/diagrams/github-oauth-dual-client-architecture/token-lifecycle-v8.html",
+  "specification": {
+    "sha256": "251ec1427562d78974ee5c72fa19653e9a2c30533014655c6d9052c20be4bd60",
+    "bytes": 6588
+  },
+  "artifact": {
+    "sha256": "b558e8164a8b8b27cc326c5eb1d3f794372b408a143dc50f52a3dbf072758906",
+    "bytes": 712142
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
