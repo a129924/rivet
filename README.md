@@ -19,7 +19,7 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 ## 目前狀態
 
-non-BC `GitHubIntegration` 現提供 internal-only GraphQL Query 與 authenticated REST GET／POST／PUT／PATCH 契約；兩個 client 可共用既有 OAuthTokenProvider instance。GraphQL 使用 Apollo 2.1.2 並保留合法 partial response；REST 透過 internal `GitHubRestClient` 的組裝／完整 request 雙入口，以 bare HTTPClient 執行 `api.github.com` 的 HTTPS GET／POST／PUT／PATCH，且拒絕 redirect。兩者僅在 HTTP 401 回報實際 snapshot、最多重送原操作一次，並保留 cancellation。這些 client 不對其他 target 公開；跨 target GraphQL／REST 使用、完整 REST endpoint 能力、各 BC adapters、Keychain credential adapter、初次 OAuth 授權整合與產品登入仍延後。
+non-BC `GitHubIntegration` 現提供 internal-only GraphQL Query／Mutation 與 authenticated REST GET／POST／PUT／PATCH 契約；兩個 client 可共用既有 OAuthTokenProvider instance。GraphQL 使用 Apollo 2.1.2 並保留合法 partial response；REST 透過 internal `GitHubRestClient` 的組裝／完整 request 雙入口，以 bare HTTPClient 執行 `api.github.com` 的 HTTPS GET／POST／PUT／PATCH，且拒絕 redirect。兩者僅在 HTTP 401 回報實際 snapshot、最多重送原操作一次，並保留 cancellation。這些 client 不對其他 target 公開；跨 target GraphQL／REST 使用、完整 REST endpoint 能力、各 BC adapters、Keychain credential adapter、初次 OAuth 授權整合與產品登入仍延後。
 
 Rivet 目前是可公開的 architecture baseline repository。它保留產品與架構決策、Bounded Context Map，以及 Swift／Node 版本基線；root Swift package 已包含受限的產品實作。
 

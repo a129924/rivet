@@ -17,7 +17,7 @@ struct GraphQLIsolationTests {
   }
 
   @Test
-  func clientAndExecutorRemainInternalQueryOnly() throws {
+  func clientAndExecutorRemainInternalQueryAndMutation() throws {
     let root = URL(fileURLWithPath: #filePath)
       .deletingLastPathComponent().deletingLastPathComponent()
       .deletingLastPathComponent().deletingLastPathComponent()
@@ -32,7 +32,8 @@ struct GraphQLIsolationTests {
     #expect(executor.contains("internal protocol ApolloGraphQLExecuting: Sendable"))
     #expect(!client.contains("public "))
     #expect(!executor.contains("public "))
-    #expect(!client.contains("GraphQLMutation"))
+    #expect(client.contains("func perform<Mutation: GraphQLMutation>"))
+    #expect(executor.contains("func perform<Mutation: GraphQLMutation>"))
     #expect(!client.contains("GraphQLSubscription"))
   }
 }

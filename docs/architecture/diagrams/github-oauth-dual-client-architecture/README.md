@@ -2,9 +2,9 @@
 
 本目錄的責任／依賴 canvas 為 [index.html](index.html)；它只表達元件責任與依賴，不表達 runtime sequence。
 
-Canvas 標示 OAuth provider／adapter ports、internal GraphQL Query 與 REST GET／POST／PUT／PATCH 雙入口／401-only 一次復原為已交付；跨 target client 使用、完整 REST、Keychain credential adapter 仍延後。長期 composition root 與雙 client 的責任、依賴不變。
+Canvas 標示 OAuth provider／adapter ports、internal GraphQL Query／Mutation 與 REST GET／POST／PUT／PATCH 雙入口／401-only 一次復原為已交付；跨 target client 使用、完整 REST、Keychain credential adapter 仍延後。長期 composition root 與雙 client 的責任、依賴不變。
 
-Canonical lifecycle 同步標示 internal Query 與 REST 四 methods／雙入口的交付狀態；產品登入仍延後，provider restore／refresh／persist 保留技術階段。作者內容採繁體中文；Archify 固定 Viewer UI 與 HTML lang 依 skill fallback 為 English。
+Canonical lifecycle 同步標示 internal Query／Mutation 與 REST 四 methods／雙入口的交付狀態；產品登入仍延後，provider restore／refresh／persist 保留技術階段。作者內容採繁體中文；Archify 固定 Viewer UI 與 HTML lang 依 skill fallback 為 English。
 
 ## Canonical Token Lifecycle
 
@@ -36,4 +36,4 @@ delivery receipt 的 `input` 與 `output` 僅作 repository-relative path normal
 
 `token-lifecycle-v7.*` 保留為上一版已驗證交付的 immutable historical evidence；不得覆寫或刪除。
 
-`token-lifecycle-v10.*` 保留為前一版已驗證交付的 immutable historical evidence；不得覆寫或刪除。v11 只更新 REST 四 methods／雙入口的交付文案，不改 lifecycle 或 ownership。
+`token-lifecycle-v10.*` 保留為前一版已驗證交付的 immutable historical evidence；不得覆寫或刪除。v11 更新 REST 四 methods／雙入口與 GraphQL Mutation 的交付文案，不改 lifecycle 或 ownership。

@@ -19,7 +19,7 @@
           "response",
           "complete"
         ],
-        "note": "REST GET／POST／PUT／PATCH 透過組裝或完整 request 入口，只對 api.github.com 加入 Bearer；轉址不跟隨。internal Query 同樣已交付。"
+        "note": "REST GET／POST／PUT／PATCH 透過組裝或完整 request 入口，只對 api.github.com 加入 Bearer；轉址不跟隨。internal Query／Mutation 同樣已交付。"
       },
       {
         "id": "recovery",
@@ -63,7 +63,7 @@
     {
       "id": "query",
       "type": "start",
-      "label": "呼叫 REST 或 Query",
+      "label": "呼叫 REST 或 GraphQL",
       "sublabel": "REST 四 methods／雙入口",
       "lane": "main",
       "col": 0,
@@ -82,7 +82,7 @@
       "id": "dispatch",
       "type": "active",
       "label": "加入 Bearer 送出",
-      "sublabel": "保有原 request／Query",
+      "sublabel": "保有原 request／操作",
       "lane": "main",
       "col": 2,
       "step": "03"
