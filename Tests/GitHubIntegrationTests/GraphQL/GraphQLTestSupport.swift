@@ -36,11 +36,49 @@ struct ProbeData: RootSelectionSet {
   var probe: String? { __data["probe"] }
 }
 
+struct ProbeMutation: GraphQLMutation {
+  typealias Data = ProbeMutationData
+  static let operationName = "InfrastructureMutationProbe"
+  static let operationDocument = OperationDocument(
+    operationIdentifier: "test-only-mutation-probe",
+    definition: .init(
+      "mutation InfrastructureMutationProbe($value: String!) { probe(value: $value) }")
+  )
+  let value: String
+  // Apollo's test operation must implement this exact protocol witness.
+  // swiftlint:disable identifier_name
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  var __variables: Variables? { ["value": value] }
+  // swiftlint:enable identifier_name
+}
+
+struct ProbeMutationData: RootSelectionSet {
+  typealias Schema = ProbeSchema
+  // Exact Apollo selection-set witnesses; these names cannot be changed.
+  // swiftlint:disable identifier_name
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static let __parentType: any ParentType = ProbeSchema.mutation
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static var __selections: [Selection] { [.field("probe", String?.self)] }
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static var __fulfilledFragments: [any SelectionSet.Type] { [Self.self] }
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  let __data: DataDict
+  // swiftlint:enable identifier_name
+  init(_dataDict dataDict: DataDict) { __data = dataDict }
+  var probe: String? { __data["probe"] }
+}
+
 enum ProbeSchema: SchemaMetadata {
+  static let mutation = Object(typename: "Mutation", implementedInterfaces: [])
   static let query = Object(typename: "Query", implementedInterfaces: [])
   static var configuration: any SchemaConfiguration.Type { ProbeConfiguration.self }
   static func objectType(forTypename typename: String) -> Object? {
-    typename == "Query" ? query : nil
+    switch typename {
+    case "Query": query
+    case "Mutation": mutation
+    default: nil
+    }
   }
 }
 
@@ -160,6 +198,7 @@ actor GraphQLStubExecutor: ApolloGraphQLExecuting {
   let gate: GraphQLGate?
   private(set) var tokens: [String] = []
   private(set) var queries: [String] = []
+  private(set) var mutations: [String] = []
 
   init(statuses: [Int] = [200], error: (any Error & Sendable)? = nil, gate: GraphQLGate? = nil) {
     self.statuses = statuses
@@ -173,6 +212,20 @@ actor GraphQLStubExecutor: ApolloGraphQLExecuting {
   ) async throws -> GraphQLResponse<Query> where Query.ResponseFormat == SingleResponseFormat {
     tokens.append(accessToken.rawValue)
     queries.append(String(describing: query))
+    if let gate { await gate.enter() }
+    if let error { throw error }
+    let status = statuses.isEmpty ? 200 : statuses.removeFirst()
+    if status != 200 { throw GitHubGraphQLClientError.httpStatus(status) }
+    return .init(data: nil, extensions: nil, errors: nil, source: .server, dependentKeys: nil)
+  }
+
+  func perform<Mutation: GraphQLMutation>(
+    mutation: Mutation,
+    accessToken: GitHubAccessToken
+  ) async throws -> GraphQLResponse<Mutation>
+  where Mutation.ResponseFormat == SingleResponseFormat {
+    tokens.append(accessToken.rawValue)
+    mutations.append(String(describing: mutation))
     if let gate { await gate.enter() }
     if let error { throw error }
     let status = statuses.isEmpty ? 200 : statuses.removeFirst()

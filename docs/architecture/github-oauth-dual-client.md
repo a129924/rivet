@@ -2,9 +2,9 @@
 
 ## Goal
 
-鎖定 GitHub OAuth App 的可 refresh、會過期 credential bundle shared token lifecycle：`GitHubIntegration` 已交付 `OAuthTokenProvider` runtime 與 adapter ports，以及 internal-only Apollo GraphQL Query 與 authenticated REST GET／POST／PUT／PATCH 契約。GraphQL client 在 HTTP 401 回報實際 snapshot，透過 provider recovery 後重送原 query／variables 一次；第二次 401 終止。兩個 internal client 可共用同一 provider instance；跨 target 使用、完整 REST endpoint 能力仍延後。
+鎖定 GitHub OAuth App 的可 refresh、會過期 credential bundle shared token lifecycle：`GitHubIntegration` 已交付 `OAuthTokenProvider` runtime 與 adapter ports，以及 internal-only Apollo GraphQL Query／Mutation 與 authenticated REST GET／POST／PUT／PATCH 契約。GraphQL client 在 HTTP 401 回報實際 snapshot，透過 provider recovery 後重送原 operation／variables 一次；第二次 401 終止。兩個 internal client 可共用同一 provider instance；跨 target 使用、完整 REST endpoint 能力仍延後。
 
-這是長期**架構文件**；internal Query client 的受限 runtime 契約與驗證見 `github-graphql-infra-foundation` topic，長期 composition root 與雙 client 組裝仍為後續能力。
+這是長期**架構文件**；internal Query／Mutation client 的受限 runtime 契約與驗證見 `github-graphql-infra-foundation` 與 `github-graphql-mutation-foundation` topics，長期 composition root 與雙 client 組裝仍為後續能力。
 
 ## Non-Goal
 
@@ -69,7 +69,7 @@ access token 過期先觸發更新，不以 refreshTokenExpiresAt 預先拒絕�
 
 ## Boundary 與後續 Topic
 
-已交付的 `internal final class GitHubGraphQLClient` 只提供 `fetch<Query: GraphQLQuery>` 且限制 SingleResponseFormat，technical outcomes 也維持 internal。raw Apollo executor 只有 internal Apollo-bound 測試 seam；不新增外層 client abstraction。固定 transport 為 Apollo 2.1.2、POST、APQ off、retry 0、network-only 且不寫 cache；合法 partial／errors-only response 保留。caller cancellation 優先於 recovery／mapping，URLError.cancelled 與 provider-stage cancellation 正規化；client 不取消 shared refresh，也不保證 provider await 立即返回。另已交付的 internal GitHubHTTPClient 符合 internal GitHubRestClient 契約，提供 GET／POST／PUT／PATCH 的組裝與完整 request 雙入口，於取得 token 前驗證 method 與 api.github.com 目的地，拒絕所有 redirect，其他 status 保持 raw；首次 401 回報完整 snapshot 並重送原 request 一次（只替換 Authorization）。兩者皆不表示 Facade 注入、跨 target consumer contract 或 BC adapter 已交付。
+已交付的 `internal final class GitHubGraphQLClient` 提供 `fetch<Query: GraphQLQuery>` 與 `perform<Mutation: GraphQLMutation>`，兩者皆限制 SingleResponseFormat，technical outcomes 也維持 internal。raw Apollo executor 只有 internal Apollo-bound 測試 seam；不新增外層 client abstraction。固定 transport 為 Apollo 2.1.2、POST、APQ off、retry 0、network-only 且不寫 cache；合法 partial／errors-only response 保留。caller cancellation 優先於 recovery／mapping，URLError.cancelled 與 provider-stage cancellation 正規化；client 不取消 shared refresh，也不保證 provider await 立即返回。另已交付的 internal GitHubHTTPClient 符合 internal GitHubRestClient 契約，提供 GET／POST／PUT／PATCH 的組裝與完整 request 雙入口，於取得 token 前驗證 method 與 api.github.com 目的地，拒絕所有 redirect，其他 status 保持 raw；首次 401 回報完整 snapshot 並重送原 request 一次（只替換 Authorization）。兩者皆不表示 Facade 注入、跨 target consumer contract 或 BC adapter 已交付。
 
 `GitHubRestClient: Sendable` 的八個 internal requirements 為 `get/post/put/patch(url:headers:body:)` 與 `executeGet/executePost/executePut/executePatch(_:)`，均 async throws 回 raw `HTTPResponse`。四個 builder 的預設實作組裝對應 method，委派 execution requirement；不提供 default arguments 或其他 overload，`headers` 與可重播的 `Data?` body 必須明傳（GET 亦可帶 body）。完整 request 的 method 不符或 URL 不合法時，在取得 credential 與發送前回 `.invalidRequest`；不暗改 method。首次 401 才要求 recovery，第二次 401 為 `.authenticationRequired`；非 401 原樣回傳，timeout／transport failure 不重送。舊 internal `executeGET` 已改為 `executeGet`，不保留 alias。
 
@@ -100,3 +100,5 @@ OAuth technical failure 不跨越成 shared BC failure contract；未來由 cons
 [實驗 E003](../../experiments/E003/README.md) 於 2026-10-08 沿用 E002 OAuth App，以一次新授權取得 refreshable credential，完成單次遠端 refresh／rotation 測量；runner exit 0，遮蔽結果為 T01–T04 與 overall 均成功。T01 初始 access token 的 `GET /user` 回 HTTP 200 且有有效身分；T02 一次 refresh 取得各自更換的非空 access／refresh token、有效六欄與可建立的 public `GitHubOAuthCredentialBundle`；T03 新 access token 的 `/user` 回 HTTP 200 且身分一致。T04 唯一一次重用舊 refresh token 的 HTTP status 為 200，但 body 含明確 `bad_refresh_token` 且無新 token；拒絕判準來自 body，不能由 HTTP 200 單獨推論。
 
 此證據只支持本次 App／帳號的 refresh exchange、credential 相容性、身分一致與舊 refresh token 拒絕，不表示產品 `OAuthTokenProvider` 自動刷新、持久化、並行、401 recovery、正式 OAuth adapter 或遠端 revoke 已驗證。App 全域 expiring-token 設定未另行查證；E002 反向 PKCE 與 overall「無法判定」結論保持獨立。E003 的遮蔽 stdout、程序外層時間與單次實驗限制保存在實驗 README；repository 證據未保存 secret、code、token、user ID 或原始回應；browser／OS 留痕不在 runner 控制範圍。本次實證不改變上述 shared lifecycle 與雙 Client 的責任決策。
+
+Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合法 partial／errors-only response、timeout、transport／parse failure 不重送。取消或 transport failure 不保證遠端未執行寫入，也不提供 rollback；不包含產品 operation 或寫入結果 reconciliation。

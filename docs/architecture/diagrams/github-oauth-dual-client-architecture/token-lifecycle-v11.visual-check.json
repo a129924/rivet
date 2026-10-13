@@ -6,8 +6,8 @@
   "visualReview": "pending",
   "artifact": {
     "path": "docs/architecture/diagrams/github-oauth-dual-client-architecture/token-lifecycle-v11.html",
-    "sha256": "c38350e9d22f064b46f2ff66fb223074a9fdde53ce8bce7bace33c83b617b130",
-    "bytes": 711532
+    "sha256": "c49a015914f0c14127c193657463991cf8b1a5b5e62b8a9cf22fbdec4b93edfd",
+    "bytes": 711556
   },
   "state": {
     "detail": "read",

@@ -21,12 +21,29 @@ internal final class GitHubGraphQLClient: Sendable {
     query: Query
   ) async throws -> GraphQLResponse<Query>
   where Query.ResponseFormat == SingleResponseFormat {
+    try await execute { accessToken in
+      try await executor.fetch(query: query, accessToken: accessToken)
+    }
+  }
+
+  internal func perform<Mutation: GraphQLMutation>(
+    mutation: Mutation
+  ) async throws -> GraphQLResponse<Mutation>
+  where Mutation.ResponseFormat == SingleResponseFormat {
+    try await execute { accessToken in
+      try await executor.perform(mutation: mutation, accessToken: accessToken)
+    }
+  }
+
+  private func execute<Value: Sendable>(
+    _ operation: (GitHubAccessToken) async throws -> Value
+  ) async throws -> Value {
     var snapshot = try await atAsyncBoundary { try await provider.snapshot() }
     var recoveries = 0
     while true {
       do {
         return try await atAsyncBoundary {
-          try await executor.fetch(query: query, accessToken: snapshot.accessToken)
+          try await operation(snapshot.accessToken)
         }
       } catch GitHubGraphQLClientError.httpStatus(401) {
         guard recoveries < Self.maximumAuthenticationRecoveries else {

@@ -8,6 +8,12 @@ internal protocol ApolloGraphQLExecuting: Sendable {
     accessToken: GitHubAccessToken
   ) async throws -> GraphQLResponse<Query>
   where Query.ResponseFormat == SingleResponseFormat
+
+  func perform<Mutation: GraphQLMutation>(
+    mutation: Mutation,
+    accessToken: GitHubAccessToken
+  ) async throws -> GraphQLResponse<Mutation>
+  where Mutation.ResponseFormat == SingleResponseFormat
 }
 
 internal final class ApolloGraphQLClient: ApolloGraphQLExecuting {
@@ -38,6 +44,19 @@ internal final class ApolloGraphQLClient: ApolloGraphQLExecuting {
         query: query,
         cachePolicy: .networkOnly,
         requestConfiguration: .init(writeResultsToCache: false)
+      )
+    }
+  }
+
+  internal func perform<Mutation: GraphQLMutation>(
+    mutation: Mutation,
+    accessToken: GitHubAccessToken
+  ) async throws -> GraphQLResponse<Mutation>
+  where Mutation.ResponseFormat == SingleResponseFormat {
+    try await GitHubGraphQLHTTPInterceptor.$accessToken.withValue(accessToken) {
+      try await client.perform(
+        mutation: mutation,
+        requestConfiguration: .init(requestTimeout: nil, writeResultsToCache: false)
       )
     }
   }

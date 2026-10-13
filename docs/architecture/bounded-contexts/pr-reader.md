@@ -24,7 +24,7 @@
 
 ## Core Content Source Contract
 
-`GitHubIntegration` 已提供 internal-only GraphQL Query foundation；跨 target GraphQL 使用及 Reader adapter 仍延後。候選 SDL 不屬於本次 Query 或測試來源，Reader Core／UseCase／Port 不新增 Apollo、OAuth 或 transport 依賴。
+`GitHubIntegration` 已提供 internal-only GraphQL Query／Mutation foundation；跨 target GraphQL 使用及 Reader adapter 仍延後。候選 SDL 不屬於Query／Mutation 或測試來源，Reader Core／UseCase／Port 不新增 Apollo、OAuth 或 transport 依賴。
 
 - `PRContentSource` 是 Reader-owned、`Sendable` 的 Domain Port；它以 `ReaderPullRequestID(owner, repository, number)` 非同步回傳 target-local `Outcome<PRContentSnapshot, PRReaderFailure>`。
 - `PRContentSnapshot` 保留背景、有序 conversation、reviews、inline threads、files，以及可缺的 review decision 與 check rollup。成功 producer 必須回傳與 request 相同的 PR identity、同一 snapshot 內唯一的 `ReaderFileReference`，並保留來源檔案順序；Core 不另設 validator。
