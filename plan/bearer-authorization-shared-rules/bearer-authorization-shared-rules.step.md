@@ -5,15 +5,20 @@
 - Topic：`bearer-authorization-shared-rules`。
 - Branch：`feat/bearer-authorization-shared-rules`。
 - Feature worktree：`agent-20261012-bearer-authorization-shared-rules`；所有後續工作僅在此處，dev 工作目錄不得修改。
-- Base：`origin/dev`，`1c8ff51bb5b569bb63a5c80e44dc59bc711d0226`（Observer 提供的建立交接）。
-- Phase：S5 獨立成果審查已明示 approved，待執行已授權的 topic commit／push／Draft PR，之後 human review。
+- 建立時 Base snapshot：`origin/dev`，`1c8ff51bb5b569bb63a5c80e44dc59bc711d0226`；後續已整合 dev `0c5298604df9886b18abedafccbbc16d8168e4ba`。
+- Phase：topic 與 dev 整合均已交付；目前處理 PR review comments，human review 尚未完成。
 - 四份 artifacts 已實際落檔；S2 由獨立 Plan-Reviewer 明示 approved（planning readiness），原文及受審版本見下方紀錄。
-- Current step：S5／completed；下一動作交 Implementer 依人類預授權執行 topic commit／push／Draft PR。目前尚未 commit、push 或建立 PR。
+- Current step：S1–S5 completed；本輪 review 文件修正的獨立檢查與 Reviewer 審查已完成。本輪交付及 threads 狀態以實際 Git／PR 紀錄為準；human review 尚未完成。
+- Topic commit：`a49c4447a29329e25904130c348a1d28811ed63f`，completed。
+- Dev 整合 commit：`49f0f455cd04981e9334d41e1e8ca6aa92818217`，completed；兩次交付已 push。此 SHA 同時是本輪文件修訂前查證的 feature 遠端 HEAD 快照，不是本文件自身 commit，也不表示永久或後續目前 HEAD。
+- PR：[#53](https://github.com/a129924/rivet/pull/53)，本輪文件修訂前查證快照為 Open／Ready、head `49f0f455cd04981e9334d41e1e8ca6aa92818217`。本輪文件修正已完成獨立驗證及 Reviewer 審查；交付及 threads 狀態以實際 Git／PR 紀錄為準，human review 尚未完成。
 - Planner 歷史 verdict：先前 `approved` 僅限當時 planning-preparation readiness，不構成本次修訂批准。
 - Plan-Reviewer verdict：`approved`（planning readiness）；Reviewer verdict：`approved`（S5 成果審查）。
 - 產品實作已完成；Implementer 局部 red／green 與品質檢查見下方，不取代獨立 S4／S5。
 
 ## Steps 與證據
+
+以下 S1–S5 與各歷史驗證／審查段落保留原時點快照；其中「尚未 commit／push／開 PR」、pending、Next 等描述僅指記錄當時，不代表目前交付狀態。現在狀態以上方 Current state 為準。
 
 | ID | Status | Owner | 完成條件 | 驗證證據 |
 | --- | --- | --- | --- | --- |
@@ -97,22 +102,25 @@ S2／S5 審查後，唯一由 Plan-Creator 僅將 verdict 原文及證據引用�
 
 ### Blockers
 
-- 目前無已回報的未解除 blocker。歷史「四份 artifacts 未落檔」已由 S1 解除；「尚無本次 Plan-Reviewer verdict」已由 S2 的明示 approved 解除。
-- S4 全套驗證已完成；原「S5 尚待執行」已由獨立 Reviewer 明示 approved 解除。下一動作為已授權交付，尚未執行 commit／push／Draft PR。
+- 歷史規劃、實作與 dev 整合 blockers 已解除；原 S1–S5 與整合驗證／審查證據保留。本輪 PR review 文件修正已完成獨立 Tester 檢查及 Reviewer 明示 approved，非沿用歷史 approval；目前無已回報的未解除 blocker。
+- Topic 與 dev 整合交付已有實際紀錄；本輪交付及 threads 狀態以實際 Git／PR 紀錄為準，human review 尚未完成。
 - 若出現新的 scope、path 或 locked decision 衝突，停止並交還人類，不以推論補足。
 
 ### Human Check
 
-- 原 Q1–Q5 與「兩入口統一透過 BearerAuth、新增 public nonthrowing Headers overload」決策已確認，無須重問。
-- 人類最新已接受計畫，授權 feature-only 實作及無重大問題時直接 topic commit、push、Draft PR，再交 human review；取代先前將這些 delivery 動作排除的記錄。
-- S2、S3、S4、S5 已依明示交接完成；本次 Reviewer approved 與既有 Human 預授權允許交 Implementer 直接進行 topic commit／push／Draft PR，不再新增 message 確認 blocker。之後交 human review；不 merge／release。
-- 本次 Plan-Creator 未實作、未測試、未 commit／push／開 PR；最終 merge／release 未獲授權。
+- 原 Q1–Q5 與 BearerAuth Headers overload 設計已確認；本輪僅修正交付狀態、授權追溯及已接入 REST 的文件描述。
+- 本 session 人類明確指示「請直接 commit by topic → push → open Draft PR → human review」，本輪亦明確授權處理建議項後 commit／push／回覆／resolve；這些直接指示是各自受限交付的執行依據，並非 Reviewer approval 自行授權 Git 操作。
+- Agent 曾在執行前提出 `feat(auth): 統一 BearerAuth 與 GraphQL 授權規則` 與 `fix(auth): 解決 dev 整合衝突與 BearerAuth 相容性`；可由兩個實際 commit 核對 subjects。本帳本不宣稱人類曾逐字確認這兩個 message。
+- 僅本 session 上述明確直接交付指示優先於 local skill 的再次確認預設；不推導一般預授權，不取消 repository 一般 staged-diff／message／human-confirmation 規範，也不修改 AGENTS 或 skill。
+- 本輪文件修正已獨立驗證並獲 Reviewer 明示 approved；本 session 明確直接 commit／push／回覆／resolve 授權保留，不另要求逐 message 確認。Repository 一般 message policy 不變；merge PR／release 未獲授權，human review 尚未完成。
 
 ## 最後更新
 
-2026-10-12T16:52:30+08:00（Asia/Taipei），Plan-Creator：僅記錄 PR #53 衝突整合的獨立 Reviewer approved；保留原 S1–S5 及本次失敗→修復→重驗歷史。下一步為已授權的整合 merge commit（正常 hooks）／push，保持 PR Ready，之後 human review；本次整合 commit／push 尚未執行，不 merge PR／release。
+2026-10-13T10:10:49+08:00（Asia/Taipei），Plan-Creator：依本次獨立 Reviewer 指示，忠實記錄兩份文件修正的 Tester 結果及 Reviewer approved，並同步必要狀態 metadata。`49f0f455cd04981e9334d41e1e8ca6aa92818217` 僅為本輪文件修訂前的遠端查證快照；本輪交付及 threads 狀態以實際 Git／PR 紀錄為準，human review 尚未完成。不重判、不重跑檢查，不 merge PR／release。
 
 ## PR #53 衝突整合驗證
+
+以下為 2026-10-12 各時點的歷史快照，包括當時尚未 commit／push、待驗或待審的狀態；其後交付已完成，見 Current state。
 
 - 驗證時間：2026-10-12T16:47:52+08:00（Asia/Taipei）；角色：獨立 Tester `tester`。
 - Feature 父 SHA：`a49c4447a29329e25904130c348a1d28811ed63f`；合入 dev SHA：`0c5298604df9886b18abedafccbbc16d8168e4ba`。驗證對象為 merge 尚未 commit 的 feature worktree 最終 tree。
@@ -165,5 +173,15 @@ S2／S5 審查後，唯一由 Plan-Creator 僅將 verdict 原文及證據引用�
 - 審查者確認：GraphQL 與 package 成果未被覆寫，docs 保留契約；三個 REST paths 與 D-doc 的必要相容例外已記入本帳本，未擴充 REST 能力。
 - 證據引用：本帳本「PR #53 bounded compatibility fix 後獨立重驗」及外部暫存 logs `bearer-merge-fixed-root.log`、`bearer-merge-fixed-consumer.log`、`bearer-merge-fixed-format.log`、`bearer-merge-fixed-lint.log`。Reviewer 已讀 Tester 原始 logs，確認 root 210 tests／27 suites、consumer 9 tests／2 suites、lint 110 files／0 violations；format exit 0 依 Tester 明示交接。無 unmerged paths。
 - 狀態：本次衝突整合 Reviewer approved；先前編譯失敗與等待本次獨立審查的 blocker 已解除。保留原 S1–S5 及本次失敗→修復→重驗全部歷史，不以新結論覆寫歷史時點紀錄。
-- Next：交 Implementer 依既有 Human 授權執行整合 merge commit，正常執行 hooks，然後 push 並保持 PR #53 Ready，再交 human review；本次整合 merge commit／push 尚未執行，不新增 message 確認 blocker，不 merge PR／release。
+- 當時 Next：依本 session 人類明確直接交付指示執行整合 merge commit（正常 hooks）／push，保持 PR #53 Ready，再交 human review；當時尚未執行。此例外僅限該明確指示，不修改一般 message 確認規範；不 merge PR／release。
 - Plan-Creator 僅忠實記錄審查者 verdict 與證據引用，未重判、修改其他檔案、測試或執行 Git mutation。
+
+## PR #53 review 文件修正獨立檢查與審查紀錄
+
+- 記錄時間：2026-10-13T10:10:49+08:00（Asia/Taipei）；角色：Plan-Creator，依 Observer 交接忠實記錄。
+- 獨立 Tester 結果：本輪文件 checks 全部 exit 0；檢查時精準 staged 兩檔、20 additions／12 deletions，無 unstaged diff。此為本次 metadata 更新前的受驗快照，不表示 metadata 更新後的即時 index 狀態。
+- Tester 查證：Git revision／log、PR #53 的 head `49f0f455cd04981e9334d41e1e8ca6aa92818217`、Open／Ready 狀態與 source facts 一致。此 SHA 是本輪文件修訂前快照，不是本文件自身 commit 或永久 HEAD。
+- Reviewer：獨立 Reviewer `plan_reviewer` 已讀實際 staged diff，明示 verdict 原文 `approved`；本次兩份文件修正的 A／B／C 處理正確，額外逐 message 重問非必要。此為本次獨立審查結果，非沿用歷史 approval。
+- 審查確認：S1–S5、source contracts 與歷史證據保留；Human Check 沒有假稱人類逐字確認 commit messages；本輪未執行不必要的 Swift tests。
+- 本次必要 metadata 更新依 Reviewer 明確指示完成：獨立檢查／審查改記已完成，遠端 SHA 限定為修訂前查證快照，不預填本輪 commit／push／resolve 結果。此忠實紀錄不重開 review／tests，不推算新的 approval。
+- 交付與 threads 狀態以實際 Git／PR 紀錄為準；本 session Human 的直接 commit／push／回覆／resolve 授權保留，repository 一般 message policy 不變，human review 尚未完成，不 merge PR／release。
