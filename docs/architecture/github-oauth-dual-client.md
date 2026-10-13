@@ -2,7 +2,7 @@
 
 ## Goal
 
-鎖定 GitHub OAuth App 的可 refresh、會過期 credential bundle shared token lifecycle：`GitHubIntegration` 已交付 `OAuthTokenProvider` runtime 與 adapter ports，以及 internal-only Apollo GraphQL Query 與 authenticated REST GET foundation。GraphQL client 在 HTTP 401 回報實際 snapshot，透過 provider recovery 後重送原 query／variables 一次；第二次 401 終止。兩個 internal client 可共用同一 provider instance；跨 target 使用、完整 REST endpoint 能力仍延後。
+鎖定 GitHub OAuth App 的可 refresh、會過期 credential bundle shared token lifecycle：`GitHubIntegration` 已交付 `OAuthTokenProvider` runtime 與 adapter ports，以及 internal-only Apollo GraphQL Query 與 authenticated REST GET／POST／PUT／PATCH 契約。GraphQL client 在 HTTP 401 回報實際 snapshot，透過 provider recovery 後重送原 query／variables 一次；第二次 401 終止。兩個 internal client 可共用同一 provider instance；跨 target 使用、完整 REST endpoint 能力仍延後。
 
 這是長期**架構文件**；internal Query client 的受限 runtime 契約與驗證見 `github-graphql-infra-foundation` topic，長期 composition root 與雙 client 組裝仍為後續能力。
 
@@ -15,7 +15,7 @@
 
 ## 責任與依賴
 
-[責任與依賴 canvas](diagrams/github-oauth-dual-client-architecture/index.html) 只呈現 component ownership 與 dependency；它刻意不表達 request sequence。 [Token lifecycle](diagrams/github-oauth-dual-client-architecture/token-lifecycle-v10.html) 則呈現 expiry-valid snapshot、401-only response recovery 與一次 retry；其 canonical／歷史 evidence 狀態見 [圖表說明](diagrams/github-oauth-dual-client-architecture/README.md)。
+[責任與依賴 canvas](diagrams/github-oauth-dual-client-architecture/index.html) 只呈現 component ownership 與 dependency；它刻意不表達 request sequence。 [Token lifecycle](diagrams/github-oauth-dual-client-architecture/token-lifecycle-v11.html) 則呈現 expiry-valid snapshot、401-only response recovery 與一次 retry；其 canonical／歷史 evidence 狀態見 [圖表說明](diagrams/github-oauth-dual-client-architecture/README.md)。
 
 ```text
 Facade（layer 外的 application composition root）
@@ -23,7 +23,7 @@ Facade（layer 外的 application composition root）
   ├─ OAuthCredentialStore adapter（deferred）
   ├─ GitHubOAuthHTTPTokenFetcher（internal bare HTTP refresh，已交付）
   ├─ OAuthTokenProvider(OAuthCredentialStore, OAuthTokenFetcher)
-  ├─ GitHub REST GET client(TokenProvider, internal redirect-rejecting bare HTTP executor)
+  ├─ GitHub REST client(TokenProvider, internal redirect-rejecting bare HTTP executor)
   └─ GitHub GraphQL client(TokenProvider, Apollo)
 ```
 
@@ -35,7 +35,7 @@ Facade（layer 外的 application composition root）
 - `OAuthTokenProvider` 是唯一 lifecycle owner：記憶體 credential、restore、expiry-first refresh、accepted rotation persistence、version 與 single-flight。remote rotation accepted 後的 persistence failure 使 provider 永久 unavailable；它不持有、不接收、不重送 `HTTPRequest` 或 Apollo operation。
 - `TokenSnapshot` 是 public immutable、`Equatable`、`Sendable` client input，只包含 access token 與 version；`hasSameVersion(as:)` 只比較 version。refresh token 與完整 bundle 不會暴露給 client。
 - 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration。另已交付的 async `GitHubAccessTokenProvider` 只表示 token acquisition；新的 OAuth provider 不 conform 或 bridge 它，也不實作 request、transport、401 classification 或 retry。
-- internal REST GET client 由 Facade 注入共享 `TokenProvider`，production 自建拒絕 redirect 的 bare HTTP executor，並保有自己的原 `HTTPRequest`；GraphQL client 保有自己的 Apollo operation。兩者只共用 provider instance，不互相呼叫，GraphQL 亦不經 REST route。
+- internal REST client 由 Facade 注入共享 `TokenProvider`，production 自建拒絕 redirect 的 bare HTTP executor，並保有自己的原 `HTTPRequest`；GraphQL client 保有自己的 Apollo operation。兩者只共用 provider instance，不互相呼叫，GraphQL 亦不經 REST route。
 
 ## Token Lifecycle
 
@@ -69,7 +69,9 @@ access token 過期先觸發更新，不以 refreshTokenExpiresAt 預先拒絕�
 
 ## Boundary 與後續 Topic
 
-已交付的 `internal final class GitHubGraphQLClient` 只提供 `fetch<Query: GraphQLQuery>` 且限制 SingleResponseFormat，technical outcomes 也維持 internal。raw Apollo executor 只有 internal Apollo-bound 測試 seam；不新增外層 client abstraction。固定 transport 為 Apollo 2.1.2、POST、APQ off、retry 0、network-only 且不寫 cache；合法 partial／errors-only response 保留。caller cancellation 優先於 recovery／mapping，URLError.cancelled 與 provider-stage cancellation 正規化；client 不取消 shared refresh，也不保證 provider await 立即返回。另已交付的 internal GitHubHTTPClient 只接受 api.github.com GET，於取得 token 前驗證目的地，拒絕所有 redirect，其他 status 保持 raw；首次 401 回報完整 snapshot 並重送原 GET 一次。兩者皆不表示 Facade 注入、跨 target consumer contract 或 BC adapter 已交付。
+已交付的 `internal final class GitHubGraphQLClient` 只提供 `fetch<Query: GraphQLQuery>` 且限制 SingleResponseFormat，technical outcomes 也維持 internal。raw Apollo executor 只有 internal Apollo-bound 測試 seam；不新增外層 client abstraction。固定 transport 為 Apollo 2.1.2、POST、APQ off、retry 0、network-only 且不寫 cache；合法 partial／errors-only response 保留。caller cancellation 優先於 recovery／mapping，URLError.cancelled 與 provider-stage cancellation 正規化；client 不取消 shared refresh，也不保證 provider await 立即返回。另已交付的 internal GitHubHTTPClient 符合 internal GitHubRestClient 契約，提供 GET／POST／PUT／PATCH 的組裝與完整 request 雙入口，於取得 token 前驗證 method 與 api.github.com 目的地，拒絕所有 redirect，其他 status 保持 raw；首次 401 回報完整 snapshot 並重送原 request 一次（只替換 Authorization）。兩者皆不表示 Facade 注入、跨 target consumer contract 或 BC adapter 已交付。
+
+`GitHubRestClient: Sendable` 的八個 internal requirements 為 `get/post/put/patch(url:headers:body:)` 與 `executeGet/executePost/executePut/executePatch(_:)`，均 async throws 回 raw `HTTPResponse`。四個 builder 的預設實作組裝對應 method，委派 execution requirement；不提供 default arguments 或其他 overload，`headers` 與可重播的 `Data?` body 必須明傳（GET 亦可帶 body）。完整 request 的 method 不符或 URL 不合法時，在取得 credential 與發送前回 `.invalidRequest`；不暗改 method。首次 401 才要求 recovery，第二次 401 為 `.authenticationRequired`；非 401 原樣回傳，timeout／transport failure 不重送。舊 internal `executeGET` 已改為 `executeGet`，不保留 alias。
 
 GraphQL interceptor 對當次 snapshot 建立 `BearerAuth`，經 public、nonthrowing Headers overload 授權，再將結果設回 `URLRequest` 副本；不直接呼叫 `AuthorizationHeader`，也不轉換為 `HTTPRequest`。`BearerAuth.init(token:)` 以 typed `AuthorizationHeaderError` 拒絕非法 Token，保存已驗證的 immutable 完整 Header value；其既有 Request overload 委派同一 Headers overload，replacement 與 `AuthorizationHeader` 共用單一 internal helper。建立端須補 `try`，`RequestAuthorization.applying` 仍 nonthrowing，diagnostics／reflection redaction 保留。
 
