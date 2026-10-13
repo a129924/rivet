@@ -71,6 +71,10 @@ access token 過期先觸發更新，不以 refreshTokenExpiresAt 預先拒絕�
 
 已交付的 `internal final class GitHubGraphQLClient` 只提供 `fetch<Query: GraphQLQuery>` 且限制 SingleResponseFormat，technical outcomes 也維持 internal。raw Apollo executor 只有 internal Apollo-bound 測試 seam；不新增外層 client abstraction。固定 transport 為 Apollo 2.1.2、POST、APQ off、retry 0、network-only 且不寫 cache；合法 partial／errors-only response 保留。caller cancellation 優先於 recovery／mapping，URLError.cancelled 與 provider-stage cancellation 正規化；client 不取消 shared refresh，也不保證 provider await 立即返回。另已交付的 internal GitHubHTTPClient 只接受 api.github.com GET，於取得 token 前驗證目的地，拒絕所有 redirect，其他 status 保持 raw；首次 401 回報完整 snapshot 並重送原 GET 一次。兩者皆不表示 Facade 注入、跨 target consumer contract 或 BC adapter 已交付。
 
+GraphQL interceptor 對當次 snapshot 建立 `BearerAuth`，經 public、nonthrowing Headers overload 授權，再將結果設回 `URLRequest` 副本；不直接呼叫 `AuthorizationHeader`，也不轉換為 `HTTPRequest`。`BearerAuth.init(token:)` 以 typed `AuthorizationHeaderError` 拒絕非法 Token，保存已驗證的 immutable 完整 Header value；其既有 Request overload 委派同一 Headers overload，replacement 與 `AuthorizationHeader` 共用單一 internal helper。建立端須補 `try`，`RequestAuthorization.applying` 仍 nonthrowing，diagnostics／reflection redaction 保留。
+
+本地驗證失敗映射為不攜帶 Token 的 internal `.invalidAuthorizationToken`；`next`、取消檢查與 HTTP status 分類維持在局部 catch 外。初始非法 Token 不發送、不 recovery；401 recovery 取得非法 replacement 時，停止重送且不再 recovery。既有 snapshot 隔離與 401-only 一次 retry 不變。REST 既有 `BearerAuth` 呼叫僅補 throwing 建立端，讓非法 Token 經既有 boundary 映射 `.executionFailed`；初始非法 Token 不發送或 recovery，非法 replacement 不重送或額外 recovery。此相容修正未新增 REST 能力，也未更改 recovery。
+
 OAuth technical failure 不跨越成 shared BC failure contract；未來由 consuming BC 的 local Infra 映射為該 BC 自己的 failure contract。
 
 初次 OAuth sign-in、authorization code + PKCE、callback、logout／revoke 與 multi-account 必須以獨立 topic 處理。本文件 supersede `github-integration-auth-boundary` 的 PAT-only、REST-only authorizer 方向；該歷史 topic 僅保留 traceability，沒有被改寫或刪除。

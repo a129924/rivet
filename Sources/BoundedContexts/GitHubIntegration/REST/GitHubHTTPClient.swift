@@ -52,10 +52,10 @@ internal final class GitHubHTTPClient: Sendable {
   private func send(
     _ originalRequest: HTTPRequest, using snapshot: TokenSnapshot
   ) async throws -> HTTPResponse {
-    let request = BearerAuth(token: snapshot.accessToken.rawValue)
-      .applying(to: originalRequest)
     return try await atAsyncBoundary {
-      try await httpClient.execute(request)
+      let request = try BearerAuth(token: snapshot.accessToken.rawValue)
+        .applying(to: originalRequest)
+      return try await httpClient.execute(request)
     }
   }
 

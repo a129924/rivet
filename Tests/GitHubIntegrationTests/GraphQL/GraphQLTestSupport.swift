@@ -126,10 +126,15 @@ actor GraphQLTokenFetcher: OAuthTokenFetcher {
   typealias Credential = GitHubOAuthCredentialBundle
   let error: (any Error & Sendable)?
   let gate: GraphQLGate?
+  let replacementToken: String
   private(set) var calls = 0
   private(set) var wasCancelled = false
 
-  init(error: (any Error & Sendable)? = nil, gate: GraphQLGate? = nil) {
+  init(
+    error: (any Error & Sendable)? = nil, gate: GraphQLGate? = nil,
+    replacementToken: String = "replacement"
+  ) {
+    self.replacementToken = replacementToken
     self.error = error
     self.gate = gate
   }
@@ -145,7 +150,7 @@ actor GraphQLTokenFetcher: OAuthTokenFetcher {
       }
       throw .knownTechnicalFailure
     }
-    return graphQLCredential("replacement")
+    return graphQLCredential(replacementToken)
   }
 }
 

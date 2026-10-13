@@ -31,6 +31,41 @@ struct GitHubHTTPClientTests {
   }
 
   @Test
+  func invalidInitialTokenFailsBeforeSendOrRecovery() async throws {
+    let fetcher = GraphQLTokenFetcher()
+    let provider = OAuthTokenProvider(
+      store: GraphQLCredentialStore(credential: graphQLCredential("invalid token")),
+      fetcher: fetcher, now: { graphQLTestDate })
+    let transport = RESTProbeTransport(statuses: [200])
+    let error = await #expect(throws: GitHubHTTPClientError.executionFailed) {
+      try await GitHubHTTPClient(
+        provider: provider, httpClient: HTTPClient(transport: transport)
+      ).executeGET(probeRequest())
+    }
+    #expect(await transport.requests.isEmpty)
+    #expect(await fetcher.calls == 0)
+    if let error {
+      #expect(String(describing: error) == "executionFailed")
+      #expect(Mirror(reflecting: error).children.isEmpty)
+    }
+  }
+
+  @Test
+  func invalidReplacementStopsBeforeRetryOrExtraRecovery() async throws {
+    let fetcher = GraphQLTokenFetcher(replacementToken: "invalid replacement")
+    let provider = OAuthTokenProvider(
+      store: GraphQLCredentialStore(), fetcher: fetcher, now: { graphQLTestDate })
+    let transport = RESTProbeTransport(statuses: [401, 200])
+    await #expect(throws: GitHubHTTPClientError.executionFailed) {
+      try await GitHubHTTPClient(
+        provider: provider, httpClient: HTTPClient(transport: transport)
+      ).executeGET(probeRequest())
+    }
+    #expect(await transport.requests.count == 1)
+    #expect(await fetcher.calls == 1)
+  }
+
+  @Test
   func secondUnauthorizedTerminatesWithoutThirdSend() async throws {
     let fetcher = GraphQLTokenFetcher()
     let provider = OAuthTokenProvider(

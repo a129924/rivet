@@ -39,7 +39,7 @@ struct GitHubHTTPTransportTests {
     let client = GitHubHTTPClient.makeHTTPClient(configuration: configuration)
     let original = HTTPRequest(
       url: try HTTPURL(URL(string: "https://api.github.com/user")!), method: .get)
-    let authenticated = BearerAuth(token: "local-test-token").applying(to: original)
+    let authenticated = try BearerAuth(token: "local-test-token").applying(to: original)
     let response = try await client.execute(authenticated)
     #expect(response.statusCode == 302)
     let requests = RawRedirectURLProtocol.requests

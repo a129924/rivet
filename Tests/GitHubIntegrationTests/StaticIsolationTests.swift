@@ -397,12 +397,18 @@ struct StaticIsolationTests {
         "GraphQL/ApolloGraphQLClient.swift",
         "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
       ]
-      let forbiddenForFile =
-        apolloFiles.contains(path)
-        ? forbiddenImports.subtracting(["Apollo", "ApolloAPI"])
-        : path == "OAuth/GitHubOAuthHTTPTokenFetcher.swift"
-          || path == "REST/GitHubHTTPClient.swift"
-          ? forbiddenImports.subtracting(["RivetHTTPClient"]) : forbiddenImports
+      var forbiddenForFile = forbiddenImports
+      if apolloFiles.contains(path) {
+        forbiddenForFile.subtract(["Apollo", "ApolloAPI"])
+      }
+      let httpClientFiles: Set = [
+        "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
+        "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
+        "REST/GitHubHTTPClient.swift",
+      ]
+      if httpClientFiles.contains(path) {
+        forbiddenForFile.remove("RivetHTTPClient")
+      }
       #expect(imports.isDisjoint(with: forbiddenForFile))
 
       if path == "Stores/KeychainTokenStore.swift" {

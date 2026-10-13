@@ -53,7 +53,7 @@ Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.pre
 
 同一 `RivetHTTPClient` product 提供 public、無狀態的 `AuthorizationHeader`：`bearerValue(token:)` 依 RFC 6750 b64token 字元文法產生 `Bearer <token>`；`applyingBearer(token:to:)` 只使用 `[String: String]`，以 ASCII 大小寫不敏感方式移除 Authorization 變體，再寫入單一 `Authorization`，保留其他 key 拼字與 value，且不修改原始輸入。非法 token 以不帶 token 資訊的 `AuthorizationHeaderError.invalidToken` 同步拋出；不 trim、解碼、檢查到期或持有 credential state。
 
-此元件沒有 transport／OAuth 依賴或外部 side effect；既有 `BearerAuth`、REST／GraphQL consumers 尚未遷移，原有契約不變。[AuthorizationHeader 轉換流程](diagrams/authorization-header/authorization-header-flow.html) 僅描述純資料轉換；作者內容繁體中文，固定 Viewer UI／HTML lang 使用 English fallback。
+此元件沒有 transport／OAuth 依賴或外部 side effect。既有 `BearerAuth` 已接入：`init(token:) throws(AuthorizationHeaderError)` 在建立時驗證並保存 immutable 完整 Header value；此為 source-breaking 變更，建立端須補 `try`。新增 public、nonthrowing `applying(to headers: [String: String]) -> [String: String]`，與 `AuthorizationHeader.applyingBearer` 共用唯一 internal replacement helper。既有 `HTTPRequest` overload 委派 Headers overload 後重建 Request，`RequestAuthorization.applying` 維持 nonthrowing，redaction 保留。GraphQL interceptor 亦以當次 snapshot 建立 `BearerAuth` 並套用 Headers overload，保留自己的 `URLRequest` 副本；REST consumer 已透過 `BearerAuth` 的 `HTTPRequest` overload 接入，非法 Token 經既有 boundary 映射 `.executionFailed`，不發送該 Request 或啟動額外 recovery；既有取消與 401 recovery policy 不變。此接入不表示完整 REST 能力或跨 target consumer contract 已交付。[AuthorizationHeader 轉換流程](diagrams/authorization-header/authorization-header-flow.html) 僅描述純資料轉換；作者內容繁體中文，固定 Viewer UI／HTML lang 使用 English fallback。
 
 ## PR Reader WebView Diff Pipeline
 
