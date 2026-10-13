@@ -1,7 +1,7 @@
 import Foundation
 import RivetHTTPClient
 
-internal final class GitHubHTTPClient: Sendable {
+internal final class GitHubHTTPClient: GitHubRestClient {
   private let provider: OAuthTokenProvider
   private let httpClient: HTTPClient
 
@@ -31,8 +31,26 @@ internal final class GitHubHTTPClient: Sendable {
     self.httpClient = httpClient
   }
 
-  internal func executeGET(_ originalRequest: HTTPRequest) async throws -> HTTPResponse {
-    guard Self.isAllowed(originalRequest) else {
+  internal func executeGet(_ request: HTTPRequest) async throws -> HTTPResponse {
+    try await execute(request, expectedMethod: .get)
+  }
+
+  internal func executePost(_ request: HTTPRequest) async throws -> HTTPResponse {
+    try await execute(request, expectedMethod: .post)
+  }
+
+  internal func executePut(_ request: HTTPRequest) async throws -> HTTPResponse {
+    try await execute(request, expectedMethod: .put)
+  }
+
+  internal func executePatch(_ request: HTTPRequest) async throws -> HTTPResponse {
+    try await execute(request, expectedMethod: .patch)
+  }
+
+  private func execute(
+    _ originalRequest: HTTPRequest, expectedMethod: HTTPMethod
+  ) async throws -> HTTPResponse {
+    guard originalRequest.method == expectedMethod, Self.isAllowed(originalRequest) else {
       throw GitHubHTTPClientError.invalidRequest
     }
     let usedSnapshot = try await atAsyncBoundary { try await provider.snapshot() }
@@ -60,8 +78,7 @@ internal final class GitHubHTTPClient: Sendable {
   }
 
   private static func isAllowed(_ request: HTTPRequest) -> Bool {
-    guard request.method == .get,
-      let parts = URLComponents(url: request.url.value, resolvingAgainstBaseURL: false),
+    guard let parts = URLComponents(url: request.url.value, resolvingAgainstBaseURL: false),
       parts.scheme?.lowercased() == "https",
       parts.host?.lowercased() == "api.github.com",
       parts.user == nil, parts.password == nil,

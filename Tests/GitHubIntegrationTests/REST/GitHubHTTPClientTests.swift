@@ -16,7 +16,7 @@ struct GitHubHTTPClientTests {
     let request = try probeRequest(
       headers: [.accept: "application/json", .authorization: "old", .custom("X-Probe"): "kept"],
       body: Data("original".utf8))
-    let response = try await client.executeGET(request)
+    let response = try await client.executeGet(request)
     #expect(response.statusCode == 200)
     let sent = await transport.requests
     #expect(sent.count == 2)
@@ -40,7 +40,7 @@ struct GitHubHTTPClientTests {
     let error = await #expect(throws: GitHubHTTPClientError.executionFailed) {
       try await GitHubHTTPClient(
         provider: provider, httpClient: HTTPClient(transport: transport)
-      ).executeGET(probeRequest())
+      ).executeGet(probeRequest())
     }
     #expect(await transport.requests.isEmpty)
     #expect(await fetcher.calls == 0)
@@ -59,7 +59,7 @@ struct GitHubHTTPClientTests {
     await #expect(throws: GitHubHTTPClientError.executionFailed) {
       try await GitHubHTTPClient(
         provider: provider, httpClient: HTTPClient(transport: transport)
-      ).executeGET(probeRequest())
+      ).executeGet(probeRequest())
     }
     #expect(await transport.requests.count == 1)
     #expect(await fetcher.calls == 1)
@@ -73,7 +73,7 @@ struct GitHubHTTPClientTests {
     let transport = RESTProbeTransport(statuses: [401, 401, 200])
     let client = GitHubHTTPClient(provider: provider, httpClient: HTTPClient(transport: transport))
     await #expect(throws: GitHubHTTPClientError.authenticationRequired) {
-      try await client.executeGET(probeRequest())
+      try await client.executeGet(probeRequest())
     }
     #expect(await transport.requests.count == 2)
     #expect(await fetcher.calls == 1)
@@ -87,7 +87,7 @@ struct GitHubHTTPClientTests {
     let transport = RESTProbeTransport(statuses: [status])
     let response = try await GitHubHTTPClient(
       provider: provider, httpClient: HTTPClient(transport: transport)
-    ).executeGET(probeRequest())
+    ).executeGet(probeRequest())
     #expect(response.statusCode == status)
     #expect(await transport.requests.count == 1)
     #expect(await fetcher.calls == 0)
@@ -105,7 +105,7 @@ struct GitHubHTTPClientTests {
     let client = GitHubHTTPClient(provider: provider, httpClient: HTTPClient(transport: transport))
     let request = HTTPRequest(url: try HTTPURL(URL(string: address)!), method: .get)
     await #expect(throws: GitHubHTTPClientError.invalidRequest) {
-      try await client.executeGET(request)
+      try await client.executeGet(request)
     }
     #expect(await store.loads == 0)
     #expect(await transport.requests.isEmpty)
@@ -121,7 +121,7 @@ struct GitHubHTTPClientTests {
     await #expect(throws: GitHubHTTPClientError.invalidRequest) {
       try await GitHubHTTPClient(
         provider: provider, httpClient: HTTPClient(transport: transport)
-      ).executeGET(request)
+      ).executeGet(request)
     }
     #expect(await store.loads == 0)
     #expect(await transport.requests.isEmpty)
@@ -135,7 +135,7 @@ struct GitHubHTTPClientTests {
     await #expect(throws: GitHubHTTPClientError.authenticationRequired) {
       try await GitHubHTTPClient(
         provider: missing, httpClient: HTTPClient(transport: missingTransport)
-      ).executeGET(probeRequest())
+      ).executeGet(probeRequest())
     }
     #expect(await missingTransport.requests.isEmpty)
 
@@ -146,7 +146,7 @@ struct GitHubHTTPClientTests {
     await #expect(throws: GitHubHTTPClientError.authenticationRequired) {
       try await GitHubHTTPClient(
         provider: provider, httpClient: HTTPClient(transport: transport)
-      ).executeGET(probeRequest())
+      ).executeGet(probeRequest())
     }
     #expect(await transport.requests.count == 1)
   }
@@ -164,7 +164,7 @@ struct GitHubHTTPClientTests {
       await #expect(throws: GitHubHTTPClientError.credentialLifecycle(stage: stage)) {
         try await GitHubHTTPClient(
           provider: provider, httpClient: HTTPClient(transport: transport)
-        ).executeGET(probeRequest())
+        ).executeGet(probeRequest())
       }
       #expect(await transport.requests.count == (stage == .restore ? 0 : 1))
     }
@@ -180,7 +180,7 @@ struct GitHubHTTPClientTests {
     await #expect(throws: GitHubHTTPClientError.executionFailed) {
       try await GitHubHTTPClient(
         provider: provider, httpClient: HTTPClient(transport: transport)
-      ).executeGET(probeRequest())
+      ).executeGet(probeRequest())
     }
     #expect(await transport.requests.count == 1)
     #expect(await fetcher.calls == 0)
@@ -195,7 +195,7 @@ struct GitHubHTTPClientTests {
     let task = Task {
       try await GitHubHTTPClient(
         provider: provider, httpClient: HTTPClient(transport: transport)
-      ).executeGET(probeRequest())
+      ).executeGet(probeRequest())
     }
     await #expect(throws: CancellationError.self) { try await task.value }
     #expect(await transport.requests.count == 1)
@@ -210,7 +210,7 @@ struct GitHubHTTPClientTests {
       store: GraphQLCredentialStore(), fetcher: fetcher, now: { graphQLTestDate })
     let transport = RESTProbeTransport(statuses: [401, 200])
     let client = GitHubHTTPClient(provider: provider, httpClient: HTTPClient(transport: transport))
-    let task = Task { try await client.executeGET(probeRequest()) }
+    let task = Task { try await client.executeGet(probeRequest()) }
     await gate.waitForArrival()
     task.cancel()
     await gate.open()
@@ -231,7 +231,7 @@ struct GitHubHTTPClientTests {
     let client = GitHubHTTPClient(provider: provider, httpClient: HTTPClient(transport: transport))
     let task = Task {
       await gate.enter()
-      return try await client.executeGET(probeRequest())
+      return try await client.executeGet(probeRequest())
     }
     await gate.waitForArrival()
     task.cancel()
@@ -250,7 +250,7 @@ struct GitHubHTTPClientTests {
       try await GitHubHTTPClient(
         provider: wrappedProvider,
         httpClient: HTTPClient(transport: RESTProbeTransport(statuses: [200]))
-      ).executeGET(probeRequest())
+      ).executeGet(probeRequest())
     }
     let provider = OAuthTokenProvider(
       store: GraphQLCredentialStore(), fetcher: GraphQLTokenFetcher(),
@@ -260,7 +260,7 @@ struct GitHubHTTPClientTests {
     await #expect(throws: CancellationError.self) {
       try await GitHubHTTPClient(
         provider: provider, httpClient: HTTPClient(transport: transport)
-      ).executeGET(probeRequest())
+      ).executeGet(probeRequest())
     }
   }
 }
