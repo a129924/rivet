@@ -366,6 +366,9 @@ struct StaticIsolationTests {
       "GraphQL/ApolloGraphQLClient.swift",
       "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
       "GraphQL/GitHubGraphQLClientError.swift",
+      "GraphQL/GitHubGraphQLServing.swift",
+      "Composition/GitHubClientScope.swift",
+      "Composition/GitHubClientPreparationError.swift",
       "OAuth/GitHubOAuthEndpoints.swift",
       "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift",
@@ -394,6 +397,7 @@ struct StaticIsolationTests {
         "ApolloAPI",
       ]
       let apolloFiles: Set = [
+        "GraphQL/GitHubGraphQLServing.swift",
         "GraphQL/GitHubGraphQLClient.swift",
         "GraphQL/ApolloGraphQLClient.swift",
         "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
@@ -403,6 +407,7 @@ struct StaticIsolationTests {
         forbiddenForFile.subtract(["Apollo", "ApolloAPI"])
       }
       let httpClientFiles: Set = [
+        "Composition/GitHubClientScope.swift",
         "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
         "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
         "REST/GitHubHTTPClient.swift",

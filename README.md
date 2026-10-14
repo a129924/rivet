@@ -19,7 +19,9 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 ## 目前狀態
 
-non-BC `GitHubIntegration` 現提供 internal-only GraphQL Query／Mutation 與 authenticated REST GET／POST／PUT／PATCH 契約；兩個 client 可共用既有 OAuthTokenProvider instance。GraphQL 使用 Apollo 2.1.2 並保留合法 partial response；REST 透過 internal `GitHubRestClient` 的組裝／完整 request 雙入口，以 bare HTTPClient 執行 `api.github.com` 的 HTTPS GET／POST／PUT／PATCH，且拒絕 redirect。兩者僅在 HTTP 401 回報實際 snapshot、最多重送原操作一次，並保留 cancellation。這些 client 不對其他 target 公開；跨 target GraphQL／REST 使用、完整 REST endpoint 能力、各 BC adapters、Keychain credential adapter、初次 OAuth 授權整合與產品登入仍延後。
+`GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
+
+完整 REST endpoint 能力、各 BC adapters、Keychain OAuth credential adapter、初次 OAuth 授權與產品登入仍延後。合法 raw REST 與 Apollo partial／errors-only responses 保持；有限 technical errors 與 cancellation 不形成 shared BC failure contract。
 
 Rivet 目前是可公開的 architecture baseline repository。它保留產品與架構決策、Bounded Context Map，以及 Swift／Node 版本基線；root Swift package 已包含受限的產品實作。
 

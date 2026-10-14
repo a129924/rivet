@@ -2,23 +2,24 @@
 
 本目錄的責任／依賴 canvas 為 [index.html](index.html)；它只表達元件責任與依賴，不表達 runtime sequence。
 
-Canvas 標示 OAuth provider／adapter ports、internal GraphQL Query／Mutation 與 REST GET／POST／PUT／PATCH 雙入口／401-only 一次復原為已交付；跨 target client 使用、完整 REST、Keychain credential adapter 仍延後。長期 composition root 與雙 client 的責任、依賴不變。
+Canvas 標示 public `GitHubRestClient` 四 methods／雙入口與 `GitHubGraphQLServing` Query／Mutation，concrete clients 保持 internal。Caller composition root 建立並保留 provider；`GitHubClientScope.prepare(provider:)` 完成本地 readiness 後交付雙 client。Scope 強持有同一 provider，支援多 request lifetime，非 UoW；產品組裝、完整 REST endpoint、BC adapters、Keychain OAuth 與產品登入仍延後。
 
-Canonical lifecycle 同步標示 internal Query／Mutation 與 REST 四 methods／雙入口的交付狀態；產品登入仍延後，provider restore／refresh／persist 保留技術階段。作者內容採繁體中文；Archify 固定 Viewer UI 與 HTML lang 依 skill fallback 為 English。
+作者內容採繁體中文；Archify 固定 Viewer UI 與 HTML lang 依 skill fallback 為 English。未 preview、publish 或 upload。
 
 ## Canonical Token Lifecycle
 
-本 topic 唯一的 canonical token lifecycle 是：
+本目錄唯一 canonical token lifecycle 為：
 
-- 規格：[token-lifecycle-v11.json](token-lifecycle-v11.json)
-- 已交付圖表：[token-lifecycle-v11.html](token-lifecycle-v11.html)
-- 交付與視覺檢查 receipt：`token-lifecycle-v11.delivery.json` 與 `token-lifecycle-v11.visual-check.json`
+- 規格：[token-lifecycle-v12.json](token-lifecycle-v12.json)
+- 已交付圖表：[token-lifecycle-v12.html](token-lifecycle-v12.html)
+- Delivery receipt：[token-lifecycle-v12.delivery.json](token-lifecycle-v12.delivery.json)
+- 四 desktop 視覺證據：[token-lifecycle-v12.visual-check.json](token-lifecycle-v12.visual-check.json)／[captures](token-lifecycle-v12.visual-check.html)
 
-後續 lifecycle delivery 只可使用 `token-lifecycle-v11.json` 作為輸入。
+後續 lifecycle delivery 使用 v12 規格；v11 保留為 immutable historical evidence，不覆寫。v12 承接 v11 的 expiry-valid snapshot、401-only recovery、一次 retry、輪替未知與 persistence failure terminal policy，新增 caller-owned provider／ready Scope、prepare failure／cancellation 不交付與逐次 fresh snapshot 說明。
 
-v8 showcase validation 通過，但 1440×900 visual-check 有 1px 垂直 overflow；v9 同樣通過 validation，但有 24px overflow。兩者保留為 rejected evidence，不得作為 canonical，也不得覆寫。v10 保留為前一版 immutable historical evidence。v11 showcase 9／9、composition 0 errors／0 warnings；四種桌面尺寸 containment pass，light／dark captures 已人工檢視（visual_review: passed；correction_rounds: 0）。
+v12 showcase 檢查 9／9、composition 0 errors／0 warnings。第一次 desktop check 在 1440×900 有 35px overflow；精簡重複卡片文案後重新 validate／deliver，四尺寸 containment pass。1440×900 與 2048×1320 light／dark 四張實際檢視，節點、標籤與路線無碰撞，最大尺寸未見多餘下方空帶；`visual_review: passed`、`correction_rounds: 1`。自動 receipt 的 `visualReview: pending` 保留原值，不視為人工檢視結論。
 
-delivery receipt 的 `input` 與 `output` 僅作 repository-relative path normalization；其餘工具輸出欄位、specification／artifact SHA-256、bytes 與 validation 保持原值。
+Delivery receipt 僅將 `input`／`output` 正規化為 repository-relative paths；SHA-256、bytes 與 validation 保留工具原值。精確 digest 見 receipt；未手動修改交付 HTML。
 
 ## 保留的歷史 Evidence
 
@@ -37,3 +38,5 @@ delivery receipt 的 `input` 與 `output` 僅作 repository-relative path normal
 `token-lifecycle-v7.*` 保留為上一版已驗證交付的 immutable historical evidence；不得覆寫或刪除。
 
 `token-lifecycle-v10.*` 保留為前一版已驗證交付的 immutable historical evidence；不得覆寫或刪除。v11 更新 REST 四 methods／雙入口與 GraphQL Mutation 的交付文案，不改 lifecycle 或 ownership。
+
+`token-lifecycle-v11.*` 保留為上一版已驗證的 immutable historical evidence；v12 為本次公開 contracts 與 Scope composition 的 canonical 版本。

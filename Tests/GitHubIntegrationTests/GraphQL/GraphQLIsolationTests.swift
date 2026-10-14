@@ -30,7 +30,13 @@ struct GraphQLIsolationTests {
     #expect(client.contains("maximumAuthenticationRecoveries = 1"))
     #expect(client.contains("func fetch<Query: GraphQLQuery>"))
     #expect(executor.contains("internal protocol ApolloGraphQLExecuting: Sendable"))
+    #expect(client.contains("GitHubGraphQLClient: GitHubGraphQLServing"))
     #expect(!client.contains("public "))
+    let serving = try String(
+      contentsOf: directory.appendingPathComponent("GitHubGraphQLServing.swift"), encoding: .utf8)
+    #expect(serving.contains("public protocol GitHubGraphQLServing: Sendable"))
+    #expect(serving.contains("Query.ResponseFormat == SingleResponseFormat"))
+    #expect(serving.contains("Mutation.ResponseFormat == SingleResponseFormat"))
     #expect(!executor.contains("public "))
     #expect(client.contains("func perform<Mutation: GraphQLMutation>"))
     #expect(executor.contains("func perform<Mutation: GraphQLMutation>"))
