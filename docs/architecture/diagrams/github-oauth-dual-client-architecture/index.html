@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>GitHub OAuth 雙 Client 架構</title>
+<title>GitHub OAuth — 雙用戶端架構</title>
 <script>
   // Dark is the style's default — the OS preference deliberately does not
   // override it, since these diagrams are authored and reviewed as dark. A
@@ -152,8 +152,8 @@
 <div id="stage"><canvas id="c"></canvas></div>
 
 <div id="plate">
-  <div class="k">GITHUB OAUTH — 雙用戶端架構</div>
-  <div class="n"><b>組裝</b> → <b>共享權杖生命週期</b> → <b>原工作所有權留在用戶端</b></div>
+  <div class="k">RIVET — GITHUB INTEGRATION</div>
+  <div class="n"><b>Caller 保留 provider</b> → <b>Scope 本地準備</b> → <b>雙 client 各自執行</b></div>
 </div>
 
 <div id="hint">
@@ -306,16 +306,19 @@ const BANDS = [
 ];
 
 const BOXES = [
-  { id: 'facade', plane: 'composition', band: 'band-composition', x: 210, y: 260, w: 1160, h: 70, r: 10,
-    name: '外觀層 — 層級外的應用程式組裝根節點', about: '後續由應用程式組裝根節點建立已交付的 OAuthTokenProvider，並注入用戶端；internal Query／Mutation 與 REST 四 methods 已交付；產品組裝延後。',
-    texts: [['bl', 454, 288, '外觀層 — 層級外的應用程式組裝根節點'], ['bs', 454, 310, '後續組裝 HTTP／轉接器與已交付提供者；用戶端注入仍延後']] },
+  { id: 'facade', plane: 'composition', band: 'band-composition', x: 210, y: 260, w: 530, h: 70, r: 10,
+    name: 'Caller composition root', about: 'Caller 建立並保留唯一共享的 OAuthTokenProvider；prepare 失敗後仍持有原 instance，產品組裝延後。',
+    texts: [['bl', 234, 288, 'Caller composition root'], ['bs', 234, 310, '建立並保留 provider；不自動重建或 reprepare']] },
+  { id: 'scope', plane: 'composition', band: 'band-composition', x: 830, y: 260, w: 540, h: 70, r: 10, dash: true,
+    name: 'GitHubClientScope', about: 'prepare 完成本地 readiness 後交付雙 client；強持有同一 provider，支援多 request，非 UoW。',
+    texts: [['bl', 854, 288, 'GitHubClientScope.prepare(provider:)'], ['bs', 854, 310, '本地 ready 才交付 rest／graphql；非 UoW']] },
 
   { id: 'rest-client', plane: 'clients', band: 'band-clients', x: 230, y: 500, w: 500, h: 88, r: 10, dash: true,
-    name: 'GitHub REST 契約／用戶端', about: '已交付 internal-only GitHubRestClient 八入口（GET／POST／PUT／PATCH）；保有原 HTTPRequest，HTTP 401 後只重送一次，跨 target 使用延後。',
+    name: 'GitHub REST 契約／用戶端', about: '已交付 public GitHubRestClient 八入口（GET／POST／PUT／PATCH）；保有原 HTTPRequest，HTTP 401 後只重送一次；concrete 保持 internal。',
     texts: [['bl', 254, 528, 'GitHub REST 契約／用戶端'], ['bs', 254, 550, 'GET／POST／PUT／PATCH；雙入口'], ['bn', 254, 572, '保有 HTTPRequest；401 復原一次']] },
   { id: 'graphql-client', plane: 'clients', band: 'band-clients', x: 800, y: 500, w: 390, h: 88, r: 10, dash: true,
-    name: 'GitHub GraphQL 用戶端', about: '已交付 internal-only Apollo Query／Mutation foundation，401 時只重送原操作一次；跨 target 使用仍延後。',
-    texts: [['bl', 824, 528, 'GitHub GraphQL 用戶端'], ['bs', 824, 550, '已交付 Query／Mutation + Apollo'], ['bn', 824, 572, '401 復原一次；跨 target 延後']] },
+    name: 'GitHub GraphQL 用戶端', about: 'public GitHubGraphQLServing 提供 Query／Mutation，internal concrete 以 Apollo 執行並最多重送一次。',
+    texts: [['bl', 824, 528, 'GitHub GraphQL 用戶端'], ['bs', 824, 550, '已交付 Query／Mutation + Apollo'], ['bn', 824, 572, 'public serving；concrete internal']] },
 
   { id: 'github-integration', plane: 'integration', band: 'band-integration', x: 230, y: 780, w: 390, h: 92, r: 10, dash: true,
     name: 'GithubIntegration', about: '所有限界上下文之外、已交付轉接器使用介面的 GitHub 專屬共享整合模組；不擁有限界上下文的 Port、DTO 或失敗對應。',
@@ -358,8 +361,9 @@ const BOXES = [
 ];
 
 const EDGES = [
-  { from: 'facade', to: 'rest-client', pts: [[650,334], [480,334], [480,494]], label: { s: 'al', x: 494, y: 410, t: '注入共享提供者' } },
-  { from: 'facade', to: 'graphql-client', pts: [[930,334], [995,334], [995,494]], label: { s: 'al', x: 1009, y: 410, t: '注入共享提供者' } },
+  { from: 'facade', to: 'scope', pts: [[744,295], [824,295]], label: { s: 'al', x: 784, y: 281, t: 'prepare', anchor: 'center' } },
+  { from: 'scope', to: 'rest-client', pts: [[920,334], [920,390], [480,390], [480,494]], label: { s: 'al', x: 494, y: 410, t: '注入同一 provider' } },
+  { from: 'scope', to: 'graphql-client', pts: [[995,334], [995,494]], label: { s: 'al', x: 1009, y: 410, t: '注入共享提供者' } },
   { from: 'rest-client', to: 'provider', pts: [[620,592], [620,750], [820,750], [820,774]], label: { s: 'al', x: 634, y: 742, t: '依賴快照復原' } },
   { from: 'rest-client', to: 'http-client', pts: [[224,544], [200,544], [200,1214], [224,1214]], label: { s: 'al', x: 186, y: 900, t: '使用純 HTTP 執行器', rot: -90, anchor: 'center' } },
   { from: 'graphql-client', to: 'provider', pts: [[995,592], [995,774]], label: { s: 'al', x: 1009, y: 690, t: '依賴快照復原' } },
@@ -387,7 +391,7 @@ const TEXTS = [
   { s: 'bn', x: 160, y: 1644, t: '不變量：OAuthTokenProvider 不持有請求／操作；REST 與 Apollo GraphQL 用戶端不互相呼叫。' },
   { s: 'bn', x: 160, y: 1664, t: '不變量：HTTPClient 不驅動流程；內部 AuthRequester 僅驅動通用 AuthFlow，不承擔 GitHub OAuth 生命週期。' },
   { s: 'bn', x: 160, y: 1684, t: '不變量：403、儲存庫權限與資源可見性不是權杖更新訊號。' },
-  { s: 'bn', x: 160, y: 1704, t: '已交付 OAuth 提供者、internal Query／Mutation／REST 四 methods 一次復原與 HTTP 更新；跨 target、完整 REST、Keychain 延後。' }
+  { s: 'bn', x: 160, y: 1704, t: '已交付 public contracts／ready Scope；完整 REST endpoint、BC adapters、Keychain OAuth 與產品登入延後。' }
 ];
 
 const SWATCHES = [

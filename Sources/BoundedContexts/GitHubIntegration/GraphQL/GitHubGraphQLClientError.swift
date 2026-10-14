@@ -1,5 +1,5 @@
-internal enum GitHubGraphQLClientError: Error, Sendable, Equatable {
-  internal enum CredentialLifecycleStage: Sendable {
+public enum GitHubGraphQLClientError: Error, Sendable, Equatable {
+  public enum CredentialLifecycleStage: Sendable {
     case restore
     case refresh
     case persist

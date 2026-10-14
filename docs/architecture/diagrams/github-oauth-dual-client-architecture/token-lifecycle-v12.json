@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "GitHub Client Scope 準備與雙 Client 復原",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      650
+    ],
+    "views": [
+      {
+        "id": "main",
+        "label": "原工作",
+        "focus": [
+          "scope-query",
+          "scope-snapshot",
+          "scope-dispatch",
+          "scope-response",
+          "scope-complete"
+        ],
+        "note": "Caller 保留同一 provider；prepare 完成 restore、expiry-first refresh、persist 與本地 Bearer 驗證後才交付雙 client。每次 execution 仍取得 fresh snapshot。"
+      },
+      {
+        "id": "recovery",
+        "label": "401 復原",
+        "focus": [
+          "scope-response",
+          "scope-refresh",
+          "scope-retry"
+        ],
+        "note": "client 回報實際使用的 TokenSnapshot；以新版快照重送各自原工作一次。"
+      },
+      {
+        "id": "failure",
+        "label": "失敗分類",
+        "focus": [
+          "scope-refresh",
+          "scope-retryable",
+          "scope-reauth",
+          "scope-unknown",
+          "scope-persist"
+        ],
+        "note": "可信憑證拒絕需重新授權；技術失敗保留階段。取消 caller 不取消共享更新。"
+      }
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "用戶端原工作"
+    },
+    {
+      "id": "recovery",
+      "label": "提供者與一次復原"
+    },
+    {
+      "id": "terminal",
+      "label": "輪替狀態與停止"
+    }
+  ],
+  "states": [
+    {
+      "id": "scope-query",
+      "type": "start",
+      "label": "Scope 本地準備",
+      "sublabel": "既有 provider／Bearer 驗證",
+      "lane": "main",
+      "col": 0,
+      "step": "01"
+    },
+    {
+      "id": "scope-snapshot",
+      "type": "active",
+      "label": "取得有效快照",
+      "sublabel": "逐次取得／過期先更新",
+      "lane": "main",
+      "col": 1,
+      "step": "02"
+    },
+    {
+      "id": "scope-dispatch",
+      "type": "active",
+      "label": "加入 Bearer 送出",
+      "sublabel": "保有原 request／操作",
+      "lane": "main",
+      "col": 2,
+      "step": "03"
+    },
+    {
+      "id": "scope-response",
+      "type": "decision",
+      "label": "是否收到 401？",
+      "sublabel": "403 不觸發更新",
+      "lane": "main",
+      "col": 3,
+      "step": "04"
+    },
+    {
+      "id": "scope-complete",
+      "type": "success",
+      "label": "交付回應",
+      "sublabel": "非 401 原樣交付",
+      "lane": "main",
+      "col": 4,
+      "step": "05"
+    },
+    {
+      "id": "scope-refresh",
+      "type": "active",
+      "label": "取得新版快照",
+      "sublabel": "實際版本／單飛更新",
+      "lane": "recovery",
+      "col": 1
+    },
+    {
+      "id": "scope-retry",
+      "type": "decision",
+      "label": "原工作重送一次",
+      "sublabel": "取消不重送",
+      "lane": "recovery",
+      "col": 2,
+      "width": 108
+    },
+    {
+      "id": "scope-retryable",
+      "type": "failure",
+      "label": "可再次更新",
+      "sublabel": "明確未輪替／過期耗盡",
+      "lane": "recovery",
+      "col": 0,
+      "yOffset": -80
+    },
+    {
+      "id": "scope-reauth",
+      "type": "failure",
+      "label": "需要重新授權",
+      "sublabel": "憑證失效／第二次 401",
+      "lane": "recovery",
+      "col": 0,
+      "yOffset": 70
+    },
+    {
+      "id": "scope-persist",
+      "type": "failure",
+      "label": "落盤失敗停止",
+      "sublabel": "遠端輪替已接受",
+      "lane": "terminal",
+      "col": 2
+    },
+    {
+      "id": "scope-unknown",
+      "type": "failure",
+      "label": "輪替未知停止",
+      "sublabel": "技術失敗；保留儲存",
+      "lane": "terminal",
+      "col": 1
+    },
+    {
+      "id": "scope-cancelled",
+      "type": "failure",
+      "label": "呼叫者取消",
+      "sublabel": "不交付 Scope／不重送",
+      "lane": "terminal",
+      "col": 0
+    }
+  ],
+  "transitions": [
+    {
+      "id": "scope-query-snapshot",
+      "from": "scope-query",
+      "to": "scope-snapshot",
+      "label": "執行原工作",
+      "labelAt": [
+        171,
+        202
+      ]
+    },
+    {
+      "id": "scope-authorize",
+      "from": "scope-snapshot",
+      "to": "scope-dispatch"
+    },
+    {
+      "id": "scope-receive",
+      "from": "scope-dispatch",
+      "to": "scope-response"
+    },
+    {
+      "id": "scope-non-401",
+      "from": "scope-response",
+      "to": "scope-complete",
+      "label": "含 3xx 原樣交付",
+      "labelAt": [
+        633,
+        202
+      ]
+    },
+    {
+      "id": "scope-first-401",
+      "from": "scope-response",
+      "to": "scope-refresh",
+      "label": "只有 401",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "scope-replacement",
+      "from": "scope-refresh",
+      "to": "scope-retry",
+      "variant": "emphasis",
+      "via": [
+        [
+          635,
+          307
+        ],
+        [
+          635,
+          250
+        ],
+        [
+          710,
+          250
+        ]
+      ],
+      "toSide": "top"
+    },
+    {
+      "id": "scope-retry-ok",
+      "from": "scope-retry",
+      "to": "scope-complete",
+      "variant": "emphasis"
+    },
+    {
+      "id": "scope-second-401",
+      "from": "scope-retry",
+      "to": "scope-reauth",
+      "label": "第二次 401",
+      "variant": "security",
+      "via": [
+        [
+          860,
+          307
+        ],
+        [
+          860,
+          560
+        ],
+        [
+          300,
+          560
+        ],
+        [
+          300,
+          377
+        ]
+      ]
+    },
+    {
+      "id": "scope-credential-rejected",
+      "from": "scope-refresh",
+      "to": "scope-reauth",
+      "label": "明確失效",
+      "variant": "security",
+      "labelAt": [
+        440,
+        340
+      ]
+    },
+    {
+      "id": "scope-known-technical",
+      "from": "scope-refresh",
+      "to": "scope-retryable"
+    },
+    {
+      "id": "scope-later-call",
+      "from": "scope-retryable",
+      "to": "scope-refresh",
+      "label": "後續呼叫",
+      "variant": "emphasis",
+      "labelAt": [
+        520,
+        260
+      ]
+    },
+    {
+      "id": "scope-unknown-rotation",
+      "from": "scope-refresh",
+      "to": "scope-unknown",
+      "variant": "security"
+    },
+    {
+      "id": "scope-persist-failed",
+      "from": "scope-refresh",
+      "to": "scope-persist",
+      "variant": "security"
+    },
+    {
+      "id": "scope-recovery-cancel",
+      "from": "scope-refresh",
+      "to": "scope-cancelled",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "本地 ready 與 ownership",
+      "items": [
+        "Caller 保留 provider；prepare 完成 restore／refresh／persist／Bearer，不探測 API。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "取消與失敗邊界",
+      "items": [
+        "取消不交付 Scope；已接受輪替仍保存。Ready 不保證遠端權限，不是 UoW。"
+      ]
+    }
+  ]
+}

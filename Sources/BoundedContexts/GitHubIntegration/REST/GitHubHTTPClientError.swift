@@ -1,5 +1,5 @@
-internal enum GitHubHTTPClientError: Error, Sendable, Equatable {
-  internal enum CredentialLifecycleStage: Sendable {
+public enum GitHubHTTPClientError: Error, Sendable, Equatable {
+  public enum CredentialLifecycleStage: Sendable {
     case restore
     case refresh
     case persist

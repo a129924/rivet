@@ -2,7 +2,7 @@ import Apollo
 import ApolloAPI
 import Foundation
 
-internal final class GitHubGraphQLClient: Sendable {
+internal final class GitHubGraphQLClient: GitHubGraphQLServing {
   private static let maximumAuthenticationRecoveries = 1
   private let provider: OAuthTokenProvider
   private let executor: any ApolloGraphQLExecuting
