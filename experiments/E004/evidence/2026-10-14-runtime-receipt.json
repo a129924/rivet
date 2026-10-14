@@ -1,0 +1,8 @@
+{
+  "executedAt": "2026-10-14T03:40:49.348092+00:00",
+  "exitCode": 0,
+  "scenarios": 6,
+  "fakeCredentials": true,
+  "liveGitHub": false,
+  "command": "<scratch>/debug/oauth-sqlite-probe"
+}
