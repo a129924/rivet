@@ -8,7 +8,10 @@
 - 假設：完整 bundle 可原子保存且跨程序還原；保存失敗不發布新版，並維持既有 provider-local unavailable 契約。
 - Branch：`chore/github-oauth-sqlite-store-feasibility`；以最新可得 dev 基線建立獨立 feature worktree。
 
-`swift-implementation` 交接契約：
+本輪定位為依 feasibility-validation 進行的受限實驗；下列九欄是實驗的交接界線，不代表正式 SDD topic。
+依已核定範圍，不為本輪新增四份正式 topic artifacts；正式 adapter 採用須另開 topic，於實作前建立其 requirements、technical-spec、plan 與 step。
+
+`swift-implementation` 實驗交接契約：
 
 | 欄位 | 本輪界線 |
 |---|---|
@@ -16,9 +19,9 @@
 | In-Scope | GRDB adapter、假憑證／fetcher／clock、六情境、sequence 圖及本地 review 輔助。 |
 | Out-Of-Scope | 真 GitHub／秘密、產品 UI、正式儲存、加密、sandbox、跨程序 refresh 協調。 |
 | ReadOnly | 既有 runtime、ports、tests、package、架構、skills 與可得 graph／diff。 |
-| Written | E004 的 package、source、tests、README、公開 evidence 及 diagrams。 |
+| Written | E004 的 package、source、tests、README、公開 evidence 及 diagrams；本次 PR review 另回寫 docs 的受限證據。 |
 | Deleted | 無既有檔案刪除；只清理本次暫存 DB。 |
-| Modify | 僅本次新增實驗內容；既有 tracked files 保持。 |
+| Modify | 實驗實作限新增 E004 內容；本次 PR review 僅補正文檔定位及 OAuth 架構文件的 E004 證據小節。 |
 | Non-Goal | 不改 public API、root 工具鏈、Keychain 或長期架構；不自動正式採用。 |
 | TestCase | 下列 T01–T06。 |
 
@@ -111,5 +114,6 @@ PR Lens 0.11.0：在 commit 後依實際 base/head diff 於 repository 外 valid
 
 沒有驗證真 GitHub、登入／登出、client 401 retry、sandbox 隔離、加密、斷電 durability 或跨程序 refresh 協調。
 SQLite 路徑名稱不提供秘密保護；舊 bundle 在 fake rotation persistence failure 後雖完整保留，不表示真遠端仍接受它。
+完成後仍成立的受限觀察已回寫 [OAuth 架構文件的 E004 證據小節](../../docs/architecture/github-oauth-dual-client.md#e004-受限-sqlite-儲存與-provider-lifecycle-實證)；這是本次 PR review 的文件補正，不改既定架構或升格為正式 adapter。
 正式秘密儲存、工具鏈最低版本、reconciliation 與正式採用須回原決策流程；本實驗不改長期架構。
-下一步為 Draft PR 的人類 review，再決定是否另開正式 adapter topic。
+下一步為 PR 的人類 review，再決定是否另開正式 adapter topic。

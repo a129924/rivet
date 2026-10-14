@@ -102,3 +102,13 @@ OAuth technical failure 不跨越成 shared BC failure contract；未來由 cons
 此證據只支持本次 App／帳號的 refresh exchange、credential 相容性、身分一致與舊 refresh token 拒絕，不表示產品 `OAuthTokenProvider` 自動刷新、持久化、並行、401 recovery、正式 OAuth adapter 或遠端 revoke 已驗證。App 全域 expiring-token 設定未另行查證；E002 反向 PKCE 與 overall「無法判定」結論保持獨立。E003 的遮蔽 stdout、程序外層時間與單次實驗限制保存在實驗 README；repository 證據未保存 secret、code、token、user ID 或原始回應；browser／OS 留痕不在 runner 控制範圍。本次實證不改變上述 shared lifecycle 與雙 Client 的責任決策。
 
 Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合法 partial／errors-only response、timeout、transport／parse failure 不重送。取消或 transport failure 不保證遠端未執行寫入，也不提供 rollback；不包含產品 operation 或寫入結果 reconciliation。
+
+## E004 受限 SQLite 儲存與 provider lifecycle 實證
+
+[實驗 E004](../../experiments/E004/README.md) 於 2026-10-14 在 arm64 macOS 26.5.2／Apple Swift 6.3.3，以獨立 Swift tools 6.1 package、GRDB 7.11.1、真磁碟 SQLite 與既有 `OAuthTokenProvider` 完成受限驗證。所有憑證、refresh 回應與時鐘皆為模擬輸入；沒有呼叫 GitHub OAuth。這是 feasibility experiment，並非正式 credential adapter 的交付或採用決策。
+
+[Runtime 證據](../../experiments/E004/evidence/2026-10-14-runtime.txt)記錄 T01–T06 全部成功、probe exit 0；[Swift Testing 證據](../../experiments/E004/evidence/2026-10-14-swift-test.txt)記錄六個測試通過。獨立 writer 結束後，fresh reader 逐欄讀回完整 bundle；到期刷新後，新程序可讀回兩個 token 均已輪替的完整 bundle。同一 provider 的本次 12 個重疊需求只 refresh 一次，後續 stale snapshot recovery 沒有額外 refresh。
+
+故障注入先成功執行部分 SQL 改寫並於交易內確認可見，再在 commit 前拋錯；rollback 後新程序仍讀回完整舊 bundle。fake fetcher 接受輪替後若保存失敗，同一 provider 的後續 snapshot／replacement 持續 `.persist`，沒有額外 refresh 或 save。空 store、損毀 DB 與唯讀寫入故障維持不同分類；後兩者分別觀察到 `SQLITE_NOTADB` 與 `SQLITE_READONLY`。
+
+這些觀察支持 GRDB＋SQLite 在上述條件下作為 `OAuthCredentialStore` 的候選後端，並沿用既有 provider 的持久化及失敗契約；不代表正式 adapter、秘密儲存或產品登入已交付。未驗證其他 compiler／OS、所有並行排程、真 GitHub OAuth、client 401 retry、sandbox 隔離、加密、斷電 durability 或跨程序 refresh 協調。SQLite 路徑名稱不提供秘密保護；輪替保存失敗後舊 bundle 完整保留，不表示真遠端仍接受它。正式採用、最低工具鏈與 reconciliation 仍須另行決策，既有 OAuth lifecycle ownership 與正式 adapter deferred 狀態不變。
