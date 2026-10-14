@@ -1,0 +1,35 @@
+[1/1] Compiling plugin Install CLI
+Building for debugging...
+[1/6] Write sources
+[2/6] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling SQLiteProbeCore RuntimeScenarios.swift
+[5/8] Emitting module SQLiteProbeCore
+[6/14] Compiling OAuthSQLiteProbe ProbeMain.swift
+[7/14] Emitting module OAuthSQLiteProbe
+[7/14] Write Objects.LinkFileList
+[9/14] Compiling SQLiteProbeCoreTests SQLiteCredentialStoreTests.swift
+[10/14] Emitting module SQLiteProbeCoreTests
+[10/14] Write Objects.LinkFileList
+[11/14] Linking oauth-sqlite-probe
+[12/14] Linking OAuthSQLiteExperimentPackageTests
+[13/14] Applying oauth-sqlite-probe
+Build complete! (2.09s)
+Test Suite 'All tests' started at 2026-10-14 11:39:27.010.
+Test Suite 'All tests' passed at 2026-10-14 11:39:27.011.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.002) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Test actualPartialSQLWriteRollsBack() started.
+◇ Test expirationRotatesAndPersistsCompleteBundle() started.
+◇ Test overlappingDemandsRefreshOnceAndStaleSnapshotReusesCurrent() started.
+◇ Test acceptedRotationWithSaveFailureStopsProvider() started.
+◇ Test missingCorruptAndReadOnlyStorageStayDistinct() started.
+◇ Test savesAndReloadsAllCredentialFields() started.
+✔ Test savesAndReloadsAllCredentialFields() passed after 0.006 seconds.
+✔ Test overlappingDemandsRefreshOnceAndStaleSnapshotReusesCurrent() passed after 0.006 seconds.
+✔ Test actualPartialSQLWriteRollsBack() passed after 0.006 seconds.
+✔ Test acceptedRotationWithSaveFailureStopsProvider() passed after 0.006 seconds.
+✔ Test expirationRotatesAndPersistsCompleteBundle() passed after 0.006 seconds.
+✔ Test missingCorruptAndReadOnlyStorageStayDistinct() passed after 0.007 seconds.
+✔ Test run with 6 tests in 0 suites passed after 0.007 seconds.

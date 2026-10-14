@@ -1,0 +1,12 @@
+child_seed=A status=passed
+child_verify=A fields=6 refresh_calls=0 status=passed
+child_verify=B fields=6 refresh_calls=0 status=passed
+child_verify=A fields=6 refresh_calls=0 status=passed
+child_verify=A fields=6 refresh_calls=0 status=passed
+T01=passed fields=6 independent_writer_and_reader=true refresh_calls=0
+T02=passed pair_changed=true fields=6 new_process=true refresh_calls=1
+T03=passed demands=12 refresh_calls=1 equal_snapshots=true stale_refresh_calls=0
+T04=passed partial_sql_observed=true rollback_complete_A=true
+T05=passed fake_rotation_accepted=true terminal_persist=true refresh_calls=1 save_calls=2 disk_A=true
+T06=passed empty=missingCredential corrupt=restore readonly=write_failure
+overall=passed live_github=false encryption_tested=false sandbox_tested=false
