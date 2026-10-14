@@ -1,9 +1,9 @@
 # GitHub Client Scope Composition — Step Ledger
 
 - Topic：`github-client-scope-composition`
-- Current phase：獨立 Reviewer 已依人類限定例外 approved；交付進行中
-- Current step：D01
-- Current status：in-progress
+- Current phase：Draft PR 已交付；等待 H01 人類 review
+- Current step：H01
+- Current status：pending
 - Upstream verdict：approved；派遣者傳遞獨立 R01 Reviewer 限定例外後 reassessment，無 required fixes。
 - 最後更新：2026-10-14，Implementer（記錄派遣者提供的獨立 R01 verdict 與實際交付狀態）。
 - 帳本狀態與 checkbox 不等同 approval；不得自行宣稱 gate 通過。
@@ -27,8 +27,8 @@ Caller 保留 provider、public scope readiness、雙 contracts 與限定檔案�
 | I03 | completed | Implementer | 回寫長期文件、責任 canvas、canonical lifecycle v12 與 skill evidence | 長期四文件、責任 canvas 0 errors／warnings；v12 9／9＋四 desktop containment＋七張 captures 已實看 |
 | T01 | completed | Tester | 獨立執行 14 AC 對應驗證、consumer、regression、format、lint、coverage；依 2026-10-14 人類限定例外接受 root 未達 90% | root 264／31、consumer 12／3、format、strict lint 通過；root coverage script exit 1、57.41% 未達 90%，failure evidence 保留；HTTP 85／12、97.81%；詳見 T01 evidence |
 | R01 | completed | Reviewer | 獨立審查實作、測試 evidence、scope drift、secrets 與 long-term docs；依人類限定例外再評估並明示 verdict | 派遣者提供獨立 reassessment approved；全部 source public boundary、取消、ownership、14 AC 與 36-path allowlist 已審；plan:123／step:65 例外記錄真實，無 required fixes |
-| D01 | in-progress | Implementer | 依已明示授權檢查 staged diff、提出 message、topic commit／push／Draft PR | 已確認 feature branch／base／36 paths／Deleted=[] 與 dev clean；待實際 commit／push／Draft PR |
-| H01 | pending | Human | Review Draft PR，決定後續合併或修正 | 尚無；不自動 merge／release |
+| D01 | completed | Implementer | 依已明示授權檢查 staged diff、提出 message、topic commit／push／Draft PR | feature commit `002855b58487575bc4beeb55a6a23deb85806198` 已 push；Draft PR #57，base dev；全部 commit hooks 最終通過；本機 PRLens validate／render 通過 |
+| H01 | pending | Human | Review Draft PR，決定後續合併或修正 | [Draft PR #57](https://github.com/a129924/rivet/pull/57)；等待人類 review，不自動 merge／release |
 
 ## P02 檢查輸入
 
@@ -155,3 +155,14 @@ S=`GitHubClientScopeTests`，F=normal-import `ClientContractTests`。以下 test
 派遣者明示獨立 Reviewer reassessment `approved`，無 required fixes。Reviewer 已審全部 source public boundary、取消、ownership、AC01–AC14、36-path allowlist 與長期文件；唯一 coverage human-check 已由人類 topic 限定例外解除。這是上游獨立 verdict 的轉錄，不是 Implementer 自審。上文 reassessment pending 敘述均為當時歷史狀態。
 
 D01 已核對 local／remote dev base 相同、指定 feature branch 未有遠端同名分支或既有 PR、dev worktree clean。36 changed paths 全符合精確 allowlist，無刪除。依人類已授權 topic commit／push／Draft PR 繼續；root coverage exit 1 與 57.41% failure evidence 保留，H01 仍 pending。
+
+
+## D01 實際交付 Evidence（2026-10-14）
+
+- Feature commit：`002855b58487575bc4beeb55a6a23deb85806198`，`feat(github-integration): 公開雙 client 契約與共用 provider 的 ready scope`；36 allowed paths，Deleted=[]。已 push `origin/feat/github-client-scope-composition`，未 force。
+- [Draft PR #57](https://github.com/a129924/rivet/pull/57) 已建立並實際核對 `isDraft=true`、base=`dev`、head=`feat/github-client-scope-composition`，當次 head OID 與 feature commit 相同；本 ledger audit 後再核對最終 head。
+- Commit hooks：whitespace、EOF、Swift format、normal-import consumer、SwiftLint、renderer 最終全部通過。首次 renderer 因本地缺少 `biome` exit 127；僅依既有 frozen lockfile 安裝 untracked dependencies 後重跑成功，無工具版本／tracked dependency／config／hook 修改。
+- PRLens 0.11.0：對實際 `git diff --find-renames <base>...<head>` 建立外部 topic tmp 本機 component change view；3 lanes／9 nodes／10 edges、4 walkthrough steps，unchanged provider／generic HTTP／Apollo neighbors 與 source file refs 已保留。首次 graph validate exit 0、light render exit 0；manifest 實際檢查為 1 SVG、1301×428、15494 bytes，head 綁定上述 feature commit。Audit commit 後以最終 PR head 重建並再 validate／render；輸出不進 repo、不上傳或附 PR。
+- Graphify 無現成 graph，採 targeted rg／source fallback；未 build／extract／refresh／stamp／install／hooks。
+- Root coverage script exit 1、57.41% <90% 仍為已接受的 topic 限定例外，未改全域門檻；未量測 exact base checkout coverage。獨立 R01 approved 無 required fixes。
+- H01 pending：保留 feature worktree 供人類 review；dev branch／base／clean 狀態維持。不 merge、release、刪除 worktree 或 publish artifact.cafe。
