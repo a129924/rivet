@@ -1,0 +1,47 @@
+{
+  "recordedUTC": "2026-10-15T08:21:10.182430+00:00",
+  "immutableTesterResultSHA256": "161e8541a0b25a817e83c850369af011a109e1172ea426c7d49db09db4667c12",
+  "referenceMeaning": "control/* in the existing immutable Tester result denotes external original control files; entries below map those aliases to byte-identical repository snapshots. No original receipt was changed.",
+  "entries": {
+    "control/gate-1.json": {
+      "repositoryPath": "experiments/E005/evidence/ux-human-only-20261015T080306Z/control/gate-1.json",
+      "sha256": "7b2756e6ab883879b75ccc94ffc57c6cce0bbc908c53d1b339340eec8286d51b",
+      "copiedByteForByte": true
+    },
+    "control/gate-2.json": {
+      "repositoryPath": "experiments/E005/evidence/ux-human-only-20261015T080306Z/control/gate-2.json",
+      "sha256": "ced22fb7f8253a5ec15f79bdb473855f1982598938bef4bd5d025b4300a414fb",
+      "copiedByteForByte": true
+    },
+    "control/gate-3.json": {
+      "repositoryPath": "experiments/E005/evidence/ux-human-only-20261015T080306Z/control/gate-3.json",
+      "sha256": "f8b8faa0b997b545ca121eb5fafb6af330c335dcda822b560dc3d5d9f46dfbf8",
+      "copiedByteForByte": true
+    },
+    "control/gate-4.json": {
+      "repositoryPath": "experiments/E005/evidence/ux-human-only-20261015T080306Z/control/gate-4.json",
+      "sha256": "ca8bbbe0d473cef7268bbfdc5963cf88a3993d3b5b6eddbf6ded0b621b315807",
+      "copiedByteForByte": true
+    },
+    "control/notice-1.json": {
+      "repositoryPath": "experiments/E005/evidence/ux-human-only-20261015T080306Z/control/notice-1.json",
+      "sha256": "90ed6150438cf5f4a2f620c217cdcef153c44c9a68cbb289321f0903221b9bda",
+      "copiedByteForByte": true
+    },
+    "control/notice-2.json": {
+      "repositoryPath": "experiments/E005/evidence/ux-human-only-20261015T080306Z/control/notice-2.json",
+      "sha256": "0fcf14e559a7938cb6e4ff2c9d0d0281a83a06e564d20fa0e656a1e9b4e00817",
+      "copiedByteForByte": true
+    },
+    "control/notice-3.json": {
+      "repositoryPath": "experiments/E005/evidence/ux-human-only-20261015T080306Z/control/notice-3.json",
+      "sha256": "3025f74301b9302c10fef79994a4bdf17984860fa97e95867960b251886cc001",
+      "copiedByteForByte": true
+    },
+    "control/notice-4.json": {
+      "repositoryPath": "experiments/E005/evidence/ux-human-only-20261015T080306Z/control/notice-4.json",
+      "sha256": "cc9e7a448225b26e4522ca73811f619f3000be16fa17e9c2c430d7737bbd0089",
+      "copiedByteForByte": true
+    }
+  }
+}

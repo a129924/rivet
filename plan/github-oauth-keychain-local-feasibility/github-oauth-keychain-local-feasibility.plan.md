@@ -216,3 +216,34 @@ Human 明確授權以同一主要問題補新一輪 UX 證據；沿用 E005，�
 沿 E005 同條件補 UX 缺口，無需新 experiment 編號。允許新增 `experiments/E005/scripts/ux_stages.py` 小型 protocol helper（immutable phase machine／Human SHA、external notices／gates），以及 `experiments/E005/Tests/test_ux_stages.py` 必要 synthetic 測試；既有 `run_self_signed_probe.py` 僅加 `--segmented-ux`、`--ux-control-dir`／`--ux-evidence-dir` 明確 opt-in 及 freshness／前提 early guards，另存舊 runner 的完整 SHA-256／source snapshot。允許獨立 stage receipts／Human sidecars 與八段 README 更新；不改 Swift host、TrustProbe、build 或 production。phase scratch／秘密在 repository 外隔離，repo evidence 僅非秘密相對位置及 bool／count，不輸出個人 path／secret。既有工具 scratch 維持本機，不為本輪重跑無關工具或擴範圍。
 
 synthetic 必須驗證錯 namespace／phase／receipt SHA、缺 Human 觀察與未 ready 都阻擋下一測量段，且 deadline／abort／受控 signal 不阻塞 cleanup；只代表控制流程，不冒充真 Keychain／Human prompt 證據。四狀態／驗證任務完成／cleanup／recovery 分開。四檔修訂交獨立 Plan-Reviewer，不自行 approve；本輪尚未實作或執行，不預報成功。
+
+
+## 最新有效窄授權：Human-only 逐段真人觀察
+
+Human 已明確授權：「允許改為完全由我逐段真人觀察，免除桌面工具連線前提。其餘範圍、逐段停點與判準不變；每段等我回報觀察後再繼續，請開始。」本節僅解除本輪 CUA／桌面工具連線前提，絕不降低真人觀察、完整回報或 UX 判準；native 模式預設行為維持。
+
+### 時間、目前 ready 與證據隔離
+
+依 Human 08:03:06 UTC 的重新開始授權，新窗為 2026-10-15 08:03:06–08:33:06 UTC；08:28:06 UTC 停新增測量，最後五分鐘優先 cleanup／closure，不自動延長。本節時間及 human-only 連線豁免優先於所有前版時窗／CUA prerequisite 敘述，舊契約與 receipts 保留為歷史。
+
+Human 當前「請開始」可作本輪 Stage 0 setup 的明確 ready；不能沿用於 Phase 1–4。各後續段仍須前段完整 Human 觀察已記錄，再取得該段 fresh Human ready，逐次停止／等待回報後才繼續。依主工作 session 交接，目前尚無本輪真 UX run／實驗 mutation，不預填結果。
+
+沿用 E005，新增 prefix `ux-human-only-20261015T080306Z` 的不可覆寫準備／stage／Human 證據，不覆前輪 preflight-false 或其他歷史紀錄。改程式前保存舊 runner／helper 的完整 SHA-256 及 source snapshots；本輪準備收據綁定改後新 source hashes，交獨立 Reviewer 核對。
+
+### 明確 opt-in 與 mode gate
+
+新增 `--human-only-observation` 明確 opt-in，必須同時有 `--segmented-ux`；缺 guard 在 Security 初始化／任何實驗副作用前失敗。既有 trust、diagnose、cert、UTC deadline、ownership 等 guards 維持。`UXStages` 預設 native 模式不變；只有顯式 human-only 模式可跳過 desktop connection gate。
+
+human-only 模式的正常段 gate 必須要求 `observationMode='human-only'`，且 machine／Human receipt 皆明列相同 mode；不得以 desktopConnected=true 冒充連線。desktopConnected 依實際情況保留 false／null，不能偽填或作 Human 觀察完整性的替代。namespace、phase、前段 immutable receipt SHA-256、完整 Human count／purpose／action 與全程觀察、fresh Human ready 的 gate 全保留；錯 mode／不一致／缺 Human 觀察不得進下一測量段，不能預填零提示。
+
+Stage 0 setup 與 Phase 1 first write A＋read A、Phase 2 同 first fresh reader、Phase 3 不同 hash／同 DR second reader、Phase 4 cleanup 的順序與逐段停點維持。setup 授權獨立於首次憑證存取，trust add／remove authentication 仍由 Human 自行操作。Phase 1 首次最多一次提示、Phase 2／3 各零才支持成功；缺完整觀察／unknown 仍無法判定，不 rerun、不改判準。
+
+### 退出、安全與最小變更
+
+正常 cleanup 前仍須該段 Human ready；異常／abort／deadline／受控 signal 直接清楚 announce cleanup，不得被等 Human、phase gate 或桌面連線阻塞。異常 cleanup prompt 未完整觀察即 unknown。trust／user search-list cleanup ownership、exact own cert／Keychain、foreign entries／order、default 保護、殘留 recovery 全維持。
+
+仍只假六欄、同 legacy、新 own self-signed cert、user codeSign trust、temporary user search-list 的既有授權；禁止 production、既有 ACL／partition-list、付費、admin／system／SSL／broad trust。不得新增安全操作、B／negative／refresh 或其他實驗變體。
+
+只做必要 human-only mode-gate／early guards 測試及 source-hash Reviewer 核對，不重跑十五項無關 suite、不加圖或 baseline。以上為窄修規劃當時內容；其後已獲獨立 Plan-Reviewer、Tester／Reviewer 準備 approved，唯一真人輪結果見 E005 最新分段紀錄，不以準備 approval 當 UX 成功。
+
+最新 Human-only 唯一輪已逐段完成：setup 1次設定指紋；首次保存／存取0次、同binary fresh reader0次、不同hash／同DR rebuilt reader1次憑證提示（密碼＋允許）；cleanup1次撤trust設定指紋另記。每段六欄資料一致、前觀察SHA＋freshready後才前進，全部隔離資料／trust／search-list／秘密清理完整。依事前判準此候選 UX 失敗、資料機制成功，不再是階段無法辨識；本次選「允許」，不混作前輪「永遠允許」或外推其他選項。不重跑、不推論所有免費路徑失敗／必須付費，正式採用不核准。結果與任務完成判斷交獨立 Tester／Reviewer。

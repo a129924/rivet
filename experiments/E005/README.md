@@ -1,6 +1,6 @@
 # E005：Keychain 本機完整 OAuth 憑證保存
 
-前八段主文記錄初輪 ad-hoc baseline；後續授權、簽章診斷與補測依時間追加於末段。最新同身分重建資料機制已成立；Human 觀察到兩次授權但無法區分階段，UX 仍無法判定，詳見末節。
+前八段主文記錄初輪 ad-hoc baseline；後續授權、簽章診斷與補測依時間追加於末段。前輪同身分重建資料機制已成立但 UX 曾無法判定；最新 human-only 分段輪已確認重建版一次憑證提示，此候選 UX 失敗，詳見末節。
 
 ## 驗證什麼
 - 設計日期：2026-10-15；實驗編號 E005，由 Implementer 重查占用後建立，未覆寫 E001–E004。執行日期：2026-10-15，獨立 Tester。
@@ -215,3 +215,31 @@ python3 -B experiments/E005/scripts/run_self_signed_probe.py --pem-import --diag
 尚未取得本輪 Human setup-ready，未啟動新真實 run、零 Keychain／trust／search-list mutation，無本輪實驗秘密或 OAuth 項目需清理。已請 Human 恢復既有桌面連線，既定時窗不延長。實驗狀態 **未執行**；UX／主假設仍 **無法判定**；本輪真人驗證任務完成：**否**。前文「紀錄任務完成」只屬前輪已結束的資料機制實證，不能由本輪準備成果交付推成真人驗證完成。若窗內連線恢復，另存新的連線事件收據，先取得 setup-ready 才啟動唯一 run；不覆寫這份失敗 preflight。
 
 Human 回覆「已恢復連線，請再檢查」後，原生 inventory 與重新初始化後的安全 inventory 仍回相同 native pipe 錯誤，見新獨立 [重試收據](evidence/ux-segmented-desktop-retry.json)；初次收據不覆寫。仍未真人 run、零實驗 mutation，未將 Human 的連線回報當成工具連線成功證據。
+
+
+### Human-only 明確授權的新一輪
+
+Human 在 ChatGPT App 要求重新開始，並明確允許完全由本人逐段真人觀察、免除桌面連線前提，其餘範圍、停點、判準不變。新窗 08:03:06–08:33:06 UTC，08:28:06 停新測量；舊桌面失敗 receipts 保留。`--human-only-observation` 必須同時 segmented 明確 opt-in；各 machine／Human receipt 如實標 `human-only`、desktop connection 不要求、不偽填成功。完整前段觀察、fresh Human ready、phase／namespace／實際 receipt SHA gates 均保留。
+
+窄修經獨立 Plan-Reviewer、Tester（8 focused UX tests與instrumented earlyguard）及 Reviewer approved，舊runner／helper另存原SHA snapshots，finally與安全操作不變。[新準備收據](evidence/ux-human-only-preparation-check.json) 明標 synthetic，不能當真UX。Stage0當前「請開始」已ready，唯一真run只先setup／兩版預檢，完成即停；phase1-4尚待各段Human觀察與freshready，不預報成功。
+
+
+### Human-only 唯一真人輪：逐段觀察結果
+
+[整輪 machine receipt](evidence/ux-human-only-run-20261015T080306Z.json) 的實際起訖為 08:11:20.612622–08:16:17.709974 UTC；所有測量與清理在本次新窗內完成，沒有重跑。這一輪按 Human 明確授權免除桌面工具前提，所有提示數都來自 Human，機器不推論提示；各段 machine／Human receipts 位於 [分段證據](evidence/ux-human-only-20261015T080306Z/)，人工紀錄各自綁定本段 machine SHA-256。
+
+| 段落 | 實際 UTC 時窗 | 資料／身分證據 | Human 全程觀察 |
+| --- | --- | --- | --- |
+| Stage 0 setup | 08:11:20.612622–08:11:32.130427 | 兩版 cert-backed 簽章有效、hash 不同／DR 相等、無 profile；限定 trust／own search-list append 核對通過，零 OAuth 寫入。 | 1 次設定／簽章授權，以指紋完成。 |
+| Phase 1 首次保存／存取 | 08:12:24.932810–08:12:25.595112 | first binary `2b75dc47…961b7a65` 保存 A／讀 A，六欄全 true。 | 0 次提示。 |
+| Phase 2 fresh-process | 08:13:47.882128–08:13:47.913841 | 相同 first hash 的新 reader，六欄全 true。 | 0 次提示。 |
+| Phase 3 真重建版讀取 | 08:14:33.343298–08:14:46.673137 | second binary `70d771b4…a04a5c6`，hash 不同、DR 相同，六欄全 true。 | 1 次憑證存取提示；Human 回報「2 -> 1 次 只能輸入密碼 我選允許」。 |
+| Phase 4 cleanup | 08:16:11.718513–08:16:17.709997 | OAuth item absence、exact-cert trust absence、own search-list membership absence、原有序清單／default 恢復、專用 Keychain／秘密不存在，全部 true。 | 1 次撤回信任的設定授權，以指紋完成；與 Phase 3 分開。 |
+
+每段在收到上一段完整觀察與本段新 ready 後才開 gate。全部正常操作6次（writeA、3個readA、delete、readAbsent），不重跑 B／negative／refresh；first writer／first fresh reader／second rebuilt reader 的實際 hash 均保存。cleanup complete、無 recoveryRequired，設定清理完整。
+
+按寫入前固定判準，首次 0≤1、fresh 0 符合，重建提示 1>0 不符合：**此候選 UX 失敗，資料機制成功**。這次觀察已補足前輪提示階段未知的缺口；不把本次「允許」混作前輪「永遠允許」，不推論選其他選項或下一次重建的行為。機器 immutable receipt 保留 experimentStatus unknown／prompt null，這只是機器不判讀 Human 的表示；本輪受限判讀以獨立結果收據與人工證據為準。
+
+本輪驗證任務完成：是；獨立 Tester／Reviewer 已對逐段 SHA、ready 順序、條件、清理及分類正式 approved；此不支持正式採用、不等於所有免費 Keychain 路徑不可行，也不推論付費必要。DPK、其他 macOS、長期 retained identity 與真 denial 仍不在本輪驗證範圍。
+
+[獨立結果判讀](evidence/ux-human-only-result-20261015T080306Z.json) 保存候選 UX 失敗／機制成功／任務完成；[控制索引](evidence/ux-human-only-20261015T080306Z/control-index.json) 將舊結果內 `control/*` 外部原始參照映射至本輪 evidence/control 的 byte-identical gate／notice snapshots，綁SHA，不修改 immutable result。Reviewer closure approved，核可指定 docs 有條件回寫及交付；不新增測量、不核准採用。

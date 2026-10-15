@@ -1,0 +1,432 @@
+{
+  "startedUTC": "2026-10-15T08:11:20.612622+00:00",
+  "backend": "legacy",
+  "signing": "isolated self-signed certificate",
+  "paidQualificationRequired": false,
+  "measurementRequested": true,
+  "importFormat": "PEM",
+  "diagnosticRequested": true,
+  "signingSelector": "certificate-sha1",
+  "limitedTrustRequested": true,
+  "humanReadyForMeasurement": true,
+  "primaryNamespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+  "negativeNamespace": "595662c7-ee4f-45c0-adfe-5433cc90ce02",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": true,
+  "promptObservation": "unobserved; separate human receipt required",
+  "commands": [
+    {
+      "mode": "write-a",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:12:24.932839+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "operation": "write-a",
+          "saved": true
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:12:25.554833+00:00"
+    },
+    {
+      "mode": "read-a",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:12:25.554905+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:12:25.595053+00:00"
+    },
+    {
+      "mode": "read-a",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:13:47.882177+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:13:47.913801+00:00"
+    },
+    {
+      "mode": "read-a",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:14:33.343333+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "70d771b4a7944998697a93acd886f3e35c24d2d905ec7971f74db2644a04a5c6",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:14:46.672951+00:00"
+    },
+    {
+      "mode": "delete",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:16:11.722318+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "deleted": true,
+          "operation": "delete"
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:16:12.020778+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:16:12.020818+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:16:12.124629+00:00"
+    }
+  ],
+  "cleanup": [
+    {
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    }
+  ],
+  "setupCommands": [
+    {
+      "stage": "generateCertificate",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "encodePrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importCertificate",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importPrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "buildTrustHelper",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "encodeCertificateDER",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "signFirst",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "signRebuilt",
+      "exitCode": 0,
+      "stderrPresent": true
+    }
+  ],
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "7138dbcc700732e356f7ba372da285fe6f0b8f3d9e7ecca13cba67d80309ee4e",
+    "ux_stages.py": "b07ccee8fc3545f4f3146c3e3afe1176ebbe8a95889ce62eb93882ebf03031c3"
+  },
+  "uxCriteriaBeforeWrite": {
+    "initialMaximumPrompts": 1,
+    "freshProcessMaximumPrompts": 0,
+    "rebuiltMaximumPrompts": 0,
+    "incompleteObservation": "無法判定"
+  },
+  "observationMode": "human-only",
+  "desktopConnectionRequired": false,
+  "keychainCreateStatus": 0,
+  "settingsAfterCreate": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "temporaryUserSearchList": {
+    "requested": true,
+    "mutationAttempted": true,
+    "atomicCompareAndSwapAvailable": false,
+    "baselineUnchangedBeforeAdd": true,
+    "ownAbsentBeforeAdd": true,
+    "baselineCount": 1,
+    "appendReadbackVerified": true,
+    "afterAppendCount": 2,
+    "cleanupMutationAttempted": true,
+    "foreignSequenceMatchedBaselineBeforeRemove": true,
+    "ownMembershipAbsent": true,
+    "foreignSequencePreserved": true,
+    "baselineRestored": true,
+    "defaultUnchanged": true,
+    "cleanupComplete": true
+  },
+  "trustHelperSourceSHA256": "b126204190a3bab691dd908f28d3cda1b783217ddcbafca78df8defc0ca568ea",
+  "trustCommands": [
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T08:11:23.981727+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        }
+      },
+      "finishedUTC": "2026-10-15T08:11:24.488687+00:00"
+    },
+    {
+      "operation": "add-code-signing",
+      "startedUTC": "2026-10-15T08:11:24.488732+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "mutationAttempted": true,
+        "policy": "codeSign",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T08:11:29.263788+00:00"
+    },
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T08:11:29.263854+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": false,
+          "codeSigningOnly": true,
+          "constraintShape": [
+            {
+              "keyKinds": [
+                "policy",
+                "policyName",
+                "result"
+              ],
+              "policyNameIsCanonicalCodeSigning": true,
+              "policyObjectIsSecPolicy": true,
+              "policyOIDIsCodeSigning": true,
+              "resultIsTrustRoot": true
+            }
+          ],
+          "entryCount": 1,
+          "status": 0
+        }
+      },
+      "finishedUTC": "2026-10-15T08:11:29.290394+00:00"
+    },
+    {
+      "operation": "remove-user",
+      "startedUTC": "2026-10-15T08:16:12.124734+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "operation": "remove-exact-certificate",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T08:16:17.552627+00:00"
+    },
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T08:16:17.554897+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        }
+      },
+      "finishedUTC": "2026-10-15T08:16:17.614152+00:00"
+    }
+  ],
+  "trustBaselineAbsent": true,
+  "limitedTrustReadbackVerified": true,
+  "isolatedIdentityDiagnostic": {
+    "exitCode": 0,
+    "counts": {
+      "matching": 1,
+      "valid": 1
+    },
+    "knownDiagnostics": [],
+    "explicitPrivateKeychainOnly": true
+  },
+  "selectedCertificateMatchedIsolatedIdentity": true,
+  "hostFirst": {
+    "binarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+    "signatureValid": true,
+    "adHoc": false,
+    "teamIdentifierPresent": false,
+    "profilePresent": false,
+    "requirementAvailable": true,
+    "entitlementsReadSucceeded": true
+  },
+  "hostSecond": {
+    "binarySHA256": "70d771b4a7944998697a93acd886f3e35c24d2d905ec7971f74db2644a04a5c6",
+    "signatureValid": true,
+    "adHoc": false,
+    "teamIdentifierPresent": false,
+    "profilePresent": false,
+    "requirementAvailable": true,
+    "entitlementsReadSucceeded": true
+  },
+  "rebuildComparison": {
+    "binaryChanged": true,
+    "designatedRequirementEqual": true,
+    "signaturesValid": true,
+    "certificateBacked": true,
+    "entitlementsEqual": true,
+    "bundleIdentifierEqual": true,
+    "profileAbsent": true,
+    "hostPathEqual": true
+  },
+  "signingPreflightComplete": true,
+  "humanReadyAcceptedUTC": "2026-10-15T08:12:24.928422+00:00",
+  "UXInitialData": "成功",
+  "UXFreshData": "成功",
+  "UXRebuiltData": "成功",
+  "trustRemovalVerifiedAbsent": true,
+  "trustCleanupComplete": true,
+  "searchListCleanupComplete": true,
+  "keychainDeleteStatus": 0,
+  "privateKeychainAbsent": true,
+  "settingsAfterCleanup": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "secretScratchAbsent": true,
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T08:16:17.709974+00:00",
+  "limitations": [
+    "human prompt receipt required for UX; historical zero prompts do not cover this host",
+    "DPK free profile not verified",
+    "true denial not observed",
+    "SIGKILL, process crash and host failure cannot guarantee cleanup",
+    "self-signed identity deleted after this trial; future builds need a retained stable identity",
+    "search-list read/write has no atomic CAS; before/after checks cannot exclude concurrent races"
+  ],
+  "uxStageReceipts": {
+    "0": {
+      "file": "phase-0.machine.json",
+      "sha256": "84948fa66022fbd4c2894d774b663cdee79769a46125188b4160d04e4b3329a7"
+    },
+    "1": {
+      "file": "phase-1.machine.json",
+      "sha256": "798aacdc1e764d837c50c0ff03d1783ba29dd8c2794d84925885b1cb2d8edc12"
+    },
+    "2": {
+      "file": "phase-2.machine.json",
+      "sha256": "75056866c60e2628036914d6b8f04e1dec0ab2d95051873f4710a0553219da2f"
+    },
+    "3": {
+      "file": "phase-3.machine.json",
+      "sha256": "c514790335fecc80cee59ba8ff68548aff83808e9518cb215c6db85acccfb68c"
+    },
+    "4": {
+      "file": "phase-4.machine.json",
+      "sha256": "d6198b053d14e3dc105ac5451569a96642aebf68f5b539330021feeac95faed8"
+    }
+  }
+}

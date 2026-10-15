@@ -107,7 +107,10 @@ def main():
     parser.add_argument('--segmented-ux', action='store_true')
     parser.add_argument('--ux-control-dir', type=Path)
     parser.add_argument('--ux-evidence-dir', type=Path)
+    parser.add_argument('--human-only-observation', action='store_true')
     args = parser.parse_args()
+    if args.human_only_observation and not args.segmented_ux:
+        parser.error('human-only observation requires explicit segmented UX mode')
     if args.segmented_ux:
         if not (args.measure and args.temporary_user_search_list and args.ux_control_dir and args.ux_evidence_dir):
             parser.error('segmented UX requires measured limited-trust search-list path and two fresh directories')
@@ -295,10 +298,12 @@ def main():
 
     try:
         if args.segmented_ux:
-            ux = UXStages(primary, args.ux_evidence_dir, args.ux_control_dir, measurement_deadline)
+            ux = UXStages(primary, args.ux_evidence_dir, args.ux_control_dir, measurement_deadline, human_only=args.human_only_observation)
             report['sourceSHA256']['ux_stages.py'] = hashlib.sha256((Path(__file__).parent / 'ux_stages.py').read_bytes()).hexdigest()
             report['uxCriteriaBeforeWrite'] = {'initialMaximumPrompts': 1, 'freshProcessMaximumPrompts': 0,
                                               'rebuiltMaximumPrompts': 0, 'incompleteObservation': '無法判定'}
+        report['observationMode'] = 'human-only' if args.human_only_observation else 'native-desktop'
+        report['desktopConnectionRequired'] = not args.human_only_observation
         snapshots = settings()
         password = secrets.token_bytes(32).hex().encode()
         status = security.SecKeychainCreate(os.fsencode(keychain_path), len(password), password,

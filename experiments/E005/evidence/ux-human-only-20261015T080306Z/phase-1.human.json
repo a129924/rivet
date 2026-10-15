@@ -1,0 +1,18 @@
+{
+  "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+  "phase": 1,
+  "observationMode": "human-only",
+  "machineReceipt": "phase-1.machine.json",
+  "machineReceiptSHA256": "798aacdc1e764d837c50c0ff03d1783ba29dd8c2794d84925885b1cb2d8edc12",
+  "observedWholeStage": true,
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "actions": [],
+  "humanStatement": "全程，0 次提示",
+  "observationWindowUTC": {
+    "startedUTC": "2026-10-15T08:12:24.932810+00:00",
+    "finishedUTC": "2026-10-15T08:12:25.595112+00:00"
+  },
+  "recordedUTC": "2026-10-15T08:13:47.684492+00:00"
+}

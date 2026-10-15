@@ -16,7 +16,9 @@ def exclusive_json(path, value):
 
 
 class UXStages:
-    def __init__(self, namespace, evidence, control, deadline):
+    def __init__(self, namespace, evidence, control, deadline, human_only=False):
+        self.human_only = human_only
+        self.observation_mode = "human-only" if human_only else "native-desktop"
         self.namespace = namespace
         self.evidence, self.control = Path(evidence), Path(control)
         self.deadline = deadline
@@ -26,6 +28,7 @@ class UXStages:
 
     def complete(self, phase, payload):
         value = {'namespace': self.namespace, 'phase': phase, 'promptCount': None,
+                 'observationMode': self.observation_mode, 'desktopConnectionRequired': not self.human_only,
                  'promptObservation': 'Human sidecar required', **payload}
         path = self.evidence / f'phase-{phase}.machine.json'
         exclusive_json(path, value)
@@ -53,9 +56,11 @@ class UXStages:
         if hashlib.sha256((self.evidence / previous['file']).read_bytes()).hexdigest() != previous['sha256']:
             raise RuntimeError('uxMachineReceiptChanged')
         value = json.loads(gate.read_text())
+        mode = value.get('observationMode', 'native-desktop')
+        connection_valid = (mode == 'human-only' and (value.get('desktopConnected') is False or value.get('desktopConnected') is None)) if self.human_only else (mode == 'native-desktop' and value.get('desktopConnected') is True)
         if (value.get('namespace') != self.namespace or value.get('phase') != phase or
                 value.get('previousReceiptSHA256') != previous['sha256'] or
-                value.get('humanReady') is not True or value.get('desktopConnected') is not True or
+                value.get('humanReady') is not True or not connection_valid or
                 not value.get('humanReadyStatement')):
             raise RuntimeError('uxGateMismatchOrNotReady')
         path = self.evidence / f'phase-{phase - 1}.human.json'
@@ -63,6 +68,8 @@ class UXStages:
             raise RuntimeError('uxPreviousHumanObservationMissing')
         human = json.loads(path.read_text())
         count = human.get('promptCount')
+        if human.get('observationMode', 'native-desktop') != self.observation_mode:
+            raise RuntimeError('uxHumanObservationModeMismatch')
         if (human.get('namespace') != self.namespace or human.get('phase') != phase - 1 or
                 human.get('machineReceiptSHA256') != previous['sha256'] or
                 human.get('observedWholeStage') is not True or human.get('phaseIdentified') is not True or

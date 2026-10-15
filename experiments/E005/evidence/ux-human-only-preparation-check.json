@@ -1,0 +1,24 @@
+{
+  "checkedUTC": "2026-10-15T08:09:44.784660+00:00",
+  "synthetic": true,
+  "realSecurityMeasurementRun": false,
+  "verdict": "approved",
+  "scope": "human-only preparation protocol and CLI early guard only; no UX success claim",
+  "testsRun": 8,
+  "failures": 0,
+  "errors": 0,
+  "testOutput": "test_deadline_abort_and_controlled_stop_allow_finally_cleanup (focused.UXProtocol.test_deadline_abort_and_controlled_stop_allow_finally_cleanup) ... ok\ntest_default_native_mode_rejects_human_only_gate (focused.UXProtocol.test_default_native_mode_rejects_human_only_gate) ... ok\ntest_human_only_requires_explicit_consistent_mode_without_fake_connection (focused.UXProtocol.test_human_only_requires_explicit_consistent_mode_without_fake_connection) ... ok\ntest_machine_receipt_tamper_detected (focused.UXProtocol.test_machine_receipt_tamper_detected) ... ok\ntest_missing_or_incomplete_observation_blocked (focused.UXProtocol.test_missing_or_incomplete_observation_blocked) ... ok\ntest_receipt_cannot_be_overwritten (focused.UXProtocol.test_receipt_cannot_be_overwritten) ... ok\ntest_valid_observation_and_fresh_ready_accepted (focused.UXProtocol.test_valid_observation_and_fresh_ready_accepted) ... ok\ntest_wrong_namespace_phase_sha_or_ready_blocked (focused.UXProtocol.test_wrong_namespace_phase_sha_or_ready_blocked) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.029s\n\nOK\n",
+  "guard": {
+    "exitCode": 2,
+    "securityInitializationCalls": 0,
+    "scratchAllocationCalls": 0,
+    "outputExists": false
+  },
+  "sourceSHA256": {
+    "run_self_signed_probe.py": "7138dbcc700732e356f7ba372da285fe6f0b8f3d9e7ecca13cba67d80309ee4e",
+    "ux_stages.py": "b07ccee8fc3545f4f3146c3e3afe1176ebbe8a95889ce62eb93882ebf03031c3",
+    "test_ux_stages.py": "434cecce95b3a972fd2df7cbf0ca69482693d333bf08d119711e6acccdb623e3"
+  },
+  "finallyCleanupUnchanged": true,
+  "finallyEvidence": "Runner diff contains only CLI mode guard, UXStages mode argument and report mode fields; existing finally blocks unchanged."
+}

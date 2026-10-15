@@ -11,11 +11,11 @@ from ux_stages import UXStages, exclusive_json, utc_now
 
 
 class UXProtocol(unittest.TestCase):
-    def fixture(self):
+    def fixture(self, human_only=False):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         root = Path(temporary.name)
-        ux = UXStages('synthetic-namespace', root / 'evidence', root / 'control', utc_now() + datetime.timedelta(minutes=1))
+        ux = UXStages('synthetic-namespace', root / 'evidence', root / 'control', utc_now() + datetime.timedelta(minutes=1), human_only=human_only)
         digest = ux.complete(0, {'startedUTC': utc_now().isoformat(), 'finishedUTC': utc_now().isoformat()})
         gate = {'namespace': ux.namespace, 'phase': 1, 'previousReceiptSHA256': digest,
                 'humanReady': True, 'desktopConnected': True, 'humanReadyStatement': 'synthetic ready'}
@@ -28,6 +28,38 @@ class UXProtocol(unittest.TestCase):
         exclusive_json(ux.evidence / 'phase-0.human.json', human)
         exclusive_json(ux.control / 'gate-1.json', gate)
         self.assertEqual(ux.wait_ready(1), gate)
+
+    def test_human_only_requires_explicit_consistent_mode_without_fake_connection(self):
+        for wrong in (None, 'missing-gate-mode', 'fake-connection', 'missing-human-mode'):
+            with self.subTest(wrong=wrong):
+                ux, gate, human = self.fixture(human_only=True)
+                gate.update(observationMode='human-only', desktopConnected=None)
+                human['observationMode'] = 'human-only'
+                if wrong == 'missing-gate-mode':
+                    del gate['observationMode']
+                elif wrong == 'fake-connection':
+                    gate['desktopConnected'] = True
+                elif wrong == 'missing-human-mode':
+                    del human['observationMode']
+                exclusive_json(ux.evidence / 'phase-0.human.json', human)
+                exclusive_json(ux.control / 'gate-1.json', gate)
+                if wrong:
+                    with self.assertRaises(RuntimeError):
+                        ux.wait_ready(1)
+                else:
+                    ux.wait_ready(1)
+                    receipt = json.loads((ux.evidence / 'phase-0.machine.json').read_text())
+                    self.assertEqual(receipt['observationMode'], 'human-only')
+                    self.assertFalse(receipt['desktopConnectionRequired'])
+
+    def test_default_native_mode_rejects_human_only_gate(self):
+        ux, gate, human = self.fixture()
+        gate.update(observationMode='human-only', desktopConnected=None)
+        human['observationMode'] = 'human-only'
+        exclusive_json(ux.evidence / 'phase-0.human.json', human)
+        exclusive_json(ux.control / 'gate-1.json', gate)
+        with self.assertRaisesRegex(RuntimeError, 'uxGateMismatchOrNotReady'):
+            ux.wait_ready(1)
 
     def test_wrong_namespace_phase_sha_or_ready_blocked(self):
         for field, value in (('namespace', 'other'), ('phase', 3), ('previousReceiptSHA256', 'wrong'),
