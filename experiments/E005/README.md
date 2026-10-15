@@ -213,3 +213,5 @@ python3 -B experiments/E005/scripts/run_self_signed_probe.py --pem-import --diag
 **本輪桌面前提結果。** 分段準備經獨立 Tester／Reviewer approved，15 synthetic tests、CLI guards 與 fake main wait-abort→finally cleanup 通過，見 [準備收據](evidence/ux-segmented-preparation-check.json)。但 [桌面 preflight](evidence/ux-segmented-desktop-preflight.json) 顯示原生 CUA 重試及 kernel reset 後仍 `native pipe startup failed`；Chrome 可連線不等於原生桌面已連線。另一次 App-content probe 被自動審查以無關私人對話風險拒絕，未讀取內容；安全 inventory 替代仍回原生連線失敗。
 
 尚未取得本輪 Human setup-ready，未啟動新真實 run、零 Keychain／trust／search-list mutation，無本輪實驗秘密或 OAuth 項目需清理。已請 Human 恢復既有桌面連線，既定時窗不延長。實驗狀態 **未執行**；UX／主假設仍 **無法判定**；本輪真人驗證任務完成：**否**。前文「紀錄任務完成」只屬前輪已結束的資料機制實證，不能由本輪準備成果交付推成真人驗證完成。若窗內連線恢復，另存新的連線事件收據，先取得 setup-ready 才啟動唯一 run；不覆寫這份失敗 preflight。
+
+Human 回覆「已恢復連線，請再檢查」後，原生 inventory 與重新初始化後的安全 inventory 仍回相同 native pipe 錯誤，見新獨立 [重試收據](evidence/ux-segmented-desktop-retry.json)；初次收據不覆寫。仍未真人 run、零實驗 mutation，未將 Human 的連線回報當成工具連線成功證據。

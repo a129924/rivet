@@ -4,7 +4,7 @@
 - 目前 phase：分段 UX 準備完成，等待原生桌面連線
 - Current step：S04
 - Current step status：pending
-- 上游正式 verdict：approved（最新分段 UX 契約經獨立 Plan-Reviewer；非 UX 成功）
+- 上游正式 verdict：approved（分段準備 closure 經獨立 Reviewer；真人未執行、非 UX 成功）
 - [需求](../../analysis/github-oauth-keychain-local-feasibility/requirements.md)／[規格](../../analysis/github-oauth-keychain-local-feasibility/technical-spec.md)／[契約](github-oauth-keychain-local-feasibility.plan.md)
 
 ## Steps
@@ -276,3 +276,5 @@ synthetic 必須驗證錯 namespace／phase／receipt SHA、缺 Human 觀察與�
 - 最新 UX 契約已獲獨立 Plan-Reviewer approved，無 required fixes；Implementer 已完成明確 opt-in 分段 protocol／machine receipt／Human SHA gate／deadline cleanup。15項必要 synthetic tests（UX6、trust3、search-list6）通過，尚未真實 mutation。交獨立 Tester 準備驗證。
 
 - 2026-10-15 07:44 UTC：獨立 Tester／Reviewer 對分段準備正式 approved（15 synthetic＋CLI guards＋fake main stop/cleanup）；尚未真人測量。原生 CUA inventory 重試仍 native pipe startup failed，Chrome 連線不替代桌面；App-content probe 被自動審查以無關私人對話風險拒絕，未讀取其內容。已改安全 inventory 並請 Human 恢復連線；未收到 setup-ready、零 Keychain／trust／search-list mutation，停於 S04 prerequisite，不延長截止。
+
+- 2026-10-15T07:52:27.626185+00:00：準備核心 commit 3cf66bb 已 push，Draft PR #58 head/isDraft 已核對，全部hooks通過；PR Lens 實際diff本機validate/render（9 nodes／10 edges），Graphify0.9.73無圖sourcefallback。Human回報恢復後原生inventory與重新初始化仍failed，新desktop-retry收據保留初次SHA；Reviewer維持準備closureapproved。S04仍pending、真人驗證任務未完成；已詢問是否允許human-only觀察流程例外，尚未獲答，不修改契約/code、不啟動run、不延長原窗。本次只交付準備與重試紀錄，不將commit當驗證完成。
