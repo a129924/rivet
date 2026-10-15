@@ -115,3 +115,13 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 故障注入先成功執行部分 SQL 改寫並於交易內確認可見，再在 commit 前拋錯；rollback 後新程序仍讀回完整舊 bundle。fake fetcher 接受輪替後若保存失敗，同一 provider 的後續 snapshot／replacement 持續 `.persist`，沒有額外 refresh 或 save。空 store、損毀 DB 與唯讀寫入故障維持不同分類；後兩者分別觀察到 `SQLITE_NOTADB` 與 `SQLITE_READONLY`。
 
 這些觀察支持 GRDB＋SQLite 在上述條件下作為 `OAuthCredentialStore` 的候選後端，並沿用既有 provider 的持久化及失敗契約；不代表正式 adapter、秘密儲存或產品登入已交付。未驗證其他 compiler／OS、所有並行排程、真 GitHub OAuth、client 401 retry、sandbox 隔離、加密、斷電 durability 或跨程序 refresh 協調。SQLite 路徑名稱不提供秘密保護；輪替保存失敗後舊 bundle 完整保留，不表示真遠端仍接受它。正式採用、最低工具鏈與 reconciliation 仍須另行決策，既有 OAuth lifecycle ownership 與正式 adapter deferred 狀態不變。
+
+## E005 本機 Keychain 完整憑證的受限實證
+
+[實驗 E005](../../experiments/E005/README.md) 於 2026-10-15 在 arm64 macOS 26.5.2／Apple Swift 6.3.3，以無憑證、無 profile 的 ad-hoc app-like CLI，明確選用 legacy file-based Keychain（DPK selector false、同步 false），保存固定假 OAuth bundle。writer 結束後兩個 fresh reader 的六欄均一致；恢復原 binary 身分後整筆替換 B，新程序六欄均為 B。這只支持本次 host 的跨程序資料保存與完整替換，不是正式 Keychain adapter 交付。
+
+真正修改 build marker 並重新建置後，binary hash 改變、簽章有效，但 designated requirement 不一致；T03 沒有執行 acceptance read，不能以相同 bundle ID 或還原舊 binary 讀回冒充同身分重建成功。所有提示次數維持 null／unobserved，真實拒絕授權未測；因此主假設為**無法判定**，不表示機制失敗、不支持原定 UX 或正式採用。DPK 免費 host／profile 前提仍未證實，不能據此推論必須付費。
+
+真實 absent／malformed 分類與所有本輪已嘗試寫入的主要／負向／停止項目清理均有證據，確認不存在。SIGINT／SIGTERM 控制流程及清理期間重複訊號以明標 synthetic 測試驗證；寫入後受控例外清理另有真實 Keychain 證據，兩者不混作真實訊號中斷的 Keychain 或 UX 證明。不可捕捉停止／程序或主機失效仍不保證 finally 清理。
+
+後續需要免費且維持穩定 code identity 的 host 與實際系統提示觀察，再返回採用決策；不得自行新增帳號／憑證或放寬 ACL／安全設定。既有 non-BC GitHubIntegration 邊界、OAuthTokenProvider ownership、production APIs 與 Keychain adapter deferred 狀態保持。

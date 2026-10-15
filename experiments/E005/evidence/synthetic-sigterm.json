@@ -1,0 +1,115 @@
+{
+  "startedUTC": "2026-10-15T02:57:45.068905+00:00",
+  "backend": "legacy",
+  "primaryNamespace": "5eb6d294-ce2f-4b56-8139-b6969c266d3b",
+  "negativeNamespace": "52f40604-2394-4bf0-a464-063901245298",
+  "selectionBeforeFirstWrite": true,
+  "selectionReason": "free DPK profile not established; explicitly select legacy",
+  "data": "fixed fake credentials only",
+  "commands": [
+    {
+      "mode": "synthetic-check",
+      "namespace": "5eb6d294-ce2f-4b56-8139-b6969c266d3b",
+      "startedUTC": "2026-10-15T02:57:45.069749+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "synthetic": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:57:45.069761+00:00"
+    },
+    {
+      "mode": "write-a",
+      "namespace": "5eb6d294-ce2f-4b56-8139-b6969c266d3b",
+      "startedUTC": "2026-10-15T02:57:45.069763+00:00",
+      "promptCount": null,
+      "finishedUTC": "2026-10-15T02:57:45.069776+00:00"
+    },
+    {
+      "mode": "delete",
+      "namespace": "5eb6d294-ce2f-4b56-8139-b6969c266d3b",
+      "startedUTC": "2026-10-15T02:57:45.072178+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "deleted": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:57:45.072223+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "5eb6d294-ce2f-4b56-8139-b6969c266d3b",
+      "startedUTC": "2026-10-15T02:57:45.072224+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "absent": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:57:45.072229+00:00"
+    }
+  ],
+  "cleanup": [
+    {
+      "namespace": "5eb6d294-ce2f-4b56-8139-b6969c266d3b",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    }
+  ],
+  "promptObservation": "unobserved: no human/system-dialog observation supplied",
+  "trueDenial": "未執行: no naturally observed denial prompt",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": false,
+  "forcedEarlyExit": false,
+  "sourceSHA256": {
+    "Sources/KeychainProbe.swift": "7456ee380cf3ec8cca4ad79a5394c6db719888424ec569427e1b1745abe6fe5c",
+    "scripts/build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "scripts/run_probe.py": "422159b1925d0cbca2311219c34c3c62585c352cb61ed1337289a8c5c001809c"
+  },
+  "controlledStopSignals": [
+    "SIGINT",
+    "SIGTERM"
+  ],
+  "hostBefore": {
+    "signatureValid": true,
+    "adHoc": true,
+    "profilePresent": false
+  },
+  "preflight": {
+    "host": "app-like CLI",
+    "signing": "ad-hoc, no certificate/profile",
+    "paidQualificationRequired": false,
+    "DPKEligible": false,
+    "DPKFreeProfile": "not established; no account operation attempted"
+  },
+  "stopReason": "controlledSignalStop:SIGTERM",
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T02:57:45.072232+00:00",
+  "limitations": [
+    "normal system authorization prompts not observed",
+    "DPK free host/profile not verified",
+    "same-identity rebuild not established if designated requirement changed",
+    "true denial not observed; synthetic classification is separate",
+    "SIGKILL, process crash and host failure cannot guarantee finally cleanup"
+  ],
+  "syntheticHarness": {
+    "synthetic": true,
+    "realKeychainOperations": false,
+    "scope": "runner signal control flow only; fake build, identity and subprocess",
+    "signalAtWrite": "SIGTERM",
+    "repeatedSignalDuringDelete": [
+      "SIGTERM"
+    ],
+    "allWrittenItemsTrackedAndDeleted": true,
+    "expectedRunnerExitCode": 1,
+    "actualRunnerExitCode": 1
+  }
+}

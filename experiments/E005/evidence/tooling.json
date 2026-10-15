@@ -1,0 +1,27 @@
+{
+  "recordedDate": "2026-10-15",
+  "graphify": {
+    "runtimeVersion": "0.9.73",
+    "autoRefreshDisabled": true,
+    "existingRepositoryGraph": "not found",
+    "status": "fallback",
+    "fallback": "targeted rg and source reads",
+    "graphBuildAttempted": false,
+    "externalGraphFreshness": "not established; no external graph supplied"
+  },
+  "archify": {
+    "version": "2.16",
+    "showcaseChecks": 9,
+    "errors": 0,
+    "warnings": 0,
+    "containment": "four desktop viewports passed",
+    "visualReview": "passed separately; automated pending preserved",
+    "receipt": "../diagrams/keychain-workflow.delivery.json"
+  },
+  "prLens": {
+    "runtimeVersion": "0.11.0",
+    "status": "deferred until actual topic commit",
+    "plannedOutput": "external per-topic scratch only",
+    "noInstallOrPublication": true
+  }
+}

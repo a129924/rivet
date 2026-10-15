@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "E005：本機 Keychain 實驗與整輪清理",
+    "quality_profile": "showcase",
+    "viewBox": [
+      720,
+      360
+    ]
+  },
+  "lanes": [
+    {
+      "id": "normal",
+      "label": "候選與測量"
+    },
+    {
+      "id": "finish",
+      "label": "整輪退出與證據"
+    }
+  ],
+  "mainPath": [
+    "preflight",
+    "measure",
+    "cleanup"
+  ],
+  "nodes": [
+    {
+      "id": "preflight",
+      "lane": "normal",
+      "col": 1,
+      "type": "backend",
+      "label": "固定候選",
+      "sublabel": "免費 host 前提",
+      "width": 150
+    },
+    {
+      "id": "measure",
+      "lane": "normal",
+      "col": 4,
+      "type": "backend",
+      "label": "完整六欄測量",
+      "sublabel": "T02–T05 依序執行",
+      "width": 180
+    },
+    {
+      "id": "stop",
+      "lane": "finish",
+      "col": 1,
+      "type": "external",
+      "label": "停止依賴操作",
+      "sublabel": "失敗／例外／75 分鐘",
+      "width": 160
+    },
+    {
+      "id": "cleanup",
+      "lane": "finish",
+      "col": 4,
+      "type": "security",
+      "label": "整輪精確清理",
+      "sublabel": "主要與負向項目查無資料",
+      "width": 180
+    }
+  ],
+  "edges": [
+    {
+      "from": "preflight",
+      "to": "measure",
+      "role": "main"
+    },
+    {
+      "from": "measure",
+      "to": "cleanup",
+      "role": "main"
+    },
+    {
+      "from": "preflight",
+      "to": "stop",
+      "role": "error",
+      "label": "失敗或停止",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "stop",
+      "to": "cleanup",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "順序與證據界線",
+      "items": [
+        "先保存 A 與兩次跨程序讀回，再真重建及 B 替換，最後獨立負向。",
+        "提示未觀察或身分不足時保留無法判定；所有測量階段退出均清理。"
+      ]
+    }
+  ]
+}

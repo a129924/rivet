@@ -1,0 +1,300 @@
+{
+  "startedUTC": "2026-10-15T02:53:53.135235+00:00",
+  "backend": "legacy",
+  "primaryNamespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+  "negativeNamespace": "b06b212a-da53-4c9c-8f0c-c62d162d2626",
+  "selectionBeforeFirstWrite": true,
+  "selectionReason": "free DPK profile not established; explicitly select legacy",
+  "data": "fixed fake credentials only",
+  "commands": [
+    {
+      "mode": "synthetic-check",
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "startedUTC": "2026-10-15T02:53:58.283542+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "checks": {
+            "absent": true,
+            "cancelled": true,
+            "denied": true,
+            "interactionUnavailable": true,
+            "malformed": true,
+            "sixFieldRoundTrip": true,
+            "unavailable": true
+          },
+          "synthetic": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:53:58.815708+00:00"
+    },
+    {
+      "mode": "write-a",
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "startedUTC": "2026-10-15T02:53:58.815736+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "operation": "write-a",
+          "saved": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:53:58.845734+00:00"
+    },
+    {
+      "mode": "read-a",
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "startedUTC": "2026-10-15T02:53:58.845762+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:53:58.933759+00:00"
+    },
+    {
+      "mode": "read-a",
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "startedUTC": "2026-10-15T02:53:58.933872+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:53:58.981361+00:00"
+    },
+    {
+      "mode": "replace-b",
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "startedUTC": "2026-10-15T02:53:59.950730+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "operation": "replace-b",
+          "saved": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.150201+00:00"
+    },
+    {
+      "mode": "read-b",
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "startedUTC": "2026-10-15T02:54:00.150234+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-b"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.188587+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "b06b212a-da53-4c9c-8f0c-c62d162d2626",
+      "startedUTC": "2026-10-15T02:54:00.188637+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.205296+00:00"
+    },
+    {
+      "mode": "write-invalid",
+      "namespace": "b06b212a-da53-4c9c-8f0c-c62d162d2626",
+      "startedUTC": "2026-10-15T02:54:00.205316+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "operation": "write-invalid",
+          "saved": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.228728+00:00"
+    },
+    {
+      "mode": "read-invalid",
+      "namespace": "b06b212a-da53-4c9c-8f0c-c62d162d2626",
+      "startedUTC": "2026-10-15T02:54:00.228758+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "decodeFailure": true,
+          "operation": "read-invalid"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.244104+00:00"
+    },
+    {
+      "mode": "delete",
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "startedUTC": "2026-10-15T02:54:00.245790+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "deleted": true,
+          "operation": "delete"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.391151+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "startedUTC": "2026-10-15T02:54:00.391183+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.406436+00:00"
+    },
+    {
+      "mode": "delete",
+      "namespace": "b06b212a-da53-4c9c-8f0c-c62d162d2626",
+      "startedUTC": "2026-10-15T02:54:00.406484+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "deleted": true,
+          "operation": "delete"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.422149+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "b06b212a-da53-4c9c-8f0c-c62d162d2626",
+      "startedUTC": "2026-10-15T02:54:00.422186+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:00.435975+00:00"
+    }
+  ],
+  "cleanup": [
+    {
+      "namespace": "4da14690-19e8-4207-acb5-5cdca4a9f474",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    },
+    {
+      "namespace": "b06b212a-da53-4c9c-8f0c-c62d162d2626",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    }
+  ],
+  "promptObservation": "unobserved: no human/system-dialog observation supplied",
+  "trueDenial": "未執行: no naturally observed denial prompt",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": true,
+  "forcedEarlyExit": false,
+  "hostBefore": {
+    "binarySHA256": "dd819394281d73c61edc889d2ca0e8cf7db0977646f4b964bb70a30fdcc6079c",
+    "signatureValid": true,
+    "adHoc": true,
+    "teamIdentifierPresent": false,
+    "profilePresent": false,
+    "requirementAvailable": true,
+    "entitlementsReadSucceeded": true
+  },
+  "preflight": {
+    "host": "app-like CLI",
+    "signing": "ad-hoc, no certificate/profile",
+    "paidQualificationRequired": false,
+    "DPKEligible": false,
+    "DPKFreeProfile": "not established; no account operation attempted"
+  },
+  "T02Data": "成功",
+  "hostAfter": {
+    "binarySHA256": "97a4fe3bb36933d266eafa63be93240b95919df0c15ac147b2d35a0559be7db5",
+    "signatureValid": true,
+    "adHoc": true,
+    "teamIdentifierPresent": false,
+    "profilePresent": false,
+    "requirementAvailable": true,
+    "entitlementsReadSucceeded": true
+  },
+  "rebuildComparison": {
+    "binaryChanged": true,
+    "designatedRequirementEqual": false,
+    "entitlementsEqual": true,
+    "accessGroupsEqual": true,
+    "bundleIdentifierEqual": true,
+    "hostPathEqual": true,
+    "signingMethodEqual": true
+  },
+  "T03Data": "無法判定",
+  "T03Reason": "rebuilt binary has no demonstrated stable designated requirement; no acceptance read",
+  "originalIdentityRestoredForT04AndCleanup": true,
+  "T04Data": "成功",
+  "T05AbsentAndMalformed": "成功",
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T02:54:00.436037+00:00",
+  "limitations": [
+    "normal system authorization prompts not observed",
+    "DPK free host/profile not verified",
+    "same-identity rebuild not established if designated requirement changed",
+    "true denial not observed; synthetic classification is separate"
+  ]
+}
