@@ -20,8 +20,27 @@
   },
   "prLens": {
     "runtimeVersion": "0.11.0",
-    "status": "deferred until actual topic commit",
+    "status": "validated and rendered for core topic commit",
     "plannedOutput": "external per-topic scratch only",
-    "noInstallOrPublication": true
+    "noInstallOrPublication": true,
+    "mappedCoreCommit": "e6438ad082b8f0488883da6af6039087da611f1a",
+    "baseCommit": "913c063268b2416122f073e121c55f5e74000c2b",
+    "graphSchema": "0.2.0",
+    "views": 1,
+    "nodes": 8,
+    "edges": 7,
+    "walkthroughSteps": 3,
+    "artifacts": "external per-topic scratch; no upload or repository .pr-lens",
+    "finalHeadVerification": "post-commit external-only map is reported on Draft PR; core receipt remains historical"
+  },
+  "publication": {
+    "recordedUTC": "2026-10-15T03:05:29+00:00",
+    "coreCommit": "e6438ad082b8f0488883da6af6039087da611f1a",
+    "branch": "chore/github-oauth-keychain-local-feasibility",
+    "base": "dev",
+    "draftPR": "https://github.com/a129924/rivet/pull/58",
+    "isDraftVerified": true,
+    "preCommitHooks": "all passed; renderer dependencies copied from existing cache after matching lockfile",
+    "devWorktree": "clean; no implementation changes"
   }
 }
