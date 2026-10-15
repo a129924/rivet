@@ -142,3 +142,38 @@ Human trust-ready／Touch ID 授權已收到；T03 仍須預檢成功後另確�
 公開 `SecPolicyCopyProperties` 對標準 codeSign policy 的 `kSecPolicyName` 為 missing；該 key 用於 SSL 等 policy-specific name，不能作為取得 friendly label 的途徑。唯一 optional metadata `kSecTrustSettingsPolicyName` 必須 String 且精確等於 `CodeSigning`，依據為 Apple OSS [SecPolicy.list 第 25 行](https://github.com/apple-oss-distributions/Security/blob/main/OSX/sec/Security/SecPolicy.list#L25) 的 CodeSigning policy 定義。TrustSettings.cpp 以內部名稱附回此 metadata；本實驗不呼叫私有 `SecPolicyGetName`。
 
 仍以實際 SecPolicy runtime type／AppleCodeSigning OID、trustRoot、user-only、exact-one-entry 及 admin／system absent 作政策資格判斷，metadata 只作一致性檢查；unknown keys／allowedError／SSL／broad／multi-entry 仍拒絕。set 仍兩 keys，cleanup ownership／same-process gate／first writer-second reader／UX／scope／06:07:19 停測與06:12:19總上限全不變。此為 checker API 來源更正，不擴 semantic 或改主假設成功標準；舊 code／receipt 保留，本修訂交獨立 Plan-Reviewer。
+
+
+## 最新 Execution Authorized：暫時 user search-list 受限例外
+
+Human 已明確授權本輪 freshly-created 專用實驗 Keychain 暫時 append 至使用者搜尋清單。此為唯一新例外，不改 default Keychain、既有 ACL／partition-list、admin／system trust、SSL／broad trust 或其他設定；trust 仍限同一新 cert 的既有 user/codeSign 授權及 ownership guard。單一 legacy 候選、單一真實 run，不增加 backend fallback／簽章變體。原 receipts／code snapshots 保留。
+
+### 最新時間與 readiness
+
+新 30 分鐘窗為 2026-10-15 06:09:51–06:39:51 UTC，06:34:51 UTC 停新測量，最後五分鐘優先撤 trust、還原 search-list、清理與紀錄，不自動延長。本節的時間及 exact-own-Keychain user search-list 例外優先於所有前版時窗／全面 search-list 禁令；舊記錄保留為歷史，其他 scope／主六欄／UX 判準不變。
+
+同 run trust setup 的 Human 授權已收到，可由 Human 自行處理系統 approval／密碼，agent 不自填。T03 必須於 trust、同 cert 兩版簽章／DR 預檢成功後，重新確認 CUA 連線與 Human 全程觀察 ready；未 ready／連線不足／到停測點不得寫 OAuth。CUA 能列 apps 不等於能觀察 SecurityAgent，系統提示仍由 Human 觀察。固定 active host path、first writer／second reader 及不同 hash 證據維持。
+
+### Search-list mutation ownership 與核對
+
+只以 `security list-keychains -d user` 讀、`security list-keychains -d user -s` 寫 user-domain search-list；不得改 domain 或 default。原完整有序清單及 default snapshot 僅在記憶體，quote 以 shlex 解析；輸出僅 bool／count，不保存私人 path／raw list。own identity 僅以 resolve 與該已知 `.keychain`／`.keychain-db` suffix 等價核對，不能 substring 模糊匹配。
+
+新增 opt-in `--temporary-user-search-list`，必須已有 trust＋diagnose＋certSHA1 guards 及 UTC deadline；missing guard 在 Security 初始化前失敗，不產生副作用。
+
+1. 確認 own Keychain 是本輪 freshly-created、精確隔離且 baseline 無此 membership；讀取 baseline user search-list 有序序列及 default。
+2. mutation 前再次讀 current 與 default，要求原序列及 default 完全一致；不一致即停止，不覆寫、不 append，清自建素材。確認後在 write 前登記本輪 search-list ownership／attempt，再只寫 baseline + [ownKC]；add failure 亦須考慮部分新增。
+3. 立即讀回，核對 exact baseline + [ownKC] 順序／count 及 default 不變；不符即停新測量並進 cleanup。不以寫入 exit0 代替讀回證據。
+
+### 整輪退出還原與殘留
+
+所有正常、失敗、timeout、受控 signal／例外退出皆依 ownership cleanup。先清本輪 OAuth 項目（若有），處理既定 exact-cert trust 撤回／absence 核對，再在 delete Keychain 前撤回自己新增的 user search-list membership；trust cleanup 失敗亦記錄並嘗試自己的 search-list cleanup，不能省略已擁有的副作用。
+
+若 search-list ownership／attempt 未登記，絕不寫回清單。已登記時重新讀 current，只移 ownKC，保留所有 foreign entries 及其順序；不能把舊 baseline 直接覆寫 current。無並發修改時，核對原 baseline 有序序列已恢復且 default 不變，之後才刪專用 Keychain／秘密。
+
+若 current 有其他並發修改，保留 foreign entries／order、只移 ownKC，立即核對 own membership absence 與 foreign sequence 保留，明列 baseline 不一致及 recovery；不得為恢復 baseline 撤銷別人的修改。若原序列未恢復、移除／核對失敗或 trust absence 未成立，保留專用 Keychain／必要非秘密 recovery 依據，明列殘留／原因、任務否，不先刪 Keychain 掩蓋 membership 或 trust。所有路徑不輸出私人 path／秘密，不因刪 cert 推論 trust 消失。
+
+### 實作與交付邊界
+
+只修改 E005 runner、必要最小 synthetic ownership／concurrency／exit 測試、新獨立收據及八段 README，不改 production。synthetic 須明標；必要案例包括 baseline conflict 零 mutation、部分 write failure cleanup、foreign order 保留及受控退出還原，不能冒充真 Keychain 證據。真實 run 僅一輪，不在失敗後追加變體。
+
+四狀態／任務完成／cleanup／recovery 分開。先前 T03 仍無法判定；本節只新增窄授權契約，不預報本輪成功。此為規劃當時狀態：四檔具備獨立審查內容、正式 verdict 待審；其後已獲 Plan-Reviewer approved，後續實測結果另記。

@@ -10,6 +10,7 @@ import re
 from pathlib import Path
 import secrets
 import shutil
+import shlex
 import signal
 import subprocess
 import tempfile
@@ -22,6 +23,74 @@ def now():
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 
+class SearchListLease:
+    """Exact own-membership lease; read/write API has no atomic compare-and-swap."""
+    def __init__(self, own, baseline, read, write):
+        self.own = str(own)
+        self.baseline = baseline
+        self.read = read
+        self.write = write
+        self.attempted = False
+        self.facts = {'requested': True, 'mutationAttempted': False,
+                      'atomicCompareAndSwapAvailable': False}
+
+    @staticmethod
+    def key(path):
+        value = str(Path(path).resolve())
+        return value[:-3] if value.endswith('.keychain-db') else value
+
+    def keys(self, paths):
+        return tuple(self.key(path) for path in paths)
+
+    def append(self):
+        original_default, original = self.baseline
+        current_default, current = self.read()
+        unchanged = current_default == original_default and self.keys(current) == self.keys(original)
+        self.facts['baselineUnchangedBeforeAdd'] = unchanged
+        own_absent = self.key(self.own) not in self.keys(original) and self.key(self.own) not in self.keys(current)
+        self.facts['ownAbsentBeforeAdd'] = own_absent
+        self.facts['baselineCount'] = len(original)
+        if not unchanged or not own_absent:
+            raise RuntimeError('searchListBaselineConflict')
+        self.attempted = True  # Own a possible partial mutation before calling the API.
+        self.facts['mutationAttempted'] = True
+        self.write(tuple(original) + (self.own,))
+        after_default, after = self.read()
+        valid = after_default == original_default and self.keys(after) == self.keys(tuple(original) + (self.own,))
+        self.facts['appendReadbackVerified'] = valid
+        self.facts['afterAppendCount'] = len(after)
+        if not valid:
+            raise RuntimeError('searchListAppendReadbackFailed')
+
+    def cleanup(self):
+        if not self.attempted:
+            self.facts['cleanupMutationAttempted'] = False
+            return True
+        self.facts['cleanupMutationAttempted'] = False
+        try:
+            current_default, current = self.read()
+            retained = tuple(path for path in current if self.key(path) != self.key(self.own))
+            self.facts['foreignSequenceMatchedBaselineBeforeRemove'] = self.keys(retained) == self.keys(self.baseline[1])
+            if len(retained) != len(current):
+                self.facts['cleanupMutationAttempted'] = True
+                try:
+                    self.write(retained)  # Never replace foreign entries with an old baseline.
+                except Exception:
+                    self.facts['removeWriteFailed'] = True
+            final_default, final = self.read()
+            self.facts['ownMembershipAbsent'] = self.key(self.own) not in self.keys(final)
+            self.facts['foreignSequencePreserved'] = self.keys(final) == self.keys(retained)
+            self.facts['baselineRestored'] = self.keys(final) == self.keys(self.baseline[1])
+            self.facts['defaultUnchanged'] = final_default == current_default == self.baseline[0]
+            complete = all(self.facts[name] for name in ('ownMembershipAbsent', 'foreignSequencePreserved',
+                                                        'baselineRestored', 'defaultUnchanged'))
+        except Exception:
+            self.facts['cleanupReadOrVerificationFailed'] = True
+            complete = False
+        self.facts['cleanupComplete'] = complete
+        return complete
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--out', type=Path, required=True)
@@ -32,18 +101,22 @@ def main():
     parser.add_argument('--observer-gate', type=Path, help='External same-run Human ready gate; must initially be absent')
     parser.add_argument('--ready-notice', type=Path, help='External non-secret preflight completion notice')
     parser.add_argument('--measurement-deadline-utc', help='Hard stop for waiting/new measurements, ISO UTC')
+    parser.add_argument('--temporary-user-search-list', action='store_true', help='Authorized exact experiment Keychain membership only; restored on exit')
     parser.add_argument('--measure', action='store_true', help='Also measure fake OAuth items after signing preflight')
     args = parser.parse_args()
     if args.signing_selector == 'certificate-sha1' and not (args.trust_code_signing and args.diagnose):
         parser.error('certificate hash selection requires the limited-trust explicit-keychain diagnostic path')
     if args.trust_code_signing and not args.pem_import:
         parser.error('limited trust trial requires the established PEM path')
+    if args.temporary_user_search_list and not (args.trust_code_signing and args.diagnose and args.signing_selector == 'certificate-sha1' and args.measurement_deadline_utc):
+        parser.error('temporary search-list requires limited trust, diagnostic, certificate hash and UTC deadline')
     measurement_deadline = None
     if args.trust_code_signing and args.measure:
         if not args.observer_gate or not args.ready_notice or not args.measurement_deadline_utc:
             parser.error('limited-trust measurement requires post-preflight observer gate, notice and deadline')
         if args.observer_gate.exists() or args.ready_notice.exists():
             parser.error('use fresh external gate and notice paths for this run')
+    if args.measurement_deadline_utc:
         measurement_deadline = datetime.datetime.fromisoformat(args.measurement_deadline_utc)
         if measurement_deadline.tzinfo is None or measurement_deadline.utcoffset() != datetime.timedelta(0):
             parser.error('measurement deadline must explicitly be UTC')
@@ -76,6 +149,7 @@ def main():
     attempted = []
     executable = None
     snapshots = None
+    search_lease = None
     trust_attempted = False
     trust_baseline_absent = False
     trust_helper = scratch / 'trust-probe'
@@ -89,11 +163,21 @@ def main():
     def settings():
         values = []
         for operation in ('default-keychain', 'list-keychains'):
-            result = subprocess.run(['security', operation], capture_output=True, timeout=10)
+            result = subprocess.run(['security', operation, '-d', 'user'], capture_output=True, timeout=10)
             if result.returncode:
                 raise RuntimeError('settingsSnapshotFailed')
             values.append(result.stdout)
         return values  # Private paths stay in memory only.
+
+    def search_settings():
+        raw = settings()
+        return raw[0], tuple(shlex.split(raw[1].decode('utf-8')))
+
+    def write_search_list(paths):
+        result = subprocess.run(['security', 'list-keychains', '-d', 'user', '-s', *paths],
+                                capture_output=True, timeout=10)
+        if result.returncode:
+            raise RuntimeError('searchListWriteFailed')
 
     def trust_command(mode, timeout=10):
         if mode == 'add-code-signing' and measurement_deadline is not None and datetime.datetime.now(datetime.timezone.utc) >= measurement_deadline:
@@ -194,6 +278,9 @@ def main():
                                          'searchListEqual': current[1] == snapshots[1]}
         if current != snapshots:
             raise RuntimeError('globalSettingsChangedStop')
+        if args.temporary_user_search_list:
+            search_lease = SearchListLease(keychain_path, (snapshots[0], tuple(shlex.split(snapshots[1].decode('utf-8')))), search_settings, write_search_list)
+            report['temporaryUserSearchList'] = search_lease.facts
         config = scratch / 'certificate.cnf'
         config.write_text('[req]\nprompt=no\ndistinguished_name=dn\nx509_extensions=ext\n'
                           '[dn]\nCN=' + label + '\n[ext]\nbasicConstraints=critical,CA:TRUE\n'
@@ -262,6 +349,10 @@ def main():
                 report['selectedCertificateMatchedIsolatedIdentity'] = matched
                 if not matched:
                     raise RuntimeError('selectedCertificateNotInIsolatedIdentityDiagnostic')
+        if search_lease is not None:
+            if datetime.datetime.now(datetime.timezone.utc) >= measurement_deadline:
+                raise RuntimeError('searchListAddDeadlineReached')
+            search_lease.append()
         first = signed_build(False)
         report['hostFirst'] = public_identity(first)
         shutil.copytree(app, scratch / 'First.app')
@@ -353,8 +444,10 @@ def main():
                 report['trustCleanupOperationFailed'] = True
             report['trustRemovalVerifiedAbsent'] = trust_clean
         report['trustCleanupComplete'] = trust_clean
-        # Keep exact-certificate recovery material if trust removal/verification failed.
-        if clean_items and trust_clean and keychain.value:
+        search_clean = search_lease.cleanup() if search_lease is not None else True
+        report['searchListCleanupComplete'] = search_clean
+        # Retain recovery material if trust or exact search-list restoration failed.
+        if clean_items and trust_clean and search_clean and keychain.value:
             report['keychainDeleteStatus'] = security.SecKeychainDelete(keychain)
         report['privateKeychainAbsent'] = not keychain_path.exists() and not Path(str(keychain_path) + '-db').exists()
         if snapshots is not None:
@@ -365,10 +458,10 @@ def main():
             except Exception:
                 report['settingsAfterCleanup'] = {'snapshotFailed': True}
         globals_clean = report.get('settingsAfterCleanup') == {'defaultEqual': True, 'searchListEqual': True}
-        if clean_items and trust_clean and report['privateKeychainAbsent']:
+        if clean_items and trust_clean and search_clean and report['privateKeychainAbsent']:
             shutil.rmtree(scratch)
         report['secretScratchAbsent'] = not scratch.exists()
-        report['cleanupComplete'] = clean_items and trust_clean and report['privateKeychainAbsent'] and report['secretScratchAbsent'] and globals_clean
+        report['cleanupComplete'] = clean_items and trust_clean and search_clean and report['privateKeychainAbsent'] and report['secretScratchAbsent'] and globals_clean
         if not report['cleanupComplete']:
             report['recoveryRequired'] = {'experimentCertificateLabel': label,
                 'retainExactCertificateAndPrivateScratch': scratch.exists(),
@@ -378,7 +471,8 @@ def main():
         report['limitations'] = ['human prompt receipt required for UX; historical zero prompts do not cover this host',
                                  'DPK free profile not verified', 'true denial not observed',
                                  'SIGKILL, process crash and host failure cannot guarantee cleanup',
-                                 'self-signed identity deleted after this trial; future builds need a retained stable identity']
+                                 'self-signed identity deleted after this trial; future builds need a retained stable identity',
+                                 'search-list read/write has no atomic CAS; before/after checks cannot exclude concurrent races']
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps({k: report.get(k) for k in ('signingPreflightComplete', 'cleanupComplete', 'validationTaskComplete', 'stopReason')}))

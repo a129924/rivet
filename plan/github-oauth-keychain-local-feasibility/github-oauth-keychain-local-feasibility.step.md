@@ -1,10 +1,10 @@
 # Keychain 本機 OAuth 憑證保存可行性：狀態帳本
 
 - Topic：`github-oauth-keychain-local-feasibility`
-- 目前 phase：Human review／search-list 待決策
-- Current step：S07
-- Current step status：pending
-- 上游正式 verdict：approved（最新時窗及 metadata 正規化計畫經獨立審查；非 T03 成功）
+- 目前 phase：user search-list 成果交付
+- Current step：S06
+- Current step status：in-progress
+- 上游正式 verdict：approved（最新 user search-list 窄授權經獨立 Plan-Reviewer；非 T03 成功）
 - [需求](../../analysis/github-oauth-keychain-local-feasibility/requirements.md)／[規格](../../analysis/github-oauth-keychain-local-feasibility/technical-spec.md)／[契約](github-oauth-keychain-local-feasibility.plan.md)
 
 ## Steps
@@ -13,10 +13,10 @@
 | --- | --- | --- | --- | --- |
 | S01 | completed | Plan-Creator | 已核准對話計畫映射為同 slug 四份正式 artifacts，保留九欄、T01–T06、工具與時間／清理契約。 | 本 topic requirements、technical-spec、plan、step 四檔已建立；沒有 host／測量結果或正式 approval 聲明。 |
 | S02 | completed | Plan-Reviewer | 獨立審查四檔一致性、scope 與執行條件，明示正式 verdict。 | 原 cleanup、first／second 與 trust ownership 回修均保留歷史；最新 Human-start 時窗與 CodeSigning metadata 正規化修訂已分別經獨立 Plan-Reviewer 正式 approved，不代替實測成功。 |
-| S03 | completed | Implementer | 正式 approved 後建立受限 host、trust helper、runner 與必要紀錄，按 scope 交測。 | 原 E005 成果保留；本次限定 trust helper、metadata checker 與同 cert ready gate／SHA1 selector 已實作並經獨立純檢查及 code review。四輪真試驗已停止，未取得可簽署 host，不把準備或測量完成當成 T03 成功。 |
-| S04 | completed | Tester | 獨立執行 T01–T06、fresh-process、真重建、提示觀察及整輪實驗所有退出 cleanup（子程序正常結束保留 item）；保存四狀態／任務完成判斷與工具交付狀態。 | E005 evidence/normal-run.json、early-stop-run.json、environment.json 與八段 README。T02／T04 六欄成功；T03 真重建 requirement 不同，無 acceptance read；UX unobserved；真 absent／malformed 成功，denial 只 synthetic。正常兩項與提前停止一項清理確認不存在。實驗無法判定，Keychain 驗證任務完成；Reviewer 指出受控停止 cleanup 缺口後，Implementer bounded fix，Tester 新增真 controlled-stop-run 與 synthetic SIGINT／SIGTERM 兩測試（delete 重複同訊號），均成功清理／保存 receipt。舊正常與 early-stop 證據保留；不可捕捉停止限制明列。Tester 複驗 verdict approved（交獨立 Reviewer，非採用核准）。  本次四輪限定 trust 測量、全部 source snapshots／receipts／cleanup 亦經獨立 Tester closure approved；真 T03 未執行、machine validationTaskComplete=false，記錄工作完成但主假設仍無法判定。 |
+| S03 | completed | Implementer | 正式 approved 後建立受限 host、trust helper、runner 與必要紀錄，按 scope 交測。 | 原 E005 成果保留；本次限定 trust helper、metadata checker 與同 cert ready gate／SHA1 selector 已實作並經獨立純檢查及 code review。四輪真試驗已停止，未取得可簽署 host，不把準備或測量完成當成 T03 成功。 以上未簽成／T03 未執行屬歷史；最新 user-search-list 準備已通過11 synthetic tests／3 guards及獨立 Reviewer，單輪兩版簽章與 DR 相同、T03 六欄讀回均成立。 |
+| S04 | completed | Tester | 獨立執行 T01–T06、fresh-process、真重建、提示觀察及整輪實驗所有退出 cleanup（子程序正常結束保留 item）；保存四狀態／任務完成判斷與工具交付狀態。 | E005 evidence/normal-run.json、early-stop-run.json、environment.json 與八段 README。T02／T04 六欄成功；T03 真重建 requirement 不同，無 acceptance read；UX unobserved；真 absent／malformed 成功，denial 只 synthetic。正常兩項與提前停止一項清理確認不存在。實驗無法判定，Keychain 驗證任務完成；Reviewer 指出受控停止 cleanup 缺口後，Implementer bounded fix，Tester 新增真 controlled-stop-run 與 synthetic SIGINT／SIGTERM 兩測試（delete 重複同訊號），均成功清理／保存 receipt。舊正常與 early-stop 證據保留；不可捕捉停止限制明列。Tester 複驗 verdict approved（交獨立 Reviewer，非採用核准）。  本次四輪限定 trust 測量、全部 source snapshots／receipts／cleanup 亦經獨立 Tester closure approved；真 T03 未執行、machine validationTaskComplete=false，記錄工作完成但主假設仍無法判定。 以上 unknown／未執行屬歷史；最新 user-search-list-run 真 T02／T03／T04 六欄成功、absent／malformed 成功、machine validationTaskComplete=true（機制與清理），全部清理完成；Human 兩次授權階段未知，UX／主假設仍無法判定。 |
 | S05 | completed | Reviewer | 獨立檢視實際證據、分類、限制、cleanup 與工具產物，明示成果 verdict。 | 獨立 Reviewer 明示 approved；核對 SIGINT／SIGTERM 受控 cleanup 回修及 synthetic／真 controlled-stop 證據、receipt 相對路徑、T03／UX 限制、四尺寸與實際圖檢視。非採用核准；以上為原成果。本次兩輪自簽 preflight 與紀錄也經獨立 Reviewer 複審 approved。  以上 approvals 為歷史成果；最新四輪結果也經本次獨立 Reviewer closure approved。 |
-| S06 | completed | Implementer | 依獨立審查結果，只回寫指定 docs 條件結論；按 topic commit／push／開 Draft PR 供人類 review。 | 已依 staged diff 確認單一 topic 邊界；核心 commit e6438ad 已 push，Draft PR #58（base dev、isDraft true）已查證。所有 pre-commit hooks 通過；PR Lens 真實核心 diff 本機 validate／render 完成。此交付紀錄以同 topic docs commit 保存，最終 head 核對在 repository 外。 |
+| S06 | in-progress | Implementer | 依獨立審查結果，只回寫指定 docs 條件結論；按 topic commit／push／開 Draft PR 供人類 review。 | 已依 staged diff 確認單一 topic 邊界；核心 commit e6438ad 已 push，Draft PR #58（base dev、isDraft true）已查證。所有 pre-commit hooks 通過；PR Lens 真實核心 diff 本機 validate／render 完成。此交付紀錄以同 topic docs commit 保存，最終 head 核對在 repository 外。 |
 | S07 | pending | Human | 人類檢視 Draft PR，決定是否接受本輪結果；正式採用另行規劃。 | Draft PR #58 已建立：https://github.com/a129924/rivet/pull/58；等待 Human review，未核准採用／merge／release。 |
 
 Status 記錄不等同 approval。Plan-Creator 不審自己的四檔；Tester／Reviewer 維持獨立。Human 是人類邊界 owner，不是新增 agent role。
@@ -35,14 +35,14 @@ Status 記錄不等同 approval。Plan-Creator 不審自己的四檔；Tester／
 ## Blockers
 
 - 前版本正式 Plan-Reviewer 已複審 approved，planning cleanup blocker 已解除；本次自簽憑證限定例外四檔修訂也經獨立 Plan-Reviewer approved，不沿用前版本 approval。
-- DPK 免費 host／profile 仍未確認。legacy ad-hoc 真重建 designated requirement 改變；後續 Human 已觀察原 binary 單輪 0 提示，但無 T03 acceptance read 或重建後 UX 證據。主要採用決策仍受阻，不是已判定機制失敗。
+- DPK 免費 host／profile 仍未確認。先前 ad-hoc 的 DR 改變／無 T03 acceptance 為歷史缺口；最新自簽＋限定 trust＋user search-list 單輪已取得不同 hash、相同 DR 及 T03 六欄讀回，資料機制缺口已解除。現存 blocker 是 Human 無法區分兩次授權屬 runtime 或撤 trust，故 UX／主要假設仍無法判定，正式採用受阻。
 - 若無自然真 denial，保留未驗證缺口；不自行製造安全設定改動。
 - 正常 run 的主要／負向項目、獨立 early-stop 與 controlled-stop 項目均已精確清理並確認不存在；無已知殘留。
 
 ## Human Check
 
 - 已收到使用者本 topic 實現、直接 commit、push、Draft PR 供人類 review 的授權，無需再次等待 commit 批准。
-- 需新增帳號／超出限定自簽憑證例外的憑證操作／付費／安全設定、免費來源不明或時間到達：停止依賴操作，清理並交還缺口。除末節本輪新 cert 的 user-domain codeSign trust 唯一例外外，任何 trust／預設 Keychain／全域 search-list 改動即停；禁止 admin／SSL／broad trust。
+- 以末節已授權 exact-own-Keychain user search-list 例外為目前有效規則；以下舊全面禁令不覆蓋該例外。需新增帳號／超出限定自簽憑證例外的憑證操作／付費／安全設定、免費來源不明或時間到達：停止依賴操作，清理並交還缺口。除末節本輪新 cert 的 user-domain codeSign trust 唯一例外外，任何 trust／預設 Keychain／全域 search-list 改動即停；禁止 admin／SSL／broad trust。
 - Draft PR #58 已建立並驗證為 Draft，供 human review；主假設仍無法判定，未授權 merge／release／正式採用。
 
 ## Time Budget：原授權窗歷史（新 trust 補測依末節新窗）
@@ -175,3 +175,50 @@ Human trust-ready／Touch ID 授權已收到；T03 仍須預檢成功後另確�
 - 2026-10-15 05:57:26 UTC：四輪真實限定 trust 試驗已停止；前兩輪 readback metadata 誤拒，官方來源與 shape 證據後獨立核准 checker 正規化；後兩輪限定 trust／valid identity 成立，但名稱與 exact SHA-1 selector 的 codesign 仍 no identity found。全部零 OAuth 寫入／T03 未執行，trust 撤回與三 domain absence、專用 Keychain／秘密清理、default/search-list 一致均確認。最後 selector 試驗後不再變體；下一個 search-list 前提超出授權未介入。等待 Tester／Reviewer closure，不以局部成功宣稱主假設成立。
 
 - 2026-10-15 06:01:57 UTC：獨立 Tester／Reviewer closure 正式 approved，四輪 receipts／全部來源與metadata回修、zeroOAuth／T03未執行及完整清理核對一致，無 required fixes。已回寫指定 docs；同 topic 提交更新 Draft PR，最終 head 於 repository 外核對。不再本輪測量；search-list 僅待測前提，任何修改須新 Human 授權，未核准採用／merge。
+
+
+## 最新 Execution Authorized：暫時 user search-list 受限例外
+
+Human 已明確授權本輪 freshly-created 專用實驗 Keychain 暫時 append 至使用者搜尋清單。此為唯一新例外，不改 default Keychain、既有 ACL／partition-list、admin／system trust、SSL／broad trust 或其他設定；trust 仍限同一新 cert 的既有 user/codeSign 授權及 ownership guard。單一 legacy 候選、單一真實 run，不增加 backend fallback／簽章變體。原 receipts／code snapshots 保留。
+
+### 最新時間與 readiness
+
+新 30 分鐘窗為 2026-10-15 06:09:51–06:39:51 UTC，06:34:51 UTC 停新測量，最後五分鐘優先撤 trust、還原 search-list、清理與紀錄，不自動延長。本節的時間及 exact-own-Keychain user search-list 例外優先於所有前版時窗／全面 search-list 禁令；舊記錄保留為歷史，其他 scope／主六欄／UX 判準不變。
+
+同 run trust setup 的 Human 授權已收到，可由 Human 自行處理系統 approval／密碼，agent 不自填。T03 必須於 trust、同 cert 兩版簽章／DR 預檢成功後，重新確認 CUA 連線與 Human 全程觀察 ready；未 ready／連線不足／到停測點不得寫 OAuth。CUA 能列 apps 不等於能觀察 SecurityAgent，系統提示仍由 Human 觀察。固定 active host path、first writer／second reader 及不同 hash 證據維持。
+
+### Search-list mutation ownership 與核對
+
+只以 `security list-keychains -d user` 讀、`security list-keychains -d user -s` 寫 user-domain search-list；不得改 domain 或 default。原完整有序清單及 default snapshot 僅在記憶體，quote 以 shlex 解析；輸出僅 bool／count，不保存私人 path／raw list。own identity 僅以 resolve 與該已知 `.keychain`／`.keychain-db` suffix 等價核對，不能 substring 模糊匹配。
+
+新增 opt-in `--temporary-user-search-list`，必須已有 trust＋diagnose＋certSHA1 guards 及 UTC deadline；missing guard 在 Security 初始化前失敗，不產生副作用。
+
+1. 確認 own Keychain 是本輪 freshly-created、精確隔離且 baseline 無此 membership；讀取 baseline user search-list 有序序列及 default。
+2. mutation 前再次讀 current 與 default，要求原序列及 default 完全一致；不一致即停止，不覆寫、不 append，清自建素材。確認後在 write 前登記本輪 search-list ownership／attempt，再只寫 baseline + [ownKC]；add failure 亦須考慮部分新增。
+3. 立即讀回，核對 exact baseline + [ownKC] 順序／count 及 default 不變；不符即停新測量並進 cleanup。不以寫入 exit0 代替讀回證據。
+
+### 整輪退出還原與殘留
+
+所有正常、失敗、timeout、受控 signal／例外退出皆依 ownership cleanup。先清本輪 OAuth 項目（若有），處理既定 exact-cert trust 撤回／absence 核對，再在 delete Keychain 前撤回自己新增的 user search-list membership；trust cleanup 失敗亦記錄並嘗試自己的 search-list cleanup，不能省略已擁有的副作用。
+
+若 search-list ownership／attempt 未登記，絕不寫回清單。已登記時重新讀 current，只移 ownKC，保留所有 foreign entries 及其順序；不能把舊 baseline 直接覆寫 current。無並發修改時，核對原 baseline 有序序列已恢復且 default 不變，之後才刪專用 Keychain／秘密。
+
+若 current 有其他並發修改，保留 foreign entries／order、只移 ownKC，立即核對 own membership absence 與 foreign sequence 保留，明列 baseline 不一致及 recovery；不得為恢復 baseline 撤銷別人的修改。若原序列未恢復、移除／核對失敗或 trust absence 未成立，保留專用 Keychain／必要非秘密 recovery 依據，明列殘留／原因、任務否，不先刪 Keychain 掩蓋 membership 或 trust。所有路徑不輸出私人 path／秘密，不因刪 cert 推論 trust 消失。
+
+### 實作與交付邊界
+
+只修改 E005 runner、必要最小 synthetic ownership／concurrency／exit 測試、新獨立收據及八段 README，不改 production。synthetic 須明標；必要案例包括 baseline conflict 零 mutation、部分 write failure cleanup、foreign order 保留及受控退出還原，不能冒充真 Keychain 證據。真實 run 僅一輪，不在失敗後追加變體。
+
+四狀態／任務完成／cleanup／recovery 分開。先前 T03 仍無法判定；本節只新增窄授權契約，不預報本輪成功。此為規劃當時狀態：四檔具備獨立審查內容、正式 verdict 待審；其後已獲 Plan-Reviewer approved，後續實測結果另記。
+
+- 2026-10-15 06:11:48 UTC：Plan-Creator 依 Human Execution Authorized 只追加 exact freshly-created Keychain 的 user search-list append／ownership／還原與新窗契約；S02 pending、四檔 ready-for-independent-review，正式 verdict null。交接 HEAD 6c7e52f／Draft PR #58 為主工作 session 提供，未自行 Git 查核；未實作／測試／操作 search-list 或 commit。
+
+- 2026-10-15 06:12 UTC：獨立 Plan-Reviewer 對最新 user-search-list 例外明示 approved，無 required fixes；不宣稱 read/write 原子性。Implementer 開始受限 runner／synthetic 檢查實作，尚未真實 mutation 或 OAuth 寫入。
+
+- 2026-10-15 06:15 UTC：獨立 Tester 準備 approved（11 synthetic tests／3 CLI guards），獨立 Reviewer 準備 approved，無 required fixes；兩份自測副作用歷史 synthetic receipts 已精確恢復 HEAD。交 Tester 單一真實 run；尚未執行 T03，不核准採用。
+
+- 2026-10-15 06:21 UTC：唯一真實 user-search-list run 完成；T02／T03／T04 六欄成功、兩版 hash 不同 DR 相同、13 ops exit0、真 absent／malformed成功；OAuth／trust／own membership／原序列及 default／KC與秘密全部清理確認。獨立 Tester、Reviewer 明示機制與清理 approved；UX 待 Human 對14:20:47–14:20:59完整觀察回報，machine null/unknown不改。未新增變體或重跑。
+
+- 2026-10-15 06:25 UTC：Human 全程回報兩次授權，第一次密碼／永遠允許、第二次指紋；明確無法確認兩次階段。另存 SHA 綁定人工收據，runtime promptCount null／UX與主假設無法判定，不以耗時推階段、不追加 run。S04 completed，S05 pending，交 Reviewer 最終分類與紀錄審查。
+
+- 2026-10-15 06:28 UTC：獨立 Reviewer closure approved、無剩餘 required fixes。核可指定 docs 條件回寫與本 topic commit／push／Draft PR 更新；T03 資料機制成立、UX／主假設無法判定、全部清理完成，紀錄任務完成。S05 completed、S06 in-progress，停點仍為 human review、不核准採用／merge。

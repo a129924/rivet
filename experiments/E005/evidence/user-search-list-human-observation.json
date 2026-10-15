@@ -1,0 +1,26 @@
+{
+  "source": "Human replies in this session",
+  "machineReceipt": "user-search-list-run.json",
+  "machineReceiptSHA256": "648549e43984ba6daa37cfe0caffadaabe60c10f1fc30548393e78ad80dff447",
+  "recordedUTC": "2026-10-15T06:24:11.070697+00:00",
+  "setupHumanStatement": "看到畫面，已完成授權",
+  "readinessHumanStatement": "已準備好，全程觀察",
+  "observationHumanStatement": "第二點 第一次輸出密碼 第二次 指紋",
+  "reportedAuthorizationEvents": 2,
+  "reportedMethodsInOrder": [
+    "password",
+    "fingerprint"
+  ],
+  "wholeRunObservationClaimed": true,
+  "runtimePromptCount": null,
+  "cleanupTrustAuthorizationCount": null,
+  "promptPhaseAssignment": "Human unable to distinguish runtime access from cleanup trust authorization",
+  "firstPromptAction": "永遠允許",
+  "runtimeUXConclusion": "無法判定",
+  "limitations": [
+    "Do not infer phase or prompt count from operation duration or exit status",
+    "Repeated setup and runtime statements refer to distinct observations"
+  ],
+  "phaseClarificationHumanStatement": "無法確認兩次各屬哪個階段",
+  "actionClarificationHumanStatement": "我按 `永遠允許`"
+}

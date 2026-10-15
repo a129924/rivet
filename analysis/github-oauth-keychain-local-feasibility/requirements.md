@@ -127,3 +127,49 @@ Human trust-ready／Touch ID 授權已收到；T03 仍須預檢成功後另確�
 Human-start 新窗內四輪 receipts 已保存於 E005：前兩輪辨識 readback policyName metadata 誤拒；經獨立核准的 checker 正規化後，user-only codeSign／trustRoot 讀回成立，target private Keychain 為 1 matching／1 valid identity。名稱及 exact DER SHA-1 selector 的 codesign 首次簽章仍回 no identity found；最後一輪已停止，不再試其他變體。零 OAuth 寫入、無兩版有效簽章／DR／T03，主假設仍無法判定；四輪 trust 精確移除、三 domain absence、Keychain／秘密不存在及 default／search-list 一致皆確認，無已知殘留。
 
 本機 Apple man codesign SIGNING IDENTITIES 指出 identity 所在 Keychain 須在使用者 search-list；這是下一個待測前提，不稱唯一根因。既定 scope 禁止修改 search-list，必須另獲 Human 授權才可介入，不自動擴安全／時間範圍。免費 cert／限定 trust 前提的局部成功不代替 T03 或正式採用。詳見 [E005](../../experiments/E005/README.md)。
+
+
+## 最新 Execution Authorized：暫時 user search-list 受限例外
+
+Human 已明確授權本輪 freshly-created 專用實驗 Keychain 暫時 append 至使用者搜尋清單。此為唯一新例外，不改 default Keychain、既有 ACL／partition-list、admin／system trust、SSL／broad trust 或其他設定；trust 仍限同一新 cert 的既有 user/codeSign 授權及 ownership guard。單一 legacy 候選、單一真實 run，不增加 backend fallback／簽章變體。原 receipts／code snapshots 保留。
+
+### 最新時間與 readiness
+
+新 30 分鐘窗為 2026-10-15 06:09:51–06:39:51 UTC，06:34:51 UTC 停新測量，最後五分鐘優先撤 trust、還原 search-list、清理與紀錄，不自動延長。本節的時間及 exact-own-Keychain user search-list 例外優先於所有前版時窗／全面 search-list 禁令；舊記錄保留為歷史，其他 scope／主六欄／UX 判準不變。
+
+同 run trust setup 的 Human 授權已收到，可由 Human 自行處理系統 approval／密碼，agent 不自填。T03 必須於 trust、同 cert 兩版簽章／DR 預檢成功後，重新確認 CUA 連線與 Human 全程觀察 ready；未 ready／連線不足／到停測點不得寫 OAuth。CUA 能列 apps 不等於能觀察 SecurityAgent，系統提示仍由 Human 觀察。固定 active host path、first writer／second reader 及不同 hash 證據維持。
+
+### Search-list mutation ownership 與核對
+
+只以 `security list-keychains -d user` 讀、`security list-keychains -d user -s` 寫 user-domain search-list；不得改 domain 或 default。原完整有序清單及 default snapshot 僅在記憶體，quote 以 shlex 解析；輸出僅 bool／count，不保存私人 path／raw list。own identity 僅以 resolve 與該已知 `.keychain`／`.keychain-db` suffix 等價核對，不能 substring 模糊匹配。
+
+新增 opt-in `--temporary-user-search-list`，必須已有 trust＋diagnose＋certSHA1 guards 及 UTC deadline；missing guard 在 Security 初始化前失敗，不產生副作用。
+
+1. 確認 own Keychain 是本輪 freshly-created、精確隔離且 baseline 無此 membership；讀取 baseline user search-list 有序序列及 default。
+2. mutation 前再次讀 current 與 default，要求原序列及 default 完全一致；不一致即停止，不覆寫、不 append，清自建素材。確認後在 write 前登記本輪 search-list ownership／attempt，再只寫 baseline + [ownKC]；add failure 亦須考慮部分新增。
+3. 立即讀回，核對 exact baseline + [ownKC] 順序／count 及 default 不變；不符即停新測量並進 cleanup。不以寫入 exit0 代替讀回證據。
+
+### 整輪退出還原與殘留
+
+所有正常、失敗、timeout、受控 signal／例外退出皆依 ownership cleanup。先清本輪 OAuth 項目（若有），處理既定 exact-cert trust 撤回／absence 核對，再在 delete Keychain 前撤回自己新增的 user search-list membership；trust cleanup 失敗亦記錄並嘗試自己的 search-list cleanup，不能省略已擁有的副作用。
+
+若 search-list ownership／attempt 未登記，絕不寫回清單。已登記時重新讀 current，只移 ownKC，保留所有 foreign entries 及其順序；不能把舊 baseline 直接覆寫 current。無並發修改時，核對原 baseline 有序序列已恢復且 default 不變，之後才刪專用 Keychain／秘密。
+
+若 current 有其他並發修改，保留 foreign entries／order、只移 ownKC，立即核對 own membership absence 與 foreign sequence 保留，明列 baseline 不一致及 recovery；不得為恢復 baseline 撤銷別人的修改。若原序列未恢復、移除／核對失敗或 trust absence 未成立，保留專用 Keychain／必要非秘密 recovery 依據，明列殘留／原因、任務否，不先刪 Keychain 掩蓋 membership 或 trust。所有路徑不輸出私人 path／秘密，不因刪 cert 推論 trust 消失。
+
+### 實作與交付邊界
+
+只修改 E005 runner、必要最小 synthetic ownership／concurrency／exit 測試、新獨立收據及八段 README，不改 production。synthetic 須明標；必要案例包括 baseline conflict 零 mutation、部分 write failure cleanup、foreign order 保留及受控退出還原，不能冒充真 Keychain 證據。真實 run 僅一輪，不在失敗後追加變體。
+
+四狀態／任務完成／cleanup／recovery 分開。先前 T03 仍無法判定；本節只新增窄授權契約，不預報本輪成功。此為規劃當時狀態：四檔具備獨立審查內容、正式 verdict 待審；其後已獲 Plan-Reviewer approved，後續實測結果另記。
+
+
+### 新授權單輪實測結果（資料／清理已確認，UX 無法判定）
+
+Human 授權 exact-own-Keychain user search-list 例外後，唯一 [user-search-list-run](../../experiments/E005/evidence/user-search-list-run.json) 於 06:16:17–06:21:03 UTC 完成；setup 授權由 Human 處理，預檢通過、CUA 重新連線及 Human 明確全程 ready 後才接受 gate。first writer／兩 fresh readers、不同 hash 的 rebuilt second reader 均逐欄六欄 true，DR 相同且兩版 cert-backed signature 有效、path／bundle／entitlements 一致，沒有 profile；second 完整替換 B／fresh read B、真 absent／malformed 分類也成立。沒有付費或既有 identity 依賴，legacy 固定。
+
+全部13操作 exit0，兩 OAuth 項目、exact-cert user trust、own search-list membership、專用 Keychain／秘密已精確清理，原有序清單／default 恢復；無 recovery。獨立 Tester／Reviewer 核對機制與清理 approved。machine validationTaskComplete=true 僅表示這些測量完成；experimentStatus unknown／prompt null 保留，Human 全程觀察後回報兩次授權，第一次輸入密碼並選「永遠允許」、第二次指紋，但無法分辨 runtime／撤 trust 階段；[人工收據](../../experiments/E005/evidence/user-search-list-human-observation.json) 另綁 machine SHA。runtime promptCount 仍 null，UX 無法判定，不能從 exit0／操作耗時猜階段，也不把「永遠允許」當作未測下一次重建的證明。
+
+這已補足本輪 T03 資料機制，不宣稱唯一根因、DPK、其他 macOS、長期保留身分 reuse 或正式採用。cert 隨實驗刪除；真 denial 仍未觀察，production adapter／provider lifecycle 不變。
+
+本輪受限驗證／紀錄任務完成，主假設仍無法判定，缺口為 UX 提示階段而非 T03 資料機制；不追加真實 run、不核准採用。
