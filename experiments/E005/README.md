@@ -83,3 +83,26 @@
 - 主假設仍為無法判定；本次僅補上已執行操作的人工 UX 觀察，沒有核准正式採用。
 
 - 後續補測之 machine／Human 觀察與條件化措辭已由獨立 Reviewer 核對，明示 approved；不取代 Human 對 Draft PR 的接受決策。
+
+### T03 限定自簽身分預檢補充（2026-10-15）
+
+**驗證什麼／為什麼。** 使用者明確允許一張實驗專用自簽 Code Signing 憑證／私鑰、repository 外獨立實驗 Keychain，以補相同 legacy／假六欄的 T03。重用 E005 同一問題、環境及判準；不覆寫 ad-hoc 或 Human 零提示收據。[Apple Code Signing Tasks](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html) 說明自簽憑證可用於內部測試、驗證版本來源一致性；文件本身不證明此 macOS 的 Keychain UX。[Apple Security 原始碼](https://github.com/apple-oss-distributions/Security/blob/main/OSX/libsecurity_keychain/lib/StorageManager.cpp) 的 `shouldAddToSearchList` 說明私人 Keychain 建立不應改全域搜尋清單；本次仍實測比較，不將源碼外推為環境保證。
+
+**成功與失敗判準。** 維持既定六欄／首次最多一次提示／後續零提示；先完成兩次真重建與 DR 相等預檢，再以固定路徑 first writer、second reader 核對實際 hash。預檢不成立即不寫 OAuth item，不調整 trust／預設 Keychain／search-list／既有 ACL／partition-list。原 03:56:28 UTC 停新測量及 04:11:28 UTC 總上限不延長。
+
+**環境與前置條件。** 同 E005 macOS／Swift，OpenSSL 3.6.4；私有 Keychain 直接 `SecKeychainCreate`、隨機密碼僅記憶體；0700 scratch、0600 秘密素材。只在新私鑰匯入時設定 `/usr/bin/codesign` 初始存取，沒有全 app 存取或既有 ACL 修改。自簽 host 未建立成功，未取得可比較的 DR。
+
+**重現步驟。** 新增 `scripts/run_self_signed_probe.py`，預設只做簽章預檢並 finally 精確清理；`--measure` 路徑未執行。獨立 Tester 依序執行：
+
+```sh
+python3 experiments/E005/scripts/run_self_signed_probe.py --out experiments/E005/evidence/self-signed-preflight.json
+python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --out experiments/E005/evidence/self-signed-pem-preflight.json
+```
+
+第二輪僅為一次 PEM transport 相容性檢查，沒有 backend／簽章政策 fallback。首輪執行的原始碼快照位於 `evidence/source-snapshots/45c995f97c0b4c1872db8930e37af08b9796a376056682f00c38322709531f4a.py`，SHA-256 與首輪收據一致；此為歷史來源快照，重現入口仍為 scripts 目錄。第二輪收據 hash 綁定目前腳本。沒有秘密或原始 system stderr 進入 repository。
+
+**是否成功。** 本補測狀態 **無法判定**；T03 acceptance **未執行**。兩份 machine receipt 的 `validationTaskComplete=false` 表示簽章預檢未達成，不冒充 T03 完成。受限驗證與紀錄工作可在如實保存停止原因、缺口、清理與決策限制後完成；主假設及正式採用仍受阻。
+
+**結果與證據。** [PKCS12 收據](evidence/self-signed-preflight.json)：03:32:17.382262–03:32:18.185115 UTC，生成／封裝 exit0，匯入 exit1。 [PEM 收據](evidence/self-signed-pem-preflight.json)：03:33:40.699403–03:33:44.072436 UTC，生成、編碼、憑證及私鑰匯入均 exit0，首次簽章 exit1。兩輪均未取得兩版有效簽章／DR 比較，OAuth commands 為空、零 OAuth 寫入。已知錯誤分類不足以指出根因，不能稱為已確認的信任錯誤。兩輪私有 Keychain create/delete status0、專用 Keychain 與秘密 scratch 確認不存在，建立後及清理後 default／search-list 比較全部相等。桌面工具連線確認成功；程序清單抽樣未見 SecurityAgent，不等同全程可見提示觀察，也不補造本輪 UX 結果。
+
+**結論與限制。** 原 binary 的 Human 全程零提示證據繼續有效，不能外推此次尚未建立的自簽 host。現有 host 已有 `.app` 包裝；目前缺口為可成功簽署且可維持 DR 的免費身分，不是已證實需要 GUI App。此次自簽候選未滿足前提，不能判定 Keychain 保存失敗、不能推論必須付費或自簽方案普遍不可用。沒有放寬信任／安全設定或增加其他簽章變體。下一步需另行釐清簽章失敗原因及免費穩定 host，才可重新安排 T03 與該 host 的人工 UX 觀察；本輪不核准正式採用。不可捕捉停止／程序或主機失效仍不保證 finally 清理；實際兩輪清理完整。

@@ -125,3 +125,5 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 真實 absent／malformed 分類與所有本輪已嘗試寫入的主要／負向／停止項目清理均有證據，確認不存在。SIGINT／SIGTERM 控制流程及清理期間重複訊號以明標 synthetic 測試驗證；寫入後受控例外清理另有真實 Keychain 證據，兩者不混作真實訊號中斷的 Keychain 或 UX 證明。不可捕捉停止／程序或主機失效仍不保證 finally 清理。
 
 後續需要免費且維持穩定 code identity 的 host 與實際系統提示觀察，再返回採用決策；不得自行新增帳號／憑證或放寬 ACL／安全設定。既有 non-BC GitHubIntegration 邊界、OAuthTokenProvider ownership、production APIs 與 Keychain adapter deferred 狀態保持。
+
+使用者後續明確授權實驗專用自簽 Code Signing 憑證／私鑰與獨立實驗 Keychain，僅補同一 legacy／假六欄的穩定簽章前提。[PKCS12 preflight](../../experiments/E005/evidence/self-signed-preflight.json) 停於匯入 exit1；一次 [PEM 相容性 preflight](../../experiments/E005/evidence/self-signed-pem-preflight.json) 成功匯入憑證與私鑰後，首次簽章 exit1。未取得兩版有效簽章／相等 DR，沒有 OAuth 寫入或 T03 acceptance read；根因尚未確認，不推論信任錯誤、必須付費或自簽方案普遍不可用。兩輪專用 Keychain 與秘密暫存完整清理，default Keychain／全域搜尋清單前後一致；未改系統信任、既有 ACL 或安全設定。獨立 Tester／Reviewer 已核對受限紀錄；原 binary 的 Human 零提示結論保留，主假設仍無法判定。現有 host 已有 app-like `.app` 包裝，尚無證據表示改成 GUI App 可解除此簽章缺口。後續仍須釐清免費穩定簽章前提，才可補 T03 與新 host 的 UX 觀察；此不核准正式採用。

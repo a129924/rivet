@@ -69,3 +69,21 @@ E005 在首次寫入前明確選 legacy，無 profile 的 ad-hoc host 不依賴�
 ### Human 觀察的獨立保存
 
 同環境／同判準 E005 後續補測使用新 UUID，machine promptCount 原樣為 null；Human 另明確回報整輪全程觀察 0 提示，以獨立 JSON 的 machine receipt SHA-256 綁定時窗。此為 Human 陳述的實際桌面觀察，不是程式 exit code 推論，也不改寫初輪證據。T02／T04 本輪原 binary 的零提示可採為受限 UX 證據；不涵蓋 T03 未執行的 acceptance read 或其他 host。整體無法判定與正式 adapter deferred 保持。
+
+
+## T03 補測限定設計：實驗自簽身分
+
+本節記錄使用者後續明確授權，不覆寫上方歷史 E005 ad-hoc 結果。只允許新增一張實驗專用自簽 Code Signing cert／private key，放在 repository 外新 UUID 隔離的專用實驗 Keychain；不依賴付費資格、既有個人憑證或 profile。授權涵蓋該專用 Keychain 的建立、限定 cert／key 匯入與精確刪除，不涵蓋既有 ACL、系統信任、預設 Keychain 或全域 search-list 改動。需要任一禁止操作即停並清理。
+
+補測維持同一 legacy backend 與固定假六欄，不切 DPK，也不重新定義主要判準。順序如下：
+
+1. 建立隔離專用 Keychain 及唯一實驗 cert／private key；所有 private key、密碼與匯入素材僅留 repository 外隔離 scratch，不進 repository、log 或公開證據。
+2. 以同一實驗身分簽署兩次真正重建的 host，維持原 host 路徑、bundle ID、簽章方式、entitlements／access groups。改 build marker，保存並核對 first／second 的不同 binary hash；先記 designated requirement 相等及其他身分條件一致性布林值。兩次 build／DR 預檢完成後保留 first／second binaries。未相等即停止，不寫入本次 OAuth item。
+3. 同身分前提成立後，於固定 host 路徑還原 first（第一次 build）作 writer，寫入新 UUID OAuth item 的固定假 A 並結束；再於同一路徑換成 second（第二次 build），以 fresh reader 逐欄讀回。保存／核對每次實際執行 binary 的 hash，證明 writer=first、reader=second 且兩者不同；不得 writer／reader 都使用 second。子程序正常退出保留 item。記錄真正 T03 acceptance read 及全部提示，正常 UX 判準不變。
+4. 任一專用 Keychain／秘密素材建立後，整輪正常完成、失敗、停止或例外退出皆嘗試精確清理本輪 OAuth 項目、專用 cert Keychain（含 cert／private key）及 repository 外秘密／匯入素材；分開保存 OAuth item absence、專用 Keychain／素材不存在的非秘密結果。不得刪既有 Keychain、改預設／search-list 或放寬安全設定換取清理成功。
+
+只保存新補測的獨立 receipt／非秘密證據，歷史 receipts 不覆寫。若尚未執行為未執行；已嘗試但 DR／信任／權限或時限不足為無法判定，不稱免費 Keychain 假設失敗。清理狀態與四狀態分開，殘留只記非秘密 UUID／原因，任務完成為否。截止仍為 03:56:28 UTC 新測量、04:11:28 UTC 總額。
+
+## 自簽身分補測結果（2026-10-15）
+
+使用者明確允許限定自簽憑證／獨立 Keychain 例外後，獨立 Plan-Reviewer 已核准 first writer／second reader 的補測計畫。兩輪僅簽章預檢：PKCS12 停於匯入 exit1；一次 PEM 相容性檢查成功匯入憑證／私鑰後，首次簽章 exit1，沒有兩版有效簽章或 DR 比較。零 OAuth 寫入，T03 acceptance 未執行；主假設仍無法判定。已知錯誤分類不足以指出根因，不推論信任錯誤、付費必要性或方案普遍不可用。兩輪專用 Keychain／秘密暫存完整清理，預設 Keychain／全域 search-list 前後一致。原 ad-hoc host 的 Human 零提示證據保留；不能外推尚未建立的自簽 host。詳細指令、時間、source hash 與 receipt 見 [E005](../../experiments/E005/README.md)。
