@@ -1,0 +1,21 @@
+{
+  "recordedUTC": "2026-10-15T04:00:10.435042+00:00",
+  "synthetic": true,
+  "scope": "constraint predicate only; no certificate, trust mutation or Keychain item operation",
+  "sourceSHA256": "0706543b7b6acc894178fec4773b70c4c7e0ec8dd90104b24b95d2d52b23790e",
+  "binarySHA256": "f189e3669307ffde9eca5dc38352350b365b5eba8ab790aff0dee85fee76bb71",
+  "build": "independent Tester swiftc -swift-version 6 -parse-as-library",
+  "exitCode": 0,
+  "output": {
+    "noTrustMutation": true,
+    "syntheticConstraintChecks": {
+      "allowedErrorRejected": true,
+      "emptyAlwaysTrustRejected": true,
+      "exactCodeSigningAccepted": true,
+      "multipleEntriesRejected": true,
+      "SSLRejected": true,
+      "unconstrainedRootRejected": true,
+      "wrongResultRejected": true
+    }
+  }
+}

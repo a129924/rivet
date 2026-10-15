@@ -18,10 +18,10 @@ DPK 優先檢查免費 host 前提，無法證實時只允許首次寫入前選 
 | --- | --- |
 | **Goal** | 免費本機完整憑證的 fresh-process、真重建與提示 UX 可行性。 |
 | **In-Scope** | 單一候選最小 Swift host、私有編碼器、固定假 A／B、T01–T06、遮蔽證據、精確清理、必要 workflow 與受限本地理解。 |
-| **Out-Of-Scope** | 真 token／GitHub OAuth／登入 UI、正式 adapter、SQLite migration、跨程序 refresh、公開分發／notarization、新增帳號、超出下節窄範圍例外的建立／匯入憑證、付費、安全設定／既有 ACL 變更、發布。 |
+| **Out-Of-Scope** | 真 token／GitHub OAuth／登入 UI、正式 adapter、SQLite migration、跨程序 refresh、公開分發／notarization、新增帳號、超出下節窄範圍例外的建立／匯入憑證、付費、超出新授權 user-domain codeSign trust 例外的安全設定／既有 ACL 變更、發布。 |
 | **ReadOnly** | production Sources／Tests、root manifests、歷史 topics／E001–E004、技能與 tool configs；架構文件作依據，唯一後續回寫目標除外。 |
-| **Written** | 本 topic requirements／technical-spec／plan／step 四檔，新 experiment 的 host、八段 README、evidence、Archify spec／HTML／receipts／captures；PR Lens 僅 repository 外 topic scratch；限定自簽憑證／private key、匯入素材與專用實驗 Keychain 僅在 repository 外隔離 scratch，不進 repository 或輸出秘密。 |
-| **Deleted** | 不刪既有 repository 檔案；僅本輪精確 UUID Keychain 項目、限定憑證的專用實驗 Keychain／repository 外秘密素材及確認屬本輪的 build 暫存，不刪證據或既有 Keychain。 |
+| **Written** | 本 topic requirements／technical-spec／plan／step 四檔，新 experiment 的 host、八段 README、evidence、Archify spec／HTML／receipts／captures；PR Lens 僅 repository 外 topic scratch；限定自簽憑證／private key、匯入素材與專用實驗 Keychain 僅在 repository 外隔離 scratch，不進 repository 或輸出秘密；僅本輪新 cert 的 user-domain codeSign trust 依末節建立／讀回／撤回，證據只留非秘密判斷。 |
+| **Deleted** | 不刪既有 repository 檔案；僅本輪精確 UUID Keychain 項目、限定憑證的專用實驗 Keychain／repository 外秘密素材及確認屬本輪的 build 暫存，不刪證據或既有 Keychain；只有 baseline 三 domain absence 已確認且本輪 add 已嘗試才撤回 exact-cert user trust並驗證無 trust，不能以刪 cert 代替；baseline 失敗／已有 trust／未 add 不得 remove。 |
 | **Modify** | 本 topic 新檔後續更新；經實證與獨立 review 後，只於 `docs/architecture/github-oauth-dual-client.md` 回寫有條件結論，不核准採用、不擴其他 docs。 |
 | **Non-Goal** | 不改 API、provider ownership、既定架構或歷史 topic，不以工具／build green 代替驗證。 |
 | **TestCase** | 下列 T01–T06，正常完成後獨立負向；整輪 experiment 的所有退出路徑精確清理，writer／reader 正常結束保留 item。 |
@@ -69,7 +69,7 @@ host 與整輪實驗退出行為明確後，產出一張繁中 static classic wo
 
 ## 時間、清理與停止
 
-2026-10-15 02:41:28 UTC 起算，總額 90 分鐘；03:56:28 UTC（75 分鐘）停止新增測量／圖作業，04:11:28 UTC（90 分鐘）到總上限。最後十五分鐘優先清理、保存證據與八段紀錄。PR 提交交接不當作 Keychain 測量，不杜撰額外測量時間或結果。
+原授權窗（歷史，後續限定 trust 補測另見末節明確 Human 新窗）：2026-10-15 02:41:28 UTC 起算，總額 90 分鐘；03:56:28 UTC（75 分鐘）停止新增測量／圖作業，04:11:28 UTC（90 分鐘）到總上限。最後十五分鐘優先清理、保存證據與八段紀錄。PR 提交交接不當作 Keychain 測量，不杜撰額外測量時間或結果。
 
 統一 cleanup 是整輪 experiment 的退出路徑：writer／reader 子程序正常結束保留 item，供 T02 跨程序、T03 真重建、T04 替換使用。任一寫入嘗試後，整輪正常完成／失敗／停止／例外退出時才嘗試精確清理全部本輪主要及負向項目。殘留時記非秘密 UUID 識別、原因、待處理操作，驗證任務完成為否。需要新增帳號／超出限定例外的憑證操作／付費／安全設定變更、所選免費來源不明或時限到達即停止依賴操作並清理紀錄。
 
@@ -91,3 +91,23 @@ host 與整輪實驗退出行為明確後，產出一張繁中 static classic wo
 原 90 分鐘不延長：03:56:28 UTC 停止新增測量，最後十五分鐘優先清理紀錄，04:11:28 UTC 總上限。四檔修訂先交獨立 Plan-Reviewer，通過後依既有 Implementer→Tester→Reviewer 流程補測，不新增工具 gate；新結果獨立保存，歷史及其審查結論不覆寫。T03 acceptance 目前未執行；兩輪簽章 preflight 結果見 E005，不預先宣稱 T03 或主假設成功。
 
 使用者續行授權（2026-10-15）：同一 PEM／自簽候選只補失敗診斷，保存公開已知錯誤片語與本輪專用 Keychain identity 數量，不保留個人識別／raw stderr、不掃全域。無 OAuth 寫入，不增加簽章變體或安全設定變更；原 03:56:28 UTC 新測量截止不變，診斷後若需禁止操作即停。
+
+
+## Human 額外 30 分鐘窗：user-domain codeSign trust 唯一例外
+
+使用者明確授權僅本輪新自簽 cert、使用者範圍、Code Signing 用途的 trust；這是原安全設定禁令的唯一新增例外。禁止 admin／`-d`、SSL／broad trust、既有 ACL／partition-list、預設 Keychain／全域 search-list 變更。系統密碼／approval 由 Human 操作，agent 不自填、不保存。
+
+執行順序固定：證明 exact cert 原本無 user trust → 新增唯一 user-domain codeSign trust → 讀回驗證僅此 domain／policy → 同 cert 兩 build 真重建及 DR 相等／hash 不同預檢（至此零 OAuth write）→ 確認 CUA 連線 → 等 Human 明確 ready → 固定 active host 路徑 first writer／second reader T03。前提、CUA 或 ready 不足／超時則無 OAuth write 並 cleanup，不增加 trust 變體。
+
+所有整輪退出（包括 trustfailed、timeout、受控 signal、正常／失敗／例外）皆 finally cleanup；只有三 domain baseline absence 已確認 AND 本輪 add 已嘗試，才可 remove 本次 exact-cert user trust，核對無 user trust後才刪專用 Keychain／cert／秘密。baseline 已有 trust／查證失敗／未 add 只清自建素材，絕不撤原有 trust。不得以刪 cert 假設 trust 消失；部分新增也需撤回核對。失敗保留非秘密 exact-cert 撤回依據／殘留原因、標任務否，不先毀掉撤回依據；不輸出秘密或改其他設定。
+
+新窗 2026-10-15 03:54:20 UTC 起，04:19:20 UTC 停新測量，04:24:20 UTC 總上限，最後五分鐘優先撤 trust／清理紀錄。這是 Human 明確新授權，原 90 分鐘窗及所有 receipts 作歷史保留，不暗延長。新四檔修訂交獨立 Plan-Reviewer，再依既有 Implementer／Tester／Reviewer 分工；T03 仍無法判定，不預報成功，不覆寫舊 evidence。
+
+
+### 本窗精確 trust 與互動約束
+
+只新增 experiment-local Swift TrustProbe，接受本輪 `Rivet-E005-UUID` cert DER，exact-cert CopyTrustSettings 查 user／admin／system。三 domain baseline 均須 `errSecItemNotFound`，空 array／錯誤不算 absence。set 僅 user／SecPolicyCreateWithProperties(kSecPolicyAppleCodeSigning, nil)／trustRoot；readback 恰一 entry、keys 恰為 Policy／Result、OID AppleCodeSigning／result trustRoot，admin／system absent；SSL／broad／空array／multirow／額外keys 拒絕。
+
+trust 互動 ready 尚未收到：先 code preparation，不執行需互動 trust。收到 Human 明確 ready 後才 add，authentication 全由 Human；兩版預檢成功後再確認 CUA／T03 Human ready，不能沿用 trust-ready。trustOwnedAttempt 初始 false，只在三 domain baseline absence 確認後、呼叫 add 前設 true；finally 只有 true 才 remove exact-cert user trust並嚴格 readback absent，再刪 Keychain／秘密。add failure 仍處理可能部分新增；false 分支只清自建素材，絕不 remove 原有 trust；失敗保留 cert DER／private Keychain／recovery 資料供 Human，明列殘留，不輸出路徑／秘密，不改 partition-list。新窗截止不變。
+
+目前有效優先規則：本次 Human 新授權的 30 分鐘窗與 exact-cert user-domain codeSign trust 例外，優先於前版一律禁止 trust 及原 90 分鐘截止的敘述；前版限制／收據僅保留為歷史。此優先只開放本次新 cert 的 user/codeSign，不開放 system/admin domain 或其他政策；其餘 scope、安全／UX／cleanup 限制保持有效。

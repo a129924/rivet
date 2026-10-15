@@ -1,10 +1,10 @@
 # Keychain 本機 OAuth 憑證保存可行性：狀態帳本
 
 - Topic：`github-oauth-keychain-local-feasibility`
-- 目前 phase：Human 信任設定決策
-- Current step：S07
-- Current step status：pending
-- 上游正式 verdict：approved（本次限定自簽授權修訂經獨立 Plan-Reviewer 複審；不代表實驗成功）
+- 目前 phase：準備 approved／等待 Human trust-ready
+- Current step：S03
+- Current step status：in-progress
+- 上游正式 verdict：approved（本次限定 user/codeSign trust 計畫經獨立複審；非測量成功）
 - [需求](../../analysis/github-oauth-keychain-local-feasibility/requirements.md)／[規格](../../analysis/github-oauth-keychain-local-feasibility/technical-spec.md)／[契約](github-oauth-keychain-local-feasibility.plan.md)
 
 ## Steps
@@ -12,8 +12,8 @@
 | ID | Status | Owner role | 完成條件 | 驗證證據 |
 | --- | --- | --- | --- | --- |
 | S01 | completed | Plan-Creator | 已核准對話計畫映射為同 slug 四份正式 artifacts，保留九欄、T01–T06、工具與時間／清理契約。 | 本 topic requirements、technical-spec、plan、step 四檔已建立；沒有 host／測量結果或正式 approval 聲明。 |
-| S02 | completed | Plan-Reviewer | 獨立審查四檔一致性、scope 與執行條件，明示正式 verdict。 | 先前 needs-rework 的整輪 cleanup 歧義已由 Plan-Creator 修正；同一獨立 Plan-Reviewer 複審明示 approved（上游交測訊息）；此為先前版本。使用者後續授權實驗專用自簽憑證補 T03，本次四檔修訂經獨立審查 needs-rework，要求 writer=第一次 build／reader=第二次 build；已回修，獨立 Plan-Reviewer 本次複審正式 approved；僅核准限定計畫，不代表 T03 成功。 |
-| S03 | completed | Implementer | 正式 approved 後，preflight、重查實驗編號，建立受限最小 host／八段紀錄及必要素材，固定候選與判準後交測。 | E005 host、runner、build script 與初始八段 README 已建立；Swift 6 build／ad-hoc signature verify 與 Python syntax 檢查通過，未作 Keychain 成功宣稱。 |
+| S02 | completed | Plan-Reviewer | 獨立審查四檔一致性、scope 與執行條件，明示正式 verdict。 | 先前 needs-rework 的整輪 cleanup 歧義已由 Plan-Creator 修正；同一獨立 Plan-Reviewer 複審明示 approved（上游交測訊息）；此為先前版本。使用者後續授權實驗專用自簽憑證補 T03，本次四檔修訂經獨立審查 needs-rework，要求 writer=第一次 build／reader=第二次 build；已回修，獨立 Plan-Reviewer 本次複審正式 approved；僅核准當時限定計畫，不代表 T03 成功。本次 Human 新授權 user-domain codeSign trust 與新 30 分鐘窗的唯一 cleanup ownership required fix 已回修，獨立 Plan-Reviewer 複審正式 approved。 |
+| S03 | in-progress | Implementer | 正式 approved 後，preflight、重查實驗編號，建立受限最小 host／八段紀錄及必要素材，固定候選與判準後交測。 | E005 host、runner、build script 與初始八段 README 已建立；Swift 6 build／ad-hoc signature verify 與 Python syntax 檢查通過，未作 Keychain 成功宣稱。以上為原成果 completed；本次限定 trust 準備已實作並完成純檢查，真實驗證仍待 Human trust-ready，尚未執行。 |
 | S04 | completed | Tester | 獨立執行 T01–T06、fresh-process、真重建、提示觀察及整輪實驗所有退出 cleanup（子程序正常結束保留 item）；保存四狀態／任務完成判斷與工具交付狀態。 | E005 evidence/normal-run.json、early-stop-run.json、environment.json 與八段 README。T02／T04 六欄成功；T03 真重建 requirement 不同，無 acceptance read；UX unobserved；真 absent／malformed 成功，denial 只 synthetic。正常兩項與提前停止一項清理確認不存在。實驗無法判定，Keychain 驗證任務完成；Reviewer 指出受控停止 cleanup 缺口後，Implementer bounded fix，Tester 新增真 controlled-stop-run 與 synthetic SIGINT／SIGTERM 兩測試（delete 重複同訊號），均成功清理／保存 receipt。舊正常與 early-stop 證據保留；不可捕捉停止限制明列。Tester 複驗 verdict approved（交獨立 Reviewer，非採用核准）。 |
 | S05 | completed | Reviewer | 獨立檢視實際證據、分類、限制、cleanup 與工具產物，明示成果 verdict。 | 獨立 Reviewer 明示 approved；核對 SIGINT／SIGTERM 受控 cleanup 回修及 synthetic／真 controlled-stop 證據、receipt 相對路徑、T03／UX 限制、四尺寸與實際圖檢視。非採用核准；以上為原成果。本次兩輪自簽 preflight 與紀錄也經獨立 Reviewer 複審 approved。 |
 | S06 | completed | Implementer | 依獨立審查結果，只回寫指定 docs 條件結論；按 topic commit／push／開 Draft PR 供人類 review。 | 已依 staged diff 確認單一 topic 邊界；核心 commit e6438ad 已 push，Draft PR #58（base dev、isDraft true）已查證。所有 pre-commit hooks 通過；PR Lens 真實核心 diff 本機 validate／render 完成。此交付紀錄以同 topic docs commit 保存，最終 head 核對在 repository 外。 |
@@ -42,10 +42,10 @@ Status 記錄不等同 approval。Plan-Creator 不審自己的四檔；Tester／
 ## Human Check
 
 - 已收到使用者本 topic 實現、直接 commit、push、Draft PR 供人類 review 的授權，無需再次等待 commit 批准。
-- 需新增帳號／超出限定自簽憑證例外的憑證操作／付費／安全設定、免費來源不明或時間到達：停止依賴操作，清理並交還缺口。若需要改 trust／預設 Keychain／全域 search-list 即停。
+- 需新增帳號／超出限定自簽憑證例外的憑證操作／付費／安全設定、免費來源不明或時間到達：停止依賴操作，清理並交還缺口。除末節本輪新 cert 的 user-domain codeSign trust 唯一例外外，任何 trust／預設 Keychain／全域 search-list 改動即停；禁止 admin／SSL／broad trust。
 - Draft PR #58 已建立並驗證為 Draft，供 human review；主假設仍無法判定，未授權 merge／release／正式採用。
 
-## Time Budget
+## Time Budget：原授權窗歷史（新 trust 補測依末節新窗）
 
 - 起算：2026-10-15 02:41:28 UTC。
 - 停止新增測量／圖作業：2026-10-15 03:56:28 UTC。
@@ -103,3 +103,34 @@ Status 記錄不等同 approval。Plan-Creator 不審自己的四檔；Tester／
 - 2026-10-15 03:46:19 UTC：獨立 Tester 單輪同候選診斷確認 1 matching／0 valid，`CSSMERR_TP_NOT_TRUSTED`，codesign `no identity found`。零 OAuth 寫入／T03 acceptance 未執行，專用 Keychain／秘密清理與全域設定一致已核對；禁止信任調整邊界維持，結果待 Reviewer，若續行信任變更交 Human 決策。
 
 - 2026-10-15 03:47:59 UTC：獨立 Tester／Reviewer 明示 `approved`，唯一 provenance 文字修正已核對。本輪具體診斷僅為隔離 identity 的 codesigning policy 不受信任與 codesign 找不到可用 identity；已回寫指定 docs。依既有授權提交／更新同一 Draft PR，最終 head 以 PR 與 repository 外核對為準。信任設定未獲授權，停於 Human 決策，不新增測量／變體、不外推正式採用；原03:56:28新測量截止仍有效。
+
+
+## 新授權 trust 窗：目前有效契約
+
+- Human 已明確核准僅本輪新 self-signed cert、user domain、codeSign policy 的 trust，以及額外最多 30 分鐘；原信任禁令僅在此範圍例外。禁止 admin／`-d`、SSL／broad trust、既有 ACL／partition-list、default／全域 search-list 改動；Human 自行操作系統密碼／approval。
+- 先證明 exact cert 無 user trust；新增後讀回驗證只有 user／codeSign。trust＋兩 build／DR 預檢零 OAuth write；成功才確認 CUA 並等 Human 明確 ready，同 cert／固定 active path first 寫 second 讀、核對不同 hash。不 ready／連線不通／到停止點即 cleanup。
+- finally／受控 signal／trustfailed／timeout／正常或例外皆 cleanup；只有三 domain baseline absence 確認且本輪 add 已嘗試才撤回 exact-cert user trust，核對無 user trust後才刪專用 Keychain／cert／秘密。baseline 已有 trust／查證失敗／未 add 只清自建素材，絕不撤原有 trust。刪 cert 不代表撤 trust；部分新增也需核對。撤回失敗保留非秘密撤回依據、殘留原因，標清理未完成／任務否。
+- 新窗起算 2026-10-15 03:54:20 UTC；04:19:20 UTC 停新測量，04:24:20 UTC 總上限，最後五分鐘優先撤 trust／清理紀錄。原 90 分鐘窗及證據保留為歷史，非暗延長，等 ready 不延長。
+- 本次 S02 completed：trust cleanup ownership 已回修且獨立 Plan-Reviewer 複審 approved；既有 approvals 不用來代替本次審查。T03／主假設目前仍無法判定；新窗操作未執行，舊 receipts 不覆寫，S07 人類審查未宣稱完成。
+- 2026-10-15 03:55:44 UTC：Plan-Creator 僅更新四份 planning artifacts 的新 trust 例外、順序、撤回驗證與明確新時間窗；未新增 trust、未實作／測試／commit。交獨立 Plan-Reviewer。
+
+
+### 本窗 TrustProbe 與目前 Human ready 狀態
+
+- helper 限 `Rivet-E005-UUID` cert DER；exact-cert user／admin／system baseline 嚴格 errSecItemNotFound。空 array 是 broad AlwaysTrust，不能當 absent／limited。
+- 新增僅 user codeSigning／trustRoot；讀回恰一 entry、恰 Policy／Result keys、AppleCodeSigning OID／trustRoot，admin／system absent；其他形狀拒絕。
+- trust 互動 ready 尚未收到，只 code preparation；收到 Human 明確 ready 才做需互動 add。兩版簽章／DR 成功後，另確認 CUA／Human T03 ready；密碼／approval 均由 Human。
+- trustOwnedAttempt 初始 false，僅三 domain baseline absence 成功後在 add 前設 true；finally 僅 flag=true remove exact-cert user trust＋嚴格 absent 核對後才刪 Keychain／秘密。add failure 仍處理部分新增；flag=false 只清自建素材，不撤原有 trust；失敗保留 cert DER／private Keychain／recovery 資料並明列殘留，不輸出路徑／秘密、不改 partition-list。
+- 本次 S02 completed，獨立 Plan-Reviewer 複審 approved；未宣稱 trust、T03 或清理已執行。新窗截止仍04:19:20停測／04:24:20總上限。
+
+- 2026-10-15 03:56:25 UTC：依主工作 session 精確化 TrustProbe 介面與兩個 ready 時點，四檔僅規劃追加；未執行 trust／測量／commit。
+
+目前有效優先規則：本次 Human 新授權的 30 分鐘窗與 exact-cert user-domain codeSign trust 例外，優先於前版一律禁止 trust 及原 90 分鐘截止的敘述；前版限制／收據僅保留為歷史。此優先只開放本次新 cert 的 user/codeSign，不開放 system/admin domain 或其他政策；其餘 scope、安全／UX／cleanup 限制保持有效。
+
+- 2026-10-15 03:58:02 UTC：依獨立 Plan-Reviewer needs-rework 唯一 required fix，四檔限定 trust cleanup ownership：baseline 三 domain absent 且本輪 add 已嘗試才 remove；baseline 失敗／已有 trust／未 add 只清自建素材，絕不撤原有 trust。add failure 仍核對部分新增／absence。S02 needs-rework，已回修待獨立複審；未實作／測量／commit。
+
+- 2026-10-15 03:59:35 UTC：獨立 Plan-Reviewer 複審正式 approved，cleanup ownership required fix 已滿足。Implementer 新增 TrustProbe 與限定 trust runner，Swift6 build／Python syntax 通過；尚未收到 trust authentication Human ready，沒有新增 trust 或 OAuth 寫入。Tester 先驗純 constraint synthetic checks，Reviewer 先檢視 bounded 實作；不以 build green 代替 trust／T03。
+
+- 2026-10-15 04:02:46 UTC：Tester 純檢查 approved，TrustProbe 七項 constraint checks 與 runner 三項 adversarial cleanup tests 通過，缺 gate CLI 在 Security 初始化前拒絕；均 synthetic/noTrustMutation。Reviewer required fixes（helper declined ownership、同程序預檢後 ready gate）已實作並交複核。尚未收到 Human trust-ready，真實 trust／T03 未執行，不以 synthetic 冒充。
+
+- 2026-10-15 04:04:26 UTC：獨立 Reviewer 正式 approved（僅準備交付），兩項實作 required fixes 與全部純檢查來源 hash 已核對，無剩餘 required fixes。依既有授權提交準備成果並更新 Draft PR；尚待 Human trust-ready，沒有真實 trust／T03 操作或本輪殘留，實驗結果不提前宣稱成功。新窗04:19:20停測／04:24:20總上限維持。

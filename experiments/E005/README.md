@@ -116,3 +116,21 @@ python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --out exp
 本輪零 OAuth 寫入、T03 acceptance 未執行，整體仍**無法判定**。machine `validationTaskComplete=false` 仍代表穩定 host 前提未達，受限診斷工作可在完整紀錄及清理後完成。專用 Keychain／秘密 scratch 已刪除，default／search-list 建立後及清理後均相等，無已知殘留。桌面工具已確認連線，沒有安排新 UX 測量；原 Human 零提示證據保留。
 
 若沿此自簽身分繼續，下一個涉及信任設定的操作超出既定授權，需由 Human 明確決定；尚未執行任何信任調整。單純改 GUI App 未解除已觀察的簽章前提。診斷結果不核准正式採用，不外推其他 macOS／簽章方式／DPK。
+
+### 限定 user-domain／Code Signing trust：準備與待測
+
+使用者已明確授權「僅實驗憑證、使用者範圍、Code Signing 用途」的唯一 trust 例外。新窗 03:54:20–04:24:20 UTC，04:19:20 UTC 停新測量；舊時窗保留為歷史。新計畫經獨立 Plan-Reviewer approved，不改 legacy／假六欄／first writer 與 second reader／UX 判準，也不允許 admin／system domain、SSL、broad trust、既有 ACL／partition-list、default Keychain 或 search-list 變更。
+
+新增 `Sources/TrustProbe.swift` 僅接受 `Rivet-E005-UUID` cert DER。exact-cert 三 domain baseline 皆須嚴格 `errSecItemNotFound`；新增只用 `.user`、`SecPolicyCreateWithProperties(kSecPolicyAppleCodeSigning, nil)` 及明確 trustRoot。讀回須恰一 entry、恰 Policy／Result keys、AppleCodeSigning OID／trustRoot；空 array（AlwaysTrust）、SSL、多 entry 或額外 allowed error 都拒絕。[Apple trust-settings API](https://developer.apple.com/documentation/security/sectrustsettingscopytrustsettings(_:_:_:)) 區分 absence 與空 array，並說明 per-user 修改需系統驗證使用者。
+
+runner 的 trust cleanup ownership 僅在三 domain baseline absence 已證實且本輪 add 已嘗試時成立；helper 明確回 `mutationAttempted=false` 會清除 ownership 並停止，不撤別人設定。timeout／可能 partial add 仍進精確 remove、exact-cert 三 domain absence 讀回；信任清理失敗保留撤回材料與殘留原因，不先刪證書而失去依據。正常退出先清 OAuth item，再撤 trust／核對，再刪專用 Keychain／秘密；不可捕捉停止仍無 finally 保證。
+
+同一程序在兩版簽章／DR 預檢成功後寫出非秘密 ready notice，保留同 cert／first／second，等待本輪 namespace 綁定的 Human ready gate。未收到獨立 T03 ready 不寫 OAuth；gate 必須起初不存在，等待及新操作受硬 UTC deadline 控制，cleanup 不被 deadline 阻斷。互動 trust 與 T03 兩個 ready 時點分開，密碼／系統 approval 由 Human 處理。可重現入口（參數中的外部路徑須由主工作 session 指定新檔，不能重用 gate）：
+
+```sh
+python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --diagnose --trust-code-signing --measure --observer-gate <external-new-gate> --ready-notice <external-new-notice> --measurement-deadline-utc 2026-10-15T04:19:20+00:00 --out experiments/E005/evidence/<new-receipt>.json
+```
+
+目前只完成 Swift6 compile／Python syntax 與獨立純檢查。[Constraint 收據](evidence/trust-constraint-check.json) 為 7／7 synthetic checks；[cleanup 收據](evidence/trust-cleanup-check.json) 為三個 fake Security／subprocess adversarial cases 通過，驗證拒絕 mutation 不撤 foreign trust、failed partial add 與 timeout 仍撤回並核對。缺 gate 的 CLI 在 argparse exit2，早於 scratch／Security 初始化。這些都不是真實 trust 或 T03 證據。上輪診斷來源另存 `evidence/source-snapshots/b104dd3d649451aee270b86fa926ee6727c204c28f4f4e301f5ec2aa85dec159.py`，SHA 與原收據一致。
+
+限定 trust 真實補測狀態 **未執行**；本輪真實驗證任務未完成。尚待 Human 確認可留意 trust 系統授權，再執行；若簽章預檢成立，另確認 CUA 連線並請 Human ready 後才 T03。沒有新增 trust、OAuth 寫入或本輪殘留，主假設仍無法判定；既有原 binary Human 零提示依據保留。授權與純檢查不核准正式採用。

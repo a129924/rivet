@@ -13,6 +13,7 @@ import shutil
 import signal
 import subprocess
 import tempfile
+import time
 import uuid
 from build_probe import build, identity, public_identity
 
@@ -26,8 +27,23 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--pem-import', action='store_true', help='One transport-format check; no policy changes')
     parser.add_argument('--diagnose', action='store_true', help='Read only this trial keychain identity counts and known errors')
+    parser.add_argument('--trust-code-signing', action='store_true', help='Explicitly authorized temporary user-domain codeSign trust only')
+    parser.add_argument('--observer-gate', type=Path, help='External same-run Human ready gate; must initially be absent')
+    parser.add_argument('--ready-notice', type=Path, help='External non-secret preflight completion notice')
+    parser.add_argument('--measurement-deadline-utc', help='Hard stop for waiting/new measurements, ISO UTC')
     parser.add_argument('--measure', action='store_true', help='Also measure fake OAuth items after signing preflight')
     args = parser.parse_args()
+    if args.trust_code_signing and not args.pem_import:
+        parser.error('limited trust trial requires the established PEM path')
+    measurement_deadline = None
+    if args.trust_code_signing and args.measure:
+        if not args.observer_gate or not args.ready_notice or not args.measurement_deadline_utc:
+            parser.error('limited-trust measurement requires post-preflight observer gate, notice and deadline')
+        if args.observer_gate.exists() or args.ready_notice.exists():
+            parser.error('use fresh external gate and notice paths for this run')
+        measurement_deadline = datetime.datetime.fromisoformat(args.measurement_deadline_utc)
+        if measurement_deadline.tzinfo is None or measurement_deadline.utcoffset() != datetime.timedelta(0):
+            parser.error('measurement deadline must explicitly be UTC')
     scratch = Path(tempfile.mkdtemp(prefix='rivet-E005-selfsigned-'))
     os.chmod(scratch, 0o700)
     app = scratch / 'KeychainProbe.app'
@@ -38,6 +54,7 @@ def main():
               'paidQualificationRequired': False, 'measurementRequested': args.measure,
               'importFormat': 'PEM' if args.pem_import else 'PKCS12',
               'diagnosticRequested': args.diagnose,
+              'limitedTrustRequested': args.trust_code_signing, 'humanReadyForMeasurement': False,
               'primaryNamespace': primary, 'negativeNamespace': negative,
               'experimentStatus': '無法判定', 'validationTaskComplete': False,
               'promptObservation': 'unobserved; separate human receipt required',
@@ -54,6 +71,10 @@ def main():
     attempted = []
     executable = None
     snapshots = None
+    trust_attempted = False
+    trust_baseline_absent = False
+    trust_helper = scratch / 'trust-probe'
+    certificate_der = scratch / 'certificate.der'
 
     def stop(signum, _frame):
         raise RuntimeError('controlledSignalStop:' + signal.Signals(signum).name)
@@ -69,6 +90,26 @@ def main():
             values.append(result.stdout)
         return values  # Private paths stay in memory only.
 
+    def trust_command(mode, timeout=10):
+        if mode == 'add-code-signing' and measurement_deadline is not None and datetime.datetime.now(datetime.timezone.utc) >= measurement_deadline:
+            raise RuntimeError('trustAddDeadlineReached')
+        entry = {'operation': mode, 'startedUTC': now()}
+        report.setdefault('trustCommands', []).append(entry)
+        try:
+            result = subprocess.run([str(trust_helper), mode, str(certificate_der)],
+                                    capture_output=True, text=True, timeout=timeout)
+            entry['exitCode'] = result.returncode
+            entry['output'] = json.loads(result.stdout)
+            return entry['output'], result.returncode == 0
+        except subprocess.TimeoutExpired:
+            entry['timedOut'] = True
+            raise RuntimeError('trustCommandTimeout:' + mode)
+        finally:
+            entry['finishedUTC'] = now()
+
+    def trust_absent(state):
+        return all(state.get(domain, {}).get('absent') is True for domain in ('user', 'admin', 'system'))
+
     def known_diagnostics(data):
         # Return only exact public error phrases, never arbitrary stderr or identity names.
         phrases = (b'no identity found', b'no identities found', b'ambiguous',
@@ -83,6 +124,8 @@ def main():
         return [phrase.decode('ascii') for phrase in phrases if phrase.lower() in data.lower()]
 
     def setup(stage, argv):
+        if measurement_deadline is not None and datetime.datetime.now(datetime.timezone.utc) >= measurement_deadline:
+            raise RuntimeError('preflightDeadlineReached')
         result = subprocess.run(argv, capture_output=True, timeout=20)
         entry = {'stage': stage, 'exitCode': result.returncode, 'stderrPresent': bool(result.stderr)}
         report['setupCommands'].append(entry)
@@ -113,7 +156,9 @@ def main():
             raise RuntimeError('restoredBinaryHashMismatch')
         return candidate
 
-    def command(mode, namespace):
+    def command(mode, namespace, cleanup=False):
+        if measurement_deadline is not None and not cleanup and datetime.datetime.now(datetime.timezone.utc) >= measurement_deadline:
+            raise RuntimeError('measurementDeadlineReached')
         entry = {'mode': mode, 'namespace': namespace, 'startedUTC': now(), 'promptCount': None,
                  'actualBinarySHA256': hashlib.sha256(executable.read_bytes()).hexdigest()}
         report['commands'].append(entry)
@@ -168,6 +213,30 @@ def main():
             os.chmod(scratch / 'identity.p12', 0o600)
             setup('importCertificate', ['security', 'import', str(scratch / 'identity.p12'), '-k',
                   str(keychain_path), '-f', 'pkcs12', '-P', '', '-x', '-T', '/usr/bin/codesign'])
+        if args.trust_code_signing:
+            helper_source = Path(__file__).resolve().parents[1] / 'Sources/TrustProbe.swift'
+            report['trustHelperSourceSHA256'] = hashlib.sha256(helper_source.read_bytes()).hexdigest()
+            setup('buildTrustHelper', ['swiftc', '-swift-version', '6', '-parse-as-library',
+                  '-module-cache-path', str(scratch / 'ModuleCache'), str(helper_source), '-o', str(trust_helper)])
+            setup('encodeCertificateDER', ['openssl', 'x509', '-in', str(scratch / 'cert.pem'),
+                  '-outform', 'DER', '-out', str(certificate_der)])
+            baseline, ok = trust_command('inspect')
+            trust_baseline_absent = ok and trust_absent(baseline)
+            report['trustBaselineAbsent'] = trust_baseline_absent
+            if not trust_baseline_absent:
+                raise RuntimeError('trustBaselineNotAbsent')
+            # Register ownership before add, including timeout/partial-add failures.
+            trust_attempted = True
+            add_result, added = trust_command('add-code-signing', timeout=60)
+            if add_result.get('mutationAttempted') is False:
+                trust_attempted = False
+                raise RuntimeError('helperDeclinedTrustMutation')
+            added_state, inspected = trust_command('inspect')
+            limited = inspected and added_state.get('user', {}).get('codeSigningOnly') is True and all(
+                added_state.get(domain, {}).get('absent') is True for domain in ('admin', 'system'))
+            report['limitedTrustReadbackVerified'] = limited
+            if not added or not limited:
+                raise RuntimeError('limitedTrustAddOrReadbackFailed')
         if args.diagnose:
             # An explicit target prevents any global identity inventory.
             result = subprocess.run(['security', 'find-identity', '-p', 'codesigning', str(keychain_path)],
@@ -199,6 +268,25 @@ def main():
         if not report['signingPreflightComplete']:
             raise RuntimeError('stableSigningPreflightFailed')
         if args.measure:
+            if args.trust_code_signing:
+                notice = {'phase': 'awaitingHumanT03Ready', 'namespace': primary,
+                          'recordedUTC': now(), 'rebuildComparison': checks,
+                          'hostFirst': public_identity(first), 'hostSecond': public_identity(second),
+                          'limitedTrustReadbackVerified': report['limitedTrustReadbackVerified']}
+                args.ready_notice.parent.mkdir(parents=True, exist_ok=True)
+                args.ready_notice.write_text(json.dumps(notice, ensure_ascii=False, indent=2) + '\n')
+                print('preflight complete; waiting for same-run Human T03 readiness', flush=True)
+                while not args.observer_gate.exists():
+                    if datetime.datetime.now(datetime.timezone.utc) >= measurement_deadline:
+                        raise RuntimeError('observerReadyDeadlineReached')
+                    time.sleep(0.25)
+                gate = json.loads(args.observer_gate.read_text())
+                if gate.get('namespace') != primary or gate.get('humanReady') is not True:
+                    raise RuntimeError('observerGateNotForThisRun')
+                if datetime.datetime.now(datetime.timezone.utc) >= measurement_deadline:
+                    raise RuntimeError('measurementDeadlineReachedBeforeWrite')
+                report['humanReadyForMeasurement'] = True
+                report['humanReadyAcceptedUTC'] = now()
             executable = restore('First.app', first['binarySHA256'])
             attempted.append(primary)
             if not command('write-a', primary):
@@ -233,15 +321,27 @@ def main():
                 report['cleanupHostRestoreFailed'] = True
         for namespace in attempted:
             try:
-                deleted = command('delete', namespace)
-                absent = command('read-absent', namespace) if deleted else False
+                deleted = command('delete', namespace, cleanup=True)
+                absent = command('read-absent', namespace, cleanup=True) if deleted else False
             except Exception:
                 deleted, absent = False, False
             report['cleanup'].append({'namespace': namespace, 'deleteSucceeded': deleted,
                                       'absenceConfirmed': absent})
         clean_items = all(x['absenceConfirmed'] for x in report['cleanup'])
-        # Do not destroy the remedial signing identity if OAuth cleanup failed.
-        if clean_items and keychain.value:
+        # A pre-existing/unknown baseline is never ours to remove.
+        trust_clean = True
+        if trust_baseline_absent and trust_attempted:
+            trust_clean = False
+            try:
+                _, removed = trust_command('remove-user', timeout=60)
+                removed_state, inspected = trust_command('inspect')
+                trust_clean = removed and inspected and trust_absent(removed_state)
+            except Exception:
+                report['trustCleanupOperationFailed'] = True
+            report['trustRemovalVerifiedAbsent'] = trust_clean
+        report['trustCleanupComplete'] = trust_clean
+        # Keep exact-certificate recovery material if trust removal/verification failed.
+        if clean_items and trust_clean and keychain.value:
             report['keychainDeleteStatus'] = security.SecKeychainDelete(keychain)
         report['privateKeychainAbsent'] = not keychain_path.exists() and not Path(str(keychain_path) + '-db').exists()
         if snapshots is not None:
@@ -252,10 +352,14 @@ def main():
             except Exception:
                 report['settingsAfterCleanup'] = {'snapshotFailed': True}
         globals_clean = report.get('settingsAfterCleanup') == {'defaultEqual': True, 'searchListEqual': True}
-        if clean_items and report['privateKeychainAbsent']:
+        if clean_items and trust_clean and report['privateKeychainAbsent']:
             shutil.rmtree(scratch)
         report['secretScratchAbsent'] = not scratch.exists()
-        report['cleanupComplete'] = clean_items and report['privateKeychainAbsent'] and report['secretScratchAbsent'] and globals_clean
+        report['cleanupComplete'] = clean_items and trust_clean and report['privateKeychainAbsent'] and report['secretScratchAbsent'] and globals_clean
+        if not report['cleanupComplete']:
+            report['recoveryRequired'] = {'experimentCertificateLabel': label,
+                'retainExactCertificateAndPrivateScratch': scratch.exists(),
+                'reason': 'see individual trust, OAuth and keychain cleanup fields'}
         report['validationTaskComplete'] = report['cleanupComplete'] and (report.get('signingPreflightComplete', False) if not args.measure else all(report.get(k) == '成功' for k in ('T02Data', 'T03Data', 'T04Data', 'T05AbsentAndMalformed')))
         report['finishedUTC'] = now()
         report['limitations'] = ['human prompt receipt required for UX; historical zero prompts do not cover this host',

@@ -91,3 +91,31 @@ E005 在首次寫入前明確選 legacy，無 profile 的 ad-hoc host 不依賴�
 使用者續行授權（2026-10-15）：同一 PEM／自簽候選只補失敗診斷，保存公開已知錯誤片語與本輪專用 Keychain identity 數量，不保留個人識別／raw stderr、不掃全域。無 OAuth 寫入，不增加簽章變體或安全設定變更；原 03:56:28 UTC 新測量截止不變，診斷後若需禁止操作即停。
 
 同一候選新診斷（03:46:15–19 UTC）：僅本輪私有 Keychain 身分查詢回 1 matching／0 valid、`CSSMERR_TP_NOT_TRUSTED`；codesign 首次簽章回 `no identity found`。本次可具體指出可用簽章身分前提不成立；舊兩輪無診斷紀錄保留，不倒填根因。零 OAuth 寫入／T03 acceptance 未執行、清理完整、全域設定一致。若需信任調整須 Human 新授權，不自動執行；不推論必須付費。詳見 E005 診斷收據。
+
+
+## 新窗限定 trust 補測：操作與退出順序
+
+唯一新增安全操作是本輪新自簽 cert 的 user-domain codeSign trust。不得使用 `-d`／admin domain、SSL、broad trust，不改既有 ACL／partition-list／default Keychain／全域 search-list；不改其他 cert 或其 trust。需要超出例外即停。password／系統 approval 由 Human 操作，agent 不讀取、自填或記錄密碼。
+
+1. 建立本輪新 UUID cert／專用 Keychain 與 repository 外秘密素材；鎖定 exact cert。先查證該 cert 原本無 user trust；若已有 trust 或無法確認，不新增或覆寫 trust，停止並保存缺口。
+2. 僅新增該 exact cert 的 user-domain Code Signing policy trust；立即讀回，證明僅該 domain／policy，沒有 SSL／broad trust。讀回不符或失敗即進退出 cleanup，不擴大 trust 重試。
+3. 同 cert 完成 first／second 真重建，保存不同 binary hash、DR 相等及身分一致性。此階段含 trust／兩 build 預檢全程零 OAuth 寫入。前提不成立即停，不能用 build green 取代 DR／T03 證據。
+4. 前提成功後確認 CUA 連線可用，等待 Human 明確 ready；未 ready／連線失敗／到停止時點，不寫 OAuth item，進 cleanup。ready 後固定 active host 路徑還原 first 作 writer，再換 second 作 fresh reader；同 cert、legacy backend、假六欄與 UX 判準維持，保存實際兩端不同 hash，記錄 Human 全程提示觀察，不能兩端都 second。
+5. finally 與受控 signal 路徑在正常完成、trust 新增失敗、DR 失敗、timeout、停止／例外均執行精確 cleanup：先清本輪 OAuth 項目（若曾寫入）；只有三 domain baseline absence 已確認且本輪 add 已嘗試（trustOwnedAttempt=true）時，才撤回 exact-cert user trust、讀回核對該 cert 無 user trust，再刪專用 Keychain／cert 及秘密素材。add 失敗也須處理可能的部分新增並核對 absence。baseline 已有 trust／查證失敗／未 add 時 trustOwnedAttempt=false，只清自建素材，絕不 remove 原有 trust。不得藉刪 cert 或 Keychain 推論 trust 已撤回。撤回／核對失敗保留辨識 exact cert 所需的非秘密材料與殘留原因，不先刪除而失去撤回依據；標清理未完成／任務否。不可捕捉停止的限制與殘留處理仍明列，不保證 SIGKILL 自動 finally。
+
+只保存本次獨立非秘密 receipt，分列 baseline-no-user-trust、新增／讀回 policy/domain、DR／hash、Human ready、T03、撤回／absence 及秘密清理；不覆寫舊 receipts，不把尚未做的結果寫成成功。實驗四狀態與任務／清理完成分開，T03 目前仍無法判定。
+
+Human 新窗為 03:54:20–04:24:20 UTC；04:19:20 UTC 停新測量，最後五分鐘優先撤 trust／清理／紀錄。不沿用原 90 分鐘窗延伸，不因等 ready 延長，也不增加 trust 變體。
+
+
+### TrustProbe 精確介面與互動前提
+
+新增受限 Swift `TrustProbe` helper，只處理本輪 cert DER，拒絕非 `Rivet-E005-UUID` 實驗 cert。不盤點個人 trust；`SecTrustSettingsCopyTrustSettings` 僅查 exact cert 的 `.user`／`.admin`／`.system`，輸出 status、absent、entryCount、codeSigningOnly 等非秘密判斷。新增前三 domain 均須 `errSecItemNotFound`；其他錯誤不足以證明 absence，空 array 代表 AlwaysTrust，必須拒絕。
+
+僅用 `SecTrustSettingsSetTrustSettings(cert, .user, ...)` 設定一筆 `SecPolicyCreateWithProperties(kSecPolicyAppleCodeSigning, nil)`／trustRoot。讀回須恰一 entry、keys 恰為 Policy／Result、OID 為 AppleCodeSigning 且 result 為 trustRoot；admin／system 仍 absent。空 array、SSL、broad、multirow 或額外 keys 全拒絕，不使用 admin／`-d`、broadAlwaysTrust 或 partition-list 放寬。
+
+trustOwnedAttempt 初始 false，僅三 domain baseline absence 已確認後，在呼叫本輪 add 前設 true；其他分支不得設 true。finally 僅該 flag=true 才 remove exact cert `.user` 並 readback 嚴格驗證 absent，再刪本輪 Keychain／秘密。flag=false（baseline 已有 trust／查證失敗／未 add）只清自建素材，不撤任何原有 trust；flag=true 的 add failure 也處理部分新增並 readback absence。若 remove／readback 失敗，保留 cert DER、private Keychain 與必要 recovery 資料，不輸出其路徑／秘密，明列殘留並交 Human；不得因 cert 刪除推論 trust 消失。
+
+Native API 可能要求 Human authentication。目前尚未收到 trust 互動 ready，code preparation 可先做，但不得執行需互動 add／remove；須 Human 明確 ready 後，由 Human 自行處理密碼／approval。兩版預檢通過後的 T03 仍另確認 CUA／Human ready，之後 first writer／second reader 才寫／讀 OAuth。兩個 ready 時點分開記錄，不延長新窗。
+
+目前有效優先規則：本次 Human 新授權的 30 分鐘窗與 exact-cert user-domain codeSign trust 例外，優先於前版一律禁止 trust 及原 90 分鐘截止的敘述；前版限制／收據僅保留為歷史。此優先只開放本次新 cert 的 user/codeSign，不開放 system/admin domain 或其他政策；其餘 scope、安全／UX／cleanup 限制保持有效。
