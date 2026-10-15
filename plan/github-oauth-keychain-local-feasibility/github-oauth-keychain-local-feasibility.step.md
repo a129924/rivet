@@ -1,10 +1,10 @@
 # Keychain 本機 OAuth 憑證保存可行性：狀態帳本
 
 - Topic：`github-oauth-keychain-local-feasibility`
-- 目前 phase：user search-list 成果交付
-- Current step：S06
-- Current step status：in-progress
-- 上游正式 verdict：approved（最新 user search-list 窄授權經獨立 Plan-Reviewer；非 T03 成功）
+- 目前 phase：Human review（T03 資料成立；UX 無法判定）
+- Current step：S07
+- Current step status：pending
+- 上游正式 verdict：approved（最新成果 closure 經獨立 Reviewer；T03 資料成功，UX 未定，非採用核准）
 - [需求](../../analysis/github-oauth-keychain-local-feasibility/requirements.md)／[規格](../../analysis/github-oauth-keychain-local-feasibility/technical-spec.md)／[契約](github-oauth-keychain-local-feasibility.plan.md)
 
 ## Steps
@@ -16,7 +16,7 @@
 | S03 | completed | Implementer | 正式 approved 後建立受限 host、trust helper、runner 與必要紀錄，按 scope 交測。 | 原 E005 成果保留；本次限定 trust helper、metadata checker 與同 cert ready gate／SHA1 selector 已實作並經獨立純檢查及 code review。四輪真試驗已停止，未取得可簽署 host，不把準備或測量完成當成 T03 成功。 以上未簽成／T03 未執行屬歷史；最新 user-search-list 準備已通過11 synthetic tests／3 guards及獨立 Reviewer，單輪兩版簽章與 DR 相同、T03 六欄讀回均成立。 |
 | S04 | completed | Tester | 獨立執行 T01–T06、fresh-process、真重建、提示觀察及整輪實驗所有退出 cleanup（子程序正常結束保留 item）；保存四狀態／任務完成判斷與工具交付狀態。 | E005 evidence/normal-run.json、early-stop-run.json、environment.json 與八段 README。T02／T04 六欄成功；T03 真重建 requirement 不同，無 acceptance read；UX unobserved；真 absent／malformed 成功，denial 只 synthetic。正常兩項與提前停止一項清理確認不存在。實驗無法判定，Keychain 驗證任務完成；Reviewer 指出受控停止 cleanup 缺口後，Implementer bounded fix，Tester 新增真 controlled-stop-run 與 synthetic SIGINT／SIGTERM 兩測試（delete 重複同訊號），均成功清理／保存 receipt。舊正常與 early-stop 證據保留；不可捕捉停止限制明列。Tester 複驗 verdict approved（交獨立 Reviewer，非採用核准）。  本次四輪限定 trust 測量、全部 source snapshots／receipts／cleanup 亦經獨立 Tester closure approved；真 T03 未執行、machine validationTaskComplete=false，記錄工作完成但主假設仍無法判定。 以上 unknown／未執行屬歷史；最新 user-search-list-run 真 T02／T03／T04 六欄成功、absent／malformed 成功、machine validationTaskComplete=true（機制與清理），全部清理完成；Human 兩次授權階段未知，UX／主假設仍無法判定。 |
 | S05 | completed | Reviewer | 獨立檢視實際證據、分類、限制、cleanup 與工具產物，明示成果 verdict。 | 獨立 Reviewer 明示 approved；核對 SIGINT／SIGTERM 受控 cleanup 回修及 synthetic／真 controlled-stop 證據、receipt 相對路徑、T03／UX 限制、四尺寸與實際圖檢視。非採用核准；以上為原成果。本次兩輪自簽 preflight 與紀錄也經獨立 Reviewer 複審 approved。  以上 approvals 為歷史成果；最新四輪結果也經本次獨立 Reviewer closure approved。 |
-| S06 | in-progress | Implementer | 依獨立審查結果，只回寫指定 docs 條件結論；按 topic commit／push／開 Draft PR 供人類 review。 | 已依 staged diff 確認單一 topic 邊界；核心 commit e6438ad 已 push，Draft PR #58（base dev、isDraft true）已查證。所有 pre-commit hooks 通過；PR Lens 真實核心 diff 本機 validate／render 完成。此交付紀錄以同 topic docs commit 保存，最終 head 核對在 repository 外。 |
+| S06 | completed | Implementer | 依獨立審查結果，只回寫指定 docs 條件結論；按 topic commit／push／開 Draft PR 供人類 review。 | 已依 staged diff 確認單一 topic 邊界；核心 commit e6438ad 已 push，Draft PR #58（base dev、isDraft true）已查證。所有 pre-commit hooks 通過；PR Lens 真實核心 diff 本機 validate／render 完成。此交付紀錄以同 topic docs commit 保存，最終 head 核對在 repository 外。 最新核心 commit f8a1b66 已 push，Draft PR #58 head/base/dev/isDraft 已核對，全部 hooks 通過；PR Lens 9 nodes／10 edges 本機 validate／render、Graphify 0.9.73 無圖 source fallback。最終 bookkeeping head 另於 repository 外核對，無新測量。 |
 | S07 | pending | Human | 人類檢視 Draft PR，決定是否接受本輪結果；正式採用另行規劃。 | Draft PR #58 已建立：https://github.com/a129924/rivet/pull/58；等待 Human review，未核准採用／merge／release。 |
 
 Status 記錄不等同 approval。Plan-Creator 不審自己的四檔；Tester／Reviewer 維持獨立。Human 是人類邊界 owner，不是新增 agent role。
@@ -222,3 +222,5 @@ Human 已明確授權本輪 freshly-created 專用實驗 Keychain 暫時 append 
 - 2026-10-15 06:25 UTC：Human 全程回報兩次授權，第一次密碼／永遠允許、第二次指紋；明確無法確認兩次階段。另存 SHA 綁定人工收據，runtime promptCount null／UX與主假設無法判定，不以耗時推階段、不追加 run。S04 completed，S05 pending，交 Reviewer 最終分類與紀錄審查。
 
 - 2026-10-15 06:28 UTC：獨立 Reviewer closure approved、無剩餘 required fixes。核可指定 docs 條件回寫與本 topic commit／push／Draft PR 更新；T03 資料機制成立、UX／主假設無法判定、全部清理完成，紀錄任務完成。S05 completed、S06 in-progress，停點仍為 human review、不核准採用／merge。
+
+- 2026-10-15 06:28 UTC：最新核心 commit f8a1b66、push、Draft PR #58 更新已完成並查證，hooks 全通過；PR Lens 實際 diff validate／render（9 nodes／10 edges），Graphify 0.9.73 重查無 repository graph、不建圖／refresh。S06 completed，S07 pending，停於 human review。本帳本交付紀錄另同 topic 提交；最終 head／remote／PR 一致性於 repository 外核對，不追加實驗。

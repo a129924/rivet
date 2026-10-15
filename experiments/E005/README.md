@@ -197,3 +197,5 @@ python3 -B experiments/E005/scripts/run_self_signed_probe.py --pem-import --diag
 **最終 Human 觀察與判讀。** [獨立人工收據](evidence/user-search-list-human-observation.json) 綁定本輪 machine SHA-256。Human 全程觀察後回報「第二點 第一次輸出密碼 第二次 指紋」，後續確認第一次選「永遠允許」，但明確「無法確認兩次各屬哪個階段」。因此記錄兩次授權與已知動作，不將 setup／撤 trust 授權計作或排除為 runtime；runtime promptCount 仍 null。不能從 T03 操作耗時猜階段，也不能從「永遠允許」推論未實測的下一次重建會零提示；本輪沒有追加測量。
 
 主要假設仍為 **無法判定**，原因已縮小為 UX 提示階段未能確認，不再是 T03 資料讀回缺失。受限驗證／紀錄任務完成：是；資料機制及清理成功，Human 觀察、剩餘缺口與決策限制已如實保存。正式採用仍未核准；若下一輪要補 UX，需另定可區分存取與設定清理提示的人工觀察，不在本輪重跑。
+
+獨立 Reviewer 最終 closure approved，無剩餘 required fixes，核可指定 docs 條件回寫與交付；這核可紀錄完成，不核准 UX 成功或正式採用。核心 commit f8a1b66 已 push 並更新 Draft PR #58；hooks 全通過，PR Lens 本機 9 nodes／10 edges validate／render，Graphify 0.9.73 無圖 fallback、未建圖／refresh。停於 human review，無新測量。
