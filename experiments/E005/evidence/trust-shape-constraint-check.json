@@ -1,0 +1,21 @@
+{
+  "recordedUTC": "2026-10-15T05:46:45.156023+00:00",
+  "synthetic": true,
+  "noTrustMutation": true,
+  "scope": "logging-only helper revision; independent Swift6 build and predicate self-check, not actual trust readback",
+  "sourceSHA256": "fe80f64c4110826ebfcf2a59e96a6c345a94508d23521d9b7775f9d3bcbb0690",
+  "binarySHA256": "9c30ac8bd124980349c7595744363e7c963215f5976a779f39c4ef1f9d4dd899",
+  "exitCode": 0,
+  "output": {
+    "noTrustMutation": true,
+    "syntheticConstraintChecks": {
+      "allowedErrorRejected": true,
+      "emptyAlwaysTrustRejected": true,
+      "exactCodeSigningAccepted": true,
+      "multipleEntriesRejected": true,
+      "SSLRejected": true,
+      "unconstrainedRootRejected": true,
+      "wrongResultRejected": true
+    }
+  }
+}

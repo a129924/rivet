@@ -6,19 +6,52 @@ import Security
 struct TrustProbe {
   static let policyKey = kSecTrustSettingsPolicy as String
   static let resultKey = kSecTrustSettingsResult as String
+  static let policyNameKey = "kSecTrustSettingsPolicyName"
+  // Apple Security SecPolicy.list defines this metadata label; the OID is still required.
+  static let expectedPolicyName = "CodeSigning"
 
   static func codeSigningOnly(_ rows: [[String: Any]]) -> Bool {
     guard rows.count == 1, let row = rows.first,
-      Set(row.keys) == Set([policyKey, resultKey]),
+      Set([policyKey, resultKey]).isSubset(of: Set(row.keys)),
+      Set(row.keys).isSubset(of: Set([policyKey, resultKey, policyNameKey])),
       let result = row[resultKey] as? NSNumber,
       result.uint32Value == SecTrustSettingsResult.trustRoot.rawValue,
       let value = row[policyKey]
     else { return false }
+    if let metadata = row[policyNameKey] {
+      guard let name = metadata as? String, name == expectedPolicyName else { return false }
+    }
     let object = value as CFTypeRef
     guard CFGetTypeID(object) == SecPolicyGetTypeID() else { return false }
     let policy = object as! SecPolicy
     let properties = SecPolicyCopyProperties(policy) as? [String: Any]
     return (properties?[kSecPolicyOid as String] as? String) == (kSecPolicyAppleCodeSigning as String)
+  }
+
+  static func constraintShape(_ rows: [[String: Any]]) -> [[String: Any]] {
+    let knownKeys = [policyKey: "policy", resultKey: "result",
+      policyNameKey: "policyName",
+      kSecTrustSettingsApplication as String: "application",
+      kSecTrustSettingsPolicyString as String: "policyString",
+      kSecTrustSettingsAllowedError as String: "allowedError",
+      kSecTrustSettingsKeyUsage as String: "keyUsage"]
+    return rows.map { row in
+      var oidMatches = false
+      var policyObject = false
+      if let value = row[policyKey] {
+        let object = value as CFTypeRef
+        policyObject = CFGetTypeID(object) == SecPolicyGetTypeID()
+        if policyObject {
+          let properties = SecPolicyCopyProperties(object as! SecPolicy) as? [String: Any]
+          oidMatches = (properties?[kSecPolicyOid as String] as? String) == (kSecPolicyAppleCodeSigning as String)
+        }
+      }
+      let name = row[policyNameKey] as? String
+      return ["keyKinds": row.keys.map { knownKeys[$0] ?? "unknown" }.sorted(),
+        "policyObjectIsSecPolicy": policyObject, "policyOIDIsCodeSigning": oidMatches,
+        "resultIsTrustRoot": (row[resultKey] as? NSNumber)?.uint32Value == SecTrustSettingsResult.trustRoot.rawValue,
+        "policyNameIsCanonicalCodeSigning": name == expectedPolicyName]
+    }
   }
 
   static func snapshot(_ certificate: SecCertificate, _ domain: SecTrustSettingsDomain) -> [String: Any] {
@@ -29,6 +62,7 @@ struct TrustProbe {
       "status": status,
       "absent": status == errSecItemNotFound,
       "entryCount": rows?.count ?? -1,
+      "constraintShape": rows.map(constraintShape) ?? [],
       "codeSigningOnly": status == errSecSuccess && rows.map(codeSigningOnly) == true,
     ]
   }
@@ -56,8 +90,21 @@ struct TrustProbe {
     let exact: [String: Any] = [policyKey: policy, resultKey: root]
     var extra = exact
     extra[kSecTrustSettingsAllowedError as String] = NSNumber(value: -1)
+    var withMetadata = exact
+    withMetadata[policyNameKey] = expectedPolicyName
+    var wrongName = exact
+    wrongName[policyNameKey] = "SSL"
+    var wrongNameType = exact
+    wrongNameType[policyNameKey] = NSNumber(value: 1)
+    var unknownKey = exact
+    unknownKey["unknownTrustKey"] = true
     let checks = [
       "exactCodeSigningAccepted": codeSigningOnly([exact]),
+      "canonicalMetadataAccepted": codeSigningOnly([withMetadata]),
+      "mismatchedMetadataRejected": !codeSigningOnly([wrongName]),
+      "wrongMetadataTypeRejected": !codeSigningOnly([wrongNameType]),
+      "unknownExtraKeyRejected": !codeSigningOnly([unknownKey]),
+      "metadataCannotReplacePolicy": !codeSigningOnly([[policyNameKey: expectedPolicyName, resultKey: root]]),
       "emptyAlwaysTrustRejected": !codeSigningOnly([]),
       "unconstrainedRootRejected": !codeSigningOnly([[resultKey: root]]),
       "SSLRejected": !codeSigningOnly([[policyKey: SecPolicyCreateSSL(true, nil), resultKey: root]]),

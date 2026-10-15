@@ -1,0 +1,24 @@
+{
+  "recordedUTC": "2026-10-15T05:56:27.663088+00:00",
+  "synthetic": true,
+  "noTrustMutation": true,
+  "scope": "syntax and fake CDLL/Security/subprocess ownership only; no signing or trust trial",
+  "sourceSHA256": {
+    "scripts/run_self_signed_probe.py": "f914788182b99e6ff15efe9d5367e5bea30baf9a0515287f243924b670fdf798",
+    "Sources/TrustProbe.swift": "b126204190a3bab691dd908f28d3cda1b783217ddcbafca78df8defc0ca568ea",
+    "Tests/test_trust_cleanup.py": "cf69531f84994153a7f6ffb578ceca98f5aa39a3932a5ff5caac64e482c17492"
+  },
+  "pythonSyntax": "passed ast.parse",
+  "testExitCode": 0,
+  "cases": {
+    "helper_declines_mutation_preserves_foreign_trust": "passed",
+    "partial_failed_add_is_removed_and_absence_verified": "passed",
+    "add_timeout_still_removes_partial_trust": "passed"
+  },
+  "hashSelectorMissingRequiredPathGuard": {
+    "exitCode": 2,
+    "receiptCreated": false,
+    "message": "certificate hash selection requires the limited-trust explicit-keychain diagnostic path",
+    "phase": "argparse validation before scratch/CDLL"
+  }
+}

@@ -90,3 +90,40 @@ finally／受控 signal／trust failed／timeout 等整輪退出，只有三 dom
 只接受本輪 `Rivet-E005-UUID` 實驗 cert，新增前 exact-cert user／admin／system 三 domain 均須嚴格 absence。absence 僅 `errSecItemNotFound`；空 array 是 broad AlwaysTrust，不算 absence 或限定 trust。新增後只允許 user domain 的恰一筆 codeSigning／trustRoot，admin／system 必須仍 absent；其他形狀即停止。撤回僅在三 domain baseline absence 成立且本輪 add 已嘗試時，對 exact cert user trust 執行，核對 absent 後才刪 Keychain／秘密；否則不得 remove，只清自建素材；撤回失敗保留 cert DER、private Keychain 及 recovery 資料供 Human，不輸出路徑或秘密。
 
 目前有效優先規則：本次 Human 新授權的 30 分鐘窗與 exact-cert user-domain codeSign trust 例外，優先於前版一律禁止 trust 及原 90 分鐘截止的敘述；前版限制／收據僅保留為歷史。此優先只開放本次新 cert 的 user/codeSign，不開放 system/admin domain 或其他政策；其餘 scope、安全／UX／cleanup 限制保持有效。
+
+
+## 最新有效 Human-start 窗與 trust-ready（2026-10-15）
+
+Human 本 turn 明確回覆「可以開始」，trust authentication ready 已收到；此 ready 授權在既定範圍開始本輪，不重問 scope／trust-ready。主工作 session 已向 Human 明說以此次實際 start 另起相同最多 30 分鐘的一輪。
+
+- 本輪起算：2026-10-15 05:42:19 UTC。
+- 停止新增測量：2026-10-15 06:07:19 UTC。
+- 總上限：2026-10-15 06:12:19 UTC；最後五分鐘優先撤 trust、精確清理與紀錄，不自動延長。
+- 本節為最新 active 時間／trust-ready 契約，優先於前述 03:54:20–04:24:20 窗、04:19:20 停測時間及尚未收到 trust-ready 的敘述；那些內容保留為歷史。此為 Human 明確 start 後的新一輪，不暗延長舊窗。主工作 session 交接確認前窗零 trust／OAuth mutation、無殘留；本次修訂不將舊窗寫成已執行。
+- 其餘 scope、既有準備 approval、user-only codeSign policy、exact cert、cleanup ownership 及 same-process gate 均保持，不因新時間窗放寬。只有 baseline 三 domain absence 確認且本輪 add 已嘗試才可 remove；既有 trust 不得撤回。密碼／系統 approval 仍由 Human 操作。
+- 本次 start 僅滿足 trust-ready。兩版簽章／DR 預檢成功後，T03 仍須確認 CUA 連線並另行取得 Human 的 T03 觀察 ready，不能沿用本次 trust-ready；保持固定 active host path、first writer／second reader、不同 hash 及完整假六欄。
+- 本次僅時間與 trust-ready 修訂，交獨立 Plan-Reviewer 快核這兩項；不撤銷既有準備審查，不新增政策／實作決策，不預報 trust 或 T03 成功。
+
+
+## Readback checker false-negative 窄修：OSS CodeSigning policyName metadata
+
+`limited-trust-shape-run.json` 的交接實證為 user 恰一 entry，keys 為 policy／policyName／result，SecPolicy object、AppleCodeSigning OID 與 trustRoot 均符合；先前 exact-two-keys checker 因回傳 metadata 誤拒。Apple OSS [TrustSettings.cpp](https://github.com/apple-oss-distributions/Security/blob/main/OSX/libsecurity_keychain/lib/TrustSettings.cpp) 的 copyTrustSettings 會附加 policyName。本修正僅正規化 readback metadata，不改 trust policy、主假設或通過標準，不回寫舊 code／receipt。
+
+目前有效 readback 契約：恰一 entry，必需 kSecTrustSettingsPolicy／kSecTrustSettingsResult；Policy 必須 SecPolicy runtime type 且 OID AppleCodeSigning，Result 必須 trustRoot。唯一可選 key 為 kSecTrustSettingsPolicyName；若有，其值必須 String 且精確等於 Apple OSS `SecPolicy.list` 明定的 literal `CodeSigning`。metadata 不符即拒絕；不宣稱公開 `SecPolicyCopyProperties` 的 `kSecPolicyName` 可取得此 friendly label，不呼叫私有 API，不以 label 取代實際 SecPolicy type／OID 的政策資格判斷。admin／system 仍必須 absent。
+
+set 維持僅 Policy／Result 兩 keys、user-only；unknown keys、allowedError、SSL、broad trust／空 array、multi-entry 一律拒絕。只接受本輪 exact cert，baseline absence／cleanup ownership／same-process gate 不變；舊程式與 receipts 保留。此節優先於前文 readback 必須恰兩 keys 的描述，其他限制保持有效。
+
+Human trust-ready／Touch ID 授權已收到；T03 仍須預檢成功後另確認 CUA／Human ready。active 時限不變：06:07:19 UTC 停新測量、06:12:19 UTC 總上限；主六欄／UX／授權 scope 不變。T03 尚未成立，本次只 planning 窄修，交獨立 Plan-Reviewer 快核後才實作，不 commit。
+
+
+### policyName 來源更正（不改政策語意）
+
+公開 `SecPolicyCopyProperties` 對標準 codeSign policy 的 `kSecPolicyName` 為 missing；該 key 用於 SSL 等 policy-specific name，不能作為取得 friendly label 的途徑。唯一 optional metadata `kSecTrustSettingsPolicyName` 必須 String 且精確等於 `CodeSigning`，依據為 Apple OSS [SecPolicy.list 第 25 行](https://github.com/apple-oss-distributions/Security/blob/main/OSX/sec/Security/SecPolicy.list#L25) 的 CodeSigning policy 定義。TrustSettings.cpp 以內部名稱附回此 metadata；本實驗不呼叫私有 `SecPolicyGetName`。
+
+仍以實際 SecPolicy runtime type／AppleCodeSigning OID、trustRoot、user-only、exact-one-entry 及 admin／system absent 作政策資格判斷，metadata 只作一致性檢查；unknown keys／allowedError／SSL／broad／multi-entry 仍拒絕。set 仍兩 keys，cleanup ownership／same-process gate／first writer-second reader／UX／scope／06:07:19 停測與06:12:19總上限全不變。此為 checker API 來源更正，不擴 semantic 或改主假設成功標準；舊 code／receipt 保留，本修訂交獨立 Plan-Reviewer。
+
+## 最新限定 trust 實證與停止結果
+
+Human-start 新窗內四輪 receipts 已保存於 E005：前兩輪辨識 readback policyName metadata 誤拒；經獨立核准的 checker 正規化後，user-only codeSign／trustRoot 讀回成立，target private Keychain 為 1 matching／1 valid identity。名稱及 exact DER SHA-1 selector 的 codesign 首次簽章仍回 no identity found；最後一輪已停止，不再試其他變體。零 OAuth 寫入、無兩版有效簽章／DR／T03，主假設仍無法判定；四輪 trust 精確移除、三 domain absence、Keychain／秘密不存在及 default／search-list 一致皆確認，無已知殘留。
+
+本機 Apple man codesign SIGNING IDENTITIES 指出 identity 所在 Keychain 須在使用者 search-list；這是下一個待測前提，不稱唯一根因。既定 scope 禁止修改 search-list，必須另獲 Human 授權才可介入，不自動擴安全／時間範圍。免費 cert／限定 trust 前提的局部成功不代替 T03 或正式採用。詳見 [E005](../../experiments/E005/README.md)。

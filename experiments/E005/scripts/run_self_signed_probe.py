@@ -26,6 +26,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--pem-import', action='store_true', help='One transport-format check; no policy changes')
+    parser.add_argument('--signing-selector', choices=('common-name', 'certificate-sha1'), default='common-name', help='Select the same experiment identity by certificate hash; never changes trust or search list')
     parser.add_argument('--diagnose', action='store_true', help='Read only this trial keychain identity counts and known errors')
     parser.add_argument('--trust-code-signing', action='store_true', help='Explicitly authorized temporary user-domain codeSign trust only')
     parser.add_argument('--observer-gate', type=Path, help='External same-run Human ready gate; must initially be absent')
@@ -33,6 +34,8 @@ def main():
     parser.add_argument('--measurement-deadline-utc', help='Hard stop for waiting/new measurements, ISO UTC')
     parser.add_argument('--measure', action='store_true', help='Also measure fake OAuth items after signing preflight')
     args = parser.parse_args()
+    if args.signing_selector == 'certificate-sha1' and not (args.trust_code_signing and args.diagnose):
+        parser.error('certificate hash selection requires the limited-trust explicit-keychain diagnostic path')
     if args.trust_code_signing and not args.pem_import:
         parser.error('limited trust trial requires the established PEM path')
     measurement_deadline = None
@@ -49,11 +52,13 @@ def main():
     app = scratch / 'KeychainProbe.app'
     keychain_path = scratch / 'signing.keychain'
     label = 'Rivet-E005-' + str(uuid.uuid4())
+    selector_value = label
     primary, negative = str(uuid.uuid4()), str(uuid.uuid4())
     report = {'startedUTC': now(), 'backend': 'legacy', 'signing': 'isolated self-signed certificate',
               'paidQualificationRequired': False, 'measurementRequested': args.measure,
               'importFormat': 'PEM' if args.pem_import else 'PKCS12',
               'diagnosticRequested': args.diagnose,
+              'signingSelector': args.signing_selector,
               'limitedTrustRequested': args.trust_code_signing, 'humanReadyForMeasurement': False,
               'primaryNamespace': primary, 'negativeNamespace': negative,
               'experimentStatus': '無法判定', 'validationTaskComplete': False,
@@ -143,7 +148,7 @@ def main():
     def signed_build(rebuilt):
         build(app, rebuilt=rebuilt)
         setup('signRebuilt' if rebuilt else 'signFirst',
-              ['/usr/bin/codesign', '--force', '--sign', label, '--keychain', str(keychain_path),
+              ['/usr/bin/codesign', '--force', '--sign', selector_value, '--keychain', str(keychain_path),
                '--timestamp=none', str(app)])
         return identity(app)
 
@@ -220,6 +225,8 @@ def main():
                   '-module-cache-path', str(scratch / 'ModuleCache'), str(helper_source), '-o', str(trust_helper)])
             setup('encodeCertificateDER', ['openssl', 'x509', '-in', str(scratch / 'cert.pem'),
                   '-outform', 'DER', '-out', str(certificate_der)])
+            if args.signing_selector == 'certificate-sha1':
+                selector_value = hashlib.sha1(certificate_der.read_bytes()).hexdigest()
             baseline, ok = trust_command('inspect')
             trust_baseline_absent = ok and trust_absent(baseline)
             report['trustBaselineAbsent'] = trust_baseline_absent
@@ -249,6 +256,12 @@ def main():
                 counts[name] = int(match.group(1)) if match else None
             report['isolatedIdentityDiagnostic'] = {'exitCode': result.returncode,
                 'counts': counts, 'knownDiagnostics': known_diagnostics(data), 'explicitPrivateKeychainOnly': True}
+            if args.signing_selector == 'certificate-sha1':
+                hashes = re.findall(rb'^\s*\d+\)\s+([0-9a-fA-F]{40})\b', data, re.MULTILINE)
+                matched = selector_value.lower() in {value.decode('ascii').lower() for value in hashes}
+                report['selectedCertificateMatchedIsolatedIdentity'] = matched
+                if not matched:
+                    raise RuntimeError('selectedCertificateNotInIsolatedIdentityDiagnostic')
         first = signed_build(False)
         report['hostFirst'] = public_identity(first)
         shutil.copytree(app, scratch / 'First.app')

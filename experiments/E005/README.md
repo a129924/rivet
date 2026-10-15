@@ -117,7 +117,7 @@ python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --out exp
 
 若沿此自簽身分繼續，下一個涉及信任設定的操作超出既定授權，需由 Human 明確決定；尚未執行任何信任調整。單純改 GUI App 未解除已觀察的簽章前提。診斷結果不核准正式採用，不外推其他 macOS／簽章方式／DPK。
 
-### 限定 user-domain／Code Signing trust：準備與待測
+### 限定 user-domain／Code Signing trust：前一準備窗歷史（截至 04:04 UTC）
 
 使用者已明確授權「僅實驗憑證、使用者範圍、Code Signing 用途」的唯一 trust 例外。新窗 03:54:20–04:24:20 UTC，04:19:20 UTC 停新測量；舊時窗保留為歷史。新計畫經獨立 Plan-Reviewer approved，不改 legacy／假六欄／first writer 與 second reader／UX 判準，也不允許 admin／system domain、SSL、broad trust、既有 ACL／partition-list、default Keychain 或 search-list 變更。
 
@@ -131,6 +131,29 @@ runner 的 trust cleanup ownership 僅在三 domain baseline absence 已證實�
 python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --diagnose --trust-code-signing --measure --observer-gate <external-new-gate> --ready-notice <external-new-notice> --measurement-deadline-utc 2026-10-15T04:19:20+00:00 --out experiments/E005/evidence/<new-receipt>.json
 ```
 
-目前只完成 Swift6 compile／Python syntax 與獨立純檢查。[Constraint 收據](evidence/trust-constraint-check.json) 為 7／7 synthetic checks；[cleanup 收據](evidence/trust-cleanup-check.json) 為三個 fake Security／subprocess adversarial cases 通過，驗證拒絕 mutation 不撤 foreign trust、failed partial add 與 timeout 仍撤回並核對。缺 gate 的 CLI 在 argparse exit2，早於 scratch／Security 初始化。這些都不是真實 trust 或 T03 證據。上輪診斷來源另存 `evidence/source-snapshots/b104dd3d649451aee270b86fa926ee6727c204c28f4f4e301f5ec2aa85dec159.py`，SHA 與原收據一致。
+該準備階段當時只完成 Swift6 compile／Python syntax 與獨立純檢查。[Constraint 收據](evidence/trust-constraint-check.json) 為 7／7 synthetic checks；[cleanup 收據](evidence/trust-cleanup-check.json) 為三個 fake Security／subprocess adversarial cases 通過，驗證拒絕 mutation 不撤 foreign trust、failed partial add 與 timeout 仍撤回並核對。缺 gate 的 CLI 在 argparse exit2，早於 scratch／Security 初始化。這些都不是真實 trust 或 T03 證據。上輪診斷來源另存 `evidence/source-snapshots/b104dd3d649451aee270b86fa926ee6727c204c28f4f4e301f5ec2aa85dec159.py`，SHA 與原收據一致。
 
-限定 trust 真實補測狀態 **未執行**；本輪真實驗證任務未完成。尚待 Human 確認可留意 trust 系統授權，再執行；若簽章預檢成立，另確認 CUA 連線並請 Human ready 後才 T03。沒有新增 trust、OAuth 寫入或本輪殘留，主假設仍無法判定；既有原 binary Human 零提示依據保留。授權與純檢查不核准正式採用。
+該準備窗當時的限定 trust 真實補測狀態 **未執行**，真實驗證任務未完成，當時尚待 Human 確認可留意 trust 系統授權；後續實際四輪見下節。若簽章預檢成立，另確認 CUA 連線並請 Human ready 後才 T03。沒有新增 trust、OAuth 寫入或本輪殘留，主假設仍無法判定；既有原 binary Human 零提示依據保留。授權與純檢查不核准正式採用。
+
+### 最新 Human-start 時窗與真實限定 trust 結果
+
+前一個準備窗已結束，且未執行 trust／OAuth。Human 後續明確「可以開始」，本輪另起同樣上限 30 分鐘：05:42:19–06:12:19 UTC，06:07:19 停新增測量；獨立 Plan-Reviewer 已核准時間／ready 修訂。trust-ready 已收到，T03 仍需同程序預檢成功後另取 ready。本輪四份新收據皆保留，沒有開啟任何 observer gate。
+
+| 真實收據 | UTC 時窗 | 停止位置與觀察 | 清理 |
+| --- | --- | --- | --- |
+| [limited-trust-run](evidence/limited-trust-run.json) | 05:44:15.914510–05:44:38.119597 | user trust 新增 status0；一筆讀回未通過原 exact-two-keys checker，未進簽章。 | trust 精確移除，三 domain absence、專用 Keychain／秘密不存在，全域設定一致。 |
+| [limited-trust-shape-run](evidence/limited-trust-shape-run.json) | 05:47:23.557417–05:47:37.966892 | 實際 keys 為 policy／policyName／result，SecPolicy type／codeSign OID／trustRoot 均符合；原 checker 因 metadata 誤拒。 | 同上，全部確認。 |
+| [limited-trust-metadata-run](evidence/limited-trust-metadata-run.json) | 05:53:07.632028–05:53:24.724267 | 修正後限定 trust 讀回通過；私有 Keychain 為 1 matching／1 valid identity；codesign 以名稱選取仍回 no identity found。 | 同上，全部確認。 |
+| [limited-trust-sha1-run](evidence/limited-trust-sha1-run.json) | 05:57:14.648418–05:57:26.520884 | 本輪 cert DER SHA-1 與隔離 identity 匹配，1 matching／1 valid、限定 trust 通過；codesign 仍回 no identity found。 | 同上，全部確認，無 recoveryRequired。 |
+
+四輪均零 OAuth 寫入、沒有兩版有效簽章／DR 比較，沒有 T03 acceptance／runtime UX 測量。每輪建立新 cert／私有 Keychain；設定授權不是程序重啟的正常憑證存取證據。Human 回報看到並完成系統設定授權，[人工收據](evidence/limited-trust-human-authorization.json) 綁定首輪 machine SHA；沒有精確每輪提示次數或全程 runtime 觀察聲明，不推論各輪 0 提示。CUA inventory 可連線，但 SecurityAgent 視窗無法被工具讀取，沒有以程序清單抽樣冒充對話框觀察。
+
+**Checker 修正依據。** Apple OSS [TrustSettings.cpp](https://github.com/apple-oss-distributions/Security/blob/main/OSX/libsecurity_keychain/lib/TrustSettings.cpp) 在儲存／讀回時附加 policyName；[SecPolicy.list](https://github.com/apple-oss-distributions/Security/blob/main/OSX/sec/Security/SecPolicy.list) 定義內部名稱 `CodeSigning`。故本次只正規化系統 metadata：Policy／Result 仍必需，唯一可選 key 為 policyName，值必須 String 且精確 `CodeSigning`；SecPolicy type、實際 codeSign OID、trustRoot、單筆 user domain、admin／system absent 均保持。set 仍兩 keys，沒有改政策或呼叫私有 API。公開 `SecPolicyCopyProperties` 的 `kSecPolicyName` 並非取得此 internal label 的方法，不宣稱可從該公開 API 取名。
+
+舊 exact-two-keys／logging-only helper 均保存 SHA 一致的 `.swift` source snapshots，舊收據未覆寫。[Logging checks](evidence/trust-shape-constraint-check.json) 保留原 7 項 strict checks；[修正後 checks](evidence/trust-metadata-constraint-check.json) 12／12 通過，新增 canonical metadata 正例及錯名、錯型別、未知 key、名稱不能替代 policy 的負例。[修正後 cleanup checks](evidence/trust-metadata-cleanup-check.json) 及 [selector checks](evidence/signing-selector-cleanup-check.json) 均為明標 synthetic；不當真實 trust／Keychain 證據。
+
+**同候選 selector 診斷。** 本機 Apple `man codesign` 的 SIGNING IDENTITIES 說明：40 個十六進位字元會改用憑證 SHA-1 選取、不考慮 subject name。新增 `--signing-selector certificate-sha1` 只計算本輪 cert DER，並與明確指定私有 Keychain 的 identity 指紋比對，僅保存 matched 布林；兩 build 使用同一 selector，不改 trust、ACL、search-list、backend 或 default designated requirement。沒有在失敗後切換 backend；最後一輪失敗後已停止，不再新增變體。
+
+本輪實驗結果仍 **無法判定**；machine `validationTaskComplete=false` 如實表示穩定 host 前提未達、T03 未執行。受限驗證／紀錄工作可在停止原因、缺口、清理及決策限制保存完整後完成，不能據此推進正式採用。已支持免費新 cert／user-only codeSign trust 的新增、限定讀回與精確撤回，以及 target Keychain 的有效 identity；尚未支持此 codesign host 的成功簽署或穩定重建。
+
+下一個可測前提是 Keychain 搜尋清單：同一 `codesign` 手冊說明簽章身分的 Keychain 須在使用者搜尋清單，`--keychain` 則限制查找目標。目前本輪明確禁止修改搜尋清單，因此未測這項介入，不能宣稱它已被證實為唯一根因。若要暫時加入本輪專用 Keychain，須 Human 另行授權及規劃精確恢復；本輪沒有做這項變更。這不表示需要付費，也不證明 GUI App 可解除缺口。既有原 binary 的 Human 0 提示證據保留，正式採用／公開分發／DPK 仍未核准。

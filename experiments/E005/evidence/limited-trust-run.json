@@ -1,0 +1,184 @@
+{
+  "startedUTC": "2026-10-15T05:44:15.914510+00:00",
+  "backend": "legacy",
+  "signing": "isolated self-signed certificate",
+  "paidQualificationRequired": false,
+  "measurementRequested": true,
+  "importFormat": "PEM",
+  "diagnosticRequested": true,
+  "limitedTrustRequested": true,
+  "humanReadyForMeasurement": false,
+  "primaryNamespace": "c3bad29b-fbcd-4986-ab1f-847ff28c540e",
+  "negativeNamespace": "ec015fd3-8367-49da-ae5b-3bb1a57501a2",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": false,
+  "promptObservation": "unobserved; separate human receipt required",
+  "commands": [],
+  "cleanup": [],
+  "setupCommands": [
+    {
+      "stage": "generateCertificate",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "encodePrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importCertificate",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importPrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "buildTrustHelper",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "encodeCertificateDER",
+      "exitCode": 0,
+      "stderrPresent": false
+    }
+  ],
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "3fc84bcc06b6519f2d4dd36715a8f55c6199f7d5832543c8fc2903bee05c1e8f"
+  },
+  "keychainCreateStatus": 0,
+  "settingsAfterCreate": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "trustHelperSourceSHA256": "0706543b7b6acc894178fec4773b70c4c7e0ec8dd90104b24b95d2d52b23790e",
+  "trustCommands": [
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T05:44:18.773746+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "entryCount": -1,
+          "status": -25300
+        }
+      },
+      "finishedUTC": "2026-10-15T05:44:19.359152+00:00"
+    },
+    {
+      "operation": "add-code-signing",
+      "startedUTC": "2026-10-15T05:44:19.359214+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "mutationAttempted": true,
+        "policy": "codeSign",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T05:44:33.009341+00:00"
+    },
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T05:44:33.009800+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": false,
+          "codeSigningOnly": false,
+          "entryCount": 1,
+          "status": 0
+        }
+      },
+      "finishedUTC": "2026-10-15T05:44:33.195001+00:00"
+    },
+    {
+      "operation": "remove-user",
+      "startedUTC": "2026-10-15T05:44:33.195168+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "operation": "remove-exact-certificate",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T05:44:37.969599+00:00"
+    },
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T05:44:37.969843+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "entryCount": -1,
+          "status": -25300
+        }
+      },
+      "finishedUTC": "2026-10-15T05:44:37.985938+00:00"
+    }
+  ],
+  "trustBaselineAbsent": true,
+  "limitedTrustReadbackVerified": false,
+  "stopReason": "limitedTrustAddOrReadbackFailed",
+  "trustRemovalVerifiedAbsent": true,
+  "trustCleanupComplete": true,
+  "keychainDeleteStatus": 0,
+  "privateKeychainAbsent": true,
+  "settingsAfterCleanup": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "secretScratchAbsent": true,
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T05:44:38.119597+00:00",
+  "limitations": [
+    "human prompt receipt required for UX; historical zero prompts do not cover this host",
+    "DPK free profile not verified",
+    "true denial not observed",
+    "SIGKILL, process crash and host failure cannot guarantee cleanup",
+    "self-signed identity deleted after this trial; future builds need a retained stable identity"
+  ]
+}
