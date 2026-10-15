@@ -199,3 +199,17 @@ python3 -B experiments/E005/scripts/run_self_signed_probe.py --pem-import --diag
 主要假設仍為 **無法判定**，原因已縮小為 UX 提示階段未能確認，不再是 T03 資料讀回缺失。受限驗證／紀錄任務完成：是；資料機制及清理成功，Human 觀察、剩餘缺口與決策限制已如實保存。正式採用仍未核准；若下一輪要補 UX，需另定可區分存取與設定清理提示的人工觀察，不在本輪重跑。
 
 獨立 Reviewer 最終 closure approved，無剩餘 required fixes，核可指定 docs 條件回寫與交付；這核可紀錄完成，不核准 UX 成功或正式採用。核心 commit f8a1b66 已 push 並更新 Draft PR #58；hooks 全通過，PR Lens 本機 9 nodes／10 edges validate／render，Graphify 0.9.73 無圖 fallback、未建圖／refresh。停於 human review，無新測量。
+
+
+### 新授權 UX 分段聚焦輪（規劃／準備，未執行）
+
+本輪沿同一 E005 UX 缺口，不重測 B／negative／refresh。新窗 07:34:33–08:04:33 UTC，07:59:33 停新測量；先確認桌面工具＋Human ready 才 setup。stage0限定 setup／兩版簽章預檢，phase1 first writeA＋readA，phase2 same-first fresh readA，phase3 different-hash／same-DR second readA，phase4精確cleanup。每段不可覆寫machine receipt，Human另以其SHA-256綁定；完成停住，取得觀察及下一段fresh CUA／ready後才前進。初次最多1提示、後fresh／rebuilt各0；觀察缺失unknown，不重跑。異常／deadline不等待Human而直接cleanup，prompt未知如實記錄。
+
+新增 --segmented-ux／--ux-control-dir／--ux-evidence-dir 明確opt-in；external control notices/gates與非秘密repo evidence分開，新目錄與final out均須不存在。舊runner保存為SHA一致的20ec49357bf0db112611313d81477db31f11b92e5dfb0708ba77441ec9c2008e.py，不改歷史收據。UX helper驗證同namespace／phase／前receipt SHA、完整Human觀察與當段ready，拒絕receipt變更；deadline／abort／受控signal進finallycleanup，不以machine exit0推UX。
+
+準備自測15項synthetic通過（UX6、trust3、search-list6），控制helper停止測試僅helper-level，不冒充真Security／GUI或main整合證據。交獨立Tester／Reviewer審查準備後才允許唯一真實run；本段未預報成功。
+
+
+**本輪桌面前提結果。** 分段準備經獨立 Tester／Reviewer approved，15 synthetic tests、CLI guards 與 fake main wait-abort→finally cleanup 通過，見 [準備收據](evidence/ux-segmented-preparation-check.json)。但 [桌面 preflight](evidence/ux-segmented-desktop-preflight.json) 顯示原生 CUA 重試及 kernel reset 後仍 `native pipe startup failed`；Chrome 可連線不等於原生桌面已連線。另一次 App-content probe 被自動審查以無關私人對話風險拒絕，未讀取內容；安全 inventory 替代仍回原生連線失敗。
+
+尚未取得本輪 Human setup-ready，未啟動新真實 run、零 Keychain／trust／search-list mutation，無本輪實驗秘密或 OAuth 項目需清理。已請 Human 恢復既有桌面連線，既定時窗不延長。實驗狀態 **未執行**；UX／主假設仍 **無法判定**；本輪真人驗證任務完成：**否**。前文「紀錄任務完成」只屬前輪已結束的資料機制實證，不能由本輪準備成果交付推成真人驗證完成。若窗內連線恢復，另存新的連線事件收據，先取得 setup-ready 才啟動唯一 run；不覆寫這份失敗 preflight。

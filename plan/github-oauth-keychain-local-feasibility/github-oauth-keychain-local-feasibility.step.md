@@ -1,10 +1,10 @@
 # Keychain 本機 OAuth 憑證保存可行性：狀態帳本
 
 - Topic：`github-oauth-keychain-local-feasibility`
-- 目前 phase：Human review（T03 資料成立；UX 無法判定）
-- Current step：S07
+- 目前 phase：分段 UX 準備完成，等待原生桌面連線
+- Current step：S04
 - Current step status：pending
-- 上游正式 verdict：approved（最新成果 closure 經獨立 Reviewer；T03 資料成功，UX 未定，非採用核准）
+- 上游正式 verdict：approved（最新分段 UX 契約經獨立 Plan-Reviewer；非 UX 成功）
 - [需求](../../analysis/github-oauth-keychain-local-feasibility/requirements.md)／[規格](../../analysis/github-oauth-keychain-local-feasibility/technical-spec.md)／[契約](github-oauth-keychain-local-feasibility.plan.md)
 
 ## Steps
@@ -13,8 +13,8 @@
 | --- | --- | --- | --- | --- |
 | S01 | completed | Plan-Creator | 已核准對話計畫映射為同 slug 四份正式 artifacts，保留九欄、T01–T06、工具與時間／清理契約。 | 本 topic requirements、technical-spec、plan、step 四檔已建立；沒有 host／測量結果或正式 approval 聲明。 |
 | S02 | completed | Plan-Reviewer | 獨立審查四檔一致性、scope 與執行條件，明示正式 verdict。 | 原 cleanup、first／second 與 trust ownership 回修均保留歷史；最新 Human-start 時窗與 CodeSigning metadata 正規化修訂已分別經獨立 Plan-Reviewer 正式 approved，不代替實測成功。 |
-| S03 | completed | Implementer | 正式 approved 後建立受限 host、trust helper、runner 與必要紀錄，按 scope 交測。 | 原 E005 成果保留；本次限定 trust helper、metadata checker 與同 cert ready gate／SHA1 selector 已實作並經獨立純檢查及 code review。四輪真試驗已停止，未取得可簽署 host，不把準備或測量完成當成 T03 成功。 以上未簽成／T03 未執行屬歷史；最新 user-search-list 準備已通過11 synthetic tests／3 guards及獨立 Reviewer，單輪兩版簽章與 DR 相同、T03 六欄讀回均成立。 |
-| S04 | completed | Tester | 獨立執行 T01–T06、fresh-process、真重建、提示觀察及整輪實驗所有退出 cleanup（子程序正常結束保留 item）；保存四狀態／任務完成判斷與工具交付狀態。 | E005 evidence/normal-run.json、early-stop-run.json、environment.json 與八段 README。T02／T04 六欄成功；T03 真重建 requirement 不同，無 acceptance read；UX unobserved；真 absent／malformed 成功，denial 只 synthetic。正常兩項與提前停止一項清理確認不存在。實驗無法判定，Keychain 驗證任務完成；Reviewer 指出受控停止 cleanup 缺口後，Implementer bounded fix，Tester 新增真 controlled-stop-run 與 synthetic SIGINT／SIGTERM 兩測試（delete 重複同訊號），均成功清理／保存 receipt。舊正常與 early-stop 證據保留；不可捕捉停止限制明列。Tester 複驗 verdict approved（交獨立 Reviewer，非採用核准）。  本次四輪限定 trust 測量、全部 source snapshots／receipts／cleanup 亦經獨立 Tester closure approved；真 T03 未執行、machine validationTaskComplete=false，記錄工作完成但主假設仍無法判定。 以上 unknown／未執行屬歷史；最新 user-search-list-run 真 T02／T03／T04 六欄成功、absent／malformed 成功、machine validationTaskComplete=true（機制與清理），全部清理完成；Human 兩次授權階段未知，UX／主假設仍無法判定。 |
+| S03 | completed | Implementer | 正式 approved 後建立受限 host、trust helper、runner 與必要紀錄，按 scope 交測。 | 原 E005 成果保留；本次限定 trust helper、metadata checker 與同 cert ready gate／SHA1 selector 已實作並經獨立純檢查及 code review。四輪真試驗已停止，未取得可簽署 host，不把準備或測量完成當成 T03 成功。 以上未簽成／T03 未執行屬歷史；最新 user-search-list 準備已通過11 synthetic tests／3 guards及獨立 Reviewer，單輪兩版簽章與 DR 相同、T03 六欄讀回均成立。 以上為前輪歷史；本輪分段 UX 程式準備完成，15 synthetic tests／CLI guards／fake main abort-finally cleanup 經獨立 Tester、Reviewer approved，尚未真人 run。 |
+| S04 | pending | Tester | 獨立執行 T01–T06、fresh-process、真重建、提示觀察及整輪實驗所有退出 cleanup（子程序正常結束保留 item）；保存四狀態／任務完成判斷與工具交付狀態。 | E005 evidence/normal-run.json、early-stop-run.json、environment.json 與八段 README。T02／T04 六欄成功；T03 真重建 requirement 不同，無 acceptance read；UX unobserved；真 absent／malformed 成功，denial 只 synthetic。正常兩項與提前停止一項清理確認不存在。實驗無法判定，Keychain 驗證任務完成；Reviewer 指出受控停止 cleanup 缺口後，Implementer bounded fix，Tester 新增真 controlled-stop-run 與 synthetic SIGINT／SIGTERM 兩測試（delete 重複同訊號），均成功清理／保存 receipt。舊正常與 early-stop 證據保留；不可捕捉停止限制明列。Tester 複驗 verdict approved（交獨立 Reviewer，非採用核准）。  本次四輪限定 trust 測量、全部 source snapshots／receipts／cleanup 亦經獨立 Tester closure approved；真 T03 未執行、machine validationTaskComplete=false，記錄工作完成但主假設仍無法判定。 以上 unknown／未執行屬歷史；最新 user-search-list-run 真 T02／T03／T04 六欄成功、absent／malformed 成功、machine validationTaskComplete=true（機制與清理），全部清理完成；Human 兩次授權階段未知，UX／主假設仍無法判定。 以上 completed／machine validation true 為前輪歷史；本輪 UX 真人驗證 pending prerequisite：native desktop 連線失敗，未收到 setup-ready，未啟動真實 run、零 mutation，真人驗證任務未完成。 |
 | S05 | completed | Reviewer | 獨立檢視實際證據、分類、限制、cleanup 與工具產物，明示成果 verdict。 | 獨立 Reviewer 明示 approved；核對 SIGINT／SIGTERM 受控 cleanup 回修及 synthetic／真 controlled-stop 證據、receipt 相對路徑、T03／UX 限制、四尺寸與實際圖檢視。非採用核准；以上為原成果。本次兩輪自簽 preflight 與紀錄也經獨立 Reviewer 複審 approved。  以上 approvals 為歷史成果；最新四輪結果也經本次獨立 Reviewer closure approved。 |
 | S06 | completed | Implementer | 依獨立審查結果，只回寫指定 docs 條件結論；按 topic commit／push／開 Draft PR 供人類 review。 | 已依 staged diff 確認單一 topic 邊界；核心 commit e6438ad 已 push，Draft PR #58（base dev、isDraft true）已查證。所有 pre-commit hooks 通過；PR Lens 真實核心 diff 本機 validate／render 完成。此交付紀錄以同 topic docs commit 保存，最終 head 核對在 repository 外。 最新核心 commit f8a1b66 已 push，Draft PR #58 head/base/dev/isDraft 已核對，全部 hooks 通過；PR Lens 9 nodes／10 edges 本機 validate／render、Graphify 0.9.73 無圖 source fallback。最終 bookkeeping head 另於 repository 外核對，無新測量。 |
 | S07 | pending | Human | 人類檢視 Draft PR，決定是否接受本輪結果；正式採用另行規劃。 | Draft PR #58 已建立：https://github.com/a129924/rivet/pull/58；等待 Human review，未核准採用／merge／release。 |
@@ -224,3 +224,55 @@ Human 已明確授權本輪 freshly-created 專用實驗 Keychain 暫時 append 
 - 2026-10-15 06:28 UTC：獨立 Reviewer closure approved、無剩餘 required fixes。核可指定 docs 條件回寫與本 topic commit／push／Draft PR 更新；T03 資料機制成立、UX／主假設無法判定、全部清理完成，紀錄任務完成。S05 completed、S06 in-progress，停點仍為 human review、不核准採用／merge。
 
 - 2026-10-15 06:28 UTC：最新核心 commit f8a1b66、push、Draft PR #58 更新已完成並查證，hooks 全通過；PR Lens 實際 diff validate／render（9 nodes／10 edges），Graphify 0.9.73 重查無 repository graph、不建圖／refresh。S06 completed，S07 pending，停於 human review。本帳本交付紀錄另同 topic 提交；最終 head／remote／PR 一致性於 repository 外核對，不追加實驗。
+
+
+## 最新有效授權：E005 分段 UX 聚焦單輪
+
+Human 明確授權以同一主要問題補新一輪 UX 證據；沿用 E005，新增 `ux-segmented-*` 獨立證據，不覆寫任何舊 receipt／Human sidecar／code snapshot。實作前保存既有 runner 的 SHA-256 與對應舊 source snapshot。先前 T03 資料證據成立而 UX 無法判定的結果、closure approved 與 Draft PR #58 均保留為歷史，不倒填本輪觀察。
+
+### 本輪範圍與時間
+
+僅假 A 六欄、同一 legacy backend、新本輪 own self-signed cert、既有 exact-cert user/codeSign trust 及暫時 user search-list 例外。保留 trust／search-list ownership、只清 own 副作用、foreign entries／order 與 default 不變的契約。禁止 production 改動、既有 ACL／partition-list、付費／帳號、admin／system／SSL／broad trust 或其他安全政策變更。只 UX 聚焦，不跑 B／negative／refresh，不 rerun，不以新結果改判準；自然 denial 維持歷史 gap。
+
+新窗：2026-10-15 07:34:33 UTC 起，07:59:33 UTC 停新增測量，08:04:33 UTC 總上限；最後五分鐘優先 cleanup／closure，不自動延長。本節優先於前版時窗及不分段量測安排，其他 scope／安全／UX 判準不變。
+
+### 分段與 Human ready
+
+每段開始前均先 fresh CUA 連線核對，再取得明確 Human ready，不能沿用舊輪或前段 ready。CUA 連線不代表看得到 SecurityAgent，prompt 仍由 Human 全程觀察；系統密碼／approval 只由 Human 操作。
+
+| 段落 | 操作與停點 |
+| --- | --- |
+| Stage 0 setup | fresh CUA＋Human ready 後才 run setup／trust／build；同 cert 預檢 first／second 兩版不同 hash、DR 相等。零 OAuth write。setup 提示與授權獨立記錄，不混入首次憑證存取提示。完成後停，取得本段 Human 觀察。 |
+| Phase 1 首次保存／存取 | 固定 active host path 的 first binary：write A＋read A，逐欄比較六欄。完成立刻停，取得本段 prompt count／purpose／Human action 與全程觀察是否完整；不得預填 0。 |
+| Phase 2 同身分 fresh reader | 同 first binary 的新 reader process 讀 A、逐欄比較。完成停，取得本段完整 Human 觀察；不重寫資料。 |
+| Phase 3 真重建 reader | 同 active host path 換成保留的 second binary，核對 hash 確實不同且 DR 相等，fresh reader 讀 A、逐欄比較。完成停，取得本段完整 Human 觀察。writer 仍 first，不能兩端都 second。 |
+| Phase 4 cleanup | 正常啟動 cleanup 前另 fresh CUA＋Human ready，處理 own OAuth item、owned trust 撤回／absence、owned search-list 移除／恢復及專用 Keychain／秘密清理。完成停，取得本段 Human cleanup 觀察；撤 trust 的 authentication 另記，不併入正常讀取 UX。 |
+
+### 每段證據與下一段 gate
+
+每段完成即保存獨立、不可覆寫 machine stage receipt，記實際 namespace、phase、開始／結束時間、執行 binary hash 及該段六欄比較；setup／cleanup 未執行六欄比較須明記不適用／未執行，不預填成功。Human sidecar 以該 receipt SHA-256 綁定，記 prompt count、purpose、action、觀察時窗及是否全程完整；未知即 unknown，不由 exit0 或 CUA 連線推定 0。
+
+下一個正常測量段開始前，gate 必須核對同 run namespace、預期 phase、前段不可覆寫 receipt 的 SHA-256，以及其完整 Human 觀察已記錄；再 fresh CUA＋取得本段明確 ready。namespace／phase／SHA 不符、缺觀察或未 ready，不得進下一測量段。setup 授權與 Phase 1 首次保存／存取授權分開。
+
+正常 cleanup 也需上述觀察／ready；但任何 abort、deadline、受控 signal、失敗或 gate 不足時，必須直接退出測量並清楚 announce 異常 cleanup，不得讓等待 Human、gate 或 deadline 阻塞清理。異常 cleanup 的 prompt 若無完整觀察即 unknown，不冒充 UX。不可捕捉停止限制及非秘密 recovery 仍明列。
+
+### 判準、實作與交付
+
+本輪 UX 成功需 Phase 1 首次保存／存取最多一次明確系統授權、Phase 2 fresh reader 與 Phase 3 真重建 reader 各零提示，且六欄資料／身分前提及 cleanup 成立。任何 phase 觀察缺失／unknown 為無法判定；資料成功不能外推 UX 成功。完整前提下明確超出提示判準則失敗，不 rerun 換結果。setup／cleanup 提示分開揭露，不能將正常測量重複提示移至其他分類排除。
+
+沿 E005 同條件補 UX 缺口，無需新 experiment 編號。允許新增 `experiments/E005/scripts/ux_stages.py` 小型 protocol helper（immutable phase machine／Human SHA、external notices／gates），以及 `experiments/E005/Tests/test_ux_stages.py` 必要 synthetic 測試；既有 `run_self_signed_probe.py` 僅加 `--segmented-ux`、`--ux-control-dir`／`--ux-evidence-dir` 明確 opt-in 及 freshness／前提 early guards，另存舊 runner 的完整 SHA-256／source snapshot。允許獨立 stage receipts／Human sidecars 與八段 README 更新；不改 Swift host、TrustProbe、build 或 production。phase scratch／秘密在 repository 外隔離，repo evidence 僅非秘密相對位置及 bool／count，不輸出個人 path／secret。既有工具 scratch 維持本機，不為本輪重跑無關工具或擴範圍。
+
+synthetic 必須驗證錯 namespace／phase／receipt SHA、缺 Human 觀察與未 ready 都阻擋下一測量段，且 deadline／abort／受控 signal 不阻塞 cleanup；只代表控制流程，不冒充真 Keychain／Human prompt 證據。四狀態／驗證任務完成／cleanup／recovery 分開。四檔修訂交獨立 Plan-Reviewer，不自行 approve；本輪尚未實作或執行，不預報成功。
+
+
+### 最新 Blockers／交接
+
+- S02 completed：本輪 UX 契約經獨立 Plan-Reviewer approved；S03 completed：分段準備經獨立 Tester／Reviewer approved。S04 pending：native desktop pipe startup failed，未取得 Human setup-ready，本輪真人驗證未執行；不沿用歷史 closure 冒稱本輪完成。
+- 本輪尚無 stage receipts／Human sidecars；各段 fresh CUA／Human ready 待依 gate 取得，不能預填 0 或沿用前段 ready。缺觀察不進下一測量段，仍執行異常 cleanup。
+- 先前資料與 UX 限制保留；本輪只補 UX，不重新定義假設、denial gap 或正式採用邊界。S07 人類 review 未宣稱完成。
+- 本輪截止 07:59:33 UTC 停新測量／08:04:33 UTC 總上限，不以等待 Human 延長。
+- 2026-10-15 07:37:03 UTC：Plan-Creator 僅更新四檔，交獨立 Plan-Reviewer。主工作 session 交接 HEAD／remote／PR58 Draft=b27e646，未自行 Git 查核；未實作／測量／commit。
+
+- 最新 UX 契約已獲獨立 Plan-Reviewer approved，無 required fixes；Implementer 已完成明確 opt-in 分段 protocol／machine receipt／Human SHA gate／deadline cleanup。15項必要 synthetic tests（UX6、trust3、search-list6）通過，尚未真實 mutation。交獨立 Tester 準備驗證。
+
+- 2026-10-15 07:44 UTC：獨立 Tester／Reviewer 對分段準備正式 approved（15 synthetic＋CLI guards＋fake main stop/cleanup）；尚未真人測量。原生 CUA inventory 重試仍 native pipe startup failed，Chrome 連線不替代桌面；App-content probe 被自動審查以無關私人對話風險拒絕，未讀取其內容。已改安全 inventory 並請 Human 恢復連線；未收到 setup-ready、零 Keychain／trust／search-list mutation，停於 S04 prerequisite，不延長截止。

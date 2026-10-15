@@ -173,3 +173,44 @@ Human 授權 exact-own-Keychain user search-list 例外後，唯一 [user-search
 這已補足本輪 T03 資料機制，不宣稱唯一根因、DPK、其他 macOS、長期保留身分 reuse 或正式採用。cert 隨實驗刪除；真 denial 仍未觀察，production adapter／provider lifecycle 不變。
 
 本輪受限驗證／紀錄任務完成，主假設仍無法判定，缺口為 UX 提示階段而非 T03 資料機制；不追加真實 run、不核准採用。
+
+
+## 最新有效授權：E005 分段 UX 聚焦單輪
+
+Human 明確授權以同一主要問題補新一輪 UX 證據；沿用 E005，新增 `ux-segmented-*` 獨立證據，不覆寫任何舊 receipt／Human sidecar／code snapshot。實作前保存既有 runner 的 SHA-256 與對應舊 source snapshot。先前 T03 資料證據成立而 UX 無法判定的結果、closure approved 與 Draft PR #58 均保留為歷史，不倒填本輪觀察。
+
+### 本輪範圍與時間
+
+僅假 A 六欄、同一 legacy backend、新本輪 own self-signed cert、既有 exact-cert user/codeSign trust 及暫時 user search-list 例外。保留 trust／search-list ownership、只清 own 副作用、foreign entries／order 與 default 不變的契約。禁止 production 改動、既有 ACL／partition-list、付費／帳號、admin／system／SSL／broad trust 或其他安全政策變更。只 UX 聚焦，不跑 B／negative／refresh，不 rerun，不以新結果改判準；自然 denial 維持歷史 gap。
+
+新窗：2026-10-15 07:34:33 UTC 起，07:59:33 UTC 停新增測量，08:04:33 UTC 總上限；最後五分鐘優先 cleanup／closure，不自動延長。本節優先於前版時窗及不分段量測安排，其他 scope／安全／UX 判準不變。
+
+### 分段與 Human ready
+
+每段開始前均先 fresh CUA 連線核對，再取得明確 Human ready，不能沿用舊輪或前段 ready。CUA 連線不代表看得到 SecurityAgent，prompt 仍由 Human 全程觀察；系統密碼／approval 只由 Human 操作。
+
+| 段落 | 操作與停點 |
+| --- | --- |
+| Stage 0 setup | fresh CUA＋Human ready 後才 run setup／trust／build；同 cert 預檢 first／second 兩版不同 hash、DR 相等。零 OAuth write。setup 提示與授權獨立記錄，不混入首次憑證存取提示。完成後停，取得本段 Human 觀察。 |
+| Phase 1 首次保存／存取 | 固定 active host path 的 first binary：write A＋read A，逐欄比較六欄。完成立刻停，取得本段 prompt count／purpose／Human action 與全程觀察是否完整；不得預填 0。 |
+| Phase 2 同身分 fresh reader | 同 first binary 的新 reader process 讀 A、逐欄比較。完成停，取得本段完整 Human 觀察；不重寫資料。 |
+| Phase 3 真重建 reader | 同 active host path 換成保留的 second binary，核對 hash 確實不同且 DR 相等，fresh reader 讀 A、逐欄比較。完成停，取得本段完整 Human 觀察。writer 仍 first，不能兩端都 second。 |
+| Phase 4 cleanup | 正常啟動 cleanup 前另 fresh CUA＋Human ready，處理 own OAuth item、owned trust 撤回／absence、owned search-list 移除／恢復及專用 Keychain／秘密清理。完成停，取得本段 Human cleanup 觀察；撤 trust 的 authentication 另記，不併入正常讀取 UX。 |
+
+### 每段證據與下一段 gate
+
+每段完成即保存獨立、不可覆寫 machine stage receipt，記實際 namespace、phase、開始／結束時間、執行 binary hash 及該段六欄比較；setup／cleanup 未執行六欄比較須明記不適用／未執行，不預填成功。Human sidecar 以該 receipt SHA-256 綁定，記 prompt count、purpose、action、觀察時窗及是否全程完整；未知即 unknown，不由 exit0 或 CUA 連線推定 0。
+
+下一個正常測量段開始前，gate 必須核對同 run namespace、預期 phase、前段不可覆寫 receipt 的 SHA-256，以及其完整 Human 觀察已記錄；再 fresh CUA＋取得本段明確 ready。namespace／phase／SHA 不符、缺觀察或未 ready，不得進下一測量段。setup 授權與 Phase 1 首次保存／存取授權分開。
+
+正常 cleanup 也需上述觀察／ready；但任何 abort、deadline、受控 signal、失敗或 gate 不足時，必須直接退出測量並清楚 announce 異常 cleanup，不得讓等待 Human、gate 或 deadline 阻塞清理。異常 cleanup 的 prompt 若無完整觀察即 unknown，不冒充 UX。不可捕捉停止限制及非秘密 recovery 仍明列。
+
+### 判準、實作與交付
+
+本輪 UX 成功需 Phase 1 首次保存／存取最多一次明確系統授權、Phase 2 fresh reader 與 Phase 3 真重建 reader 各零提示，且六欄資料／身分前提及 cleanup 成立。任何 phase 觀察缺失／unknown 為無法判定；資料成功不能外推 UX 成功。完整前提下明確超出提示判準則失敗，不 rerun 換結果。setup／cleanup 提示分開揭露，不能將正常測量重複提示移至其他分類排除。
+
+沿 E005 同條件補 UX 缺口，無需新 experiment 編號。允許新增 `experiments/E005/scripts/ux_stages.py` 小型 protocol helper（immutable phase machine／Human SHA、external notices／gates），以及 `experiments/E005/Tests/test_ux_stages.py` 必要 synthetic 測試；既有 `run_self_signed_probe.py` 僅加 `--segmented-ux`、`--ux-control-dir`／`--ux-evidence-dir` 明確 opt-in 及 freshness／前提 early guards，另存舊 runner 的完整 SHA-256／source snapshot。允許獨立 stage receipts／Human sidecars 與八段 README 更新；不改 Swift host、TrustProbe、build 或 production。phase scratch／秘密在 repository 外隔離，repo evidence 僅非秘密相對位置及 bool／count，不輸出個人 path／secret。既有工具 scratch 維持本機，不為本輪重跑無關工具或擴範圍。
+
+synthetic 必須驗證錯 namespace／phase／receipt SHA、缺 Human 觀察與未 ready 都阻擋下一測量段，且 deadline／abort／受控 signal 不阻塞 cleanup；只代表控制流程，不冒充真 Keychain／Human prompt 證據。四狀態／驗證任務完成／cleanup／recovery 分開。四檔修訂交獨立 Plan-Reviewer，不自行 approve；本輪尚未實作或執行，不預報成功。
+
+最新分段準備已經獨立 Plan-Reviewer、Tester／Reviewer 核准；原生 CUA desktop preflight 失敗，尚未收到 setup-ready、未啟動真人 run、零實驗 mutation。新 UX 實驗未執行，真人驗證任務未完成，歷史資料機制與 UX unknown 保留；連線恢復前不得開始，原時限不延長。詳見 E005 新獨立 desktop preflight／準備收據。

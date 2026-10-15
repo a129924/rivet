@@ -1,0 +1,67 @@
+{
+  "recordedUTC": "2026-10-15T07:41:14.611008+00:00",
+  "synthetic": true,
+  "noTrustMutation": true,
+  "noSearchListMutation": true,
+  "noKeychainOrGUIOperation": true,
+  "testSuites": {
+    "test_ux_stages.py": {
+      "testsRun": 6,
+      "status": "passed"
+    },
+    "test_trust_cleanup.py": {
+      "testsRun": 3,
+      "status": "passed"
+    },
+    "test_search_list_cleanup.py": {
+      "testsRun": 6,
+      "status": "passed"
+    }
+  },
+  "totalTests": 15,
+  "sourceSHA256": {
+    "scripts/ux_stages.py": "f86f61123b6477dc1236a96824f42b31078e59d3040a83d56dd32a1b7b2aa205",
+    "scripts/run_self_signed_probe.py": "387de0e52a970bfa9a14379974eb0b8c47205f97d7edbb5b462b9b4dee9cac2e",
+    "Sources/TrustProbe.swift": "b126204190a3bab691dd908f28d3cda1b783217ddcbafca78df8defc0ca568ea",
+    "Tests/test_ux_stages.py": "e8600f42db21573dd80371d68666f4791e209cc0777a61d7462e8efbccba2f84",
+    "Tests/test_trust_cleanup.py": "cf69531f84994153a7f6ffb578ceca98f5aa39a3932a5ff5caac64e482c17492",
+    "Tests/test_search_list_cleanup.py": "7b28cdfb81e37edf76092e9aad562f1487e1522af94fbcab5797c4519ca74e20"
+  },
+  "earlyGuards": [
+    {
+      "case": 0,
+      "exitCode": 2,
+      "receiptCreated": false,
+      "phase": "argparse before scratch/CDLL"
+    },
+    {
+      "case": 1,
+      "exitCode": 2,
+      "receiptCreated": false,
+      "phase": "argparse before scratch/CDLL"
+    }
+  ],
+  "staticChecks": {
+    "exclusiveMachineReceipt": true,
+    "sameNamespacePhaseSHARequired": true,
+    "previousWholeStageHumanObservationAndFreshDesktopReadyRequired": true,
+    "deadlineAndAbortDuringWait": true,
+    "machineReceiptTamperDetected": true,
+    "allCatchableMainStopsEnterFinally": true,
+    "exceptionCleanupDoesNotWaitHumanGate": true
+  },
+  "mainSyntheticWaitStopIntegration": {
+    "synthetic": true,
+    "noTrustMutation": true,
+    "noSearchListMutation": true,
+    "mainWaitStopIntegration": "passed",
+    "stopReason": "uxHumanAbort",
+    "mainFinallyTrustRemoved": true,
+    "mainFinallySearchListBaselineRestored": true,
+    "privateKeychainAndSecretScratchAbsent": true,
+    "phase0AndPhase4ImmutableReceiptsWritten": true,
+    "oauthCommands": 0,
+    "mainExitCode": 1
+  },
+  "mainSyntheticHarnessSHA256": "35e73dfb860193e55bc00209ec282eb3cdf49bd933fc79cc54ed7c3e09b70073"
+}

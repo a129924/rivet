@@ -17,6 +17,7 @@ import tempfile
 import time
 import uuid
 from build_probe import build, identity, public_identity
+from ux_stages import UXStages
 
 
 def now():
@@ -103,7 +104,17 @@ def main():
     parser.add_argument('--measurement-deadline-utc', help='Hard stop for waiting/new measurements, ISO UTC')
     parser.add_argument('--temporary-user-search-list', action='store_true', help='Authorized exact experiment Keychain membership only; restored on exit')
     parser.add_argument('--measure', action='store_true', help='Also measure fake OAuth items after signing preflight')
+    parser.add_argument('--segmented-ux', action='store_true')
+    parser.add_argument('--ux-control-dir', type=Path)
+    parser.add_argument('--ux-evidence-dir', type=Path)
     args = parser.parse_args()
+    if args.segmented_ux:
+        if not (args.measure and args.temporary_user_search_list and args.ux_control_dir and args.ux_evidence_dir):
+            parser.error('segmented UX requires measured limited-trust search-list path and two fresh directories')
+        if args.out.exists() or args.ux_control_dir.exists() or args.ux_evidence_dir.exists():
+            parser.error('segmented UX output and directories must be new')
+        if args.observer_gate or args.ready_notice:
+            parser.error('segmented UX uses per-phase gates instead of legacy gate paths')
     if args.signing_selector == 'certificate-sha1' and not (args.trust_code_signing and args.diagnose):
         parser.error('certificate hash selection requires the limited-trust explicit-keychain diagnostic path')
     if args.trust_code_signing and not args.pem_import:
@@ -111,7 +122,7 @@ def main():
     if args.temporary_user_search_list and not (args.trust_code_signing and args.diagnose and args.signing_selector == 'certificate-sha1' and args.measurement_deadline_utc):
         parser.error('temporary search-list requires limited trust, diagnostic, certificate hash and UTC deadline')
     measurement_deadline = None
-    if args.trust_code_signing and args.measure:
+    if args.trust_code_signing and args.measure and not args.segmented_ux:
         if not args.observer_gate or not args.ready_notice or not args.measurement_deadline_utc:
             parser.error('limited-trust measurement requires post-preflight observer gate, notice and deadline')
         if args.observer_gate.exists() or args.ready_notice.exists():
@@ -150,6 +161,8 @@ def main():
     executable = None
     snapshots = None
     search_lease = None
+    ux = None
+    normal_cleanup_ready = False
     trust_attempted = False
     trust_baseline_absent = False
     trust_helper = scratch / 'trust-probe'
@@ -264,7 +277,28 @@ def main():
         finally:
             entry['finishedUTC'] = now()
 
+    def ux_measure(phase, action):
+        started = now()
+        offset = len(report['commands'])
+        succeeded = False
+        try:
+            succeeded = action()
+            return succeeded
+        finally:
+            commands = report['commands'][offset:]
+            comparisons = [entry['fields'] for item in commands for entry in item.get('output', []) if 'fields' in entry]
+            ux.complete(phase, {'startedUTC': started, 'finishedUTC': now(), 'commands': commands,
+                'actualBinarySHA256': hashlib.sha256(executable.read_bytes()).hexdigest(),
+                'sixFieldComparisons': comparisons,
+                'allSixFieldsComparedAndEqual': bool(comparisons) and all(len(fields) == 6 and all(fields.values()) for fields in comparisons),
+                'operationSucceeded': succeeded, 'sourceSHA256': report['sourceSHA256']})
+
     try:
+        if args.segmented_ux:
+            ux = UXStages(primary, args.ux_evidence_dir, args.ux_control_dir, measurement_deadline)
+            report['sourceSHA256']['ux_stages.py'] = hashlib.sha256((Path(__file__).parent / 'ux_stages.py').read_bytes()).hexdigest()
+            report['uxCriteriaBeforeWrite'] = {'initialMaximumPrompts': 1, 'freshProcessMaximumPrompts': 0,
+                                              'rebuiltMaximumPrompts': 0, 'incompleteObservation': '無法判定'}
         snapshots = settings()
         password = secrets.token_bytes(32).hex().encode()
         status = security.SecKeychainCreate(os.fsencode(keychain_path), len(password), password,
@@ -371,7 +405,35 @@ def main():
         report['signingPreflightComplete'] = all(checks.values())
         if not report['signingPreflightComplete']:
             raise RuntimeError('stableSigningPreflightFailed')
-        if args.measure:
+        if args.segmented_ux:
+            ux.complete(0, {'startedUTC': report['startedUTC'], 'finishedUTC': now(),
+                'sixFieldComparisons': None, 'comparisonApplicability': 'not applicable: setup only',
+                'hostFirst': report['hostFirst'], 'hostSecond': report['hostSecond'],
+                'rebuildComparison': checks, 'setupCommands': report['setupCommands'],
+                'trustCommands': report.get('trustCommands', []),
+                'limitedTrustReadbackVerified': report.get('limitedTrustReadbackVerified'),
+                'searchListAppendVerified': search_lease.facts.get('appendReadbackVerified'),
+                'sourceSHA256': report['sourceSHA256']})
+            ux.wait_ready(1)
+            report['humanReadyForMeasurement'] = True
+            report['humanReadyAcceptedUTC'] = now()
+            executable = restore('First.app', first['binarySHA256'])
+            attempted.append(primary)
+            if not ux_measure(1, lambda: command('write-a', primary) and command('read-a', primary)):
+                raise RuntimeError('uxInitialAccessFailed')
+            report['UXInitialData'] = '成功'
+            ux.wait_ready(2)
+            if not ux_measure(2, lambda: command('read-a', primary)):
+                raise RuntimeError('uxFreshReadFailed')
+            report['UXFreshData'] = '成功'
+            ux.wait_ready(3)
+            executable = restore('Second.app', second['binarySHA256'])
+            if not ux_measure(3, lambda: command('read-a', primary)):
+                raise RuntimeError('uxRebuiltReadFailed')
+            report['UXRebuiltData'] = '成功'
+            ux.wait_ready(4)
+            normal_cleanup_ready = True
+        elif args.measure:
             if args.trust_code_signing:
                 notice = {'phase': 'awaitingHumanT03Ready', 'namespace': primary,
                           'recordedUTC': now(), 'rebuildComparison': checks,
@@ -415,6 +477,18 @@ def main():
         if isinstance(error, subprocess.TimeoutExpired):
             report['stopReason'] = 'subprocessTimeout: no settings bypass attempted'
     finally:
+        if ux is not None and 0 not in ux.receipts:
+            try:
+                ux.complete(0, {'startedUTC': report['startedUTC'], 'finishedUTC': now(), 'sixFieldComparisons': None,
+                    'comparisonApplicability': 'not applicable: interrupted setup', 'setupCommands': report['setupCommands'],
+                    'trustCommands': report.get('trustCommands', []), 'stopReason': report.get('stopReason'),
+                    'sourceSHA256': report['sourceSHA256']})
+            except Exception:
+                report['setupStageReceiptFailed'] = True
+        cleanup_started = now()
+        cleanup_command_offset = len(report['commands'])
+        if ux is not None and not normal_cleanup_ready:
+            print('UX abnormal/deadline cleanup starting; no Human gate may block cleanup', flush=True)
         signal.signal(signal.SIGINT, signal.SIG_IGN)
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
         # If a new binary cannot read, the writer remains available for exact cleanup.
@@ -467,14 +541,29 @@ def main():
                 'retainExactCertificateAndPrivateScratch': scratch.exists(),
                 'reason': 'see individual trust, OAuth and keychain cleanup fields'}
         report['validationTaskComplete'] = report['cleanupComplete'] and (report.get('signingPreflightComplete', False) if not args.measure else all(report.get(k) == '成功' for k in ('T02Data', 'T03Data', 'T04Data', 'T05AbsentAndMalformed')))
+        if args.segmented_ux:
+            report['validationTaskComplete'] = report['cleanupComplete'] and all(report.get(key) == '成功' for key in ('UXInitialData', 'UXFreshData', 'UXRebuiltData'))
         report['finishedUTC'] = now()
         report['limitations'] = ['human prompt receipt required for UX; historical zero prompts do not cover this host',
                                  'DPK free profile not verified', 'true denial not observed',
                                  'SIGKILL, process crash and host failure cannot guarantee cleanup',
                                  'self-signed identity deleted after this trial; future builds need a retained stable identity',
                                  'search-list read/write has no atomic CAS; before/after checks cannot exclude concurrent races']
+        if ux is not None:
+            ux.complete(4, {'startedUTC': cleanup_started, 'finishedUTC': now(),
+                'normalCleanupReady': normal_cleanup_ready, 'sixFieldComparisons': None,
+                'comparisonApplicability': 'not applicable: cleanup only',
+                'commands': report['commands'][cleanup_command_offset:], 'cleanup': report['cleanup'],
+                'trustCommands': [entry for entry in report.get('trustCommands', []) if entry['operation'] == 'remove-user'],
+                'trustRemovalVerifiedAbsent': report.get('trustRemovalVerifiedAbsent'),
+                'temporaryUserSearchList': report.get('temporaryUserSearchList'),
+                'privateKeychainAbsent': report['privateKeychainAbsent'], 'secretScratchAbsent': report['secretScratchAbsent'],
+                'settingsAfterCleanup': report.get('settingsAfterCleanup'), 'cleanupComplete': report['cleanupComplete'],
+                'sourceSHA256': report['sourceSHA256']})
+            report['uxStageReceipts'] = ux.receipts
         args.out.parent.mkdir(parents=True, exist_ok=True)
-        args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
+        with args.out.open('x' if args.segmented_ux else 'w') as output:
+            output.write(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps({k: report.get(k) for k in ('signingPreflightComplete', 'cleanupComplete', 'validationTaskComplete', 'stopReason')}))
     return 0 if report['validationTaskComplete'] else 1
 
