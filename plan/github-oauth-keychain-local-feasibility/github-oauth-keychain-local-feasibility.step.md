@@ -35,7 +35,7 @@ Status 記錄不等同 approval。Plan-Creator 不審自己的四檔；Tester／
 ## Blockers
 
 - 正式 Plan-Reviewer 已複審 approved，前 planning cleanup blocker 已解除。
-- DPK 免費 host／profile 仍未確認。legacy ad-hoc 真重建 designated requirement 改變，且 UX 提示未觀察；主要採用決策仍受阻，不是已判定機制失敗。
+- DPK 免費 host／profile 仍未確認。legacy ad-hoc 真重建 designated requirement 改變；後續 Human 已觀察原 binary 單輪 0 提示，但無 T03 acceptance read 或重建後 UX 證據。主要採用決策仍受阻，不是已判定機制失敗。
 - 若無自然真 denial，保留未驗證缺口；不自行製造安全設定改動。
 - 正常 run 的主要／負向項目、獨立 early-stop 與 controlled-stop 項目均已精確清理並確認不存在；無已知殘留。
 
@@ -70,3 +70,7 @@ Status 記錄不等同 approval。Plan-Creator 不審自己的四檔；Tester／
 - 2026-10-15T02:59:52+00:00：獨立 Reviewer 明示成果 approved，兩項 required fixes 已核對。Implementer 僅回寫指定 docs 與本 topic 實證限制；S05 completed、S06 in-progress，尚未 commit／push／開 Draft PR。
 
 - 2026-10-15T03:05:29+00:00：S06 completed，核心 commit e6438ad、push 與 Draft PR #58 已實際查證；所有 hooks 通過，Graphify fallback、Archify 完成交付、PR Lens 核心 diff 本機 validate／render。S07 pending，停於 Human review；交付帳本另以同 topic docs commit 保存，最終 head／remote 一致性核對不新增實驗或採用。
+
+- 2026-10-15T03:18:20+00:00：使用者要求並確認沿原範圍親自觀察 Keychain；獨立 Tester 新 UUID 單輪 03:16:56–03:17:01 UTC，13 操作 exit0、兩項清理確認不存在。Human 明確全程觀察 0 提示，另存 human-observation.json 綁定新 machine receipt，舊收據與 machine null 保留。此補測仍無 T03 acceptance read，主假設無法判定；等待獨立 Reviewer 核對新觀察範圍，S07 人類 review 未宣稱完成。
+
+- 2026-10-15T03:19:39+00:00：獨立 Reviewer 核對後續 machine／Human 觀察與 receipt SHA-256、13 操作及兩項清理，明示 approved，核可指定 docs／analysis 僅原 binary 實際操作 0 提示的條件化回寫。整體仍無法判定；S07 人類 review pending，不核准採用／merge。

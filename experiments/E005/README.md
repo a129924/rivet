@@ -33,7 +33,7 @@
 
 ## 是否成功
 - 執行日期：2026-10-15。正常 run：02:53:53.135235–02:54:00.436037 UTC；獨立提前停止 run：02:54:07.447658–02:54:10.198966 UTC。
-- 實驗狀態：**無法判定**。正常 run 的 legacy 完整保存、fresh-process 還原、整筆替換及清理成功，但 ad-hoc 真重建後 designated requirement 不一致，且系統授權提示沒有人工觀察，無法滿足主要假設的同身分重建與 UX 前提。此不是 Keychain 機制失敗，也不能推論必須付費。
+- 實驗狀態：**無法判定**。正常 run 的 legacy 完整保存、fresh-process 還原、整筆替換及清理成功，但 ad-hoc 真重建後 designated requirement 不一致，初輪系統提示沒有人工觀察；下方後續 Human 補測已觀察原 binary 實際操作 0 提示，但仍未滿足主要假設的同身分重建前提。此不是 Keychain 機制失敗，也不能推論必須付費。
 - 本輪 Keychain 驗證任務完成：**是**；已執行可用前提下的受限測量、記錄不足與決策限制，所有嘗試寫入項目已清理確認不存在。工具及整包交付由後續獨立 Reviewer 核對，不以此宣告完成。
 - early-stop 與 controlled-stop receipt 的 `validationTaskComplete=false` 表示該 run 刻意不跑完整 T02–T05；其清理探針本身成功，不與正常 run 混合作同一筆憑證持久性證據。修復後 controlled-stop：02:57:52.206763–02:57:55.721547 UTC，新 UUID 真寫入後受控例外清理成功。
 
@@ -52,12 +52,12 @@
 
 - Reviewer 回修後新增 [controlled-stop-run.json](evidence/controlled-stop-run.json)：真實 Keychain、新 UUID、`--stop-after-write` 受控例外路徑，精確 delete／absence confirmed 皆 true。初版 normal／early-stop 沒有 source hashes；新版 receipt 保存三 source SHA-256，不事後添加舊 provenance。Swift／build 不變，原 normal 六欄與同身分不足結論維持，沒有重跑或混用新舊 binary 持久性證據。
 - [synthetic-sigint.json](evidence/synthetic-sigint.json) 與 [synthetic-sigterm.json](evidence/synthetic-sigterm.json) 為 **synthetic** 控制流程測試：fake write 登記後向本程序送真 OS 訊號，fake delete 中再送同訊號；兩個 testcase 成功，stopReason 對應訊號、所有假項目已追蹤並清理，receipt 均完整。這不證明真 Keychain 遭訊號中斷時的行為或 UX。
-- 全部系統提示觀察維持 `unobserved`，所有 `promptCount` 為 null；沒有用程序成功、stderr 空白或操作耗時推論零提示。
+- 初輪及停止測試的 machine 收據提示欄位維持 `unobserved`／null；沒有用程序成功、stderr 空白或操作耗時推論零提示。下方另列後續 Human 全程觀察，原 machine 收據不覆寫。
 - 真實 Security 操作與 synthetic 分類分開；JSON 不輸出 token、個人簽章識別或原始 system stderr。
 
 ## 結論與限制
 - 本輪支持「此 ad-hoc legacy host 可跨 fresh process 保存／還原六欄假憑證並整筆替換」的受限結論；主問題仍無法判定，不支持正式採用。
-- 下一個必要證據為免費且可重建後維持相同 designated requirement 的 host，以及首次／後續提示的實際人工觀察；需新增帳號或憑證操作時交還人類，不自行解除。DPK 免費前提仍未驗證。
+- 下一個必要證據為免費且可重建後維持相同 designated requirement 的 host，並在該穩定 host 下觀察首次／後續提示（本次原 binary 的 Human 0 提示不外推新 host）；需新增帳號或憑證操作時交還人類，不自行解除。DPK 免費前提仍未驗證。
 - SIGINT／SIGTERM 受控停止有 synthetic 流程證據，寫入後受控例外有真 Keychain 清理證據；SIGKILL、程序 crash、host／系統失效無法保證 finally 清理，不將「所有退出路徑」外推至不可捕捉停止。若發生該類中斷須依 namespace／service／account／backend 人工恢復精確清理，不放寬安全設定。
 - 只支持本次 OS、host、候選、簽章及假輸入；不外推產品登入、所有 macOS、公開分發或 provider runtime。
 
@@ -70,3 +70,16 @@
 ### 交付與人類審查
 
 本 topic 核心 commit `e6438ad` 已 push，已建立 [Draft PR #58](https://github.com/a129924/rivet/pull/58)，base 為 dev。全部 pre-commit hooks 通過；初次 renderer check 缺既有依賴快取，在 lockfile 相同下唯讀複用快取至 feature worktree 後通過，未安裝／更新依賴或修改 dev。PR Lens 0.11.0 已對核心 commit 的實際 diff 完成本機 validate／render；最終交付帳本 commit 後的 head 核對只在 repository 外進行，結果記於 Draft PR。圖表不是 correctness review。後續停於人類 review；主假設仍為無法判定，不核准採用或 merge。
+
+### 後續真人授權提示觀察（2026-10-15）
+
+使用者明確選擇「親自觀察 Keychain 提示，沿用原範圍」。重用 E005 的相同主要問題、macOS／Swift、legacy backend、ad-hoc host、固定假資料與既定判準，另建新 UUID；不新增帳號／憑證／ACL 操作，也不覆寫先前 receipts。
+
+獨立 Tester 執行單輪 03:16:56.242858–03:17:01.549622 UTC（台灣時間 11:16:56–11:17:01），13 次子程序操作 exit 0、無 timeout。T02 兩個 fresh reader 六欄全 true；T04 完整 B 六欄全 true；真 absent／malformed 成立。主要與負向兩項均刪除並確認不存在。T03 真重建 hash 改變、designated requirement 不同，未執行 acceptance read。
+
+- [machine receipt](evidence/human-observation-run.json)：保留原始 promptCount=null／unobserved，不以 exit 0 宣稱沒有提示。
+- [獨立 Human 觀察](evidence/human-observation.json)：使用者回覆「全程觀察，完全沒有 Keychain 提示」，整輪觀察 0 次；以 machine receipt SHA-256 綁定時窗。
+- 此證據支持本次原 binary 身分下的保存、fresh-process 讀回、替換及清理沒有觀察到提示；不外推未執行的新 binary acceptance read、DPK 或所有 macOS。真 denial 未觀察，不能由 0 提示宣稱拒絕測試成功。
+- 主假設仍為無法判定；本次僅補上已執行操作的人工 UX 觀察，沒有核准正式採用。
+
+- 後續補測之 machine／Human 觀察與條件化措辭已由獨立 Reviewer 核對，明示 approved；不取代 Human 對 Draft PR 的接受決策。

@@ -120,7 +120,7 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 
 [實驗 E005](../../experiments/E005/README.md) 於 2026-10-15 在 arm64 macOS 26.5.2／Apple Swift 6.3.3，以無憑證、無 profile 的 ad-hoc app-like CLI，明確選用 legacy file-based Keychain（DPK selector false、同步 false），保存固定假 OAuth bundle。writer 結束後兩個 fresh reader 的六欄均一致；恢復原 binary 身分後整筆替換 B，新程序六欄均為 B。這只支持本次 host 的跨程序資料保存與完整替換，不是正式 Keychain adapter 交付。
 
-真正修改 build marker 並重新建置後，binary hash 改變、簽章有效，但 designated requirement 不一致；T03 沒有執行 acceptance read，不能以相同 bundle ID 或還原舊 binary 讀回冒充同身分重建成功。所有提示次數維持 null／unobserved，真實拒絕授權未測；因此主假設為**無法判定**，不表示機制失敗、不支持原定 UX 或正式採用。DPK 免費 host／profile 前提仍未證實，不能據此推論必須付費。
+真正修改 build marker 並重新建置後，binary hash 改變、簽章有效，但 designated requirement 不一致；T03 沒有執行 acceptance read，不能以相同 bundle ID 或還原舊 binary 讀回冒充同身分重建成功。初輪 machine 收據的提示次數維持 null／unobserved，真實拒絕授權未測。後續 03:16:56–03:17:01 UTC 的新 UUID 補測，Human 明確回報全程觀察 0 次 Keychain 提示；[獨立人工觀察](../../experiments/E005/evidence/human-observation.json) 以 SHA-256 綁定該輪 machine 收據，原 null 欄位與歷史證據未覆寫。這只支持該輪原 binary 身分下實際保存、fresh-process 讀回、替換及清理的零提示體驗，不涵蓋未執行的 T03 acceptance read。主假設仍為**無法判定**，不表示機制失敗或核准採用。DPK 免費 host／profile 前提仍未證實，不能據此推論必須付費。
 
 真實 absent／malformed 分類與所有本輪已嘗試寫入的主要／負向／停止項目清理均有證據，確認不存在。SIGINT／SIGTERM 控制流程及清理期間重複訊號以明標 synthetic 測試驗證；寫入後受控例外清理另有真實 Keychain 證據，兩者不混作真實訊號中斷的 Keychain 或 UX 證明。不可捕捉停止／程序或主機失效仍不保證 finally 清理。
 

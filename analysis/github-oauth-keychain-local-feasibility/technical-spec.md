@@ -65,3 +65,7 @@ T02 writer 完整結束後，兩個獨立 fresh reader 逐欄比較 A。T03 改 
 ## 實際候選與證據限制
 
 E005 在首次寫入前明確選 legacy，無 profile 的 ad-hoc host 不依賴付費資格；未嘗試 DPK。T02／T04／真 absent／malformed 與精確清理成立；T03 真重建產生不同 designated requirement，沒有 acceptance read。正常 UX 提示沒有人工觀察，整體無法判定。受控 SIGINT／SIGTERM 與清理期間重複訊號的 fake harness 不當真 Keychain／UX 證據；真寫入後受控例外清理有獨立新 UUID receipt。完整結果見 E005 八段 README，既定 production contract 不變。
+
+### Human 觀察的獨立保存
+
+同環境／同判準 E005 後續補測使用新 UUID，machine promptCount 原樣為 null；Human 另明確回報整輪全程觀察 0 提示，以獨立 JSON 的 machine receipt SHA-256 綁定時窗。此為 Human 陳述的實際桌面觀察，不是程式 exit code 推論，也不改寫初輪證據。T02／T04 本輪原 binary 的零提示可採為受限 UX 證據；不涵蓋 T03 未執行的 acceptance read 或其他 host。整體無法判定與正式 adapter deferred 保持。

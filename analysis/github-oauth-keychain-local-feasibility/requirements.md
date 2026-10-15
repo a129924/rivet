@@ -47,3 +47,7 @@ Rivet 能否在完全不依賴付費 Apple Developer 資格的個人本機條件
 ## E005 返回的決策結果
 
 2026-10-15 [E005](../../experiments/E005/README.md) 的主假設為無法判定；legacy ad-hoc 原 binary 的完整六欄跨程序保存／替換成立，但真重建 designated requirement 改變，沒有 T03 acceptance read，提示觀察為 null。DPK 免費前提仍未證實，不能推論付費必要性。全部本輪真實項目已清理；驗證任務完成與未解的採用決策分開。獨立 Reviewer 明示成果 approved 僅核可證據及限制的交付，未核准正式採用。
+
+### 後續 Human 補測
+
+2026-10-15 03:16:56–03:17:01 UTC，獨立 Tester 依原條件以新 UUID 執行，Human 明確回報全程觀察 0 次提示。保存獨立 human-observation.json 綁定該輪 machine receipt，不覆寫原 null 或歷史證據。僅支持實際原 binary 身分操作的 UX；T03 acceptance read 未執行、DPK／真 denial 未驗證，主要假設仍無法判定。獨立 Reviewer 明示 approved，僅核可本輪觀察與條件化交付，不核准採用。

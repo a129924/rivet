@@ -1,0 +1,25 @@
+{
+  "recordedUTC": "2026-10-15T03:18:20+00:00",
+  "source": "Human reply in this session",
+  "humanStatement": "全程觀察，完全沒有 Keychain 提示",
+  "observationWindow": {
+    "startedUTC": "2026-10-15T03:16:56.242858+00:00",
+    "finishedUTC": "2026-10-15T03:17:01.549622+00:00",
+    "localTimezone": "Asia/Taipei"
+  },
+  "machineReceipt": "human-observation-run.json",
+  "machineReceiptSHA256": "6fee263fb33d1b320878c1f851856f9aec277028ca9c5ee280a4b08e73525b89",
+  "coverage": "entire recorded run; visible macOS desktop",
+  "totalKeychainPrompts": 0,
+  "authorizationAction": "none; no prompt observed",
+  "interpretation": "zero observed prompts covers actual original-identity write/read/replace/negative/cleanup operations; no T03 acceptance read occurred",
+  "rebuildAcceptanceObserved": false,
+  "trueDenialObserved": false,
+  "overallExperimentStatus": "無法判定",
+  "limits": [
+    "single human-observed run only",
+    "DPK free host/profile not verified",
+    "same-identity rebuild prerequisite not established",
+    "original machine promptCount fields remain null; human observation recorded separately"
+  ]
+}
