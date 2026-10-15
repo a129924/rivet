@@ -89,3 +89,5 @@ host 與整輪實驗退出行為明確後，產出一張繁中 static classic wo
 不得改既有 ACL、系統信任、預設 Keychain、全域 search-list，不新增帳號或付費；需要任一禁止改動即停。private key、密碼及匯入素材只在 repository 外隔離 scratch，不進 repo／證據／log。整輪退出 cleanup 除精確 OAuth 項目外，亦涵蓋本次專用 cert Keychain 與秘密素材，分開確認不存在；保留 receipts，不刪歷史或既有 Keychain。無法清理則記非秘密 UUID／原因，任務完成為否。
 
 原 90 分鐘不延長：03:56:28 UTC 停止新增測量，最後十五分鐘優先清理紀錄，04:11:28 UTC 總上限。四檔修訂先交獨立 Plan-Reviewer，通過後依既有 Implementer→Tester→Reviewer 流程補測，不新增工具 gate；新結果獨立保存，歷史及其審查結論不覆寫。T03 acceptance 目前未執行；兩輪簽章 preflight 結果見 E005，不預先宣稱 T03 或主假設成功。
+
+使用者續行授權（2026-10-15）：同一 PEM／自簽候選只補失敗診斷，保存公開已知錯誤片語與本輪專用 Keychain identity 數量，不保留個人識別／raw stderr、不掃全域。無 OAuth 寫入，不增加簽章變體或安全設定變更；原 03:56:28 UTC 新測量截止不變，診斷後若需禁止操作即停。

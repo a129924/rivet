@@ -1,7 +1,7 @@
 # Keychain 本機 OAuth 憑證保存可行性：狀態帳本
 
 - Topic：`github-oauth-keychain-local-feasibility`
-- 目前 phase：Human review
+- 目前 phase：Human 信任設定決策
 - Current step：S07
 - Current step status：pending
 - 上游正式 verdict：approved（本次限定自簽授權修訂經獨立 Plan-Reviewer 複審；不代表實驗成功）
@@ -97,3 +97,9 @@ Status 記錄不等同 approval。Plan-Creator 不審自己的四檔；Tester／
 - 2026-10-15 03:36:29 UTC：獨立 Tester／Reviewer 正式 `approved`，source snapshot、兩份 receipt、零 OAuth 寫入、cleanup 與 unknown 分類核對通過，無 required fix。僅回寫指定 docs 條件結論；S06 本次交付 in-progress，原成果與 Human 0 提示紀錄保留。未核准採用／merge。
 
 - 2026-10-15 03:37:31 UTC：自簽預檢成果 commit `3a0eb8f` 已 push；GitHub 查證 Draft PR #58 head 為該 commit、base dev、isDraft true，hooks 全通過。PR Lens 本機對實際 diff validate／render 通過（8 nodes／8 edges），Graphify 0.9.73 重查無 repository graph，沿限定 source fallback、不建圖／refresh。S06 本次交付 completed、S07 Human review pending；本帳本另以同 topic docs commit 保存，最終 head 與 PR body 核對留 repository 外，不新增測量或採用。
+
+- 2026-10-15 03:44:50 UTC：使用者要求續行下一步；僅同一自簽 PEM 候選失敗診斷，不變判準／安全邊界或原截止。新增已知錯誤片語 allowlist 與本輪專用 Keychain identity 數量，保留上輪 source snapshot；待獨立 Tester／Reviewer，不再用不足分類當作具體根因。
+
+- 2026-10-15 03:46:19 UTC：獨立 Tester 單輪同候選診斷確認 1 matching／0 valid，`CSSMERR_TP_NOT_TRUSTED`，codesign `no identity found`。零 OAuth 寫入／T03 acceptance 未執行，專用 Keychain／秘密清理與全域設定一致已核對；禁止信任調整邊界維持，結果待 Reviewer，若續行信任變更交 Human 決策。
+
+- 2026-10-15 03:47:59 UTC：獨立 Tester／Reviewer 明示 `approved`，唯一 provenance 文字修正已核對。本輪具體診斷僅為隔離 identity 的 codesigning policy 不受信任與 codesign 找不到可用 identity；已回寫指定 docs。依既有授權提交／更新同一 Draft PR，最終 head 以 PR 與 repository 外核對為準。信任設定未獲授權，停於 Human 決策，不新增測量／變體、不外推正式採用；原03:56:28新測量截止仍有效。

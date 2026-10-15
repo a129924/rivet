@@ -25,6 +25,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--pem-import', action='store_true', help='One transport-format check; no policy changes')
+    parser.add_argument('--diagnose', action='store_true', help='Read only this trial keychain identity counts and known errors')
     parser.add_argument('--measure', action='store_true', help='Also measure fake OAuth items after signing preflight')
     args = parser.parse_args()
     scratch = Path(tempfile.mkdtemp(prefix='rivet-E005-selfsigned-'))
@@ -36,6 +37,7 @@ def main():
     report = {'startedUTC': now(), 'backend': 'legacy', 'signing': 'isolated self-signed certificate',
               'paidQualificationRequired': False, 'measurementRequested': args.measure,
               'importFormat': 'PEM' if args.pem_import else 'PKCS12',
+              'diagnosticRequested': args.diagnose,
               'primaryNamespace': primary, 'negativeNamespace': negative,
               'experimentStatus': '無法判定', 'validationTaskComplete': False,
               'promptObservation': 'unobserved; separate human receipt required',
@@ -67,6 +69,19 @@ def main():
             values.append(result.stdout)
         return values  # Private paths stay in memory only.
 
+    def known_diagnostics(data):
+        # Return only exact public error phrases, never arbitrary stderr or identity names.
+        phrases = (b'no identity found', b'no identities found', b'ambiguous',
+                   b'The specified item could not be found in the keychain',
+                   b'User interaction is not allowed', b'The user name or passphrase you entered is not correct',
+                   b'CSSMERR_TP_NOT_TRUSTED', b'CSSMERR_TP_INVALID_CERTIFICATE',
+                   b'CSSMERR_TP_CERT_EXPIRED', b'CSSMERR_TP_CERT_NOT_VALID_YET',
+                   b'errSecInternalComponent', b'errSecInteractionNotAllowed',
+                   b'unable to build chain to self-signed root', b'invalid or unsupported format',
+                   b'code object is not signed at all', b'replacing existing signature',
+                   b'certificate is not trusted', b'identity not found', b'keychain is locked')
+        return [phrase.decode('ascii') for phrase in phrases if phrase.lower() in data.lower()]
+
     def setup(stage, argv):
         result = subprocess.run(argv, capture_output=True, timeout=20)
         entry = {'stage': stage, 'exitCode': result.returncode, 'stderrPresent': bool(result.stderr)}
@@ -79,6 +94,7 @@ def main():
             entry['unsupportedFormat'] = b'Unknown format' in result.stderr or b'unsupported' in result.stderr.lower()
             entry['knownSecurityStatus'] = re.findall(rb'(?<![0-9])-(?:25|67)[0-9]{3,4}(?![0-9])', result.stderr)
             entry['knownSecurityStatus'] = [x.decode('ascii') for x in entry['knownSecurityStatus']]
+            entry['knownDiagnostics'] = known_diagnostics(result.stdout + result.stderr)
             raise RuntimeError(stage + 'Failed')
 
     def signed_build(rebuilt):
@@ -152,6 +168,18 @@ def main():
             os.chmod(scratch / 'identity.p12', 0o600)
             setup('importCertificate', ['security', 'import', str(scratch / 'identity.p12'), '-k',
                   str(keychain_path), '-f', 'pkcs12', '-P', '', '-x', '-T', '/usr/bin/codesign'])
+        if args.diagnose:
+            # An explicit target prevents any global identity inventory.
+            result = subprocess.run(['security', 'find-identity', '-p', 'codesigning', str(keychain_path)],
+                                    capture_output=True, timeout=10)
+            data = result.stdout + result.stderr
+            counts = {}
+            for name, pattern in (('matching', rb'^\s*(\d+) identities found\s*$'),
+                                  ('valid', rb'^\s*(\d+) valid identities found\s*$')):
+                match = re.search(pattern, data, re.MULTILINE)
+                counts[name] = int(match.group(1)) if match else None
+            report['isolatedIdentityDiagnostic'] = {'exitCode': result.returncode,
+                'counts': counts, 'knownDiagnostics': known_diagnostics(data), 'explicitPrivateKeychainOnly': True}
         first = signed_build(False)
         report['hostFirst'] = public_identity(first)
         shutil.copytree(app, scratch / 'First.app')

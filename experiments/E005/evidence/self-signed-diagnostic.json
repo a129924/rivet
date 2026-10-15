@@ -1,0 +1,88 @@
+{
+  "startedUTC": "2026-10-15T03:46:15.198788+00:00",
+  "backend": "legacy",
+  "signing": "isolated self-signed certificate",
+  "paidQualificationRequired": false,
+  "measurementRequested": false,
+  "importFormat": "PEM",
+  "diagnosticRequested": true,
+  "primaryNamespace": "a56da5c6-7586-4194-ab19-8ee3fcadaa0b",
+  "negativeNamespace": "b5257f29-071d-4840-88d4-b6133eac9f93",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": false,
+  "promptObservation": "unobserved; separate human receipt required",
+  "commands": [],
+  "cleanup": [],
+  "setupCommands": [
+    {
+      "stage": "generateCertificate",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "encodePrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importCertificate",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importPrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "signFirst",
+      "exitCode": 1,
+      "stderrPresent": true,
+      "certificateTrustError": false,
+      "internalComponentError": false,
+      "macVerificationFailed": false,
+      "unsupportedFormat": false,
+      "knownSecurityStatus": [],
+      "knownDiagnostics": [
+        "no identity found"
+      ]
+    }
+  ],
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "b104dd3d649451aee270b86fa926ee6727c204c28f4f4e301f5ec2aa85dec159"
+  },
+  "keychainCreateStatus": 0,
+  "settingsAfterCreate": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "isolatedIdentityDiagnostic": {
+    "exitCode": 0,
+    "counts": {
+      "matching": 1,
+      "valid": 0
+    },
+    "knownDiagnostics": [
+      "CSSMERR_TP_NOT_TRUSTED"
+    ],
+    "explicitPrivateKeychainOnly": true
+  },
+  "stopReason": "signFirstFailed",
+  "keychainDeleteStatus": 0,
+  "privateKeychainAbsent": true,
+  "settingsAfterCleanup": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "secretScratchAbsent": true,
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T03:46:19.466323+00:00",
+  "limitations": [
+    "human prompt receipt required for UX; historical zero prompts do not cover this host",
+    "DPK free profile not verified",
+    "true denial not observed",
+    "SIGKILL, process crash and host failure cannot guarantee cleanup",
+    "self-signed identity deleted after this trial; future builds need a retained stable identity"
+  ]
+}

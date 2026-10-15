@@ -99,10 +99,20 @@ python3 experiments/E005/scripts/run_self_signed_probe.py --out experiments/E005
 python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --out experiments/E005/evidence/self-signed-pem-preflight.json
 ```
 
-第二輪僅為一次 PEM transport 相容性檢查，沒有 backend／簽章政策 fallback。首輪執行的原始碼快照位於 `evidence/source-snapshots/45c995f97c0b4c1872db8930e37af08b9796a376056682f00c38322709531f4a.py`，SHA-256 與首輪收據一致；此為歷史來源快照，重現入口仍為 scripts 目錄。第二輪收據 hash 綁定目前腳本。沒有秘密或原始 system stderr 進入 repository。
+第二輪僅為一次 PEM transport 相容性檢查，沒有 backend／簽章政策 fallback。首輪執行的原始碼快照位於 `evidence/source-snapshots/45c995f97c0b4c1872db8930e37af08b9796a376056682f00c38322709531f4a.py`，SHA-256 與首輪收據一致；此為歷史來源快照，重現入口仍為 scripts 目錄。第二輪收據 hash 綁定當時執行腳本，後續診斷前另存 SHA-256 一致的 `0b24e6e01e35c4729f9a0e883c295380a6ecc423135c848a32f9738a09dbb287.py` 歷史快照；目前腳本由下方新診斷收據綁定。沒有秘密或原始 system stderr 進入 repository。
 
 **是否成功。** 本補測狀態 **無法判定**；T03 acceptance **未執行**。兩份 machine receipt 的 `validationTaskComplete=false` 表示簽章預檢未達成，不冒充 T03 完成。受限驗證與紀錄工作可在如實保存停止原因、缺口、清理與決策限制後完成；主假設及正式採用仍受阻。
 
 **結果與證據。** [PKCS12 收據](evidence/self-signed-preflight.json)：03:32:17.382262–03:32:18.185115 UTC，生成／封裝 exit0，匯入 exit1。 [PEM 收據](evidence/self-signed-pem-preflight.json)：03:33:40.699403–03:33:44.072436 UTC，生成、編碼、憑證及私鑰匯入均 exit0，首次簽章 exit1。兩輪均未取得兩版有效簽章／DR 比較，OAuth commands 為空、零 OAuth 寫入。已知錯誤分類不足以指出根因，不能稱為已確認的信任錯誤。兩輪私有 Keychain create/delete status0、專用 Keychain 與秘密 scratch 確認不存在，建立後及清理後 default／search-list 比較全部相等。桌面工具連線確認成功；程序清單抽樣未見 SecurityAgent，不等同全程可見提示觀察，也不補造本輪 UX 結果。
 
 **結論與限制。** 原 binary 的 Human 全程零提示證據繼續有效，不能外推此次尚未建立的自簽 host。現有 host 已有 `.app` 包裝；目前缺口為可成功簽署且可維持 DR 的免費身分，不是已證實需要 GUI App。此次自簽候選未滿足前提，不能判定 Keychain 保存失敗、不能推論必須付費或自簽方案普遍不可用。沒有放寬信任／安全設定或增加其他簽章變體。下一步需另行釐清簽章失敗原因及免費穩定 host，才可重新安排 T03 與該 host 的人工 UX 觀察；本輪不核准正式採用。不可捕捉停止／程序或主機失效仍不保證 finally 清理；實際兩輪清理完整。
+
+### 同一自簽候選的失敗診斷（2026-10-15）
+
+使用者要求續行後，僅改善非秘密診斷，不變候選、判準、原時限或禁止信任變更的邊界。新增 `--diagnose` 只對本輪專用 Keychain 查詢 `security find-identity -p codesigning`，僅保存數量與公開錯誤片語 allowlist，不掃全域身分、不存 raw stderr／個人識別。上輪 PEM 原始碼另存 SHA-256 一致的 `evidence/source-snapshots/0b24e6e01e35c4729f9a0e883c295380a6ecc423135c848a32f9738a09dbb287.py`，舊收據不覆寫。
+
+獨立 Tester 執行 `python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --diagnose --out experiments/E005/evidence/self-signed-diagnostic.json`。 [診斷收據](evidence/self-signed-diagnostic.json) 時窗為 03:46:15.198788–03:46:19.466323 UTC：本輪隔離 Keychain 有 1 matching／0 valid identities，codesigning policy 明確分類 `CSSMERR_TP_NOT_TRUSTED`；首次簽章 exit1，公開錯誤為 `no identity found`。這指出本次重現的可用簽章身分前提未成立，不回填前兩輪未保存的診斷，也不證明自簽方案普遍不可用或必須付費。[Apple TN3161](https://developer.apple.com/documentation/technotes/tn3161-inside-code-signing-certificates) 說明 codesign 的身分查找與憑證鏈前提；本次分類仍以實際隔離查詢為證據。
+
+本輪零 OAuth 寫入、T03 acceptance 未執行，整體仍**無法判定**。machine `validationTaskComplete=false` 仍代表穩定 host 前提未達，受限診斷工作可在完整紀錄及清理後完成。專用 Keychain／秘密 scratch 已刪除，default／search-list 建立後及清理後均相等，無已知殘留。桌面工具已確認連線，沒有安排新 UX 測量；原 Human 零提示證據保留。
+
+若沿此自簽身分繼續，下一個涉及信任設定的操作超出既定授權，需由 Human 明確決定；尚未執行任何信任調整。單純改 GUI App 未解除已觀察的簽章前提。診斷結果不核准正式採用，不外推其他 macOS／簽章方式／DPK。
