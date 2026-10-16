@@ -1,0 +1,26 @@
+{
+  "recordedUTC": "2026-10-15T05:52:13.193649+00:00",
+  "synthetic": true,
+  "noTrustMutation": true,
+  "scope": "independent Swift6 predicate checks; optional exact canonical CodeSigning metadata, policy OID/type/root remains required",
+  "sourceSHA256": "b126204190a3bab691dd908f28d3cda1b783217ddcbafca78df8defc0ca568ea",
+  "binarySHA256": "a923d3e86493d49d69daf5fa4ce7382734af1f35c9f74549b8b43c04122aa474",
+  "exitCode": 0,
+  "output": {
+    "noTrustMutation": true,
+    "syntheticConstraintChecks": {
+      "allowedErrorRejected": true,
+      "canonicalMetadataAccepted": true,
+      "emptyAlwaysTrustRejected": true,
+      "exactCodeSigningAccepted": true,
+      "metadataCannotReplacePolicy": true,
+      "mismatchedMetadataRejected": true,
+      "multipleEntriesRejected": true,
+      "SSLRejected": true,
+      "unconstrainedRootRejected": true,
+      "unknownExtraKeyRejected": true,
+      "wrongMetadataTypeRejected": true,
+      "wrongResultRejected": true
+    }
+  }
+}

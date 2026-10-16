@@ -1,0 +1,53 @@
+{
+  "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+  "phase": 2,
+  "promptCount": null,
+  "observationMode": "human-only",
+  "desktopConnectionRequired": false,
+  "promptObservation": "Human sidecar required",
+  "startedUTC": "2026-10-15T08:13:47.882128+00:00",
+  "finishedUTC": "2026-10-15T08:13:47.913841+00:00",
+  "commands": [
+    {
+      "mode": "read-a",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:13:47.882177+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:13:47.913801+00:00"
+    }
+  ],
+  "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+  "sixFieldComparisons": [
+    {
+      "accessToken": true,
+      "accessTokenExpiresAt": true,
+      "grantedScopes": true,
+      "refreshToken": true,
+      "refreshTokenExpiresAt": true,
+      "tokenType": true
+    }
+  ],
+  "allSixFieldsComparedAndEqual": true,
+  "operationSucceeded": true,
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "7138dbcc700732e356f7ba372da285fe6f0b8f3d9e7ecca13cba67d80309ee4e",
+    "ux_stages.py": "b07ccee8fc3545f4f3146c3e3afe1176ebbe8a95889ce62eb93882ebf03031c3"
+  }
+}

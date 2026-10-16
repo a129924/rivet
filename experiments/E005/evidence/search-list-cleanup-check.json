@@ -1,0 +1,64 @@
+{
+  "recordedUTC": "2026-10-15T06:14:45.455596+00:00",
+  "synthetic": true,
+  "noTrustMutation": true,
+  "noSearchListMutation": true,
+  "scope": "fake callbacks/CDLL/subprocess only; signal test receipts redirected to temporary directory to preserve historical receipts",
+  "sourceSHA256": {
+    "scripts/run_self_signed_probe.py": "20ec49357bf0db112611313d81477db31f11b92e5dfb0708ba77441ec9c2008e",
+    "Sources/TrustProbe.swift": "b126204190a3bab691dd908f28d3cda1b783217ddcbafca78df8defc0ca568ea",
+    "Tests/test_search_list_cleanup.py": "7b28cdfb81e37edf76092e9aad562f1487e1522af94fbcab5797c4519ca74e20",
+    "Tests/test_trust_cleanup.py": "cf69531f84994153a7f6ffb578ceca98f5aa39a3932a5ff5caac64e482c17492",
+    "Tests/test_signal_cleanup.py": "d2729af7682257a393773fb7d61ab11a3536153626e422b2644d53cac3befa85"
+  },
+  "testSuites": {
+    "test_search_list_cleanup.py": {
+      "testsRun": 6,
+      "failures": 0,
+      "errors": 0,
+      "status": "passed"
+    },
+    "test_trust_cleanup.py": {
+      "testsRun": 3,
+      "failures": 0,
+      "errors": 0,
+      "status": "passed"
+    },
+    "test_signal_cleanup.py": {
+      "testsRun": 2,
+      "failures": 0,
+      "errors": 0,
+      "status": "passed"
+    }
+  },
+  "totalTests": 11,
+  "missingPrerequisiteGuards": [
+    {
+      "case": 0,
+      "exitCode": 2,
+      "receiptCreated": false,
+      "phase": "argparse before scratch/CDLL"
+    },
+    {
+      "case": 1,
+      "exitCode": 2,
+      "receiptCreated": false,
+      "phase": "argparse before scratch/CDLL"
+    },
+    {
+      "case": 2,
+      "exitCode": 2,
+      "receiptCreated": false,
+      "phase": "argparse before scratch/CDLL"
+    }
+  ],
+  "staticChecks": {
+    "ownershipBeforeWrite": true,
+    "baselineDefaultAndOrderedMembershipChecked": true,
+    "ownOnlyRemovalPreservesCurrentForeignSequence": true,
+    "foreignDivergenceDoesNotClaimBaselineRestore": true,
+    "cleanupBeforePrivateKeychainDeletion": true,
+    "cleanupFailureRetainsRecoveryMaterial": true,
+    "noAtomicCASLimitationDisclosed": true
+  }
+}

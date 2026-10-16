@@ -1,0 +1,73 @@
+{
+  "startedUTC": "2026-10-15T03:33:40.699403+00:00",
+  "backend": "legacy",
+  "signing": "isolated self-signed certificate",
+  "paidQualificationRequired": false,
+  "measurementRequested": false,
+  "importFormat": "PEM",
+  "primaryNamespace": "fe1f6a7b-d807-4699-91d1-919ef1245bec",
+  "negativeNamespace": "134683f8-72e4-44ab-9743-9a36b9324811",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": false,
+  "promptObservation": "unobserved; separate human receipt required",
+  "commands": [],
+  "cleanup": [],
+  "setupCommands": [
+    {
+      "stage": "generateCertificate",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "encodePrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importCertificate",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importPrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "signFirst",
+      "exitCode": 1,
+      "stderrPresent": true,
+      "certificateTrustError": false,
+      "internalComponentError": false,
+      "macVerificationFailed": false,
+      "unsupportedFormat": false,
+      "knownSecurityStatus": []
+    }
+  ],
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "0b24e6e01e35c4729f9a0e883c295380a6ecc423135c848a32f9738a09dbb287"
+  },
+  "keychainCreateStatus": 0,
+  "settingsAfterCreate": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "stopReason": "signFirstFailed",
+  "keychainDeleteStatus": 0,
+  "privateKeychainAbsent": true,
+  "settingsAfterCleanup": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "secretScratchAbsent": true,
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T03:33:44.072436+00:00",
+  "limitations": [
+    "human prompt receipt required for UX; historical zero prompts do not cover this host",
+    "DPK free profile not verified",
+    "true denial not observed",
+    "SIGKILL, process crash and host failure cannot guarantee cleanup",
+    "self-signed identity deleted after this trial; future builds need a retained stable identity"
+  ]
+}

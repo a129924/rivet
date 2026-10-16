@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "workflow",
+  "input": "experiments/E005/diagrams/keychain-workflow.json",
+  "output": "experiments/E005/diagrams/keychain-workflow.html",
+  "specification": {
+    "sha256": "1b90a4cb1ebd33bafae4ca9d1f752a1a4eb886c2817cd47a656791fbf79b3655",
+    "bytes": 2014
+  },
+  "artifact": {
+    "sha256": "3f09922e6fb71471e1aadb3a10c2bbcf3cf63074b3f9d3712af456049052bcee",
+    "bytes": 695513
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

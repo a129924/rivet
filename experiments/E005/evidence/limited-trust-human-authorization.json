@@ -1,0 +1,15 @@
+{
+  "source": "Human reply in this session",
+  "humanStatement": "我看到授權畫面 也授權了",
+  "machineReceipt": "limited-trust-run.json",
+  "machineReceiptSHA256": "7afdd292161c386cd144f2e99189b46954c71e66b7342744ff051dd56021ea34",
+  "scope": "observed and completed setup trust authorization; not a whole-run prompt count",
+  "observedAuthorizationPrompt": true,
+  "authorizationCompleted": true,
+  "exactPromptCount": null,
+  "T03AcceptanceObserved": false,
+  "runtimeUXConclusion": "not measured",
+  "followUpHumanStatement": "我看到授權畫面 也授權了 我是用指紋",
+  "reportedAuthorizationMethod": "fingerprint",
+  "followUpScope": "Human clarification of setup authorization method; repeated messages do not establish additional prompt events or T03 observation"
+}

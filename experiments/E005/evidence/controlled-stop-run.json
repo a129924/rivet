@@ -1,0 +1,126 @@
+{
+  "startedUTC": "2026-10-15T02:57:52.206763+00:00",
+  "backend": "legacy",
+  "primaryNamespace": "a6ec36aa-2cd1-4ea4-b26b-fcceb4ed00ce",
+  "negativeNamespace": "b548c74d-6370-42f6-a00a-63de395216b9",
+  "selectionBeforeFirstWrite": true,
+  "selectionReason": "free DPK profile not established; explicitly select legacy",
+  "data": "fixed fake credentials only",
+  "commands": [
+    {
+      "mode": "synthetic-check",
+      "namespace": "a6ec36aa-2cd1-4ea4-b26b-fcceb4ed00ce",
+      "startedUTC": "2026-10-15T02:57:55.195899+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "checks": {
+            "absent": true,
+            "cancelled": true,
+            "denied": true,
+            "interactionUnavailable": true,
+            "malformed": true,
+            "sixFieldRoundTrip": true,
+            "unavailable": true
+          },
+          "synthetic": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:57:55.454738+00:00"
+    },
+    {
+      "mode": "write-a",
+      "namespace": "a6ec36aa-2cd1-4ea4-b26b-fcceb4ed00ce",
+      "startedUTC": "2026-10-15T02:57:55.454774+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "operation": "write-a",
+          "saved": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:57:55.489004+00:00"
+    },
+    {
+      "mode": "delete",
+      "namespace": "a6ec36aa-2cd1-4ea4-b26b-fcceb4ed00ce",
+      "startedUTC": "2026-10-15T02:57:55.503394+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "deleted": true,
+          "operation": "delete"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:57:55.702846+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "a6ec36aa-2cd1-4ea4-b26b-fcceb4ed00ce",
+      "startedUTC": "2026-10-15T02:57:55.702917+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:57:55.721376+00:00"
+    }
+  ],
+  "cleanup": [
+    {
+      "namespace": "a6ec36aa-2cd1-4ea4-b26b-fcceb4ed00ce",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    }
+  ],
+  "promptObservation": "unobserved: no human/system-dialog observation supplied",
+  "trueDenial": "未執行: no naturally observed denial prompt",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": false,
+  "forcedEarlyExit": true,
+  "sourceSHA256": {
+    "Sources/KeychainProbe.swift": "7456ee380cf3ec8cca4ad79a5394c6db719888424ec569427e1b1745abe6fe5c",
+    "scripts/build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "scripts/run_probe.py": "422159b1925d0cbca2311219c34c3c62585c352cb61ed1337289a8c5c001809c"
+  },
+  "controlledStopSignals": [
+    "SIGINT",
+    "SIGTERM"
+  ],
+  "hostBefore": {
+    "binarySHA256": "dd819394281d73c61edc889d2ca0e8cf7db0977646f4b964bb70a30fdcc6079c",
+    "signatureValid": true,
+    "adHoc": true,
+    "teamIdentifierPresent": false,
+    "profilePresent": false,
+    "requirementAvailable": true,
+    "entitlementsReadSucceeded": true
+  },
+  "preflight": {
+    "host": "app-like CLI",
+    "signing": "ad-hoc, no certificate/profile",
+    "paidQualificationRequired": false,
+    "DPKEligible": false,
+    "DPKFreeProfile": "not established; no account operation attempted"
+  },
+  "stopReason": "injected whole-experiment stop after first write",
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T02:57:55.721547+00:00",
+  "limitations": [
+    "normal system authorization prompts not observed",
+    "DPK free host/profile not verified",
+    "same-identity rebuild not established if designated requirement changed",
+    "true denial not observed; synthetic classification is separate",
+    "SIGKILL, process crash and host failure cannot guarantee finally cleanup"
+  ]
+}

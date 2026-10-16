@@ -1,0 +1,10 @@
+{
+  "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+  "phase": 1,
+  "observationMode": "human-only",
+  "desktopConnected": null,
+  "humanReady": true,
+  "humanReadyStatement": "已準備好，開始 Phase 1",
+  "previousReceiptSHA256": "84948fa66022fbd4c2894d774b663cdee79769a46125188b4160d04e4b3329a7",
+  "recordedUTC": "2026-10-15T08:12:24.901463+00:00"
+}

@@ -1,0 +1,526 @@
+{
+  "startedUTC": "2026-10-15T06:16:17.258965+00:00",
+  "backend": "legacy",
+  "signing": "isolated self-signed certificate",
+  "paidQualificationRequired": false,
+  "measurementRequested": true,
+  "importFormat": "PEM",
+  "diagnosticRequested": true,
+  "signingSelector": "certificate-sha1",
+  "limitedTrustRequested": true,
+  "humanReadyForMeasurement": true,
+  "primaryNamespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+  "negativeNamespace": "d4026241-6663-4485-8258-09597eb961d1",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": true,
+  "promptObservation": "unobserved; separate human receipt required",
+  "commands": [
+    {
+      "mode": "write-a",
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "startedUTC": "2026-10-15T06:20:47.540426+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "1a36a0bda1a2ac5fb1fce23eabc54ebbc0d63117858b22bb1044cd8f381a897a",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "operation": "write-a",
+          "saved": true
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:48.217863+00:00"
+    },
+    {
+      "mode": "read-a",
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "startedUTC": "2026-10-15T06:20:48.217888+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "1a36a0bda1a2ac5fb1fce23eabc54ebbc0d63117858b22bb1044cd8f381a897a",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:48.272072+00:00"
+    },
+    {
+      "mode": "read-a",
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "startedUTC": "2026-10-15T06:20:48.272105+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "1a36a0bda1a2ac5fb1fce23eabc54ebbc0d63117858b22bb1044cd8f381a897a",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:48.287071+00:00"
+    },
+    {
+      "mode": "read-a",
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "startedUTC": "2026-10-15T06:20:48.289771+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "8451d87b787e0dd5facebfd2ce369f9ff1160a8dfccc50e4eb7a4375af784418",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-a"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:58.683621+00:00"
+    },
+    {
+      "mode": "replace-b",
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "startedUTC": "2026-10-15T06:20:58.684077+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "8451d87b787e0dd5facebfd2ce369f9ff1160a8dfccc50e4eb7a4375af784418",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "operation": "replace-b",
+          "saved": true
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:58.805342+00:00"
+    },
+    {
+      "mode": "read-b",
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "startedUTC": "2026-10-15T06:20:58.805373+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "8451d87b787e0dd5facebfd2ce369f9ff1160a8dfccc50e4eb7a4375af784418",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "fields": {
+            "accessToken": true,
+            "accessTokenExpiresAt": true,
+            "grantedScopes": true,
+            "refreshToken": true,
+            "refreshTokenExpiresAt": true,
+            "tokenType": true
+          },
+          "operation": "read-b"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:58.845130+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "d4026241-6663-4485-8258-09597eb961d1",
+      "startedUTC": "2026-10-15T06:20:58.845525+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "8451d87b787e0dd5facebfd2ce369f9ff1160a8dfccc50e4eb7a4375af784418",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:58.865107+00:00"
+    },
+    {
+      "mode": "write-invalid",
+      "namespace": "d4026241-6663-4485-8258-09597eb961d1",
+      "startedUTC": "2026-10-15T06:20:58.865452+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "8451d87b787e0dd5facebfd2ce369f9ff1160a8dfccc50e4eb7a4375af784418",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "operation": "write-invalid",
+          "saved": true
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:58.902552+00:00"
+    },
+    {
+      "mode": "read-invalid",
+      "namespace": "d4026241-6663-4485-8258-09597eb961d1",
+      "startedUTC": "2026-10-15T06:20:58.902611+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "8451d87b787e0dd5facebfd2ce369f9ff1160a8dfccc50e4eb7a4375af784418",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "decodeFailure": true,
+          "operation": "read-invalid"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:58.939476+00:00"
+    },
+    {
+      "mode": "delete",
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "startedUTC": "2026-10-15T06:20:58.946315+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "1a36a0bda1a2ac5fb1fce23eabc54ebbc0d63117858b22bb1044cd8f381a897a",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "deleted": true,
+          "operation": "delete"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:59.172107+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "startedUTC": "2026-10-15T06:20:59.172144+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "1a36a0bda1a2ac5fb1fce23eabc54ebbc0d63117858b22bb1044cd8f381a897a",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:59.198678+00:00"
+    },
+    {
+      "mode": "delete",
+      "namespace": "d4026241-6663-4485-8258-09597eb961d1",
+      "startedUTC": "2026-10-15T06:20:59.198712+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "1a36a0bda1a2ac5fb1fce23eabc54ebbc0d63117858b22bb1044cd8f381a897a",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "deleted": true,
+          "operation": "delete"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:59.218247+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "d4026241-6663-4485-8258-09597eb961d1",
+      "startedUTC": "2026-10-15T06:20:59.218275+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "1a36a0bda1a2ac5fb1fce23eabc54ebbc0d63117858b22bb1044cd8f381a897a",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "finishedUTC": "2026-10-15T06:20:59.239332+00:00"
+    }
+  ],
+  "cleanup": [
+    {
+      "namespace": "9159f3e6-4f8e-45e4-81ba-c8ed62693520",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    },
+    {
+      "namespace": "d4026241-6663-4485-8258-09597eb961d1",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    }
+  ],
+  "setupCommands": [
+    {
+      "stage": "generateCertificate",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "encodePrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importCertificate",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importPrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "buildTrustHelper",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "encodeCertificateDER",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "signFirst",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "signRebuilt",
+      "exitCode": 0,
+      "stderrPresent": true
+    }
+  ],
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "20ec49357bf0db112611313d81477db31f11b92e5dfb0708ba77441ec9c2008e"
+  },
+  "keychainCreateStatus": 0,
+  "settingsAfterCreate": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "temporaryUserSearchList": {
+    "requested": true,
+    "mutationAttempted": true,
+    "atomicCompareAndSwapAvailable": false,
+    "baselineUnchangedBeforeAdd": true,
+    "ownAbsentBeforeAdd": true,
+    "baselineCount": 1,
+    "appendReadbackVerified": true,
+    "afterAppendCount": 2,
+    "cleanupMutationAttempted": true,
+    "foreignSequenceMatchedBaselineBeforeRemove": true,
+    "ownMembershipAbsent": true,
+    "foreignSequencePreserved": true,
+    "baselineRestored": true,
+    "defaultUnchanged": true,
+    "cleanupComplete": true
+  },
+  "trustHelperSourceSHA256": "b126204190a3bab691dd908f28d3cda1b783217ddcbafca78df8defc0ca568ea",
+  "trustCommands": [
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T06:16:20.328958+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        }
+      },
+      "finishedUTC": "2026-10-15T06:16:20.902100+00:00"
+    },
+    {
+      "operation": "add-code-signing",
+      "startedUTC": "2026-10-15T06:16:20.902171+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "mutationAttempted": true,
+        "policy": "codeSign",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T06:16:25.935895+00:00"
+    },
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T06:16:25.936158+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": false,
+          "codeSigningOnly": true,
+          "constraintShape": [
+            {
+              "keyKinds": [
+                "policy",
+                "policyName",
+                "result"
+              ],
+              "policyNameIsCanonicalCodeSigning": true,
+              "policyObjectIsSecPolicy": true,
+              "policyOIDIsCodeSigning": true,
+              "resultIsTrustRoot": true
+            }
+          ],
+          "entryCount": 1,
+          "status": 0
+        }
+      },
+      "finishedUTC": "2026-10-15T06:16:26.078078+00:00"
+    },
+    {
+      "operation": "remove-user",
+      "startedUTC": "2026-10-15T06:20:59.239379+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "operation": "remove-exact-certificate",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T06:21:02.995971+00:00"
+    },
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T06:21:02.997598+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        }
+      },
+      "finishedUTC": "2026-10-15T06:21:03.028626+00:00"
+    }
+  ],
+  "trustBaselineAbsent": true,
+  "limitedTrustReadbackVerified": true,
+  "isolatedIdentityDiagnostic": {
+    "exitCode": 0,
+    "counts": {
+      "matching": 1,
+      "valid": 1
+    },
+    "knownDiagnostics": [],
+    "explicitPrivateKeychainOnly": true
+  },
+  "selectedCertificateMatchedIsolatedIdentity": true,
+  "hostFirst": {
+    "binarySHA256": "1a36a0bda1a2ac5fb1fce23eabc54ebbc0d63117858b22bb1044cd8f381a897a",
+    "signatureValid": true,
+    "adHoc": false,
+    "teamIdentifierPresent": false,
+    "profilePresent": false,
+    "requirementAvailable": true,
+    "entitlementsReadSucceeded": true
+  },
+  "hostSecond": {
+    "binarySHA256": "8451d87b787e0dd5facebfd2ce369f9ff1160a8dfccc50e4eb7a4375af784418",
+    "signatureValid": true,
+    "adHoc": false,
+    "teamIdentifierPresent": false,
+    "profilePresent": false,
+    "requirementAvailable": true,
+    "entitlementsReadSucceeded": true
+  },
+  "rebuildComparison": {
+    "binaryChanged": true,
+    "designatedRequirementEqual": true,
+    "signaturesValid": true,
+    "certificateBacked": true,
+    "entitlementsEqual": true,
+    "bundleIdentifierEqual": true,
+    "profileAbsent": true,
+    "hostPathEqual": true
+  },
+  "signingPreflightComplete": true,
+  "humanReadyAcceptedUTC": "2026-10-15T06:20:47.533799+00:00",
+  "T02Data": "成功",
+  "T03Data": "成功",
+  "T04Data": "成功",
+  "T05AbsentAndMalformed": "成功",
+  "trustRemovalVerifiedAbsent": true,
+  "trustCleanupComplete": true,
+  "searchListCleanupComplete": true,
+  "keychainDeleteStatus": 0,
+  "privateKeychainAbsent": true,
+  "settingsAfterCleanup": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "secretScratchAbsent": true,
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T06:21:03.120661+00:00",
+  "limitations": [
+    "human prompt receipt required for UX; historical zero prompts do not cover this host",
+    "DPK free profile not verified",
+    "true denial not observed",
+    "SIGKILL, process crash and host failure cannot guarantee cleanup",
+    "self-signed identity deleted after this trial; future builds need a retained stable identity",
+    "search-list read/write has no atomic CAS; before/after checks cannot exclude concurrent races"
+  ]
+}

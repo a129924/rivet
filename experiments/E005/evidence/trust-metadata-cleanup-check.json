@@ -1,0 +1,17 @@
+{
+  "recordedUTC": "2026-10-15T05:52:13.337041+00:00",
+  "synthetic": true,
+  "noTrustMutation": true,
+  "scope": "fake CDLL/Security/subprocess only; no real trust trial",
+  "sourceSHA256": {
+    "Tests/test_trust_cleanup.py": "cf69531f84994153a7f6ffb578ceca98f5aa39a3932a5ff5caac64e482c17492",
+    "scripts/run_self_signed_probe.py": "3fc84bcc06b6519f2d4dd36715a8f55c6199f7d5832543c8fc2903bee05c1e8f",
+    "Sources/TrustProbe.swift": "b126204190a3bab691dd908f28d3cda1b783217ddcbafca78df8defc0ca568ea"
+  },
+  "testExitCode": 0,
+  "cases": {
+    "test_helper_declines_mutation_preserves_foreign_trust": "passed",
+    "test_partial_failed_add_is_removed_and_absence_verified": "passed",
+    "test_add_timeout_still_removes_partial_trust": "passed"
+  }
+}

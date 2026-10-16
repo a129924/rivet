@@ -1,0 +1,22 @@
+{
+  "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+  "phase": 0,
+  "observationMode": "human-only",
+  "machineReceipt": "phase-0.machine.json",
+  "machineReceiptSHA256": "84948fa66022fbd4c2894d774b663cdee79769a46125188b4160d04e4b3329a7",
+  "observedWholeStage": true,
+  "phaseIdentified": true,
+  "promptCount": 1,
+  "purposes": [
+    "Stage 0 設定／簽章授權"
+  ],
+  "actions": [
+    "以指紋完成授權"
+  ],
+  "humanStatement": "全程，1 次設定／簽章授權，以指紋完成",
+  "observationWindowUTC": {
+    "startedUTC": "2026-10-15T08:11:20.612622+00:00",
+    "finishedUTC": "2026-10-15T08:11:32.130427+00:00"
+  },
+  "recordedUTC": "2026-10-15T08:12:24.901360+00:00"
+}

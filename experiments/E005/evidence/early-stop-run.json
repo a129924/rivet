@@ -1,0 +1,116 @@
+{
+  "startedUTC": "2026-10-15T02:54:07.447658+00:00",
+  "backend": "legacy",
+  "primaryNamespace": "545d14f0-e253-42bf-b32e-0a84f90bb8d6",
+  "negativeNamespace": "fdc3728b-792c-41d0-a022-c67de45bb96a",
+  "selectionBeforeFirstWrite": true,
+  "selectionReason": "free DPK profile not established; explicitly select legacy",
+  "data": "fixed fake credentials only",
+  "commands": [
+    {
+      "mode": "synthetic-check",
+      "namespace": "545d14f0-e253-42bf-b32e-0a84f90bb8d6",
+      "startedUTC": "2026-10-15T02:54:09.766996+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "checks": {
+            "absent": true,
+            "cancelled": true,
+            "denied": true,
+            "interactionUnavailable": true,
+            "malformed": true,
+            "sixFieldRoundTrip": true,
+            "unavailable": true
+          },
+          "synthetic": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:09.974952+00:00"
+    },
+    {
+      "mode": "write-a",
+      "namespace": "545d14f0-e253-42bf-b32e-0a84f90bb8d6",
+      "startedUTC": "2026-10-15T02:54:09.974986+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "operation": "write-a",
+          "saved": true
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:09.996858+00:00"
+    },
+    {
+      "mode": "delete",
+      "namespace": "545d14f0-e253-42bf-b32e-0a84f90bb8d6",
+      "startedUTC": "2026-10-15T02:54:09.998552+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "deleted": true,
+          "operation": "delete"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:10.179959+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "545d14f0-e253-42bf-b32e-0a84f90bb8d6",
+      "startedUTC": "2026-10-15T02:54:10.180003+00:00",
+      "promptCount": null,
+      "exitCode": 0,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "stderrPresent": false,
+      "finishedUTC": "2026-10-15T02:54:10.198929+00:00"
+    }
+  ],
+  "cleanup": [
+    {
+      "namespace": "545d14f0-e253-42bf-b32e-0a84f90bb8d6",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    }
+  ],
+  "promptObservation": "unobserved: no human/system-dialog observation supplied",
+  "trueDenial": "未執行: no naturally observed denial prompt",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": false,
+  "forcedEarlyExit": true,
+  "hostBefore": {
+    "binarySHA256": "dd819394281d73c61edc889d2ca0e8cf7db0977646f4b964bb70a30fdcc6079c",
+    "signatureValid": true,
+    "adHoc": true,
+    "teamIdentifierPresent": false,
+    "profilePresent": false,
+    "requirementAvailable": true,
+    "entitlementsReadSucceeded": true
+  },
+  "preflight": {
+    "host": "app-like CLI",
+    "signing": "ad-hoc, no certificate/profile",
+    "paidQualificationRequired": false,
+    "DPKEligible": false,
+    "DPKFreeProfile": "not established; no account operation attempted"
+  },
+  "stopReason": "injected whole-experiment stop after first write",
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T02:54:10.198966+00:00",
+  "limitations": [
+    "normal system authorization prompts not observed",
+    "DPK free host/profile not verified",
+    "same-identity rebuild not established if designated requirement changed",
+    "true denial not observed; synthetic classification is separate"
+  ]
+}

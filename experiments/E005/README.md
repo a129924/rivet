@@ -1,0 +1,245 @@
+# E005：Keychain 本機完整 OAuth 憑證保存
+
+前八段主文記錄初輪 ad-hoc baseline；後續授權、簽章診斷與補測依時間追加於末段。前輪同身分重建資料機制已成立但 UX 曾無法判定；最新 human-only 分段輪已確認重建版一次憑證提示，此候選 UX 失敗，詳見末節。
+
+## 驗證什麼
+- 設計日期：2026-10-15；實驗編號 E005，由 Implementer 重查占用後建立，未覆寫 E001–E004。執行日期：2026-10-15，獨立 Tester。
+- 問題：完全不依賴付費資格，完整六欄假憑證可否跨程序及同身分真重建還原，首次最多一次提示、其後零提示？
+- 假設：存在符合上述條件的本機 Keychain 路徑；本輪只驗一個候選，不核准正式採用。
+
+## 為什麼
+- legacy 歷史八測試與 E004 不支持本輪完整 Keychain bundle／重建／UX 結論。
+- TN3137、TN3125 及 DTS 836816／845980 指出兩種實作、host/profile 與 legacy 限制，仍須本機實證。
+- [正式契約](../../plan/github-oauth-keychain-local-feasibility/github-oauth-keychain-local-feasibility.plan.md)。
+
+## 成功與失敗判準
+- 寫入前固定：免費來源、完整還原、真同身分重建、替換、清理、首次最多一次提示／正常後續零提示均成立才成功。
+- 前提滿足仍可重現不完整、讀不到或反覆提示為失敗。
+- 身分／資格／觀察不足為無法判定；尚未嘗試為未執行。真 denial 無自然提示可保留缺口。
+- 90 分鐘總額；02:41:28 UTC 起，03:56:28 停新增測量／圖作業，04:11:28 總上限。
+
+## 環境與前置條件
+- macOS 26.5.2（25F84），Apple Swift 6.3.3（swiftlang-6.3.3.1.3），arm64-apple-macosx26.0；版本證據見 [environment.json](evidence/environment.json)。
+- 實驗 host 為 app-like CLI，以明確 ad-hoc 簽章，不建立憑證／帳號／profile。
+- DPK 免費 profile 未建立且不進行新增帳號操作，首次寫入前選 legacy；selector false、sync false，全輪固定。這不證明 DPK 需要付費。
+- 原始碼直接唯讀編譯既有三份 credential contracts，無 root manifest／production 修改或外部依賴。
+- 所有資料為固定假值；namespace 為每輪 UUID。系統提示沒有人工觀察時必列未知，不以 exit code 推成零提示。
+
+## 重現步驟
+- `python3 experiments/E005/scripts/run_probe.py --backend legacy --out experiments/E005/evidence/normal-run.json`。
+- runner 在系統暫存編譯 host：writer 結束→兩 fresh reader→marker 真重建／身分比較→正常替換→獨立負向→整輪 finally 清理。
+- `--stop-after-write` 另用新 UUID 驗證提前停止清理，輸出至另一 evidence JSON。初版 early-stop 是正常 branch；修復後 controlled-stop 會明確 raise RuntimeError，經 exception path 進 finally。舊 receipts 保留不覆寫。
+- 修復後 SIGINT／SIGTERM 轉為受控停止，finally 開始忽略重複同類訊號直到清理／receipt 完成。可重現 synthetic harness：`python3 experiments/E005/Tests/test_signal_cleanup.py`；fake build／identity／subprocess，不執行 Security。
+- 重建身分不足不進行 acceptance read；恢復原 binary 只用於獨立 T04／T05 與清理，不作 T03 證據。
+- 子程序正常退出保留項目；整輪正常／失敗／停止／例外統一精確清理主要與負向項目。
+
+## 是否成功
+- 執行日期：2026-10-15。正常 run：02:53:53.135235–02:54:00.436037 UTC；獨立提前停止 run：02:54:07.447658–02:54:10.198966 UTC。
+- 實驗狀態：**無法判定**。正常 run 的 legacy 完整保存、fresh-process 還原、整筆替換及清理成功，但 ad-hoc 真重建後 designated requirement 不一致，初輪系統提示沒有人工觀察；下方後續 Human 補測已觀察原 binary 實際操作 0 提示，但仍未滿足主要假設的同身分重建前提。此不是 Keychain 機制失敗，也不能推論必須付費。
+- 本輪 Keychain 驗證任務完成：**是**；已執行可用前提下的受限測量、記錄不足與決策限制，所有嘗試寫入項目已清理確認不存在。工具及整包交付由後續獨立 Reviewer 核對，不以此宣告完成。
+- early-stop 與 controlled-stop receipt 的 `validationTaskComplete=false` 表示該 run 刻意不跑完整 T02–T05；其清理探針本身成功，不與正常 run 混合作同一筆憑證持久性證據。修復後 controlled-stop：02:57:52.206763–02:57:55.721547 UTC，新 UUID 真寫入後受控例外清理成功。
+
+## 結果與證據
+- 實際指令依上節順序，第二次為 `python3 experiments/E005/scripts/run_probe.py --backend legacy --stop-after-write --out experiments/E005/evidence/early-stop-run.json`。兩 run exit 0 只代表 runner 對應操作完成，不代表 UX 或主要假設成功。
+- [normal-run.json](evidence/normal-run.json) 保存逐次 fresh subprocess 操作、時間、六欄布林值、遮蔽身分比較、namespace 及清理結果；[early-stop-run.json](evidence/early-stop-run.json) 為另一 UUID 的整輪停止清理證據。
+
+| TestCase | 實際觀察與分類 |
+| --- | --- |
+| T01 前提 | 明確 legacy、selector false／sync false；app-like CLI ad-hoc signature verify 成功，沒有 team identifier／profile，不需憑證或付費資格。DPK 免費 host/profile 未確立，不能宣稱 DPK 不可用或需要付費。 |
+| T02 完整還原 | 成功（資料機制）；writer 結束後兩個 fresh reader 的六欄均 true。提示次數均 null，UX 無法判定。 |
+| T03 真重建 | 無法判定；實際 hash 改變且新簽章有效，路徑／bundle ID／簽章方式及 entitlements 比較相同，但 `designatedRequirementEqual=false`；未進行 acceptance read。還原舊 binary 只供 T04／T05／清理，不構成此案例證據。 |
+| T04 完整替換 | 成功（資料機制）；在還原原身分後整筆替換 B，新程序六欄全 true。未支持新 binary 存取或 UX。 |
+| T05 失敗邊界 | 真實 Keychain absent→nil、malformed→decode failure 成功。真 denial 未執行，沒有可用的自然提示觀察。synthetic 的 denied／cancelled／interactionUnavailable／unavailable 等分類皆 true，僅是函式注入分類證據，不能當真拒絕。 |
+| T06 清理 | 正常 run 主要與負向兩項 delete／absence confirmed 皆 true；獨立 early-stop 寫入後故意停止，該主要項目亦 delete／absence confirmed true；負向項目未嘗試寫入。無已知殘留。 |
+
+- Reviewer 回修後新增 [controlled-stop-run.json](evidence/controlled-stop-run.json)：真實 Keychain、新 UUID、`--stop-after-write` 受控例外路徑，精確 delete／absence confirmed 皆 true。初版 normal／early-stop 沒有 source hashes；新版 receipt 保存三 source SHA-256，不事後添加舊 provenance。Swift／build 不變，原 normal 六欄與同身分不足結論維持，沒有重跑或混用新舊 binary 持久性證據。
+- [synthetic-sigint.json](evidence/synthetic-sigint.json) 與 [synthetic-sigterm.json](evidence/synthetic-sigterm.json) 為 **synthetic** 控制流程測試：fake write 登記後向本程序送真 OS 訊號，fake delete 中再送同訊號；兩個 testcase 成功，stopReason 對應訊號、所有假項目已追蹤並清理，receipt 均完整。這不證明真 Keychain 遭訊號中斷時的行為或 UX。
+- 初輪及停止測試的 machine 收據提示欄位維持 `unobserved`／null；沒有用程序成功、stderr 空白或操作耗時推論零提示。下方另列後續 Human 全程觀察，原 machine 收據不覆寫。
+- 真實 Security 操作與 synthetic 分類分開；JSON 不輸出 token、個人簽章識別或原始 system stderr。
+
+## 結論與限制
+- 本輪支持「此 ad-hoc legacy host 可跨 fresh process 保存／還原六欄假憑證並整筆替換」的受限結論；主問題仍無法判定，不支持正式採用。
+- 下一個必要證據為免費且可重建後維持相同 designated requirement 的 host，並在該穩定 host 下觀察首次／後續提示（本次原 binary 的 Human 0 提示不外推新 host）；需新增帳號或憑證操作時交還人類，不自行解除。DPK 免費前提仍未驗證。
+- SIGINT／SIGTERM 受控停止有 synthetic 流程證據，寫入後受控例外有真 Keychain 清理證據；SIGKILL、程序 crash、host／系統失效無法保證 finally 清理，不將「所有退出路徑」外推至不可捕捉停止。若發生該類中斷須依 namespace／service／account／backend 人工恢復精確清理，不放寬安全設定。
+- 只支持本次 OS、host、候選、簽章及假輸入；不外推產品登入、所有 macOS、公開分發或 provider runtime。
+
+### 輔助工具交付
+
+- [實驗 workflow](diagrams/keychain-workflow.html)、[delivery receipt](diagrams/keychain-workflow.delivery.json)、[四尺寸 receipt](diagrams/keychain-workflow.visual-check.json)、[另行視覺檢查](diagrams/visual-review.md)。Showcase 9/9、0 errors／warnings，四尺寸 containment 與明暗 captures 實際檢視通過；自動 `visualReview: pending` 原樣保留。作者內容繁體中文，固定 Viewer UI／HTML lang 使用 English fallback。
+- [tooling.json](evidence/tooling.json)：Graphify 0.9.73 runtime 可用，但無可用 repository graph，依規範以限定 rg／source reads fallback，未 build／refresh。PR Lens 0.11.0 已確認 runtime，真實 topic commit 後才在 repository 外產生 bounded diff map，產物不發布；本檔不捏造尚未取得的 commit provenance。
+- 獨立 Reviewer 已核對本輪受限成果及回修證據，明示 approved；這不改變主假設無法判定或核准採用。
+
+### 交付與人類審查
+
+本 topic 核心 commit `e6438ad` 已 push，已建立 [Draft PR #58](https://github.com/a129924/rivet/pull/58)，base 為 dev。全部 pre-commit hooks 通過；初次 renderer check 缺既有依賴快取，在 lockfile 相同下唯讀複用快取至 feature worktree 後通過，未安裝／更新依賴或修改 dev。PR Lens 0.11.0 已對核心 commit 的實際 diff 完成本機 validate／render；最終交付帳本 commit 後的 head 核對只在 repository 外進行，結果記於 Draft PR。圖表不是 correctness review。後續停於人類 review；主假設仍為無法判定，不核准採用或 merge。
+
+### 後續真人授權提示觀察（2026-10-15）
+
+使用者明確選擇「親自觀察 Keychain 提示，沿用原範圍」。重用 E005 的相同主要問題、macOS／Swift、legacy backend、ad-hoc host、固定假資料與既定判準，另建新 UUID；不新增帳號／憑證／ACL 操作，也不覆寫先前 receipts。
+
+獨立 Tester 執行單輪 03:16:56.242858–03:17:01.549622 UTC（台灣時間 11:16:56–11:17:01），13 次子程序操作 exit 0、無 timeout。T02 兩個 fresh reader 六欄全 true；T04 完整 B 六欄全 true；真 absent／malformed 成立。主要與負向兩項均刪除並確認不存在。T03 真重建 hash 改變、designated requirement 不同，未執行 acceptance read。
+
+- [machine receipt](evidence/human-observation-run.json)：保留原始 promptCount=null／unobserved，不以 exit 0 宣稱沒有提示。
+- [獨立 Human 觀察](evidence/human-observation.json)：使用者回覆「全程觀察，完全沒有 Keychain 提示」，整輪觀察 0 次；以 machine receipt SHA-256 綁定時窗。
+- 此證據支持本次原 binary 身分下的保存、fresh-process 讀回、替換及清理沒有觀察到提示；不外推未執行的新 binary acceptance read、DPK 或所有 macOS。真 denial 未觀察，不能由 0 提示宣稱拒絕測試成功。
+- 主假設仍為無法判定；本次僅補上已執行操作的人工 UX 觀察，沒有核准正式採用。
+
+- 後續補測之 machine／Human 觀察與條件化措辭已由獨立 Reviewer 核對，明示 approved；不取代 Human 對 Draft PR 的接受決策。
+
+### T03 限定自簽身分預檢補充（2026-10-15）
+
+**驗證什麼／為什麼。** 使用者明確允許一張實驗專用自簽 Code Signing 憑證／私鑰、repository 外獨立實驗 Keychain，以補相同 legacy／假六欄的 T03。重用 E005 同一問題、環境及判準；不覆寫 ad-hoc 或 Human 零提示收據。[Apple Code Signing Tasks](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html) 說明自簽憑證可用於內部測試、驗證版本來源一致性；文件本身不證明此 macOS 的 Keychain UX。[Apple Security 原始碼](https://github.com/apple-oss-distributions/Security/blob/main/OSX/libsecurity_keychain/lib/StorageManager.cpp) 的 `shouldAddToSearchList` 說明私人 Keychain 建立不應改全域搜尋清單；本次仍實測比較，不將源碼外推為環境保證。
+
+**成功與失敗判準。** 維持既定六欄／首次最多一次提示／後續零提示；先完成兩次真重建與 DR 相等預檢，再以固定路徑 first writer、second reader 核對實際 hash。預檢不成立即不寫 OAuth item，不調整 trust／預設 Keychain／search-list／既有 ACL／partition-list。原 03:56:28 UTC 停新測量及 04:11:28 UTC 總上限不延長。
+
+**環境與前置條件。** 同 E005 macOS／Swift，OpenSSL 3.6.4；私有 Keychain 直接 `SecKeychainCreate`、隨機密碼僅記憶體；0700 scratch、0600 秘密素材。只在新私鑰匯入時設定 `/usr/bin/codesign` 初始存取，沒有全 app 存取或既有 ACL 修改。自簽 host 未建立成功，未取得可比較的 DR。
+
+**重現步驟。** 新增 `scripts/run_self_signed_probe.py`，預設只做簽章預檢並 finally 精確清理；`--measure` 路徑未執行。獨立 Tester 依序執行：
+
+```sh
+python3 experiments/E005/scripts/run_self_signed_probe.py --out experiments/E005/evidence/self-signed-preflight.json
+python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --out experiments/E005/evidence/self-signed-pem-preflight.json
+```
+
+第二輪僅為一次 PEM transport 相容性檢查，沒有 backend／簽章政策 fallback。首輪執行的原始碼快照位於 `evidence/source-snapshots/45c995f97c0b4c1872db8930e37af08b9796a376056682f00c38322709531f4a.py`，SHA-256 與首輪收據一致；此為歷史來源快照，重現入口仍為 scripts 目錄。第二輪收據 hash 綁定當時執行腳本，後續診斷前另存 SHA-256 一致的 `0b24e6e01e35c4729f9a0e883c295380a6ecc423135c848a32f9738a09dbb287.py` 歷史快照；目前腳本由下方新診斷收據綁定。沒有秘密或原始 system stderr 進入 repository。
+
+**是否成功。** 本補測狀態 **無法判定**；T03 acceptance **未執行**。兩份 machine receipt 的 `validationTaskComplete=false` 表示簽章預檢未達成，不冒充 T03 完成。受限驗證與紀錄工作可在如實保存停止原因、缺口、清理與決策限制後完成；主假設及正式採用仍受阻。
+
+**結果與證據。** [PKCS12 收據](evidence/self-signed-preflight.json)：03:32:17.382262–03:32:18.185115 UTC，生成／封裝 exit0，匯入 exit1。 [PEM 收據](evidence/self-signed-pem-preflight.json)：03:33:40.699403–03:33:44.072436 UTC，生成、編碼、憑證及私鑰匯入均 exit0，首次簽章 exit1。兩輪均未取得兩版有效簽章／DR 比較，OAuth commands 為空、零 OAuth 寫入。已知錯誤分類不足以指出根因，不能稱為已確認的信任錯誤。兩輪私有 Keychain create/delete status0、專用 Keychain 與秘密 scratch 確認不存在，建立後及清理後 default／search-list 比較全部相等。桌面工具連線確認成功；程序清單抽樣未見 SecurityAgent，不等同全程可見提示觀察，也不補造本輪 UX 結果。
+
+**結論與限制。** 原 binary 的 Human 全程零提示證據繼續有效，不能外推此次尚未建立的自簽 host。現有 host 已有 `.app` 包裝；目前缺口為可成功簽署且可維持 DR 的免費身分，不是已證實需要 GUI App。此次自簽候選未滿足前提，不能判定 Keychain 保存失敗、不能推論必須付費或自簽方案普遍不可用。沒有放寬信任／安全設定或增加其他簽章變體。下一步需另行釐清簽章失敗原因及免費穩定 host，才可重新安排 T03 與該 host 的人工 UX 觀察；本輪不核准正式採用。不可捕捉停止／程序或主機失效仍不保證 finally 清理；實際兩輪清理完整。
+
+### 同一自簽候選的失敗診斷（2026-10-15）
+
+使用者要求續行後，僅改善非秘密診斷，不變候選、判準、原時限或禁止信任變更的邊界。新增 `--diagnose` 只對本輪專用 Keychain 查詢 `security find-identity -p codesigning`，僅保存數量與公開錯誤片語 allowlist，不掃全域身分、不存 raw stderr／個人識別。上輪 PEM 原始碼另存 SHA-256 一致的 `evidence/source-snapshots/0b24e6e01e35c4729f9a0e883c295380a6ecc423135c848a32f9738a09dbb287.py`，舊收據不覆寫。
+
+獨立 Tester 執行 `python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --diagnose --out experiments/E005/evidence/self-signed-diagnostic.json`。 [診斷收據](evidence/self-signed-diagnostic.json) 時窗為 03:46:15.198788–03:46:19.466323 UTC：本輪隔離 Keychain 有 1 matching／0 valid identities，codesigning policy 明確分類 `CSSMERR_TP_NOT_TRUSTED`；首次簽章 exit1，公開錯誤為 `no identity found`。這指出本次重現的可用簽章身分前提未成立，不回填前兩輪未保存的診斷，也不證明自簽方案普遍不可用或必須付費。[Apple TN3161](https://developer.apple.com/documentation/technotes/tn3161-inside-code-signing-certificates) 說明 codesign 的身分查找與憑證鏈前提；本次分類仍以實際隔離查詢為證據。
+
+本輪零 OAuth 寫入、T03 acceptance 未執行，整體仍**無法判定**。machine `validationTaskComplete=false` 仍代表穩定 host 前提未達，受限診斷工作可在完整紀錄及清理後完成。專用 Keychain／秘密 scratch 已刪除，default／search-list 建立後及清理後均相等，無已知殘留。桌面工具已確認連線，沒有安排新 UX 測量；原 Human 零提示證據保留。
+
+若沿此自簽身分繼續，下一個涉及信任設定的操作超出既定授權，需由 Human 明確決定；尚未執行任何信任調整。單純改 GUI App 未解除已觀察的簽章前提。診斷結果不核准正式採用，不外推其他 macOS／簽章方式／DPK。
+
+### 限定 user-domain／Code Signing trust：前一準備窗歷史（截至 04:04 UTC）
+
+使用者已明確授權「僅實驗憑證、使用者範圍、Code Signing 用途」的唯一 trust 例外。新窗 03:54:20–04:24:20 UTC，04:19:20 UTC 停新測量；舊時窗保留為歷史。新計畫經獨立 Plan-Reviewer approved，不改 legacy／假六欄／first writer 與 second reader／UX 判準，也不允許 admin／system domain、SSL、broad trust、既有 ACL／partition-list、default Keychain 或 search-list 變更。
+
+新增 `Sources/TrustProbe.swift` 僅接受 `Rivet-E005-UUID` cert DER。exact-cert 三 domain baseline 皆須嚴格 `errSecItemNotFound`；新增只用 `.user`、`SecPolicyCreateWithProperties(kSecPolicyAppleCodeSigning, nil)` 及明確 trustRoot。讀回須恰一 entry、恰 Policy／Result keys、AppleCodeSigning OID／trustRoot；空 array（AlwaysTrust）、SSL、多 entry 或額外 allowed error 都拒絕。[Apple trust-settings API](https://developer.apple.com/documentation/security/sectrustsettingscopytrustsettings(_:_:_:)) 區分 absence 與空 array，並說明 per-user 修改需系統驗證使用者。
+
+runner 的 trust cleanup ownership 僅在三 domain baseline absence 已證實且本輪 add 已嘗試時成立；helper 明確回 `mutationAttempted=false` 會清除 ownership 並停止，不撤別人設定。timeout／可能 partial add 仍進精確 remove、exact-cert 三 domain absence 讀回；信任清理失敗保留撤回材料與殘留原因，不先刪證書而失去依據。正常退出先清 OAuth item，再撤 trust／核對，再刪專用 Keychain／秘密；不可捕捉停止仍無 finally 保證。
+
+同一程序在兩版簽章／DR 預檢成功後寫出非秘密 ready notice，保留同 cert／first／second，等待本輪 namespace 綁定的 Human ready gate。未收到獨立 T03 ready 不寫 OAuth；gate 必須起初不存在，等待及新操作受硬 UTC deadline 控制，cleanup 不被 deadline 阻斷。互動 trust 與 T03 兩個 ready 時點分開，密碼／系統 approval 由 Human 處理。可重現入口（參數中的外部路徑須由主工作 session 指定新檔，不能重用 gate）：
+
+```sh
+python3 experiments/E005/scripts/run_self_signed_probe.py --pem-import --diagnose --trust-code-signing --measure --observer-gate <external-new-gate> --ready-notice <external-new-notice> --measurement-deadline-utc 2026-10-15T04:19:20+00:00 --out experiments/E005/evidence/<new-receipt>.json
+```
+
+該準備階段當時只完成 Swift6 compile／Python syntax 與獨立純檢查。[Constraint 收據](evidence/trust-constraint-check.json) 為 7／7 synthetic checks；[cleanup 收據](evidence/trust-cleanup-check.json) 為三個 fake Security／subprocess adversarial cases 通過，驗證拒絕 mutation 不撤 foreign trust、failed partial add 與 timeout 仍撤回並核對。缺 gate 的 CLI 在 argparse exit2，早於 scratch／Security 初始化。這些都不是真實 trust 或 T03 證據。上輪診斷來源另存 `evidence/source-snapshots/b104dd3d649451aee270b86fa926ee6727c204c28f4f4e301f5ec2aa85dec159.py`，SHA 與原收據一致。
+
+該準備窗當時的限定 trust 真實補測狀態 **未執行**，真實驗證任務未完成，當時尚待 Human 確認可留意 trust 系統授權；後續實際四輪見下節。若簽章預檢成立，另確認 CUA 連線並請 Human ready 後才 T03。沒有新增 trust、OAuth 寫入或本輪殘留，主假設仍無法判定；既有原 binary Human 零提示依據保留。授權與純檢查不核准正式採用。
+
+### 最新 Human-start 時窗與真實限定 trust 結果
+
+前一個準備窗已結束，且未執行 trust／OAuth。Human 後續明確「可以開始」，本輪另起同樣上限 30 分鐘：05:42:19–06:12:19 UTC，06:07:19 停新增測量；獨立 Plan-Reviewer 已核准時間／ready 修訂。trust-ready 已收到，T03 仍需同程序預檢成功後另取 ready。本輪四份新收據皆保留，沒有開啟任何 observer gate。
+
+| 真實收據 | UTC 時窗 | 停止位置與觀察 | 清理 |
+| --- | --- | --- | --- |
+| [limited-trust-run](evidence/limited-trust-run.json) | 05:44:15.914510–05:44:38.119597 | user trust 新增 status0；一筆讀回未通過原 exact-two-keys checker，未進簽章。 | trust 精確移除，三 domain absence、專用 Keychain／秘密不存在，全域設定一致。 |
+| [limited-trust-shape-run](evidence/limited-trust-shape-run.json) | 05:47:23.557417–05:47:37.966892 | 實際 keys 為 policy／policyName／result，SecPolicy type／codeSign OID／trustRoot 均符合；原 checker 因 metadata 誤拒。 | 同上，全部確認。 |
+| [limited-trust-metadata-run](evidence/limited-trust-metadata-run.json) | 05:53:07.632028–05:53:24.724267 | 修正後限定 trust 讀回通過；私有 Keychain 為 1 matching／1 valid identity；codesign 以名稱選取仍回 no identity found。 | 同上，全部確認。 |
+| [limited-trust-sha1-run](evidence/limited-trust-sha1-run.json) | 05:57:14.648418–05:57:26.520884 | 本輪 cert DER SHA-1 與隔離 identity 匹配，1 matching／1 valid、限定 trust 通過；codesign 仍回 no identity found。 | 同上，全部確認，無 recoveryRequired。 |
+
+四輪均零 OAuth 寫入、沒有兩版有效簽章／DR 比較，沒有 T03 acceptance／runtime UX 測量。每輪建立新 cert／私有 Keychain；設定授權不是程序重啟的正常憑證存取證據。Human 回報看到並完成系統設定授權，[人工收據](evidence/limited-trust-human-authorization.json) 綁定首輪 machine SHA；沒有精確每輪提示次數或全程 runtime 觀察聲明，不推論各輪 0 提示。CUA inventory 可連線，但 SecurityAgent 視窗無法被工具讀取，沒有以程序清單抽樣冒充對話框觀察。
+
+**Checker 修正依據。** Apple OSS [TrustSettings.cpp](https://github.com/apple-oss-distributions/Security/blob/main/OSX/libsecurity_keychain/lib/TrustSettings.cpp) 在儲存／讀回時附加 policyName；[SecPolicy.list](https://github.com/apple-oss-distributions/Security/blob/main/OSX/sec/Security/SecPolicy.list) 定義內部名稱 `CodeSigning`。故本次只正規化系統 metadata：Policy／Result 仍必需，唯一可選 key 為 policyName，值必須 String 且精確 `CodeSigning`；SecPolicy type、實際 codeSign OID、trustRoot、單筆 user domain、admin／system absent 均保持。set 仍兩 keys，沒有改政策或呼叫私有 API。公開 `SecPolicyCopyProperties` 的 `kSecPolicyName` 並非取得此 internal label 的方法，不宣稱可從該公開 API 取名。
+
+舊 exact-two-keys／logging-only helper 均保存 SHA 一致的 `.swift` source snapshots，舊收據未覆寫。[Logging checks](evidence/trust-shape-constraint-check.json) 保留原 7 項 strict checks；[修正後 checks](evidence/trust-metadata-constraint-check.json) 12／12 通過，新增 canonical metadata 正例及錯名、錯型別、未知 key、名稱不能替代 policy 的負例。[修正後 cleanup checks](evidence/trust-metadata-cleanup-check.json) 及 [selector checks](evidence/signing-selector-cleanup-check.json) 均為明標 synthetic；不當真實 trust／Keychain 證據。
+
+**同候選 selector 診斷。** 本機 Apple `man codesign` 的 SIGNING IDENTITIES 說明：40 個十六進位字元會改用憑證 SHA-1 選取、不考慮 subject name。新增 `--signing-selector certificate-sha1` 只計算本輪 cert DER，並與明確指定私有 Keychain 的 identity 指紋比對，僅保存 matched 布林；兩 build 使用同一 selector，不改 trust、ACL、search-list、backend 或 default designated requirement。沒有在失敗後切換 backend；最後一輪失敗後已停止，不再新增變體。
+
+本輪實驗結果仍 **無法判定**；machine `validationTaskComplete=false` 如實表示穩定 host 前提未達、T03 未執行。受限驗證／紀錄工作可在停止原因、缺口、清理及決策限制保存完整後完成，不能據此推進正式採用。已支持免費新 cert／user-only codeSign trust 的新增、限定讀回與精確撤回，以及 target Keychain 的有效 identity；尚未支持此 codesign host 的成功簽署或穩定重建。
+
+下一個可測前提是 Keychain 搜尋清單：同一 `codesign` 手冊說明簽章身分的 Keychain 須在使用者搜尋清單，`--keychain` 則限制查找目標。目前本輪明確禁止修改搜尋清單，因此未測這項介入，不能宣稱它已被證實為唯一根因。若要暫時加入本輪專用 Keychain，須 Human 另行授權及規劃精確恢復；本輪沒有做這項變更。這不表示需要付費，也不證明 GUI App 可解除缺口。既有原 binary 的 Human 0 提示證據保留，正式採用／公開分發／DPK 仍未核准。
+
+
+### 新授權：專用 user search-list 單輪補測
+
+Human 明確授權暫時加入本輪專用實驗 Keychain 至使用者搜尋清單，四份契約經獨立 Plan-Reviewer approved。新窗 06:09:51–06:39:51 UTC，06:34:51 停新測量；單候選、單一真實 run，不延長或追加失敗變體。
+
+新增 opt-in `--temporary-user-search-list`，要求限定 trust／diagnostic／certificate-sha1 與 UTC deadline。明確 user-domain 原清單與 default 只留記憶體；寫前核對、先登記 partial-mutation ownership、append exact own Keychain 後讀回。finally 在撤 trust 後、刪 Keychain 前只移 own membership，保留 foreign entries／order；核對 baseline／default 還原，失敗保留 recovery，不覆寫其他程序變動。讀／寫沒有 CAS，前後核對不能排除兩步間並發，不能宣稱原子還原。新 synthetic tests 不代表真實 Keychain 證據。
+
+此為準備時點狀態：當時真實 run 尚未執行，兩版預檢成立後仍需 fresh CUA 連線與 Human 全程觀察 ready。其後已獲 Tester／Reviewer 準備 approved 並完成下列唯一真實 run；舊四輪、原 host 零提示、DPK／denial 缺口保留。
+
+
+### User search-list 單輪實測：資料機制成立、UX 無法判定
+
+[真實收據](evidence/user-search-list-run.json) 執行 06:16:17.258965–06:21:03.120661 UTC。Human 回覆看到並完成本輪 setup 系統授權；預檢於 06:16:28.380702 成立，CUA 已重新連線，Human 明確「已準備好，全程觀察」後於 06:20:47.533799 接受本輪 gate，未提前寫 OAuth。
+
+重現入口（gate／notice／out 都必須使用新檔，不能覆寫本輪收據）：
+
+```sh
+python3 -B experiments/E005/scripts/run_self_signed_probe.py --pem-import --diagnose --trust-code-signing --signing-selector certificate-sha1 --temporary-user-search-list --measure --observer-gate <external-new-gate> --ready-notice <external-new-notice> --measurement-deadline-utc <future-UTC-within-authorized-window> --out <new-receipt>
+```
+
+| 案例 | 本輪事實 |
+| --- | --- |
+| T01 | 本輪新自簽 Code Signing cert／專用 Keychain、user-only codeSign trust 讀回、暫時 user search-list append 讀回均成立；無付費資格／既有 identity／profile 依賴。legacy 固定，不切換 DPK。 |
+| T02 | first writer 保存 A；兩個 first fresh readers 逐欄六欄全 true。 |
+| T03 | first hash `1a36a0bd…381a897a`，marker 真重建後 second hash `8451d87b…af784418`；兩版有效 cert-backed 簽章、DR／entitlements／bundle ID／path 一致，無 profile。實際 second reader 六欄全 true；不是恢復原 binary 的讀取。 |
+| T04 | second binary 整筆替換 B，再以 fresh second reader 六欄全 true。 |
+| T05 | 真 absent／malformed 分類成立；真 denial 未測，既有 synthetic 不充當真拒絕。 |
+| T06 | 兩項 OAuth 精確刪除並確認不存在；exact-cert user trust 撤回且三 domain absence；只移 own search-list membership，原順序／default 恢復，專用 Keychain／秘密不存在。無 recoveryRequired。 |
+
+13 次操作均 exit0；runtime 與 item cleanup 為 06:20:47.540426–06:20:59.239332 UTC。機器 `validationTaskComplete=true` 僅表示資料操作與清理均符合，不代表 UX／採用核准；`experimentStatus=無法判定` 與 prompt null/unobserved 保留，另以 SHA-256 綁定的 Human 收據記錄觀察。預檢授權／撤 trust 設定授權與 runtime 提示分開；原 ad-hoc 零提示證據不外推本輪。
+
+獨立 Tester 與 Reviewer 已對資料機制／清理明示 approved。這支持本次 macOS／legacy／同 cert 與受限 trust／search-list 前提下的完整假 bundle 重建讀取；不證明唯一根因、其他簽章方式／系統版本或 DPK。實驗 cert 隨本輪刪除，未驗證未來保留 identity 的長期 reuse；正式 adapter 與產品採用仍延後。
+
+
+**最終 Human 觀察與判讀。** [獨立人工收據](evidence/user-search-list-human-observation.json) 綁定本輪 machine SHA-256。Human 全程觀察後回報「第二點 第一次輸出密碼 第二次 指紋」，後續確認第一次選「永遠允許」，但明確「無法確認兩次各屬哪個階段」。因此記錄兩次授權與已知動作，不將 setup／撤 trust 授權計作或排除為 runtime；runtime promptCount 仍 null。不能從 T03 操作耗時猜階段，也不能從「永遠允許」推論未實測的下一次重建會零提示；本輪沒有追加測量。
+
+主要假設仍為 **無法判定**，原因已縮小為 UX 提示階段未能確認，不再是 T03 資料讀回缺失。受限驗證／紀錄任務完成：是；資料機制及清理成功，Human 觀察、剩餘缺口與決策限制已如實保存。正式採用仍未核准；若下一輪要補 UX，需另定可區分存取與設定清理提示的人工觀察，不在本輪重跑。
+
+獨立 Reviewer 最終 closure approved，無剩餘 required fixes，核可指定 docs 條件回寫與交付；這核可紀錄完成，不核准 UX 成功或正式採用。核心 commit f8a1b66 已 push 並更新 Draft PR #58；hooks 全通過，PR Lens 本機 9 nodes／10 edges validate／render，Graphify 0.9.73 無圖 fallback、未建圖／refresh。停於 human review，無新測量。
+
+
+### 新授權 UX 分段聚焦輪（規劃／準備，未執行）
+
+本輪沿同一 E005 UX 缺口，不重測 B／negative／refresh。新窗 07:34:33–08:04:33 UTC，07:59:33 停新測量；先確認桌面工具＋Human ready 才 setup。stage0限定 setup／兩版簽章預檢，phase1 first writeA＋readA，phase2 same-first fresh readA，phase3 different-hash／same-DR second readA，phase4精確cleanup。每段不可覆寫machine receipt，Human另以其SHA-256綁定；完成停住，取得觀察及下一段fresh CUA／ready後才前進。初次最多1提示、後fresh／rebuilt各0；觀察缺失unknown，不重跑。異常／deadline不等待Human而直接cleanup，prompt未知如實記錄。
+
+新增 --segmented-ux／--ux-control-dir／--ux-evidence-dir 明確opt-in；external control notices/gates與非秘密repo evidence分開，新目錄與final out均須不存在。舊runner保存為SHA一致的20ec49357bf0db112611313d81477db31f11b92e5dfb0708ba77441ec9c2008e.py，不改歷史收據。UX helper驗證同namespace／phase／前receipt SHA、完整Human觀察與當段ready，拒絕receipt變更；deadline／abort／受控signal進finallycleanup，不以machine exit0推UX。
+
+準備自測15項synthetic通過（UX6、trust3、search-list6），控制helper停止測試僅helper-level，不冒充真Security／GUI或main整合證據。交獨立Tester／Reviewer審查準備後才允許唯一真實run；本段未預報成功。
+
+
+**本輪桌面前提結果。** 分段準備經獨立 Tester／Reviewer approved，15 synthetic tests、CLI guards 與 fake main wait-abort→finally cleanup 通過，見 [準備收據](evidence/ux-segmented-preparation-check.json)。但 [桌面 preflight](evidence/ux-segmented-desktop-preflight.json) 顯示原生 CUA 重試及 kernel reset 後仍 `native pipe startup failed`；Chrome 可連線不等於原生桌面已連線。另一次 App-content probe 被自動審查以無關私人對話風險拒絕，未讀取內容；安全 inventory 替代仍回原生連線失敗。
+
+尚未取得本輪 Human setup-ready，未啟動新真實 run、零 Keychain／trust／search-list mutation，無本輪實驗秘密或 OAuth 項目需清理。已請 Human 恢復既有桌面連線，既定時窗不延長。實驗狀態 **未執行**；UX／主假設仍 **無法判定**；本輪真人驗證任務完成：**否**。前文「紀錄任務完成」只屬前輪已結束的資料機制實證，不能由本輪準備成果交付推成真人驗證完成。若窗內連線恢復，另存新的連線事件收據，先取得 setup-ready 才啟動唯一 run；不覆寫這份失敗 preflight。
+
+Human 回覆「已恢復連線，請再檢查」後，原生 inventory 與重新初始化後的安全 inventory 仍回相同 native pipe 錯誤，見新獨立 [重試收據](evidence/ux-segmented-desktop-retry.json)；初次收據不覆寫。仍未真人 run、零實驗 mutation，未將 Human 的連線回報當成工具連線成功證據。
+
+
+### Human-only 明確授權的新一輪
+
+Human 在 ChatGPT App 要求重新開始，並明確允許完全由本人逐段真人觀察、免除桌面連線前提，其餘範圍、停點、判準不變。新窗 08:03:06–08:33:06 UTC，08:28:06 停新測量；舊桌面失敗 receipts 保留。`--human-only-observation` 必須同時 segmented 明確 opt-in；各 machine／Human receipt 如實標 `human-only`、desktop connection 不要求、不偽填成功。完整前段觀察、fresh Human ready、phase／namespace／實際 receipt SHA gates 均保留。
+
+窄修經獨立 Plan-Reviewer、Tester（8 focused UX tests與instrumented earlyguard）及 Reviewer approved，舊runner／helper另存原SHA snapshots，finally與安全操作不變。[新準備收據](evidence/ux-human-only-preparation-check.json) 明標 synthetic，不能當真UX。Stage0當前「請開始」已ready，唯一真run只先setup／兩版預檢，完成即停；phase1-4尚待各段Human觀察與freshready，不預報成功。
+
+
+### Human-only 唯一真人輪：逐段觀察結果
+
+[整輪 machine receipt](evidence/ux-human-only-run-20261015T080306Z.json) 的實際起訖為 08:11:20.612622–08:16:17.709974 UTC；所有測量與清理在本次新窗內完成，沒有重跑。這一輪按 Human 明確授權免除桌面工具前提，所有提示數都來自 Human，機器不推論提示；各段 machine／Human receipts 位於 [分段證據](evidence/ux-human-only-20261015T080306Z/)，人工紀錄各自綁定本段 machine SHA-256。
+
+| 段落 | 實際 UTC 時窗 | 資料／身分證據 | Human 全程觀察 |
+| --- | --- | --- | --- |
+| Stage 0 setup | 08:11:20.612622–08:11:32.130427 | 兩版 cert-backed 簽章有效、hash 不同／DR 相等、無 profile；限定 trust／own search-list append 核對通過，零 OAuth 寫入。 | 1 次設定／簽章授權，以指紋完成。 |
+| Phase 1 首次保存／存取 | 08:12:24.932810–08:12:25.595112 | first binary `2b75dc47…961b7a65` 保存 A／讀 A，六欄全 true。 | 0 次提示。 |
+| Phase 2 fresh-process | 08:13:47.882128–08:13:47.913841 | 相同 first hash 的新 reader，六欄全 true。 | 0 次提示。 |
+| Phase 3 真重建版讀取 | 08:14:33.343298–08:14:46.673137 | second binary `70d771b4…a04a5c6`，hash 不同、DR 相同，六欄全 true。 | 1 次憑證存取提示；Human 回報「2 -> 1 次 只能輸入密碼 我選允許」。 |
+| Phase 4 cleanup | 08:16:11.718513–08:16:17.709997 | OAuth item absence、exact-cert trust absence、own search-list membership absence、原有序清單／default 恢復、專用 Keychain／秘密不存在，全部 true。 | 1 次撤回信任的設定授權，以指紋完成；與 Phase 3 分開。 |
+
+每段在收到上一段完整觀察與本段新 ready 後才開 gate。全部正常操作6次（writeA、3個readA、delete、readAbsent），不重跑 B／negative／refresh；first writer／first fresh reader／second rebuilt reader 的實際 hash 均保存。cleanup complete、無 recoveryRequired，設定清理完整。
+
+按寫入前固定判準，首次 0≤1、fresh 0 符合，重建提示 1>0 不符合：**此候選 UX 失敗，資料機制成功**。這次觀察已補足前輪提示階段未知的缺口；不把本次「允許」混作前輪「永遠允許」，不推論選其他選項或下一次重建的行為。機器 immutable receipt 保留 experimentStatus unknown／prompt null，這只是機器不判讀 Human 的表示；本輪受限判讀以獨立結果收據與人工證據為準。
+
+本輪驗證任務完成：是；獨立 Tester／Reviewer 已對逐段 SHA、ready 順序、條件、清理及分類正式 approved；此不支持正式採用、不等於所有免費 Keychain 路徑不可行，也不推論付費必要。DPK、其他 macOS、長期 retained identity 與真 denial 仍不在本輪驗證範圍。
+
+[獨立結果判讀](evidence/ux-human-only-result-20261015T080306Z.json) 保存候選 UX 失敗／機制成功／任務完成；[控制索引](evidence/ux-human-only-20261015T080306Z/control-index.json) 將舊結果內 `control/*` 外部原始參照映射至本輪 evidence/control 的 byte-identical gate／notice snapshots，綁SHA，不修改 immutable result。Reviewer closure approved，核可指定 docs 有條件回寫及交付；不新增測量、不核准採用。

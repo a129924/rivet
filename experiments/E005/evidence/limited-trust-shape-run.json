@@ -1,0 +1,205 @@
+{
+  "startedUTC": "2026-10-15T05:47:23.557417+00:00",
+  "backend": "legacy",
+  "signing": "isolated self-signed certificate",
+  "paidQualificationRequired": false,
+  "measurementRequested": true,
+  "importFormat": "PEM",
+  "diagnosticRequested": true,
+  "limitedTrustRequested": true,
+  "humanReadyForMeasurement": false,
+  "primaryNamespace": "2c75b075-3fda-40bf-a89e-a75e638c95be",
+  "negativeNamespace": "56f3f944-063f-4742-b30d-ac1c2fc50d36",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": false,
+  "promptObservation": "unobserved; separate human receipt required",
+  "commands": [],
+  "cleanup": [],
+  "setupCommands": [
+    {
+      "stage": "generateCertificate",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "encodePrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importCertificate",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importPrivateKey",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "buildTrustHelper",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "encodeCertificateDER",
+      "exitCode": 0,
+      "stderrPresent": false
+    }
+  ],
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "3fc84bcc06b6519f2d4dd36715a8f55c6199f7d5832543c8fc2903bee05c1e8f"
+  },
+  "keychainCreateStatus": 0,
+  "settingsAfterCreate": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "trustHelperSourceSHA256": "fe80f64c4110826ebfcf2a59e96a6c345a94508d23521d9b7775f9d3bcbb0690",
+  "trustCommands": [
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T05:47:26.096080+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        }
+      },
+      "finishedUTC": "2026-10-15T05:47:26.529746+00:00"
+    },
+    {
+      "operation": "add-code-signing",
+      "startedUTC": "2026-10-15T05:47:26.529791+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "mutationAttempted": true,
+        "policy": "codeSign",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T05:47:34.927262+00:00"
+    },
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T05:47:34.928077+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": false,
+          "codeSigningOnly": false,
+          "constraintShape": [
+            {
+              "keyKinds": [
+                "policy",
+                "policyName",
+                "result"
+              ],
+              "policyNameIsKnownCodeSigning": false,
+              "policyObjectIsSecPolicy": true,
+              "policyOIDIsCodeSigning": true,
+              "resultIsTrustRoot": true
+            }
+          ],
+          "entryCount": 1,
+          "status": 0
+        }
+      },
+      "finishedUTC": "2026-10-15T05:47:34.957179+00:00"
+    },
+    {
+      "operation": "remove-user",
+      "startedUTC": "2026-10-15T05:47:34.957845+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "operation": "remove-exact-certificate",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T05:47:37.853476+00:00"
+    },
+    {
+      "operation": "inspect",
+      "startedUTC": "2026-10-15T05:47:37.853544+00:00",
+      "exitCode": 0,
+      "output": {
+        "admin": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "system": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        },
+        "user": {
+          "absent": true,
+          "codeSigningOnly": false,
+          "constraintShape": [],
+          "entryCount": -1,
+          "status": -25300
+        }
+      },
+      "finishedUTC": "2026-10-15T05:47:37.909396+00:00"
+    }
+  ],
+  "trustBaselineAbsent": true,
+  "limitedTrustReadbackVerified": false,
+  "stopReason": "limitedTrustAddOrReadbackFailed",
+  "trustRemovalVerifiedAbsent": true,
+  "trustCleanupComplete": true,
+  "keychainDeleteStatus": 0,
+  "privateKeychainAbsent": true,
+  "settingsAfterCleanup": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "secretScratchAbsent": true,
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T05:47:37.966892+00:00",
+  "limitations": [
+    "human prompt receipt required for UX; historical zero prompts do not cover this host",
+    "DPK free profile not verified",
+    "true denial not observed",
+    "SIGKILL, process crash and host failure cannot guarantee cleanup",
+    "self-signed identity deleted after this trial; future builds need a retained stable identity"
+  ]
+}

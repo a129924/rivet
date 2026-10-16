@@ -1,0 +1,14 @@
+{
+  "recordedUTC": "2026-10-15T07:49:46.634924+00:00",
+  "humanConnectionStatement": "已恢復連線，請再檢查",
+  "previousPreflightSHA256": "7dbd0d05ab503a929bfbe04068697a311a40742d5c67691a769364c0ba555610",
+  "nativeInventoryRetryAfterHumanStatement": true,
+  "kernelResetThenPrivacySafeInventoryRetry": true,
+  "nativeDesktopConnected": false,
+  "nativeError": "Sky Computer Use native pipe startup failed",
+  "realUXRunStarted": false,
+  "keychainOrTrustOrSearchListMutationPerformed": false,
+  "experimentStatus": "未執行",
+  "uxConclusion": "無法判定",
+  "humanVerificationTaskComplete": false
+}

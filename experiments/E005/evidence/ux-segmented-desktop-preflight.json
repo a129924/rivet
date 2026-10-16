@@ -1,0 +1,21 @@
+{
+  "recordedUTC": "2026-10-15T07:44:45.965496+00:00",
+  "purpose": "native desktop connection prerequisite only",
+  "nativeDesktopConnected": false,
+  "nativeError": "Sky Computer Use native pipe startup failed",
+  "privacySafeInventoryRetryAfterKernelReset": true,
+  "browserConnectionDoesNotSatisfyNativeDesktopPrerequisite": true,
+  "appContentProbe": {
+    "attemptedApp": "ChatGPT",
+    "automaticReviewRejected": true,
+    "reason": "could expose unrelated private conversations; no app content read"
+  },
+  "realUXRunStarted": false,
+  "keychainOrTrustOrSearchListMutationPerformed": false,
+  "humanSetupReadyReceived": false,
+  "experimentStatus": "未執行",
+  "uxConclusion": "無法判定",
+  "measurementStopUTC": "2026-10-15T07:59:33+00:00",
+  "windowEndUTC": "2026-10-15T08:04:33+00:00",
+  "nextRequirement": "restore native desktop connection, then obtain explicit Human setup-ready"
+}

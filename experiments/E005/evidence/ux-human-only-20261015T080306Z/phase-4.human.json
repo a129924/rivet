@@ -1,0 +1,22 @@
+{
+  "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+  "phase": 4,
+  "observationMode": "human-only",
+  "machineReceipt": "phase-4.machine.json",
+  "machineReceiptSHA256": "d6198b053d14e3dc105ac5451569a96642aebf68f5b539330021feeac95faed8",
+  "observedWholeStage": true,
+  "phaseIdentified": true,
+  "promptCount": 1,
+  "purposes": [
+    "撤回實驗信任的設定授權"
+  ],
+  "actions": [
+    "以指紋完成授權"
+  ],
+  "humanStatement": "全程，1 次撤回信任的設定授權，以指紋完成",
+  "observationWindowUTC": {
+    "startedUTC": "2026-10-15T08:16:11.718513+00:00",
+    "finishedUTC": "2026-10-15T08:16:17.709997+00:00"
+  },
+  "recordedUTC": "2026-10-15T08:16:45.184621+00:00"
+}

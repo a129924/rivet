@@ -1,0 +1,97 @@
+{
+  "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+  "phase": 4,
+  "promptCount": null,
+  "observationMode": "human-only",
+  "desktopConnectionRequired": false,
+  "promptObservation": "Human sidecar required",
+  "startedUTC": "2026-10-15T08:16:11.718513+00:00",
+  "finishedUTC": "2026-10-15T08:16:17.709997+00:00",
+  "normalCleanupReady": true,
+  "sixFieldComparisons": null,
+  "comparisonApplicability": "not applicable: cleanup only",
+  "commands": [
+    {
+      "mode": "delete",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:16:11.722318+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "deleted": true,
+          "operation": "delete"
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:16:12.020778+00:00"
+    },
+    {
+      "mode": "read-absent",
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "startedUTC": "2026-10-15T08:16:12.020818+00:00",
+      "promptCount": null,
+      "actualBinarySHA256": "2b75dc47de4ff6a15fcd15d9215c3a92db41cda475854b1669108a7f961b7a65",
+      "exitCode": 0,
+      "stderrPresent": false,
+      "output": [
+        {
+          "absent": true,
+          "operation": "read-absent"
+        }
+      ],
+      "finishedUTC": "2026-10-15T08:16:12.124629+00:00"
+    }
+  ],
+  "cleanup": [
+    {
+      "namespace": "73a3c327-6b0c-4f49-838a-ed82476957ac",
+      "deleteSucceeded": true,
+      "absenceConfirmed": true
+    }
+  ],
+  "trustCommands": [
+    {
+      "operation": "remove-user",
+      "startedUTC": "2026-10-15T08:16:12.124734+00:00",
+      "exitCode": 0,
+      "output": {
+        "domain": "user",
+        "operation": "remove-exact-certificate",
+        "status": 0
+      },
+      "finishedUTC": "2026-10-15T08:16:17.552627+00:00"
+    }
+  ],
+  "trustRemovalVerifiedAbsent": true,
+  "temporaryUserSearchList": {
+    "requested": true,
+    "mutationAttempted": true,
+    "atomicCompareAndSwapAvailable": false,
+    "baselineUnchangedBeforeAdd": true,
+    "ownAbsentBeforeAdd": true,
+    "baselineCount": 1,
+    "appendReadbackVerified": true,
+    "afterAppendCount": 2,
+    "cleanupMutationAttempted": true,
+    "foreignSequenceMatchedBaselineBeforeRemove": true,
+    "ownMembershipAbsent": true,
+    "foreignSequencePreserved": true,
+    "baselineRestored": true,
+    "defaultUnchanged": true,
+    "cleanupComplete": true
+  },
+  "privateKeychainAbsent": true,
+  "secretScratchAbsent": true,
+  "settingsAfterCleanup": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "cleanupComplete": true,
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "7138dbcc700732e356f7ba372da285fe6f0b8f3d9e7ecca13cba67d80309ee4e",
+    "ux_stages.py": "b07ccee8fc3545f4f3146c3e3afe1176ebbe8a95889ce62eb93882ebf03031c3"
+  }
+}

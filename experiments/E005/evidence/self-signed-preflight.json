@@ -1,0 +1,59 @@
+{
+  "startedUTC": "2026-10-15T03:32:17.382262+00:00",
+  "backend": "legacy",
+  "signing": "isolated self-signed certificate",
+  "paidQualificationRequired": false,
+  "measurementRequested": false,
+  "primaryNamespace": "139be7bc-73f4-49f5-8654-4830144758e9",
+  "negativeNamespace": "fa07f770-642e-4ef6-b3fb-87ce2636100a",
+  "experimentStatus": "無法判定",
+  "validationTaskComplete": false,
+  "promptObservation": "unobserved; separate human receipt required",
+  "commands": [],
+  "cleanup": [],
+  "setupCommands": [
+    {
+      "stage": "generateCertificate",
+      "exitCode": 0,
+      "stderrPresent": true
+    },
+    {
+      "stage": "packageCertificate",
+      "exitCode": 0,
+      "stderrPresent": false
+    },
+    {
+      "stage": "importCertificate",
+      "exitCode": 1,
+      "stderrPresent": true,
+      "certificateTrustError": false,
+      "internalComponentError": false
+    }
+  ],
+  "sourceSHA256": {
+    "build_probe.py": "07d117946b0a20723395c14cccc49526840b7f429fe0949a8d686f241ab941fb",
+    "run_self_signed_probe.py": "45c995f97c0b4c1872db8930e37af08b9796a376056682f00c38322709531f4a"
+  },
+  "keychainCreateStatus": 0,
+  "settingsAfterCreate": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "stopReason": "importCertificateFailed",
+  "keychainDeleteStatus": 0,
+  "privateKeychainAbsent": true,
+  "settingsAfterCleanup": {
+    "defaultEqual": true,
+    "searchListEqual": true
+  },
+  "secretScratchAbsent": true,
+  "cleanupComplete": true,
+  "finishedUTC": "2026-10-15T03:32:18.185115+00:00",
+  "limitations": [
+    "human prompt receipt required for UX; historical zero prompts do not cover this host",
+    "DPK free profile not verified",
+    "true denial not observed",
+    "SIGKILL, process crash and host failure cannot guarantee cleanup",
+    "self-signed identity deleted after this trial; future builds need a retained stable identity"
+  ]
+}
