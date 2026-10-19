@@ -1,0 +1,58 @@
+{
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "startedUTC": "2026-10-16T06:05:13.745052+00:00",
+  "endedUTC": "2026-10-16T06:05:13.819642+00:00",
+  "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d",
+  "previousInspectionReceiptSHA256": "4d09a5f0df10b43d5e08044a3ffab6bf12d550d5436f1593c5cdd190111bce41",
+  "privateDiagnosticSHA256": "3cbe06658c5c1cfa176cac1fb85a304db74323c6845ee143fa70b14213713411",
+  "selectedAppUnchanged": true,
+  "binarySHA256": "4ffe883a2223c96c44c59d93aa15ee3770b9983db4ecc34d0bc13650f5ac1598",
+  "profileSHA256": "1760fde973363c17a741d660051d71d0ae2ce597a14ca2a56555871e913556f9",
+  "commandResults": [
+    {
+      "kind": "codesign.verify",
+      "exitCode": 0
+    },
+    {
+      "kind": "codesign.entitlements",
+      "exitCode": 0
+    },
+    {
+      "kind": "codesign.details",
+      "exitCode": 0
+    },
+    {
+      "kind": "codesign.DR",
+      "exitCode": 0
+    },
+    {
+      "kind": "security.cms",
+      "exitCode": 0
+    },
+    {
+      "kind": "codesign.extractSelectedCertificates",
+      "exitCode": 1
+    }
+  ],
+  "failedCommand": "codesign.extractSelectedCertificates",
+  "failedExitCode": 1,
+  "finiteError": "certificatePrefixMisparsedAsCodeOperand",
+  "safeError": "Certificate extraction prefix was treated as a code operand: No such file or directory. The selected App remains present and unchanged.",
+  "localDocumentation": {
+    "codesignManExitCode": 0,
+    "codesignManSHA256": "0f1b0d84be6e1f29015377f7f49cdc17c7401fb23495551114101781d6f41695",
+    "summary": "Optional GNU-style long values require --name=value; extract-certificates permits an omitted prefix.",
+    "securityVerifyCertHelpExitCode": 0,
+    "advertisedCodeSigningPolicy": "codeSign",
+    "existingPolicyNotAdvertised": "codesigning"
+  },
+  "defaultCodesignArtifactsPresent": false,
+  "preparationResult": "needs-rework: command argument construction; not DPK mechanism/UX failure",
+  "fullLivePreflight": false,
+  "selectedCertificateChainVerified": false,
+  "appLaunched": false,
+  "SecurityOperations": 0,
+  "signedByAgent": false,
+  "trustModified": false,
+  "requiresReviewerThenBoundedImplementer": true
+}

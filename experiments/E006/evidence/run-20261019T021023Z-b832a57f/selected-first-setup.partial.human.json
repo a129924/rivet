@@ -1,0 +1,22 @@
+{
+  "actions": [],
+  "machineReceiptSHA256": "6e4bb072c3f8be6ba62fc534d713f902dc6008fcf602d49de82abacd3972f2e7",
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "notDPKPhase1Ready": true,
+  "observationMode": "human-only",
+  "observationScope": "First setup/Debug Build segment only; complete Phase 0 observation still required separately.",
+  "promptCount": 0,
+  "purposes": [],
+  "questionChoiceInterpretation": "Question option 1 means free Personal Team selected and Debug Build succeeded; it is not a system authorization action.",
+  "recordedUTC": "2026-10-19T02:17:31.360265+00:00",
+  "reportedDebugBuildSucceeded": true,
+  "reportedFreePersonalTeamSelected": true,
+  "reportedQuestionChoice": 1,
+  "sourceReplies": [
+    "已選免費 Personal Team，Debug Build 成功",
+    "第一版Build成功；授權提示共0次，實際選項是1。"
+  ],
+  "wholePhase0Observed": false,
+  "wholePhase0PromptCount": null,
+  "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+}

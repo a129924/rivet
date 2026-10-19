@@ -1,0 +1,18 @@
+{
+  "appLaunched": false,
+  "endedUTC": "2026-10-19T02:21:15.382673+00:00",
+  "firstBinarySHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+  "firstCopyUnchanged": true,
+  "firstMachineReceiptSHA256": "6e4bb072c3f8be6ba62fc534d713f902dc6008fcf602d49de82abacd3972f2e7",
+  "mainExecutableHashesDifferent": true,
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "phase0Complete": false,
+  "privateSwiftResourcesUnchanged": true,
+  "profileCertificateEntitlementDRComparison": "pending complete coordinator preflight",
+  "readyForReadOnlyCoordinatorPreflight": true,
+  "realDPKDataOperations": 0,
+  "secondBinarySHA256": "b9320e1eac2b6d3f08faa538d781101ad6e15f876d288f18226f3f3a437182d8",
+  "secondCopyFrozen": true,
+  "startedUTC": "2026-10-19T02:21:13.684922+00:00",
+  "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+}

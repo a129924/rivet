@@ -1,0 +1,17 @@
+{
+  "controlledStopMachineSHA256": "4d72407d9e9136af515caca62cd5e3fdcc5e4a2e529c8b4c936239e0d4e65519",
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "notMeasurementReady": true,
+  "observationScope": "Reported setup/build segment only; root is separately requesting whole setup observation and project closure. No second-App binary/DR validation performed.",
+  "projectClosed": null,
+  "recordedUTC": "2026-10-16T06:18:55.462618+00:00",
+  "reportedOnlyConfigurationChangedToRebuilt": true,
+  "reportedPromptPresence": false,
+  "reportedSecondBuildSucceeded": true,
+  "sourceReplies": [
+    "第二版成功，確認僅切換Rebuilt",
+    "成功 沒有出現提示"
+  ],
+  "wholePhase0Observed": null,
+  "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d"
+}

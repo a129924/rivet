@@ -1,0 +1,96 @@
+{
+  "SecurityOperations": 0,
+  "appLaunched": false,
+  "assetsInspected": false,
+  "boundaries": [
+    "No Personal Team/account/certificate/profile inventory",
+    "No signing/provisioning/live App launch/SecItem",
+    "Unsigned build and pure fixtures are not real DPK or prompt evidence"
+  ],
+  "commands": [
+    [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/E006/Tests",
+      "-p",
+      "test_*.py"
+    ],
+    [
+      "swiftc",
+      "experiments/E006/Sources/DPKProbe/ProbeCore.swift",
+      "experiments/E006/Sources/DPKProbe/LiveGate.swift",
+      "experiments/E006/Tests/MemoryStore.swift",
+      "experiments/E006/Tests/ProbeCoreTests.swift",
+      "-o",
+      "<external-pure-test-binary>"
+    ]
+  ],
+  "environment": {
+    "Swift": "6.3.3",
+    "Xcode": "26.6 (17F113)",
+    "macOS": "26.5.2"
+  },
+  "green": {
+    "pythonExitCode": 0,
+    "pythonTests": 11,
+    "swiftExitCode": 0,
+    "swiftPureTests": "six-field, read-only, delete-absent, missing, invalid, denied, redaction, GUI/path guards passed",
+    "unsignedBuilds": {
+      "Debug": {
+        "appLaunched": false,
+        "codeSignatureDirectoryPresent": false,
+        "codeSigningAllowed": false,
+        "codeSigningRequired": false,
+        "embeddedProfilePresent": false,
+        "executableSHA256": "b420b7a0f838f0062445e544449b9f5058a6b9c56f23997944f21ca87ea802e0",
+        "exitCode": 0,
+        "marker": "initial",
+        "warning": "AppIntents metadata extraction skipped: no AppIntents.framework dependency"
+      },
+      "Rebuilt": {
+        "appLaunched": false,
+        "codeSignatureDirectoryPresent": false,
+        "codeSigningAllowed": false,
+        "codeSigningRequired": false,
+        "embeddedProfilePresent": false,
+        "executableSHA256": "b420b7a0f838f0062445e544449b9f5058a6b9c56f23997944f21ca87ea802e0",
+        "exitCode": 0,
+        "marker": "rebuilt",
+        "warning": "AppIntents metadata extraction skipped: no AppIntents.framework dependency"
+      }
+    }
+  },
+  "independentVerification": false,
+  "live": false,
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T03:08:59.086430+00:00",
+  "red": {
+    "pythonProtocol": "ModuleNotFoundError: preflight (module not yet implemented)",
+    "unsignedCompile": "LiveGate.swift: operator can throw but expression is not marked with try; fixed by precomputing validated paths"
+  },
+  "role": "Implementer",
+  "signedBuild": false,
+  "sourceRevision": "05b039b39f4f7cf136b10ddcba654a07b0a448d8",
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "84cecbd397494c4aa4dad003af6e5e100a5664139cecbc617d69307c0e68f42e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "scripts/preflight.py": "e15203d8055bc9ac38916a034478dc8d2f212f2a017f510b0e47f5102ba47401",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "3aaf68591a0d1188d44efd0810760331592ec79211db8b59b457e8d8385704e2",
+    "scripts/ux_stages.py": "7432f5246fb815df4561808648ccc4c73702e39c02f79fffe53c5fd883ed7bc2"
+  },
+  "synthetic": true,
+  "uxStatus": "未執行"
+}

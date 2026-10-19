@@ -1,0 +1,39 @@
+{
+  "checkedUTC": "2026-10-16T03:02:49.688599+00:00",
+  "scope": "local preparation only",
+  "sourceRevision": "05b039b39f4f7cf136b10ddcba654a07b0a448d8",
+  "graphify": {
+    "version": "0.9.73",
+    "autoRefreshDisabled": true,
+    "graphPresent": false,
+    "mode": "targeted-source-fallback",
+    "sourceReferences": [
+      "Sources/BoundedContexts/GitHubIntegration/Contracts/OAuthCredentialStore.swift",
+      "Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthCredentialBundle.swift",
+      "Sources/BoundedContexts/GitHubIntegration/Providers/OAuthTokenProvider.swift"
+    ],
+    "conclusions": [
+      "六欄 bundle 契約存在",
+      "store 只有 load/save；provider 持有 store",
+      "E006 不修改 production ports/provider"
+    ],
+    "buildRefreshOrProviderCalls": false
+  },
+  "prLens": {
+    "versionPin": "0.11.0",
+    "status": "deferred",
+    "reason": "本 topic 尚無獲授權 commit／PR 的真實 head diff；不以既有 HEAD 假造新增實驗圖。"
+  },
+  "archify": {
+    "artifact": "experiments/E006/diagrams/dpk-workflow-final.html",
+    "artifactSHA256": "61ec299dc93a2aea3f88f492fa1087f0d12c626bfec118ff9e25e493d3e08cda",
+    "checksPassed": 9,
+    "errors": 0,
+    "warnings": 0,
+    "containment": "pass",
+    "visualReview": "pass",
+    "capturesReviewed": 4,
+    "englishViewerFallback": true
+  },
+  "realKeychainOrAppLaunchPerformed": false
+}

@@ -1,0 +1,22 @@
+{
+  "recordedUTC": "2026-10-16T06:07:45.601049+00:00",
+  "scope": "Only exact default codesign extraction names in the two checkout roots and git status; not certificate/account inventory",
+  "worktrees": {
+    "feature": {
+      "gitStatusExitCode": 0,
+      "clean": false,
+      "statusCount": 41,
+      "unscopedStatusLines": [],
+      "defaultExtractionArtifacts": []
+    },
+    "dev": {
+      "gitStatusExitCode": 0,
+      "clean": true,
+      "statusCount": 0,
+      "unscopedStatusLines": [],
+      "defaultExtractionArtifacts": []
+    }
+  },
+  "removedFiles": [],
+  "reason": "No default extraction artifacts exist; no deletion required."
+}

@@ -1,0 +1,27 @@
+{
+  "checks": {
+    "HumanDirectBuildStoppedProjectClosedAndExactCleanupAuthorization": true,
+    "allFourOwnedAppExitsConfirmed": true,
+    "derivedDataInfoLocationMatchesOwnedRoot": true,
+    "rootsNotSymlinks": true,
+    "rootsOwnedByCurrentUser": true,
+    "runRootAlreadyRemovedByCoordinator": true,
+    "safeSnapshotIndexVerified": true,
+    "safeSnapshotsArchived": true,
+    "selectedSourceAppInsideOwnedDerivedData": true,
+    "uniqueDerivedDataWorkspacePathEqualsExactPrivateProject": true
+  },
+  "cleanupAuthorizationSHA256": "ec1f417e65e4b078a55d5f99a7a097a53f61de4e53bfcfcb4844845fc17fcc42",
+  "coordinatorMachineSHA256": "e1034d0024ccb9e7fec3823d4b7be4b42b1510cdd552ab0ed7b6bcab35330c8f",
+  "coordinatorSnapshotIndexSHA256": "c2d4df304de87d841a4ff640bce17cd694be14cbcb6a7e0f3cf78acb015887fc",
+  "dataCleanupMachineSHA256": "133e91f77c290212cae23b9b7df81f3de5174b088a3cb2b2edf327279a2875a2",
+  "derivedDataInfoAtCleanupSHA256": "395ee64f93ddf68061a72b047909d8faa3bf0acd0778f62f0da38ec8415288b2",
+  "derivedDataInfoAtFreezeSHA256": "4b90a70aaacb2b232b3bca0b1219bc7effc178a26fe7419d695e9c675c81e15a",
+  "kind": "exactPrivateCleanupOwnershipAndPreservation",
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "privateOwnershipRecordSHA256": "95f221d4fc70f21e4d77f5ebc3712277e150761f60b2dcfce75e623311c7cb8e",
+  "recordedUTC": "2026-10-19T02:27:46.522193+00:00",
+  "schemaVersion": 1,
+  "scope": "Only exact owned DerivedData and this round private setup root; no developer assets or global preferences.",
+  "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+}

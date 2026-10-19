@@ -1,0 +1,11 @@
+{
+  "buildStoppedAndPrivateProjectClosed": true,
+  "exactOwnedFileDeletionAuthorized": true,
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "notMeasurementReady": true,
+  "previousBlockedCleanupReceiptSHA256": "cce8345180e30b933ecb1635487d9f240af4ac51339e6b64ec5dfa828ea865e1",
+  "questionScope": "本輪建置已停止、私有 DPKProbe 專案已關閉；允許精確刪除本輪私有副本及已核對歸屬的專屬 DerivedData，不動其他專案或 Apple 開發資產。",
+  "recordedUTC": "2026-10-16T06:24:21.060485+00:00",
+  "source": "Human direct reply forwarded by root after automatic approval rejection",
+  "sourceReply": "確認已停止／關閉，允許精確刪除"
+}

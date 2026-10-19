@@ -1,0 +1,10 @@
+{
+  "humanReady": true,
+  "humanReadyStatement": "已準備好，開始Phase4清理",
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "observationMode": "human-only",
+  "phase": 4,
+  "previousReceiptSHA256": "5f4f1bb4a8fef9cc362f2e2017dac3d24e3dde83c6c4765111921c4103ca0809",
+  "recordedUTC": "2026-10-19T02:26:55.368939+00:00",
+  "synthetic": false
+}

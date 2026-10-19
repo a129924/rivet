@@ -1,0 +1,21 @@
+{
+  "arrayTotalLength": "not recorded; first record observed",
+  "fullHardwareSchema": false,
+  "observedProvisioningIdentifierShape": {
+    "groupLengths": [
+      8,
+      16
+    ],
+    "hexAndHyphenOnly": true,
+    "whitespace": false
+  },
+  "schema": {
+    "SPHardwareDataType": [
+      {
+        "platform_UUID": "<nonempty-string-redacted>",
+        "provisioning_UDID": "<nonempty-string-redacted>"
+      }
+    ]
+  },
+  "source": "Existing targeted current-Mac system_profiler diagnostic; values removed, no new host command"
+}

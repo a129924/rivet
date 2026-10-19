@@ -1,0 +1,22 @@
+{
+  "SecItemCleanupAttempted": false,
+  "appLaunched": false,
+  "coordinatorStarted": false,
+  "developerAssets": "Human-owned retained; not revoked/deleted",
+  "fullHumanObservationPending": true,
+  "humanBuildStopAndProjectClosePending": true,
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "originalCutoffUTC": "2026-10-16T06:18:52.294158+00:00",
+  "originalDeadlineUTC": "2026-10-16T06:23:52.294158+00:00",
+  "originalStartUTC": "2026-10-16T05:53:52.294158+00:00",
+  "phase0Complete": false,
+  "realDPKDataOperations": 0,
+  "realDPKStatus": "未執行",
+  "reason": "Device identifier selector requires independent correction; remaining window insufficient for complete segmented UX. Controlled stop before DPK.",
+  "recordedUTC": "2026-10-16T06:18:55.462465+00:00",
+  "rootReportedStopTaipei": "2026-10-16T14:14:38+08:00",
+  "rootReportedStopUTC": "2026-10-16T06:14:38+00:00",
+  "timeWindowReset": false,
+  "uxStatus": "未執行",
+  "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d"
+}

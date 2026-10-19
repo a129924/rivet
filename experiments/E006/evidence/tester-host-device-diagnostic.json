@@ -1,0 +1,54 @@
+{
+  "actualCurrentGatePassed": false,
+  "appLaunched": false,
+  "binarySHA256": "4ffe883a2223c96c44c59d93aa15ee3770b9983db4ecc34d0bc13650f5ac1598",
+  "consoleOwnerMatchesCurrentUser": true,
+  "currentMacProvisioningUDIDPresent": true,
+  "developerAssetsModified": false,
+  "diagnosticProvisioningUDIDProfileGatePassed": true,
+  "finiteError": "profileValidityOrDeviceRejected",
+  "fullLivePreflight": false,
+  "handoff": "Reviewer classification, then bounded Implementer correction or stop at unchanged original cutoff.",
+  "hostPrivateReceiptSHA256": "4941823ef7e0108f0adf5b3e6793c305fcbffcbea8dafdbf245b80123f286e92",
+  "hostSafeReceiptSHA256": "42d59f3bd84220c84ffb31784d17b4e334cf51c466316c9349302d201664438f",
+  "ioregHardwareUUIDInSelectedProfile": false,
+  "limitations": [
+    "Correct provisioning identifier membership is diagnostic evidence from current Mac and selected profile; it is not complete two-App live preflight or runtime DPK authorization",
+    "No actual device identifiers, account identities or profile contents are public",
+    "Historical first-App chain/signature evidence remains valid for unchanged binary/profile; no new signing or App execution occurred"
+  ],
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "nonRoot": true,
+  "officialReferenceReceiptSHA256": "6646806c34c61fdb630edbe2a7d8489b2a0cc09bc0a778254e4aa5e45981af05",
+  "officialSources": [
+    {
+      "summary": "Apple silicon Mac development registration requires the provisioning UDID.",
+      "url": "https://developer.apple.com/help/account/devices/register-a-single-device"
+    },
+    {
+      "summary": "Mac device ID is shown as Hardware UUID on macOS 10.15 and earlier, Provisioning UDID on macOS 11 and later.",
+      "url": "https://developer.apple.com/documentation/xcode/distributing-your-app-to-registered-devices"
+    },
+    {
+      "summary": "System Information Hardware supplies the Mac provisioning UDID used for registration.",
+      "url": "https://developer.apple.com/documentation/xcode/locating-device-identifiers"
+    }
+  ],
+  "preflightSourceSHA256": "a2650482a9e9147dae4a1ac3f9635278e730ca6641b36605c67056ad9490e7cc",
+  "profileSHA256": "1760fde973363c17a741d660051d71d0ae2ce597a14ca2a56555871e913556f9",
+  "provisioningUDIDDiffersFromHardwareUUID": true,
+  "provisioningUDIDInSelectedProfile": true,
+  "realDPKDataOperations": 0,
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T06:14:18.262610+00:00",
+  "requiredFixes": [
+    "Use the current Mac provisioning device identifier instead of assuming IOPlatformUUID is the provisioning UDID; retain selected-device membership, group, profile dates and original time window. Independent review and bounded code correction required; no re-registration or policy relaxation."
+  ],
+  "role": "Independent Tester",
+  "scope": "Readonly partial first-App host/device applicability diagnosis; no DPK data measurement",
+  "selectedAppUnchanged": true,
+  "timeWindowReset": false,
+  "uxStatus": "未執行",
+  "verdict": "needs-rework",
+  "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d"
+}

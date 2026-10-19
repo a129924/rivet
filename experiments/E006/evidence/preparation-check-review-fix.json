@@ -1,0 +1,133 @@
+{
+  "SecurityOperations": 0,
+  "appLaunched": false,
+  "assetsInspected": false,
+  "changedSourceFiles": [
+    "Tests/test_review_fixes.py",
+    "scripts/preflight.py",
+    "scripts/run_probe.py"
+  ],
+  "commands": [
+    {
+      "purpose": "red then focused green; all signing/process/Security collaborators mocked",
+      "shape": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "experiments/E006/Tests",
+        "-p",
+        "test_review_fixes.py"
+      ]
+    },
+    {
+      "exitCode": 0,
+      "shape": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "experiments/E006/Tests",
+        "-p",
+        "test_*.py"
+      ],
+      "tests": 17
+    }
+  ],
+  "green": {
+    "coordinator": [
+      "Owned process surviving SIGTERM: no phase 4 launch; current App/private proof/recovery preserved; cleanupComplete=false",
+      "Missing owned PID record after wrapper timeout: no new launch, recovery retained",
+      "Confirmed exit precedes exactly one cleanup launch and safe removal",
+      "Reused foreign PID never signalled"
+    ],
+    "profile": "Selected macOS candidate accepts missing debugging entitlement; chain/selected certificate binding/platform/device/group/expiry remain rejection guards",
+    "pythonExitCode": 0,
+    "pythonTests": 17
+  },
+  "independentVerification": false,
+  "live": false,
+  "next": "Independent focused Tester then Reviewer; no Human developer asset operations yet",
+  "officialBasis": "https://developer.apple.com/documentation/technotes/tn3125-inside-code-signing-provisioning-profiles",
+  "preFixSourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "scripts/preflight.py": "e15203d8055bc9ac38916a034478dc8d2f212f2a017f510b0e47f5102ba47401",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "3aaf68591a0d1188d44efd0810760331592ec79211db8b59b457e8d8385704e2",
+    "scripts/ux_stages.py": "7432f5246fb815df4561808648ccc4c73702e39c02f79fffe53c5fd883ed7bc2"
+  },
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T03:24:03.037039+00:00",
+  "red": {
+    "coordinator": "Actual coordinator main timeout branch launched phase 4 after owned process survived SIGTERM",
+    "errors": 1,
+    "failures": 1,
+    "focusedTests": 4,
+    "profile": "Valid synthetic macOS profile without either debugging entitlement rejected as developmentProfileRequired"
+  },
+  "reusedUnchangedVerification": {
+    "differentUnsignedMainHashes": true,
+    "noDebugDylib": true,
+    "reason": "Only Python preflight/coordinator and focused tests changed; all Swift/project/resource hashes equal independently verified version. No unrelated App rebuild or Swift test repeat.",
+    "receipt": "tester-preparation-rebuild-fix.json",
+    "unchangedSourceFiles": [
+      "DPKProbe.xcodeproj/project.pbxproj",
+      "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme",
+      "Resources/DPKProbe.entitlements",
+      "Resources/Info.plist",
+      "Sources/DPKProbe/AppMain.swift",
+      "Sources/DPKProbe/LiveGate.swift",
+      "Sources/DPKProbe/LiveStore.swift",
+      "Sources/DPKProbe/ProbeCore.swift"
+    ]
+  },
+  "role": "Implementer",
+  "signedBuild": false,
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "3f49cb878f218762e6e9be439f597d7ebbd63650466726c836bae85fb9aa147d",
+    "scripts/preflight.py": "31a1db90dc0fd79c0015a5d6368602de80c9bd2db4b13988d87c791a2f16f638",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "929c0be50c112db758d48828b5a9c66a333cfc55a71f4a70e339e16b8b61b7be",
+    "scripts/ux_stages.py": "7432f5246fb815df4561808648ccc4c73702e39c02f79fffe53c5fd883ed7bc2"
+  },
+  "synthetic": true,
+  "upstreamReceipts": {
+    "preparation-check-rebuild-fix.json": {
+      "sha256": "9beb29f13102297330996882bb937415bfbfa392b476b86193d6b78a1ace7ece"
+    },
+    "preparation-check.json": {
+      "sha256": "dc2493f04926b88fb8cb4c6fa16b33c2f80c60948f8517b04b845fc55632b95f"
+    },
+    "tester-preparation-check.json": {
+      "sha256": "d1bb2e2b281d012ca5118729ba00b517e32b8d221853d4e08dafbdbede7245d4"
+    },
+    "tester-preparation-rebuild-fix.json": {
+      "sha256": "f9900eecbc04afa7198fbad79879617308489a07686976f07b25d06aec56d387"
+    }
+  },
+  "upstreamVerdict": "Reviewer needs-rework: macOS profile classification and owned-process cleanup concurrency",
+  "uxStatus": "未執行"
+}

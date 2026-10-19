@@ -1,0 +1,101 @@
+{
+  "SecurityOperations": 0,
+  "appLaunched": false,
+  "assetsChanged": false,
+  "boundedFix": "Future authorized preflight reads system_profiler SPHardwareDataType JSON; unique record provisioning_UDID, exact profile membership, no HardwareUUID fallback or normalization. All other guards unchanged.",
+  "cleanup": "Independent Tester handling original-window evidence preservation/cleanup; no completion claim from Implementer. Apple developer assets retained by Human.",
+  "command": {
+    "exitCode": 0,
+    "shape": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/E006/Tests",
+      "-p",
+      "test_*.py"
+    ]
+  },
+  "green": {
+    "cases": [
+      "HardwareUUID differs from ProvisioningUDID; profile contains only ProvisioningUDID and succeeds",
+      "Wrong-device membership fails without HardwareUUID fallback",
+      "Missing/ambiguous/invalid schema/value rejects; all pure cases have zero real host/asset/API calls"
+    ],
+    "exitCode": 0,
+    "pythonTests": 27
+  },
+  "hostCommandPerformed": false,
+  "independentVerification": false,
+  "livePreflightPerformed": false,
+  "mainHypothesis": "無法判定",
+  "next": "Independent pure Tester/Reviewer preparation verification only. This stopped live round must not resume; new round requires Human authorization/ready.",
+  "officialSources": [
+    "https://developer.apple.com/help/account/devices/register-a-single-device/",
+    "https://developer.apple.com/documentation/xcode/distributing-your-app-to-registered-devices"
+  ],
+  "realDPKDataOperations": 0,
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T06:19:13.376123+00:00",
+  "red": {
+    "classification": "AttributeError: provisioning_device_id not implemented; expected selector capability absent",
+    "focusedMethods": 3
+  },
+  "role": "Implementer",
+  "schemaProvenance": {
+    "SPHardwareDataType": "array with exactly one object record",
+    "comparisonOnlyKey": "platform_UUID",
+    "identifierKey": "provisioning_UDID",
+    "observedIdentifierShape": "hex 8-16; no whitespace; limited to this Mac, not a universal Apple format guarantee",
+    "privateDiagnostic": "Only extracted identifiers and comparison booleans were retained; real identifiers not copied here",
+    "rawFullStdoutRetained": false,
+    "root": "object",
+    "source": "Independent Tester already-observed schema and existing private diagnostic; no new host read"
+  },
+  "scope": "Preparation selector fix after controlled stop; no resumption or new experiment authorization",
+  "settingsChanged": false,
+  "signedOrRebuilt": false,
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_device_selector.py": "597430f7d108dba7d3b13c9078805fcbeaa89ce7dbad7c7685b763554d30d137",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "ae22e11be721559b8115cbe9072a292dccd3a3ee45f11dcfa6f06d1fdd49a923",
+    "Tests/test_window.py": "72c387855272e464356543496e86a06d3706d3ea488a2cce42b025bb21d598b4",
+    "scripts/preflight.py": "e0aece5d5a46a36395ec6498a3aaf0bf4006a7dc11cfc88d847b717b5b26de9e",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "cb645341f5bdb3f0f6013b27e5bb1174fd6619164ae838f1960fb823a1e53eab",
+    "scripts/ux_stages.py": "902c0246545116ca12804f4a1c45d619adad3f684cf8f24672453693cff17f3b"
+  },
+  "synthetic": true,
+  "upstreamReceipts": {
+    "preparation-check-cli-fix.json": {
+      "sha256": "ebbbc36c1ebfd7e788aba7fda501d609e31bfe9c3bc0eb5c7b7a87d3d49d0678"
+    },
+    "tester-host-device-diagnostic.json": {
+      "sha256": "73dc8c9a317ffd5fb51ea96370d51a595fce0d60c349e9fa1e793dbaec4adc85"
+    },
+    "tester-preparation-cli-fix.json": {
+      "sha256": "af0abb2abd1f072743c54eecb64aa3d3918751ee142dc400c6761f391e20401a"
+    }
+  },
+  "upstreamVerdict": "Reviewer needs-rework: IOPlatformUUID is not this Mac provisioning identifier",
+  "uxStatus": "未執行",
+  "window": {
+    "controlledStop": "2026-10-16T14:14:38+08:00",
+    "cutoff": "2026-10-16T14:18:52+08:00",
+    "deadline": "2026-10-16T14:23:52+08:00",
+    "resetOrExtended": false,
+    "t0": "2026-10-16T13:53:52+08:00",
+    "timezone": "Asia/Taipei"
+  }
+}

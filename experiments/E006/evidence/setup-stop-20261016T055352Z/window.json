@@ -1,0 +1,10 @@
+{
+  "cutoffUTC": "2026-10-16T06:18:52.294158+00:00",
+  "deadlineUTC": "2026-10-16T06:23:52.294158+00:00",
+  "humanReadyStatement": "允許，已準備好進行設定",
+  "kind": "setup-window",
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "observationMode": "human-only",
+  "startUTC": "2026-10-16T05:53:52.294158+00:00",
+  "synthetic": false
+}

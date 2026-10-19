@@ -1,0 +1,156 @@
+{
+  "SecurityOperations": 0,
+  "appLaunched": false,
+  "archifyEvidence": {
+    "artifactSHA256": "61ec299dc93a2aea3f88f492fa1087f0d12c626bfec118ff9e25e493d3e08cda",
+    "capturesReviewedBy": "root author; independently checked receipt/hash only",
+    "containmentFourViewports": "pass",
+    "deliverySHA256": "8aaafe3e5ce42800b166ea728211778529aee1a430c66b41ef669ed15c6a7e35",
+    "nineChecksZeroErrorsWarnings": true,
+    "specSHA256": "f2a4cb9a8d6a5b05e57e7bb073df722e811561513935f230e5893c4f73bfd856",
+    "visualCheckSHA256": "3a6b8e57f458a5fff272de4c35bf81a945fb8cbc023ad6d20d55da99fa32662f"
+  },
+  "assetsInspected": false,
+  "commands": [
+    {
+      "exitCode": 0,
+      "shape": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "experiments/E006/Tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "testCount": 11
+    },
+    {
+      "exitCode": 0,
+      "shape": [
+        "python3",
+        "experiments/E006/scripts/prepare.py",
+        "--out",
+        "<new-external-scratch>/builds",
+        "--unsigned-build"
+      ],
+      "signingAllowed": false,
+      "signingRequired": false
+    },
+    {
+      "compileExitCode": 0,
+      "shape": [
+        "swiftc",
+        "ProbeCore.swift",
+        "LiveGate.swift",
+        "MemoryStore.swift",
+        "ProbeCoreTests.swift",
+        "-o",
+        "<external-pure-test-binary>"
+      ],
+      "testExitCode": 0
+    }
+  ],
+  "guardLimitations": [
+    "Swift LiveGate GUI/path refusal is tested; no live proof or signed App has been exercised",
+    "No full production coordinator launch or signal/process/timeout OS path executed; existing controlled_run cases use pure mock"
+  ],
+  "guardsVerifiedByExistingPureTests": [
+    "profile exact/wildcard group,expiry and selected device rejection",
+    "exclusive receipt, symlink and traversal rejection",
+    "namespace/phase/mode/ready and SHA mismatch rejection",
+    "whole-stage observation, phase identification and exact action/purpose counts",
+    "future/stale ready, abort/cutoff rejection",
+    "normal/exception/KeyboardInterrupt finally cleanup and recovery retention",
+    "redaction allowlist",
+    "no-authorization coordinator rejection before live_preflight; no asset authorization before inspect_app"
+  ],
+  "independentVerification": true,
+  "limitations": [
+    "Unsigned/mock success is not certificate/DR/profile/DPK or prompt evidence",
+    "No Human asset or measurement authorization is granted by this verdict",
+    "No production/root/E005/docs or planning artifacts modified by Tester"
+  ],
+  "live": false,
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T03:11:59.338442+00:00",
+  "requiredFixes": [
+    {
+      "evidence": {
+        "firstDebugDylibSHA256": "4a37080e79509f86f2e8fa7a98202a5cfea50278f4fe14a6877a02ed12d2d1bb",
+        "firstMainSHA256": "b420b7a0f838f0062445e544449b9f5058a6b9c56f23997944f21ca87ea802e0",
+        "secondDebugDylibSHA256": "fdb5a81c4867402ca418b01a96ddc4b63c5be8d31ff6bbbfec7ebff56b39cf27",
+        "secondMainSHA256": "b420b7a0f838f0062445e544449b9f5058a6b9c56f23997944f21ca87ea802e0"
+      },
+      "notAuthorized": "Do not switch acceptance to dylib hashes or launch/sign the App.",
+      "problem": "Both actual unsigned main executable hashes are identical; code and compile marker reside in DPKProbe.debug.dylib rather than the app main executable whose hash the contract checks. preflight will reject rebuildIdentityRejected.",
+      "requiredBehavior": "Ensure both App configurations compile experiment code into main executable and produce genuinely different main binary hashes, retain fixed preflight/hash/DR criteria; rerun bounded unsigned and pure preparation verification.",
+      "testCase": "T02"
+    }
+  ],
+  "role": "Independent Tester",
+  "scope": "unsigned builds and pure mock preparation only",
+  "signedBuild": false,
+  "sourceBinding": {
+    "compiledSwiftSHA256": {
+      "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+      "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+      "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+      "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017"
+    },
+    "detail": "Only after the initial builds completed, Implementer inserted ENABLE_DEBUG_DYLIB=NO in both configurations. All other source hashes match; removing exactly those two inserted settings in memory reproduces the pre-fix project SHA. This receipt applies to initial products, not corrected build products.",
+    "oldProjectInMemoryReconstructionMatches": true,
+    "postFixProjectSHA256": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "preFixProjectSHA256": "84cecbd397494c4aa4dad003af6e5e100a5664139cecbc617d69307c0e68f42e",
+    "projectChangedAfterBuildsCompleted": true
+  },
+  "sourceRevision": "05b039b39f4f7cf136b10ddcba654a07b0a448d8",
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "84cecbd397494c4aa4dad003af6e5e100a5664139cecbc617d69307c0e68f42e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "scripts/preflight.py": "e15203d8055bc9ac38916a034478dc8d2f212f2a017f510b0e47f5102ba47401",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "3aaf68591a0d1188d44efd0810760331592ec79211db8b59b457e8d8385704e2",
+    "scripts/ux_stages.py": "7432f5246fb815df4561808648ccc4c73702e39c02f79fffe53c5fd883ed7bc2"
+  },
+  "synthetic": true,
+  "toolLimitations": [
+    "Graphify source fallback from existing tool-preparation receipt; no graph build or refresh",
+    "PR Lens deferred because this topic has no new actual commit head diff"
+  ],
+  "unsignedBuilds": {
+    "Debug": {
+      "files": {
+        "DPKProbe": "b420b7a0f838f0062445e544449b9f5058a6b9c56f23997944f21ca87ea802e0",
+        "DPKProbe.debug.dylib": "4a37080e79509f86f2e8fa7a98202a5cfea50278f4fe14a6877a02ed12d2d1bb",
+        "__preview.dylib": "7a2832b47d38545e30ff0d22b10f2c0b4ac034efd3341b5f9b828cad996c9579"
+      },
+      "marker": "initial",
+      "profilePresent": false,
+      "signedDirectory": false
+    },
+    "Rebuilt": {
+      "files": {
+        "DPKProbe": "b420b7a0f838f0062445e544449b9f5058a6b9c56f23997944f21ca87ea802e0",
+        "DPKProbe.debug.dylib": "fdb5a81c4867402ca418b01a96ddc4b63c5be8d31ff6bbbfec7ebff56b39cf27",
+        "__preview.dylib": "7a2832b47d38545e30ff0d22b10f2c0b4ac034efd3341b5f9b828cad996c9579"
+      },
+      "marker": "rebuilt",
+      "profilePresent": false,
+      "signedDirectory": false
+    }
+  },
+  "uxStatus": "未執行",
+  "verdict": "needs-rework"
+}

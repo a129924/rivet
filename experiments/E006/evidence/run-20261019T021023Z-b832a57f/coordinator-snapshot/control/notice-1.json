@@ -1,0 +1,8 @@
+{
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "observationMode": "human-only",
+  "phase": 1,
+  "previousReceiptSHA256": "12b99db869777475f141de25f47489480e0b9691afcc742d7113b06e5c8ac2c0",
+  "recordedUTC": "2026-10-19T02:21:48.403479+00:00",
+  "state": "waitingForHumanObservationAndFreshReady"
+}

@@ -1,0 +1,21 @@
+{
+  "completed" : true,
+  "endedUTC" : "2026-10-19T02:24:57Z",
+  "executableSHA256" : "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+  "fields" : {
+    "accessToken" : true,
+    "accessTokenExpiresAt" : true,
+    "grantedScopes" : true,
+    "refreshToken" : true,
+    "refreshTokenExpiresAt" : true,
+    "tokenType" : true
+  },
+  "namespace" : "b832a57f-cced-4361-ba38-ac370d265e03",
+  "observationMode" : "human-only",
+  "operation" : "read-a",
+  "phase" : 2,
+  "promptCount" : null,
+  "proofSHA256" : "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119",
+  "startedUTC" : "2026-10-19T02:24:57Z",
+  "synthetic" : false
+}

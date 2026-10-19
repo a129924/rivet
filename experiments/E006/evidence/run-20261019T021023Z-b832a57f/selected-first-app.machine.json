@@ -1,0 +1,88 @@
+{
+  "after": {
+    "binarySHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+    "profileSHA256": "ec2e90ea8d0516004b606709eec823877d70250eb4787cf77040d2ea61e55f45"
+  },
+  "appLaunched": false,
+  "before": {
+    "binarySHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+    "profileSHA256": "ec2e90ea8d0516004b606709eec823877d70250eb4787cf77040d2ea61e55f45"
+  },
+  "binarySHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+  "bundleAndInitialMarkerMatch": true,
+  "certificateExpiryCoversOriginalT0Plus35Minutes": true,
+  "certificateSHA256": "5c267546d016f41f0901e535847a0ab44f81382f7aaadffbbb56a09941139440",
+  "commandResults": [
+    {
+      "kind": "codesign.verify",
+      "passed": true
+    },
+    {
+      "kind": "codesign.entitlements",
+      "passed": true
+    },
+    {
+      "kind": "codesign.details",
+      "passed": true
+    },
+    {
+      "kind": "codesign.DR",
+      "passed": true
+    },
+    {
+      "kind": "security.cms",
+      "passed": true
+    },
+    {
+      "kind": "codesign.extractSelectedCertificates",
+      "passed": true
+    },
+    {
+      "kind": "security.verify-cert",
+      "passed": true
+    },
+    {
+      "kind": "selectedLeafExpiry",
+      "passed": true
+    },
+    {
+      "kind": "currentMacProvisioningRead",
+      "passed": true
+    }
+  ],
+  "currentMacProfileDeviceMembership": true,
+  "currentMacProvisioningUDIDUsed": true,
+  "derivedDataOwnedMetadataMatch": true,
+  "designatedRequirementSHA256": "5b1c5a377d5fbe5b62bb66107c73f4a5d87ddaaf2952af63bb8e0a656b782013",
+  "embeddedProfileDecoded": true,
+  "endedUTC": "2026-10-19T02:17:00.016177+00:00",
+  "entitlementsSHA256": "b70d8ba62525476080da2bb39b087a0725305860cee61ee8fd0c7fc575995932",
+  "freePersonalTeamSource": "Human direct report",
+  "fullTwoAppLivePreflight": false,
+  "inspectionApproved": true,
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "nonRootAndConsoleUser": true,
+  "phase0Complete": false,
+  "preflightSourceSHA256": "e0aece5d5a46a36395ec6498a3aaf0bf4006a7dc11cfc88d847b717b5b26de9e",
+  "privateProjectAllowedSigningMetadataOnly": true,
+  "privateProjectChangedKeys": [
+    "DEVELOPMENT_TEAM"
+  ],
+  "privateSourcesResourcesUnchanged": true,
+  "profileCreatedByCurrentPreflightTime": true,
+  "profileExpiryCoversOriginalT0Plus35Minutes": true,
+  "profileSHA256": "ec2e90ea8d0516004b606709eec823877d70250eb4787cf77040d2ea61e55f45",
+  "realDPKDataOperations": 0,
+  "scope": "First Human-selected Debug App and host partial preconditions only",
+  "selectedAppUnchangedDuringInspection": true,
+  "selectedAppleDevelopmentChainVerified": true,
+  "selectedFirstCopyFrozen": true,
+  "selectedLeafAuthorizedByProfile": true,
+  "signedByAgent": false,
+  "singlePrivateGroupProfileAuthorized": true,
+  "sourceReceiptSHA256": "4d883f0550c85ae155b99c4bf1e4640f5a8be62177aa35f5a9cc62dc84ffffee",
+  "startedUTC": "2026-10-19T02:16:57.723444+00:00",
+  "systemProfilerRecordCount": 1,
+  "validSignature": true,
+  "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+}

@@ -1,0 +1,132 @@
+{
+  "appLaunched": false,
+  "assetsChanged": false,
+  "command": {
+    "exitCode": 0,
+    "invalidInputBreakdown": {
+      "schemaCases": 6,
+      "valueCases": 8
+    },
+    "newInvalidInputSubcases": 14,
+    "newSelectorMethods": 3,
+    "shape": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/E006/Tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "testMethods": 27
+  },
+  "controlledStopAudit": {
+    "automaticApprovalRejectionAndLaterDirectHumanAuthorizationPreserved": true,
+    "cleanupCompleteForCurrentSetupWindow": true,
+    "cleanupCompletedBeforeOriginalDeadline": false,
+    "cleanupLateSeconds": 29.045841,
+    "cleanupReceipt": "setup-stop-20261016T055352Z/cleanup-stage-2.machine.json",
+    "cleanupReceiptSHA256": "52d50e6d21612bf6df32c1966f3d6ad3af933868b63019c38fe1664bd874cb72",
+    "finalIndexSHA256": "6abec4907a3823230e2ae4de2335c115baea44858fed7a2acbfe2c72633ce40d",
+    "intentionalRetainedItems": [
+      "Human-owned Apple developer assets",
+      "Xcode recent-project shortcut/global recent settings unchanged"
+    ],
+    "thirtyMinuteConditionSatisfied": false,
+    "wholeSetupObserved": false,
+    "wholeSetupPromptCount": null
+  },
+  "handoff": "Independent Reviewer final re-review; new live setup/measurement requires new Human authorization and ready.",
+  "hostCommandPerformed": false,
+  "limitations": [
+    "This formal approval concerns pure selector preparation only; it does not approve a completed live experiment or DPK/UX outcome",
+    "Private Apps were cleaned before this verification; no two-App identity/DR/profile comparison or live selector recheck was performed",
+    "Cleanup succeeded about 29 seconds after unchanged deadline; timing condition remains unmet",
+    "Historical partial setup prompt observations do not establish zero prompts for whole setup; full prompt count remains unknown"
+  ],
+  "livePreflightPerformed": false,
+  "liveSelectedAppInspectionPerformedThisVerification": false,
+  "mainHypothesis": "無法判定",
+  "realDPKDataOperations": 0,
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T06:28:01.301641+00:00",
+  "requiredFixes": [],
+  "reusedUnchangedVerification": {
+    "compiledSourceFiles": [
+      "DPKProbe.xcodeproj/project.pbxproj",
+      "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme",
+      "Resources/DPKProbe.entitlements",
+      "Resources/Info.plist",
+      "Sources/DPKProbe/AppMain.swift",
+      "Sources/DPKProbe/LiveGate.swift",
+      "Sources/DPKProbe/LiveStore.swift",
+      "Sources/DPKProbe/ProbeCore.swift"
+    ],
+    "debugDylibPresent": false,
+    "differentUnsignedMainHashes": true,
+    "newBuildOrSwiftTestRun": false,
+    "receipt": "tester-preparation-rebuild-fix.json",
+    "sha256": "f9900eecbc04afa7198fbad79879617308489a07686976f07b25d06aec56d387"
+  },
+  "role": "Independent Tester",
+  "schemaEvidence": {
+    "historicalArrayLength": "not recorded; parser requiring one record is a conservative preparation guard, not newly observed host evidence",
+    "identifierFormatScope": "Observed current-Mac hex 8-16 only; no universal Mac format guarantee",
+    "observedKeys": [
+      "SPHardwareDataType",
+      "provisioning_UDID",
+      "platform_UUID"
+    ],
+    "receipt": "setup-stop-20261016T055352Z/current-mac-provisioning.schema.json",
+    "sha256": "3dc6e97d8c3c33118ec13d337ffcc2d7411627d2672a8c017a9f969c0cb1212b"
+  },
+  "scope": "Pure preparation device-selector correction after controlled stop and cleanup; no live round resumed",
+  "sourceRevision": "05b039b39f4f7cf136b10ddcba654a07b0a448d8",
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_device_selector.py": "597430f7d108dba7d3b13c9078805fcbeaa89ce7dbad7c7685b763554d30d137",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "ae22e11be721559b8115cbe9072a292dccd3a3ee45f11dcfa6f06d1fdd49a923",
+    "Tests/test_window.py": "72c387855272e464356543496e86a06d3706d3ea488a2cce42b025bb21d598b4",
+    "scripts/preflight.py": "e0aece5d5a46a36395ec6498a3aaf0bf4006a7dc11cfc88d847b717b5b26de9e",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "cb645341f5bdb3f0f6013b27e5bb1174fd6619164ae838f1960fb823a1e53eab",
+    "scripts/ux_stages.py": "902c0246545116ca12804f4a1c45d619adad3f684cf8f24672453693cff17f3b"
+  },
+  "sourceUnchangedDuringVerification": true,
+  "synthetic": true,
+  "timeWindowResetOrExtended": false,
+  "upstreamReceipts": {
+    "preparation-check-cli-fix.json": {
+      "sha256": "ebbbc36c1ebfd7e788aba7fda501d609e31bfe9c3bc0eb5c7b7a87d3d49d0678"
+    },
+    "preparation-check-device-selector-fix.json": {
+      "sha256": "b0e76d165059284c05c62b56bea64057adbc28bc0b98b87e5da7edbf6698d924"
+    },
+    "tester-host-device-diagnostic.json": {
+      "sha256": "73dc8c9a317ffd5fb51ea96370d51a595fce0d60c349e9fa1e793dbaec4adc85"
+    },
+    "tester-preparation-cli-fix.json": {
+      "sha256": "af0abb2abd1f072743c54eecb64aa3d3918751ee142dc400c6761f391e20401a"
+    }
+  },
+  "uxStatus": "未執行",
+  "verdict": "approved",
+  "verified": [
+    "Fixture with distinct Hardware UUID and Provisioning UDID selects only provisioning_UDID; exact selected-profile membership succeeds",
+    "Wrong-device profile is rejected with no Hardware UUID fallback or identifier normalization",
+    "Missing, ambiguous and invalid field/schema inputs reject; parser/profile fixtures execute zero host, asset or App commands",
+    "Original 24 protocol, profile, coordinator and window methods remain green"
+  ]
+}

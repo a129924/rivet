@@ -1,0 +1,19 @@
+{
+  "XcodeQuit": false,
+  "activity": "Build Succeeded",
+  "automaticApprovalAcceptedAsCleanupAuthorization": false,
+  "canonicalPrivateWorkspaceMatched": true,
+  "experimentWorkspaceAbsentAfterClose": true,
+  "globalRecentPreferencesChanged": false,
+  "historicalPromptInference": false,
+  "humanClosureConfirmation": false,
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "onlyExperimentWorkspaceClosed": true,
+  "rawAccessibilityPublished": false,
+  "recentProjectShortcutStillPresent": true,
+  "recordedUTC": "2026-10-16T06:22:52.388419+00:00",
+  "rootReportedObservedUTC": "2026-10-16T06:19:26+00:00",
+  "source": "Root native CUA accessibility report and scoped close action; not independently reobserved by Tester",
+  "stopButtonEnabled": false,
+  "welcomeWindowRemained": true
+}
