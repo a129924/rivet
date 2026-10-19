@@ -1,0 +1,31 @@
+{
+  "currentCleanupReceipt": "cleanup-stage-2.machine.json",
+  "files": {
+    "cleanup-ownership-recheck.machine.json": "ded0baf6682c99f67a37a295d3c9b49769da8968970d41044e66e925c2a62b86",
+    "cleanup-stage-1.machine.json": "acb2988f27a8a31538c43871122b0b3236f3c77a2cc646572384793327961886",
+    "cleanup-stage-2-blocked.machine.json": "cce8345180e30b933ecb1635487d9f240af4ac51339e6b64ec5dfa828ea865e1",
+    "cleanup-stage-2.machine.json": "52d50e6d21612bf6df32c1966f3d6ad3af933868b63019c38fe1664bd874cb72",
+    "controlled-stop.machine.json": "4d72407d9e9136af515caca62cd5e3fdcc5e4a2e529c8b4c936239e0d4e65519",
+    "current-mac-provisioning.schema.json": "3dc6e97d8c3c33118ec13d337ffcc2d7411627d2672a8c017a9f969c0cb1212b",
+    "derived-data-ownership.machine.safe.json": "559b6f49fabffb558b6dbf266efd88626c7f9c7fe008cf45e0da093d0b1ee3e8",
+    "exact-cleanup-authorization.human.json": "f781bad4253fa3051773bd4f426b8a50f8900aad1a21649856d7f05f051e6040",
+    "private-project-ui-closure.machine.json": "e20f6c8574217e62ed3526097287d4ed6232e8ee725196ae1ab1eaa8d8149332",
+    "second-build-partial.human.json": "0d50b51be06f7bd979b4e9ab5a4d47a511a3a7e2d5d1469bc76d74d1c4f058db",
+    "selected-first-diagnostic-worktree-check.json": "97edcc91dac433cf3233bf6fe39665859be3e0c6eb307e7ec09681e5e3c30126",
+    "selected-first-diagnostic.machine.safe.json": "4387ef80d21061c86a4c69c5b609a20d382d6cc6bbe3819aacddef23c69210e2",
+    "selected-first-host-device-reference.json": "6646806c34c61fdb630edbe2a7d8489b2a0cc09bc0a778254e4aa5e45981af05",
+    "selected-first-host-partial.machine.safe.json": "42d59f3bd84220c84ffb31784d17b4e334cf51c466316c9349302d201664438f",
+    "selected-first-inspection-after-cli-fix.machine.json": "a8d13afcb26699f7e60339015a275e356f7934f34784e878e892ca98f33d0782",
+    "selected-first-inspection.machine.json": "4d09a5f0df10b43d5e08044a3ffab6bf12d550d5436f1593c5cdd190111bce41",
+    "selected-first-setup.human.json": "9512b458edbff3dbe9e3b686298760b30f8c163c156c3925c04f1860cfd1832a",
+    "setup-window-bookkeeping.json": "cab2a84ff4ddc330db05719f2dc4f63c49aa88d7501a1138a434d6ae70ee68bb",
+    "stage-1.index.json": "68c49efe825fb69ee3d79a1551bf8a0b33786feeea8b050fd5d93d78e6b9f14e",
+    "whole-setup-partial-observation.human.json": "25181145f5d06f6bdb7b29b5e998a0da37047852d6f5249fc2f8f27d8d40d402",
+    "window.json": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d"
+  },
+  "historicalReceiptsPreserved": true,
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "privateIdentifiersRawProfilesSubjectsPathsExcluded": true,
+  "recordedUTC": "2026-10-16T06:24:21.482892+00:00",
+  "wholeSetupObservationReceipt": "whole-setup-partial-observation.human.json"
+}

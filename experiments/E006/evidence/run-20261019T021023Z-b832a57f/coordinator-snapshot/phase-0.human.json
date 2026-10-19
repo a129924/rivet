@@ -1,0 +1,15 @@
+{
+  "actions": [],
+  "humanStatement": "全程觀察，整段0次提示",
+  "machineReceiptSHA256": "12b99db869777475f141de25f47489480e0b9691afcc742d7113b06e5c8ac2c0",
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "observationMode": "human-only",
+  "phase": 0,
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "recordedUTC": "2026-10-19T02:24:03.944817+00:00",
+  "reportedStage": "Phase0（10:10:41–10:21:48）",
+  "synthetic": false,
+  "wholeStageObserved": true
+}

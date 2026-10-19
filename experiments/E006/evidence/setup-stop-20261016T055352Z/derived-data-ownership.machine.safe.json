@@ -1,0 +1,15 @@
+{
+  "deletionAttempted": false,
+  "humanBuildStopAndProjectCloseConfirmed": false,
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "proof": {
+    "derivedDataFolderExists": true,
+    "derivedDataFolderLocatedFromSelectedDebugApp": true,
+    "matchingMetadataKeys": [
+      "WorkspacePath"
+    ],
+    "metadataSHA256": "30ce47df50fbe53155ea618c7688eb9ace4000bb07011797befff57d2a82239c",
+    "ownedMetadataMatch": true
+  },
+  "source": "Only selected first App source path and its own DerivedData info metadata"
+}

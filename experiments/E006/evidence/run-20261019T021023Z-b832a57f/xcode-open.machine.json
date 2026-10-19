@@ -1,0 +1,14 @@
+{
+  "DPKProbeAppLaunched": false,
+  "action": "open private DPKProbe.xcodeproj in Xcode for Human setup only",
+  "actualUIObservedByTester": false,
+  "commandExitCode": 0,
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "nextHumanAction": "Select free Personal Team and Build Debug only; do not Run; freeze first product before Rebuilt.",
+  "personalTeamSelectedByAgent": false,
+  "privateProjectNamespacePreparedByConstruction": true,
+  "realDPKDataOperations": 0,
+  "recordedUTC": "2026-10-19T02:11:27.164566+00:00",
+  "signedByAgent": false,
+  "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+}

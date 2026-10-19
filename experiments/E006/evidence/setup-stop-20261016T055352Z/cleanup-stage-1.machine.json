@@ -1,0 +1,20 @@
+{
+  "SecItemDeleteCalled": false,
+  "allCleanupComplete": false,
+  "awaitingHumanBuildStopAndProjectClose": true,
+  "derivedDataOwnershipProven": true,
+  "derivedDataRetained": true,
+  "developerAssetsDeletedOrRevoked": false,
+  "endedUTC": "2026-10-16T06:18:55.464184+00:00",
+  "evidenceIndexSHA256": "68c49efe825fb69ee3d79a1551bf8a0b33786feeea8b050fd5d93d78e6b9f14e",
+  "liveAppOrDPKItemsCreated": false,
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "privateProjectAndSelectedAppsRetained": true,
+  "privateSetupRootRetained": true,
+  "runRootRemovalError": null,
+  "runRootRemoved": true,
+  "scope": "Archive safe evidence and remove only owned run-root window bookkeeping; no active-use App/project deletion",
+  "stage": 1,
+  "startedUTC": "2026-10-16T06:18:55.456357+00:00",
+  "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d"
+}

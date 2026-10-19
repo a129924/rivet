@@ -1,0 +1,10 @@
+{
+  "cutoffUTC": "2026-10-19T02:35:41.483264+00:00",
+  "deadlineUTC": "2026-10-19T02:40:41.483264+00:00",
+  "humanReadyStatement": "請開始新一輪 E006 真人驗證，沿用已修正程式與免費 Personal Team 路徑，原範圍、30 分鐘上限及逐段停點不變。我已準備好全程觀察設定；每段等我回報與 ready 再繼續，不開始正式 adapter。",
+  "kind": "setup-window",
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "observationMode": "human-only",
+  "startUTC": "2026-10-19T02:10:41.483264+00:00",
+  "synthetic": false
+}

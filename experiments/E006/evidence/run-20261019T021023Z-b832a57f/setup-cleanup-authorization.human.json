@@ -1,0 +1,13 @@
+{
+  "appleDeveloperAssetsRetained": true,
+  "exactCurrentRoundCleanupAuthorized": true,
+  "firstMachineReceiptSHA256": "6e4bb072c3f8be6ba62fc534d713f902dc6008fcf602d49de82abacd3972f2e7",
+  "humanConfirmedBuildStopped": true,
+  "humanConfirmedPrivateProjectClosed": true,
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "notDPKPhase1Ready": true,
+  "questionScope": "本輪 Build 已停止、私有 DPKProbe 視窗已關閉；結束時允許精確刪本輪副本及已證明 owned 專屬 DerivedData，不動其他專案或 Apple 開發資產。",
+  "recordedUTC": "2026-10-19T02:21:13.684922+00:00",
+  "sourceReply": "已停止／關閉，允許本輪精確清理",
+  "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+}

@@ -1,0 +1,15 @@
+{
+  "currentDerivedDataMetadataSHA256": "30ce47df50fbe53155ea618c7688eb9ace4000bb07011797befff57d2a82239c",
+  "derivedDataRootLocatedOnlyFromSelectedApp": true,
+  "humanAuthorizationReceiptSHA256": "f781bad4253fa3051773bd4f426b8a50f8900aad1a21649856d7f05f051e6040",
+  "matchingMetadataKeys": [
+    "WorkspacePath"
+  ],
+  "metadataMatchesCanonicalPrivateProject": true,
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "originalDerivedDataMetadataSHA256": "30ce47df50fbe53155ea618c7688eb9ace4000bb07011797befff57d2a82239c",
+  "otherDerivedDataScannedOrSelected": false,
+  "privateRootNameOwnerPermissionsVerified": true,
+  "recordedUTC": "2026-10-16T06:24:21.064739+00:00",
+  "uiClosureReceiptSHA256": "e20f6c8574217e62ed3526097287d4ed6232e8ee725196ae1ab1eaa8d8149332"
+}

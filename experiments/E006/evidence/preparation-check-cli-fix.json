@@ -1,0 +1,62 @@
+{
+  "appLaunched": false,
+  "assetsChanged": false,
+  "boundedFixes": [
+    "codesign -d --extract-certificates=<prefix> <selected-app>",
+    "security verify-cert -p codeSign -c <selected-leaf-and-chain>"
+  ],
+  "green": {
+    "exitCode": 0,
+    "pythonTests": 24,
+    "testChange": "Existing mock extractor supports the correct combined long-option argument; no new string-mirroring test."
+  },
+  "independentVerification": false,
+  "liveSelectedAppInspectPerformed": false,
+  "localPrimarySyntaxEvidence": {
+    "checks": [
+      "MANPAGER=cat man codesign (read only)",
+      "security help verify-cert (help only, no cert/identity/profile inspection)"
+    ],
+    "codesignMan": "macOS man codesign: --name value without equal sign will not work as expected for optional values; --extract-certificates prefix is optional.",
+    "verifyCertHelp": "security help verify-cert: -p policy includes codeSign (codesigning is not listed)."
+  },
+  "next": "Independent Tester read-only inspect_app on the Human-selected first App; then Reviewer. S06 Human pause remains; no OAuth write, App launch, signing, account/settings mutation or commit.",
+  "realDPKDataOperations": 0,
+  "recordedUTC": "2026-10-16T06:08:40.031766+00:00",
+  "role": "Implementer",
+  "settingsChanged": false,
+  "signedOrRebuilt": false,
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "ae22e11be721559b8115cbe9072a292dccd3a3ee45f11dcfa6f06d1fdd49a923",
+    "Tests/test_window.py": "72c387855272e464356543496e86a06d3706d3ea488a2cce42b025bb21d598b4",
+    "scripts/preflight.py": "a2650482a9e9147dae4a1ac3f9635278e730ca6641b36605c67056ad9490e7cc",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "cb645341f5bdb3f0f6013b27e5bb1174fd6619164ae838f1960fb823a1e53eab",
+    "scripts/ux_stages.py": "902c0246545116ca12804f4a1c45d619adad3f684cf8f24672453693cff17f3b"
+  },
+  "synthetic": true,
+  "upstreamReceipt": {
+    "file": "tester-preparation-window-fix.json",
+    "sha256": "521fb6765939bc4668453a024fc5ee803373b007dc60a3d6c44e91a5f48f3a8f"
+  },
+  "upstreamVerdict": "Reviewer needs-rework: two local CLI argument forms",
+  "window": {
+    "cutoff": "2026-10-16T14:18:52+08:00",
+    "deadline": "2026-10-16T14:23:52+08:00",
+    "resetOrExtended": false,
+    "source": "Root session authoritative active-window report",
+    "t0": "2026-10-16T13:53:52+08:00",
+    "timezone": "Asia/Taipei"
+  }
+}

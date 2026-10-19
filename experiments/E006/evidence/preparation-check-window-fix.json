@@ -1,0 +1,123 @@
+{
+  "SecurityOperations": 0,
+  "appLaunched": false,
+  "assetsInspected": false,
+  "certificateValidity": "Existing selected-chain security verify-cert uses current system validation time (no t0/date override), including NotBefore; certificate expiry margin remains original t0+35min. No real certificate inspected.",
+  "changedSourceFiles": [
+    "Tests/test_review_fixes.py",
+    "Tests/test_window.py",
+    "scripts/preflight.py",
+    "scripts/run_probe.py",
+    "scripts/ux_stages.py"
+  ],
+  "command": {
+    "exitCode": 0,
+    "shape": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/E006/Tests",
+      "-p",
+      "test_*.py"
+    ],
+    "tests": 24
+  },
+  "green": {
+    "cases": [
+      "Elapsed Human setup uses original t0 in proof and manifest, cutoff=t0+25/deadline=t0+30",
+      "Bookkeeping-only begin-window records exclusive namespace-bound t0; cannot overwrite",
+      "Missing/mismatched/future/cutoff/expired setup window rejects before inspect or launch",
+      "Selection cannot reset t0; window bytes/SHA tamper rejected",
+      "Emergency cleanup after original deadline retains exact original deadline and does not need new ready",
+      "Profile created during already-counted Human setup validates CreationDate at preflight now, expiry margin still original t0+35min"
+    ],
+    "pythonExitCode": 0,
+    "pythonTests": 24
+  },
+  "independentVerification": false,
+  "live": false,
+  "next": "Independent focused Tester then Reviewer; real begin-window, Human assets and DPK remain unexecuted",
+  "preFixSourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "3f49cb878f218762e6e9be439f597d7ebbd63650466726c836bae85fb9aa147d",
+    "scripts/preflight.py": "31a1db90dc0fd79c0015a5d6368602de80c9bd2db4b13988d87c791a2f16f638",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "929c0be50c112db758d48828b5a9c66a333cfc55a71f4a70e339e16b8b61b7be",
+    "scripts/ux_stages.py": "7432f5246fb815df4561808648ccc4c73702e39c02f79fffe53c5fd883ed7bc2"
+  },
+  "realDPKStatus": "未執行",
+  "realHumanSetupStarted": false,
+  "realSetupWindowArmed": false,
+  "recordedUTC": "2026-10-16T03:33:29.396849+00:00",
+  "red": {
+    "details": [
+      "No bookkeeping-only begin-window mode",
+      "Coordinator rejected preexisting setup-window record, or proceeded to inspect without any window",
+      "No original Human setup t0 could bind manifest/proof"
+    ],
+    "errors": 2,
+    "failures": 1,
+    "focusedWindowTests": 4
+  },
+  "reusedUnchangedVerification": {
+    "reason": "Swift/App/project/resource hashes unchanged; only Python phase/preflight/window code and mocks changed. No unrelated unsigned rebuild or Swift rerun.",
+    "receipt": "tester-preparation-rebuild-fix.json",
+    "sourceFiles": [
+      "DPKProbe.xcodeproj/project.pbxproj",
+      "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme",
+      "Resources/DPKProbe.entitlements",
+      "Resources/Info.plist",
+      "Sources/DPKProbe/AppMain.swift",
+      "Sources/DPKProbe/LiveGate.swift",
+      "Sources/DPKProbe/LiveStore.swift",
+      "Sources/DPKProbe/ProbeCore.swift"
+    ]
+  },
+  "role": "Implementer",
+  "signedBuild": false,
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "67b850475a4082441de4269aa79e0bd91817f684036e73a8b1f6b3d0ad0a3681",
+    "Tests/test_window.py": "72c387855272e464356543496e86a06d3706d3ea488a2cce42b025bb21d598b4",
+    "scripts/preflight.py": "9b29fc469e53670e6b34732128e331fc873acda4e89ecb1874646f1b7dd44be2",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "cb645341f5bdb3f0f6013b27e5bb1174fd6619164ae838f1960fb823a1e53eab",
+    "scripts/ux_stages.py": "902c0246545116ca12804f4a1c45d619adad3f684cf8f24672453693cff17f3b"
+  },
+  "synthetic": true,
+  "upstreamReceipts": {
+    "preparation-check-review-fix.json": {
+      "sha256": "612cedfe25e504fbb83cba8e9180777ae90bc2f92cc147b24048b004d6a04b75"
+    },
+    "tester-preparation-rebuild-fix.json": {
+      "sha256": "f9900eecbc04afa7198fbad79879617308489a07686976f07b25d06aec56d387"
+    },
+    "tester-preparation-review-fix.json": {
+      "sha256": "1581be257f3feec5ba13dea98500c0ba9f83f18abc76053d11c1d95e565a1dad"
+    }
+  },
+  "upstreamVerdict": "Reviewer needs-rework: coordinator reset setup t0 after Human assets work",
+  "uxStatus": "未執行"
+}

@@ -1,0 +1,15 @@
+{
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "startedUTC": "2026-10-16T06:03:34.466298+00:00",
+  "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d",
+  "scope": "Human-selected first Debug App inspection only; not full live preflight",
+  "appLaunched": false,
+  "SecurityOperations": 0,
+  "privateProjectAllowedMetadataOnly": true,
+  "privateProjectChangedKeys": [
+    "DEVELOPMENT_TEAM"
+  ],
+  "inspectionApproved": false,
+  "error": "selectedAssetValidationFailed",
+  "endedUTC": "2026-10-16T06:03:34.599188+00:00"
+}

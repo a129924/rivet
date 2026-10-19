@@ -1,0 +1,16 @@
+{
+  "devWorkingTreeClean": true,
+  "driverUxUnknownAtExitRemainsHistorical": true,
+  "featureStatusOnlyThreeTopicUntrackedDirectories": [
+    "analysis/github-oauth-dpk-local-feasibility/",
+    "experiments/E006/",
+    "plan/github-oauth-dpk-local-feasibility/"
+  ],
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "original20261016FinalIndexSHA256": "6abec4907a3823230e2ae4de2335c115baea44858fed7a2acbfe2c72633ce40d",
+  "originalDriverOutcomeUnchanged": true,
+  "originalTesterPreparationReceiptSHA256": "4d883f0550c85ae155b99c4bf1e4640f5a8be62177aa35f5a9cc62dc84ffffee",
+  "postExitHuman4AndFinalTesterValidationStoredSeparately": true,
+  "recordedUTC": "2026-10-19T02:29:40.715664+00:00",
+  "trackedProductionAndE005Changes": false
+}

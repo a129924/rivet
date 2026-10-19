@@ -1,0 +1,20 @@
+{
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d",
+  "UTC": {
+    "startUTC": "2026-10-16T05:53:52.294158+00:00",
+    "cutoffUTC": "2026-10-16T06:18:52.294158+00:00",
+    "deadlineUTC": "2026-10-16T06:23:52.294158+00:00"
+  },
+  "AsiaTaipei": {
+    "startUTC": "2026-10-16T13:53:52.294158+08:00",
+    "cutoffUTC": "2026-10-16T14:18:52.294158+08:00",
+    "deadlineUTC": "2026-10-16T14:23:52.294158+08:00"
+  },
+  "humanAuthorizationAndReady": "允許，已準備好進行設定",
+  "beginWindowExitCode": 0,
+  "assetsInspected": false,
+  "appLaunched": false,
+  "SecurityOperations": 0,
+  "realSetupWindowArmed": true
+}

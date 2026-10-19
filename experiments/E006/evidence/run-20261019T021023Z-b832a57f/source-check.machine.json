@@ -1,0 +1,57 @@
+{
+  "accountOrAssetInventory": false,
+  "all18ReviewedSourceFilesMatched": true,
+  "appLaunched": false,
+  "humanAuthorizationSource": "New direct Human request on 2026-10-19; original scope and per-stage ready retained",
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "newRoundDate": "2026-10-19",
+  "pastEvidenceModified": false,
+  "privateCopyPrepared": true,
+  "privateSourceResourcesMatched": true,
+  "readinessScope": "Stage 0 settings only; not DPK Phase 1",
+  "realDPKDataOperations": 0,
+  "recordedUTC": "2026-10-19T02:10:23.487030+00:00",
+  "reusedPureTests": {
+    "invalidSelectorSubcases": 14,
+    "methods": 27,
+    "reason": "Sources and toolchain match independently reviewed preparation; no source change.",
+    "rerun": false
+  },
+  "signingByAgent": false,
+  "sourceReceiptSHA256": "4d883f0550c85ae155b99c4bf1e4640f5a8be62177aa35f5a9cc62dc84ffffee",
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_device_selector.py": "597430f7d108dba7d3b13c9078805fcbeaa89ce7dbad7c7685b763554d30d137",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "ae22e11be721559b8115cbe9072a292dccd3a3ee45f11dcfa6f06d1fdd49a923",
+    "Tests/test_window.py": "72c387855272e464356543496e86a06d3706d3ea488a2cce42b025bb21d598b4",
+    "scripts/preflight.py": "e0aece5d5a46a36395ec6498a3aaf0bf4006a7dc11cfc88d847b717b5b26de9e",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "cb645341f5bdb3f0f6013b27e5bb1174fd6619164ae838f1960fb823a1e53eab",
+    "scripts/ux_stages.py": "902c0246545116ca12804f4a1c45d619adad3f684cf8f24672453693cff17f3b"
+  },
+  "templateRemainsWithoutTeam": true,
+  "toolchain": {
+    "Swift": "6.3.3",
+    "Xcode": "26.6",
+    "XcodeBuild": "17F113",
+    "architecture": "arm64",
+    "macOS": "26.5.2",
+    "macOSBuild": "25F84"
+  },
+  "toolchainReadCommands": [
+    "xcodebuild -version",
+    "swift --version",
+    "sw_vers"
+  ],
+  "windowArmed": false
+}

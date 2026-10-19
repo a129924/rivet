@@ -1,0 +1,52 @@
+{
+  "DPKAppLaunched": false,
+  "DPKItemAbsenceVerifiedBySecurity": false,
+  "SecItemDeleteCalled": false,
+  "cleanupCompleteForThisSetupWindow": true,
+  "completedBeforeOriginalDeadline": false,
+  "developerAssetsModifiedDuringCleanup": false,
+  "endedUTC": "2026-10-16T06:24:21.339999+00:00",
+  "failures": [],
+  "humanAuthorizationReceiptSHA256": "f781bad4253fa3051773bd4f426b8a50f8900aad1a21649856d7f05f051e6040",
+  "humanConfirmedBuildStopAndProjectClose": true,
+  "intentionalRetainedItems": [
+    "Human-owned Apple Development certificate/profile/App ID/Mac registration assets; never revoked or deleted",
+    "Xcode recent-project shortcut may still point to removed private project; global recent preferences unchanged"
+  ],
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "originalDeadlineUTC": "2026-10-16T06:23:52.294158+00:00",
+  "originalWindowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d",
+  "ownedDerivedDataRemoved": true,
+  "ownedPrivateProjectSelectedAppsRawDiagnosticsRemoved": true,
+  "ownedRunRootRemoved": true,
+  "ownedSetupLocationPointerRemoved": true,
+  "ownershipRecheckReceiptSHA256": "ded0baf6682c99f67a37a295d3c9b49769da8968970d41044e66e925c2a62b86",
+  "previousAutomaticApprovalRejectionPreserved": true,
+  "processSignalOrForceQuitUsed": false,
+  "realDPKDataOperations": 0,
+  "realDPKStatus": "未執行",
+  "reasonNoDPKDelete": "No App/coordinator or DPK operation was started; no experimental DPK item was created.",
+  "remainingOwnedSetupFiles": [],
+  "rootCUAVerifiedProjectClose": true,
+  "scope": "Current controlled-stop Human setup window owned files only",
+  "stage": 2,
+  "startedUTC": "2026-10-16T06:24:21.060485+00:00",
+  "timeWindowResetOrExtended": false,
+  "uxStatus": "未執行",
+  "wholeSetupObserved": false,
+  "wholeSetupPromptCount": null,
+  "worktreeChecks": {
+    "dev": {
+      "clean": true,
+      "defaultExtractionArtifactsPresent": false,
+      "gitStatusExitCode": 0,
+      "outsideTopicChanges": []
+    },
+    "feature": {
+      "clean": false,
+      "defaultExtractionArtifactsPresent": false,
+      "gitStatusExitCode": 0,
+      "outsideTopicChanges": []
+    }
+  }
+}

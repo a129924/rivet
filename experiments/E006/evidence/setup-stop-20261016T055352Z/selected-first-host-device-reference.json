@@ -1,0 +1,19 @@
+{
+  "recordedUTC": "2026-10-16T06:14:18.262610+00:00",
+  "hostSafeReceiptSHA256": "42d59f3bd84220c84ffb31784d17b4e334cf51c466316c9349302d201664438f",
+  "sources": [
+    {
+      "url": "https://developer.apple.com/help/account/devices/register-a-single-device",
+      "summary": "Apple silicon Mac development registration requires the provisioning UDID."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/xcode/distributing-your-app-to-registered-devices",
+      "summary": "Mac device ID is shown as Hardware UUID on macOS 10.15 and earlier, Provisioning UDID on macOS 11 and later."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/xcode/locating-device-identifiers",
+      "summary": "System Information Hardware supplies the Mac provisioning UDID used for registration."
+    }
+  ],
+  "inference": "Current host exposes a distinct Provisioning UDID already present in selected profile. The current IOPlatformUUID selector rejects a locally applicable profile; device membership requirement must remain, with correct identifier semantics."
+}

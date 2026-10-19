@@ -1,0 +1,23 @@
+{
+  "actions": null,
+  "buildStoppedAndPrivateProjectClosed": false,
+  "closureConfirmationPending": true,
+  "interpretation": "Whole setup prompt count is unknown. Earlier first/second partial setup reports remain separate and cannot be aggregated into zero for whole setup.",
+  "machineReceiptSHA256": "4d72407d9e9136af515caca62cd5e3fdcc5e4a2e529c8b4c936239e0d4e65519",
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "noPhase0CompletionClaim": true,
+  "notMeasurementReady": true,
+  "observationMode": "human-only",
+  "observedSubintervals": null,
+  "promptCount": null,
+  "purposes": null,
+  "recordedUTC": "2026-10-16T06:19:32.261834+00:00",
+  "requestedObservationEndUTC": "2026-10-16T06:14:38+00:00",
+  "requestedObservationStartUTC": "2026-10-16T05:53:52.294158+00:00",
+  "sourceReplies": [
+    "只觀察部分時段",
+    "尚未停止或關閉"
+  ],
+  "stage": "setup before controlled stop",
+  "wholeStageObserved": false
+}

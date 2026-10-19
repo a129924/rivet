@@ -1,0 +1,15 @@
+{
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "recordedUTC": "2026-10-16T06:07:25.781812+00:00",
+  "sourceReply": "我選1 `全程觀察，0 次設定／簽章授權`",
+  "mapping": "1 = Human selected free Personal Team and initial Debug Build succeeded",
+  "observationScope": "Human first account/signing/setup/build segment only; excludes agent inspections and later setup",
+  "wholeFirstSetupSegmentObserved": true,
+  "wholePhase0Observed": false,
+  "promptCount": 0,
+  "actions": [],
+  "purposes": [],
+  "machineReceiptSHA256": "4d09a5f0df10b43d5e08044a3ffab6bf12d550d5436f1593c5cdd190111bce41",
+  "diagnosticSafeReceiptSHA256": "4387ef80d21061c86a4c69c5b609a20d382d6cc6bbe3819aacddef23c69210e2",
+  "notMeasurementReady": true
+}

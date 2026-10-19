@@ -1,0 +1,131 @@
+{
+  "SecurityOperations": 0,
+  "appLaunched": false,
+  "assetsInspected": false,
+  "boundaries": [
+    "No signing, provisioning, Personal Team login or account/certificate/profile inventory",
+    "No App launch, live preflight, real SecItem or prompt observation",
+    "Unsigned main hash difference is preparation evidence, not signed certificate/profile/DR or DPK evidence",
+    "No experiment-specific DPK item was created; no claim of real DPK cleanup",
+    "Historical Implementer/Tester receipts preserved without overwrite"
+  ],
+  "commands": [
+    {
+      "actualBuilds": [
+        "Debug",
+        "Rebuilt"
+      ],
+      "exitCode": 0,
+      "requiredFlags": [
+        "CODE_SIGNING_ALLOWED=NO",
+        "CODE_SIGNING_REQUIRED=NO"
+      ],
+      "shape": [
+        "python3",
+        "experiments/E006/scripts/prepare.py",
+        "--out",
+        "<new-external-scratch>/builds",
+        "--unsigned-build"
+      ]
+    },
+    {
+      "exitCodes": [
+        0,
+        0
+      ],
+      "purpose": "Read main executable imports without executing App",
+      "shape": [
+        "/usr/bin/nm",
+        "-u",
+        "<actual-unsigned-main-executable>"
+      ]
+    }
+  ],
+  "differentMainExecutableHashes": true,
+  "handoff": "Independent Reviewer; Human developer-assets and measurement boundaries remain closed.",
+  "live": false,
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T03:14:20.190029+00:00",
+  "requiredFixes": [],
+  "resolvedBlocker": "Both target configurations set ENABLE_DEBUG_DYLIB=NO; both rebuilt products have different main hashes, no debug dylib, and SecItem imports in the main executable. Acceptance remains the main hash, not a dylib fallback.",
+  "reusedUnchangedPureVerification": {
+    "pythonExitCode": 0,
+    "pythonTests": 11,
+    "reason": "Only project build setting changed; all Swift sources, scripts, fixtures, entitlements and scheme SHA match initial tested versions. Focused unsigned rebuild covers the changed configuration; unrelated pure tests were not repeated.",
+    "receipt": "tester-preparation-check.json",
+    "swiftCompileExitCode": 0,
+    "swiftTestExitCode": 0
+  },
+  "role": "Independent Tester",
+  "scope": "E006 unsigned and pure preparation only; independent rebuild-fix verification",
+  "signedBuild": false,
+  "sourceRevision": "05b039b39f4f7cf136b10ddcba654a07b0a448d8",
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "scripts/preflight.py": "e15203d8055bc9ac38916a034478dc8d2f212f2a017f510b0e47f5102ba47401",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "3aaf68591a0d1188d44efd0810760331592ec79211db8b59b457e8d8385704e2",
+    "scripts/ux_stages.py": "7432f5246fb815df4561808648ccc4c73702e39c02f79fffe53c5fd883ed7bc2"
+  },
+  "sourceUnchangedDuringVerification": true,
+  "synthetic": true,
+  "unsignedBuilds": {
+    "Debug": {
+      "appLaunched": false,
+      "codeSignatureDirectoryPresent": false,
+      "codeSigningAllowed": false,
+      "codeSigningRequired": false,
+      "debugDylibPresent": false,
+      "executableSHA256": "813894ca64d739d79bb472279b52bc9269c40e4422429858ad3d8f08e1748c5a",
+      "exitCode": 0,
+      "mainSecuritySymbols": {
+        "SecItemAdd": true,
+        "SecItemCopyMatching": true,
+        "SecItemDelete": true
+      },
+      "marker": "initial",
+      "nmExitCode": 0,
+      "profilePresent": false
+    },
+    "Rebuilt": {
+      "appLaunched": false,
+      "codeSignatureDirectoryPresent": false,
+      "codeSigningAllowed": false,
+      "codeSigningRequired": false,
+      "debugDylibPresent": false,
+      "executableSHA256": "af7cf5a2c7d2528a8c340a281e58819e5ca0d548c7a8a1c605a3bad822f33b21",
+      "exitCode": 0,
+      "mainSecuritySymbols": {
+        "SecItemAdd": true,
+        "SecItemCopyMatching": true,
+        "SecItemDelete": true
+      },
+      "marker": "rebuilt",
+      "nmExitCode": 0,
+      "profilePresent": false
+    }
+  },
+  "upstreamReceipts": {
+    "implementerFix": {
+      "file": "preparation-check-rebuild-fix.json",
+      "sha256": "9beb29f13102297330996882bb937415bfbfa392b476b86193d6b78a1ace7ece"
+    },
+    "initialTester": {
+      "file": "tester-preparation-check.json",
+      "sha256": "d1bb2e2b281d012ca5118729ba00b517e32b8d221853d4e08dafbdbede7245d4",
+      "verdict": "needs-rework"
+    }
+  },
+  "uxStatus": "未執行",
+  "verdict": "approved"
+}

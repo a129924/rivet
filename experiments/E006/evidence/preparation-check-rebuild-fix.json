@@ -1,0 +1,74 @@
+{
+  "SecurityOperations": 0,
+  "appLaunched": false,
+  "assetsInspected": false,
+  "boundedFix": "Both target configurations explicitly set ENABLE_DEBUG_DYLIB=NO; no fallback to dylib hash; marker remains the only code difference.",
+  "green": {
+    "differentMainExecutableHashes": true,
+    "pythonExitCode": 0,
+    "pythonTests": 11,
+    "swiftExitCode": 0,
+    "swiftPureTests": "six-field, read-only, delete-absent, missing, invalid, denied, redaction, GUI/path guards passed",
+    "unsignedBuilds": {
+      "Debug": {
+        "appLaunched": false,
+        "codeSignatureDirectoryPresent": false,
+        "codeSigningAllowed": false,
+        "codeSigningRequired": false,
+        "debugDylibPresent": false,
+        "embeddedProfilePresent": false,
+        "enableDebugDylib": false,
+        "executableSHA256": "8fa67400e3ec13a9bf5a924eca0cf2489f8e962c4ee0af73885c84cf5e982652",
+        "exitCode": 0,
+        "marker": "initial"
+      },
+      "Rebuilt": {
+        "appLaunched": false,
+        "codeSignatureDirectoryPresent": false,
+        "codeSigningAllowed": false,
+        "codeSigningRequired": false,
+        "debugDylibPresent": false,
+        "embeddedProfilePresent": false,
+        "enableDebugDylib": false,
+        "executableSHA256": "04a15a6563723a0044a2fa5f77e36bd3eb77a07b9d3d189633e87d06200563c0",
+        "exitCode": 0,
+        "marker": "rebuilt"
+      }
+    }
+  },
+  "historicalReceipt": {
+    "file": "preparation-check.json",
+    "sha256": "dc2493f04926b88fb8cb4c6fa16b33c2f80c60948f8517b04b845fc55632b95f",
+    "status": "historical only: same main executable SHA and debug dylib split; not latest pass evidence"
+  },
+  "independentVerification": false,
+  "live": false,
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T03:12:35.438309+00:00",
+  "role": "Implementer",
+  "signedBuild": false,
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "scripts/preflight.py": "e15203d8055bc9ac38916a034478dc8d2f212f2a017f510b0e47f5102ba47401",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "3aaf68591a0d1188d44efd0810760331592ec79211db8b59b457e8d8385704e2",
+    "scripts/ux_stages.py": "7432f5246fb815df4561808648ccc4c73702e39c02f79fffe53c5fd883ed7bc2"
+  },
+  "synthetic": true,
+  "upstreamTester": {
+    "file": "tester-preparation-check.json",
+    "sha256": "d1bb2e2b281d012ca5118729ba00b517e32b8d221853d4e08dafbdbede7245d4",
+    "verdict": "needs-rework"
+  },
+  "uxStatus": "未執行"
+}

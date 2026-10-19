@@ -1,0 +1,109 @@
+{
+  "appLaunched": false,
+  "developerAssetsChangedByAgent": false,
+  "fullTwoAppLivePreflight": false,
+  "handoff": "Independent Reviewer; root may guide Human Rebuilt Build-only within unchanged original window. DPK measurement requires separate ready.",
+  "limitations": [
+    "Approval applies only to CLI correction and first selected App readonly checks; current-device applicability, second App identity/DR/hash comparisons and complete live preflight remain pending",
+    "Human observation of zero setup/signing prompts applies only to first partial setup/build segment, not entire phase 0 or later agent inspections",
+    "Actual signature/profile/selected chain read-only validation is distinct from DPK data persistence or UX evidence",
+    "No App launch, SecItem, signing, trust changes, unrelated asset inventory or time-window reset was performed"
+  ],
+  "pureTests": {
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/E006/Tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exitCode": 0,
+    "synthetic": true,
+    "tests": 24
+  },
+  "realDPKDataOperations": 0,
+  "realDPKStatus": "未執行",
+  "recordedUTC": "2026-10-16T06:10:05.571854+00:00",
+  "requiredFixes": [],
+  "reusedUnchangedUnsignedVerification": {
+    "compiledSourceFiles": [
+      "DPKProbe.xcodeproj/project.pbxproj",
+      "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme",
+      "Resources/DPKProbe.entitlements",
+      "Resources/Info.plist",
+      "Sources/DPKProbe/AppMain.swift",
+      "Sources/DPKProbe/LiveGate.swift",
+      "Sources/DPKProbe/LiveStore.swift",
+      "Sources/DPKProbe/ProbeCore.swift"
+    ],
+    "debugDylibPresent": false,
+    "differentUnsignedMainHashes": true,
+    "rebuiltByTesterThisRound": false,
+    "receipt": "tester-preparation-rebuild-fix.json",
+    "sha256": "f9900eecbc04afa7198fbad79879617308489a07686976f07b25d06aec56d387"
+  },
+  "role": "Independent Tester",
+  "scope": "Bounded CLI argument correction, pure regression tests and readonly inspection of the single Human-selected first signed App",
+  "selectedAppInspection": {
+    "binarySHA256": "4ffe883a2223c96c44c59d93aa15ee3770b9983db4ecc34d0bc13650f5ac1598",
+    "bundleAndInitialMarkerMatch": true,
+    "certificateExpiryCoversOriginalT0Plus35Minutes": true,
+    "certificateSHA256": "5c267546d016f41f0901e535847a0ab44f81382f7aaadffbbb56a09941139440",
+    "embeddedProfileDecoded": true,
+    "endedUTC": "2026-10-16T06:09:04.116620+00:00",
+    "machineReceiptSHA256": "a8d13afcb26699f7e60339015a275e356f7934f34784e878e892ca98f33d0782",
+    "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+    "performed": true,
+    "previousFailedInspectionSHA256": "4d09a5f0df10b43d5e08044a3ffab6bf12d550d5436f1593c5cdd190111bce41",
+    "previousSafeDiagnosticSHA256": "4387ef80d21061c86a4c69c5b609a20d382d6cc6bbe3819aacddef23c69210e2",
+    "profileExpiryCoversOriginalT0Plus35Minutes": true,
+    "profileSHA256": "1760fde973363c17a741d660051d71d0ae2ce597a14ca2a56555871e913556f9",
+    "selectedAppUnchanged": true,
+    "selectedAppleDevelopmentChainVerified": true,
+    "selectedGroupProfileAuthorization": true,
+    "selectedLeafAuthorizedByProfile": true,
+    "startedUTC": "2026-10-16T06:09:04.012457+00:00",
+    "synthetic": false,
+    "validSignature": true,
+    "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d"
+  },
+  "signedByAgent": false,
+  "sourceFreezeVerification": "Preflight SHA checked before inspection; all current source hashes match Implementer freeze after tests and inspection. Swift/project/resources match independently verified unsigned version.",
+  "sourceRevision": "05b039b39f4f7cf136b10ddcba654a07b0a448d8",
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "ae22e11be721559b8115cbe9072a292dccd3a3ee45f11dcfa6f06d1fdd49a923",
+    "Tests/test_window.py": "72c387855272e464356543496e86a06d3706d3ea488a2cce42b025bb21d598b4",
+    "scripts/preflight.py": "a2650482a9e9147dae4a1ac3f9635278e730ca6641b36605c67056ad9490e7cc",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "cb645341f5bdb3f0f6013b27e5bb1174fd6619164ae838f1960fb823a1e53eab",
+    "scripts/ux_stages.py": "902c0246545116ca12804f4a1c45d619adad3f684cf8f24672453693cff17f3b"
+  },
+  "trustModified": false,
+  "upstreamReceipts": {
+    "preparation-check-cli-fix.json": {
+      "sha256": "ebbbc36c1ebfd7e788aba7fda501d609e31bfe9c3bc0eb5c7b7a87d3d49d0678"
+    },
+    "tester-preparation-window-fix.json": {
+      "file": "tester-preparation-window-fix.json",
+      "sha256": "521fb6765939bc4668453a024fc5ee803373b007dc60a3d6c44e91a5f48f3a8f"
+    }
+  },
+  "uxStatus": "未執行",
+  "verdict": "approved",
+  "windowResetOrExtended": false
+}

@@ -1,0 +1,190 @@
+{
+  "adoptionApproved": false,
+  "all18ReviewedSourceFilesUnchanged": true,
+  "allOwnedPrivatePathsAbsent": true,
+  "cleanupCompletedBeforeOriginalDeadline": true,
+  "cleanupEndedUTC": "2026-10-19T02:28:04.712768+00:00",
+  "cleanupOwnershipReceiptSHA256": "d609692b4800276907e0cfc34e70188c0f73124d7cbcd96242368f4d9c9e3c0b",
+  "cleanupReceiptSHA256": "63cf9b038a0d716ca5f8d860283b364392dccf385331ff56c3d5491078257009",
+  "coordinatorExitCode": 0,
+  "coordinatorMachineSHA256": "e1034d0024ccb9e7fec3823d4b7be4b42b1510cdd552ab0ed7b6bcab35330c8f",
+  "coordinatorSnapshotIndexSHA256": "c2d4df304de87d841a4ff640bce17cd694be14cbcb6a7e0f3cf78acb015887fc",
+  "cutoffUTC": "2026-10-19T02:35:41.483264+00:00",
+  "deadlineUTC": "2026-10-19T02:40:41.483264+00:00",
+  "firstExecutableSHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+  "freePersonalTeamSource": "本輪 Human 明確聲明；未由 Apple Development certificate 單獨推論帳號資格",
+  "freshProcessEvidence": {
+    "launchUsesOpenWAndN": true,
+    "noPIDEqualityClaim": true,
+    "phase1AndPhase2SeparateLaunchRecords": true,
+    "previousOwnedAppExitConfirmedBeforeNextLaunchByFrozenCoordinator": true,
+    "rawProcessIDsNotPublishedOrRetained": true
+  },
+  "gates": {
+    "1": {
+      "HumanStatement": "已準備好，開始Phase1",
+      "gateSHA256": "9f6d6d67e53b1634ab9c7e7101aba04dce78f7b78bc8abe1ca30d13abd94301e",
+      "recordedUTC": "2026-10-19T02:24:03.945495+00:00"
+    },
+    "2": {
+      "HumanStatement": "已準備好，開始Phase2",
+      "gateSHA256": "aa33b0d4a7e225026c9355ec77bce6f2c66032f7509b09de404b93681e14c136",
+      "recordedUTC": "2026-10-19T02:24:56.864660+00:00"
+    },
+    "3": {
+      "HumanStatement": "已準備好，開始Phase3",
+      "gateSHA256": "33f5e7a414f20d46b32e769930587d725104002f41c05565783850f36f3f39a1",
+      "recordedUTC": "2026-10-19T02:25:42.534699+00:00"
+    },
+    "4": {
+      "HumanStatement": "已準備好，開始Phase4清理",
+      "gateSHA256": "f7a5190fba56a856dcfcb21bf4c3c52c953d1ecae007c65fb7f5802477e13b34",
+      "recordedUTC": "2026-10-19T02:26:55.368939+00:00"
+    }
+  },
+  "handoff": "Reviewer 獨立審查本輪收據鏈、結論與清理一致性；Implementer 僅據實更新正式紀錄。",
+  "historicalEvidenceOverwritten": false,
+  "identityEvidence": {
+    "certificateSHA256": "5c267546d016f41f0901e535847a0ab44f81382f7aaadffbbb56a09941139440",
+    "designatedRequirementSHA256": "5b1c5a377d5fbe5b62bb66107c73f4a5d87ddaaf2952af63bb8e0a656b782013",
+    "entitlementsSHA256": "b70d8ba62525476080da2bb39b087a0725305860cee61ee8fd0c7fc575995932",
+    "profileSHA256": "ec2e90ea8d0516004b606709eec823877d70250eb4787cf77040d2ea61e55f45",
+    "proofSHA256": "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119"
+  },
+  "limitations": [
+    "僅目前 Mac、目前免費 Personal Team、有效 embedded profile／同 certificate／同 group／同 DR 與本輪固定路徑成立。",
+    "七日 profile 到期／續期、重新佈建、certificate 輪替、長期恢復與其他 macOS 未測。",
+    "真實拒絕授權、錯誤／資料損壞等 failure boundary 僅沿用 pure/mock 證據；本輪未新增真人失敗測量。",
+    "本輪只驗固定假 A；B 完整替換、OAuth／refresh runtime 不屬本輪，沿用歷史範圍且不外推。",
+    "Apple 開發資產依授權保留；全域 Recent 設定未變更，捷徑存在與否未檢查。",
+    "不核准正式 Keychain adapter、產品整合、公開分發或 merge。"
+  ],
+  "mechanismStatus": "成功",
+  "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+  "newTestsRunThisRound": 0,
+  "phases": {
+    "0": {
+      "endedUTC": "2026-10-19T02:21:48.403003+00:00",
+      "executableSHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+      "humanSHA256": "b1d3037dce1ad1d8a47b0234e9512333a4cbb9c540cba25ad397e7b66651617d",
+      "machineSHA256": "12b99db869777475f141de25f47489480e0b9691afcc742d7113b06e5c8ac2c0",
+      "promptCount": 0,
+      "startedUTC": "2026-10-19T02:10:41.483264+00:00",
+      "wholeStageObserved": true
+    },
+    "1": {
+      "endedUTC": "2026-10-19T02:24:05Z",
+      "executableSHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+      "humanSHA256": "9ca81f525df0762a1e8754bd15660f29d89f1946ac557d61cfbf850b90d21b07",
+      "machineSHA256": "dbd2cf1a875b9dc0a4bbcd4c375dcae7e7f983171406bca66fb17bce9da0e9f7",
+      "promptCount": 0,
+      "sixFieldComparison": {
+        "accessToken": true,
+        "accessTokenExpiresAt": true,
+        "grantedScopes": true,
+        "refreshToken": true,
+        "refreshTokenExpiresAt": true,
+        "tokenType": true
+      },
+      "startedUTC": "2026-10-19T02:24:05Z",
+      "wholeStageObserved": true
+    },
+    "2": {
+      "endedUTC": "2026-10-19T02:24:57Z",
+      "executableSHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+      "humanSHA256": "b6eee60e67d944e6bff206956ae0484fa5d3e09caae5c289d92a9543a397af4c",
+      "machineSHA256": "86c39aa6f73abf98a38c2f83fd245baa9b7b9af5c879851f215fae44400bee96",
+      "promptCount": 0,
+      "sixFieldComparison": {
+        "accessToken": true,
+        "accessTokenExpiresAt": true,
+        "grantedScopes": true,
+        "refreshToken": true,
+        "refreshTokenExpiresAt": true,
+        "tokenType": true
+      },
+      "startedUTC": "2026-10-19T02:24:57Z",
+      "wholeStageObserved": true
+    },
+    "3": {
+      "endedUTC": "2026-10-19T02:25:43Z",
+      "executableSHA256": "b9320e1eac2b6d3f08faa538d781101ad6e15f876d288f18226f3f3a437182d8",
+      "humanSHA256": "52c02d898fedb09f293236afe1071c966060c469ee2c022b7af73aef470a68b9",
+      "machineSHA256": "5f4f1bb4a8fef9cc362f2e2017dac3d24e3dde83c6c4765111921c4103ca0809",
+      "promptCount": 0,
+      "sixFieldComparison": {
+        "accessToken": true,
+        "accessTokenExpiresAt": true,
+        "grantedScopes": true,
+        "refreshToken": true,
+        "refreshTokenExpiresAt": true,
+        "tokenType": true
+      },
+      "startedUTC": "2026-10-19T02:25:43Z",
+      "wholeStageObserved": true
+    },
+    "4": {
+      "endedUTC": "2026-10-19T02:26:56Z",
+      "executableSHA256": "b9320e1eac2b6d3f08faa538d781101ad6e15f876d288f18226f3f3a437182d8",
+      "humanSHA256": "24add9e06881ce90459c69cf9cae0da73427dc80cf3826359b60545f2585650a",
+      "machineSHA256": "133e91f77c290212cae23b9b7df81f3de5174b088a3cb2b2edf327279a2875a2",
+      "promptCount": 0,
+      "startedUTC": "2026-10-19T02:26:56Z",
+      "wholeStageObserved": true
+    }
+  },
+  "preflightChecks": {
+    "GUIConsoleNonRootUser": true,
+    "appleDevelopmentCertificateChain": true,
+    "currentProvisioningUDIDMembership": true,
+    "frozenAppCopies": true,
+    "mainExecutableHashesDifferent": true,
+    "mutualCodesignRequirementEvaluation": true,
+    "namespaceBundleAndBuildMarkers": true,
+    "privateCoreSwiftAndResourcesMatchTemplate": true,
+    "profileValidityThroughOriginalT0Plus35Minutes": true,
+    "sameDesignatedRequirement": true,
+    "sameEntitlements": true,
+    "sameProfileBytes": true,
+    "sameSelectedCertificate": true,
+    "sourceFreeze": true,
+    "uniqueAccessGroup": true
+  },
+  "pureTestsReusedWithoutRerun": 27,
+  "recordedUTC": "2026-10-19T02:29:08.037298+00:00",
+  "requiredFixes": [],
+  "retained": [
+    "Human-owned Apple Development certificate/profile and registered experimental App ID/current Mac; not inventoried or revoked",
+    "Xcode global recent-project preferences not modified; shortcut presence uninspected"
+  ],
+  "reusedPureTestReceiptSHA256": "4d883f0550c85ae155b99c4bf1e4640f5a8be62177aa35f5a9cc62dc84ffffee",
+  "role": "independentTester",
+  "schemaVersion": 1,
+  "scope": "2026-10-19 E006 bounded free Personal Team DPK local round only",
+  "secondExecutableSHA256": "b9320e1eac2b6d3f08faa538d781101ad6e15f876d288f18226f3f3a437182d8",
+  "sourceSHA256": {
+    "DPKProbe.xcodeproj/project.pbxproj": "de7a29a0365beff7fb12af59eb12fdf69e6b6cd76c487899a1e25f1671b7756e",
+    "DPKProbe.xcodeproj/xcshareddata/xcschemes/DPKProbe.xcscheme": "52d5ae0ec66f43390a99e28e0bedcf6ec5028c144a88b09413b43395682b0b29",
+    "Resources/DPKProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "155991350be583f8a71d1383add48a2e5bddf7ac076707338a5c5f4252066146",
+    "Sources/DPKProbe/AppMain.swift": "c585ba855e31a0dffd0ac80a7bb0368871b5dd35805df60d9cf66e4075332492",
+    "Sources/DPKProbe/LiveGate.swift": "c2acd7e1572d57349f38f319eb28810aaf014f98aa09f7c6d4a23871a6234adc",
+    "Sources/DPKProbe/LiveStore.swift": "374cbf3b2b35254a22ccf020aa0840be6e952dab5a5ba7864a7cc6bea226c159",
+    "Sources/DPKProbe/ProbeCore.swift": "ee259457878ce5a56383514d43216035f85ae626d04411a45a1ad31b4fc1a017",
+    "Tests/MemoryStore.swift": "5d3954e779848c377eef6192053d93c31295bab2c4eb212b7584093d73950ca0",
+    "Tests/ProbeCoreTests.swift": "a1d7d08464561b98b5d493235fd8f246b1d788fd56509472d6ab36f01d281221",
+    "Tests/test_device_selector.py": "597430f7d108dba7d3b13c9078805fcbeaa89ce7dbad7c7685b763554d30d137",
+    "Tests/test_protocol.py": "5c67363913f59c14c258e0eea2b42058e72d743c86737ef92c04f8402afde232",
+    "Tests/test_review_fixes.py": "ae22e11be721559b8115cbe9072a292dccd3a3ee45f11dcfa6f06d1fdd49a923",
+    "Tests/test_window.py": "72c387855272e464356543496e86a06d3706d3ea488a2cce42b025bb21d598b4",
+    "scripts/preflight.py": "e0aece5d5a46a36395ec6498a3aaf0bf4006a7dc11cfc88d847b717b5b26de9e",
+    "scripts/prepare.py": "adb360f75e430beaf663a392946b43cc99d6d77cebee3c0a43905f490c4d22da",
+    "scripts/run_probe.py": "cb645341f5bdb3f0f6013b27e5bb1174fd6619164ae838f1960fb823a1e53eab",
+    "scripts/ux_stages.py": "902c0246545116ca12804f4a1c45d619adad3f684cf8f24672453693cff17f3b"
+  },
+  "startUTC": "2026-10-19T02:10:41.483264+00:00",
+  "uxStatus": "成功：本輪受限條件下首次／fresh-process／同身分重新建置皆零提示",
+  "validationTaskStatus": "成功：本輪逐段驗證及精確清理已完成",
+  "verdict": "approved",
+  "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+}

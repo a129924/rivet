@@ -1,0 +1,34 @@
+{
+  "namespace": "9f326761-59cb-4501-906f-1285b3ba6fbd",
+  "startedUTC": "2026-10-16T06:09:04.012457+00:00",
+  "windowSHA256": "c2e109165e1562ee6510a27cf9cd5e0cd1472b01d5db7c2a270cdc19fd52149d",
+  "preflightSourceSHA256": "a2650482a9e9147dae4a1ac3f9635278e730ca6641b36605c67056ad9490e7cc",
+  "before": {
+    "binarySHA256": "4ffe883a2223c96c44c59d93aa15ee3770b9983db4ecc34d0bc13650f5ac1598",
+    "profileSHA256": "1760fde973363c17a741d660051d71d0ae2ce597a14ca2a56555871e913556f9"
+  },
+  "previousFailedInspectionSHA256": "4d09a5f0df10b43d5e08044a3ffab6bf12d550d5436f1593c5cdd190111bce41",
+  "previousSafeDiagnosticSHA256": "4387ef80d21061c86a4c69c5b609a20d382d6cc6bbe3819aacddef23c69210e2",
+  "appLaunched": false,
+  "SecurityOperations": 0,
+  "fullLivePreflight": false,
+  "inspectionApproved": true,
+  "validSignature": true,
+  "selectedAppleDevelopmentChainVerified": true,
+  "selectedLeafAuthorizedByProfile": true,
+  "embeddedProfileDecoded": true,
+  "certificateSHA256": "5c267546d016f41f0901e535847a0ab44f81382f7aaadffbbb56a09941139440",
+  "binarySHA256": "4ffe883a2223c96c44c59d93aa15ee3770b9983db4ecc34d0bc13650f5ac1598",
+  "profileSHA256": "1760fde973363c17a741d660051d71d0ae2ce597a14ca2a56555871e913556f9",
+  "bundleAndInitialMarkerMatch": true,
+  "profileExpiryCoversOriginalT0Plus35Minutes": true,
+  "certificateExpiryCoversOriginalT0Plus35Minutes": true,
+  "selectedGroupProfileAuthorization": true,
+  "currentDeviceAndTwoAppDRComparisons": "pending complete two-App live preflight",
+  "after": {
+    "binarySHA256": "4ffe883a2223c96c44c59d93aa15ee3770b9983db4ecc34d0bc13650f5ac1598",
+    "profileSHA256": "1760fde973363c17a741d660051d71d0ae2ce597a14ca2a56555871e913556f9"
+  },
+  "selectedAppUnchanged": true,
+  "endedUTC": "2026-10-16T06:09:04.116620+00:00"
+}

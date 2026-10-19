@@ -1,0 +1,141 @@
+{
+  "cleanupBlocker": null,
+  "developerAssets": "Human-owned retained; never deleted",
+  "machine": {
+    "cleanup": "delete-read-absent",
+    "cleanupComplete": true,
+    "completed": true,
+    "endedUTC": "2026-10-19T02:26:56.226553+00:00",
+    "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+    "observationMode": "human-only",
+    "promptCount": null,
+    "proofSHA256": "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119",
+    "recoveryRequired": false,
+    "startedUTC": "2026-10-19T02:10:41.483264+00:00",
+    "synthetic": false
+  },
+  "manifest": {
+    "account": "oauth-bundle",
+    "backend": "dpk",
+    "cutoffUTC": "2026-10-19T02:35:41.483264+00:00",
+    "deadlineUTC": "2026-10-19T02:40:41.483264+00:00",
+    "firstHash": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+    "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+    "observationMode": "human-only",
+    "proofSHA256": "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119",
+    "secondHash": "b9320e1eac2b6d3f08faa538d781101ad6e15f876d288f18226f3f3a437182d8",
+    "startUTC": "2026-10-19T02:10:41.483264+00:00",
+    "synthetic": false,
+    "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+  },
+  "phaseReceipts": {
+    "phase-0.machine.json": {
+      "receipt": {
+        "completed": true,
+        "endedUTC": "2026-10-19T02:21:48.403003+00:00",
+        "executableSHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+        "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+        "observationMode": "human-only",
+        "phase": 0,
+        "promptCount": null,
+        "proofSHA256": "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119",
+        "startedUTC": "2026-10-19T02:10:41.483264+00:00",
+        "synthetic": false
+      },
+      "sha256": "12b99db869777475f141de25f47489480e0b9691afcc742d7113b06e5c8ac2c0"
+    },
+    "phase-1.machine.json": {
+      "receipt": {
+        "completed": true,
+        "endedUTC": "2026-10-19T02:24:05Z",
+        "executableSHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+        "fields": {
+          "accessToken": true,
+          "accessTokenExpiresAt": true,
+          "grantedScopes": true,
+          "refreshToken": true,
+          "refreshTokenExpiresAt": true,
+          "tokenType": true
+        },
+        "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+        "observationMode": "human-only",
+        "operation": "save-read-a",
+        "phase": 1,
+        "promptCount": null,
+        "proofSHA256": "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119",
+        "startedUTC": "2026-10-19T02:24:05Z",
+        "synthetic": false
+      },
+      "sha256": "dbd2cf1a875b9dc0a4bbcd4c375dcae7e7f983171406bca66fb17bce9da0e9f7"
+    },
+    "phase-2.machine.json": {
+      "receipt": {
+        "completed": true,
+        "endedUTC": "2026-10-19T02:24:57Z",
+        "executableSHA256": "b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840",
+        "fields": {
+          "accessToken": true,
+          "accessTokenExpiresAt": true,
+          "grantedScopes": true,
+          "refreshToken": true,
+          "refreshTokenExpiresAt": true,
+          "tokenType": true
+        },
+        "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+        "observationMode": "human-only",
+        "operation": "read-a",
+        "phase": 2,
+        "promptCount": null,
+        "proofSHA256": "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119",
+        "startedUTC": "2026-10-19T02:24:57Z",
+        "synthetic": false
+      },
+      "sha256": "86c39aa6f73abf98a38c2f83fd245baa9b7b9af5c879851f215fae44400bee96"
+    },
+    "phase-3.machine.json": {
+      "receipt": {
+        "completed": true,
+        "endedUTC": "2026-10-19T02:25:43Z",
+        "executableSHA256": "b9320e1eac2b6d3f08faa538d781101ad6e15f876d288f18226f3f3a437182d8",
+        "fields": {
+          "accessToken": true,
+          "accessTokenExpiresAt": true,
+          "grantedScopes": true,
+          "refreshToken": true,
+          "refreshTokenExpiresAt": true,
+          "tokenType": true
+        },
+        "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+        "observationMode": "human-only",
+        "operation": "read-a",
+        "phase": 3,
+        "promptCount": null,
+        "proofSHA256": "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119",
+        "startedUTC": "2026-10-19T02:25:43Z",
+        "synthetic": false
+      },
+      "sha256": "5f4f1bb4a8fef9cc362f2e2017dac3d24e3dde83c6c4765111921c4103ca0809"
+    },
+    "phase-4.machine.json": {
+      "receipt": {
+        "absent": true,
+        "completed": true,
+        "endedUTC": "2026-10-19T02:26:56Z",
+        "executableSHA256": "b9320e1eac2b6d3f08faa538d781101ad6e15f876d288f18226f3f3a437182d8",
+        "fields": {},
+        "namespace": "b832a57f-cced-4361-ba38-ac370d265e03",
+        "observationMode": "human-only",
+        "operation": "delete-read-absent",
+        "phase": 4,
+        "promptCount": null,
+        "proofSHA256": "c7010d27ff023f435193e5aad22d588ed58ee6c6f16b0c3d2de3413cca050119",
+        "startedUTC": "2026-10-19T02:26:56Z",
+        "synthetic": false
+      },
+      "sha256": "133e91f77c290212cae23b9b7df81f3de5174b088a3cb2b2edf327279a2875a2"
+    }
+  },
+  "realDataOperationsAttempted": true,
+  "uxResult": "無法判定：等待完整 Human sidecars 與獨立驗證",
+  "windowSHA256": "188416b5c7f198c69ffbff962b25943eadc9b0ecb50b01ba136f7f8187b8bbf7"
+}
