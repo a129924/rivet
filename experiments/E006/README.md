@@ -64,7 +64,7 @@ Topic：`github-oauth-dpk-local-feasibility`；branch：`chore/github-oauth-dpk-
 | T05 真正重建版 | phase 3 換 rebuilt hash，唯讀六欄 true，Human 全程 0 提示。 |
 | T06 控制／失敗分類／redaction | 同 toolchain／18 reviewed source SHA 未變，沿用獨立 27 pure tests，本輪未重跑；真拒絕／損毀等邊界未新增真人測量。 |
 | T07 精確清理 | phase 4 delete＋read-absent 成功，Human 全程 0 提示；私有 owned 檔案全清且早於原 deadline。 |
-| T08 本機圖工具 | [工具收據](evidence/tool-preparation.json)：Archify showcase 9／9及視覺核對；Graphify targeted source fallback；PR Lens 無獲授權實際 commit diff，維持 deferred，不當成 UX 證據。 |
+| T08 本機圖工具 | [準備期工具收據](evidence/tool-preparation.json) 保留發佈前 PR Lens deferred 的快照；Archify showcase 9／9及視覺核對不變。原交付發佈時，Graphify 無可用圖而採 targeted source fallback；PR Lens 已對第 8 段指定的原交付 base／head 完成本機 validate／render 及視覺核對，不當成 UX 證據。 |
 
 2026-10-19 台灣時間；每段的精確 UTC／machine／Human SHA 由 [Tester validation](evidence/run-20261019T021023Z-b832a57f/tester-live-validation.json) 列明：
 
@@ -92,8 +92,14 @@ DPK 項目已於 phase 4 精確刪除並讀回不存在。Human 直接確認 Bui
 
 ## 8. 結論／限制／下一步
 
-依本輪實際前提、三段六欄、Human 首次／fresh-process／真正重建皆零提示及時限內精確清理，**資料機制成功、受限 UX 成功、驗證任務完成**；本輪 Tester 及 S08 獨立 Reviewer 均 approved，Reviewer required_fixes=[]。S08 已完成，目前停於 S09 Human review／後續決策（human-check），此 approval 僅接受受限實驗證據與紀錄，不核准正式 adapter 或 Git 發布。
+依本輪實際前提、三段六欄、Human 首次／fresh-process／真正重建皆零提示及時限內精確清理，**資料機制成功、受限 UX 成功、驗證任務完成**；本輪 Tester 及 S08 獨立 Reviewer 均 approved，Reviewer required_fixes=[]。S08 已完成，目前停於 S09 Human review／後續決策（human-check）；此 Reviewer approval 僅接受受限實驗證據與紀錄。Git 發布另依 Human 明確授權，正式 adapter 仍未核准。
 
 可支持的本機條件是本次 Mac／GUI user session、Human 聲明的免費 Personal Team、有效 embedded development profile、相同 Apple Development certificate／group／DR、固定 App 路徑。不能由本輪成功推論已修復 E005 legacy 根因，或覆寫 E005 UX 失敗／10月16日 unknown 與逾時。
 
-真拒絕授權、損毀／技術失敗邊界仍只有 pure fixtures；profile expiry／renewal／reprovision、certificate rotation、長期恢復、其他 macOS、公開分發、真 OAuth／refresh、B 替換與跨程序 refresh 協調未在本輪驗證。正式 Keychain adapter／產品整合／採用仍未核准，provider ownership 不變。沒有新輪、新測試或 Git commit／push／PR／merge 授權；獨立 Reviewer 已完成，目前停於 Human review，只支持後續正式規劃。
+真拒絕授權、損毀／技術失敗邊界仍只有 pure fixtures；profile expiry／renewal／reprovision、certificate rotation、長期恢復、其他 macOS、公開分發、真 OAuth／refresh、B 替換與跨程序 refresh 協調未在本輪驗證。正式 Keychain adapter／產品整合／採用仍未核准，provider ownership 不變。新輪／新測試、merge 及正式 adapter 仍未授權；原受限實驗獨立審查已完成，目前停於 Human review，只支持後續正式規劃。
+
+2026-10-19 原交付發佈狀態：Human 已明確授權並確認 topic 分組與訊息，`9ce209429d2b1fe8e9b98a3d24a2de311710eda1`（實驗工具）與 `ebbb71f9237ac883914ebfc32d4838e6ba2df517`（契約／證據）已 push 至 topic branch，並建立 [Draft PR #59](https://github.com/a129924/rivet/pull/59)，base 為 `dev`。此為已完成的原交付事件；本次 P3 僅同步 README／step 的發佈時序，不重跑實驗、不改 source 或 immutable 收據。
+
+原交付 PR Lens 0.11.0 的已完成範圍為 base `05b039b39f4f7cf136b10ddcba654a07b0a448d8` 至 head `ebbb71f9237ac883914ebfc32d4838e6ba2df517`；於外部 scratch validate／render 通過且已完整視覺核對，產物只保留本機。這項核對不涵蓋後續文件修正 head；Graphify 0.9.73 沒有可用圖，沿用限定來源核對，不建立或上傳圖。
+
+原交付第一筆 commit 六個 hooks 全通過；第二筆的 94 檔以實際 EOF formatter 外部副本檢查通過，8 份 immutable machine JSON 經獨立 Reviewer 核准保留原 bytes，僅該次 commit 略過 `end-of-file-fixer`，其餘五個 hooks 全通過。本次兩份 Markdown 修正不沿用該例外。
