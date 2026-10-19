@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "E006：DPK 分段實驗（尚未真人測量）",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "setup",
+      "label": "未來設定與寫入前提"
+    },
+    {
+      "id": "trial",
+      "label": "分段真人測量"
+    }
+  ],
+  "mainPath": [
+    "setup",
+    "proof",
+    "first",
+    "fresh",
+    "rebuilt",
+    "clean"
+  ],
+  "nodes": [
+    {
+      "id": "setup",
+      "lane": "setup",
+      "col": 0,
+      "type": "external",
+      "label": "準備與授權",
+      "sublabel": "App／Personal Team"
+    },
+    {
+      "id": "proof",
+      "lane": "setup",
+      "col": 1,
+      "type": "security",
+      "label": "前提核對",
+      "sublabel": "不足即零寫入"
+    },
+    {
+      "id": "first",
+      "lane": "trial",
+      "col": 2,
+      "type": "database",
+      "label": "首次存取",
+      "sublabel": "六欄／提示≤1",
+      "width": 80
+    },
+    {
+      "id": "fresh",
+      "lane": "trial",
+      "col": 3,
+      "type": "backend",
+      "label": "新程序",
+      "width": 40,
+      "height": 40
+    },
+    {
+      "id": "rebuilt",
+      "lane": "trial",
+      "col": 4,
+      "type": "backend",
+      "label": "重建",
+      "width": 40,
+      "height": 40
+    },
+    {
+      "id": "clean",
+      "lane": "trial",
+      "col": 5,
+      "type": "security",
+      "label": "清理與交付",
+      "sublabel": "UUID刪除／審查"
+    }
+  ],
+  "edges": [
+    {
+      "from": "setup",
+      "to": "proof",
+      "label": "有效開發資產",
+      "labelDy": -24
+    },
+    {
+      "from": "proof",
+      "to": "first",
+      "label": "前提成立＋ready"
+    },
+    {
+      "from": "first",
+      "to": "fresh",
+      "label": "觀察＋ready"
+    },
+    {
+      "from": "fresh",
+      "to": "rebuilt",
+      "label": "觀察＋ready",
+      "labelDy": -26
+    },
+    {
+      "from": "rebuilt",
+      "to": "clean",
+      "label": "清理"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "前提與範圍",
+      "items": [
+        "免費來源、有效簽章與 profile；兩版同 DR",
+        "有效性至少 35 分鐘；只用 DPK／假六欄"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "每段停點",
+      "items": [
+        "Human 全程觀察綁 machine SHA，再取 ready",
+        "首次最多一次，fresh 與重建各零提示"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "異常直接清理",
+      "items": [
+        "失敗／逾時／缺觀察進 finally，不等 ready",
+        "25 分鐘停新測量；30 分鐘上限；殘留明列"
+      ]
+    }
+  ]
+}

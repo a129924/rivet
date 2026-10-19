@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "workflow",
+  "input": "experiments/E006/diagrams/dpk-workflow-final.json",
+  "output": "experiments/E006/diagrams/dpk-workflow-final.html",
+  "specification": {
+    "sha256": "f2a4cb9a8d6a5b05e57e7bb073df722e811561513935f230e5893c4f73bfd856",
+    "bytes": 2669
+  },
+  "artifact": {
+    "sha256": "61ec299dc93a2aea3f88f492fa1087f0d12c626bfec118ff9e25e493d3e08cda",
+    "bytes": 699870
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
