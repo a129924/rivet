@@ -5,6 +5,10 @@ import Testing
 
 @Suite("OAuth token provider")
 struct OAuthTokenProviderTests {
+  @Test func dispositionObservationHasNoSideEffects() async throws {
+    try await exerciseProviderDispositionContract()
+  }
+
   @Test
   func snapshotSeparatesFullEqualityFromVersionEquality() {
     let first = snapshot(.initial, version: 1)

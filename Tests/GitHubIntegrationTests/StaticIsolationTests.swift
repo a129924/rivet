@@ -356,6 +356,7 @@ struct StaticIsolationTests {
       "Contracts/CredentialTypes.swift",
       "Contracts/GitHubAccessTokenProvider.swift",
       "Contracts/GitHubOAuthCredentialBundle.swift",
+      "Contracts/GitHubOAuthAppConfiguration.swift",
       "Contracts/GitHubTokenStore.swift",
       "Contracts/GitHubTokenProvider.swift",
       "Contracts/OAuthCredentialStore.swift",
@@ -369,6 +370,9 @@ struct StaticIsolationTests {
       "GraphQL/GitHubGraphQLServing.swift",
       "Composition/GitHubClientScope.swift",
       "Composition/GitHubClientPreparationError.swift",
+      "OAuth/GitHubOAuth.swift",
+      "OAuth/GitHubOAuthAuthorizationSession.swift",
+      "Stores/GitHubOAuthDataProtectionStores.swift",
       "OAuth/GitHubOAuthEndpoints.swift",
       "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift",
@@ -408,6 +412,8 @@ struct StaticIsolationTests {
       }
       let httpClientFiles: Set = [
         "Composition/GitHubClientScope.swift",
+        "OAuth/GitHubOAuth.swift",
+        "OAuth/GitHubOAuthAuthorizationSession.swift",
         "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
         "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
         "REST/GitHubHTTPClient.swift",
@@ -418,9 +424,12 @@ struct StaticIsolationTests {
       }
       #expect(imports.isDisjoint(with: forbiddenForFile))
 
-      if path == "Stores/KeychainTokenStore.swift" {
+      switch path {
+      case "Stores/KeychainTokenStore.swift", "Stores/GitHubOAuthDataProtectionStores.swift":
         #expect(imports == ["Foundation", "Security"])
-      } else {
+      case "OAuth/GitHubOAuth.swift":
+        #expect(imports == ["Foundation", "Security", "RivetHTTPClient"])
+      default:
         #expect(!imports.contains("Security"))
       }
     }
