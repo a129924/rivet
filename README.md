@@ -21,7 +21,9 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
 
-完整 REST endpoint 能力、各 BC adapters、Keychain OAuth credential adapter、初次 OAuth 授權與產品登入仍延後。合法 raw REST 與 Apollo partial／errors-only responses 保持；有限 technical errors 與 cancellation 不形成 shared BC failure contract。
+完整 REST endpoint 能力、各 BC adapters、初次 OAuth 授權與產品登入仍延後。合法 raw REST 與 Apollo partial／errors-only responses 保持；有限 technical errors 與 cancellation 不形成 shared BC failure contract。
+
+`GitHubOAuthDataProtectionStores` 已提供 caller-owned DPK configuration／完整 OAuth credential stores，使用 host 明確指定的 access group，支援 clientID 綁定、完整替換與有限錯誤；既有 provider／clients 契約維持。本 topic 的證據限 fake Security 與受控 provider 測試，真簽章、跨程序 DPK、重建與提示 UX 尚未驗證；它與 E007／整套登入驗證為獨立工作線。詳見[OAuth 憑證儲存](docs/architecture/github-oauth-credential-persistence.md)。
 
 Rivet 目前是可公開的 architecture baseline repository。它保留產品與架構決策、Bounded Context Map，以及 Swift／Node 版本基線；root Swift package 已包含受限的產品實作。
 
