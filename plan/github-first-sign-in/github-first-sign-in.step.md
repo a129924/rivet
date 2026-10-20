@@ -1,13 +1,13 @@
 # GitHub 首次登入：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase：S07 Draft PR 交付。
-- Current step：S07。
-- Current status：in-progress；獨立 Reviewer approved，準備 commit／push／Draft PR。
+- Phase：S08 Human review。
+- Current step：S08。
+- Current status：human-check；Draft PR 已建立，等待人工審查。
 - Upstream verdict：approved；獨立 Plan-Reviewer 已明示 S01／S02 approved（2026-10-20）。
 - Branch：feat/github-first-sign-in；base／PR target：dev；基線 16606b89b8e3e6b61523c23aa0be9653c1ea7b44。
 - Worktree：使用者指定的本 topic feature worktree；不得在 dev 或平行儲存線實作。
-- 最後更新：2026-10-20，主 agent 轉錄獨立 Reviewer approved；S07 進行中。
+- 最後更新：2026-10-20，主 agent；實作 commit 已 push，Draft PR #61 已建立。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
 ## Steps
@@ -20,8 +20,8 @@
 | S04 | completed | Implementer | W04–W06／M03；store、host、UI、API、docs／圖 | 已接收 Implementer 明示交接；圖視覺限制與最終 build/test 見 evidence | 依S03整合，不碰其他worktree |
 | S05 | completed | Tester | 受控tests／consumer／build／check、docs／工具證據分列 | evidence/contracts.md、compatibility.md：276 root＋13 consumer＋8 app pass（R1最終），格式/lint pass | coverage 限制經 Reviewer 接受；反向PKCE/canvas視覺Human pending |
 | S06 | completed | Reviewer | 獨立code／scope／evidence review，required fixes明示 | evidence/reviewer-verdict.md（外部明示 verdict 轉錄） | approved；R1 required fix 已關閉 |
-| S07 | in-progress | Implementer | 無重大問題且上游允許；staged語意檢查後commit→push→Draft PR回dev | 真commit IDs／push／Draft PR URL待補 | user已明示授權，不merge |
-| S08 | pending | Human；Tester記錄 | Draft PR後human review，真登入／再次API／新code反向PKCE實際結果 | product-e2e.md：正常授權及再次/user已由Human/主agent觀察；反向PKCE待Human | 不得擅取secret；pending不改寫通過 |
+| S07 | completed | Implementer | 無重大問題且上游允許；staged語意檢查後commit→push→Draft PR回dev | 實作 commit `46b48730c68580cc51cd5b44898a85aff7f79118` 已 push；[Draft PR #61](https://github.com/a129924/rivet/pull/61) | user已明示授權，不merge |
+| S08 | human-check | Human；Tester記錄 | Draft PR後human review，真登入／再次API／新code反向PKCE實際結果 | product-e2e.md：正常授權及再次/user已由Human/主agent觀察；反向PKCE待Human | 不得擅取secret；pending不改寫通過 |
 
 每個 step status／checkbox 均不等於 approval；只有獨立角色明示 verdict 才能路由。各角色只填自身實際事實及已收到的外部 verdict。
 
@@ -29,7 +29,7 @@
 
 - B01（已解除）：依主 agent 明示，獨立 Plan-Reviewer 已對 S01／S02 approved；v2 candidate 與 app lock amendments 亦 approved。
 - B02：儲存線四 draft仍有舊重疊，來源與SHA已記technical-spec §6；Human split已決，不重問。S02審本topic amendment即可；儲存線產品實作前須在其流程回修，不要求本topic等E007／DPK。
-- B03（現行）：受控 root/consumer/app tests 與 strict checks 親跑通過；contracts.md 明列 coverage gaps，獨立 Reviewer 已接受限制，不將全部 TC 冒稱完整。Canvas 視覺 Human pending，PR Lens 待真 diff。
+- B03（現行）：受控 root/consumer/app tests 與 strict checks 親跑通過；contracts.md 明列 coverage gaps，獨立 Reviewer 已接受限制，不將全部 TC 冒稱完整。Canvas 視覺 Human pending，PR Lens 對真實 commit diff 於本機產生；不寫 repository .pr-lens 或上傳。
 - B04：真實OAuth／反向PKCE需Human個人配置與互動，記Human review pending；依最新user順序，不作開Draft PR的前置。不是授權agent讀取既有secret或gh credential。
 
 ## Human Check 與授權
@@ -89,3 +89,10 @@ S05 測試執行完成不等於 approved；R1補充TC06真provider gatedrefresh/
 ### S05 R1 bounded 重驗
 
 Reviewer R1 required fix：Implementer僅新增 app coordinator 真provider gatedrefresh取消/settlement測試。Tester親跑完整app build/test 8tests／4suites passed；app strict format/lint exit0。產品source未改，root/consumer結果沿用。最終dirty source指紋見contracts.md。已補TC06證據，交獨立Reviewer複查，不代填approved。
+
+## S07 交付記錄
+
+- 實作：`46b48730c68580cc51cd5b44898a85aff7f79118`；topic message 經 staged 語意檢查，全部 pre-commit hooks 通過。
+- 已 push：`origin/feat/github-first-sign-in`；[Draft PR #61](https://github.com/a129924/rivet/pull/61)，base `dev`。
+- 本次記錄提交只更新交付帳本，不改產品 source 或已核准契約。
+- 停點：S08 Human review；不 merge、不釋放 worktree，不將 Human pending 改寫為通過。
