@@ -1,9 +1,9 @@
 # GitHub 持續連線：執行帳本
 
 - Topic：`github-persistent-connection`
-- Phase：S11 Human 已實際接受圖面與成果，執行既定 S12 topic commit／工具 map／push／Draft PR。
+- Phase：S11 已接受；S12 topic commits／真 PR Lens map／正常 push／Draft PR 已交付，停 Human review。
 - Current step：S12
-- Current status：in-progress（S11 實際 Human 接受已到位；依原授權完成 topic 交付，最後停 Draft PR Human review）
+- Current status：human-check（Draft PR #62 已 OPEN／isDraft=true／base=dev；交付完成後等待 Human review，不 merge）
 - Upstream verdict：外部 Plan-Reviewer 已 approved 唯一 gate amendment 及 StaticIsolation 精確 manifest delta；S06a Tester 與 S06b Reviewer 均明示 approved／requiredFixes=[]，僅接受 integration fake-only 契約及相容性，交 S07。S08a Tester 與 S08b Reviewer 亦均明示 approved／requiredFixes=[]，只放行 S09。E007 當時 human-check／thirdRunAllowed=false 與後續 Human 接受決策分列保持。
 - Branch：`feat/github-persistent-connection`，由 `origin/dev` 的 `16606b8` 建立，PR target `dev`；建立與乾淨狀態由呼叫端 Planner／Dispatcher 提供，本輪不另執行 Git。
 - Worktree：指定本 topic feature worktree；本輪四份寫入均在該 worktree，不在 dev。
@@ -32,7 +32,7 @@
 | S10a | completed | Tester | 核V01–V09 evidence／docs／圖技術與source一致性，保留Human點 | contracts／compatibility S10a：三圖9/9零錯警／獨立四尺寸與12PNG親看；CanvasRF-D01重驗0/0、正確單邊責任／幾何／重建byteidentity／新截圖；69source／四liveSHA鏈／五Human0及linksprivacy核符 | approved、requiredFixes=[]；只交S10b，S11Human與S12真commit後工具／發佈保持pending |
 | S10b | completed | Reviewer | 獨立成果／scope／workflow review，明示 verdict／required fixes | final-review.md S10b 第一輪及 RF-D02 bounded recheck；兩段現況已對齊，先前其他成果核對保留 | approved、requiredFixes=[]；只交 S11 Human，不等於其接受／發布／merge |
 | S11 | completed | Human | 正式入口／真系統提示與成果 Human review／必要接受決策 | Human：圖面與成果可接受，繼續既定交付；receivedAtUTC2026-10-20 09:51:14 | 實際接受，非自動 pending 推定；授權既定 S12 |
-| S12 | in-progress | Implementer | 既有 gates允許且無重大問題；staged 語意檢查後 topic commit／push／Draft PR 回 dev | 真 commit IDs／push／Draft PR URL 待補；不捏造 | 已有 User 明確發佈授權；Draft PR 保留 Human review，不 merge |
+| S12 | completed | Implementer | staged 語意檢查後 topic commits／真 code map／正常 push／Draft PR 回 dev | 下列真 commit IDs、原生 PR Lens manifest/SHA 與 Draft PR #62 readback | 停 Human review，不 merge；CI 未提供 checks，不冒稱 pass |
 
 S11／S12 順序依授權語意：S11 記錄交付需要的真人入口／UX確認；S12 完成已授權 Draft PR 後仍停 Human review，不把 Draft PR 建立等同接受／merge。若實際入口驗收需等待 Human，先如實記 human-check，不藉 Draft PR 越過採用或驗收 gate。
 
@@ -379,3 +379,20 @@ Manifest amendment 已由獨立 Plan-Reviewer approved，僅新增兩個精確 r
 - 兩個本輪Xcode生成的manifest外SchemeUserState plist已核baseline未存在／untracked／regular/currentUID／非symlink、只有預期linkedpackage schemes與orderHint，精確移至ownprivatebackup，保留hash，不stage、不改gitignore或父目錄。
 - PR Lens以真base至上述codehead的find-renames diff完成localvalidate/render：coverage23/23，5 unchanged source鄰居，4lanes／10nodes／13edges／1flow／4walkthroughsteps，4nativeSVG與2diagrams。manifest／graph／SVG真SHA、有限coverage與四張實際Chrome截圖親看已記tool-evidence；此map不涵蓋E007及後docscommits，不虛構最終PRhead。Graphify沿S09 sourcefallback，不新增graph或操作。
 - 下一組 staged 僅45個正式plan／evidence／長期docs／圖leaves，message `docs(github-connection): 記錄持續連線契約驗收與架構圖`，出版前精確manifest與privacy核對後正常commit／push／DraftPR。S12未完成前不宣稱remote或PR結果。
+
+
+### S12 已發布 Draft PR：Human review 停點
+
+- 已依單一 topic 語意分組、每次 staged diff --check／privacy／message 檢查後提交：
+
+```text
+7e81b7799a20e49f2cb7209706ebe5b3fd9c7f18 feat(github-connection): 建立可跨重啟持續使用的 GitHub 連線
+f4a45fa876d3edf9d7125070a63af6f81cd656c3 chore(e007): 保存 profile 更新驗證與未判定結果
+bd00c3e4b266b1703448b91aff220731241a5335 docs(github-connection): 記錄持續連線契約驗收與架構圖
+```
+
+- 正常 `git push --set-upstream origin feat/github-persistent-connection` 成功，沒有force／dev checkout或變更。以User明確要求的gh建立 [Draft PR #62](https://github.com/a129924/rivet/pull/62)，隨後實際readback：isDraft=true、state=OPEN、baseRefName=dev、headRefName=feat/github-persistent-connection；當次headRefOid=bd00c3e4b266b1703448b91aff220731241a5335，與local／remotehead相符，origin/dev仍原16606b89b8e3e6b61523c23aa0be9653c1ea7b44。
+- 當次statusCheckRollup=[]，沒有CI checks可判定，不寫綠燈。code／E007／docs三組commit既有全部pre-commit hooks均Passed，沒有skip；不另重跑已綠29／226／13或真人流程。
+- 本段與tool-evidence是最後doc-only交付收據，message `docs(github-connection): 記錄 Draft PR 與交付收據`；它不屬於PRLens的原code-head覆蓋範圍。此commit完成hooks後正常push，最終本地／遠端／Drafthead及乾淨feature與dev讀回由交接訊息提供；不將自指commitSHA硬寫成本段自身hash。
+- 本role的temporaryfeature dependency symlink僅供完整hooks，最後hook後精確移除，不動dev deps／父dir；ownprivatecopy／兩generatedplist backups及PRLens／Chrome scratch保留供核。沒有新追蹤output／工具config／Apple設定／App或credential操作。
+- S12交付範圍已達DraftPRHumanreview；不請指定第三方reviewer、不comment別人、不merge／tag／release。有效profile／七日到期／renewalunknown Human例外、controlled非自然到期／初始digest未測等限制完整保留。

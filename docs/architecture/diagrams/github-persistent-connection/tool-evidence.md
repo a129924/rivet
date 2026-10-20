@@ -47,3 +47,8 @@ S09 當時尚無本 topic source commit，不能拿相同 SHA 偽造 change map�
 | `authorization-flow-dark-79d6b2f6502df22cceaca248518f081d.svg` | 15953 | `79d6b2f6502df22cceaca248518f081d8fddb39368fcae4ce5454f6a81677be3` |
 
 四個 SVG 均以實際 Chrome 開本地檔案擷取私有 PNG，再逐張 view_image 親看：architecture 在1708×700、flow在1386×517，light／dark完整文字與箭頭可辨識，無截斷；單一完整保存 hero edge 的 from 為產品 Coordinator，session 僅回 bundle。此為 change-map QA，不是產品 correctness review 或替代已通過的 Archify QA。flow 的 animated=true 是 PR Lens renderer 原生輸出，未改寫 trusted SVG。graph／manifest／SVG／四PNG與 find-renames raw diff 保持在私有 scratch，repository 僅存有限 hashes／coverage，無本機絕對路徑。
+
+
+## S12 Draft PR 交付
+
+真 code map完成後，E007 evidence與正式plan／長期文件／四圖以獨立topic commits保存並正常push；[Draft PR #62](https://github.com/a129924/rivet/pull/62)已建立，實際readback為OPEN、isDraft=true、base=dev、head=feat/github-persistent-connection。初次PRhead為bd00c3e4b266b1703448b91aff220731241a5335，最後doc-only發布收據commit另由Git／PR讀回核實；map head仍固定7e81b7799a20e49f2cb7209706ebe5b3fd9c7f18，沒有冒稱涵蓋後續E007／docs／發布收據。初次statusCheckRollup=[]，不宣稱CI通過。全部既有commit hooks實際通過，沒有跳過；最後停Humanreview，不merge或發布App／圖站。
