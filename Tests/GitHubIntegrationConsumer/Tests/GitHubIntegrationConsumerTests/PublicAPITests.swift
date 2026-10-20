@@ -58,6 +58,27 @@ struct PublicAPITests {
   }
 
   @Test
+  func dataProtectionStoresExposeCallerOwnedPublicContractsWithoutAccessingSecurity() throws {
+    let configuration = try GitHubOAuthAppConfiguration(
+      clientID: "consumer-app", clientSecret: "consumer-secret")
+    let stores = try GitHubOAuthDataProtectionStores(accessGroup: "consumer.explicit.group")
+    let credentials: any OAuthCredentialStore = stores.credentialStore(
+      clientID: configuration.clientID)
+    let configurations: any GitHubOAuthAppConfigurationStore = stores.configurationStore
+    let inspect: @Sendable () async throws -> GitHubOAuthStoredCredential? = {
+      try await stores.inspectCredential()
+    }
+    assertSendable(configuration)
+    assertSendable(stores)
+    assertSendable(credentials)
+    assertSendable(configurations)
+    assertSendable(inspect)
+    assertSendable(GitHubOAuthDataProtectionStoreError.identityMismatch)
+    assertSendable(GitHubOAuthAppConfigurationError.invalidConfiguration)
+    #expect(!String(reflecting: configuration).contains("consumer-secret"))
+  }
+
+  @Test
   func asyncAccessTokenProviderCanBeUsedThroughThePublicContract() async throws {
     let expected = GitHubAccessToken(rawValue: "consumer-token")
     let provider: any GitHubAccessTokenProvider = ExternalAccessTokenProvider(token: expected)

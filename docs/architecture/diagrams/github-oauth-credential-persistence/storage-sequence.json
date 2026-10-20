@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "OAuth 憑證保存與還原",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1540,
+      720
+    ]
+  },
+  "participants": [
+    {
+      "id": "provider",
+      "type": "backend",
+      "label": "既有 provider"
+    },
+    {
+      "id": "storage",
+      "type": "security",
+      "label": "DPK 儲存 adapter"
+    },
+    {
+      "id": "keychain",
+      "type": "database",
+      "label": "系統 Keychain"
+    }
+  ],
+  "segments": [
+    {
+      "from": 160,
+      "to": 365,
+      "label": "完整還原"
+    },
+    {
+      "from": 395,
+      "to": 660,
+      "label": "輪替保存"
+    }
+  ],
+  "messages": [
+    {
+      "id": "restore",
+      "from": "provider",
+      "to": "storage",
+      "y": 190,
+      "label": "load：綁定 clientID"
+    },
+    {
+      "id": "copy",
+      "from": "storage",
+      "to": "keychain",
+      "y": 240,
+      "label": "查詢 credential item",
+      "variant": "security"
+    },
+    {
+      "id": "data",
+      "from": "keychain",
+      "to": "storage",
+      "y": 290,
+      "label": "完整 envelope／錯誤",
+      "variant": "return"
+    },
+    {
+      "id": "bundle",
+      "from": "storage",
+      "to": "provider",
+      "y": 340,
+      "label": "完整 bundle／有限錯誤",
+      "variant": "return"
+    },
+    {
+      "id": "save",
+      "from": "provider",
+      "to": "storage",
+      "y": 420,
+      "label": "save：完整輪替 bundle"
+    },
+    {
+      "id": "identity",
+      "from": "storage",
+      "to": "keychain",
+      "y": 470,
+      "label": "讀取並檢查既存身分"
+    },
+    {
+      "id": "replace",
+      "from": "storage",
+      "to": "keychain",
+      "y": 520,
+      "label": "整筆 update／必要時 add",
+      "variant": "security"
+    },
+    {
+      "id": "commit",
+      "from": "keychain",
+      "to": "storage",
+      "y": 570,
+      "label": "提交成功／錯誤",
+      "variant": "return"
+    },
+    {
+      "id": "publish",
+      "from": "storage",
+      "to": "provider",
+      "y": 620,
+      "label": "成功才發布；失敗停止",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "單一 actor，整筆替換",
+      "items": [
+        "同 facade 的 views 序列化完整操作",
+        "不同身分或讀取失敗不覆寫；兩 items 無交易"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "本次驗證範圍",
+      "items": [
+        "假 Security 與受控刷新驗證契約",
+        "真簽章、跨程序 DPK 與提示 UX 尚未驗證"
+      ]
+    }
+  ]
+}
