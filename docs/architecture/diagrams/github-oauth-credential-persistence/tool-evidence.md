@@ -10,4 +10,4 @@ Pin 2.16，sequence；delivery receipt 綁 specification／artifact SHA-256 及 
 
 ## PR Lens
 
-等待實際 source commit 後，以真 base/head bounded diff 建立本地變更圖，再補實際 validate/render 結果。不把尚未產生的圖填成成功；不使用 hosted canvas、不上傳資產、不修改配置。
+以真 base `16606b89b8e3e6b61523c23aa0be9653c1ea7b44`／source head `e53030883d6de111b52ee64996a7fe01c04109a7` 的 `git diff --find-renames <base>...<head>` 建立外部 scratch 變更圖。CLI 0.11.0 validate／render 均 exit0；實讀 render manifest：1 SVG、4 lanes、7 nodes、7 edges、3 walkthrough steps，保留未變更 provider／port 鄰接與 file refs。初次 generatedAt ISO suffix 格式被拒，修正為 Z 後通過；未忽略 validator failure。圖及 actual.diff 僅留本地，不使用 hosted canvas、不上傳資產、不修改配置。這是變更理解圖，不是 correctness verdict。
