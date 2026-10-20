@@ -1,7 +1,9 @@
 # 視覺檢查紀錄
 
-2026-10-20，Implementer。
+2026-10-20，Implementer，驗證 host amendment。
 
-Archify v2：showcase 九項 checks、零 composition errors／warnings；1440×900、1600×1000、1920×1080、2048×1320 containment 均通過。已用本機圖片檢視工具實看最小／最大兩尺寸的 light／dark 四張既有截圖：訊息與節點可讀、無遮擋、主流程完整、桌面版面平衡。自動 receipt 的 visualReview 仍為 pending，此段才是實看紀錄，不改 receipt。
+Archify v3：showcase九checks、零composition errors／warnings；1440×900、1600×1000、1920×1080、2048×1320 containment通過。已用圖片檢視工具實看1440×900與2048×1320 light/dark共四張：標題與驗證App標示可讀，主流程完整、無遮擋、桌面版面平衡。自動receipt的visualReview保留pending，不改工具原始結果。
 
-Architecture canvas：validate／build 成功（5 bands、18 boxes、17 edges、零 errors／warnings）。本機 file URL 的互動瀏覽器預覽被 browser URL policy 拒絕；未改用 alternate browser／server／raw CDP 繞過。Canvas light/dark 互動視覺確認留待 Human review；不宣稱已實看或產生未存在的 screenshots。
+責任canvas v2：validate/build完成（5bands、18boxes、17edges、零errors/warnings）。沿用先前file-URL browser policy限制，不以其他browser/server/rawCDP繞過；本次未實看互動canvas，Human pending，不宣稱有canvas截圖。
+
+歷史：基線e63eeb2的Archify v2曾通過九checks／四viewport，四張light/dark截圖由Implementer實看；舊canvas亦validate/build成功但互動視覺pending。舊版原樣保留，現行文件改連v3與canvas v2。

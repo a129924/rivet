@@ -1,7 +1,9 @@
 # 工具證據
 
-Graphify：未找到現存可用圖，依 skill 採 targeted rg/source；未 build/extract、未安裝、未呼叫 provider。CLI pin 為 0.9.73；沒有圖時未執行 query，不假稱 graph coverage。
+Graphify 0.9.73：本次以 GRAPHIFY_NO_AUTO_REFRESH=1 核對pin；未找到現存可用圖，沿用targeted rg/source fallback。未extract/build/install/provider，未假稱graph coverage。
 
-Archify：見 delivery.json、visual-check.json 與 visual-review.md。v1 曾通過結構驗證但 desktop containment 失敗，v2 才是目前 HTML 來源。責任 canvas 由 architecture-canvas 生成，不混作 PR Lens change map。
+Archify v3：本次validate/deliver showcase九checks、零errors/warnings；receipt記spec／artifact SHA，路徑已正規化為repository-relative。visual-check四viewport及四截圖通過，Implementer實看見visual-review.md。舊v1/v2已frozen並原樣保留。
 
-PR Lens：待真實 commit diff 形成後，以 pinned local-only CLI validate/render 外部 topic scratch；不把產品 secret 或 callback 放入圖。結果與實際 commit provenance 在 Draft PR／交付回報提供；不將外部 scratch 寫進 repository，也不取代 Reviewer。
+Architecture canvas v2：新scene-v2.js與index-v2.html標示獨立驗證App／正式OAuth能力／產品UI未交付；validate/build零errors/warnings。互動視覺沿用已知policy限制，Human pending，沒有嘗試繞過。
+
+PR Lens 0.11.0：提交後依原PR真base/head diff在外部topic scratch產生並validate/render；保留unchanged OAuth/runtime鄰居與file refs、walkthrough。實際provenance與結果在原Draft PR及交付回報；不建立repo .pr-lens、不上傳附件、不代替Reviewer。基線e63eeb2的舊map僅代表當時diff。

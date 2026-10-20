@@ -1,99 +1,139 @@
-# GitHub 首次登入：受限執行計畫
+# 正式 OAuth 能力與獨立驗證 App：受限執行計畫
 
-- Topic：`github-first-sign-in`；2026-10-20，Plan-Creator 初稿，待獨立 Plan-Reviewer。
-- Branch：`feat/github-first-sign-in`；base／PR target：dev；只在指定 feature worktree 實作。
+- Topic：`github-first-sign-in`；2026-10-20，Plan-Creator amendment，已獲獨立 Plan-Reviewer A02 approved（無required fix）。
+- Branch：`feat/github-first-sign-in`；base／PR target：`dev`；基線 `e63eeb21b4774adafc5f8a822ac474df7e0bdc22`。
+- 沿用原 feature worktree／[Draft PR #61](https://github.com/a129924/rivet/pull/61)，不建新 worktree／PR、不在 dev 實作、不 merge。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
-## 1. 九欄與 bounded handoff
+## 1. 現行 Goal 與九欄
 
-每個 `swift-implementation` bounded step 開始及完成交接均逐項列以下原拼寫九欄，實際逐檔展開本 manifest 的子集；這不是可任改整個目錄的授權。
+交付為「正式 OAuth 實作能力＋獨立 GitHubSignInVerification App」。正式 Rivet 產品登入 UI 尚未交付。基線已完成 OAuth，本次只搬移並澄清驗證外殼，不重做正式能力。
 
-- **In-Scope**：本 slice 允許的行為／責任；S03 授權、交換、factory；S04 程序內 store、host、coordinator、Presentation、API 與文件。
-- **Out-Of-Scope**：儲存／重啟／DPK、多帳號、logout／revoke、PR 業務、其他 worktree、generic HTTP auth 及既有 lifecycle 重寫。
-- **ReadOnly**：凍結的 public contracts／runtime policy、唯讀參考。檔案可讀不代表整份可寫；M01 的 additive imports／組裝例外明列，不把需接 factory 的檔案整份凍住。
-- **Written**：開始交接是 planned allowed exact new paths；完成交接才是 actual new paths＋diff 證據。不得把允許清單複製成完成結果。
-- **Deleted**：預設無；包含 rename 造成的刪除。若需要刪除，先回修契約並獨立審查，不能直接擴張。
-- **Modify**：開始列允許既有檔與修改目的；完成列 actual changed paths／diff hunks，不改名為 Modified。
-- **Goal**：該 slice 可觀察結果；S03 完整初次 bundle，S04 正式 app 至實際 API 身分結果與同程序重複操作。
-- **Non-Goal**：不保證持久連線、全部遠端 refresh／401 證據、repository permission 或遠端撤銷。
-- **TestCase**：TC IDs、預期／實際命令、輸入層級、結果、相對 evidence path；區分 passed／failed／未執行／Human pending。
+每個 implementation slice 開始與完成交接均保留以下九欄，開始是 allowed paths，完成才記 actual paths／diff／結果，不能把允許清單抄成已完成。
 
-交接記真實 revision、bounded diff、dirty patch 範圍／識別；工具暫存輸出獨立列，不混入 repository Written／Modify，更不能混入憑證。此 planning 建立階段只有四 artifacts 實際 Written；產品實作／tests／圖尚未執行，Deleted=無。
+| 欄位 | 本次受限內容 |
+|---|---|
+| In-Scope | A03a App/project/target/entry rename、app-local UI搬移；A03b 文件／圖修訂 |
+| Out-Of-Scope | 正式產品登入或帳號管理、CurrentUserReader、新共用module/public API、其他topic/worktree、持久化及lifecycle重寫 |
+| ReadOnly | 正式OAuth及既有credential/provider/scope/clients/refresh/rotation/single-flight/401、PR Inbox／Reader、frozen圖與歷史結果 |
+| Written | 下列rename目的及新修訂圖／amendment evidence，逐slice展開精確paths |
+| Deleted | 下列16個rename來源；除此無刪除授權 |
+| Modify | 搬後host識別／存取範圍／引用、四planning、指定長期docs／工具證據 |
+| Goal | 驗證App可build/test、明示驗證身份，正式OAuth與共用PR Inbox保持不變 |
+| Non-Goal | 不把驗證UI說成產品交付；不宣稱新host真登入、反向PKCE或所有遠端refresh已驗證 |
+| TestCase | TC01–TC09的適用regression／AT01–AT05搬移驗證；記實際命令、層級、pass/fail/pending與相對evidence |
 
-## 2. 精確檔案 manifest
+## 2. 精確 manifest（本 amendment 的唯一寫入授權）
 
-Aliases 僅縮寫固定前綴；每個分號項是一個允許檔案，不授權任意新增目錄內容：G=`Sources/BoundedContexts/GitHubIntegration`；GT=`Tests/GitHubIntegrationTests`；A=`apps/Rivet`；P=`Sources/Presentation/GitHubConnection`；D=`docs/architecture/diagrams/github-first-sign-in`；E=`plan/github-first-sign-in/evidence`。
+### Rename＝Deleted 來源＋Written 目的（A03a）
 
-### Written：planned allowed 新檔
+共16檔，apps/Rivet原13檔完整搬移，加上共用UI兩檔及其測試。每列均允許搬後必要內容修改，不代表行為重寫。
 
-| ID／slice | 精確相對 paths | 用途 |
+| Deleted：來源 | Written：目的 |
+|---|---|
+| `apps/Rivet/Rivet.xcodeproj/project.pbxproj` | `apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj/project.pbxproj` |
+| `apps/Rivet/Rivet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved` | `apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved` |
+| `apps/Rivet/Rivet.xcodeproj/xcshareddata/xcschemes/Rivet.xcscheme` | `apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj/xcshareddata/xcschemes/GitHubSignInVerification.xcscheme` |
+| `apps/Rivet/Sources/RivetApp.swift` | `apps/GitHubSignInVerification/Sources/GitHubSignInVerificationApp.swift` |
+| `apps/Rivet/Sources/GitHubConnectionCoordinator.swift` | `apps/GitHubSignInVerification/Sources/GitHubConnectionCoordinator.swift` |
+| `apps/Rivet/Sources/GitHubLoopbackCallbackRelay.swift` | `apps/GitHubSignInVerification/Sources/GitHubLoopbackCallbackRelay.swift` |
+| `apps/Rivet/Sources/GitHubAccountProbe.swift` | `apps/GitHubSignInVerification/Sources/GitHubAccountProbe.swift` |
+| `apps/Rivet/Sources/InMemoryOAuthCredentialStore.swift` | `apps/GitHubSignInVerification/Sources/InMemoryOAuthCredentialStore.swift` |
+| `apps/Rivet/Resources/Info.plist` | `apps/GitHubSignInVerification/Resources/Info.plist` |
+| `apps/Rivet/Tests/GitHubConnectionCoordinatorTests.swift` | `apps/GitHubSignInVerification/Tests/GitHubConnectionCoordinatorTests.swift` |
+| `apps/Rivet/Tests/GitHubLoopbackCallbackRelayTests.swift` | `apps/GitHubSignInVerification/Tests/GitHubLoopbackCallbackRelayTests.swift` |
+| `apps/Rivet/Tests/GitHubAccountProbeTests.swift` | `apps/GitHubSignInVerification/Tests/GitHubAccountProbeTests.swift` |
+| `apps/Rivet/Tests/InMemoryOAuthCredentialStoreTests.swift` | `apps/GitHubSignInVerification/Tests/InMemoryOAuthCredentialStoreTests.swift` |
+| `Sources/Presentation/GitHubConnection/GitHubConnectionPresentation.swift` | `apps/GitHubSignInVerification/Sources/GitHubConnectionPresentation.swift` |
+| `Sources/Presentation/GitHubConnection/GitHubConnectionView.swift` | `apps/GitHubSignInVerification/Sources/GitHubConnectionView.swift` |
+| `Tests/RivetPresentationTests/GitHubConnectionPresentationTests.swift` | `apps/GitHubSignInVerification/Tests/GitHubConnectionPresentationTests.swift` |
+
+允許搬後修改：project/scheme/app entry/product/test target/module、bundle identifier、TEST_HOST／BUNDLE_LOADER、imports/path references；從App移除RivetPresentation dependency；UI及Presentation型別移除public，無新module；窗口／畫面明示驗證App及非正式產品登入UI；User-Agent、queue label與靜態callback頁字串明確驗證用途。test key改 `GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE`，entry早於live建立檢查，scheme一致；protocol、callback policy及lifecycle不變。Package.resolved內容原樣搬移，不更新dependencies。
+
+### Modify（A01／A03b／對應角色記錄）
+
+- `analysis/github-first-sign-in/requirements.md`
+- `analysis/github-first-sign-in/technical-spec.md`
+- `plan/github-first-sign-in/github-first-sign-in.plan.md`
+- `plan/github-first-sign-in/github-first-sign-in.step.md`
+- `README.md`
+- `docs/design-principles.md`
+- `docs/architecture/README.md`
+- `docs/architecture/github-oauth-dual-client.md`
+- `docs/architecture/github-first-sign-in.md`
+- `docs/architecture/diagrams/github-first-sign-in/BUILD.md`
+- `docs/architecture/diagrams/github-first-sign-in/visual-review.md`
+- `docs/architecture/diagrams/github-first-sign-in/tool-evidence.md`
+- `plan/github-first-sign-in/evidence/contracts.md`
+- `plan/github-first-sign-in/evidence/compatibility.md`
+- `plan/github-first-sign-in/evidence/product-e2e.md`
+- `plan/github-first-sign-in/evidence/reviewer-verdict.md`
+
+前五份長期docs改實際責任與新入口／命令／圖連結；不得再宣稱正式Rivet登入UI已交付。既有evidence只加基線來源／歷史限定聲明，不改舊測試或live結果，新結果放下列新證據。各角色只記自己事實與外部明示verdict。
+
+### Written：新修訂圖與證據（A03b／A04／A05）
+
+前綴 D=`docs/architecture/diagrams/github-first-sign-in`，每一項為精確檔案，不是整目錄授權：
+
+- `D/scene-v2.js`
+- `D/index-v2.html`
+- `D/authorization-sequence-v3.json`
+- `D/authorization-sequence-v3.html`
+- `D/authorization-sequence-v3.delivery.json`
+- `D/authorization-sequence-v3.visual-check.json`
+- `D/authorization-sequence-v3.visual-check.html`
+- `D/authorization-sequence-v3.visual-check.1440x900.light.png`
+- `D/authorization-sequence-v3.visual-check.1440x900.dark.png`
+- `D/authorization-sequence-v3.visual-check.2048x1320.light.png`
+- `D/authorization-sequence-v3.visual-check.2048x1320.dark.png`
+- `plan/github-first-sign-in/evidence/verification-host-amendment.md`
+
+舊scene/index與已frozen的v1/v2 spec、HTML、receipts／screenshots原樣保留，不直接覆寫。新spec驗證後freeze；若工具另產生必要snapshot，先將精確名稱納amendment，再寫入，不借整目錄授權。Generated outputs只來自對應skill工具；衍生資料放ignored `.build/github-first-sign-in/VerificationHostDerivedData`；PR Lens用外部topic scratch，不入repo。
+
+### ReadOnly
+
+全部 `Sources/BoundedContexts/GitHubIntegration`（包括本topic正式OAuth五檔與原refresh/runtime）、GitHubIntegration tests／consumer source、通用HTTPClient、root `Package.swift`／`Package.resolved`、共用Presentation除上列搬移來源以外全部檔案、PR Inbox／Reader、experiments、其他topic/worktree、skills/runtime/AGENTS/hooks/config/.gitignore唯讀。必要新改檔未列manifest前不得寫入。Graphify／PR Lens策略沿用下文，不新增外部服務或repo工具設定。
+
+## 3. Amendment 步驟
+
+| Step | Owner role | 完成條件 |
 |---|---|---|
-| W01 Planning | `analysis/github-first-sign-in/requirements.md`; `analysis/github-first-sign-in/technical-spec.md`; `plan/github-first-sign-in/github-first-sign-in.plan.md`; `plan/github-first-sign-in/github-first-sign-in.step.md` | 四份正式 artifacts；建立後依對應角色更新 |
-| W02 S03 | `G/Contracts/GitHubOAuthAppConfiguration.swift`; `G/OAuth/GitHubOAuth.swift`; `G/OAuth/GitHubOAuthAuthorizationSession.swift`; `G/OAuth/GitHubOAuthCodeExchanger.swift`; `G/OAuth/GitHubOAuthAuthorizationError.swift` | additive configuration／factory／session／exchange／安全 errors |
-| W03 S03 | `GT/GitHubOAuthFactoryTests.swift`; `GT/GitHubOAuthAuthorizationSessionTests.swift`; `GT/GitHubOAuthCodeExchangerTests.swift` | deterministic clock／random／HTTP seams、PKCE／callback／response tests |
-| W04 S04 | `A/Rivet.xcodeproj/project.pbxproj`; `A/Rivet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`; `A/Rivet.xcodeproj/xcshareddata/xcschemes/Rivet.xcscheme`; `A/Sources/RivetApp.swift`; `A/Sources/GitHubConnectionCoordinator.swift`; `A/Sources/GitHubLoopbackCallbackRelay.swift`; `A/Sources/GitHubAccountProbe.swift`; `A/Sources/InMemoryOAuthCredentialStore.swift`; `A/Resources/Info.plist` | 正式 app／local root package products／platform adapter／完整程序內 store；不新增 persistent adapter／entitlements；新增 lock 僅為 Xcode generated dependency lock，沿用 root Apollo 2.1.2、revision `38c202227d0f09508e573dcf22f54885cfb0c5d4`，不修改 root lock |
-| W05 S04 | `A/Tests/GitHubConnectionCoordinatorTests.swift`; `A/Tests/GitHubLoopbackCallbackRelayTests.swift`; `A/Tests/GitHubAccountProbeTests.swift`; `A/Tests/InMemoryOAuthCredentialStoreTests.swift`; `P/GitHubConnectionPresentation.swift`; `P/GitHubConnectionView.swift`; `Tests/RivetPresentationTests/GitHubConnectionPresentationTests.swift` | app hosted fake-only tests／display-ready leaf；無新 module |
-| W06 S04 docs | `docs/architecture/github-first-sign-in.md`; `D/scene.js`; `D/index.html`; `D/authorization-sequence.json`; `D/authorization-sequence-v2.json`; `D/authorization-sequence.html`; `D/BUILD.md`; `D/visual-review.md`; `D/tool-evidence.md` | 長期責任、architecture-canvas、Archify sequence 與驗證紀錄 |
-| W07 evidence | `E/contracts.md`; `E/compatibility.md`; `E/product-e2e.md`; `E/reviewer-verdict.md` | Tester／Reviewer／Human 的脫敏實際證據；非新增正式 artifact／gate |
+| A01 | Plan-Creator | 四planning現行契約一致，先列rename/delete與Human Decision，保留歷史來源 |
+| A02 | Plan-Reviewer | 獨立審manifest／責任／九欄／測試與locked decisions，明示verdict |
+| A03a | Implementer | A02 approved後，bounded搬移App與UI、移除共用依賴，開始／完成均九欄 |
+| A03b | Implementer | 文件與修訂圖反映正式能力／驗證host／未交付產品UI，工具驗證及限制分列 |
+| A04 | Tester | 明示交接後獨立root／consumer／app／format／lint／隔離／diff／圖檢查 |
+| A05 | Reviewer | 獨立code/scope/evidence review；required fixes回Implementer及Tester重驗，再複審 |
+| A06 | Implementer | A05 approved後staged語意檢查→topic commit→push→更新原Draft PR61，真diff PR Lens |
+| A07 | Human；Tester記錄 | 原Draft PR human review；新驗證App真登入及反向PKCE維持實際結果或pending |
 
-Archify basename `authorization-sequence` 只另允許同名 `.delivery.json`、`.visual-check.json`、`.visual-check.html`、`.visual-check.1440x900.light.png`、`.visual-check.1440x900.dark.png`、`.visual-check.2048x1320.light.png`、`.visual-check.2048x1320.dark.png`，及 deliver 產生的同目錄 frozen-spec snapshot（精確名稱／SHA 必須記 receipt）。Canvas 可另寫 `D/canvas-light.png`、`D/canvas-dark.png` 作實看證據。其他必要輸出先明列 amendment，不掃寫整目錄。Build outputs 用 ignored `.build/github-first-sign-in/`；PR Lens 用外部 topic scratch，不入 repository。
-
-### Bounded manifest amendment：desktop geometry v2
-
-只額外允許新檔 `D/authorization-sequence-v2.json`，用於既有授權 sequence 的 desktop geometry 修正。原 `D/authorization-sequence.json` 已通過九項 validate／deliver 並 frozen，不得修改；本 amendment 不改 OAuth scope、流程語意、contract 或產品程式碼。v2 重新 validate／deliver 後仍交付既有 `D/authorization-sequence.html`，receipt／visual-check／screenshots 沿用上述原 basename allowlist，不另開 v2 輸出系列。若 deliver 實際產生同目錄 frozen-spec snapshot，僅允許該次工具生成的精確 snapshot，名稱／SHA 依實際 receipt 記錄；未產生不得宣稱存在。此 amendment 尚待原獨立 Plan-Reviewer 審查，不自行宣告 approved。
-
-### Modify：planned allowed 既有檔
-
-| ID | 精確相對 paths | 限制 |
-|---|---|---|
-| M01 S03 | `G/OAuth/GitHubOAuthHTTPTokenFetcher.swift` | 只有必要 imports／additive internal configuration bridge 或 initializer；不改 refresh payload、response policy、redirect、cancel／rotation classification 或 visibility。若新 factory 可直接呼叫既有 init，保持檔案未改 |
-| M02 S03 | `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift`; `GT/StaticIsolationTests.swift` | 前者只增加 public construction／visibility／source compatibility 覆蓋；後者只精確新增 W02 sourcePaths 及其中實際必要的 RivetHTTPClient imports exceptions，不放寬 core isolation、不改舊期望配合新政策 |
-| M03 S04 docs | `README.md`; `docs/design-principles.md`; `docs/architecture/README.md`; `docs/architecture/github-oauth-dual-client.md` | 回寫實際能力、責任與圖連結，保留 E001–E003 限制；Human live pending 不寫成已成功 |
-| M04 | W01 四份 planning artifacts | 各角色只記自己事實與外部明示 verdict；不代 Reviewer／Human 填核准 |
-
-### ReadOnly／Deleted
-
-凍結 bundle／store／fetcher public signatures、OAuthTokenProvider 全部 lifecycle／snapshot／single-flight／rotation semantics、GitHubClientScope、既有 REST／GraphQL policy；不新增 disposition／quiescence。G 的既有 provider、contracts、composition、clients、endpoints 除 M01 外不修改。通用 RivetHTTPClient、PR Inbox／Reader、既有 Presentation PRInbox、root Package.swift／Package.resolved、其他 tests、experiments、其他 topic／worktree 均唯讀。
-
-Skills／runtime／AGENTS／hooks／工具 config／.gitignore 不修改；`.github/pr-lens.yml` 若存在只讀。Deleted 預設無。不得靠改 dev 或儲存線繞過 sandbox／ownership。
-
-## 3. 步驟與交付順序
-
-| Step | Owner role | 範圍／完成條件 |
-|---|---|---|
-| S01 | Plan-Creator → Plan-Reviewer | 四份 artifacts 與 manifest；獨立 planning verdict，非自行放行 |
-| S02 | Plan-Reviewer | 回查 technical-spec §6 的 Human ownership amendment／來源 SHA；僅判本 topic 分工，非等待 E007／儲存採用 |
-| S03 | Implementer | W02／W03、必要 M01／M02 的 bounded 九欄交接；完整初次授權與交換能力 |
-| S04 | Implementer | W04–W06／M03；完整程序內 store、app／scope／API、文件及圖；分子 slice 交九欄 |
-| S05 | Tester | TC01–TC07 受控／build／compatibility；TC09 文件圖／工具證據；TC08 與真 OAuth 分列 Human pending |
-| S06 | Reviewer | 獨立 bounded code／scope／evidence review；required fixes 回 Implementer，再由 Tester／Reviewer 核查 |
-| S07 | Implementer | 無重大問題且上游允許時，staged 語意檢查 → topic commit → push → Draft PR 回 dev；真 IDs／URL，不能 merge |
-| S08 | Human；Tester 記錄 | Draft PR 後 Human review；需要個人 secret 的正式登入／重複 /user／反向 PKCE 記真結果或 pending |
-
-S01／S02 需要獨立 Plan-Reviewer 明示 approved 才能 S03。S02 不要求儲存線完成 adoption／全部 planning 回修；其未來產品實作前必須遵守 Human split。S05／S06 的受控結果與 code review 是 S07 前置。使用者已明示 commit/push/Draft PR 授權，不因舊逐次確認預設重問；staged diff 仍須依 git-commit-convention 檢查語意與 message。Human live pending 不是 code 已完成的證據，也不是停止可完成實作或 Draft PR 的理由。
+使用者已授權同topic回修、commit／push／原Draft PR更新，不重問發布授權。不能merge；重大scope／contract問題才停止受影響工作交Human。舊S01–S08為歷史交付，不等於本amendment核准。
 
 ## 4. TestCase 與驗證命令
 
-| ID | Cases／結果 |
+TC01–TC06：沿用基線callback/state/S256／交換完整bundle／取消settlement／store／provider-scope多次使用及lifecycle regression，搬移不改OAuth政策。TC07：新host fake-only tests及真實API probe判定；TC08：Human live與反向PKCE；TC09：docs／圖／受限工具及diff來源。不能把舊命令或舊host結果當成搬後重驗。
+
+| ID | 本次新增驗證 |
 |---|---|
-| TC01 | 正確 authorize query、offline_access、獨立 state／verifier、S256、dynamic redirect；listener ready 前不開瀏覽器、open failure 可重試 |
-| TC02 | method／host／port／path／userinfo／fragment、缺失／重複 state／code／error、錯 state、code+error；無效 callback 保持有效等待、單次 claim、重複／遲到零額外交換 |
-| TC03 | 五分鐘 deadline、cancel／denied／timeout／exchange race；generation gate、listener cleanup、真 settlement 前不能新嘗試；用 clock／latch，無 sleep 推測 |
-| TC04 | 固定 endpoint、form encoding、完整 fields、無 redirect／cache／cookies、三十秒上限、不重送；HTTP／OAuth／network／mixed／incomplete response、Bearer／date validation、同 receivedAt mapping |
-| TC05 | 完整六欄 in-memory load／save／rotation save、無 Security／檔案路徑、啟動不 restore；redaction／安全 failures，不保存原始機密或帳號值證據 |
-| TC06 | caller-owned provider／scope identity、多 request、prepare 失敗同 instance retry、old refresh／save latch settlement、新 bundle 後新 provider；既有 lifecycle／REST／GraphQL regression 不變；StaticIsolationTests 精確 source manifest／imports whitelist 維持隔離 |
-| TC07 | hosted fake-only live-call counters=0、正式 ad hoc build／launch、UI 進行中／取消／失敗／retry、GET /user 200+valid login/id、非200／decode failure不宣稱成功、再次查詢不重新授權 |
-| TC08 | Human 於正式 app 輸入自有 OAuth App；正常 S256+完整 bundle+/user+再次查詢；缺失／錯誤 verifier 各用獨立新 code；未執行記 Human pending，不預填PKCE enforcement |
-| TC09 | ownership／source-doc-diagram 一致；canvas validate/build＋實看、Archify 九 checks／deliver／四viewport／lightdark實看；Graphify fallback或source-confirm；PR Lens真diff來源與validate/render或明確限制 |
+| AT01 | 新project/scheme/app entry/target/product/module與bundle references一致；build/test成功；舊apps/Rivet來源不殘留 |
+| AT02 | hosted scheme key與entry一致；fake-only零livecall；原coordinator/relay/probe/store測試搬後通過 |
+| AT03 | UI／Presentation測試改App-local且public移除；共用RivetPresentation不含驗證UI；PRInbox與rootPackage原樣 |
+| AT04 | OAuth source與原lifecycle相對基線無diff；root tests、consumer及適用format/lint通過 |
+| AT05 | 新圖明示三者邊界並驗證；歷史evidence來源標版本，新host live與反向PKCE/canvas pending如實保留；PR Lens取原PR真base/head diff |
 
-受控 commands（由 Tester 執行；此文件不表示已跑）：
+Tester命令（此plan不表示已執行）：
 
-- `swift test --filter 'GitHubOAuth|OAuthTokenProvider|GitHubClientScope|GitHubHTTP|GitHubRest|GitHubGraphQL|ApolloGraphQL|GitHubConnectionPresentation'`。
-- `scripts/check-github-integration-consumer.sh`。
-- `scripts/check-swift-format.sh`、`scripts/check-swiftlint.sh`，只 check、不 formatter 掃寫其他檔。若失敗先區分新改動與既有問題。
-- `xcodebuild -project apps/Rivet/Rivet.xcodeproj -scheme Rivet -destination 'platform=macOS' -derivedDataPath .build/github-first-sign-in/DerivedData CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES build test`。Scheme 的 hosted tests 設 RIVET_UNIT_TEST_MODE=1，不啟動 live OAuth／Security。
+```sh
+swift test
+scripts/check-github-integration-consumer.sh
+scripts/check-swift-format.sh
+scripts/check-swiftlint.sh
+xcodebuild -project apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj -scheme GitHubSignInVerification -destination 'platform=macOS' -derivedDataPath .build/github-first-sign-in/VerificationHostDerivedData CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES build test
+swift format lint --strict --recursive apps/GitHubSignInVerification/Sources apps/GitHubSignInVerification/Tests
+swiftlint lint --strict apps/GitHubSignInVerification/Sources apps/GitHubSignInVerification/Tests
+```
 
-只對實際修改與失敗新增必要驗證；不因工具輔助失敗無限擴測。TC08 若需額外安全輔助，先以 bounded test seam 規劃；不暴露產品 verifier 繞過開關，不索取或搜尋任何 secret。
+依實際CLI接受語法執行適用app檢查；不掃寫其他檔。可唯讀source/diff確認newtestkey與public隔離，不需要為純rename新增鏡像tests。舊276 root／13consumer／8app與live結果明示屬基線；搬後實際數量由Tester記，不預填。新host真登入若需重做，由Human自行輸入機密；不讀取或重貼舊callback/code/state/secret。
 
 ## 5. 工具、證據與停止條件
 
@@ -107,7 +147,7 @@ Pin 0.11.0、local-only；只在實際 bounded diff 後讀 diff 與必要 contex
 
 ### Archify／architecture-canvas
 
-S04 文件圖作者文字繁中；固定 UI／HTML lang English fallback。責任邊界依 architecture-canvas 讀 scene contract、author scene.js、validate/build、實看；不得用 sequence 或 PR Lens 代替。授權流程採 Archify sequence：先 matching schema＋common＋matching example，下一個工具動作寫 candidate；不預先鑽 renderer。Showcase 九 checks、零 composition errors／warnings；validate 後 freeze、deliver 收據。visual-check 四 viewport 1440x900／1600x1000／1920x1080／2048x1320，實看最小／最大 lightdark screenshots。自動 visualReview=pending 不等於已實看；非零如實記；連續兩輪不改善即停報 diagnostics。不能發布 artifact.cafe／start preview server。
+A03 文件圖作者文字繁中；固定 UI／HTML lang English fallback。責任邊界依 architecture-canvas 讀 scene contract、author scene-v2.js、validate/build、實看；不得用 sequence 或 PR Lens 代替。授權流程採 Archify sequence：先 matching schema＋common＋matching example，下一個工具動作寫 candidate；不預先鑽 renderer。Showcase 九 checks、零 composition errors／warnings；validate 後 freeze、deliver 收據。visual-check 四 viewport 1440x900／1600x1000／1920x1080／2048x1320，實看最小／最大 lightdark screenshots。自動 visualReview=pending 不等於已實看；非零如實記；連續兩輪不改善即停報 diagnostics。不能發布 artifact.cafe／start preview server。
 
 Graphify／PR Lens 是導覽／理解輔助，不是新增 OAuth 業務驗收或外部服務依賴；失敗記 concrete limitation，保留 source／diff fallback與既有 review gate。必要長期圖交付未完成則文件仍 pending，不冒稱完成。工具暫存、DerivedData、機密輸入皆不入版控；evidence 只放必要脫敏結果。
 

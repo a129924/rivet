@@ -2,7 +2,6 @@ import AppKit
 import Foundation
 import GitHubIntegration
 import Observation
-import RivetPresentation
 
 struct GitHubConnectionDependencies: Sendable {
   var authorize: @Sendable (GitHubOAuthAppConfiguration) async throws -> GitHubOAuthCredentialBundle

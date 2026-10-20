@@ -88,6 +88,8 @@ Rivet 仍是 architecture baseline。`RivetHTTPClient` 是 generic、GitHub-unaw
 
 GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic HTTPClient 執行固定 refresh POST；public `OAuthTokenFetcher.refresh` 使用 typed `OAuthTokenRefreshError`。只有可信純 error 的憑證拒絕映射為 `.authenticationRequired`；設定錯誤維持 `.refresh` 且可再次嘗試。輪替未知與遠端已接受後的 persistence failure 停止該 provider，保留 store。這些 GitHub-specific 分類屬於 GitHubIntegration；通用 HTTPClient 與各 BC 的業務 failure 邊界維持。[完整契約](github-oauth-dual-client.md)記錄取消與過期行為。
 
-## 首次登入的程序內交付
+## 正式 OAuth 能力與獨立驗證 App
 
-正式本機 Rivet.app 已加入初次授權與當次 `/user` 使用：自有 OAuth App、loopback/state/S256、完整記憶體 bundle，沿用 caller-owned provider／scope。2026-10-20 已觀察正向授權及同程序再次 API 查詢成功；反向 PKCE、完整遠端 refresh／401 與持久化驗收不因此成立。既有 lifecycle 及 BC 邊界不變。詳見 [首次登入契約](github-first-sign-in.md)。
+`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
+
+舊版 `e63eeb2` 的正向授權及同程序再次 API 查詢可作來源證據；本次新 host 真登入、反向 PKCE、完整遠端 refresh／401 與持久化仍未因此驗證。詳見 [首次 OAuth 契約](github-first-sign-in.md)。

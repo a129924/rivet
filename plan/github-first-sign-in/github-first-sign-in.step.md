@@ -1,16 +1,53 @@
-# GitHub 首次登入：執行帳本
+# 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase：S08 Human review。
-- Current step：S08。
-- Current status：human-check；Draft PR 已建立，等待人工審查。
-- Upstream verdict：approved；獨立 Plan-Reviewer 已明示 S01／S02 approved（2026-10-20）。
-- Branch：feat/github-first-sign-in；base／PR target：dev；基線 16606b89b8e3e6b61523c23aa0be9653c1ea7b44。
-- Worktree：使用者指定的本 topic feature worktree；不得在 dev 或平行儲存線實作。
-- 最後更新：2026-10-20，主 agent；實作 commit 已 push，Draft PR #61 已建立。
+- Phase／Current step：A06 提交與更新原 Draft PR。
+- Current status：A04 verification completed；交獨立 Reviewer。
+- Upstream verdict：approved；獨立 Plan-Reviewer 明示 A02 approved，無 required fix（2026-10-20）。
+- Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
+- 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
+- 最後更新：2026-10-20，Tester；A04親跑完成，實際結果及限制見 verification-host-amendment.md。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
-## Steps
+## 現行 amendment ledger
+
+Human 已確認「正式 OAuth 實作能力＋獨立 GitHubSignInVerification App」；正式 Rivet 產品登入 UI 尚未交付。舊host命名與產品交付說法由此決策取代，以下歷史區保留作來源，不構成現行執行契約。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
+|---|---|---|---|---|---|
+| A01 | completed | Plan-Creator | 四planning一致，16rename/Delete與新增圖精確manifest先列 | 本次四planning內容；只讀基線source/文件 | 未自審 |
+| A02 | completed | Plan-Reviewer | 獨立planning範圍/manifest/九欄/驗證審查 | 獨立 Plan-Reviewer 明示 A02 approved | approved |
+| A03a | completed | Implementer | approved後App/project/UI/test bounded搬移 | A03a完成九欄；16rename與精確diff已由Tester／Reviewer核對 | 需A02 approved |
+| A03b | completed | Implementer | 長期docs/修訂圖/來源聲明與工具驗證 | A03b完成九欄；v3／canvas v2收據與來源聲明 | 依A02契約 |
+| A04 | completed | Tester | root/consumer/app/format/lint/隔離/圖驗證 | verification-host-amendment.md：275 root／13 consumer／9 app passed；strict checks及圖validate/hash通過 | 新host live/canvas互動/反向PKCE pending；不代A05核准 |
+| A05 | completed | Reviewer | 獨立review及requiredfixes關閉 | 獨立 Reviewer 明示 approved，無 required fix；見 amendment evidence | approved |
+| A06 | in-progress | Implementer | staged語意→commit→push→更新原DraftPR61與local真diffPRLens | 待真SHA/URL/map | user已授權，需A05approved |
+| A07 | pending | Human；Tester記錄 | 原PRhumanreview、新hostlive適用項目 | 舊live基線來源可沿用；新hostlive與反向PKCE pending | 不讀取或保存機密 |
+
+## 現行 Blockers／Human Check
+
+- 無新增重大scope決策缺口；A02獨立Plan-Reviewer明示approved（無required fix），Tester已完成，獨立code Reviewer明示approved，無required fix。
+- 新驗證App真登入尚未執行，可保留Human pending；正常授權／再次API的舊證據來源基線明列，不冒充新host。反向PKCE、canvas互動視覺、全部遠端refresh/401及跨重啟仍未通過。
+- 舊canvas的file-URL policy限制沿用，不改其他路徑繞過。圖若必要驗證受限則如實記pending，不宣稱完整視覺通過。
+- user已授權本topic回修/commit/push/更新原DraftPR，無重大問題不重問；不得新worktree/PR或merge。重大contract/scope或外部系統設定變更才停受影響動作回Human。
+
+## A01 九欄完成交接
+
+- In-Scope：四planning現行契約amendment、HumanDecision、先列16rename/delete、修訂圖與獨立gate。
+- Out-Of-Scope：code/docs圖實作、測試、Git與PR操作、其他topic/worktree。
+- ReadOnly：README/design-principles/architecture、原四planning、基線host/UI/圖檔名、plan-creator及SDD契約。
+- Written：無新repository檔案。
+- Deleted：無（只規劃後續16rename來源）。
+- Modify：analysis/github-first-sign-in/requirements.md；analysis/github-first-sign-in/technical-spec.md；plan/github-first-sign-in/github-first-sign-in.plan.md；plan/github-first-sign-in/github-first-sign-in.step.md。
+- Goal：獨立Plan-Reviewer可讀的受限現行契約。
+- Non-Goal：不宣稱本次planning approved、搬移或驗證已完成。
+- TestCase：本輪未執行；AT01–AT05與TC01–TC09適用regression交Tester。
+
+後續每個implementation slice開始與完成均記同九欄及actualdiff，不沿用本planning事實作完成證據。
+
+---
+
+## 歷史交付 Steps（基線 e63eeb2）
 
 | ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
 |---|---|---|---|---|---|
@@ -96,3 +133,61 @@ Reviewer R1 required fix：Implementer僅新增 app coordinator 真provider gate
 - 已 push：`origin/feat/github-first-sign-in`；[Draft PR #61](https://github.com/a129924/rivet/pull/61)，base `dev`。
 - 本次記錄提交只更新交付帳本，不改產品 source 或已核准契約。
 - 停點：S08 Human review；不 merge、不釋放 worktree，不將 Human pending 改寫為通過。
+
+## A03a 開始交接（Implementer）
+
+- In-Scope：plan §2 全16筆rename與搬後必要host/UI/test識別修改。
+- Out-Of-Scope：正式產品登入、帳號業務、新module及OAuth政策。
+- ReadOnly：GitHubIntegration全source/tests、PR Inbox、rootPackage；基線e63eeb2。
+- Written：plan rename表16筆目的（完整逐檔路徑為本slice精確allowlist）。
+- Deleted：同表16筆來源；無其他刪除。
+- Modify：搬後project/scheme/entry/module/bundle/testkey、app-local UI存取、驗證提示與references。
+- Goal：獨立驗證App包含真OAuth/API組合，移除共用Presentation驗證UI。
+- Non-Goal：正式Rivet登入UI與新host真登入驗收。
+- TestCase：AT01–AT04；搬後build/test與隔離檢查待執行。
+
+## A03b 開始交接（Implementer）
+
+- In-Scope：plan §2 明列長期docs、圖修訂與歷史證據來源註記。
+- Out-Of-Scope：其他topic、改寫歷史結果、工具設定或發布圖。
+- ReadOnly：舊frozen v1/v2與生成物、experiments、其他worktree。
+- Written：plan新圖精確11檔與evidence/verification-host-amendment.md；實際生成再記。
+- Deleted：無。
+- Modify：plan列明5長期docs、3工具紀錄、4歷史evidence；四planning依實際更新。
+- Goal：清楚區分正式OAuth能力、獨立驗證host與尚未交付產品UI。
+- Non-Goal：不把舊正向live或pending變成新host已通過。
+- TestCase：AT05／TC09；新圖showcase與視覺證據待執行，Graphify已確認0.9.73無圖採source fallback。
+
+## A03a 完成交接（Implementer）
+
+- In-Scope：已完成plan §2的16筆精確rename；app/test product、scheme、entry、bundle/module、hosted key及references同步。
+- Out-Of-Scope：未新增產品登入、帳號抽象或共用module；未改其他topic/worktree。
+- ReadOnly：正式OAuth/lifecycle、PR Inbox、rootPackage；與e63eeb2比較指紋無變。
+- Written：rename表全部16個目的實際存在；App Sources7、Tests5、Info及project3檔。
+- Deleted：rename表16個來源實際移除，無其他刪除。
+- Modify：搬後必要識別及UI public移除；project移除RivetPresentation產品與兩target引用；callback/queue/User-Agent改驗證App識別。
+- Goal：驗證App明示用途，真OAuth/API組合保留；共用Presentation無驗證UI。
+- Non-Goal：不宣稱已build/test、新host真登入或產品UI交付。
+- TestCase：swift format僅處理新App source/tests；AT01–AT04實際執行交Tester。
+
+## A03b 完成交接（Implementer）
+
+- In-Scope：五份長期docs與現行圖連結、三工具紀錄、四歷史evidence來源聲明；四planning記實際進度。
+- Out-Of-Scope：未改歷史實驗/測試/live結果，未發布圖或修改工具設定。
+- ReadOnly：舊frozen specs／HTML／receipts指紋均相同；正式OAuth全部source相同。
+- Written：scene-v2.js、index-v2.html；authorization-sequence-v3.json/html/delivery.json/visual-check.json/visual-check.html及1440x900/2048x1320的light/dark四PNG；verification-host-amendment.md。
+- Deleted：無。
+- Modify：plan §2列明5長期docs、3工具紀錄、4舊evidence與四planning；僅本topic允許範圍。
+- Goal：正式能力／驗證host／未交付產品UI有一致文字與圖；舊證據標e63eeb2來源。
+- Non-Goal：canvas互動、新hostlive、反向PKCE及全部遠端refresh/401保持pending。
+- TestCase：Archify v3九checks零errors/warnings、四viewport通過，四截圖已實看可讀無遮擋；canvas v2 validate/build 5bands/18boxes/17edges零errors/warnings，互動視覺pending；Graphify 0.9.73無圖採source fallback。PRLens待真commit diff。
+
+## A04 獨立 Tester 完成交接
+
+In-Scope：AT01–AT05；Out-Of-Scope：code/Git/live/其他worktree；ReadOnly：planning/source/diagram；Written：無新repository檔案（build及scratch不入版控）；Deleted：無；Modify：verification-host-amendment.md及本step；Goal：獨立驗證實際回修；Non-Goal：不代Reviewer/Human核准；TestCase：root275/consumer13/app9，strict checks與Archify9checks均pass，正式OAuth/PRInbox/rootPackage與lock不變。完整命令、指紋、限制見該evidence；交A05獨立Reviewer。
+
+## A05 外部 verdict 與 A06 開始
+
+2026-10-20，主 agent 轉錄獨立 Reviewer 明示 **approved，無 required fix**。Reviewer逐一比較16搬移檔與e63eeb2，變動限於App識別、app-local存取、引用／依賴與核准文字；正式OAuth/lifecycle/PRInbox未變。文件／新圖與歷史來源一致，Tester275/13/9結果符合搬移範圍。Reviewer只讀未改檔或跑tests。
+
+依使用者授權進行staged語意檢查、同topic commit/push、更新原DraftPR61。新hostlive／反向PKCE／canvas互動與既有coverage限制不改寫為通過；不merge。

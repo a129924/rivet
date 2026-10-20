@@ -144,6 +144,8 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 
 六欄資料全數還原、身份／簽章前提成立，OAuth／exact-cert trust／own search-list membership／專用 Keychain與秘密已精確清理，原清單順序及 default 恢復。獨立 Tester／Reviewer 核對後，按寫入前「首次最多一次，fresh-process與同身分重建均零」判準，**此候選 UX 失敗、資料機制成功，受限驗證任務完成**；本輪不再是提示階段未知。前輪 unknown 收據保留，不把本次「允許」混成前輪「永遠允許」，不推論其他選項或未測下一次重建。這是本次 macOS／legacy／隔離自簽＋限定 user Code Signing trust／暫時 user search-list 條件的結果，不證明所有免費 Keychain 路徑不可行或需要付費；DPK、其他 macOS、長期 retained identity 及真 denial 仍未驗證。正式 adapter／採用繼續延後，既有 provider ownership 不變。
 
-## 首次登入的程序內交付
+## 正式 OAuth 能力與獨立驗證 App
 
-正式本機 Rivet.app 已加入初次授權與當次 `/user` 使用：自有 OAuth App、loopback/state/S256、完整記憶體 bundle，沿用 caller-owned provider／scope。2026-10-20 已觀察正向授權及同程序再次 API 查詢成功；反向 PKCE、完整遠端 refresh／401 與持久化驗收不因此成立。既有 lifecycle 及 BC 邊界不變。詳見 [首次登入契約](github-first-sign-in.md)。
+`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
+
+舊版 `e63eeb2` 的正向授權及同程序再次 API 查詢可作來源證據；本次新 host 真登入、反向 PKCE、完整遠端 refresh／401 與持久化仍未因此驗證。詳見 [首次 OAuth 契約](github-first-sign-in.md)。

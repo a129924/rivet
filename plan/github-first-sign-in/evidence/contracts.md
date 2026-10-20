@@ -1,5 +1,7 @@
 # 獨立 Tester：契約與實際交接
 
+> 歷史來源：基線 `e63eeb21b4774adafc5f8a822ac474df7e0bdc22` 的舊 host／當時 dirty source；以下原始結果保留。舊「正式 app」說法不代表產品 UI 已交付，不冒充搬後驗證 App 重驗；本次結果見 [verification-host-amendment.md](verification-host-amendment.md)。
+
 2026-10-20，Tester；受審 source base `16606b89b8e3e6b61523c23aa0be9653c1ea7b44`，branch `feat/github-first-sign-in`。dirty source/project/tests 指紋 SHA-256：`6b5aba527e080c9d65ab7481abf9a17f3a98b8906d8da5e8b324cc249cceec13`。計算方式：所有本 topic changed/new 且位於 Sources、Tests、apps 的檔案，relative path 排序；依序串接 UTF-8 path、NUL、完整 bytes、NUL。這是 dirty 快照識別，不是假造 commit。tracked patch SHA 見 compatibility.md；文件證據後續更新不改此 source 指紋。
 
 ## 九欄

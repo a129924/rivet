@@ -3,7 +3,7 @@ import Network
 
 /// All mutable listener/continuation state is confined to queue.
 final class GitHubLoopbackCallbackRelay: @unchecked Sendable {
-  private let queue = DispatchQueue(label: "Rivet.oauth.loopback")
+  private let queue = DispatchQueue(label: "GitHubSignInVerification.oauth.loopback")
   private var listener: NWListener?
   private var startup: CheckedContinuation<URL, any Error>?
   private var waiter: CheckedContinuation<URL, any Error>?
@@ -165,7 +165,7 @@ final class GitHubLoopbackCallbackRelay: @unchecked Sendable {
   }
 
   private func respond(_ id: UUID, valid: Bool) {
-    let body = valid ? "已收到回呼，請返回 Rivet 查看結果。" : "此要求不是有效的本機回呼。"
+    let body = valid ? "已收到回呼，請返回 GitHubSignInVerification 驗證 App 查看結果。" : "此要求不是有效的本機回呼。"
     let status = valid ? "200 OK" : "400 Bad Request"
     let response = [
       "HTTP/1.1 \(status)", "Content-Type: text/plain; charset=utf-8",

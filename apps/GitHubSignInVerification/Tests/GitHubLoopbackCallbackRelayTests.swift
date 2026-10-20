@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import Rivet
+@testable import GitHubSignInVerification
 
 struct GitHubLoopbackCallbackRelayTests {
   @Test func validatesMethodHostAndBoundsWithoutReflectingInput() {

@@ -1,5 +1,7 @@
 # 獨立建置與相容性驗證
 
+> 歷史來源：基線 `e63eeb21b4774adafc5f8a822ac474df7e0bdc22` 的舊 host／當時 dirty source；以下原始結果保留。舊「正式 app」說法不代表產品 UI 已交付，不冒充搬後驗證 App 重驗；本次結果見 [verification-host-amendment.md](verification-host-amendment.md)。
+
 2026-10-20，Tester；僅在本 topic feature worktree 執行，未更改產品原始碼、commit、push 或操作既有 live app。
 
 - Branch：`feat/github-first-sign-in`；source base HEAD：`16606b89b8e3e6b61523c23aa0be9653c1ea7b44`。

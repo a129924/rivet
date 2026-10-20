@@ -1,5 +1,6 @@
-import RivetPresentation
 import Testing
+
+@testable import GitHubSignInVerification
 
 struct GitHubConnectionPresentationTests {
   @Test func busyPresentationDisablesConflictingActions() {

@@ -1,32 +1,34 @@
-# GitHub 首次登入與當次 API 使用
+# 正式 OAuth 能力與獨立驗證 App
 
-本機 `apps/Rivet/Rivet.xcodeproj` 的 Rivet scheme 提供正式 SwiftUI 入口。使用者輸入自有 GitHub.com OAuth App 的 Client ID 與 Client Secret，再主動開啟預設瀏覽器；配置及完整 OAuth bundle 僅留當次程序，不恢復、不落盤。
+本 topic 交付正式 GitHub OAuth 實作能力與獨立 `GitHubSignInVerification` App。**正式 Rivet 產品登入 UI 尚未交付**。驗證 App 使用真 OAuth／GitHub API，配置與完整 bundle 只留當次程序，不是 mock app，也不是 Rivet 主畫面。
 
 ## 責任與契約
 
-GitHubIntegration 仍為 non-BC。新增 `GitHubOAuthAppConfiguration`、`GitHubOAuth.makeTokenFetcher(configuration:)` 及 `makeAuthorizationSession(configuration:redirectURI:)`；現有 refresh concrete 保持 internal。Session actor 封裝 state、verifier 與一次 callback claim，檢查 loopback URI、state、單值 code/error，採 S256、offline_access。無效 callback 不消耗有效等待；取消、到期或重複結果不發布連線。初次交換無自動重送，完整六欄依同一 receivedAt 轉換成既有 bundle。
+GitHubIntegration 保持 non-BC。正式能力為 `GitHubOAuthAppConfiguration`、`GitHubOAuth.makeTokenFetcher(configuration:)`、`makeAuthorizationSession(configuration:redirectURI:)`、`GitHubOAuthAuthorizationSession`、internal `GitHubOAuthCodeExchanger` 與 `GitHubOAuthAuthorizationError`。Session 封裝 state／verifier／單次 callback claim，驗證 loopback URI、state、單值 code/error，採 S256／offline_access。無效 callback 不消耗有效等待；取消、到期或重複結果不發布連線。初次交換無自動重送，完整六欄依同一 receivedAt 建立既有 bundle。
 
-App 擁有 loopback relay、coordinator、完整記憶體 store、provider／scope 與 `/user` probe；Presentation 只接收 display-ready 狀態及 intents。Relay 只綁 127.0.0.1 動態 port，限制 headers／connections／讀取時間。Coordinator 追蹤單一 operation，取消後等待實際工作 settled；prepare 重試保留原 provider，重複 API 使用原 scope。既有 refresh／rotation／single-flight／401 recovery 與 BC 邊界不變。
+驗證 App 擁有 `GitHubConnectionView`／`GitHubConnectionPresentation`、coordinator／dependencies、loopback relay、完整記憶體 store、caller-owned provider／scope、`GitHubAccountProbe`／Identity／Error 及 hosted tests。兩個 UI 型別只在 App module 內部使用，不再由共用 RivetPresentation 公開；PR Inbox Presentation 不改。日後刪除整個驗證 App，不需修改或刪除 GitHubIntegration 正式 OAuth 能力。沒有新共用 module、CurrentUserReader 或帳號業務抽象。
 
-成功指 HTTP 200 且 `/user` 的 login／id 有效；不是 callback 或 prepare 成功。Secret 與 token 不寫 diagnostics、檔案或測試證據。產品可顯示自己的身分，但驗收證據只記欄位有效與前後一致。
+Relay 僅綁 127.0.0.1 動態 port，限制 headers／connections／讀取時間。Coordinator 追蹤單一 operation，取消後等實際工作 settled；prepare 重試保留原 provider，再次查詢使用原 scope。既有 credential／refresh／rotation／single-flight／401 recovery 及 BC 邊界不變。
 
-## 本機啟動
+驗證成功指 `/user` HTTP 200 且 login／id 有效，不是 callback 或 prepare 成功。UI 顯示身分供驗證，沒有正式帳號顯示需求。Secret／token／callback 不寫 diagnostics、檔案或證據；證據只記必要有效／一致等布林。
 
-在 Xcode 開啟 `apps/Rivet/Rivet.xcodeproj`，選 Rivet scheme、My Mac，再執行。採 ad hoc 簽章、macOS 15+；不需 Development Team、provisioning profile 或 Keychain entitlement。
+## 本機建置與驗證
 
-也可從 repository 根目錄：
+在 Xcode 開啟 `apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj`，選 `GitHubSignInVerification` scheme、My Mac。App／test target 分別為 `GitHubSignInVerification`／`GitHubSignInVerificationTests`。使用 macOS 15+／Swift 6、ad hoc 簽章；不需 Team／profile／Keychain entitlement。
 
 ```sh
-xcodebuild -project apps/Rivet/Rivet.xcodeproj -scheme Rivet -destination 'platform=macOS' -derivedDataPath .build/github-first-sign-in/DerivedData CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- build
-open .build/github-first-sign-in/DerivedData/Build/Products/Debug/Rivet.app
+xcodebuild -project apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj -scheme GitHubSignInVerification -destination 'platform=macOS' -derivedDataPath .build/github-first-sign-in/VerificationHostDerivedData CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES build test
+open .build/github-first-sign-in/VerificationHostDerivedData/Build/Products/Debug/GitHubSignInVerification.app
 ```
 
-OAuth App callback 設為 `http://127.0.0.1/oauth/callback`；runtime 帶動態 port。若需更動外部 App 配置，由擁有者確認。本 topic 不保存配置、不讀 gh credential，也不自行變更 GitHub App。
+Hosted TestAction 使用 `GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1`；entry 在建立 live dependencies 前改用 disabled dependencies，測試自行注入 fake，不啟動真 OAuth。一般啟動不還原、不自動開瀏覽器，按登入才開始。
 
-## 驗證與限制
+若 Human 選擇真登入，自行輸入自有 OAuth App 的配置。callback 設為 `http://127.0.0.1/oauth/callback`，runtime 帶動態 port；外部 App 更動由擁有者確認。不讀 gh credential 或先前機密，不自行改 OAuth App。
 
-受控測試涵蓋 callback、單次交換、取消與真 settlement、完整 store、prepare 重試及 API 結果。2026-10-20 Human 在正式 app 完成授權；agent 觀察實際 API 成功，並操作再次查詢後仍顯示成功及一致身分。這只證明本次正向流程，不證明反向 PKCE enforcement、所有遠端 refresh／401 路徑或重啟恢復。
+## 版本來源與限制
 
-[責任與依賴 canvas](diagrams/github-first-sign-in/index.html) 與 [授權 sequence](diagrams/github-first-sign-in/authorization-sequence.html) 的作者文字為繁體中文；固定 Viewer UI／HTML lang 使用 English fallback。[工具與視覺限制](diagrams/github-first-sign-in/visual-review.md) 如實分列。
+基線 `e63eeb21b4774adafc5f8a822ac474df7e0bdc22` 的舊 `apps/Rivet` 外殼曾由 Human 完成正常授權，agent 觀察實際 API 與再次查詢成功。其能力證據可沿用，舊外殼名稱不代表產品 UI 已交付；不能冒充新驗證 App 已真登入。新 host 真登入與反向 PKCE enforcement 仍 Human pending，所有遠端 refresh／401、跨重啟也未因此通過。E001–E003 實驗保留原限制。
 
-持久化／DPK／跨重啟及合流由 `github-persistent-connection` 後續消費本 topic 的授權入口，不另建立競爭 host。正式規劃與 ownership amendment 見 `analysis/github-first-sign-in/`、`plan/github-first-sign-in/`。E001–E003 仍是受限可行性依據，未定結論不升格為實證。
+現行 [責任 canvas v2](diagrams/github-first-sign-in/index-v2.html) 與 [授權 sequence v3](diagrams/github-first-sign-in/authorization-sequence-v3.html) 反映驗證 host。舊 frozen 圖原樣保留為歷史來源，不作現行產品事實；[工具／視覺限制](diagrams/github-first-sign-in/visual-review.md) 分列自動檢查與實看。
+
+持久化／DPK／跨重啟及正式產品 host 的後續整合另行規劃，不假定驗證 host 就是產品。四份 planning 與本次精確搬移契約見 `analysis/github-first-sign-in/`、`plan/github-first-sign-in/`。

@@ -20,7 +20,8 @@ struct GitHubAccountProbe {
   static func read(client: any GitHubRestClient) async throws -> GitHubAccountIdentity {
     let response = try await client.get(
       url: HTTPURL(URL(string: "https://api.github.com/user")!),
-      headers: [.accept: "application/vnd.github+json", .userAgent: "Rivet"], body: nil)
+      headers: [.accept: "application/vnd.github+json", .userAgent: "GitHubSignInVerification"],
+      body: nil)
     guard response.statusCode == 200 else {
       throw GitHubAccountProbeError.http(response.statusCode)
     }

@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct GitHubConnectionView: View {
+struct GitHubConnectionView: View {
   @Binding private var clientID: String
   @Binding private var clientSecret: String
   private let input: GitHubConnectionPresentation
@@ -9,7 +9,7 @@ public struct GitHubConnectionView: View {
   private let retry: () -> Void
   private let query: () -> Void
 
-  public init(
+  init(
     clientID: Binding<String>, clientSecret: Binding<String>, input: GitHubConnectionPresentation,
     signIn: @escaping () -> Void, cancel: @escaping () -> Void,
     retry: @escaping () -> Void, query: @escaping () -> Void
@@ -23,9 +23,10 @@ public struct GitHubConnectionView: View {
     self.query = query
   }
 
-  public var body: some View {
+  var body: some View {
     VStack(alignment: .leading, spacing: 18) {
-      Text("連接 GitHub").font(.largeTitle.bold())
+      Text("GitHub 登入驗證").font(.largeTitle.bold())
+      Text("獨立驗證 App；非 Rivet 正式產品登入 UI。使用真實 OAuth 與 GitHub API。")
       Text("使用你管理的個人 OAuth App。配置與連線僅保留於本次啟動。")
         .foregroundStyle(.secondary)
       Grid(alignment: .leading, horizontalSpacing: 14, verticalSpacing: 12) {

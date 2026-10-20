@@ -2,7 +2,7 @@ import Foundation
 import GitHubIntegration
 import Testing
 
-@testable import Rivet
+@testable import GitHubSignInVerification
 
 @MainActor
 struct GitHubConnectionCoordinatorTests {

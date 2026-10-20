@@ -1,17 +1,15 @@
 # 圖的重建與驗證
 
-作者：繁體中文；固定 Viewer UI／HTML lang 為 English fallback。圖不發布 artifact.cafe。
+現行責任圖為 `scene-v2.js` → `index-v2.html`；流程圖為 `authorization-sequence-v3.json` → `authorization-sequence-v3.html`，反映正式 OAuth 能力＋獨立驗證 App，正式 Rivet 產品 UI 未交付。舊 scene/index 與 frozen v1/v2、HTML、receipt、截圖均原樣保留為基線歷史來源，不作現行產品事實。
 
-責任圖依 architecture-canvas：使用該 skill 的 scripts/validate.js 檢查 scene.js，零錯誤／零警告後 scripts/build.js 建置 index.html；目前 5 bands、18 boxes、17 edges。這是責任與依賴圖，不是 runtime sequence。
-
-流程圖依 Archify sequence。v1 specification 已 frozen，保留作來源；桌面 containment 不通過後，以核准的 authorization-sequence-v2.json 修正幾何。v2 已通過 showcase 九項檢查，deliver 至 authorization-sequence.html。不得直接修改 frozen JSON 或生成 HTML；需要修圖時建立明列的新 candidate 並重新驗證／交付。
-
-命令（先將 ARCHIFY_SKILL 指向已安裝 skill）：
+作者文字繁體中文，固定 Viewer UI／HTML lang 為 English fallback；不發布 artifact.cafe。先將 ARCHIFY_SKILL／CANVAS_SKILL 指向已安裝 skill：
 
 ```sh
-node "$ARCHIFY_SKILL/bin/archify.mjs" validate sequence docs/architecture/diagrams/github-first-sign-in/authorization-sequence-v2.json --quality showcase --json
-node "$ARCHIFY_SKILL/bin/archify.mjs" deliver sequence docs/architecture/diagrams/github-first-sign-in/authorization-sequence-v2.json docs/architecture/diagrams/github-first-sign-in/authorization-sequence.html --quality showcase --json
-node "$ARCHIFY_SKILL/bin/archify.mjs" visual-check docs/architecture/diagrams/github-first-sign-in/authorization-sequence.html --repo-root . --json
+node "$CANVAS_SKILL/scripts/validate.js" docs/architecture/diagrams/github-first-sign-in/scene-v2.js
+node "$CANVAS_SKILL/scripts/build.js" --scene docs/architecture/diagrams/github-first-sign-in/scene-v2.js --out docs/architecture/diagrams/github-first-sign-in/index-v2.html --title '正式 OAuth 與獨立驗證 App' --kicker 'GITHUB SIGN-IN VERIFICATION' --sub '<b>驗證入口</b> → <b>正式 OAuth</b> → <b>程序內組合</b> → <b>API 結果</b>' --slug github-first-sign-in-verification
+node "$ARCHIFY_SKILL/bin/archify.mjs" validate sequence docs/architecture/diagrams/github-first-sign-in/authorization-sequence-v3.json --quality showcase --json
+node "$ARCHIFY_SKILL/bin/archify.mjs" deliver sequence docs/architecture/diagrams/github-first-sign-in/authorization-sequence-v3.json docs/architecture/diagrams/github-first-sign-in/authorization-sequence-v3.html --quality showcase --json
+node "$ARCHIFY_SKILL/bin/archify.mjs" visual-check docs/architecture/diagrams/github-first-sign-in/authorization-sequence-v3.html --repo-root . --json
 ```
 
-實際交付 hashes 見 delivery.json；四 viewport containment receipt 與 light/dark screenshots 同目錄。視覺判讀另見 visual-review.md，不能以自動 visualReview=pending 宣稱實看通過。
+已驗證 candidate 不可再編輯，修圖需先列新 revision；generated HTML不可直接覆寫。v3交付9checks、0errors/warnings，hash見v3.delivery.json。四viewport與四截圖詳見v3.visual-check.json；自動visualReview=pending不等於人已實看，見visual-review.md。

@@ -3,7 +3,7 @@ import GitHubIntegration
 import RivetHTTPClient
 import Testing
 
-@testable import Rivet
+@testable import GitHubSignInVerification
 
 struct GitHubAccountProbeTests {
   @Test func requiresHTTP200AndValidIdentity() async throws {
