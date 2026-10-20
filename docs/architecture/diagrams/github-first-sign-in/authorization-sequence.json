@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "GitHub 首次登入與當次 API 使用",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1050,
+      860
+    ]
+  },
+  "participants": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "Rivet",
+      "sublabel": "程序內組合"
+    },
+    {
+      "id": "browser",
+      "type": "external",
+      "label": "預設瀏覽器",
+      "sublabel": "使用者授權"
+    },
+    {
+      "id": "oauth",
+      "type": "security",
+      "label": "授權 Session",
+      "sublabel": "state／S256"
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub OAuth",
+      "sublabel": "授權與交換"
+    },
+    {
+      "id": "scope",
+      "type": "backend",
+      "label": "Provider／Scope",
+      "sublabel": "沿用既有執行期"
+    },
+    {
+      "id": "api",
+      "type": "external",
+      "label": "GitHub API",
+      "sublabel": "唯讀 /user"
+    }
+  ],
+  "messages": [
+    {
+      "id": "login-1",
+      "from": "app",
+      "to": "browser",
+      "y": 190,
+      "label": "開啟授權 URL",
+      "variant": "default"
+    },
+    {
+      "id": "login-2",
+      "from": "browser",
+      "to": "github",
+      "y": 236,
+      "label": "使用者核准授權",
+      "variant": "default"
+    },
+    {
+      "id": "login-3",
+      "from": "browser",
+      "to": "app",
+      "y": 282,
+      "label": "loopback callback",
+      "variant": "return"
+    },
+    {
+      "id": "login-4",
+      "from": "app",
+      "to": "oauth",
+      "y": 328,
+      "label": "驗證並單次 claim",
+      "variant": "security"
+    },
+    {
+      "id": "login-5",
+      "from": "oauth",
+      "to": "github",
+      "y": 374,
+      "label": "code＋verifier 交換",
+      "variant": "security"
+    },
+    {
+      "id": "login-6",
+      "from": "github",
+      "to": "oauth",
+      "y": 420,
+      "label": "完整六欄回應",
+      "variant": "return"
+    },
+    {
+      "id": "login-7",
+      "from": "oauth",
+      "to": "app",
+      "y": 466,
+      "label": "驗證後交付 bundle",
+      "variant": "return"
+    },
+    {
+      "id": "login-8",
+      "from": "app",
+      "to": "scope",
+      "y": 512,
+      "label": "記憶體保存並 prepare",
+      "variant": "default"
+    },
+    {
+      "id": "login-9",
+      "from": "scope",
+      "to": "api",
+      "y": 558,
+      "label": "GET /user",
+      "variant": "emphasis"
+    },
+    {
+      "id": "login-10",
+      "from": "api",
+      "to": "scope",
+      "y": 604,
+      "label": "HTTP 200＋有效身分",
+      "variant": "return"
+    },
+    {
+      "id": "login-11",
+      "from": "scope",
+      "to": "app",
+      "y": 650,
+      "label": "呈現 login／id",
+      "variant": "return"
+    },
+    {
+      "id": "login-12",
+      "from": "app",
+      "to": "scope",
+      "y": 696,
+      "label": "同 instance 再次查詢",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "本次交付",
+      "items": [
+        "完整憑證與 App 配置只留程序記憶體",
+        "再次查詢沿用同 provider／scope"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "失敗與驗收",
+      "items": [
+        "無效 callback 不交換；取消後等待工作結束",
+        "真 OAuth 與反向 PKCE 留待 Human review"
+      ]
+    }
+  ]
+}

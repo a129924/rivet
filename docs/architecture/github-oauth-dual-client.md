@@ -143,3 +143,7 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 **分段 UX 真人補測（2026-10-15）。** 後續經 Human 明確授權免除桌面工具連線前提，改由本人逐段觀察，唯一 [Human-only 結果](../../experiments/E005/evidence/ux-human-only-result-20261015T080306Z.json) 已將設定、正常存取與清理提示分離：首次保存／存取 0 次、相同 binary 的 fresh-process 讀取 0 次、不同 hash／相同 DR 的重建版讀取 1 次憑證提示。Human 明確回報該次只能輸入密碼並選「允許」；setup 與撤 trust 各一次指紋設定授權另記。每段皆在前段完整觀察及新 ready 後執行，machine／Human SHA 綁定與控制原樣 snapshots 均保存於 [本輪證據](../../experiments/E005/evidence/ux-human-only-20261015T080306Z/)。
 
 六欄資料全數還原、身份／簽章前提成立，OAuth／exact-cert trust／own search-list membership／專用 Keychain與秘密已精確清理，原清單順序及 default 恢復。獨立 Tester／Reviewer 核對後，按寫入前「首次最多一次，fresh-process與同身分重建均零」判準，**此候選 UX 失敗、資料機制成功，受限驗證任務完成**；本輪不再是提示階段未知。前輪 unknown 收據保留，不把本次「允許」混成前輪「永遠允許」，不推論其他選項或未測下一次重建。這是本次 macOS／legacy／隔離自簽＋限定 user Code Signing trust／暫時 user search-list 條件的結果，不證明所有免費 Keychain 路徑不可行或需要付費；DPK、其他 macOS、長期 retained identity 及真 denial 仍未驗證。正式 adapter／採用繼續延後，既有 provider ownership 不變。
+
+## 首次登入的程序內交付
+
+正式本機 Rivet.app 已加入初次授權與當次 `/user` 使用：自有 OAuth App、loopback/state/S256、完整記憶體 bundle，沿用 caller-owned provider／scope。2026-10-20 已觀察正向授權及同程序再次 API 查詢成功；反向 PKCE、完整遠端 refresh／401 與持久化驗收不因此成立。既有 lifecycle 及 BC 邊界不變。詳見 [首次登入契約](github-first-sign-in.md)。
