@@ -1,7 +1,7 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：A06 提交與更新原 Draft PR。
+- Phase／Current step：A07 Human review。
 - Current status：A04 verification completed；交獨立 Reviewer。
 - Upstream verdict：approved；獨立 Plan-Reviewer 明示 A02 approved，無 required fix（2026-10-20）。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
@@ -21,8 +21,8 @@ Human 已確認「正式 OAuth 實作能力＋獨立 GitHubSignInVerification Ap
 | A03b | completed | Implementer | 長期docs/修訂圖/來源聲明與工具驗證 | A03b完成九欄；v3／canvas v2收據與來源聲明 | 依A02契約 |
 | A04 | completed | Tester | root/consumer/app/format/lint/隔離/圖驗證 | verification-host-amendment.md：275 root／13 consumer／9 app passed；strict checks及圖validate/hash通過 | 新host live/canvas互動/反向PKCE pending；不代A05核准 |
 | A05 | completed | Reviewer | 獨立review及requiredfixes關閉 | 獨立 Reviewer 明示 approved，無 required fix；見 amendment evidence | approved |
-| A06 | in-progress | Implementer | staged語意→commit→push→更新原DraftPR61與local真diffPRLens | 待真SHA/URL/map | user已授權，需A05approved |
-| A07 | pending | Human；Tester記錄 | 原PRhumanreview、新hostlive適用項目 | 舊live基線來源可沿用；新hostlive與反向PKCE pending | 不讀取或保存機密 |
+| A06 | completed | Implementer | staged語意→commit→push→更新原DraftPR61與local真diffPRLens | 回修commit `81fe01f3377abbf7e7382d2c77fc756034c4fffc` 已push；原PR61標題/描述已更新；local真diff map於交付產生 | user已授權，需A05approved |
+| A07 | human-check | Human；Tester記錄 | 原PRhumanreview、新hostlive適用項目 | 舊live基線來源可沿用；新hostlive與反向PKCE pending | 不讀取或保存機密 |
 
 ## 現行 Blockers／Human Check
 
@@ -191,3 +191,10 @@ In-Scope：AT01–AT05；Out-Of-Scope：code/Git/live/其他worktree；ReadOnly�
 2026-10-20，主 agent 轉錄獨立 Reviewer 明示 **approved，無 required fix**。Reviewer逐一比較16搬移檔與e63eeb2，變動限於App識別、app-local存取、引用／依賴與核准文字；正式OAuth/lifecycle/PRInbox未變。文件／新圖與歷史來源一致，Tester275/13/9結果符合搬移範圍。Reviewer只讀未改檔或跑tests。
 
 依使用者授權進行staged語意檢查、同topic commit/push、更新原DraftPR61。新hostlive／反向PKCE／canvas互動與既有coverage限制不改寫為通過；不merge。
+
+## A06 實際交付
+
+- 回修commit `81fe01f3377abbf7e7382d2c77fc756034c4fffc`，message `refactor(github-first-sign-in): 將登入外殼分離為獨立驗證 App`；staged語意與全部pre-commit hooks通過。
+- 已push原 `origin/feat/github-first-sign-in`，並更新[原Draft PR #61](https://github.com/a129924/rivet/pull/61)標題與描述：正式OAuth能力＋獨立驗證App，正式產品登入UI尚未交付。
+- 本筆交付記錄commit只改帳本/evidence，不改受驗source。最終head的local PRLens map於外部topic scratch validate/render，實際SHA/結果隨PR及交付回報提供，無上傳。
+- A07停點：Human review。新host真登入、反向PKCE、canvas互動及既有未驗證路徑pending；不merge、不建立/移除worktree。

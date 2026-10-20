@@ -52,3 +52,7 @@ Root 減少一項 Presentation test、驗證 App 增加一項 app-local Presenta
 ## A05 獨立 Reviewer 明示結果
 
 2026-10-20，獨立 Reviewer `/root/plan_review` 唯讀審查，主 agent 依明示回覆轉錄：**approved，無 required fix**。逐一比較16搬移檔，變更限於識別、app-local存取、引用／依賴及核准文字；正式OAuth/lifecycle/PRInbox未變。文件與新圖區分正式能力、驗證host、未交付產品UI，歷史證據標基線；Tester275/13/9與checks一致。允許依授權commit/push更新原DraftPR61，保留Human pending且不merge。
+
+## A06 發布記錄
+
+回修commit `81fe01f3377abbf7e7382d2c77fc756034c4fffc` 已push原feature branch；原[Draft PR #61](https://github.com/a129924/rivet/pull/61)標題與描述已更新。全部pre-commit hooks通過；本交付記錄只改文件。真base/head的PRLens本機map於最終head後產生，結果在PR與交付回報。仍停Human review，未merge，所有Human pending不變。
