@@ -3,14 +3,20 @@ import base64
 import contextlib
 import dataclasses
 import getpass
+import html
 import hashlib
 import json
 import math
+import os
 import re
+import random
 import secrets
+import selectors
 import signal
 import socket
 import subprocess
+import tempfile
+from pathlib import Path
 import sys
 import time
 import urllib.error
@@ -451,6 +457,8 @@ def send_token(fields, deadline):
                                               "Cache-Control": "no-store"}, method="POST")
     if deadline.observer is not None:
         deadline.observer.observe_token(request)
+    response = None
+    body = b""
     try:
         with time_budget(timeout):
             try:
@@ -467,6 +475,9 @@ def send_token(fields, deadline):
         raise
     except (OSError, urllib.error.URLError, ValueError):
         raise Stop("network") from None
+    finally:
+        request = response = None
+        body = b""
 
 
 def strict_object(body, allow_duplicates=False):
@@ -551,11 +562,281 @@ def classify(status, body, case=None):
     return result
 
 
-def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=time.monotonic):
+SEMANTIC_CATEGORIES = {"verifier_mismatch_asserted", "grant_or_code_asserted",
+                       "client_redirect_configuration_asserted", "indeterminate"}
+REVIEW_STATUSES = {"confirmed", "unreviewable", "declined", "expired", "conflict"}
+REVIEW_KEYS = {"protocol_version", "semantic_category", "review_status", "reveal_started", "user_confirmed"}
+
+
+def semantic_unknown(reason="not_requested", status="unreviewable", revealed=False):
+    return {"review_source": "local_human", "semantic_category": "indeterminate",
+            "review_status": status, "reveal_started": revealed, "user_confirmed": False,
+            "reason": reason}
+
+
+@dataclasses.dataclass(repr=False)
+class SemanticCandidate:
+    description: str = ""
+    error_class: str = "unknown"
+    reason: str = "privacy_gate"
+    cleanup_completed: bool = False
+
+    def clear(self):
+        self.description = ""
+        self.error_class = "unknown"
+        self.cleanup_completed = False
+
+
+def privacy_allowed(description, context):
+    """Finite conservative gate, not an arbitrary encoding/unknown-secret detector."""
+    if not isinstance(description, str):
+        return False
+    try:
+        encoded = description.encode("utf-8", errors="strict")
+    except UnicodeError:
+        return False
+    if not encoded or len(encoded) > 4096:
+        return False
+    if any(ord(char) < 32 or 0x7f <= ord(char) <= 0x9f
+           or ord(char) in {0x061c, 0x200e, 0x200f, 0x202a, 0x202b, 0x202c, 0x202d, 0x202e,
+                            0x2066, 0x2067, 0x2068, 0x2069} for char in description):
+        return False
+    folded = description.casefold()
+    # URL forms and long identifier-like opaque values are rejected as a whole.
+    if re.search(r"(?i)(?:[a-z][a-z0-9+.-]*://|www\.|https?%3a|https?&#|https?\\u003a)", description):
+        return False
+    if re.search(r"(?<![A-Za-z0-9_])[A-Za-z0-9_+/=-]{24,}(?![A-Za-z0-9_])", description):
+        return False
+    for value in context:
+        if not isinstance(value, str) or not value:
+            continue
+        raw = value.encode("utf-8", errors="strict")
+        variants = {value, urllib.parse.quote(value, safe=""), urllib.parse.quote_plus(value, safe=""),
+                    json.dumps(value, ensure_ascii=True)[1:-1], html.escape(value, quote=True),
+                    base64.b64encode(raw).decode(), base64.urlsafe_b64encode(raw).decode(),
+                    base64.b64encode(raw).decode().rstrip("="), base64.urlsafe_b64encode(raw).decode().rstrip("="),
+                    "".join("\\u%04x" % ord(char) for char in value if ord(char) <= 0xffff)}
+        variants.update({"".join("&#%d;" % ord(char) for char in value),
+                         "".join("&#x%x;" % ord(char) for char in value)})
+        if any(variant and variant.casefold() in folded for variant in variants):
+            return False
+    return True
+
+
+def prepare_semantic_candidate(status, body, context, candidate):
+    candidate.clear()
+    candidate.reason = "privacy_gate"
+    try:
+        if type(status) is not int or not (200 <= status <= 299 or status == 400):
+            return
+        # bytes input is decoded strictly: no replacement character or truncated prefix.
+        if not isinstance(body, bytes):
+            return
+        obj = strict_object(body.decode("utf-8", errors="strict"))
+        if (obj is None or set(obj) - {"error", "error_description", "error_uri"}
+                or not isinstance(obj.get("error"), str) or not obj["error"]
+                or any(not isinstance(value, str) for value in obj.values())):
+            return
+        description = obj.get("error_description")
+        if privacy_allowed(description, context):
+            candidate.description = description
+            candidate.error_class = ERROR_CLASSES.get(obj["error"], "unknown")
+            candidate.reason = "ready"
+    except (ValueError, UnicodeError, RecursionError, TypeError):
+        candidate.clear()
+
+
+def validate_semantic_output(raw, returncode=0):
+    if returncode != 0 or not isinstance(raw, bytes) or len(raw) > 512:
+        return semantic_unknown("helper_protocol")
+    try:
+        obj = strict_object(raw.decode("utf-8", errors="strict"))
+    except UnicodeError:
+        obj = None
+    if (obj is None or set(obj) != REVIEW_KEYS or type(obj.get("protocol_version")) is not int
+            or obj["protocol_version"] != 1 or not isinstance(obj.get("semantic_category"), str)
+            or obj.get("semantic_category") not in SEMANTIC_CATEGORIES
+            or not isinstance(obj.get("review_status"), str) or obj.get("review_status") not in REVIEW_STATUSES
+            or type(obj.get("reveal_started")) is not bool or type(obj.get("user_confirmed")) is not bool):
+        return semantic_unknown("helper_protocol")
+    status, category = obj["review_status"], obj["semantic_category"]
+    if status == "confirmed":
+        if not obj["reveal_started"] or not obj["user_confirmed"]:
+            return semantic_unknown("helper_protocol")
+    elif category != "indeterminate" or obj["user_confirmed"]:
+        return semantic_unknown("helper_protocol")
+    return {"review_source": "local_human", **{key: obj[key] for key in REVIEW_KEYS if key != "protocol_version"},
+            "reason": "human_confirmed" if status == "confirmed" else "human_unavailable"}
+
+
+def apply_semantic_conflict(observation, error_class):
+    if observation["review_status"] != "confirmed":
+        return observation
+    category = observation["semantic_category"]
+    if error_class in STRONG_CLASSES:
+        compatible = (category == "indeterminate" or
+                      error_class in {"configuration", "redirect"}
+                      and category == "client_redirect_configuration_asserted"
+                      or error_class == "verifier_mismatch" and category == "verifier_mismatch_asserted")
+        if not compatible:
+            return semantic_unknown("strong_error_conflict", "conflict", observation["reveal_started"])
+    return observation
+
+
+def read_helper_output(process, seconds):
+    """Multiplex bounded stdout and one-byte stderr detection; never retain stderr bytes."""
+    output = bytearray()
+    expires = time.monotonic() + seconds
+    with selectors.DefaultSelector() as monitor:
+        monitor.register(process.stdout, selectors.EVENT_READ, "stdout")
+        monitor.register(process.stderr, selectors.EVENT_READ, "stderr")
+        while monitor.get_map():
+            remaining = expires - time.monotonic()
+            if remaining <= 0:
+                raise Stop("timeout")
+            events = monitor.select(remaining)
+            if not events:
+                raise Stop("timeout")
+            for key, _mask in events:
+                if key.data == "stderr":
+                    # Inspect only presence, not content. Kill before the pipe can fill.
+                    if os.read(key.fd, 1):
+                        raise Stop("helper_protocol")
+                    monitor.unregister(key.fileobj)
+                else:
+                    chunk = os.read(key.fd, 513 - len(output))
+                    if not chunk:
+                        monitor.unregister(key.fileobj)
+                    else:
+                        output.extend(chunk)
+                        if len(output) > 512:
+                            raise Stop("helper_protocol")
+    return bytes(output)
+
+
+def launch_semantic_helper(description, protocol_check=False):
+    """Only caller's gated candidate enters anonymous stdin, never argv/env/file/log."""
+    if not privacy_allowed(description, ()):
+        return semantic_unknown("privacy_gate")
+    source = Path(__file__).with_name("pkce_semantic_review.swift")
+    payload = json.dumps({"protocol_version": 1, "description": description}, ensure_ascii=False).encode("utf-8")
+    if len(payload) > 16384:
+        return semantic_unknown("privacy_gate")
+    try:
+        # Compiler output has no candidate. Any runtime stderr byte rejects the record; never forward it.
+        started = time.monotonic()
+        with tempfile.TemporaryDirectory(prefix="rivet-semantic-") as scratch:
+            binary = str(Path(scratch) / "semantic-review")
+            compiled = subprocess.run(["/usr/bin/xcrun", "swiftc", "-swift-version", "6", str(source), "-o", binary],
+                                      stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                      timeout=30, check=False)
+            if compiled.returncode:
+                return semantic_unknown("helper_unavailable")
+            remaining = max(0.001, 100 - (time.monotonic() - started))
+            command = [binary] + (["--protocol-check"] if protocol_check else [])
+            # Bounded reads prevent a malformed child from flooding parent memory/output.
+            with subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE, close_fds=True) as process:
+                try:
+                    with time_budget(remaining):
+                        process.stdin.write(payload)
+                        process.stdin.close()
+                        output = read_helper_output(process, remaining)
+                        process.wait(timeout=max(0.001, remaining))
+                    return validate_semantic_output(output, process.returncode)
+                except Stop as problem:
+                    process.kill()
+                    process.wait()
+                    if problem.args == ("helper_protocol",):
+                        return semantic_unknown("helper_protocol")
+                    return semantic_unknown("helper_timeout", "expired")
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+                    return semantic_unknown("helper_timeout", "expired")
+                finally:
+                    if process.poll() is None:
+                        process.kill()
+                        process.wait()
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return semantic_unknown("helper_unavailable")
+    finally:
+        payload = b""
+        description = ""
+
+
+def review_semantic_candidate(candidate, helper=launch_semantic_helper):
+    description, error_class, reason = candidate.description, candidate.error_class, candidate.reason
+    cleaned = candidate.cleanup_completed
+    candidate.clear()
+    if not cleaned:
+        return semantic_unknown("cleanup_unconfirmed")
+    if not description:
+        return semantic_unknown(reason)
+    try:
+        return apply_semantic_conflict(helper(description), error_class)
+    except (Exception, KeyboardInterrupt):
+        return semantic_unknown("helper_unavailable")
+    finally:
+        description = ""
+
+
+def calibration_descriptions(raw):
+    """Schema projection only. Never inspect or return expected_category values."""
+    obj = strict_object(raw.decode("utf-8", errors="strict"))
+    if obj is None or set(obj) != {"schema_version", "cases"} or type(obj["schema_version"]) is not int or obj["schema_version"] != 1:
+        raise ValueError()
+    cases = obj["cases"]
+    if not isinstance(cases, list) or len(cases) != 16:
+        raise ValueError()
+    projected = []
+    for index, case in enumerate(cases, 1):
+        if (not isinstance(case, dict) or set(case) != {"id", "description", "expected_category"}
+                or case["id"] != f"u{index:02d}" or not privacy_allowed(case["description"], ())):
+            raise ValueError()
+        projected.append(case["description"])
+    return projected
+
+
+def calibrate_semantic_review(helper=launch_semantic_helper):
+    """Offline only; independent Tester owns labels and scoring, never this tool."""
+    records = []
+    try:
+        path = Path(__file__).with_name("fixtures") / "semantic-review-cases.json"
+        with path.open("rb") as source:
+            raw = source.read(131073)
+        if (len(raw) > 131072 or hashlib.sha256(raw).hexdigest() !=
+                "d1567758e9dfb2861886510f8c41a3a03174be805c6b7979e8f28d850e9a2ea5"):
+            raise ValueError()
+        descriptions = calibration_descriptions(raw)
+        records = [(f"u{index:02d}", text) for index, text in enumerate(descriptions, 1)]
+        random.SystemRandom().shuffle(records)
+        raw, descriptions = b"", []
+        observations = []
+        for index, (identifier, description) in enumerate(records, 1):
+            print(f"離線校準進度 {index}/16", flush=True)
+            # ID is retained only for final independent scoring, never sent to the helper.
+            observations.append({"correlation_id": hashlib.sha256(identifier.encode("ascii")).hexdigest()[:16],
+                                 "provider_semantic_observation": helper(description)})
+        print(json.dumps({"calibration_status": "awaiting_independent_scoring", "case_count": 16,
+                          "observations": observations}, sort_keys=True))
+        return 0
+    except (OSError, ValueError, UnicodeError, RecursionError, KeyboardInterrupt):
+        print(json.dumps({"calibration_status": "unavailable"}, sort_keys=True))
+        return 2
+    finally:
+        records.clear()
+
+
+def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=time.monotonic, semantic_candidate=None):
     attempt = Attempt.create(case)
     result = safe_result("internal_error", "unknown")
     observer = PreparedRequestObserver(attempt, client_id, secret, clock)
     deadline = None
+    code = redirect = ""
+    fields = {}
+    body = b""
+    context = ()
     try:
         deadline = Deadline(clock=clock)
         deadline.observer = observer
@@ -567,6 +848,11 @@ def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=
         status, body = send(fields, deadline)
         deadline.remaining()
         result = classify(status, body, case)
+        if semantic_candidate is not None:
+            context = (client_id, secret, code, attempt.state, attempt.verifier, attempt.wrong_verifier,
+                       challenge(attempt.verifier), challenge(attempt.wrong_verifier))
+            prepare_semantic_candidate(status, body, context, semantic_candidate)
+            context = ()
     except Stop as error:
         reason = error.args[0] if error.args else "internal_error"
         result["reason"] = reason if reason in SAFE_REASONS else "internal_error"
@@ -588,20 +874,32 @@ def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=
                       wrong_challenge_differs=(challenge(attempt.verifier) != challenge(attempt.wrong_verifier))
                       if case == "wrong" else None)
         attempt.clear()
+        fields.clear()
+        code = redirect = client_id = secret = ""
+        body = b""
+        context = ()
+        if semantic_candidate is not None:
+            semantic_candidate.cleanup_completed = True
     return result
 
 
 def main(argv=None):
     args = sys.argv[1:] if argv is None else argv
+    if args == ["--calibrate-semantic-review"]:
+        return calibrate_semantic_review()
     if args == ["--help"]:
-        print("用法：python3 -B pkce_negative_probe.py --case missing|wrong；只在本機TTY隱藏輸入配置。")
+        print("用法：python3 -B pkce_negative_probe.py --case missing|wrong；只在本機TTY隱藏輸入配置。離線校準：--calibrate-semantic-review（無網路/配置）。")
         return 0
+    semantic_requested = len(args) == 3 and args[2] == "--review-semantics"
+    if semantic_requested:
+        args = args[:2]
     if len(args) != 2 or args[0] != "--case" or args[1] not in CASES:
         print(json.dumps(safe_result("input_unavailable", "unknown"), sort_keys=True))
         return 2
     result = safe_result("input_unavailable", "unknown")
     result["case"] = args[1]
     client_id = secret = ""
+    candidate = SemanticCandidate() if semantic_requested else None
     try:
         if not sys.stdin.isatty() or not sys.stderr.isatty():
             raise Stop("input_unavailable")
@@ -613,7 +911,10 @@ def main(argv=None):
             raise Stop("input_unavailable")
         print("請只完成這一次新授權；回呼後返回終端。勿複製瀏覽器URL或配置。", flush=True)
         with time_budget(300):
-            result = run_case(args[1], client_id, secret)
+            if semantic_requested:
+                result = run_case(args[1], client_id, secret, semantic_candidate=candidate)
+            else:
+                result = run_case(args[1], client_id, secret)
     except Stop as error:
         reason = error.args[0] if error.args else "internal_error"
         result["reason"] = reason if reason in SAFE_REASONS else "internal_error"
@@ -625,6 +926,8 @@ def main(argv=None):
         result["reason"] = "internal_error"
     finally:
         client_id = secret = ""
+    if candidate is not None:
+        result["provider_semantic_observation"] = review_semantic_candidate(candidate)
     if not result["remote_rejected"] and not result["token_present"]:
         result["diagnostic_class"] = STOP_CLASSES.get(result["reason"], result["diagnostic_class"])
     print(json.dumps(result, sort_keys=True))

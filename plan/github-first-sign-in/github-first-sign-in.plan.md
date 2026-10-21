@@ -6,6 +6,136 @@
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
 
+## U：Human-only 語義 review（規劃來源保留；最新離線交付事實見本節末）
+
+來源 `9f603f81d77040a2e06ad178062e8cfecc4de468`；原 feature／branch／Draft PR61 不變。Human 同意原文可見性方案進入規劃，不等於實作或新 OAuth 授權；初步 Reviewer 四 fixes 滿足不是 U02 formal verdict；現獨立 Plan-Reviewer 已另明示 U02 approved、無 required fix，只核准本次四檔 planning，整體停 Human／human-check。技術方案集中於 [technical-spec U 節](../../analysis/github-first-sign-in/technical-spec.md)，本節不重寫歷史判準或證據。
+
+### U 規劃階段九欄（歷史；現行離線授權見後段）
+
+- In-Scope：U01 四文件 amendment、U02 獨立 formal planning review，之後停 Human。
+- Out-Of-Scope：任何 CLI／helper／fixtures／tests 實作、offline Human 校準、工具／Git／發布／新 OAuth。
+- ReadOnly：全部 code／tests／正式 source/API／experiments／frozen 圖／P/Q/R/T 歷史 evidence／其他 topic；正常 App／再次 API／canvas passed 不重做。
+- Written：無。
+- Deleted：無。
+- Modify：僅 `analysis/github-first-sign-in/requirements.md`、`analysis/github-first-sign-in/technical-spec.md`、`plan/github-first-sign-in/github-first-sign-in.plan.md`、`plan/github-first-sign-in/github-first-sign-in.step.md`；只新增 U 節。
+- Goal：給 Human 具體可審查的 gate→清理→私有 pipe/helper→獨立語義 attestation 方案。
+- Non-Goal：不把 attestation 當 proof、不改 outcome／pkce_rejection_proven、不重建舊原文、不聲稱全盲／任意秘密偵測／OS無留痕或物理zero。
+- TestCase：以下 US01–US05 只列未來規劃，均未執行；本輪只文件閱讀與新增 U 節。
+
+### U 規劃時 phase 與停止點（歷史）
+
+| ID | Owner role | 完成條件／目前授權 |
+|---|---|---|
+| U01 | Plan-Creator | 只四文件新增 U：manifest、privacy/protocol、獨立校準與限制；不產生 implementation approval |
+| U02 | Plan-Reviewer | completed；獨立 Plan-Reviewer 明示 formal verdict approved、無 required fix；下一 phase Human boundary／human-check，不放行未來實作 |
+
+U02 後停 Human，即使 approved 也不自動派 Implementer／Tester／Reviewer 做工具或離線校準；它只是規劃 verdict。未來 implementation、synthetic holdout、offline Human calibration、code review 及任何 live 都須另行放行，不能沿用早前 topic 發布／實作授權越過此新 Human boundary。R→T 1/1 已耗盡，本輪新 OAuth=0，不選 case／不執行。
+
+### 既定 manifest（規劃時 NOT AUTHORIZED；現已授權 bounded offline，paths 不變）
+
+以下不是本輪 allowlist；僅供 U02 審查預計 blast radius。未來每個 bounded slice 的開始／完成 handoff 仍列同九欄，planned allowed paths 與 actual Written／Modify／Deleted evidence 分開，不新增 shared module／target。
+
+Modify 9：
+
+1. `apps/GitHubSignInVerification/tools/pkce_negative_probe.py`
+2. `apps/GitHubSignInVerification/tools/test_pkce_negative_probe.py`
+3. `apps/GitHubSignInVerification/tools/README.md`
+4. `analysis/github-first-sign-in/requirements.md`
+5. `analysis/github-first-sign-in/technical-spec.md`
+6. `plan/github-first-sign-in/github-first-sign-in.plan.md`
+7. `plan/github-first-sign-in/github-first-sign-in.step.md`
+8. `README.md`
+9. `docs/architecture/github-first-sign-in.md`
+
+Written 3：
+
+1. `apps/GitHubSignInVerification/tools/pkce_semantic_review.swift`（private Swift／AppKit script）
+2. `apps/GitHubSignInVerification/tools/fixtures/semantic-review-cases.json`（純 synthetic holdout；獨立 Tester 建、Reviewer 核標凍結）
+3. `plan/github-first-sign-in/evidence/pkce-semantic-review.md`（未來只存安全結果、來源與限制，不存原文）
+
+Deleted 0。正式 source/API、App、既有輸入／交換／TTY／loopback 安全與 outcome/proof 政策、experiments／frozen 圖／歷史 evidence／其他 topic 全部唯讀；工具擴充只限 opt-in Human review gate、cleanup與private helper protocol，不改 OAuth 交換或做新 negative case。未來若需要其他檔案，先回 planning，不借目錄授權擴寫。
+
+### US 驗證判準（規劃來源；實際結果見最新實作紀錄）
+
+| ID | 規劃中的驗證／停點 |
+|---|---|
+| US01 | strict pure-error shape、4096 UTF-8 bytes完整不截斷、已知context的literal/common URL/JSON/HTML/case/Base64及URL/control/bidi/opaque gates；命中整段不顯示；未知秘密／任意編碼能力不保證 |
+| US02 | gate後finally detach/clear所有當次敏感參照，再launch；匿名stdin總16KiB、strict JSON；stdout512bytes有限schema，stderr不forward；invalid/extra/duplicate/trailing/partial/nonzero一律static unknown；強error衝突強制conflict |
+| US03 | default no UI／no auto reveal、30秒密封、明示一次reveal60秒／無第二次、100秒parent watchdog、取消／異常清理；AppKit copy/export/restoration先synthetic實證，操作約束不冒充技術保證 |
+| US04 | Tester建16例holdout→Reviewer核標凍結→Human不看expectedlabels離線校準；3mismatch/3grant/3config/7abstain，9/9decisive正確且7/7unknown才pass；全unknown不pass，失敗禁止live／不得改標 |
+| US05 | provider_semantic_observation/review_source=local_human與既有outcome/proof獨立；拒絕raw出stdout/stderr/log/file/env/argv/screenshot/clipboard；無原文不可由agent獨立稽核；歷史/預算不改 |
+
+正常 App/canvas 與歷史 tests 不因 U 規劃重跑。Graphify／PR Lens／Archify 本輪不執行、不生圖或map。U02 正式規劃核查 approved、無 required fix 保留；gate/UI/protocol 的 bounded offline 已授權且實作事實見末段，獨立驗證與 Human 校準不得預填通過。未來若另給 live 額度，wrong 僅為推薦候選且不能保證判定；需 Human 明訂 case／次數，不回填舊案。
+
+### U 最新授權／狀態：bounded offline implementation（現行，原停點保留歷史）
+
+U02 技術方案仍為獨立 approved、無 required fix。主 agent 先前增加的「offline 實作再批准」停點現移除：依原同 topic 必要回修／實作授權與 Human 在工具修改／離線測試脈絡的續行要求，只在上列 **9 Modify／3 Written、Deleted 0** 內啟動離線實作、Tester、Reviewer 與 synthetic Human calibration 準備。原 NOT AUTHORIZED 文句為先前狀態，不再限制這些 bounded offline 工作；技術／manifest／US 判準皆不改。未來 live 仍 NOT AUTHORIZED、新 OAuth=0；Human 校準不自動開始。
+
+本次 Plan-Creator 仍只改四 planning，先凍結給原 Plan-Reviewer 確認授權／狀態紀錄；不執行 implementation／tests／Git。兩份他人 dirty Swift hosted tests 完全排除：不讀寫、不暫存／還原，不因驗證掃入它們。
+
+| ID | Owner role | 現行 status／完成條件 |
+|---|---|---|
+| U03 | Implementer | completed；工具凍結交付，既定技術／manifest不變 |
+| U04 | Tester | completed；P2回修後獨立親跑57tests、strict format／SwiftLint exit0；不代Human校準／live |
+| U05 | Reviewer | approved；外部獨立Reviewer最終明示P2closed／無其他required fix，限工具交付與Human正式offline校準 |
+| U06 | Human；Tester記錄 | pending／human-check 停點；工具及獨立 review 準備完成後，由 Human 明確參與 synthetic 校準；未參與保持 pending，不自動開窗／代填結果 |
+
+U03–U05 可做受控工具開發與 synthetic 技術驗證，不能把未來 Human 9/9 decisive＋7/7 unknown 預填通過，也不以全 unknown 宣稱校準 pass。U06 是人類互動停點；即使日後校準通過也不給 live 額度。其後 topic 發布沿原授權與獨立 verdict，本輪先完成可測工具，不在本次 planning 記錄中做 commit／push／PR 操作。
+
+#### U03 bounded implementation 九欄（planned slice）
+
+- In-Scope：既定 parent privacy gate、先清理再 helper、private Swift/AppKit protocol／timeout／有限安全輸出與單一 Human offline 入口：`python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review`。此分支無網路、不要求 ID／secret，不印 expected labels；只按既定 helper 單 record protocol 循序送入 16 個 frozen synthetic cases，每次顯示仍須 Human 明示，不自動校準。
+- Out-Of-Scope：live／新 OAuth／自動 Human 校準／改 proof/outcome／改判準／自訂 holdout labels／正式 App／他人 dirty tests。
+- ReadOnly：正式 source/API、App hosted tests、OAuth 傳輸／TTY／loopback政策、experiments、圖與歷史 evidence；沿原 manifest readonly。
+- Written：planned helper `apps/GitHubSignInVerification/tools/pkce_semantic_review.swift`、`plan/github-first-sign-in/evidence/pkce-semantic-review.md`；holdout 檔由 U04 Tester 建，不由 Implementer 自訂標準。
+- Deleted：0。
+- Modify：既定 9 Modify 的必要子集；開始交接逐檔展開，完成才記 actual diff；不擴 paths。
+- Goal：交付可測的 offline 工具與明確安全／技術限制，供獨立驗證。
+- Non-Goal：不宣稱 Human 校準／語言全面準確或 PKCE 遠端原因通過。
+- TestCase：US01–US03／US05 的 synthetic 技術測試，US04 僅準備接點；結果待實際交接。
+
+#### U04 Tester 九欄（planned slice）
+
+- In-Scope：獨立離線 privacy/protocol/timeout/cleanup/UI限制測試，由 Tester 定義 fixture schema、建立純 synthetic 16-case holdout及 expected labels，交 Reviewer 核標凍結；Implementer 不建立標準答案，校準入口依此 frozen schema 整合。
+- Out-Of-Scope：產品實作修改、Human 自動校準、live／secret／新 OAuth、為結果改標。
+- ReadOnly：工具實作、全部正式 source/API／App hosted tests／歷史 evidence／圖；不觸碰他人 dirty tests。
+- Written：planned `apps/GitHubSignInVerification/tools/fixtures/semantic-review-cases.json`；僅 synthetic，不含任何 live 原文。
+- Deleted：0。
+- Modify：新 `pkce-semantic-review.md` 與 step 的自身事實；不改工具 source 或技術判準。
+- Goal：提交可追溯的獨立受控結果、holdout 與未驗證能力清單。
+- Non-Goal：不代 Reviewer 核准、不把 synthetic 技術 pass 當 Human 語義校準 pass。
+- TestCase：US01–US05 適用離線部分；16 labels／3+3+3+7 組成供 U05 回查，Human 成績保持 pending。
+
+#### U05 Reviewer 九欄（planned slice）
+
+- In-Scope：獨立 code/scope/privacy/protocol/evidence review，以及 holdout 核標與凍結；required fixes 明示路由。
+- Out-Of-Scope：自行改受審 source、改標配合結果、執行 Human 校準／live、新 OAuth。
+- ReadOnly：受審工具、holdout、正式 source/API、他人 dirty tests、歷史 evidence 與圖。
+- Written：無。
+- Deleted：0。
+- Modify：新 `pkce-semantic-review.md` 與 step 的自身 verdict／事實，不改 manifest 或技術政策。
+- Goal：給可追溯獨立 verdict，標示可交 Human 校準準備或 required fixes。
+- Non-Goal：不批准 live／新預算，不冒充 Human 已看過原文或校準已過。
+- TestCase：US01–US05 的受控證據、holdout labels／組成／凍結來源核查；Human 9+7 結果不預填。
+
+#### U06 Human offline calibration 九欄（planned 人類停點）
+
+- In-Scope：U03–U05 完成後，等待 Human 明確參與既定 frozen synthetic holdout；Tester 僅記安全成績／來源。
+- Out-Of-Scope：自動開啟／校準、expected labels 提示、live description／新 OAuth、失敗後改標。
+- ReadOnly：frozen 工具與 holdout、正式 source/API、他人 dirty tests、全部歷史／圖。
+- Written：無。
+- Deleted：0。
+- Modify：Human 真實參與後，只更新新 `pkce-semantic-review.md` 與 step 的安全結果；尚未參與不寫 pass。
+- Goal：取得 9/9 decisive 正確且 7/7 unknown 的實際離線校準，或如實記 failed／pending。
+- Non-Goal：不保證全面語言準確、不變更 proof/outcome、不因此開 live 或取得額度。
+- TestCase：US04 既定 16-case 與既定判準；目前 pending，人類未開始。
+
+### U 最新執行狀態紀錄
+
+既定 offline confirmation approved／無 required fix 保留，9 Modify／3 Written 範圍內 U03 工具已實作並凍結：`python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review`，無網路／ID-secret；private Swift/AppKit helper與parent gate／cleanup／pipe已有實作。U03 completed；P2 selectors/stderr回修後，獨立U04親跑57項controlled tests通過、strict format／SwiftLint exit0，U04 completed；獨立U05最終approved、P2closed／無其他required fix。完整UI／clipboard／restoration／timeout與U06 Human9+7仍pending，單次smoke不當自然timeout或holdoutpassed。
+
+已允許安全替代：SystemRandom打散synthetic，UI不見labels/id；工具不讀／比較expected_category、不自評，末尾僅opaque correlation_id＋有限observations由獨立Tester核分。原自評寫入被auto-review拒絕未執行、未重試，未改9+7標準／manifest／原proof/outcome。U06仍Human停點、不自動校準；新增OAuth0，live另需明確授權，R→T1/1與全部歷史不改。本次只登錄外部U04／U05事實，不自產approval、不改code／fixture／凍結evidence。原topic commit／push／更新DraftPR61授權有效，可交Implementer完成既定12file工具交付，之後停U06 Human，不另造發布授權停點。
+
 ## T 輪現行最小診斷改善（優先於R停止及Q/P/A/S寫入授權）
 
 來源HEAD90646c2；原feature/feat/github-first-sign-in/原DraftPR61，不dev實作、不建worktree/PR、不merge。User已要求實作最小改善，採technical-spec§11的version3 actualprepared觀測＋bounded grammar/hints，不以無法保證遠端結論停止。沿用R唯一未使用額度，**共享R→T規劃時0/1、T06後現1/1用盡**，不是新增預算；case選wrong，一次fresh單POST，不第二次。

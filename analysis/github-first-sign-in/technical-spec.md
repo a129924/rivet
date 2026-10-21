@@ -3,6 +3,67 @@
 - Topic：`github-first-sign-in`；2026-10-20 Plan-Creator 驗證 host amendment，已獲獨立 Plan-Reviewer A02 approved（無required fix）。
 - 配對：[requirements](requirements.md)、[plan／manifest](../../plan/github-first-sign-in/github-first-sign-in.plan.md)、[step](../../plan/github-first-sign-in/github-first-sign-in.step.md)。
 
+## U：Human-only 原文語義 review（既定技術與規劃來源；離線已授權實作）
+
+本節只定義未來候選，不修改 §11 或 P/Q/R/T 歷史、正式 OAuth／public API／lifecycle。本輪來源 `9f603f81d77040a2e06ad178062e8cfecc4de468`；Human 可見性風險已接受進入規劃，獨立 Plan-Reviewer 已明示 U02 formal planning verdict approved、無 required fix；整體停 Human／human-check，未授權實作／校準／live，新 OAuth 額度 0。下列「必須」是未來另行放行後的契約，不是現在的操作授權。
+
+### U1. 目的與獨立觀測軸
+
+v3 安全摘要保留詞彙卻丟失文字順序、否定、條件、例子及因果；synthetic 肯定／否定因果句可有相同摘要，不是歷史原文重建。依 [RFC6749 §5.2](https://www.rfc-editor.org/rfc/rfc6749.html#section-5.2) 與 [RFC7636 §4.6](https://www.rfc-editor.org/rfc/rfc7636.html#section-4.6)，invalid_grant 可有多種原因；[GitHub token troubleshooting](https://docs.github.com/en/apps/oauth-apps/maintaining-oauth-apps/troubleshooting-oauth-app-access-token-request-errors) 未給穩定 verifier-exclusive 句法契約，不再用猜句型補證據。
+
+新增獨立 `provider_semantic_observation`，review_source 固定 `local_human`。它是 Human 對當次 provider statement 的語義 attestation，不是 agent 獨立認證因果、不改既有 `pkce_rejection_proven`／outcome、不回填舊案。沒有原文保存，因此 agent／Reviewer 無法獨立稽核原句。候選分類只有：
+
+| semantic_category | 僅可選取的語義 |
+|---|---|
+| verifier_mismatch_asserted | 明說當次送出 verifier 與原 challenge 不符是實際拒絕原因；不是條件、否定或例子 |
+| grant_or_code_asserted | 明確指向 grant／code 問題 |
+| client_redirect_configuration_asserted | 明確指向 client／redirect／configuration 問題 |
+| indeterminate | 矛盾、多候選、不完整、否定／條件／例子而未斷言實際原因，或未知 |
+
+Parent 保留既有強 configuration／redirect／auth error 優先與相容性規則；Human 語義與已知強訊號衝突時，強制 review_status=conflict、category=indeterminate／未知，不能由選項升級舊 proof。視窗不呈現 case、outcome 或 expected label，以減少 priming；Human 可能已有上下文，不能承諾全盲。
+
+### U2. Parent gate 與先清理後啟動
+
+僅 strict UTF-8、完整且未截斷的 description，UTF-8 長度 <=4096 bytes；超限不取 prefix。僅可信 strict OAuth error shape；token／成功混合、重複鍵、invalid JSON、非 string／不可信 shape 均不顯示。
+
+Parent 必須在當次已知 secret context 仍存在時，對候選檢查 client ID／secret／code／state／原與送出 verifiers／challenge／已知 token，涵蓋 literal 與常見 URL／JSON／HTML／case／Base64 形式；並 gate URL、control、bidi、長 opaque identifier。命中即整段不顯示，不以局部替換後的文本代替原句。具體 finite detection 與負向例須由未來獨立 holdout／review 凍結；不宣稱可偵測任意編碼、未知秘密或所有混合變形。
+
+時序固定：strict shape／size → 在已知 context 下 gate → 僅取得候選 → finally detach observer、clear Attempt／context／body／request／fields／code／main client ID與secret及衍生敏感參照 → 才 launch helper。Parent 在 helper 啟動時僅保留通過 gate 的候選，不傳已知 context、case 或 expected label；gate 拒絕／清理失敗／異常路徑均不 launch。此為參照生命週期控制，不承諾 immutable strings、allocator 或 OS 層的物理 zero。
+
+Live 原文不得進 stdout／stderr／logs／file／env／argv／screenshot／clipboard；agent／Reviewer／CUA 不看 live 原文。僅 Human 明確啟動 review 才可能顯示，default no UI、no auto reveal。這些操作約束不等於 AppKit／OS 技術保證；copy／export／restoration 等能力尚未驗證，須先以 synthetic 測試，不用真描述驗證。
+
+### U3. 私有 helper 與 bounded protocol
+
+已實作的 private helper 為 `apps/GitHubSignInVerification/tools/pkce_semantic_review.swift`，private Swift／AppKit tool script，不新增共用 module／target／public API。
+
+- 匿名 stdin pipe 只收一個 strict UTF-8 JSON object：`{"protocol_version":1,"description":"..."}`。總輸入 <=16 KiB，description <=4096 UTF-8 bytes；拒絕 duplicate／extra keys、trailing data、invalid UTF-8／JSON、錯型別或 oversize；不截斷。不能透過 argv／env／暫存檔傳原文。
+- stdout 上限 512 bytes，只含 `protocol_version`=1、`semantic_category`（上述四 enum）、`review_status`（confirmed／unreviewable／declined／expired／conflict）、`reveal_started`／`user_confirmed`（bool）的單一 strict JSON。Parent 驗 exact keys／types／bounds／enum 及狀態一致性；只有 confirmed 且兩 bool=true 才能有 decisive attestation，其餘歸未知。unexpected／partial／timeout／nonzero／error 一律 unknown＋static reason，不 echo 內容；stderr 不 forward。
+- 密封確認窗 30 秒無動作即 discard；Human 按「顯示一次」才 reveal，最多 60 秒且無第二次，結束關窗／釋放參照。Parent watchdog 100 秒，超時結束 helper、清理並記未知。任何時間上限都不是 OS 留痕或記憶體 zero 保證。
+- UI copy／export／restoration／automatic reveal 限制與異常關閉須先用 synthetic 驗證；未驗證不得宣稱技術禁止。不能由 agent 截圖或 CUA 檢查 live 原文。
+
+### U4. 先獨立離線驗證，不能用 live 試設計
+
+未來另行放行後，由獨立 Tester 建 synthetic holdout，獨立 Reviewer 核標並凍結；不是 Implementer 自訂判準再自測。共 16 例：3 明確肯定 mismatch、3 明確 grant/code、3 明確 configuration、7 必須 abstain（否定／條件／例子／多候選／矛盾／不完整／未知，各一）。Human 不看 expected labels。要求 **9/9 decisive 正確且 7/7 unknown**；全 unknown 不通過。不得為結果改標；未過禁止 live，需回修再獨立驗證。通過只證明該 frozen synthetic set，不是自然語言全面準確保證。
+
+另做 gate／redaction、strict input/output protocol、size/duplicate/extra/trailing/type、no-auto-reveal／default-no-UI、密封／reveal／parent timeouts、單次顯示、取消／異常／cleanup、main 與 observer 敏感參照清理、strong-error conflict 負測。以上工具的 bounded offline 工作已獲授權；Human offline calibration 尚未執行、不自動啟動，live 仍無新增授權。
+
+若日後另授權 live，推薦 wrong：既有合法不同 verifier 與 actualprepared 一致的基礎，使資訊增益集中於完整 causal text；不是預告一次會判定。共享 R→T 1/1 已耗盡，未來 case／次數須 Human 另行授權，不藉 U02 核准補新額度。
+
+### U 最新授權更正（僅狀態，不變更 U1–U4 技術契約）
+
+U02 formal planning approved 保留；原「未授權 offline implementation／須再批准」為已移除的額外停點。現依既有同 topic 實作授權續行 bounded offline tools、Tester／Reviewer、synthetic Human calibration 準備；不改 privacy gates、protocol／timeouts／cleanup、四分類、holdout／9+7 判準、proof／outcome 或既定 manifest。
+
+U03–U05 的離線工作現可準備及執行，Human 校準仍在 U06 停點，不自動啟動；新 OAuth 額度 0，live 必另次明確授權。本輪先交付可測工具。舊 U 文句保留為授權演進歷史，不能用其阻擋已授權離線工作，也不能由本更正推導 live 或擴大原文處理能力。兩份他人 dirty Swift hosted tests 不讀、不寫、不暫存、不還原，且不在本 scope。
+
+### U 最新執行狀態紀錄
+
+外部 offline confirmation approved／無 required fix 保留。U03 已實作凍結 private Swift/AppKit helper 與 `python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review` 無網路／ID-secret 校準入口；U03 completed；P2 selectors/stderr 回修後，獨立 U04 Tester 親跑 57 項受控測試通過，strict format／SwiftLint exit 0；U04 completed，獨立 Reviewer 最終 U05 approved、P2 closed／無其他 required fix，限工具交付與 Human 正式 offline 校準。原 U 初始未授權敘述是規劃來源歷史，現行只開放既定 bounded offline 範圍。
+
+現行安全替代：SystemRandom shuffle，CLI只投影description，UI不見labels/id；不讀／比較 expected_category、不自評。末尾僅回 opaque correlation_id＋有限 observations，交獨立 Tester 依 frozen labels 評分；9/9 decisive正確＋7/7 unknown不變。原自評寫入被 auto-review 拒絕、未執行、未重試。協定／privacy與proof/outcome界線不變；若日後准live，原文僅 Human 經gate短暫看，agent／Reviewer不看不存。完整 UI／clipboard／restoration／timeout 互動實證與 U06 Human 9+7 校準仍 pending，不能宣稱 OS 無留痕；OAuth0、U06 Human停點、R→T1/1耗盡與舊歷史不變。
+
+單次 smoke 紀錄為 30.534s／stderr=false／confirmed＋indeterminate。Human 回報看到文字、當時不能複製並隨意選取，可解釋人工觸發；不據此判自然 timeout、技術性全面禁複製或 Human holdout passed。完整 UI／timeout 等與正式 9+7 校準仍 pending，沒有新增 OAuth。
+
+
 ## 1. 責任與 additive public 面
 
 GitHubIntegration 保持 non-BC；不依賴 PR BC。獨立 GitHubSignInVerification App composition 獨占 coordinator、完整程序內 store、provider 與 scope；其 app-local Presentation 只有 display-ready input／intent，不再由 RivetPresentation 公開。App 的 Network-framework relay 與預設瀏覽器 opener 是平台 adapter，GitHub-specific 檢查與交換留在 GitHubIntegration。

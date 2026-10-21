@@ -5,6 +5,30 @@
 - Branch：`feat/github-first-sign-in`；base／Draft PR target：`dev`。
 - 配對：[technical-spec](technical-spec.md)、[plan](../../plan/github-first-sign-in/github-first-sign-in.plan.md)、[step](../../plan/github-first-sign-in/github-first-sign-in.step.md)。
 
+## U：Human-only 語義 review（規劃來源保留；現行實作事實見本節末）
+
+來源 `9f603f81d77040a2e06ad178062e8cfecc4de468`，沿用原 feature worktree／branch／Draft PR61。Human 已接受本機原文可見性的殘餘風險，僅同意方案進入規劃；初步獨立方案複核的四項 fixes 滿足不等於本輪 formal planning 或 implementation approval。
+
+**Goal**：規劃一條可由 Human 短暫閱讀完整 `error_description` 的本機語義 review 路徑，補足 v3 摘要丟失的順序、否定、條件、例子與因果。不繼續猜測句型。已觀察到 synthetic 肯定／否定因果兩句可產生相同安全摘要；這不是歷史原文重建。`invalid_grant` 多義，GitHub 官方 troubleshooting 未提供穩定 verifier-exclusive 句法契約，不能以它或 hints 證明 PKCE 原因。
+
+**本輪 In-Scope**：只修改同 topic 四份 planning artifacts，規劃 privacy gate、私有 helper protocol、獨立 synthetic holdout 與證據界線；獨立 Plan-Reviewer 已明示 U02 formal verdict approved、無 required fix；整體仍停 Human／human-check。**本輪 Out-Of-Scope**：任何 helper／CLI／tests 實作、fixture 建立、離線 Human 校準、工具執行、Git、發布或新 OAuth。Written／Deleted 均無，新增授權預算 **0**。
+
+未來候選方法與限制見 [technical-spec 的 U 節](technical-spec.md)。只有 Human 可看通過 gate 的完整、未截斷、至多 4096 UTF-8 bytes 描述；agent／Reviewer／CUA 不看 live 原文。新 `provider_semantic_observation` 只是 local_human 對 provider statement 的 attestation，不變更既有 `pkce_rejection_proven`／outcome，不回改歷史。無原文保存亦代表 agent 無法獨立稽核原句。
+
+P／Q 各 2/2 與 indeterminate、R 調查及 T 實際結果保留；共享 R→T **1/1 已用盡**。正常 App／再次 API／canvas passed 不重做。若日後另獲 live 授權，wrong 為推薦候選：既有合法不同 verifier 與 prepared 一致性提供基礎，新增資訊限完整 causal text 語義；不保證一次判定，case／次數需 Human 另行授權，不能挪用已耗盡額度。
+
+### U 最新授權更正：啟動 bounded offline implementation
+
+本段是現行授權／狀態，優先於 U 先前「須再批准 offline 實作／NOT AUTHORIZED」停點，原文字保留作歷史。依既有同 topic 必要回修／實作授權、Human 在「接下來完成工具修改與離線測試」脈絡的續行要求及 U02 formal approved，移除主 agent 額外增加的 offline 再批准停點；不是新增 OAuth／原文可見性授權。
+
+既定 9 Modify／3 Written、技術與判準不變，現只啟動離線工具實作、獨立 Tester／Reviewer 及 synthetic Human calibration 準備；流程 U03→U04→U05→U06 Human 停點見 plan。本輪先交付可測工具，不自動進行 Human 校準或 live。新增 OAuth 仍 0，P/Q/R/T 歷史及 App／canvas passed 原樣保留；任何 live 必須另次明確授權。其後 topic 發布沿原授權，並不代表現在執行 Git／發布。
+
+### U 最新執行狀態紀錄
+
+獨立 Plan-Reviewer 的 offline confirmation approved／無 required fix 保留；既定離線實作已獲授權，較早「只規劃／NOT AUTHORIZED」為來源歷史，不限制現行 bounded offline 工作。U03 工具已實作並凍結，命令為 `python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review`，無網路／ID-secret 輸入；U03 completed；P2 selectors/stderr 回修後，獨立 U04 Tester 親跑 57 項受控測試通過、strict format／SwiftLint exit 0，U04 completed。獨立 Reviewer 最終 U05 approved、P2 closed／無其他 required fix，限工具交付與 Human 正式 offline 校準；U06 Human 9+7 與完整 UI／clipboard／restoration／timeout 實證仍 pending，smoke 不當作自然 timeout／holdout 通過。
+
+安全替代現為 SystemRandom 打散 synthetic cases、UI不見labels/id；工具不讀／比較 expected_category、不自評，只於末尾回傳 opaque correlation_id＋有限 observations，供獨立 Tester 評分，9+7 標準不變。原自評寫入曾被 auto-review 拒絕、未執行且未重試；採已允許的外部獨立評分方案。原文仍只可在 gate 後由 Human 短暫看，agent／Reviewer 不看、不保存；獨立觀測軸不改 proof／outcome。OAuth=0、U06 Human 停點與 P/Q/R/T／App/canvas 歷史不變，本記錄只登錄已明示的外部驗證／review事實，不宣稱 Human 校準或遠端通過；既有 topic 發布授權有效，工具交付後停 U06，不另造發布批准停點。
+
 ## Goal
 
 單一使用者從獨立 GitHubSignInVerification App 輸入個人自有 GitHub.com OAuth App 配置，經系統預設瀏覽器完成授權；取得符合既有模型的完整 credential bundle 後，當次程序使用既有 provider／scope 執行 `GET /user`，呈現實際 `login` 與 `id`，並能再次查詢。

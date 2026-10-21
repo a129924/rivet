@@ -9,6 +9,78 @@
 - 最後更新：2026-10-21，Implementer；主提交/hooks/push/原PR讀回/localmap完成，收尾帳本隨後同步。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
+## U：現行 planning ledger（優先於上方 T08 標頭與以下歷史執行授權）
+
+- 更新：2026-10-21，Plan-Creator；來源 `9f603f81d77040a2e06ad178062e8cfecc4de468`，同 feature／branch／Draft PR61。
+- Current phase：Human boundary；Current step：U02 completed → Human；Current status：human-check。
+- U formal planning verdict：approved，無 required fix；來源為獨立 Plan-Reviewer 明示外部 verdict，只核准四檔 planning。U02 completed 不等於 implementation approval；整體停 Human。
+- Human 已接受原文可見性殘餘風險，僅准進入規劃；U02 後必停 Human。未來工具實作／Tester holdout／Reviewer核標／offline Human校準／任何live皆未授權。
+
+| ID | Status | Owner role | 完成條件 | Evidence／verdict |
+|---|---|---|---|---|
+| U01 | completed | Plan-Creator | 僅四planning新增U節，完整候選技術契約／九欄／未來manifest／限制 | 本次四文件新增文字；不是品質核准，未跑測試／工具 |
+| U02 | completed | Plan-Reviewer | 獨立formal planning回查Human-only gate/cleanup/helper/分類/校準/證據軸及零新預算 | 外部獨立 Plan-Reviewer 明示 approved、無 required fix；只 planning，下一步 Human boundary／human-check |
+
+### U Blockers／Human Check
+
+- Formal U02 已由外部獨立 Plan-Reviewer 明示 approved、無 required fix；U02 completed，整體停 Human／human-check。未來 9 Modify／3 Written 仍 NOT AUTHORIZED；不得實作／fixtures／校準／發布／OAuth，新預算 0，無自動 implementation／testing phase。
+- AppKit copy/export/restoration、privacy gates、protocol與timeouts／cleanup皆尚未實作或synthetic驗證；holdout與Human離線校準尚未建立／執行，不能預填通過。後續技術能力不保證任意編碼／未知秘密偵測、OS留痕消失或immutable string物理zero。
+- P/Q各2/2、R調查與T歷史／既有pkce_rejection_proven與outcome不回改；共享R→T1/1已耗盡，本輪新OAuth=0。e941d88正常App/API再次查詢與canvaspassed保留、不重做。
+- Agent／Reviewer／CUA不能看live原文；無原文保存，未來新觀測僅local_human attestation，agent無法獨立稽核原句。若另授權live，推薦wrong但須另定case／次數，不保證一次判定。
+
+### U01 完成九欄（本輪實際）
+
+- In-Scope：四planning新增U節，方案為gate→清理→private helper→獨立語義觀測軸；交U02。
+- Out-Of-Scope：任何實作／fixture／test／校準／工具／Git／commit/push/PR或新OAuth。
+- ReadOnly：所有code/tests/source/API/experiments/frozen圖/歷史evidence/其餘docs與topics；原T/P/Q/R內容保留。
+- Written：無。
+- Deleted：無。
+- Modify：本topic requirements.md、technical-spec.md、github-first-sign-in.plan.md、github-first-sign-in.step.md；完整paths見plan U當前九欄，僅新增U節。
+- Goal：給formal Plan-Reviewer可審查的具體方法與Human停點。
+- Non-Goal：不代approved、不把attestation當proof、不回推舊原文、不放行未來工具／live。
+- TestCase：US01–US05為planned/not-authorized、全未執行；未建立任何synthetic fixture或helper。
+
+### U 最新授權／狀態更正：啟動離線工具流程
+
+本段是現行 state，優先於上方 U02→Human／未授權 offline 實作的舊停點，舊內容保留為歷史。依原同topic必要回修／實作授權、Human對「工具修改與離線測試」的續行要求及 U02已approved，移除主agent額外增加的offline再批准停點。技術／privacy／manifest／判準完全不變。
+
+- Current phase：bounded offline implementation 準備；Current step：U03；Current status：pending（本記錄凍結供原 Plan-Reviewer 確認後交 Implementer）。
+- Upstream technical verdict：U02 approved、無 required fix；不把本次授權記錄當作 source／tests 已完成。
+- 現授權：既定 9 Modify／3 Written 內的 U03實作→U04獨立Tester→U05獨立Reviewer及synthetic Human calibration準備；plan各slice九欄必列。
+- 停點：U06 Human offline calibration，不自動執行或代填結果。任何live仍須另次明確授權，新OAuth=0，R→T1/1耗盡不變。
+
+| ID | Status | Owner role | 完成條件／證據 |
+|---|---|---|---|
+| U03 | completed | Implementer | 工具已完成凍結，限既定離線範圍 |
+| U04 | completed | Tester | P2selectors/stderr回修後獨立親跑57tests、strict format／SwiftLint exit0；不代Human校準 |
+| U05 | completed | Reviewer | 外部獨立最終verdict approved，P2closed／無其他required fix；限工具交付與Human正式offline校準 |
+| U06 | pending | Human；Tester記錄 | human-check停點；Human明確參與後才可記9+7校準結果，目前未開始 |
+
+本次實際只Modify四planning的U授權／狀態文字，Written／Deleted無，無Git／tests／工具／OAuth。兩份他人dirty Swift hosted tests不讀、不寫、不暫存、不還原。未來發布沿原topic授權，但本輪先交付可測工具；P/Q/R/T與正常App/API/canvaspassed均保留。
+
+### U 最新執行狀態紀錄
+
+- 外部來源：獨立 Plan-Reviewer 最新 offline confirmation 明示 approved、無 required fix；只離線，OAuth 0、U06 Human 停點不變。
+- Current phase：工具交付 → U06 Human offline calibration；Current step：U06；Current status：human-pending，優先於此前 U03 in-progress／pending。U03／U04 completed，U05 外部 verdict approved。
+- 外部實際結果：P2 selectors/stderr 回修後，獨立 Tester 親跑 57tests passed、strict format／SwiftLint exit0；獨立 Reviewer 最終 U05 approved、P2 closed／無其他 required fix。U06 正式 Human holdout 校準未開始，完整 UI／clipboard／restoration／timeout 實證仍 pending；不得預填9+7／遠端。原topic發布授權有效，交Implementer完成既定12file commit／push／原DraftPR61更新後停U06，不另造發布批准停點。
+
+#### U03 Implementer 開始九欄（已收到的開始交接，非完成證據）
+
+- In-Scope：parent gate／cleanup、helper protocol／AppKit、單一命令 offline 入口。
+- Out-Of-Scope：OAuth／live、他人 App／tests、holdout labels、正式 proof／outcome 改動。
+- ReadOnly：正式 source、傳輸／TTY／loopback、歷史 evidence／圖；他人 dirty hosted tests 不讀寫／暫存／還原。
+- Written：planned helper 及新 pkce-semantic-review.md evidence，僅指開始交接的允許範圍，不宣稱已建立。
+- Deleted：0。
+- Modify：pkce_negative_probe.py、test_pkce_negative_probe.py、tools/README.md，精確相對路徑沿既定 manifest。
+- Goal：可測 no-network 工具。
+- Non-Goal：不預填 9+7／遠端，不保證任意秘密偵測或 OS／記憶體 zero。
+- TestCase：US01–US03／US05 synthetic，US04 只接獨立 Tester 定義的 schema，不自行建立 expected labels；實際結果待補。
+
+本次 Plan-Creator 僅四 planning 的 U 狀態事實登錄，不改工具／evidence／他人 App，不執行 Git／tests；已停止編輯。
+
+單次 smoke 紀錄為 30.534s／stderr=false／confirmed＋indeterminate。Human 回報看到文字、當時不能複製並隨意選取，可解釋人工觸發；不據此判自然 timeout、技術性全面禁複製或 Human holdout passed。完整 UI／timeout 等與正式 9+7 校準仍 pending，沒有新增 OAuth。
+
+
 ## T 輪現行ledger（優先於R停止及以下Q/P/A/S歷史）
 
 來源90646c2，原feature/branch/PR61不變。T已授權私有診斷version3實作，不能因遠端結論可能unknown只停止。**共享R→T唯一預算現1/1用盡**；R當時未用，T沿用同1次，無新增額度。T06僅wrong新code單POST一次，無positive/API/refresh401/第二次。P/Q indeterminate、R調查、e941d88正常login及canvaspass保留。
@@ -667,3 +739,27 @@ In-Scope：safeJSON/§11/hash/預算/文件/readonly；Out-Of-Scope：live/36tes
 - TestCase：staged精確10檔/diffcheck/all既有hooks passed；localPRLens真base16606b8→403287a validate/render通過（4lanes/15nodes/21edges/4steps）且manifest正確。Graphify受限sourcefallback，無build/upload；frozen圖未改。
 
 本筆只收尾兩文件，隨後commit/push並同步最終HEAD localmap及原PR；不改工具或重跑未變且已通過tests。wrong indeterminate、localconsistent為本次實際新增資訊；共享R→T唯一1/1用盡，P/Q/R歷史保留，正常App/canvaspassed不重做。完整遠端refresh401及完整Humanreview仍pending，正式產品登入UI未交付，停Humanreview不merge。
+
+## U04 最新獨立Tester完成紀錄（優先於先前U03 in-progress）
+
+U03已收到明示完成交接；U04獨立離線驗證完成，Current phase=U05獨立Reviewer待審，U06 Human calibration仍pending、新OAuth0。
+
+親跑54tests與真Swift6helper compile/strictprotocol noUI passed；初次helperformat/lint fail交Implementer定點修後，Tester再跑strictformat exit0、SwiftLint0violations及全54tests exit0。最終helper SHA91d570e9f4e9a4b617105b911f2f847b393c3f974275066c5660bebcd116e148；CLI/test/READMEhash同U03，初版helperhash與failure保留歷史，詳pkce-semantic-review.md。
+
+獨立16fixture已由Reviewer核標freeze SHA d1567758e9dfb2861886510f8c41a3a03174be805c6b7979e8f28d850e9a2ea5；mock實際校準分支禁止network/config/UI仍16unique打散，只有進度與finalopaquecorrelation，沒有答案/描述洩漏；Tester獨立allunknown sanity為0/9decisive＋7/7abstain，不能pass，不是Human成績。
+
+九欄：In-Scope=US01–05適用offline/holdout/compile/protocol/checks；Out-Of-Scope=code改動/Human自動校準/GUIlive/OAuth/秘密/Git/外部App；ReadOnly=工具及正式source/他人dirtytests/舊evidence/圖/frozenlabels；Written=唯一semantic-review-cases.json；Deleted=0；Modify=新semantic evidence與本step；Goal=交U05獨立結果/限制；Non-Goal=不代核准/不預填9+7；TestCase=54/strict/protocol/mock準備passed，AppKitruntime與Humancalibrationpending。
+
+其它人六個App dirty檔只列名排除、不讀內容/不碰；不全量App/Swift測試或掃format。不宣稱OS無留痕或physicalzero。Tester已停止寫入，交U05獨立Reviewer。
+
+### U05 P2 獨立Tester定點重驗／synthetic smoke待釐清
+
+P2 stderrfix親跑57tests exit0、helperstrictformat0/SwiftLint0violations，CLI9ebee1367ffd3f91d6311debe0457668ae96d1e24af77bf9ec24c61609d742e8／test74f641699b77fc0c0142ea1072884584406dee1a7f65bb76251a2dc27081f575／helper91d570...e148，holdoutfrozen不變、pycache0。
+
+已協調的一次純synthetic密封窗smoke：30.534s、stderrfalse，卻輸出confirmed/revealtrue/userconfirmedtrue/categoryindeterminate；Tester無點選/按鍵/reveal/CUA/截圖，已退出清理。自然30s逾時未能驗證，原因待Human釐清及Reviewer唯讀查路徑；不推定bug、不重跑、不算Humanholdout/9+7或timeoutpassed。
+
+只修改semantic新evidence與本step自身事實，無source/Git/秘密/OAuth。P2受控passed與runtimepending分列，待外部明示後再路由，不代核准。
+
+#### Synthetic smoke Human外部確認（取代是否操作pending）
+
+Human已明示手動操作：看到文字不能複製，便任選選項，足以解釋confirmed/revealtrue。故本次為受Human操作中止的synthetic smoke，不是自然timeoutpassed、不是16case holdout/9+7成績；完整UI/timeout仍未驗證。未重測/改code，僅補外部事實後凍結；不存原句、不要求複製。

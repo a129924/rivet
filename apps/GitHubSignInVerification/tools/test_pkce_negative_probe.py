@@ -1,6 +1,10 @@
 """全部為 fixture；不讀機密、不開真瀏覽器、不連 GitHub。"""
 import contextlib
 import io
+import inspect
+import subprocess
+import tempfile
+from pathlib import Path
 import json
 import socket
 import threading
@@ -646,6 +650,350 @@ class NegativeProbeTests(unittest.TestCase):
         self.assertIsNone(observer.returned_at)
         self.assertEqual(result["outcome"],"indeterminate")
         self.assertNotIn("fixture-private-exception",json.dumps(result))
+
+
+
+class SemanticReviewTests(unittest.TestCase):
+    # Development fixtures only. Independent U04 holdout and expected labels are not read here.
+    def output(self, **changes):
+        value = {"protocol_version": 1, "semantic_category": "verifier_mismatch_asserted",
+                 "review_status": "confirmed", "reveal_started": True, "user_confirmed": True}
+        value.update(changes)
+        return json.dumps(value).encode()
+
+    def test_privacy_gate_known_context_forms_and_unknown_limits(self):
+        secret = "synthetic<private>&value"
+        forms = [secret, secret.upper(), urllib.parse.quote(secret, safe=""),
+                 urllib.parse.quote_plus(secret), probe.html.escape(secret),
+                 json.dumps(secret)[1:-1], probe.base64.b64encode(secret.encode()).decode(),
+                 probe.base64.urlsafe_b64encode(secret.encode()).decode().rstrip("="),
+                 "".join("&#%d;" % ord(char) for char in secret),
+                 "".join("\\u%04x" % ord(char) for char in secret)]
+        for value in forms:
+            self.assertFalse(probe.privacy_allowed("Provider says " + value, [secret]))
+        for value in ["https://example.invalid/a", "www.example.invalid", "line\nsecret", "a\x00b", "a\u202eb",
+                      "A" * 24, "x" * 4097, "\ud800"]:
+            self.assertFalse(probe.privacy_allowed(value, ()))
+        self.assertTrue(probe.privacy_allowed("The request was refused because its verifier differed.", ()))
+        self.assertTrue(probe.privacy_allowed("No active grant was found.", ()))
+
+    def test_candidate_strict_shape_size_and_token_rejection(self):
+        invalid = [b'{"error":"invalid_grant","error_description":"safe","access_token":""}',
+                   b'{"error":"invalid_grant","error_description":"safe","extra":"x"}',
+                   b'{"error":"invalid_grant","error":"invalid_client","error_description":"safe"}',
+                   b'{"error":"invalid_grant","error_description":7}', b'\xff',
+                   b'{"error":"invalid_grant","error_description":"safe"} trailing']
+        for raw in invalid:
+            candidate = probe.SemanticCandidate()
+            probe.prepare_semantic_candidate(400, raw, (), candidate)
+            self.assertEqual(candidate.description, "")
+        raw = json.dumps({"error": "invalid_grant", "error_description": "A harmless sentence."}).encode()
+        candidate = probe.SemanticCandidate()
+        probe.prepare_semantic_candidate(400, raw, (), candidate)
+        self.assertEqual(candidate.description, "A harmless sentence.")
+        probe.prepare_semantic_candidate(500, raw, (), candidate)
+        self.assertEqual(candidate.description, "")
+        for value in ["é" * 2049, "synthetic-private-context"]:
+            raw = json.dumps({"error": "invalid_grant", "error_description": value}).encode()
+            probe.prepare_semantic_candidate(400, raw, ["synthetic-private-context"], candidate)
+            self.assertEqual(candidate.description, "")
+
+    def test_output_strict_schema_types_and_status_consistency(self):
+        self.assertEqual(probe.validate_semantic_output(self.output())["semantic_category"], "verifier_mismatch_asserted")
+        invalid = [self.output(protocol_version=True), self.output(semantic_category={}),
+                   self.output(review_status=[]), self.output(reveal_started=1),
+                   self.output(extra="private"), self.output(review_status="declined"),
+                   self.output(reveal_started=False), self.output(user_confirmed=False),
+                   b'{"protocol_version":1,"protocol_version":1}', b'\xff', b'{} trailing', b'x' * 513]
+        for raw in invalid:
+            self.assertEqual(probe.validate_semantic_output(raw)["semantic_category"], "indeterminate")
+            self.assertEqual(probe.validate_semantic_output(raw)["reason"], "helper_protocol")
+        self.assertEqual(probe.validate_semantic_output(self.output(), 1)["reason"], "helper_protocol")
+
+    def test_confirmed_abstention_does_not_become_proof(self):
+        observation = probe.validate_semantic_output(self.output(semantic_category="indeterminate"))
+        self.assertEqual(observation["review_status"], "confirmed")
+        self.assertEqual(observation["semantic_category"], "indeterminate")
+        result = probe.safe_result()
+        before = (result["outcome"], result["pkce_rejection_proven"])
+        result["provider_semantic_observation"] = observation
+        self.assertEqual(before, (result["outcome"], result["pkce_rejection_proven"]))
+
+    def test_strong_error_conflicts_are_separate_attestation_axis(self):
+        for category in ["configuration", "redirect", "auth"]:
+            observation = probe.validate_semantic_output(self.output())
+            result = probe.apply_semantic_conflict(observation, category)
+            self.assertEqual(result["review_status"], "conflict")
+            self.assertEqual(result["semantic_category"], "indeterminate")
+        observation = probe.validate_semantic_output(self.output(semantic_category="client_redirect_configuration_asserted"))
+        self.assertEqual(probe.apply_semantic_conflict(observation, "configuration")["review_status"], "confirmed")
+
+    def test_unconfirmed_cleanup_never_launches_helper(self):
+        candidate = probe.SemanticCandidate("Safe sentence.", "unknown", "ready")
+        helper = mock.Mock()
+        result = probe.review_semantic_candidate(candidate, helper)
+        helper.assert_not_called()
+        self.assertEqual(result["reason"], "cleanup_unconfirmed")
+        self.assertEqual(candidate.description, "")
+
+    def test_run_case_cleans_context_before_review_and_preserves_outcome(self):
+        captured = {}
+        def acquire(client, attempt, deadline):
+            captured.update(attempt=attempt, observer=deadline.observer, deadline=deadline)
+            attempt.claimed = True
+            return "synthetic-code", "http://127.0.0.1:1234/oauth/callback"
+        def send(fields, _deadline):
+            captured["fields"] = fields
+            return 400, b'{"error":"invalid_grant","error_description":"No active grant was found."}'
+        candidate = probe.SemanticCandidate()
+        result = probe.run_case("wrong", "synthetic-client", "synthetic-secret", acquire, send,
+                                semantic_candidate=candidate)
+        def helper(description):
+            self.assertEqual(captured["attempt"].state, "")
+            self.assertEqual(captured["fields"], {})
+            self.assertIsNone(captured["deadline"].observer)
+            self.assertEqual(captured["observer"].client_id, "")
+            self.assertTrue(candidate.description == "")
+            return probe.validate_semantic_output(self.output(semantic_category="grant_or_code_asserted"))
+        before = (result["outcome"], result["pkce_rejection_proven"])
+        result["provider_semantic_observation"] = probe.review_semantic_candidate(candidate, helper)
+        self.assertEqual(result["provider_semantic_observation"]["semantic_category"], "grant_or_code_asserted")
+        self.assertEqual(before, (result["outcome"], result["pkce_rejection_proven"]))
+
+    def test_cleanup_and_gate_failures_never_reveal_or_log_sentinels(self):
+        candidate = probe.SemanticCandidate()
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            def unavailable(*_args):
+                raise ValueError("synthetic-private-exception")
+            result = probe.run_case("wrong", "synthetic-client", "synthetic-secret", acquire=unavailable,
+                                    semantic_candidate=candidate)
+            helper = mock.Mock()
+            observation = probe.review_semantic_candidate(candidate, helper)
+        helper.assert_not_called()
+        safe = json.dumps([result, observation]) + out.getvalue() + err.getvalue()
+        for sentinel in ["synthetic-client", "synthetic-secret", "synthetic-private-exception", "Traceback"]:
+            self.assertNotIn(sentinel, safe)
+
+    def test_default_path_never_launches_helper(self):
+        with mock.patch.object(probe, "launch_semantic_helper") as helper:
+            probe.run_case("missing", "fixture-id", "fixture-secret", acquire=acquire_fixture,
+                           send=lambda *_: (400, b'{"error":"invalid_grant"}'))
+        helper.assert_not_called()
+
+    def test_calibration_command_has_no_network_or_credentials(self):
+        with mock.patch.object(probe, "calibrate_semantic_review", return_value=0) as calibration, \
+             mock.patch.object(probe, "run_case", side_effect=AssertionError()), \
+             mock.patch.object(probe.getpass, "getpass", side_effect=AssertionError()), \
+             mock.patch.object(probe, "authorize", side_effect=AssertionError()), \
+             mock.patch.object(probe, "send_token", side_effect=AssertionError()):
+            self.assertEqual(probe.main(["--calibrate-semantic-review"]), 0)
+            calibration.assert_called_once_with()
+
+    def test_calibration_projection_never_returns_expected_labels(self):
+        # Schema-only synthetic records, not the independent U04 holdout or its answers.
+        raw = json.dumps({"schema_version": 1, "cases": [
+            {"id": f"u{index:02d}", "description": "A harmless synthetic sentence.",
+             "expected_category": {"opaque-not-read": True}} for index in range(1, 17)]}).encode()
+        descriptions = probe.calibration_descriptions(raw)
+        self.assertEqual(descriptions, ["A harmless synthetic sentence."] * 16)
+        self.assertNotIn("opaque-not-read", json.dumps(descriptions))
+
+    def test_helper_runtime_stderr_is_never_forwarded(self):
+        candidate = probe.SemanticCandidate("Safe text.", "unknown", "ready", True)
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            observation = probe.review_semantic_candidate(candidate,
+                helper=lambda _: (_ for _ in ()).throw(ValueError("synthetic-secret-exception")))
+        self.assertNotIn("synthetic-secret-exception", json.dumps(observation) + out.getvalue() + err.getvalue())
+
+
+
+class SemanticCleanupAndHelperProtocolTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.scratch = tempfile.TemporaryDirectory(prefix="rivet-semantic-test-")
+        cls.binary = str(Path(cls.scratch.name) / "semantic-check")
+        source = Path(probe.__file__).with_name("pkce_semantic_review.swift")
+        compiled = subprocess.run(["/usr/bin/xcrun", "swiftc", "-swift-version", "6", str(source), "-o", cls.binary],
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=30)
+        if compiled.returncode:
+            raise AssertionError("private helper synthetic compile failed")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.scratch.cleanup()
+
+    def test_swift_exact_protocol_rejects_duplicate_escaped_bool_and_invalid_input(self):
+        valid = b'{"protocol_version":1,"description":"Harmless synthetic text."}'
+        invalid = [b'{"protocol_version":true,"description":"safe"}',
+                   b'{"protocol_version":1.0,"description":"safe"}',
+                   b'{"protocol_version":1,"description":"safe","description":"other"}',
+                   b'{"protocol_version":1,"description":"safe","descrip\\u0074ion":"other"}',
+                   b'{"protocol_version":1,"description":"safe","extra":1}',
+                   b'{"protocol_version":1,"description":null}', valid+b'{}', b'\xff',
+                   json.dumps({"protocol_version":1,"description":"x"*4097}).encode(), b'x'*16385]
+        for raw in [valid] + invalid:
+            result = subprocess.run([self.binary, "--protocol-check"], input=raw,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=3)
+            self.assertEqual(result.returncode == 0, raw == valid)
+            self.assertLessEqual(len(result.stdout), 512)
+            self.assertNotIn(b'Harmless synthetic', result.stdout+result.stderr)
+            self.assertFalse(json.loads(result.stdout)["reveal_started"])
+            self.assertFalse(json.loads(result.stdout)["user_confirmed"])
+
+    def test_send_frame_drops_request_body_and_response_references(self):
+        captured = {}
+        response = mock.MagicMock()
+        response.__enter__.return_value = response
+        response.read.return_value = b'{"error":"invalid_grant"}'
+        response.code = 400
+        def open_request(*_args, **_kwargs):
+            captured["frame"] = inspect.currentframe().f_back
+            return response
+        opener = mock.Mock()
+        opener.open.side_effect = open_request
+        with mock.patch.object(probe, "make_opener", return_value=opener), \
+             mock.patch.object(probe, "time_budget", return_value=contextlib.nullcontext()):
+            probe.send_token({"code":"fixture-code"}, probe.Deadline())
+        # Mock internals may add a frame: walk only to the actual private send frame.
+        frame = captured["frame"]
+        while frame is not None and frame.f_code.co_name != "send_token":
+            frame = frame.f_back
+        self.assertIsNotNone(frame)
+        self.assertIsNone(frame.f_locals["request"])
+        self.assertIsNone(frame.f_locals["response"])
+        self.assertEqual(frame.f_locals["body"], b"")
+
+    def test_main_configuration_is_cleared_before_any_helper_launch(self):
+        captured = {}
+        def fake_run(_case, _client, _secret, semantic_candidate):
+            semantic_candidate.description = "Harmless synthetic sentence."
+            semantic_candidate.reason = "ready"
+            semantic_candidate.cleanup_completed = True
+            return probe.safe_result()
+        def fake_review(candidate):
+            parent = inspect.currentframe().f_back
+            while parent is not None and parent.f_code.co_name != "main":
+                parent = parent.f_back
+            self.assertIsNotNone(parent)
+            captured["client"] = parent.f_locals["client_id"]
+            captured["secret"] = parent.f_locals["secret"]
+            candidate.clear()
+            return probe.semantic_unknown("human_unavailable", "declined")
+        out, err = io.StringIO(), io.StringIO()
+        with mock.patch.object(probe.sys.stdin, "isatty", return_value=True), \
+             mock.patch.object(probe.sys.stderr, "isatty", return_value=True), \
+             mock.patch.object(probe.getpass, "getpass", side_effect=["fixture-client", "fixture-secret"]), \
+             mock.patch.object(probe, "run_case", side_effect=fake_run), \
+             mock.patch.object(probe, "review_semantic_candidate", side_effect=fake_review), \
+             contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            probe.main(["--case","wrong","--review-semantics"])
+        self.assertEqual(captured, {"client":"", "secret":""})
+        self.assertNotIn("fixture-client", out.getvalue()+err.getvalue())
+        self.assertNotIn("fixture-secret", out.getvalue()+err.getvalue())
+
+
+
+class SemanticParentProcessTests(unittest.TestCase):
+    def process(self, raw):
+        child = mock.MagicMock()
+        child.__enter__.return_value = child
+        child.stdin = io.BytesIO()
+        child.stdout = io.BytesIO(raw)
+        child.returncode = 0
+        child.poll.return_value = 0
+        return child
+
+    def test_anonymous_pipe_only_and_empty_stderr_required(self):
+        raw = b'{"protocol_version":1,"semantic_category":"indeterminate","review_status":"confirmed","reveal_started":true,"user_confirmed":true}'
+        child = self.process(raw)
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with mock.patch.object(probe.subprocess, "run", return_value=mock.Mock(returncode=0)), \
+             mock.patch.object(probe.subprocess, "Popen", return_value=child) as popen, \
+             mock.patch.object(probe, "read_helper_output", return_value=raw), \
+             mock.patch.object(probe, "time_budget", return_value=contextlib.nullcontext()), \
+             contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            result = probe.launch_semantic_helper("A synthetic private sentence.")
+        self.assertEqual(result["review_status"], "confirmed")
+        self.assertEqual(popen.call_args.kwargs["stdin"], subprocess.PIPE)
+        self.assertEqual(popen.call_args.kwargs["stderr"], subprocess.PIPE)
+        self.assertNotIn("synthetic private", str(popen.call_args))
+        self.assertEqual(stdout.getvalue()+stderr.getvalue(), "")
+
+    def test_helper_oversize_output_is_killed_and_unknown(self):
+        child = self.process(b'x'*513)
+        with mock.patch.object(probe.subprocess, "run", return_value=mock.Mock(returncode=0)), \
+             mock.patch.object(probe.subprocess, "Popen", return_value=child), \
+             mock.patch.object(probe, "read_helper_output", side_effect=probe.Stop("helper_protocol")), \
+             mock.patch.object(probe, "time_budget", return_value=contextlib.nullcontext()):
+            result = probe.launch_semantic_helper("Harmless text.")
+        child.kill.assert_called_once()
+        self.assertEqual(result["reason"], "helper_protocol")
+        self.assertEqual(result["semantic_category"], "indeterminate")
+
+    def test_parent_watchdog_is_unknown_and_kills_helper(self):
+        child = self.process(b'')
+        child.stdout = mock.Mock()
+        child.stdout.read.side_effect = probe.Stop("timeout")
+        with mock.patch.object(probe.subprocess, "run", return_value=mock.Mock(returncode=0)), \
+             mock.patch.object(probe.subprocess, "Popen", return_value=child), \
+             mock.patch.object(probe, "read_helper_output", side_effect=probe.Stop("timeout")), \
+             mock.patch.object(probe, "time_budget", return_value=contextlib.nullcontext()):
+            result = probe.launch_semantic_helper("Harmless text.")
+        child.kill.assert_called_once()
+        self.assertEqual(result["review_status"], "expired")
+        self.assertFalse(result["user_confirmed"])
+
+
+
+class SemanticStderrBoundaryTests(unittest.TestCase):
+    # Real anonymous pipes exercise ready/EOF/backpressure, never a Human or OAuth helper.
+    def child(self, script):
+        return subprocess.Popen([probe.sys.executable, "-c", script], stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    def test_valid_stdout_plus_any_stderr_is_unknown_and_never_echoed(self):
+        valid = b'{"protocol_version":1,"semantic_category":"verifier_mismatch_asserted","review_status":"confirmed","reveal_started":true,"user_confirmed":true}'
+        script = "import sys,os;sys.stdin.buffer.read();os.write(1,"+repr(valid)+");os.write(2,b'synthetic-private-stderr')"
+        output, error = io.StringIO(), io.StringIO()
+        child = self.child(script)
+        try:
+            with mock.patch.object(probe.subprocess, "run", return_value=mock.Mock(returncode=0)), \
+                 mock.patch.object(probe.subprocess, "Popen", return_value=child), \
+                 contextlib.redirect_stdout(output), contextlib.redirect_stderr(error):
+                result = probe.launch_semantic_helper("Harmless synthetic text.")
+        finally:
+            if child.poll() is None:
+                child.kill()
+            child.wait()
+        self.assertEqual(result["reason"], "helper_protocol")
+        self.assertEqual(result["semantic_category"], "indeterminate")
+        self.assertNotIn("synthetic-private-stderr", json.dumps(result)+output.getvalue()+error.getvalue())
+
+    def test_unbounded_stderr_cannot_fill_pipe_or_hang_collector(self):
+        child = self.child("import os\nwhile True: os.write(2, b'x' * 65536)")
+        try:
+            with self.assertRaisesRegex(probe.Stop, "helper_protocol"):
+                probe.read_helper_output(child, 2)
+        finally:
+            child.kill()
+            child.wait(timeout=2)
+            child.stdin.close()
+            child.stdout.close()
+            child.stderr.close()
+
+    def test_idle_pipes_use_watchdog_without_waiting_for_eof(self):
+        child = self.child("import time;time.sleep(10)")
+        try:
+            with self.assertRaisesRegex(probe.Stop, "timeout"):
+                probe.read_helper_output(child, 0.02)
+        finally:
+            child.kill()
+            child.wait(timeout=2)
+            child.stdin.close()
+            child.stdout.close()
+            child.stderr.close()
 
 
 if __name__ == "__main__":

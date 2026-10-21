@@ -75,3 +75,26 @@ python3 -B -m unittest discover -s apps/GitHubSignInVerification/tools -p 'test_
 ## T06 已執行，停止新授權
 
 wrong安全version3報告顯示actualprepared local consistent/valid_different/under_5s；HTTP400 invalid_grant、無token，verifier/challenge/mismatch hints true但完整description grammar none。依事前判準仍indeterminate，不把hint或本機一致當PKCE證明。共享R→T唯一1/1已用盡，停止重試/第二次；不追原文、不擴grammar、不重做positive/API/refresh401。CLI/tests與真人前SHA未改；本次只更新README結果，工具三檔fingerprint會隨README改變，勿把pre-live三檔fingerprint當更新後值。
+
+
+## U：Human-only semantic review（現行只授權離線）
+
+已實作私有parent gate、先清理再pipe/helper，以及`provider_semantic_observation`獨立軸。它只記`review_source=local_human`與有限enum/布林，不改既有`outcome`或`pkce_rejection_proven`。未保存原文，所以agent/Reviewer不能獨立稽核Human對原句的判讀。
+
+Human下一步在**原feature worktree的終端**執行單一命令（需獨立Tester/Reviewer完成後由Human明確參與）：
+
+```sh
+python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review
+```
+
+此入口沒有client ID/secret輸入、沒有socket/browser/OAuth/token POST；讀取獨立Tester建立且Reviewer凍結的16-case synthetic fixture，SHA256固定為`d1567758e9dfb2861886510f8c41a3a03174be805c6b7979e8f28d850e9a2ea5`。程式只投影description，在記憶體打散順序，不讀expected label值；每個case重啟單record helper，不把ID或label送helper，中途只有進度，不提示正誤。末尾才輸出SHA256(id)前16hex的opaque correlation_id與安全Human觀察，由獨立Tester另行核分，工具不自評score。expected labels由Tester/Reviewer擁有，Implementer不建立或為結果改標。Human校準目前pending，不會由測試或此文件自動開啟。
+
+每次先顯示密封窗，30秒未明示即丟棄；按「顯示一次」才顯示完整原句，最多60秒。可選三種明確拒絕原因或無法判定；條件/否定/例子/多候選/矛盾/不完整都應選無法判定。沒有case/outcome/expected label提示；Human可能已知上下文，不能保證全盲。9/9 decisive正確且7/7 unknown才過該frozen set，全unknown不算通過；獨立Reviewer核標後由Tester記分，不是工具自動通過。
+
+Swift helper以匿名stdin只收`protocol_version=1`及description；總16KiB、描述4096 UTF-8 bytes，嚴格拒絕重複/多餘鍵、trailing/type/UTF8/size錯誤。stdout最多512bytes只有限schema，stderr不forward；parent總watchdog100秒，異常/逾時/nonzero皆未知。編譯只在外部temporary scratch產生無原文binary，原句不經argv/env/file。無參數預設CLI仍不開semantic UI；將來的opt-in review plumbing不代表本輪有任何live額度。
+
+Parent先在當次已知context下gate：strict pure OAuth error、完整未截斷UTF8<=4096，literal/case/common URL/JSON/HTML/Base64已知敏感值、URL/control/bidi、24+ opaque identifier-like序列命中均整段不顯示。然後detach observer、清理Attempt/context/body/fields/code及main配置參照，確認cleanup後才launch。這只是有限偵測與參照生命週期控制，不保證未知秘密、任意混合編碼、immutable strings或OS/allocator物理zero。
+
+Helper停用文字選取/編輯/自動偵測、空白app menu、不提供copy/export，window不restorable且sharingType none；目前僅實作與protocol受控驗證，尚未以synthetic互動完整驗證copy/export/restoration、timeout和異常關閉，不能宣稱OS無留痕或任意截圖防護。請勿截圖/複製/記錄原文；agent/Reviewer/CUA不得看live原文。
+
+本輪新增OAuth=0；共享R→T1/1已用盡，P/Q/R/T歷史不可回填或重判。正常App/API/canvaspassed不重做。任何將來live仍須另行明確授權，不能因offline校準通過自動執行。

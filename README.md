@@ -46,3 +46,7 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 ### T 輪現行：有限診斷 version 3
 
 Human指示續行後，獨立CLI新增實際browserURL/HTTP prepared Request被動觀測、local一致性gate、有限完整句法及純詞彙hints。只輸出安全enum/布林，未知仍可無法判定，未觀測或不一致不能passed；這是本機prepared證據，不冒稱遠端wire。正式OAuth/credential/provider/scope/refresh401與公開API不變。36項受控測試、獨立Tester/Reviewer已通過；凍結版本後Human完成wrong一次，共享R→T **1/1已用盡**。實際prepared local一致、valid_different、under_5s；HTTP400 invalid_grant、無token，verifier/challenge/mismatch提示為true但完整grammar未命中，仍無法判定PKCE原因。停止重試/第二次/positive/refresh401，不以hint或本機gate當遠端證明。P/Q/R舊證據與正常App/canvaspassed保留。[version3來源與限制](plan/github-first-sign-in/evidence/pkce-diagnostics-v3.md)。
+
+### U：Human-only 離線語義 review 工具
+
+已實作 private Swift/AppKit helper 與無網路校準入口 `python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review`，U03／U04 已完成、獨立 U05 approved（P2 closed、無其他 required fix），可交付工具並由 Human 明確參與正式 offline 校準。若將來另准 live，原文只能通過 gate 後由 Human 短暫閱讀，agent／Reviewer 不看、不保存；新增 `provider_semantic_observation` 只是 Human attestation，不改 proof／outcome。工具以 SystemRandom 打散 synthetic cases，不讀／比較 `expected_category`、不自評；末尾僅輸出 opaque correlation_id 與有限 observations，交獨立 Tester 核分。P2 selectors/stderr 回修後，獨立 Tester 親跑 57 項受控測試通過、strict format／SwiftLint 均 exit 0；完整 UI／clipboard／restoration／timeout 實證及 U06 Human 9+7 校準仍 pending，單次 smoke 不當作校準通過。新增 OAuth=0，共享 R→T 1/1 已用盡；[操作與限制](apps/GitHubSignInVerification/tools/README.md)。
