@@ -1,12 +1,12 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：R06 topic文件交付。
-- Current status：in-progress；R05approved無required fix，R0/1未使用、不選case。
+- Phase／Current step：Human review（R06文件交付已完成）。
+- Current status：human-check；R05approved，調查主提交已push/原DraftPR更新；R0/1未使用。
 - Upstream verdict：R05 approved，無required fix；R04獨立11bool/來源核對通過。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
 - 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
-- 最後更新：2026-10-21，Implementer；依外部R05approved開始文件交付。
+- 最後更新：2026-10-21，Implementer；主提交/hooks/push/原PR讀回/localmap完成，收尾帳本隨後同步。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
 ## R 輪現行ledger（優先於Q/P/A/S歷史）
@@ -20,7 +20,7 @@
 | R03 | completed | Implementer | 允許docs/唯一new evidence，各九欄 | 調查matrix/來源/停止提示已完成 | R02approved |
 | R04 | completed | Tester | 最小source/來源/hash/manifest/readonly驗證，可重跑11bool | investigation evidence：親跑11/11true；CLI/testbytes/manifest/readonly/links核對通過 | 不live、不重跑25/Swift、不代R05核准 |
 | R05 | completed | Reviewer | 獨立docs/scope/evidence review與required fixes | Reviewer明示approved、無required fix | approved |
-| R06 | in-progress | Implementer → Human | commit/push/更新原DraftPR/localmap必要同步→humanreview | 待真SHA/URL | 不merge、不消耗R1次 |
+| R06 | human-check | Implementer → Human | commit/push/更新原DraftPR/localmap必要同步→humanreview | 主提交d8ad344已push、原PR61讀回OPEN/Draft、localmap驗證完成；本筆收尾隨後同步 | 停Humanreview，不merge，R0/1 |
 
 ### R Blockers／Human Check
 
@@ -548,3 +548,17 @@ R0/1未用、未選case；P/Q各2/2與indeterminate保留、正向e941/canvaspas
 - Goal：交付具來源的調查結果並停Humanreview。
 - Non-Goal：不把docs交付當PKCE證明或R已執行。
 - TestCase：staged/必要hooks/remoteSHA/原PR讀回及localmap validate/render；R0/1不動。
+
+## R06 實際交付與完成九欄
+
+- In-Scope：同topic調查文件交付與收尾紀錄。
+- Out-Of-Scope：無工具/判準/live/新case/新worktree或PR/merge。
+- ReadOnly：全部code/tests/正式能力/PQ舊證據/frozen圖。
+- Written：無額外repo檔案；localmap在scratch。
+- Deleted：無。
+- Modify：本step與新investigation evidence自身交付事實，原PR描述已更新。
+- Goal：`d8ad344d8eeb9586414620cd0ed9265ab0f9d25f` 已push原branch，原PR61讀回OPEN/isDraft=true/相同HEAD；R0/1未用。
+- Non-Goal：docs/受控結果不構成遠端PKCE通過或失敗，正常App/canvaspassed不重做。
+- TestCase：staged單topic8文件/diffcheck/all既有hooks passed；localPRLens真base16606b8→d8ad344 validate/render通過（4lanes/15nodes/21edges/4walkthrough），manifest已核對。Graphify受限sourcefallback，無build/upload；圖未改。
+
+本筆只收尾兩文件，隨後commit/push及最終head map/原PR同步；不改工具或消耗R額度，不重跑已pass且未變的tests。P/Q各2/2及indeterminate歷史保留，R0/1未使用/未選case；完整遠端refresh/401與整體Humanreview仍pending，停Humanreview不merge。

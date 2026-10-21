@@ -111,3 +111,11 @@ R未選case、0/1未使用，沒有授權安排。P/Q各2/2及indeterminate歷�
 ## R05 獨立 Reviewer verdict
 
 外部明示approved，無required fix，可R06。來源／公開向量／synthetic與歷史wire/遠端證據分層一致，11bool未用來重判P/Q或證明PKCE；R0/1未用/未選case，停止理由未誇大成未來不可能，正向/canvaspassed保留。Tester hash/manifest/readonly核對一致。只允許提交文件/push/更新原DraftPR61，停Humanreview，不修改工具或新增授權，不merge。
+
+## R06 交付與停止點
+
+主提交 `d8ad344d8eeb9586414620cd0ed9265ab0f9d25f` 已push原feat/github-first-sign-in；原DraftPR61已更新R候選原因/事實推論未知/資訊增益缺口/0/1未用停止，P/Q原文歷史保留；讀回OPEN、isDraft=true、相同HEAD。staged精確8份文件、diffcheck與全部既有hooks（whitespace/EOF/Swiftformat/consumercontract/SwiftLint/renderer）passed，未繞過。code/tests與CLI SHA保持21e2542來源，沒有新增遠端證據。
+
+本機PRLens pinned0.11.0對真base `16606b89b8e3e6b61523c23aa0be9653c1ea7b44` → head `d8ad344d8eeb9586414620cd0ed9265ab0f9d25f` validate/render通過，4lanes/15nodes/21edges/4steps，manifest head已核對；外部scratch、無上傳/server。Graphify沿用受限sourcefallback，不build/extract/provider/upload；Archify/canvas frozen bytes未改。
+
+本筆為僅文件收尾，隨後同步最終HEAD/localmap/原PR；R仍0/1未用、未選case、不安排授權，不重用或重試，也不建立正向對照。舊P/Q皆無法判定，正常App與canvas既有passed保留；完整遠端refresh/401、正式Rivet產品登入UI及整體Humanreview未因此完成，不merge。
