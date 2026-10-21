@@ -1,5 +1,20 @@
 # GitHub 持續連線：獨立驗證 App 技術契約
 
+## 現行補充：RF-C01 export-clean 契約（待獨立 Plan-Reviewer）
+
+本補充僅解鎖 plan C-M01–03，其他歷史證據不改。原兩輪使用 `62dece35` 的工具，不是新runner；下方App契約繼續有效。九欄見requirements現行補充，精確檔案與cases見plan。
+
+1. 保持 namespace、owned0700root／非symlink、safe paths、window身分、Human projectclosed、App已退出與曾可能寫入必須有精確cleanup completed/absent＋SHA綁Human觀察的守衛；不碰Applecache或來源App。所有錯誤有限分類，不洩rawpaths／secret／Human私文。
+2. 在evidence同filesystem的proven-owned0700staging準備全部boundedreceipts、sourceSHA、逐檔hash／bytes與`final.index.json`。所有檔案（包括raw machine複製）flush/fsync，再fsync staging directory；重讀完整集合與hash／size。任何validation/hash/stat/write/fsync失敗不得刪private；只留可辨識ownedstage或精確清它，不能建立partial final，重試不得被partialstage永久阻擋。
+3. 同filesystem原子**不覆寫**發布至原frozen t0＋UUID名稱；不能以exists-check加一般rename當no-clobber。macOS可用exclusive rename，unsupported即failclosed。parent/stage/final查owner與非symlink；collision／未知既有final拒絕且不改它。發布後fsync parent並再驗完整final/index，這些完成前不irreversiblecleanup。發布後失敗保留完整final，不刪唯一公開副本。
+4. 兩階段真實狀態：不可變`final.index.json`明示`exportState=published`、`cleanupState=pending`、`privateFilesRemoved=false`、`cleanupComplete=false`；published只在final內才作發布事實，不把未來清理結果預寫。刪ownedprivate、觀察不存在且fsync其parent後，另以有限`cleanup.completed.json`記completed與兩true、實際ended/deadline及原indexSHA。completion需exclusive原子發布、fsync檔案與directory，不循環加入原index。不覆寫任何舊run index；未有完整completion就是pending，不因root已不存在假定整體收據耐久成功。
+5. cleanup前建立不隨rmtree消失的owned runtime checkpoint/journal，綁原run／window及root所有權身分，保留足以部分刪除後resume的資訊；rawpaths只留private。cleanup開始前、部分rmtree、刪完但completion write/fsync失敗，同命令能驗完整已發布index/receipts與自身checkpoint接續，不能依賴已可能刪掉的window/first.json。既有完整自身pending發布可恢復、completed重試核驗而不覆寫；未知collision、錯run、symlink／owner改變、hash損壞停且不盲刪。再核適用的process／Humanclosure守衛；checkpoint自身也durable/atomic/no-clobber，若更新只限已驗owned原身分journal原子替換，不泛用覆寫未知檔。
+checkpoint 的 schemaVersion 固定為新版有限整數；至少保存 namespace、原 windowSHA256、完整 published indexSHA256、root 的 device/inode/uid/mode 與清理階段（pending/completed），以及恢復所需的原前置守衛觀察；不得靠 namespace 字串 alone 授權刪除。root 絕對路徑只在 owned private checkpoint，public index／completion 不含它。checkpoint 路徑必須可由既定 namespace／window 有限決定，在 root 不存在時仍可找到；root 原身分不符則不刪，新出現同名root也不冒認。checkpoint 的 fsync 成功先於 cleanup，部分刪除後仍能核對原 root 身分；完成收據由實際不存在的觀察產生，不能只信 journal 的預期狀態。這是 export-clean 專用協定，不建立通用 transaction framework。
+
+6. README分清新協定、pending恢復／collision停點、舊版本與兩輪unknown。新runtime狀態不回填tracked歷史收據或hash；三檔新舊SHA追加manifest，真命令／獨立結果追加review。測試只證合成failure safety與OS成功fsync順序，不冒稱停電耐久／真人新版／自然到期／profile更新已驗證。fsync錯誤須傳遞，不降級成功。不改App、production或圖面。
+
+---
+
 - Topic：`github-persistent-connection`；2026-10-21 scope correction，待獨立 Plan-Reviewer。
 - 本文取代舊正式產品定位／新增正式 public API 決策；舊版在 `ca00bc0`，僅供歷史。配對：[需求](requirements.md)、[計畫及精確 manifest](../../plan/github-persistent-connection/github-persistent-connection.plan.md)、[帳本](../../plan/github-persistent-connection/github-persistent-connection.step.md)。
 

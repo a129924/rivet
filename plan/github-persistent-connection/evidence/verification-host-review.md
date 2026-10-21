@@ -48,3 +48,38 @@ verdict=approved，requiredFixes=[]。獨立於R07作者直接核四長期docs�
 - PRLens在真正修訂sourcecommit前只記working-tree sourcefallback，真map留既定R10；Graphify明示無usablegraph、禁autorefresh與targetedsourcefallback，未造query成功／建索引／改config或公開發布。這些界線符合本輪契約，不引入新gate。
 - 只交已授權R10：stageddiff語意／message及mandatoryhooks→topiccommits→真PRLenscoverage→正常push→更新原DraftPR62並readback→R11Humanreview；不重問開始／commit、不新增圖面Human接受前置、不merge。尚未執行的發布不預填，沒有CI不稱綠。
 - 只寫本review與自身step；無App／DPK／Apple／dev／Gitmutation／外部writes。私有獨立收據SHA `7f371d4cd30302b502a891d49ca7372b2f28c191da7d9e35c2ddc020dcf89945`。本角色完成即停止repo寫入，保留新舊App／憑證／私有證據供review。
+
+
+## C03 RF-C01 Implementer 自驗（2026-10-21）
+
+本輪只修E007 export-clean失敗安全；不是新E007或真人採用。先以新合成receipt-hash故障case對原`62dece35` runner取得真RED：exit1，原private已被rmtree，`private evidence must survive export hashing failure` assertion失敗。修後同case綠；先耐久staging／完整hash-size-index讀回、macOS exclusive atomic no-clobber、root/window/index/PID綁定外部checkpoint，再清理及獨立index-bound completion。index immutable pending／兩false，不預填刪除結果。部分rmtree後privateJSON不存、刪完後completion write／fsync錯誤皆有安全同命令重試；錯run／新root／symlink／hash損壞／未知collision拒絕。
+
+- 真命令：`(cd experiments/E007/Tests && python3 -m unittest test_protocol.ProtocolTests test_protocol.ExportRecoveryTests -v)`；exit0、36 tests：21既有Python＋15新增（含C-T01–07多組subTest）。7個既有SwiftCore未跑，因Swift probe source未改且本輪只改Python匯出協定；未跑Swift／Xcode／live／Keychain／Applecache或圖工具。
+- Python `py_compile.compile(..., cfile=<owned private temp>)` 兩檔通過；`git diff --check`通過。58份歷史逐bytes保持；production對16606b89 zero-diff、新App／全部圖無delta、dev clean。格式與dependency無新增工具／設定／package／lock變更。
+- 本機SDK `sys/stdio.h` 第37行明示 `RENAME_EXCL=0x00000004`、第52行宣告 `renamex_np`；真原生primitive對競爭建立的directory／symlink拒絕且不覆寫，未用exists()+普通rename。
+- 自驗只證合成故障安全及成功fsync順序，不證實際斷電耐久、新runner真人、自然到期或profile更新後讀回。舊兩輪unknown／Human接受限制保持；C04獨立Tester與C05獨立Reviewer尚待，不自產approval。
+
+私有真RED log SHA `6770ee64ee658d03feacd0d2b4cd4748ba446851982162223db28624f712e49a`；GREEN log SHA `9c2303d09273b4d0d540470649b0d1d4c19330ab7295a08bc182771595f650b6`。三檔source新舊SHA見[版本化manifest](verification-host-manifest.md#c03-rf-c01-版本化修正清單2026-10-21)。Logs只在owned私有tmp，沒有新增或改寫歷史runreceipt。現交C04並停止寫入；不commit／push／回覆或resolve thread，待C05明示approved。
+
+
+## C04 RF-C01 獨立 Tester 收據（2026-10-21）
+
+- verdict=**approved**；requiredFixes=[]；只交C05獨立Reviewer，不等同thread已解或發布完成。本角色獨立於C03作者，未修改受審runner／tests／README／四份規格或舊證據。
+- 真命令 `python3 -B -m unittest test_protocol.ProtocolTests test_protocol.ExportRecoveryTests -v` 在owned私有scratch的原樣E007副本執行，exit0、36／36（21既有Python＋15新增，多組subTest），兩檔`py_compile.compile(..., cfile=<owned scratch>)`通過。第一次直接在feature執行時，一個原guard case需在evidence建stage，遇sandbox PermissionError；分類為環境限制，未改source即移至owned原樣副本全部通過。沒有把該次失敗省略或當成產品故障。
+- 額外自建fixture及CLI fault wrapper，獨立於作者tests；receipt hash失敗、partial-rmtree已刪window/private、root刪完後completion write失敗，第一次真main parser均exit2。解除故障後改由**全新未修改CLI程序**執行相同export-clean，三者均exit0；另有無fault成功路徑。四組均再由新程序冪等重試，output逐bytes不變，public各receipt hash／bytes／sourceSHA皆相符，Human free text與root路徑未外洩。
+- 獨立36cases包含真macOS `renamex_np(RENAME_EXCL)`對競爭directory／symlink不覆寫；source/hash/stat／exclusive-index／partial write／flush／file與stage/journal/publication-parent fsync、cleanup前／部分刪除、completion write/fsync/root-parent fsync後恢復。自身pending可恢復，未知collision、wrong-run、root換inode或symlink、corrupt export停止；savedPID及Humanclosure再核，原cleanup-required守衛保留。
+- 兩階段事實另以CLI讀回：不可變index始終cleanupState=pending、cleanupComplete=false、privateFilesRemoved=false；只有實際root已不存在後的completion才completed／兩true，且indexSHA256精確綁定原index。未因root已刪就冒稱失敗的completion耐久成功。
+- 九檔scope精確相符；C03交接九SHA全符，三檔新SHA及`62dece35`原runner／tests SHA核對通過。其餘29 E007＋29舊native＝58份immutable逐bytes保持（另三份舊圖說明也不變），兩輪舊收據／sourceSHA未改。production Sources／Tests／Package／packages／Rivet host對16606b89 zero-diff；新App及全部圖無本輪delta；dev乾淨。`git diff --check`、added-line privacy scan通過，無新依賴或設定。
+- 本次只證合成故障安全及成功OS fsync順序，不證實際停電耐久或新版runner真人。7個SwiftCore cases未重跑，因Swift probe source未改；不跑無關Swift／Xcode／GitHub／Keychain／Applecache／profile／native圖工具。自然到期仍未驗證，profile更新後讀回仍未驗證且Human接受限制。
+- 私有獨立收據SHA `ddb5c096e0aa8a6d6b0e57a4e3a0cf5e569880953698b4180cd6b2dd32f17b01`；36cases log SHA `bb4f836ef4aefbd07008fb386f47168fa10912d00045308a4742bdc07a32590a`；獨立CLI結果SHA `f377177ef9c4d44a6ce92766404efb4716cca784d5295cb93ff9a3cb71e41743`。只寫本收據與C04帳本，未Git mutation／remote／回覆或resolve；現停止repo寫入並交C05。
+
+
+## C05 RF-C01 獨立 Reviewer 收據（2026-10-21）
+
+- verdict=**approved**；requiredFixes=[]；原 RF-C01 已解除。本角色為原 finding 的獨立 Reviewer，未參與 C03 實作或 C04 測試；直接讀取新 runner／protocol tests／README、四 artifacts 的 C 補充及三檔版本化 manifest，未代修受審產物。
+- source 確認：先完整 bounded receipts／source hashes／逐檔 hash-size／index flush/fsync、stage directory fsync 與讀回；外部 owned checkpoint 綁 namespace／window／index SHA、root及stage的device/inode/uid/mode及退出PID。checkpoint與parent耐久後，以真 macOS RENAME_EXCL 不覆寫發布；publication parent fsync與完整核對均先於 rmtree，不再有原先刪除後才建 index 的路徑。
+- index 不可變且始終 pending／兩false；只有實際 root 不存在、parent fsync 後才另建 completed／兩true，completion精確綁 indexSHA。部分刪除後依外部checkpoint恢復，不依賴已消失的private JSON；刪後completion write/fsync失敗可由新程序補足。未知collision／錯run／換root身分／symlink／hash損壞 fail-closed；原Humanclosure、ownedroot、PID退出、可能首存後cleanup＋read-absent／Human SHA及脫敏守衛保留。
+- 直接核 C03 red/green log hashes、C04獨立收據SHA與36cases原生log及4組獨立CLI結果，與source cases相符：hash／stat／partialwrite／flush／fsync／no-clobber collision／部分rmtree／刪後completion失敗與冪等均有實證。三fault首次exit2，未修改CLI的fresh-process resume與冪等均exit0；無fault成功組亦通過。未有需重跑已綠tests的具體疑點，未重跑Swift／真人／圖工具。C04首次sandbox環境失敗及7個未重跑SwiftCore的理由保持透明，不改成全套測試成功。
+- 受審source三SHA及C04非自身mutable的7個輸入SHA直接相符；scope恰9檔，58份歷史immutable逐bytes對HEAD保持。production Sources／Tests／Package／packages／Rivet host對16606b89 zero-diff，新App及全部圖無本輪delta，dev乾淨，diffcheck通過。原32來源與61immutable表已明示為歷史，三檔新版另表，不覆寫舊收據或hash；新runner未真人驗收、自然到期未驗、profile更新unknown／Human接受限制保持。合成失敗與成功OS fsync順序不代表物理停電耐久。
+- 私有獨立收據SHA `3916f05d86d77a35cd8317a20eba8e52a8de4f164169c001453c60f7276bc33d`；C04收據SHA `ddb5c096e0aa8a6d6b0e57a4e3a0cf5e569880953698b4180cd6b2dd32f17b01`。本角色只寫本review與C05帳本，沒有source/tests修正、Git mutation、remote／真人／Apple／Keychain操作。現停止repo寫入。
+- 交已授權C06 staged語意/message＋完整mandatoryhooks→topiccommit／normalpush，再C07以真commit/tests回覆原thread、resolve僅已處理thread、pagination與Ready PR head讀回→humanreview；不轉回Draft、不merge。PR描述若仍稱E00732全部source immutable，僅更正為三檔版本化修正＋其餘29歷史不變，不擴改其他圖文或重開真人gate。

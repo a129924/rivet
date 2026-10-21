@@ -1,5 +1,6 @@
 """E007: bounded, fake-only profile renewal protocol. No live operation by default."""
 import argparse
+import ctypes
 import datetime as dt
 import hashlib
 import importlib.util
@@ -466,68 +467,309 @@ def finalize(args):
 
 
 
-def export_clean(args):
-    """Export only bounded public receipts, then remove this proven-owned private run."""
-    root = private_root(args.root, args.namespace)
-    window = read_json(root, "window.json")
-    if not args.human_project_closed.strip():
-        raise Rejected("humanProjectClosureRequired")
+def export_identity(path, directory=True):
+    """Identity of this user's non-link private directory or receipt."""
+    value = Path(path).lstat()
+    mode = 0o700 if directory else 0o600
+    kind = stat.S_ISDIR if directory else stat.S_ISREG
+    if not kind(value.st_mode) or value.st_uid != os.getuid() or stat.S_IMODE(value.st_mode) != mode:
+        raise Rejected("exportOwnershipRejected")
+    return {"device": value.st_dev, "inode": value.st_ino, "uid": value.st_uid, "mode": mode}
+
+
+def export_parent(path):
+    value = Path(path).lstat()
+    if not stat.S_ISDIR(value.st_mode) or value.st_uid != os.getuid():
+        raise Rejected("exportParentRejected")
+
+
+def fsync_directory(path):
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def durable_bytes(path, value):
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(fd, "wb") as stream:
+        stream.write(value)
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def durable_json(path, value):
+    durable_bytes(path, (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode())
+
+
+def exclusive_publish(source, destination):
+    """OS atomic no-clobber rename; never emulate with exists()+rename()."""
+    library = ctypes.CDLL(None, use_errno=True)
+    if sys.platform == "darwin":
+        operation = library.renamex_np
+        operation.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint]
+        # macOS SDK sys/stdio.h: RENAME_EXCL = 0x00000004 (not ordinary rename).
+        operation.restype = ctypes.c_int
+        result = operation(os.fsencode(source), os.fsencode(destination), 0x4)
+    else:
+        raise Rejected("exclusivePublishUnsupported")
+    if result != 0:
+        raise Rejected("exclusivePublishRejected")
+
+
+def atomic_export_json(destination, value):
+    """Publish one fully flushed file; never unlink a colliding temporary file."""
+    parent = destination.parent
+    temporary = parent / (".E007-receipt-" + str(uuid.uuid4()))
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    identity = os.fstat(fd)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write((json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode())
+            stream.flush()
+            os.fsync(stream.fileno())
+        if temporary.lstat().st_ino != identity.st_ino:
+            raise Rejected("temporaryReceiptChanged")
+        exclusive_publish(temporary, destination)
+        fsync_directory(parent)
+    finally:
+        if temporary.exists() and not temporary.is_symlink():
+            current = temporary.lstat()
+            if (current.st_dev, current.st_ino, current.st_uid) == (identity.st_dev, identity.st_ino, identity.st_uid):
+                temporary.unlink()
+
+
+def export_processes(root):
     ensure_previous_process_exited(root)
+    return [read_json(root, str(path.relative_to(root)))["pid"]
+            for path in sorted(safe(root, "private").glob("process-*.json"))]
+
+
+def verify_export_processes(pids):
+    if not isinstance(pids, list) or any(type(pid) is not int or pid <= 1 for pid in pids):
+        raise Rejected("processReceiptRejected")
+    for pid in pids:
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            continue
+        except OSError:
+            raise Rejected("processStateUnknown") from None
+        raise Rejected("previousProcessStillPresent")
+
+
+def verify_export(directory, checkpoint):
+    if export_identity(directory) != checkpoint["stageIdentity"]:
+        raise Rejected("exportIdentityChanged")
+    index_path = safe(directory, "final.index.json")
+    export_identity(index_path, directory=False)
+    if digest(index_path) != checkpoint["indexSHA256"]:
+        raise Rejected("exportIndexChanged")
+    index = read_json(directory, "final.index.json")
+    if (index.get("schemaVersion") != 2 or index.get("namespace") != checkpoint["namespace"]
+            or index.get("windowSHA256") != checkpoint["windowSHA256"]
+            or index.get("exportState") != "published" or index.get("cleanupState") != "pending"
+            or index.get("privateFilesRemoved") is not False or index.get("cleanupComplete") is not False):
+        raise Rejected("exportIndexRejected")
+    files = index.get("files")
+    allowed = {"window.json", "preflight.machine.json", "phase-1.machine.json", "phase-1.human.json",
+               "phase-2.machine.json", "phase-2.human.json", "cleanup.machine.json", "cleanup.human.json"}
+    if not isinstance(files, dict) or not {"window.json", "preflight.machine.json"} <= files.keys() <= allowed:
+        raise Rejected("exportFilesRejected")
+    if not {p.name for p in directory.iterdir()} <= set(files) | {"final.index.json", "cleanup.completed.json"}:
+        raise Rejected("unexpectedExportFile")
+    for name, item in files.items():
+        path = safe(directory, name)
+        export_identity(path, directory=False)
+        if (not isinstance(item, dict) or set(item) != {"sha256", "bytes"}
+                or path.stat().st_size != item["bytes"] or digest(path) != item["sha256"]):
+            raise Rejected("exportFileChanged")
+    summary = read_json(directory, "window.json")
+    if (summary.get("namespace") != checkpoint["namespace"]
+            or summary.get("privateWindowSHA256") != checkpoint["windowSHA256"]
+            or summary.get("startUTC") != checkpoint["startUTC"]
+            or summary.get("deadlineUTC") != checkpoint["deadlineUTC"]):
+        raise Rejected("exportWindowChanged")
+    return index
+
+
+def prepare_export(root, namespace, stage):
+    window = read_json(root, "window.json")
+    validate_window(window, now_utc(), measurement=False)
+    if window.get("namespace") != namespace:
+        raise Rejected("windowIdentityRejected")
+    pids = export_processes(root)
     may_have_written = safe(root, "private/permit-1.json").exists()
     if may_have_written:
         cleanup = read_json(root, "receipts/cleanup.machine.json")
         if cleanup.get("completed") is not True or cleanup.get("absent") is not True:
             raise Rejected("credentialCleanupRequired")
         human = read_json(root, "receipts/cleanup.human.json")
-        validate_observation(human, args.namespace, 3, digest(root / "receipts/cleanup.machine.json"))
-    start = timestamp(window["startUTC"]).strftime("%Y%m%dT%H%M%SZ")
-    output = SOURCE / "evidence" / ("run-" + start + "-" + args.namespace)
-    if output.exists() or output.is_symlink():
-        raise Rejected("publicEvidenceAlreadyExists")
-    output.mkdir(parents=True, mode=0o700)
+        validate_observation(human, namespace, 3, digest(root / "receipts/cleanup.machine.json"))
+    window_sha = digest(root / "window.json")
     summary = {key: window[key] for key in ("namespace", "kind", "synthetic", "observationMode",
                                           "startUTC", "cutoffUTC", "deadlineUTC")}
-    summary.update(privateWindowSHA256=digest(root / "window.json"),
+    summary.update(privateWindowSHA256=window_sha,
                    humanSetupReadyDeclared=True, freePersonalTeamDeclared=True)
-    exclusive_json(output / "window.json", summary)
+    durable_json(stage / "window.json", summary)
     names = ("preflight.machine.json", "phase-1.machine.json", "phase-1.human.json",
              "phase-2.machine.json", "phase-2.human.json", "cleanup.machine.json", "cleanup.human.json")
     for name in names:
         source = safe(root, "receipts/" + name)
         if source.exists():
-            # Machine bytes are already bounded by ProbeMain; keep observation SHA links exact.
             value = read_json(root, "receipts/" + name)
             if name.endswith(".machine.json") and value != public_receipt(value):
                 raise Rejected("unboundedMachineReceipt")
             if name.endswith(".human.json"):
                 phase_number = 3 if name.startswith("cleanup") else int(name.split("-")[1].split(".")[0])
                 machine_name = "cleanup.machine.json" if phase_number == 3 else f"phase-{phase_number}.machine.json"
-                validate_observation(value, args.namespace, phase_number, digest(root / "receipts" / machine_name))
-                exclusive_json(output / name, public_observation(value, digest(source)))
+                validate_observation(value, namespace, phase_number, digest(root / "receipts" / machine_name))
+                durable_json(stage / name, public_observation(value, digest(source)))
             else:
-                (output / name).write_bytes(source.read_bytes())
-    if not (output / "preflight.machine.json").exists():
-        exclusive_json(output / "preflight.machine.json",
-                       {"namespace": args.namespace, "completed": False, "synthetic": False,
-                        "observationMode": "human-only", "error": "profileUpdateNotValidated"})
+                durable_bytes(stage / name, source.read_bytes())
+    if not (stage / "preflight.machine.json").exists():
+        durable_json(stage / "preflight.machine.json",
+                     {"namespace": namespace, "completed": False, "synthetic": False,
+                      "observationMode": "human-only", "error": "profileUpdateNotValidated"})
     source_hashes = {str(path.relative_to(SOURCE)): digest(path) for path in (
-        SOURCE / "Sources/ProfileRenewalProbe.swift", SOURCE / "scripts/run_profile_renewal.py",
-        SOURCE / "ProfileRenewalProbe.xcodeproj/project.pbxproj",
-        SOURCE / "Resources/Info.plist", SOURCE / "Resources/ProfileRenewalProbe.entitlements")}
-    # root was exclusively created by begin; never remove selected source Apps or Apple assets.
-    shutil.rmtree(root)
-    removed = not root.exists() and not root.is_symlink()
-    ended = now_utc()
-    index = {"namespace": args.namespace, "synthetic": False, "observationMode": "human-only",
-             "privateFilesRemoved": removed, "humanProjectClosedDeclared": True,
-             "cleanupComplete": removed and (may_have_written is False or cleanup.get("absent") is True),
-             "completedBeforeDeadline": ended <= timestamp(window["deadlineUTC"]),
-             "endedUTC": ended.isoformat(), "sourceSHA256": source_hashes,
-             "scope": "live receipts; independent Tester/Reviewer receipts are added separately",
+        safe(SOURCE, "Sources/ProfileRenewalProbe.swift"), safe(SOURCE, "scripts/run_profile_renewal.py"),
+        safe(SOURCE, "ProfileRenewalProbe.xcodeproj/project.pbxproj"),
+        safe(SOURCE, "Resources/Info.plist"), safe(SOURCE, "Resources/ProfileRenewalProbe.entitlements"))}
+    index = {"schemaVersion": 2, "namespace": namespace, "windowSHA256": window_sha,
+             "synthetic": False, "observationMode": "human-only", "exportState": "published",
+             "cleanupState": "pending", "privateFilesRemoved": False, "cleanupComplete": False,
+             "humanProjectClosedDeclared": True, "sourceSHA256": source_hashes,
              "files": {path.name: {"sha256": digest(path), "bytes": path.stat().st_size}
-                       for path in sorted(output.iterdir()) if path.is_file()}}
-    exclusive_json(output / "final.index.json", index)
-    print("Public bounded receipts exported; proven-owned private run removed. Apple assets retained.")
+                       for path in sorted(stage.iterdir())}}
+    durable_json(stage / "final.index.json", index)
+    fsync_directory(stage)
+    return window, window_sha, pids
+
+
+def export_clean(args):
+    """Durable bounded export first; identity-bound resumable cleanup second."""
+    if not args.human_project_closed.strip():
+        raise Rejected("humanProjectClosureRequired")
+    root = Path(os.path.abspath(args.root))
+    try:
+        if str(uuid.UUID(args.namespace)) != args.namespace or root.name != "rivet-E007-" + args.namespace:
+            raise ValueError()
+    except (ValueError, TypeError):
+        raise Rejected("privateRootRejected") from None
+    export_parent(root.parent)
+    export_parent(SOURCE)
+    if SOURCE == root or root in SOURCE.parents:
+        raise Rejected("exportInsidePrivateRoot")
+    parent = safe(SOURCE, "evidence")
+    if not parent.exists():
+        parent.mkdir(mode=0o700)
+        fsync_directory(SOURCE)
+    export_parent(parent)
+    journal = root.parent / (".rivet-E007-export-" + args.namespace + ".json")
+    if journal.exists() or journal.is_symlink():
+        export_identity(journal, directory=False)
+        checkpoint = read_json(root.parent, journal.name)
+    else:
+        private_root(root, args.namespace)
+        stage = Path(tempfile.mkdtemp(prefix=".E007-export-" + args.namespace + "-", dir=parent))
+        stage_id = export_identity(stage)
+        try:
+            window, window_sha, pids = prepare_export(root, args.namespace, stage)
+            start = timestamp(window["startUTC"]).strftime("%Y%m%dT%H%M%SZ")
+            checkpoint = {"schemaVersion": 2, "namespace": args.namespace, "root": str(root),
+                          "rootIdentity": export_identity(root), "windowSHA256": window_sha,
+                          "startUTC": window["startUTC"], "deadlineUTC": window["deadlineUTC"],
+                          "source": str(SOURCE), "stage": stage.name, "stageIdentity": stage_id,
+                          "output": "run-" + start + "-" + args.namespace,
+                          "indexSHA256": digest(stage / "final.index.json"), "cleanupPhase": "pending",
+                          "humanProjectClosedDeclared": True, "credentialCleanupVerified": True,
+                          "processPIDs": pids}
+            verify_export(stage, checkpoint)
+            atomic_export_json(journal, checkpoint)
+        except Exception:
+            # Once the checkpoint exists, retain its only staged/published evidence for recovery.
+            if not journal.exists() and stage.exists() and export_identity(stage) == stage_id:
+                shutil.rmtree(stage)
+            raise
+    keys = {"schemaVersion", "namespace", "root", "rootIdentity", "windowSHA256", "startUTC",
+            "deadlineUTC", "source", "stage", "stageIdentity", "output", "indexSHA256", "cleanupPhase",
+            "humanProjectClosedDeclared", "credentialCleanupVerified", "processPIDs"}
+    if (not isinstance(checkpoint, dict) or set(checkpoint) != keys or checkpoint["schemaVersion"] != 2
+            or checkpoint["namespace"] != args.namespace or checkpoint["root"] != str(root)
+            or checkpoint["source"] != str(SOURCE) or checkpoint["cleanupPhase"] != "pending"
+            or any(not isinstance(checkpoint[key], str) or len(checkpoint[key]) != 64
+                   or any(c not in "0123456789abcdef" for c in checkpoint[key])
+                   for key in ("windowSHA256", "indexSHA256"))
+            or any(not isinstance(checkpoint[key], dict) or set(checkpoint[key]) != {"device", "inode", "uid", "mode"}
+                   or any(type(value) is not int for value in checkpoint[key].values())
+                   for key in ("rootIdentity", "stageIdentity"))
+            or timestamp(checkpoint["deadlineUTC"]) - timestamp(checkpoint["startUTC"]) != dt.timedelta(minutes=45)
+            or checkpoint["humanProjectClosedDeclared"] is not True
+            or checkpoint["credentialCleanupVerified"] is not True
+            or not isinstance(checkpoint["stage"], str)
+            or not checkpoint["stage"].startswith(".E007-export-" + args.namespace + "-")
+            or Path(checkpoint["stage"]).name != checkpoint["stage"]
+            or checkpoint["output"] != "run-" + timestamp(checkpoint["startUTC"]).strftime("%Y%m%dT%H%M%SZ") + "-" + args.namespace):
+        raise Rejected("exportCheckpointRejected")
+    stage = safe(parent, checkpoint["stage"])
+    output = safe(parent, checkpoint["output"])
+    verify_export_processes(checkpoint["processPIDs"])
+    # Retry re-establishes journal durability even if the previous parent's fsync failed.
+    fd = os.open(journal, os.O_RDONLY | os.O_NOFOLLOW)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    fsync_directory(root.parent)
+    if output.exists() or output.is_symlink():
+        verify_export(output, checkpoint)  # The published directory must be our original inode.
+    else:
+        verify_export(stage, checkpoint)
+        exclusive_publish(stage, output)
+    fsync_directory(parent)
+    verify_export(output, checkpoint)
+    completion_path = safe(output, "cleanup.completed.json")
+    if root.exists() or root.is_symlink():
+        if completion_path.exists() or completion_path.is_symlink():
+            raise Rejected("completedRunRootReappeared")
+        private_root(root, args.namespace)
+        if export_identity(root) != checkpoint["rootIdentity"]:
+            raise Rejected("privateRootIdentityChanged")
+        ensure_previous_process_exited(root)
+        verify_export_processes(checkpoint["processPIDs"])
+        shutil.rmtree(root)
+    if root.exists() or root.is_symlink():
+        raise Rejected("privateCleanupIncomplete")
+    fsync_directory(root.parent)
+    if not completion_path.exists() and not completion_path.is_symlink():
+        ended = now_utc()
+        atomic_export_json(completion_path,
+                           {"schemaVersion": 2, "namespace": args.namespace,
+                            "windowSHA256": checkpoint["windowSHA256"], "indexSHA256": checkpoint["indexSHA256"],
+                            "cleanupState": "completed", "privateFilesRemoved": True, "cleanupComplete": True,
+                            "endedUTC": ended.isoformat(),
+                            "completedBeforeDeadline": ended <= timestamp(checkpoint["deadlineUTC"])})
+    export_identity(completion_path, directory=False)
+    completion = read_json(output, completion_path.name)
+    expected = {"schemaVersion", "namespace", "windowSHA256", "indexSHA256", "cleanupState",
+                "privateFilesRemoved", "cleanupComplete", "endedUTC", "completedBeforeDeadline"}
+    if (not isinstance(completion, dict) or set(completion) != expected
+            or completion["schemaVersion"] != 2 or completion["namespace"] != args.namespace
+            or completion["windowSHA256"] != checkpoint["windowSHA256"]
+            or completion["indexSHA256"] != checkpoint["indexSHA256"]
+            or completion["cleanupState"] != "completed" or completion["privateFilesRemoved"] is not True
+            or completion["cleanupComplete"] is not True
+            or completion["completedBeforeDeadline"] != (timestamp(completion["endedUTC"]) <= timestamp(checkpoint["deadlineUTC"]))):
+        raise Rejected("exportCompletionRejected")
+    fd = os.open(completion_path, os.O_RDONLY | os.O_NOFOLLOW)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    fsync_directory(output)
+    fsync_directory(parent)
+    print("Bounded export and index-bound cleanup completion verified; Apple assets retained.")
     print("Independent Tester/Reviewer and Human adoption remain required.")
 
 

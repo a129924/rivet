@@ -1,5 +1,43 @@
 # GitHub 持續連線：驗證產物歸屬回修計畫
 
+## 現行補充：PR comment RF-C01（待獨立 Plan-Reviewer）
+
+Human 已授權必要回修→topic commit→push→回覆／resolve，沿原featureworktree/branch/Ready PR62，不改dev、不merge。獨立Reviewer needs-rework：[4333613564](https://github.com/a129924/rivet/pull/62#discussion_r4333613564)，thread `PRRT_kwDOUFu0Cc6upRad`。requirements現行九欄與technical-spec現行失敗安全契約優先；下方R／S為歷史。
+
+### 精確 Modify（只有九檔，無新repository leaf）
+
+| ID | 路徑 | 允許delta |
+|---|---|---|
+| C-M01 | `experiments/E007/scripts/run_profile_renewal.py` | export-clean完整staging／durable no-clobber publish／兩階段cleanup／resume必要helpers；原privacy／owner／symlink／Humanclosure／read-absent guards保持 |
+| C-M02 | `experiments/E007/Tests/test_protocol.py` | C-T01–07 synthetic temp故障／重試／脫敏cases，保留既有tests |
+| C-M03 | `experiments/E007/README.md` | 新版匯出／pending／完成／恢復說明與舊runner版本pin，不改舊測量事實 |
+| C-M04 | `analysis/github-persistent-connection/requirements.md` | 現行scope補充 |
+| C-M05 | `analysis/github-persistent-connection/technical-spec.md` | 現行技術契約補充 |
+| C-M06 | `plan/github-persistent-connection/github-persistent-connection.plan.md` | 本manifest/cases/route |
+| C-M07 | `plan/github-persistent-connection/github-persistent-connection.step.md` | Csteps、各角色實證、真實交付狀態；R／S不擦 |
+| C-M08 | `plan/github-persistent-connection/evidence/verification-host-manifest.md` | 追加三檔新舊SHA／Modify與保留表；原immutable表標原版本歷史，不覆寫舊SHA |
+| C-M09 | `plan/github-persistent-connection/evidence/verification-host-review.md` | 追加本輪assessment／planning／implementation／Tester／Reviewer／commit／thread實證，不改舊R06或approval |
+
+只解除E00732中的三檔，其餘29及舊native29＝58檔仍逐bytes保留；原manifest61immutable作舊版本收據保留，新三檔以`62dece35`追溯。所有native圖、新App sources/tests及R06、production仍只讀。Written限owned synthetic/runtime temp；Deleted無trackedfile；其餘完整九欄以requirements現行補充為準，無目錄級授權。
+
+### 必要 TestCase（全部synthetic，不跑真人／Apple／Keychain）
+
+| ID | 判準 |
+|---|---|
+| C-T01 | receipt/source hash／stat故障：private保留、無partialfinal，解除故障可重試 |
+| C-T02 | index建檔/write故障及partial ownedstage：private未刪，同命令可恢復 |
+| C-T03 | receipt/index/stage-dir/publication-parent fsync故障：不可cleanup，原private或完整final可恢復，不吞錯 |
+| C-T04 | publication race/collision/symlink/未知final/錯run：no-clobber，目標不改，private保留 |
+| C-T05 | cleanup開始前／部分rmtree失敗：完整durable final hashes正確、index pending/false；即使privateJSON已刪可依checkpoint resume |
+| C-T06 | 真成功順序：files/index fsync→stage-dir→exclusivepublish→parentfsync→完整性核對→rmtree→觀察absent/parentfsync→completion；redaction與原cleanup/closure guards保持 |
+| C-T07 | 刪完後completion write/fsync失敗可重試；自身pending/completed可核驗接續但不冒認未知collision；completed再跑不覆寫、不刪其他檔 |
+
+C01 Plan-Creator四artifacts → C02獨立Plan-Reviewer approved → C03 Implementer bounded red-green／自驗／manifest → C04獨立Tester → C05獨立Reviewer → C06 stageddiff語意／message、完整mandatoryhooks、topiccommit、normalpush → C07回覆原thread實際commit／tests與理由、resolve**僅已處理thread**、全pagination讀回threads與PRhead → humanreview。不新增Human批准或真人gate，不forcepush／merge。
+
+只重測適用Python protocol合成cases及格式／依賴／privacy／58immutable；若該檔含不相關Swiftfake可明確selection並記skip原因，不冒稱全套通過。hooks正常執行不繞過。系統責任／sequence不變，不重產native圖；archify保留原QA，pr-lens／graphify依skills bounded使用或記實際fallback於既有review，不建graph／改config／造成功，也不稱舊map覆蓋新commit。needs-rework回對應作者；blocked/human-check停交Human。未執行結果pending。
+
+---
+
 - Topic：`github-persistent-connection`；2026-10-21，回修四 artifacts 待獨立 Plan-Reviewer；此文件取代原 production implementation contract。
 - 沿用原 feature worktree、branch `feat/github-persistent-connection`、[Draft PR #62](https://github.com/a129924/rivet/pull/62)、base `dev`，不得在 dev 或 PR #61 worktree 實作。
 - 撤回基準：本 topic 前 `16606b89b8e3e6b61523c23aa0be9653c1ea7b44`；回修起點 `ca00bc074f77fa21a7fac1aaae07dc1059de5b01`。不得覆蓋基準後其他人變更，發現偏離先報具體diff。

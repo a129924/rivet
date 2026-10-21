@@ -1,5 +1,23 @@
 # E007：同身分 profile 更新後的 DPK 讀回
 
+## PR #62 RF-C01：新版匯出／清理協定
+
+本節為2026-10-21的工具修正。下方兩輪E007及所有既有run receipts均來自原版本 `62dece35`，其runner SHA `62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484`；不回寫舊sourceSHA／final.index，也不宣稱新版runner有真人驗收。原兩輪renewal read均未執行，仍為無法判定；profile更新後讀回未驗證、Human已接受限制，不新增第三輪。
+
+新版 `export-clean` 保持原namespace／owned0700非symlink root、Human關閉project、App退出，以及可能首存後的精確item cleanup＋read-absent／Human SHA綁定守衛。流程固定為：
+
+1. 在evidence同filesystem的獨占0700 staging，先準備全部脫敏machine／Human投影、source hashes、逐檔SHA／bytes及 `final.index.json`；每檔flush／fsync、staging directory fsync、完整讀回核對。任何hash／stat／write／flush／fsync失敗都不刪private。
+2. private root的同層建立0600外部checkpoint，綁namespace、window／index SHA、原root與stage的device／inode／uid／mode、原已退出PID及前置守衛；rawpaths只在此private checkpoint。checkpoint先flush／fsync／exclusive發布與parent fsync。macOS使用 `renamex_np(RENAME_EXCL)` 原子不覆寫發布staging，拒絕未知同名directory／symlink。發布後parent fsync並再驗完整final，之後才允許刪除原private root。
+3. 不可變index始終記 `exportState=published`、`cleanupState=pending`、`privateFilesRemoved=false`、`cleanupComplete=false`。只有實際root不存在且其parent fsync成功後，才exclusive發布獨立 `cleanup.completed.json`，以 `indexSHA256` 綁原index並記實際ended／deadline結果、completed與兩true。沒有完整耐久completion就不宣稱整體清理完成；不將未來狀態寫入index。
+
+失敗後使用**相同root、namespace與命令**，再次確認project已關閉。checkpoint可在private JSON部分刪除或root已不存在時接續；重試先核完整已發布集合／hash／size、原inode身分、PID／Humanclosure與checkpoint，再完成清理或完成收據。completed再次執行僅核對與補足fsync，不覆寫原index／completion。checkpoint保留於原private root的同層作恢復依據；它不是公開證據，不加入repository。未知collision、錯run、root換身分、symlink或hash損壞均停下保留，不盲刪或覆寫。不要手動移除checkpoint／pending發布物；需先保留並核對其來源。尚未建立checkpoint的失敗staging只精確清理本次已證owned staging，下次可重新準備。
+
+合成測試只驗證可觀察的失敗安全、重試及OS成功fsync順序；不是停電耐久、真Keychain／Apple cache／profile更新或新版真人觀察證據。Python控制測試可獨立跑，不啟動既有Swift pure harness：
+
+```sh
+(cd experiments/E007/Tests && python3 -m unittest test_protocol.ProtocolTests test_protocol.ExportRecoveryTests -v)
+```
+
 ## 1. 驗證什麼
 
 - 實驗編號 E007，2026-10-19 設計；建立前確認未占用。Topic 為 `github-persistent-connection`。

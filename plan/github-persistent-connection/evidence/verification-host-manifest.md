@@ -263,3 +263,16 @@ R10只追加既定step／本manifest／v2tool-evidence的真commit與工具facts
 本輪106個授權actionpaths已分source53與docs53提交：`b63af3e51d04487f651ba2fb521fd056f53f1af1`／`754e121ab23164f263fb048041a724b7b52a106c`。兩組全mandatoryhooks通過、normalpush成功、原DraftPR62 title/body完成修正；當次DraftOPEN／base dev／原headbranch／docsSHA已實際核對，checks=[]。本節與step／v2tool-evidence是既定3個mutable docs的最後收據delta，沒有新leaf、source／native／live變更。舊R03／R05／R06與R07／R08／R09當時hash保持歷史快照，不改配當前bytes。
 
 最後doc-onlycommit／normalpush後最終refs與乾淨feature／dev由私有handoff及Dispatcher獨立核對；PRLens不涵此docsdelta。所有productionSources／Tests／Package對16606b89仍zero-diff，E00732與舊native29保留，新App29編譯／資源projectbytes不改、READMEdoc-onlydelta已明列。沒有merge或新scope。
+
+
+## C03 RF-C01 版本化修正清單（2026-10-21）
+
+上方R03／R07／R10的61份immutable表與所有SHA是**原版本歷史**，不覆寫。此輪依C-M01–09只解鎖下列三檔；原29份其餘E007與29份舊native，共58份逐bytes對`62dece35`相符。E007兩個run及sourceSHA、R04–R09與新hostlive收據不改，不冒稱新版runner已真人驗收。
+
+| Action／檔案 | 原`62dece35` SHA256 | C03新版 SHA256 |
+|---|---|---|
+| Modify `experiments/E007/README.md` | `01d0969f2b65568c7aa6ea706e4fe652bb665a4e5e06913294b819eb57ecd7f4` | `b8d1af1fc6df595d520d3f560c33fc01a567f316f44087877ba2c8d5133006b8` |
+| Modify `experiments/E007/Tests/test_protocol.py` | `7798a5c8463ebec7e0b8574247f81679cab07e56b52e4a311cc8bf985036e65f` | `9f24c5e706df9b28afec22bff5842b1ff4f610d6a878ce39938a8aa8cdc08af6` |
+| Modify `experiments/E007/scripts/run_profile_renewal.py` | `62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484` | `d43f54b8713fc99e33321144f6501f090d30699ed9eed46be54531a1960f97d1` |
+
+其餘Modify僅現行四份planning artifacts與本manifest／review，共九個精確leaf；Written僅owned synthetic／runtime temp，Deleted無trackedfile。production Sources／Tests／Package／packages對16606b89 zero-diff、新App與全部圖相對本輪HEAD無delta、dev乾淨。checkpoint的rawpaths只存private，沒有新增repo runreceipt或外部依賴／工具config。新版SHA不替換歷史收據內值；本表與帳本為mutable，不自指。

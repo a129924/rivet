@@ -1,5 +1,60 @@
 # GitHub 持續連線：驗證產物歸屬回修帳本
 
+## 現行路由：PR comment RF-C01
+
+- 最後更新：2026-10-21，Reviewer；phase=comment-fix publication；current_step=C06；status=pending。
+- 上游：獨立Reviewer `needs-rework`，thread `PRRT_kwDOUFu0Cc6upRad`／comment `4333613564`。本作者不產生approval。
+- Human已授權修正→commit→push→reply/resolve；原Ready PR62/feature不變，不動dev、不merge。此現行補充優先於下方R11歷史停點；R／S舊狀態不擦除。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
+|---|---|---|---|---|---|
+| C01 | completed | Plan-Creator | 四artifacts補充、九檔manifest／只解除三檔唯讀、技術契約/cases | 實讀runner/tests與本四份補充 | verdict=null；不自審，交C02 |
+| C02 | completed | Plan-Reviewer | 獨立scope/durability/recovery/history審查 | 下列 C02 獨立規劃審查收據及受審 SHA | approved；requiredFixes=[]；只交 C03 |
+| C03 | completed | Implementer | C-M01–03與08/09必要部分red-green／自驗／清單 | 下列C03及manifest／review、私有red-green logs | selftests completed；不自審，交C04 |
+| C04 | completed | Tester | C-T01–07與58唯讀/privacy/productionzero獨立核對 | review C04獨立收據；36Python＋4組獨立CLI／fresh-process resume、hash/privacy/scope | approved；requiredFixes=[]；只交C05 |
+| C05 | completed | Reviewer | RF-C01/scope/recovery/claims獨立審查 | review C05獨立收據；source協定／C03-C04 hashes／9scope／58immutable及歷史界線 | approved；requiredFixes=[]；RF-C01解除，只交C06 |
+| C06 | pending | Implementer | staged語意/message、mandatoryhooks、topiccommit/normalpush | 待真refs | C05 approved；無新Human gate |
+| C07 | pending | Implementer | 原thread回覆真commit/tests、resolveonlyaddressed、全pagination讀回 | 待真comment/thread/head | 完成後humanreview，不merge |
+
+### 本輪 Blockers／Human Check
+
+RF-C01 C03實作與自驗完成，C04獨立驗證及C05獨立審查均approved／requiredFixes=[]；RF-C01已解除，C06/C07發布及thread處理尚待。C02 已獨立 approved／requiredFixes=[]。不需要新真人操作或新E007。自然到期仍未驗、profile更新後讀回unknown/Human已接受限制不改。原R11 human-check不阻擋Human已明確授權的此輪回修，修後再交humanreview。重大scope或權限問題才停交Human，不把未回覆當批准。
+
+### 九欄及 handoff
+
+In-Scope／Out-Of-Scope／ReadOnly／Written／Deleted／Modify／Goal／Non-Goal／TestCase完整引用requirements現行九欄及plan C-M01–09/C-T01–07。C01只寫四artifacts，無source/tests/README/evidence修改、無測試/Gitmutation/外部write。
+
+Handoff：topic=github-persistent-connection；phase=comment-fix planning review；四artifacts=changed；current_step=C02/pending；locked_decisions=獨立驗證定位/productionzero/原feature與PR62/三檔版本化修正/其餘歷史immutable/不真人重驗/不merge；upstream_verdict=needs-rework（code RF-C01，非planning結論）；blockers=RF-C01未修及C02未審；assigned_role=Plan-Reviewer；next_objective=獨立審四份現行補充並明示verdict。以下全為原版本歷史。
+
+### C02 獨立 Plan-Reviewer 收據（2026-10-21）
+
+- verdict=approved；requiredFixes=[]。實讀專案 README／design-principles／AGENTS、plan-reviewer／sdd-workflow-contract 及其 topic／routing 契約、四 artifacts 現行補充、原 export_clean／private_root／safe／observation 守衛與 protocol tests。原 runner 確認先 rmtree 再 hash/stat/index write，RF-C01 與實際程式一致；本收據不是修復完成或測試通過。
+- C-M01–09 僅九檔，三檔 E007 明確版本化解鎖，其餘29份 E007 與29份舊 native 共58份 immutable；新 App、production、真人結果與其他圖 source 不變。requirements／spec／plan 在先完整耐久 staging、exclusive atomic no-clobber 發布、parent fsync／完整性核對、外部身份綁定 checkpoint、後清理、獨立 immutable-index-bound completion 的順序與安全重試上一致。checkpoint 可在 private JSON／root 已消失後定位，root dev/inode/uid/mode／window／index 綁定及未知 collision fail-closed 足以交 bounded implementation；不是通用交易框架。
+- C-T01–07 已涵蓋 hash/stat/index write／各 fsync／競爭碰撞／部分刪除／刪後完成收據失敗／重試與 redaction／closure 守衛。結果明確只證合成故障安全與成功 fsync 順序，不宣稱斷電耐久、第三輪 E007、自然到期或 profile 更新已驗證。C03→C04→C05 獨立關係及既有授權 C06/C07 topic commit／push／原 thread 回覆與 resolve／讀回／human review 一致，不加人類批准或不相關 gate。
+- 受審 SHA-256：requirements `c975c3bb58ce8df09e0389076d18a02bf6b897a6be2c77ff0111b5ee82289c4e`；technical-spec `d05540b41299b52acdca666ec8cb1fc9f0aa63be8b1feec0c79816fe881e17d6`；plan `8fdbd1bbc18b5191288ef4a24201351394de2ec9dcabcd32191d940c4732a91f`；step 收據前 `79a7a87b5dd23705edb0bed1f2b623be99d5ae782d5150420199954d12479e68`。原 runner `62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484`、tests `7798a5c8463ebec7e0b8574247f81679cab07e56b52e4a311cc8bf985036e65f` 直接讀回相符。
+- 本角色只記自身 C02 step 狀態／收據；未改受審 requirements／spec／plan、source／tests、舊證據或圖，未執行測試、Git mutation、remote、真人／Apple／Keychain 操作。現停止寫入。現行 handoff：topic=github-persistent-connection；phase=comment-fix implementation；current_step=C03/pending；upstream_verdict=approved；assigned_role=Implementer；blockers=RF-C01 尚未實作；next_objective=依 C-M01–03／08／09 bounded red-green／自驗／來源清單，再交獨立 C04 Tester。
+
+### C03 Implementer 交接（2026-10-21）
+
+- 完成核准C-M01–03／08／09：先完整耐久export，再身份綁定可恢復cleanup／completion；原root／Humanclosure／process／read-absent／namespace／symlink／脫敏守衛保持。36個Python tests綠（21既有＋15新增），真RED→GREEN、兩檔compile／diffcheck／58immutable／productionzero／App與圖不改／devclean有私有實證；詳細命令／hash／限制見[review C03](evidence/verification-host-review.md#c03-rf-c01-implementer-自驗2026-10-21)與[三檔manifest](evidence/verification-host-manifest.md#c03-rf-c01-版本化修正清單2026-10-21)。
+- 7個SwiftCore未跑，Swift source未改；無真人／Apple／Keychain／第三輪E007／native圖工具／Gitmutation／remote。index pending及兩false維持，root真正不存在後才完成收據；合成failure／success-fsync順序不等停電耐久或新真人證據。
+- 本作者不產approval、不填C04/C05/C06/C07結果。即刻停止repo寫入，交獨立C04 Tester；thread `PRRT_kwDOUFu0Cc6upRad` 仍未回覆／resolve。
+- Handoff：topic=github-persistent-connection；phase=comment-fix verification；四artifacts=changed/present；current_step=C04/pending；locked_decisions=九檔/其餘58歷史immutable/獨立驗證定位/productionzero/無新真人及E007/原feature與PR62/不merge；upstream_verdict=approved（C02 planning，非C03自審）；blockers=C04/C05未驗審；assigned_role=Tester；next_objective=獨立C-T01–07／privacy／58保留及scope核對。
+
+### C04 獨立 Tester 交接（2026-10-21）
+
+- verdict=approved；requiredFixes=[]。36Python cases在owned原樣scratch全綠；另4組獨立CLI含三fault exit2→全新未修改CLI resume exit0→冪等，全hash／bytes／sourceSHA／redaction及兩階段事實通過；58immutable、9scope／9SHA、productionzero、App/圖無delta、devclean、compile／diffcheck／privacy通過。完整命令、最初sandbox環境失敗與限制見[review C04](evidence/verification-host-review.md#c04-rf-c01-獨立-tester-收據2026-10-21)。不證停電耐久或新版live，不改自然到期／profile未知限制。
+- Handoff：topic=github-persistent-connection；phase=comment-fix review；四artifacts=present/changed；current_step=C05/pending；locked_decisions=九檔／58歷史immutable／獨立驗證定位／productionzero／無新真人E007／原feature與PR62／不merge；upstream_verdict=approved（C04）；blockers=C05未審；assigned_role=Reviewer；next_objective=獨立審RF-C01 recovery／scope／claims後明示verdict。只完成C04收據與帳本，現停repo寫入；未commit／push／remote／回覆／resolve。
+
+
+### C05 獨立 Reviewer 交接（2026-10-21）
+
+- verdict=approved；requiredFixes=[]；RF-C01已解除。直接source/protocol審查核先durable staging/index/checkpoint、RENAME_EXCL no-clobber發布與parent fsync／核對後才cleanup；immutable index pending／兩false，actualrootgone後completion才兩true且綁indexSHA。部分刪除與刪後completion失敗可fresh-process恢復，未知collision／identity／hash改變與原guards保持；詳[review C05](evidence/verification-host-review.md#c05-rf-c01-獨立-reviewer-收據2026-10-21)。
+- 核C03真red/green與C04收據／36cases／4CLI原生證據hash，9scope／58immutable／productionbasezero／App圖無delta／devclean／diffcheck；未重跑已綠suite或真人。私有獨立收據SHA `3916f05d86d77a35cd8317a20eba8e52a8de4f164169c001453c60f7276bc33d`。舊證據版本及新版無live／自然到期未驗／profile更新unknown-Humanaccepted保持。
+- Handoff：topic=github-persistent-connection；phase=comment-fix publication；四artifacts=present/changed；current_step=C06/pending；upstream_verdict=approved（C05）；assigned_role=Implementer；blockers=[]；next_objective=已授權staged語意/message／完整hooks→topiccommit／normalpush，再C07回覆原thread實commit/tests→resolve→全pagination及Ready PR refs讀回→humanreview，不merge、不轉Draft。只寫自己review/step，現停止repo寫入；未預填commit／push／thread結果。
+
+---
+
 - Topic：`github-persistent-connection`；最後更新：2026-10-21，Implementer（R10本輪topic交付與原DraftPR更新）。
 - Phase：原DraftPR human review；Current step：R11；Current status：human-check。
 - Upstream verdict：approved（2026-10-21 獨立Reviewer R09；requiredFixes=[]；成果／宣稱／來源核對完成，只交已授權R10，R11Humanreview未代填）。

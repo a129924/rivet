@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import tempfile
 import subprocess
+import stat
 import unittest
 import uuid
 from types import SimpleNamespace
@@ -276,6 +277,407 @@ class ProtocolTests(unittest.TestCase):
                 renewal.export_clean(SimpleNamespace(root=root, namespace=self.namespace,
                                                     human_project_closed="closed"))
             self.assertTrue(root.is_dir())
+
+
+class ExportRecoveryTests(unittest.TestCase):
+    """Only owned TemporaryDirectory fixtures; no App, Security or Apple assets."""
+
+    setUp = ProtocolTests.setUp
+    make_run = ProtocolTests.make_run
+    observation = ProtocolTests.observation
+
+    def export_fixture(self, temp):
+        root = Path(temp) / ("rivet-E007-" + self.namespace)
+        self.make_run(root)
+        source = Path(temp) / "synthetic-source"
+        for relative in ("Sources/ProfileRenewalProbe.swift", "scripts/run_profile_renewal.py",
+                         "ProfileRenewalProbe.xcodeproj/project.pbxproj",
+                         "Resources/Info.plist", "Resources/ProfileRenewalProbe.entitlements"):
+            path = source / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("synthetic fixture")
+        args = SimpleNamespace(root=root, namespace=self.namespace, human_project_closed="closed")
+        return root, source, args
+
+    def published(self, source):
+        return source / "evidence" / ("run-20261019T090000Z-" + self.namespace)
+
+    def run_export(self, source, args):
+        with mock.patch.object(renewal, "SOURCE", source), mock.patch("builtins.print"):
+            renewal.export_clean(args)
+
+    def test_export_hash_failure_never_removes_private_and_retry_succeeds(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, source, args = self.export_fixture(temp)
+            original = renewal.digest
+            def fail_export_hash(path):
+                if Path(path).parent != root / "receipts" and Path(path).name == "phase-1.machine.json":
+                    raise renewal.Rejected("fileUnavailable")
+                return original(path)
+            with mock.patch.object(renewal, "digest", side_effect=fail_export_hash):
+                with self.assertRaises(renewal.Rejected):
+                    self.run_export(source, args)
+            self.assertTrue(root.is_dir(), "private evidence must survive export hashing failure")
+            self.assertFalse(self.published(source).exists(), "no partial final publication")
+            self.run_export(source, args)
+            self.assertFalse(root.exists())
+
+    def test_export_success_keeps_index_pending_and_binds_actual_completion(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, source, args = self.export_fixture(temp)
+            self.run_export(source, args)
+            output = self.published(source)
+            index_path = output / "final.index.json"
+            index = json.loads(index_path.read_text())
+            self.assertEqual(index["exportState"], "published")
+            self.assertEqual(index["cleanupState"], "pending")
+            self.assertFalse(index["privateFilesRemoved"])
+            self.assertFalse(index["cleanupComplete"])
+            done_path = output / "cleanup.completed.json"
+            done = json.loads(done_path.read_text())
+            self.assertTrue(done["privateFilesRemoved"])
+            self.assertTrue(done["cleanupComplete"])
+            self.assertEqual(done["indexSHA256"], renewal.digest(index_path))
+            before = {p.name: p.read_bytes() for p in output.iterdir()}
+            self.run_export(source, args)
+            self.assertEqual(before, {p.name: p.read_bytes() for p in output.iterdir()})
+            self.assertFalse(root.exists())
+            for path in output.iterdir():
+                self.assertNotIn("PRIVATE-SECRET", path.read_text())
+                self.assertNotIn(str(root), path.read_text())
+
+    def test_source_hash_and_export_stat_failures_preserve_private(self):
+        for fault in ("source-hash", "receipt-stat"):
+            with self.subTest(fault=fault), tempfile.TemporaryDirectory() as temp:
+                root, source, args = self.export_fixture(temp)
+                real_digest, real_stat = renewal.digest, Path.stat
+                def hashing(path):
+                    if fault == "source-hash" and Path(path) == source / "Sources/ProfileRenewalProbe.swift":
+                        raise renewal.Rejected("fileUnavailable")
+                    return real_digest(path)
+                def stating(path, *values, **options):
+                    if fault == "receipt-stat" and path.name == "phase-1.machine.json" and path.parent.name.startswith(".E007-export-"):
+                        raise OSError("synthetic stat failure")
+                    return real_stat(path, *values, **options)
+                with mock.patch.object(renewal, "digest", side_effect=hashing), mock.patch.object(Path, "stat", stating):
+                    with self.assertRaises((OSError, renewal.Rejected)):
+                        self.run_export(source, args)
+                self.assertTrue(root.is_dir())
+                self.assertFalse(self.published(source).exists())
+                self.run_export(source, args)
+                self.assertFalse(root.exists())
+
+    def test_partial_index_or_checkpoint_write_can_retry_without_partial_final(self):
+        for target in ("final.index.json", "checkpoint"):
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as temp:
+                root, source, args = self.export_fixture(temp)
+                real, real_open = renewal.durable_bytes, os.fdopen
+                def writing(path, data):
+                    if Path(path).name == target:
+                        real(path, data[:5])
+                        raise OSError("synthetic partial write")
+                    return real(path, data)
+                class PartialWrite:
+                    def __init__(self, stream):
+                        self.stream = stream
+                    def __enter__(self):
+                        return self
+                    def __exit__(self, *ignored):
+                        self.stream.close()
+                    def __getattr__(self, name):
+                        return getattr(self.stream, name)
+                    def write(self, data):
+                        if target == "checkpoint" and b'"cleanupPhase"' in data:
+                            self.stream.write(data[:5])
+                            raise OSError("synthetic partial checkpoint write")
+                        return self.stream.write(data)
+                with mock.patch.object(renewal, "durable_bytes", side_effect=writing), mock.patch.object(renewal.os, "fdopen", side_effect=lambda *a, **kw: PartialWrite(real_open(*a, **kw))):
+                    with self.assertRaises(OSError):
+                        self.run_export(source, args)
+                self.assertTrue(root.is_dir())
+                self.assertFalse(self.published(source).exists())
+                self.run_export(source, args)
+                self.assertFalse(root.exists())
+
+    def test_index_exclusive_create_collision_never_overwrites_target(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, source, args = self.export_fixture(temp)
+            target = Path(temp) / "untouched"
+            target.write_text("retain")
+            real = renewal.durable_json
+            def writing(path, value):
+                if Path(path).name == "final.index.json":
+                    path.symlink_to(target)
+                return real(path, value)
+            with mock.patch.object(renewal, "durable_json", side_effect=writing):
+                with self.assertRaises(OSError):
+                    self.run_export(source, args)
+            self.assertEqual(target.read_text(), "retain")
+            self.assertTrue(root.is_dir())
+            self.assertFalse(self.published(source).exists())
+            self.run_export(source, args)
+
+    def test_receipt_and_index_file_fsync_failures_do_not_cleanup(self):
+        for target in ("window.json", "final.index.json"):
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as temp:
+                root, source, args = self.export_fixture(temp)
+                real = os.fsync
+                def syncing(fd):
+                    inode = os.fstat(fd).st_ino
+                    matches = [p for p in (source / "evidence").glob(".E007-export-*/*") if p.name == target]
+                    if any(p.lstat().st_ino == inode for p in matches):
+                        raise OSError("synthetic file fsync failure")
+                    return real(fd)
+                with mock.patch.object(renewal.os, "fsync", side_effect=syncing):
+                    with self.assertRaises(OSError):
+                        self.run_export(source, args)
+                self.assertTrue(root.is_dir())
+                self.assertFalse(self.published(source).exists())
+                self.run_export(source, args)
+
+    def test_stream_flush_failure_preserves_private_and_retry(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, source, args = self.export_fixture(temp)
+            real = os.fdopen
+            class BrokenFlush:
+                def __init__(self, stream):
+                    self.stream = stream
+                def __enter__(self):
+                    return self
+                def __exit__(self, *ignored):
+                    self.stream.close()
+                def write(self, value):
+                    return self.stream.write(value)
+                def flush(self):
+                    raise OSError("synthetic flush failure")
+            with mock.patch.object(renewal.os, "fdopen", side_effect=lambda *a, **kw: BrokenFlush(real(*a, **kw))):
+                with self.assertRaises(OSError):
+                    self.run_export(source, args)
+            self.assertTrue(root.is_dir())
+            self.assertFalse(self.published(source).exists())
+            self.run_export(source, args)
+
+    def test_stage_journal_and_published_parent_fsync_failures_are_resumable(self):
+        for target in ("stage", "journal-parent", "publication-parent"):
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as temp:
+                root, source, args = self.export_fixture(temp)
+                real = renewal.fsync_directory
+                def syncing(path):
+                    path = Path(path)
+                    selected = ((target == "stage" and path.name.startswith(".E007-export-"))
+                                or (target == "journal-parent" and path == root.parent)
+                                or (target == "publication-parent" and path == source / "evidence"))
+                    if selected:
+                        raise OSError("synthetic directory fsync failure")
+                    return real(path)
+                with mock.patch.object(renewal, "fsync_directory", side_effect=syncing):
+                    with self.assertRaises(OSError):
+                        self.run_export(source, args)
+                self.assertTrue(root.is_dir())
+                output = self.published(source)
+                if output.exists():
+                    index = json.loads((output / "final.index.json").read_text())
+                    self.assertFalse(index["privateFilesRemoved"])
+                    for name, facts in index["files"].items():
+                        self.assertEqual(renewal.digest(output / name), facts["sha256"])
+                self.run_export(source, args)
+                self.assertFalse(root.exists())
+
+    def test_real_exclusive_publish_rejects_racing_directory_and_symlink(self):
+        for collision in ("directory", "symlink"):
+            with self.subTest(collision=collision), tempfile.TemporaryDirectory() as temp:
+                root, source, args = self.export_fixture(temp)
+                real = renewal.exclusive_publish
+                foreign = Path(temp) / "foreign"
+                foreign.mkdir(mode=0o700)
+                (foreign / "retain").write_text("retain")
+                def publishing(stage, output):
+                    if output == self.published(source):
+                        if collision == "directory":
+                            output.mkdir(mode=0o700)
+                            (output / "retain").write_text("collision")
+                        else:
+                            output.symlink_to(foreign, target_is_directory=True)
+                    return real(stage, output)
+                with mock.patch.object(renewal, "exclusive_publish", side_effect=publishing):
+                    with self.assertRaises(renewal.Rejected):
+                        self.run_export(source, args)
+                self.assertTrue(root.is_dir())
+                output = self.published(source)
+                self.assertEqual((foreign / "retain").read_text(), "retain")
+                self.assertFalse((output / "final.index.json").exists())
+                if collision == "directory":
+                    self.assertEqual((output / "retain").read_text(), "collision")
+                # Unknown collision stays rejected; do not overwrite it on retry.
+                with self.assertRaises(renewal.Rejected):
+                    self.run_export(source, args)
+                self.assertTrue(root.is_dir())
+
+    def test_publication_failure_before_rename_retries_existing_stage(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, source, args = self.export_fixture(temp)
+            real = renewal.exclusive_publish
+            def publishing(stage, output):
+                if output == self.published(source):
+                    raise renewal.Rejected("exclusivePublishRejected")
+                return real(stage, output)
+            with mock.patch.object(renewal, "exclusive_publish", side_effect=publishing):
+                with self.assertRaises(renewal.Rejected):
+                    self.run_export(source, args)
+            self.assertTrue(root.is_dir())
+            self.assertFalse(self.published(source).exists())
+            self.run_export(source, args)
+            self.assertFalse(root.exists())
+
+    def test_cleanup_failure_before_or_during_delete_resumes_without_private_json(self):
+        for partial in (False, True):
+            with self.subTest(partial=partial), tempfile.TemporaryDirectory() as temp:
+                root, source, args = self.export_fixture(temp)
+                real = renewal.shutil.rmtree
+                def deleting(path, *values, **options):
+                    if Path(path) == root:
+                        if partial:
+                            (root / "window.json").unlink()
+                            real(root / "private")
+                        raise OSError("synthetic partial cleanup")
+                    return real(path, *values, **options)
+                with mock.patch.object(renewal.shutil, "rmtree", side_effect=deleting):
+                    with self.assertRaises(OSError):
+                        self.run_export(source, args)
+                output = self.published(source)
+                before = (output / "final.index.json").read_bytes()
+                self.assertTrue(root.is_dir())
+                self.assertFalse(json.loads(before)["cleanupComplete"])
+                self.assertFalse((output / "cleanup.completed.json").exists())
+                self.run_export(source, args)
+                self.assertFalse(root.exists())
+                self.assertEqual(before, (output / "final.index.json").read_bytes())
+
+    def test_recovery_rejects_replacement_root_corrupt_export_and_wrong_checkpoint(self):
+        for change in ("replacement-root", "receipt", "wrong-run", "symlink-root"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as temp:
+                root, source, args = self.export_fixture(temp)
+                with mock.patch.object(renewal.shutil, "rmtree", side_effect=OSError("cleanup stopped")):
+                    with self.assertRaises(OSError):
+                        self.run_export(source, args)
+                if change in ("replacement-root", "symlink-root"):
+                    root.rename(root.with_name("retained-original"))
+                    if change == "replacement-root":
+                        root.mkdir(mode=0o700)
+                        (root / "retain").write_text("new root")
+                    else:
+                        root.symlink_to(root.with_name("retained-original"), target_is_directory=True)
+                elif change == "receipt":
+                    (self.published(source) / "window.json").write_text("corrupt")
+                else:
+                    journal = root.parent / (".rivet-E007-export-" + self.namespace + ".json")
+                    value = json.loads(journal.read_text())
+                    value["namespace"] = str(uuid.uuid4())
+                    journal.write_text(json.dumps(value))
+                with self.assertRaises(renewal.Rejected):
+                    self.run_export(source, args)
+                self.assertTrue(root.exists())
+                if change == "replacement-root":
+                    self.assertEqual((root / "retain").read_text(), "new root")
+                self.assertFalse((self.published(source) / "cleanup.completed.json").exists())
+
+    def test_completion_write_and_fsync_failure_after_root_removed_can_retry(self):
+        for target in ("completion-write", "completion-file-fsync", "completion-dir-fsync", "root-parent-fsync"):
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as temp:
+                root, source, args = self.export_fixture(temp)
+                real_open, real_sync, real_dir = os.fdopen, os.fsync, renewal.fsync_directory
+                class PartialWrite:
+                    def __init__(self, stream):
+                        self.stream = stream
+                    def __enter__(self):
+                        return self
+                    def __exit__(self, *ignored):
+                        self.stream.close()
+                    def __getattr__(self, name):
+                        return getattr(self.stream, name)
+                    def write(self, data):
+                        if target == "completion-write" and not root.exists():
+                            self.stream.write(data[:5])
+                            raise OSError("synthetic completion partial write")
+                        return self.stream.write(data)
+                def syncing(fd):
+                    if target == "completion-file-fsync" and not root.exists() and not stat.S_ISDIR(os.fstat(fd).st_mode):
+                        raise OSError("synthetic completion file fsync")
+                    return real_sync(fd)
+                def directory(path):
+                    if not root.exists() and ((target == "completion-dir-fsync" and Path(path) == self.published(source))
+                                              or (target == "root-parent-fsync" and Path(path) == root.parent)):
+                        raise OSError("synthetic completion directory fsync")
+                    return real_dir(path)
+                with mock.patch.object(renewal.os, "fdopen", side_effect=lambda *a, **kw: PartialWrite(real_open(*a, **kw))), mock.patch.object(renewal.os, "fsync", side_effect=syncing), mock.patch.object(renewal, "fsync_directory", side_effect=directory):
+                    with self.assertRaises(OSError):
+                        self.run_export(source, args)
+                self.assertFalse(root.exists())
+                output = self.published(source)
+                before = (output / "final.index.json").read_bytes()
+                self.assertFalse(json.loads(before)["cleanupComplete"])
+                self.run_export(source, args)
+                self.assertTrue((output / "cleanup.completed.json").is_file())
+                self.assertEqual(before, (output / "final.index.json").read_bytes())
+                completed_before = (output / "cleanup.completed.json").read_bytes()
+                self.run_export(source, args)
+                self.assertEqual(completed_before, (output / "cleanup.completed.json").read_bytes())
+
+    def test_success_fsync_and_readback_precede_cleanup_and_completion_follows_absence(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, source, args = self.export_fixture(temp)
+            events = []
+            real_sync, real_dir, real_verify, real_remove, real_publish = os.fsync, renewal.fsync_directory, renewal.verify_export, renewal.shutil.rmtree, renewal.exclusive_publish
+            def syncing(fd):
+                if not stat.S_ISDIR(os.fstat(fd).st_mode):
+                    events.append("file-fsync")
+                return real_sync(fd)
+            def directory(path):
+                events.append("dir-fsync:" + ("stage" if Path(path).name.startswith(".E007-export-") else Path(path).name))
+                return real_dir(path)
+            def verify(path, checkpoint):
+                result = real_verify(path, checkpoint)
+                events.append("verified-final" if path == self.published(source) else "verified-stage")
+                return result
+            def publishing(stage, output):
+                if output.name == "cleanup.completed.json":
+                    self.assertFalse(root.exists())
+                    events.append("completion")
+                elif output == self.published(source):
+                    events.append("published")
+                return real_publish(stage, output)
+            def deleting(path, *values, **options):
+                if Path(path) == root:
+                    self.assertIn("verified-final", events)
+                    self.assertIn("dir-fsync:evidence", events)
+                    self.assertGreaterEqual(events.count("file-fsync"), 11)
+                    self.assertLess(events.index("dir-fsync:stage"), events.index("published"))
+                    events.append("cleanup")
+                return real_remove(path, *values, **options)
+            with mock.patch.object(renewal.os, "fsync", side_effect=syncing), mock.patch.object(renewal, "fsync_directory", side_effect=directory), mock.patch.object(renewal, "verify_export", side_effect=verify), mock.patch.object(renewal, "exclusive_publish", side_effect=publishing), mock.patch.object(renewal.shutil, "rmtree", side_effect=deleting):
+                self.run_export(source, args)
+            self.assertLess(events.index("verified-final"), events.index("cleanup"))
+            self.assertLess(events.index("cleanup"), events.index("completion"))
+
+    def test_recovery_rechecks_human_closure_and_saved_process_before_cleanup(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, source, args = self.export_fixture(temp)
+            renewal.exclusive_json(root / "private/process-1.json", {"pid": 999999})
+            with mock.patch.object(renewal.os, "kill", side_effect=ProcessLookupError()), mock.patch.object(renewal.shutil, "rmtree", side_effect=OSError("cleanup stopped")):
+                with self.assertRaises(OSError):
+                    self.run_export(source, args)
+            (root / "private/process-1.json").unlink()
+            args.human_project_closed = ""
+            with self.assertRaises(renewal.Rejected):
+                self.run_export(source, args)
+            args.human_project_closed = "closed again"
+            with mock.patch.object(renewal.os, "kill", return_value=None):
+                with self.assertRaises(renewal.Rejected):
+                    self.run_export(source, args)
+            self.assertTrue(root.exists())
+            with mock.patch.object(renewal.os, "kill", side_effect=ProcessLookupError()):
+                self.run_export(source, args)
+
 
 
 class SwiftCoreTests(unittest.TestCase):

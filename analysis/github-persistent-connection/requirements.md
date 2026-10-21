@@ -1,5 +1,27 @@
 # GitHub 持續連線：整條流程可行性驗證需求
 
+## 現行補充：RF-C01 匯出與清理失敗安全（待獨立規劃審查）
+
+Human 已授權 PR comment review → 必要回修 → topic commit → push → 回覆及 resolve 已處理 thread，不重問是否開始，不 merge。獨立 Reviewer 的 `needs-rework` 指向 [評論 4333613564](https://github.com/a129924/rivet/pull/62#discussion_r4333613564)（thread `PRRT_kwDOUFu0Cc6upRad`）：E007 `export_clean` 在 final.index 完整保存前已刪私有來源，後續 hash／stat／index write 失敗失去證據，半成品公開目錄阻擋重試。
+
+本補充優先於下方已完成歸屬回修的唯讀描述；下方與 R／S 步驟保留歷史，不重開 App／production scope。只修匯出可靠性，不跑第三輪實驗。
+
+| 欄位 | 本輪受限契約 |
+|---|---|
+| In-Scope | E007 先完整耐久匯出再清理、無覆寫發布、真實 pending／completed、失敗恢復、合成測試與文件、獨立審查及原 thread 交付 |
+| Out-Of-Scope | 新E007／Applecache或資產／Keychain／GitHub／新App真人重驗、production、PR61、去重合流、merge |
+| ReadOnly | E007其餘29檔、原run／preparation收據、舊native圖29檔及全部新版native圖、production、新驗證App source/tests、R06真人證據、其他topic |
+| Written | 只有owned synthetic temp／runtime staging／journal／發布物；無新repository leaf或歷史runreceipt |
+| Deleted | 無trackedfile；只可清理本次synthetic ownedtemp，真run不操作 |
+| Modify | plan C-M01–09精確九檔；僅解鎖E007 runner／protocoltests／README三檔，其餘是四artifacts與兩既有manifest/review |
+| Goal | hash／write／fsync／publish／cleanup failure保有原來源或完整可恢復發布；不預填清理成功、半成品不永久阻重試 |
+| Non-Goal | 改舊SHA／收據、冒稱新版runner已live、自然到期或profile更新已通過、新Human gate |
+| TestCase | C-T01–07，合成temp／故障注入，不重跑無關Swift／真人／圖工具 |
+
+舊 runner／tests／README 在 `62dece35` 可追溯；runner SHA `62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484`、tests SHA `7798a5c8463ebec7e0b8574247f81679cab07e56b52e4a311cc8bf985036e65f` 保持歷史，不能重算舊收據。profile更新後讀回仍「未驗證、Human已接受限制」，自然到期仍未驗證。
+
+---
+
 - Topic：`github-persistent-connection`；2026-10-21 回修 scope，待獨立 Plan-Reviewer。
 - 現行定位：獨立驗證 App、可行性結果及限制；**不是 Rivet 正式產品登入能力**。
 - 配對：[技術契約](technical-spec.md)、[計畫](../../plan/github-persistent-connection/github-persistent-connection.plan.md)、[帳本](../../plan/github-persistent-connection/github-persistent-connection.step.md)。
