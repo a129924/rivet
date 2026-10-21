@@ -257,3 +257,9 @@ W01 AppREADME於R07只doc-only更新新host現況，原hash `b85cc76d8c88b182e66
 本輪source歸屬commit `b63af3e51d04487f651ba2fb521fd056f53f1af1` 將本表D19／M4／App30一次提交；原R03／R05／R06實測在本commit之前，仍以原sourcehash／privateproject／native收據追溯，沒有改寫成從此commit建置。53from/to union已由真ca00bc0→此head的PRLensmap全覆蓋，後docs／evidence／v2不在map範圍。
 
 R10只追加既定step／本manifest／v2tool-evidence的真commit與工具facts；沒有新repoleaf或source/native/live變更。R07／R08／R09表列SHA保持各自受審快照，mutable本檔與step避免自指；最終發布hash由私有handoff與獨立Dispatcher讀回。本輪語意分組／完整hooks／push／原DraftPR62更新按既定授權，未merge。
+
+## R10 原 PR 更新與最終文件收據
+
+本輪106個授權actionpaths已分source53與docs53提交：`b63af3e51d04487f651ba2fb521fd056f53f1af1`／`754e121ab23164f263fb048041a724b7b52a106c`。兩組全mandatoryhooks通過、normalpush成功、原DraftPR62 title/body完成修正；當次DraftOPEN／base dev／原headbranch／docsSHA已實際核對，checks=[]。本節與step／v2tool-evidence是既定3個mutable docs的最後收據delta，沒有新leaf、source／native／live變更。舊R03／R05／R06與R07／R08／R09當時hash保持歷史快照，不改配當前bytes。
+
+最後doc-onlycommit／normalpush後最終refs與乾淨feature／dev由私有handoff及Dispatcher獨立核對；PRLens不涵此docsdelta。所有productionSources／Tests／Package對16606b89仍zero-diff，E00732與舊native29保留，新App29編譯／資源projectbytes不改、READMEdoc-onlydelta已明列。沒有merge或新scope。

@@ -1,7 +1,7 @@
 # GitHub 持續連線：驗證產物歸屬回修帳本
 
-- Topic：`github-persistent-connection`；最後更新：2026-10-21，Reviewer（R09最終獨立成果／宣稱／來源審查）。
-- Phase：既定topic交付；Current step：R10；Current status：pending。
+- Topic：`github-persistent-connection`；最後更新：2026-10-21，Implementer（R10本輪topic交付與原DraftPR更新）。
+- Phase：原DraftPR human review；Current step：R11；Current status：human-check。
 - Upstream verdict：approved（2026-10-21 獨立Reviewer R09；requiredFixes=[]；成果／宣稱／來源核對完成，只交已授權R10，R11Humanreview未代填）。
 - 本輪Human指令撤回正式產品定位，交付完整獨立驗證App／可行性結果／限制。沿原featureworktree、branch `feat/github-persistent-connection`、DraftPR #62／base dev；不在dev實作，不改PR #61。
 - 四正式artifacts：[requirements](../../analysis/github-persistent-connection/requirements.md)、[technical-spec](../../analysis/github-persistent-connection/technical-spec.md)、[plan](github-persistent-connection.plan.md)、本step。
@@ -24,13 +24,13 @@
 | R07 | completed | Implementer | 文件宣稱及revision圖／nativeQA／工具實證 | v2 BUILD／visual-review／tool-evidence、R07 manifest與下列作者收據 | 僅作者完成；交R08獨立Tester，未自審approval |
 | R08 | completed | Tester | 獨立TC08/TC09證據／圖／privacy／immutablehash核對 | contracts／isolation／review R08與私有獨立收據 | approved；requiredFixes=[]；只交R09 |
 | R09 | completed | Reviewer | 獨立成果／宣稱／scope／新舊來源review | verification-host-review R09及私有獨立收據 | approved；requiredFixes=[]；只交R10 |
-| R10 | pending | Implementer | stagedtopic語意/message→mandatoryhooks→commit→真PRLensmap／有限Graphify→正常push→更新原DraftPR並readback | 尚未執行本輪發布；舊PR存在不算本輪完成 | 已授權，不重問開始／commit；不merge |
+| R10 | completed | Implementer | stagedtopic語意/message→mandatoryhooks→commit→真PRLensmap／有限Graphify→正常push→更新原DraftPR並readback | 下列真commits／53pathmap／6項hooks與Draft62readback | 停R11Humanreview，不merge；最後receiptcommit與finalhead由Dispatcher交接讀回 |
 | R11 | pending | Human | 原DraftPRhumanreview | 尚待 | 最終停點，不代填接受 |
 
 ## Blockers
 
-- 尚無已證實不可解除技術 blocker。R02 已由獨立 Plan-Reviewer 明示 approved／requiredFixes=[]；R03完成implementation，R04獨立Tester及R05獨立Reviewer均approved／requiredFixes=[]；R06a–f新host真人機器結果及逐段Human實答已完成，R07文件圖經R08獨立Tester及R09獨立Reviewer approved／requiredFixes=[]，只交R10既定交付；不代R11Humanreview或merge。
-- 新驗證host六段均已以本輪來源驗證：首次授權保存API、完整退出還原、真正Clean重建、受控真refresh及輪替新程序讀回；setup／build及五結果段Human均實答0。R07文件／revision圖及R08獨立Tester已完成；R09最終獨立成果審查已approved；仍待R10真commit／工具／push／原DraftPR更新及R11Humanreview，不能冒稱已發布。
+- 尚無已證實不可解除技術 blocker。R02 已由獨立 Plan-Reviewer 明示 approved／requiredFixes=[]；R03完成implementation，R04獨立Tester及R05獨立Reviewer均approved／requiredFixes=[]；R06a–f新host真人機器結果及逐段Human實答已完成，R07文件圖經R08獨立Tester及R09獨立Reviewer approved／requiredFixes=[]，R10已完成本輪topic提交／push／原DraftPR更新；停R11，不代Humanreview或merge。
+- 新驗證host六段均已以本輪來源驗證：首次授權保存API、完整退出還原、真正Clean重建、受控真refresh及輪替新程序讀回；setup／build及五結果段Human均實答0。R07文件／revision圖及R08獨立Tester已完成；R09最終獨立成果審查已approved；R10已真commit／map／push並更新原DraftPR，仍待R11Humanreview；不把DraftOPEN當接受或merge。
 - profile更新後讀回仍unknown／Human已接受限制，不阻擋現scope，不開第三輪E007；不擴張成豁免其他新hostlive。
 - 重大scope／正式API不可撤回、新certificate／安全設定／cache變動／付費要求即停並報具體必要性；不得默認保留production污染或借舊identity。
 
@@ -54,7 +54,7 @@
 | Non-Goal | 宣稱正式產品完成、保留驗證production契約／共用UI／開關／工具、預填真人結果 |
 | TestCase | TC01–TC10及R06六段，依slice逐檔與case交付，不能只帶目錄 |
 
-Handoff：phase=既定topic交付；current_step=R10/pending；upstream_verdict=R09 independent Reviewer approved／requiredFixes=[]；assigned_role=Implementer；next_objective=依已授權stagedtopic語意／message及mandatoryhooks、commit、真PRLensmap／有限Graphify、正常push與更新原DraftPR62並readback。R11Humanreview保持最終停點；profile更新unknown維持，不新增圖面接受gate、不merge。以下歷史不是現行 handoff。
+Handoff：phase=原DraftPRreview；current_step=R11/human-check；upstream_verdict=R09approved／requiredFixes=[]；R10依授權完成topic提交／真map／normalpush／更新原DraftPR62，assigned_role=Human；next_objective=Humanreview，不merge。最後doc-only收據commit與最終refs／cleanworktrees由Dispatcher實際讀回，不把自指SHA寫成本頁hash。以下歷史不是現行 handoff。
 
 ## R02 獨立 Plan-Reviewer 收據（2026-10-21）
 
@@ -534,3 +534,11 @@ bd00c3e4b266b1703448b91aff220731241a5335 docs(github-connection): 記錄持續�
 - code `b63af3e51d04487f651ba2fb521fd056f53f1af1`，message `fix(github-connection): 將完整流程驗證隔離至獨立 App`；53from/to原始paths、rename-aware36entries，D19＋M4撤回及App30完整一組，不混其他docs。trim／EOF／Swiftformat／consumer／SwiftLint／renderer6項hooks均Passed。featurerenderer依賴由唯讀dev現有相同pins複製到own0700copy，5內部symlinks皆只指owncopy，未install或回連dev；最後hook後精確移除本roletemporaryfeaturelink。
 - PRLens真ca00bc0→此codehead：4lanes／14nodes／16edges／1flow／3steps、53/53sourcepaths union＋7unchanged鄰居、真validate/render與4nativeSVG／Chrome截圖親看。後docs/evidence/v2commits明列不在map，詳v2/tool-evidence。Graphify沿既有禁refresh sourcefallback，不buildgraph／改config。
 - 下一組staged僅53個planning／docs／evidence／v2leaves，message `docs(github-connection): 修正驗證定位與分版可行性證據`。尚未完成本輪push／原DraftPR更新，不提前填remote結果；source／真人／native圖皆不改、不重跑。
+
+## R10 已更新原 Draft PR：本輪交付收據
+
+- source `b63af3e51d04487f651ba2fb521fd056f53f1af1`：`fix(github-connection): 將完整流程驗證隔離至獨立 App`；docs `754e121ab23164f263fb048041a724b7b52a106c`：`docs(github-connection): 修正驗證定位與分版可行性證據`。兩組分別核staged單一語意／message／privacy／diffcheck後commit，trim／EOF／Swiftformat／consumer／SwiftLint／renderer全6項mandatoryhooks均Passed，無skip。
+- normal `git push origin feat/github-persistent-connection` 成功，未force；使用Human明確授權的gh更新原[DraftPR62](https://github.com/a129924/rivet/pull/62) title／body為獨立驗證工具／可行性結果，不是正式產品，沒有重開PR。實際readback title/body與私有提交文件相符，OPEN／isDraft=true／base=dev／head=feat/github-persistent-connection，當次headRefOid=`754e121ab23164f263fb048041a724b7b52a106c`與local／remote相符。
+- 當次statusCheckRollup=[]，沒有GitHubCIchecks可判斷，不冒稱green。PRbody明列productionbasezero／App缺席buildtest、78／202／12、七段Human0、新舊sourceversion／initialgrantdigest未觀察、controlled非natural、profilerenewalunknownHumanaccepted、E007保留及真map有限覆蓋。
+- 本段與manifest／v2tool-evidence為最後doc-only收據，message `docs(github-connection): 記錄回修 Draft PR 與交付收據`；同樣正常hooks後push。它不在PRLens sourcehead覆蓋內，不循環重做map，也不改任何source／native圖／live收據。其最終commit／remotehead由交接實際提供。
+- 完整交付停R11Humanreview；不merge／tag／release／assign第三方或comment別人。最後hook後精確移除本rolefeature node_modules symlink，保留ownedcopy／map／Chrome／所有原App／新驗證App／真DPK／Apple資產與私有驗收證據，不作其他cleanup。

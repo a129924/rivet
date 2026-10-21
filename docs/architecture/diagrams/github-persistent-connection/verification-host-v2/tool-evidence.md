@@ -39,3 +39,9 @@ Pinned PRLens0.11.0真validate及 `render --theme both --no-config --out <owned-
 | `runtime-flow-light-bb5cdb7f5ce4481d0e9450b6fbd88938.svg` | `bb5cdb7f5ce4481d0e9450b6fbd88938f660d8f6fd160461d3c42c36b18eaedf` |
 
 Graphify沿R07已核sourcefallback，沒有可用graph、沒有新build／自動refresh／hooks／upload；所有CLIinvocation帶GRAPHIFY_NO_AUTO_REFRESH=1。本輪source/live/native QA未重跑，只有正常mandatorycommit hooks執行必要checks。
+
+## R10 發布收據
+
+source `b63af3e51d04487f651ba2fb521fd056f53f1af1`、docs `754e121ab23164f263fb048041a724b7b52a106c` 已normalpush；原[DraftPR62](https://github.com/a129924/rivet/pull/62) title/body已改為獨立驗證工具與受限可行性結果。實際readback OPEN／Drafttrue／base dev／原featurebranch，當次head為上述docsSHA；checks=[]，不稱CIpass。兩組完整mandatoryhooks各6項全Passed。此最後doc-only收據另正常commit/push，最終SHA由交接讀回，不宣稱已入PRLens的source-only範圍。
+
+PRLens map仍只為真ca00bc0→b63af3e51d04487f651ba2fb521fd056f53f1af1，coverage53/53from/to union＋7unchangedneighbors；source與4finalnativeSVG/截圖不再改。沒有因後續docscommit重畫或造coverage。Graphify沿有限sourcefallback，不操作外部provider或graphindex。最終停Humanreview，不merge；自己featuretemporarydependencylink最後hook後精確移除，所有已授權驗收資產保留。
