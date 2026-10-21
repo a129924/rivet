@@ -75,3 +75,13 @@
 **E009 判讀為受限成功**，依據是上述 Human 回報與補充確認，配合已查原碼的同一 session／callback／exchange／有效帳號契約。Agent 只獨立核對目前程序路徑、binary／source 指紋，沒有全程 UI 觀察或 network trace；目前正確 binary 不單獨證明整段歷史操作。精確起訖、互動 launcher 真實供給、啟動前主對話 ready 收據及 2FA 提示未獨立確認。
 
 這是 C01 之後的新證據；C01 對 L01 的撤回與原 A07 保留。結果只支持本次被 Human 確認的首次登入／同意／帳號路徑，不代表完整零配置產品 UX、產品 readiness、production custody 或 PKCE enforcement；Human PR review 仍待決。完整分層、九欄與缺口見[本輪 E009 紀錄](../experiments/E009/README.md#m03-本輪手動真人驗證結果2026-10-21現行)。
+
+## M04 可重現驗證工具交付現況（2026-10-21）
+
+Human 後續明示將驗證程式碼加入同一 PR #63；前輪文件-only 限制在 M04 精確範圍內放寬，產品 B 仍撤回。此 PR 已搬入既有初次 OAuth 五檔、必要測試與完整驗證 host；六份手動入口／配置 snapshot 經 SHA 核對，另納入 E009 一次性 launcher，無需另取 PR #61 的 working tree 或等待其合併。長期契約見[初次登入與驗證工具](architecture/github-first-sign-in.md)，本 PR build／操作見[E009 M04](../experiments/E009/README.md#m04-同一-pr-的重現與建置2026-10-21)。
+
+本次只做重建、mock 與 synthetic 檢查，未啟動真人 OAuth；M03 Human 證據及原 binary 指紋不被新 build 覆寫。正式產品入口、持久化、production custody 與 PKCE 限制保持；獨立 Tester／Reviewer、同 PR Git 交付與 Human review 仍待實際完成，不預填 gate。
+
+#### M04 獨立檢查結論與交付範圍
+
+Tester 的最終 hosted mock 為 17 definitions／18 executions、0 failures，binary 重新凍結 RF01 已解除。獨立 Reviewer 在 architecture overview 的現況句修正後明示 approved、required fixes=[]；只審本 38 paths，不代表產品採用或新真人成功。M04 準備按既有授權提交／推送原分支、交同 PR #63；PR metadata 待主方更新與讀回，尚不宣稱已更新 PR。M03／C01／PKCE 與 production 限制保留，Human review 不自動通過。

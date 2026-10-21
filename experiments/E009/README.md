@@ -165,3 +165,45 @@ Actual：Written 唯一 experiments/E009/LaunchVerification.swift；M02 source M
 - TestCase：四真人判準／三前置逐項來源核對、source／binary 指紋、文件相對連結與敏感資訊／scope／diff 檢核；不重跑 OAuth 或以舊 mock 當本輪真人證據。
 
 相對 M02 開始前是六檔追加；相對文件分支 HEAD，E009 README 仍為先前已建立、未追蹤的新文件。E009 launcher 與另一 source worktree 的 Swift 是先前未提交準備成果，本輪不混入文件發布，不冒稱文件 PR 已交付 Swift。工具圖只用實際文件 bounded diff；Graphify 無既有圖維持定向 source fallback，Archify 本輪不需產圖。
+
+## M04 同一 PR 的重現與建置（2026-10-21）
+
+本節為現行同 PR #63 的 build／操作路徑；前述依賴另一 worktree 的 M02 命令與 M03 指紋保留為歷史。以下命令在本 repository 根目錄執行，不需要原 source worktree，不代表此輪已獲新的真人 ready。
+
+```sh
+xcodebuild test -project apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj -scheme GitHubSignInVerification -destination 'platform=macOS' -derivedDataPath .build/github-account-login-feasibility/VerificationHostDerivedData
+xcodebuild build -project apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj -scheme GitHubSignInVerification -destination 'platform=macOS' -derivedDataPath .build/github-account-login-feasibility/VerificationHostDerivedData
+swift test
+scripts/check-github-integration-consumer.sh
+swift -swift-version 6 -strict-concurrency=complete experiments/E009/LaunchVerification.swift --self-test
+```
+
+上述 test scheme 設 unit-test mode，host 不建立 live dependencies。Implementer 本輪 host test／正常 build 均 exit 0（17 tests／5 suites），root 275 tests／34 suites pass；helper 另以 swiftc 的 Swift 6／complete concurrency 編譯後 synthetic self-test pass，未讀配置、未 launch App。launcher 以 `_ =` 明確丟棄清零操作回傳值，消除原 unused-result warning；其餘啟動／憑證邏輯不變。其他檢查與獨立 Tester／Reviewer 尚以最後紀錄為準。
+
+新 build 位於 `.build/github-account-login-feasibility/VerificationHostDerivedData/Build/Products/Debug/GitHubSignInVerification.app`；binary SHA-256 `781e1413dfae1f14ef46369c65c82435c76f7aebcee1154e452bcd671aae7153` 已凍結於 launcher。此值僅綁定本機本次 build，不保證其他 compiler／path 重建的 binary 相同。重建 hash 不符時須停止並在來源／build 核對後另行凍結，不能關掉檢核或冒用 M03 的 `990917ac…`。
+
+只有開發端管理者及 Human 完成前述本輪配置／browser／未授權帳號 ready，且另有真人操作授權時，才可在未錄製 TTY 使用以下本 PR bundle；本次未執行：
+
+```sh
+swift -swift-version 6 experiments/E009/LaunchVerification.swift --app-bundle .build/github-account-login-feasibility/VerificationHostDerivedData/Build/Products/Debug/GitHubSignInVerification.app
+```
+
+仍先拒絕既有同 bundle App，不讀舊 process／憑證、不秘密 argv／檔案／log。配置由開發端管理者隱藏輸入，登入驗證者不提供。未見「開發端設定已準備」不得開始；任何取消／拒絕／錯誤／逾時停止不重試。現行 M04 不進行上述真人步驟，不重跑 PKCE；M03 僅 Human 層級受限成功、C01 對 L01 的撤回與缺口均保留。
+
+#### M04 Implementer 最後檢查收據
+
+六項既有 hooks 全 pass：trailing-whitespace、end-of-file、Swift format、consumer contract、SwiftLint、renderer check。host／launcher 另跑 strict Swift format 與 SwiftLint（13 Swift files、0 violations），helper 以 `swiftc -swift-version 6 -strict-concurrency=complete -warnings-as-errors` 編譯及 `--self-test` 均 exit 0，無真人啟動或設定輸入。
+
+實際範圍恰 38 paths：26 new、12 modified、0 deleted；26 reuse byte/hash 全相等，`git diff --check` clean，未見本機使用者絕對路徑或 GitHub token 格式原值。檢查只覆蓋指定檔案，不宣稱全面秘密偵測。外部本機 M04 log 包含 host test／normal build、root test、six-hooks、local-checks、scope-equality 與新 binary SHA，未納入 Git。所有內容未 stage／commit／push，交獨立 Tester／Reviewer；不產圖、不更新 PR、不 merge。
+
+#### M04 Tester setup 與最終 build 重凍結（2026-10-21）
+
+獨立 Tester 回報首次 hosted mock setup 缺測試產物，補 `build-for-testing` 後重跑：17 definitions／18 executions、0 failures；隨後 normal build exit 0。這是測試產物準備／重建，不是 source 修改，也不是新真人 OAuth。重凍結前已核對原 38 個 repo 檔案 SHA 全未改。
+
+最終 bundle 已核為 `781e1413dfae1f14ef46369c65c82435c76f7aebcee1154e452bcd671aae7153`，與前次 launcher 凍結不符。現行 launcher 與 M04 build 指紋已同步至此最終值；前一 M04 normal build 指紋 `96ee9b8661850577495206e78c1db8114aa2489a50758f3f48cacff098b01170` 已被最終 build supersede，僅保留為歷史，不再作目前啟動依據。M03 `990917ac…` 的原始真人證據不變。
+
+本修正不 rebuild、不讀秘密、不啟動 App 或 OAuth；只變更 launcher 指紋與本五份文件中的現行值／補充收據，26 reuse source／tests／project 仍原樣。修正後 helper strict Swift 6 warnings-as-errors 編譯、synthetic self-test、局部 strict format／SwiftLint 已 exit 0（0 violations）；文件 consistency／whitespace 與新版 frozen 38 收據保存在外部 M04 evidence，交 Tester 局部核對，尚未 commit。
+
+#### M04 獨立檢查結論與交付範圍
+
+Tester 的最終 hosted mock 為 17 definitions／18 executions、0 failures，binary 重新凍結 RF01 已解除。獨立 Reviewer 在 architecture overview 的現況句修正後明示 approved、required fixes=[]；只審本 38 paths，不代表產品採用或新真人成功。M04 準備按既有授權提交／推送原分支、交同 PR #63；PR metadata 待主方更新與讀回，尚不宣稱已更新 PR。M03／C01／PKCE 與 production 限制保留，Human review 不自動通過。

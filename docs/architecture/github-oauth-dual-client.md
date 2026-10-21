@@ -9,7 +9,7 @@
 ## Non-Goal
 
 - 已交付 internal OAuth App token-response DTO → public immutable credential bundle mapping，以及 public `OAuthCredentialStore`／`OAuthTokenFetcher` ports、`TokenSnapshot` 與 actor-isolated `OAuthTokenProvider` finite failure contract；不定義 Keychain credential storage schema；internal refresh adapter 已定義固定 endpoint 與 form payload。
-- 不實作 OAuth authorization code、PKCE、callback、初次 sign-in、logout、revoke、多帳號、PAT 或 GitHub Enterprise。
+- 本文件聚焦既有 credential 的 lifecycle，不擴張 logout、revoke、多帳號、PAT 或 GitHub Enterprise。初次 OAuth authorization code／S256／callback 的既有實作與獨立驗證 host 已納入本 PR，另見[初次登入契約](github-first-sign-in.md)；正式產品登入與持久化仍延後。
 - 不定義 Domain endpoint、DTO、GraphQL schema、rate limit、pagination、一般 retry 或各 Bounded Context 的 failure mapping。
 - 不修改 `RivetHTTPClient`，也不讓其 `Auth`／`AuthFlow` 成為 OAuth runtime driver。
 

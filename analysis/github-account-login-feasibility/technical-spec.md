@@ -195,3 +195,89 @@ Human 五項操作回報與三項前置／連續性補充，詳[本輪 E009 紀�
 上述路徑分別相對於原source worktree的 `apps/GitHubSignInVerification/Sources/` 與 `Sources/BoundedContexts/GitHubIntegration/OAuth/`。current HEAD f420901a1076537c4f7aa0404fe31509b8bdc889 含並行前進，但受驗六Swift仍與M02 snapshot逐檔相符；不把它當新binary的build commit。當下預期executable路徑相符，磁碟binary SHA256仍為990917ac41d5543f342b6f32bc45daf8c665e44a67fa7d82e2da6379ec74e877。沒有獨立觀察本輪UI、network trace或歷史PID關聯。
 
 未取得精確起訖量測、設定供給者／互動launcher實際執行證據、啟動前主對話ready收據或2FA提示紀錄；不要求追補秘密或重跑。四主判準已由Human確認，以上為證據層級限制，不將其補成已驗。原產品／custody／PKCE限制及C01不變。
+
+## M04 將驗證程式碼交付到同一 PR #63（2026-10-21 增補）
+
+Human 明示「直接到 #63，不要再開新的」。因此前輪文件-only交付限制在本節受限放寬；歷史M01–M03／A07／C01不覆寫，仍不交付產品登入。沿用目前既有PR head分支／worktree，不建立、切換、改名或另開PR；docs前綴是既有PR歷史名稱，本輪內容已擴為可重現的驗證工具，PR title/body將依最終內容更新，不把原docs分支當新功能分支建議。
+
+依賴查核：此head尚缺五個既有OAuth配置／factory／session／exchange/error檔。只帶手動入口不能編譯，因此從固定9f603f81d77040a2e06ad178062e8cfecc4de468原樣重用五檔與必要測試，不重寫runtime、不依賴PR61合併。App完整host亦取同pin，但六份M01/M02受驗Swift按已核對工作快照帶入。原source worktree完全唯讀；其中PKCE工具、判讀fixtures、其planning或其他並行更動不帶入。不cherry-pick／merge整條分支。
+
+### 預定九欄與檔案
+
+- Goal：讓PR63包含可建置／測試的驗證host、M01/M02入口、一次性啟動器及必要既有OAuth依賴，補足重現性。
+- Non-Goal：產品入口、runtime新設計、PKCE／refresh401真人重跑、Secret store、PR61依賴或merge。
+- In-Scope：下列精確manifest的原樣搬入、局部建置／測試、啟動器對本PR產物重凍結及操作文件、長期現況同步。
+- Out-Of-Scope：apps/Rivet、其他BC、PKCE tools／人工判讀／fixtures、原source worktree寫入、dev、任何新真人授權。
+- ReadOnly：固定來源與M02六檔snapshot、原source worktree其他變更、現有runtime/lifecycle/transport、秘密與執行中App不讀取。
+- Written：下列新增runtime五檔／root tests三檔／App host十六檔、既有未追蹤E009 launcher納入Git、docs/architecture/github-first-sign-in.md；共26新tracked paths，actual待回填。
+- Modify：既有root consumer/isolation tests兩檔；本topic四artifacts／長期docs／E009README與README、design-principles、architecture overview、OAuth dual-client現況文件，共12 paths；原source worktree零寫入。
+- Deleted：無。
+- TestCase：root OAuth/隔離測試、跨target consumer、App hosted mock suite、strict format/lint、launcher synthetic與新binary指紋／source清單／秘密掃描；不將重建或mock當M03真人重跑。
+
+### 精確重用 manifest
+
+- `Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuth.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuthAuthorizationError.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuthAuthorizationSession.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuthCodeExchanger.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Tests/GitHubIntegrationTests/GitHubOAuthAuthorizationSessionTests.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Tests/GitHubIntegrationTests/GitHubOAuthCodeExchangerTests.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Tests/GitHubIntegrationTests/GitHubOAuthFactoryTests.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj/project.pbxproj`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj/xcshareddata/xcschemes/GitHubSignInVerification.xcscheme`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/Resources/Info.plist`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/Sources/GitHubAccountProbe.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/Sources/GitHubConnectionCoordinator.swift`（live-M02）
+- `apps/GitHubSignInVerification/Sources/GitHubConnectionPresentation.swift`（live-M02）
+- `apps/GitHubSignInVerification/Sources/GitHubConnectionView.swift`（live-M02）
+- `apps/GitHubSignInVerification/Sources/GitHubLoopbackCallbackRelay.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/Sources/GitHubSignInVerificationApp.swift`（live-M02）
+- `apps/GitHubSignInVerification/Sources/InMemoryOAuthCredentialStore.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/Tests/GitHubAccountProbeTests.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/Tests/GitHubConnectionCoordinatorTests.swift`（live-M02）
+- `apps/GitHubSignInVerification/Tests/GitHubConnectionPresentationTests.swift`（live-M02）
+- `apps/GitHubSignInVerification/Tests/GitHubLoopbackCallbackRelayTests.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+- `apps/GitHubSignInVerification/Tests/InMemoryOAuthCredentialStoreTests.swift`（9f603f81d77040a2e06ad178062e8cfecc4de468）
+
+其他兩個新tracked paths為 experiments/E009/LaunchVerification.swift 與 docs/architecture/github-first-sign-in.md。既有docs只更新對應能力現況，保留deferred產品UI／持久化及證據限制。新架構文件只記既有契約與app-local新增入口，不搬入另一topic diagrams／PKCE資料。未新增boundary或流程設計，Archify本輪N/A；Graphify無可用圖定向查source；PR Lens依實際新base/head凍結本機重製，不發布。
+
+### 執行／交接
+
+ID：M04；status：planned；owner：Implementer。完成條件為獨立plan-review、精確搬入、Tester／Reviewer、topic commit／push到同一PR63、PR實際diff／title／body讀回；actual九欄／來源相等檢查回填。新build不追溯替代M03 binary990917ac的歷史結果；launcher需核新binary重新凍結，M03不重跑。Human review H01不自動通過，不merge。
+
+### M04 搬入與建置 actual（2026-10-21）
+
+M04 planning 已由獨立 Plan-Reviewer 明示 approved、無 required fixes；Implementer 已原樣搬入清單 26 檔：20 檔 byte-for-byte 取固定 `9f603f81d77040a2e06ad178062e8cfecc4de468`，6 檔先核對 M02 SHA-256 再複製。來源 worktree／dev 零寫入，未攜入 PKCE tools、fixtures 或另一 topic 文件。新增聚焦初次登入契約與既有 E009 launcher，更新本節授權的現況文件；未啟動真人 App 或 OAuth。
+
+Implementer 檢查：host `xcodebuild test` exit 0（17 tests／5 suites）、正常 host `xcodebuild build` exit 0、root `swift test` exit 0（275 tests／34 suites）；strict Swift 6 launcher compile／synthetic self-test exit 0，輸出明示無 live launch／credential input。launcher 另以 `_ =` 明確丟棄清零操作回傳值，消除既有 unused-result warning，未改啟動／憑證邏輯。六 hooks 與局部 lint／format 結果另於最後檢查紀錄回填。
+
+本 PR 新 build binary SHA-256：`781e1413dfae1f14ef46369c65c82435c76f7aebcee1154e452bcd671aae7153`；launcher expectedBinarySHA256 已更新至此值。這是 M04 本機重建，不替換 M03 的 `990917ac41d5543f342b6f32bc45daf8c665e44a67fa7d82e2da6379ec74e877` 歷史真人指紋。獨立 Tester／Reviewer 與同 PR #63 Git 交付尚待進行，未 commit、push 或 merge。
+
+#### M04 六份 M02 snapshot 指紋
+
+| Path | SHA-256 |
+| --- | --- |
+| `apps/GitHubSignInVerification/Sources/GitHubConnectionCoordinator.swift` | `3d04f11e8fa4a9f5d023701b0b59da8541571bccd3312ac0f53de973d554e383` |
+| `apps/GitHubSignInVerification/Sources/GitHubConnectionPresentation.swift` | `a87adf9d9279b3b3d2783a9a63e3188a7e0a8fc165b9b44bfe543e70c90221d8` |
+| `apps/GitHubSignInVerification/Sources/GitHubConnectionView.swift` | `caf7dd5421020e6a6365fb8ba582c1732669cce52a01499a1b3aacbef6ac9b06` |
+| `apps/GitHubSignInVerification/Sources/GitHubSignInVerificationApp.swift` | `1686c418d887ef7b3debfa3a7e1fb70cd3cfeee835af45840f47d9d9eacd8071` |
+| `apps/GitHubSignInVerification/Tests/GitHubConnectionCoordinatorTests.swift` | `6d0c85edfce9a5f32ad2a04278950e4ad3a8b3624e80b33c40fc318dd4c4174d` |
+| `apps/GitHubSignInVerification/Tests/GitHubConnectionPresentationTests.swift` | `dcd8c94f72c076494d82698724527376412afc76b34f4ba85723ac2251691c8b` |
+
+#### M04 Implementer 最後檢查收據
+
+六項既有 hooks 全 pass：trailing-whitespace、end-of-file、Swift format、consumer contract、SwiftLint、renderer check。host／launcher 另跑 strict Swift format 與 SwiftLint（13 Swift files、0 violations），helper 以 `swiftc -swift-version 6 -strict-concurrency=complete -warnings-as-errors` 編譯及 `--self-test` 均 exit 0，無真人啟動或設定輸入。
+
+實際範圍恰 38 paths：26 new、12 modified、0 deleted；26 reuse byte/hash 全相等，`git diff --check` clean，未見本機使用者絕對路徑或 GitHub token 格式原值。檢查只覆蓋指定檔案，不宣稱全面秘密偵測。外部本機 M04 log 包含 host test／normal build、root test、six-hooks、local-checks、scope-equality 與新 binary SHA，未納入 Git。所有內容未 stage／commit／push，交獨立 Tester／Reviewer；不產圖、不更新 PR、不 merge。
+
+#### M04 Tester setup 與最終 build 重凍結（2026-10-21）
+
+獨立 Tester 回報首次 hosted mock setup 缺測試產物，補 `build-for-testing` 後重跑：17 definitions／18 executions、0 failures；隨後 normal build exit 0。這是測試產物準備／重建，不是 source 修改，也不是新真人 OAuth。重凍結前已核對原 38 個 repo 檔案 SHA 全未改。
+
+最終 bundle 已核為 `781e1413dfae1f14ef46369c65c82435c76f7aebcee1154e452bcd671aae7153`，與前次 launcher 凍結不符。現行 launcher 與 M04 build 指紋已同步至此最終值；前一 M04 normal build 指紋 `96ee9b8661850577495206e78c1db8114aa2489a50758f3f48cacff098b01170` 已被最終 build supersede，僅保留為歷史，不再作目前啟動依據。M03 `990917ac…` 的原始真人證據不變。
+
+本修正不 rebuild、不讀秘密、不啟動 App 或 OAuth；只變更 launcher 指紋與本五份文件中的現行值／補充收據，26 reuse source／tests／project 仍原樣。修正後 helper strict Swift 6 warnings-as-errors 編譯、synthetic self-test、局部 strict format／SwiftLint 已 exit 0（0 violations）；文件 consistency／whitespace 與新版 frozen 38 收據保存在外部 M04 evidence，交 Tester 局部核對，尚未 commit。
