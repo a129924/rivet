@@ -3,6 +3,27 @@
 - Topic：`github-first-sign-in`；2026-10-20 Plan-Creator 驗證 host amendment，已獲獨立 Plan-Reviewer A02 approved（無required fix）。
 - 配對：[requirements](requirements.md)、[plan／manifest](../../plan/github-first-sign-in/github-first-sign-in.plan.md)、[step](../../plan/github-first-sign-in/github-first-sign-in.step.md)。
 
+## W：最小 copy-only private 契約（待 W02）
+
+沿基線469f2b0。只擴私有工具，不改正式API／v1流程／diagnostic_version=3／outcome或pkce_rejection_proven；不調用V機譯core。CLI新增opt-in `--copy-description-for-ai`，與`--review-semantics`互斥；沒有opt-in仍原v1，錯誤參數不啟動流程。此為未來case的有限plumbing，本輪不執行任何--case／OAuth／交換，不自動AI呼叫。
+
+沿用原strict pure-error／known-secret與URL/control/bidi/opaque gate及先detach/cleanup再launch；只取完整未截斷error_description<=4096UTF8bytes，不整份response、不讓context進helper。helper private protocol_version=3（不是diagnostic_version3），exact input仍{protocol_version,description}；沿原16KiBinput／512bytesstdout／strict duplicate/extra/trailing/type/UTF8／stderr任何byteunknown。exact output僅{protocol_version:3,copy_status:copied|cancelled|expired|unreviewable}，不含semantic confirmation。
+
+單slot中文風險窗不display描述原文；明示clipboard其他程式／同步／history及AI服務留存、未知秘密與無法保證清除風險。僅Human明確點「複製單一描述」才寫clipboard一次，無defaultEnter／自動copy／傳送，成功即關閉；30秒未操作expired、取消cancelled，失敗unreviewable。沿用parent100秒watchdog，late／異常failclosed；不讀既有clipboard、不自動恢復／清除或承諾清除，不寫rawstdout／file／log／argv／env，不讀畫面。除了已批准的單欄clipboard與Human手動貼AI例外，其餘privacy不放寬。copy_status只記操作，不升級語義／proof。
+
+新公開synthetic16由Tester作者＋既有獨立Reviewer核標freeze：3mismatch／3grant／3config／7unknown（否定／條件／例子／多候選／矛盾／不完整／未知），不沿用舊fixture。Implementer只schema/hash。核標Reviewer不得當盲reader；root先只看id/source投影並凍結enum答案，再由全新Reviewer盲reader獨立看相同投影，不看labels／核標細節／root答案。均讀完整因果、否定、條件及角色，只回四分類enum；分歧／模糊／缺答一律unknown。Tester獨立核最終consensus9/9decisive＋7/7unknown，全unknown不pass；失敗停止，不改label配合。AI證據來源provider_description_ai_review，repo只記enum及必要安全來源／成績，不存live描述或判讀原文，不改正式proof。只用author投影與兩獨立回答，不寫通用框架；本輪無live來源。
+
+### W 最新外部狀態
+
+外部獨立Plan-Reviewer已明示W02 approved、無required fix。W03新fixture由獨立Tester作者開始，W04 Implementer開始WC01–WC04範圍的工具／受控接點；盲校準須待核標freeze與真實交接，不預填Tester／Reviewer／reader結果。契約／manifest不變，OAuth0；本次只四planning狀態登錄，未碰code／fixture／答案。
+
+
+### W04 目前實作／驗證層級
+
+Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fixture已freeze，W04三檔工具完成；獨立W05 Tester親跑67tests／3.850s／exit0、hash一致、Swift6compile／strictformat／lint／diffcheck0、mockclipboard及CLI互斥AST檢查通過；獨立W06 codeReview approved、無required fix，僅offline。新AI16兩blindreader各9/9decisive＋7/7unknown、分歧0，Tester已核分，labels未改；只代表該synthetic set，不推廣未知provider描述或當PKCEproof。真nativeUI／clipboard仍未驗，無actual provider raw／live。W08publication／Humanreviewpending；OAuth新增0、正常v1及U/V/PQRT歷史保留，失敗中文route不接入。 新fixture已由獨立作者／核標Reviewer freeze，兩名blindreader未見labels／彼此答案，最終安全enum成績由Tester獨立核分；完整來源由其safe evidence記錄，不在本角色讀fixture答案。AI軸仍只provider_description_ai_review，不變既有outcome／pkce_rejection_proven。
+
+已實作 `--copy-description-for-ai` 的有限plumbing與copy-only privateprotocol3，不同於diagnosticversion3；parentgate／敏感context cleanup先於helper，僅Human主動click才copy單欄，不rawstdout／file／讀畫面或自動傳送，v1保持。現已收到獨立W05受控passed及W06approved，但source/mock與盲set通過仍不是真nativeclipboard或live證據。現沒有actual provider raw，不能藉旗標取得新OAuth／跑case；資料留Mac以外／AI與clipboard風險是已接受的單欄例外，不是已保證無風險。
+
 ## V：本機繁中 offline 技術契約（待 V02，未實作）
 
 本節為 Human 已同意的本機繁中離線範圍；現在只四planning，V02獨立approved前不得code／newfixture。所有 live／OAuth仍未授權、額度0；不接入 `--case` 負測流程，不改正式Swift／public API／App macOS15基線、v1協定、v3 grammar、proof／outcome或U歷史。以下是V02後各bounded steps的契約，不預填可行性或校準passed。

@@ -31,6 +31,7 @@ func emit(_ result: ReviewOutput, status: Int32 = 0) -> Never {
 struct InputParser {
   let bytes: [UInt8]
   var offset = 0
+  var protocolVersion = 1
 
   mutating func whitespace() {
     while offset < bytes.count && [9, 10, 13, 32].contains(bytes[offset]) { offset += 1 }
@@ -77,7 +78,10 @@ struct InputParser {
       if index > 0 && !consume(44) { return nil }
       guard let key = string(), seen.insert(key).inserted, consume(58) else { return nil }
       if key == "protocol_version" {
-        guard consume(49) else { return nil }
+        whitespace()
+        guard offset < bytes.count, bytes[offset] == 49 || bytes[offset] == 51 else { return nil }
+        protocolVersion = bytes[offset] == 51 ? 3 : 1
+        offset += 1
       } else if key == "description" {
         guard let value = string(), !value.isEmpty, value.utf8.count <= 4096 else { return nil }
         text = value
@@ -257,6 +261,154 @@ final class ReviewController: NSObject, NSWindowDelegate {
   }
 }
 
+// W: Copy-only acknowledgement. No semantic answer or source text is emitted.
+enum DescriptionCopyStatus: String, Encodable {
+  case copied, cancelled, expired, unreviewable
+}
+
+struct DescriptionCopyOutput: Encodable {
+  let protocolVersion = 3
+  let copyStatus: DescriptionCopyStatus
+  private enum CodingKeys: String, CodingKey {
+    case protocolVersion = "protocol_version"
+    case copyStatus = "copy_status"
+  }
+}
+
+func emitCopy(_ status: DescriptionCopyStatus) -> Never {
+  let output = DescriptionCopyOutput(copyStatus: status)
+  if let data = try? JSONEncoder().encode(output), data.count <= 512 {
+    FileHandle.standardOutput.write(data)
+  }
+  exit(0)
+}
+
+@MainActor
+final class DescriptionCopyState {
+  private var description: String
+  private let write: (String) -> Bool
+  private(set) var status: DescriptionCopyStatus?
+
+  init(_ description: String, write: @escaping (String) -> Bool) {
+    self.description = description
+    self.write = write
+  }
+
+  func explicitMouseClick(_ isMouseClick: Bool) {
+    guard status == nil, isMouseClick else { return }
+    status = write(description) ? .copied : .unreviewable
+    description = ""
+  }
+
+  func end(_ status: DescriptionCopyStatus) {
+    guard self.status == nil else { return }
+    self.status = status
+    description = ""
+  }
+}
+
+@MainActor
+final class MouseOnlyCopyButton: NSButton {
+  private(set) var handlingMouseClick = false
+
+  override func mouseDown(with event: NSEvent) {
+    guard event.type == .leftMouseDown else { return }
+    handlingMouseClick = true
+    defer { handlingMouseClick = false }
+    super.mouseDown(with: event)
+  }
+
+  override func keyDown(with event: NSEvent) {
+    // No keyboard copy action.
+  }
+  override func performKeyEquivalent(with event: NSEvent) -> Bool { false }
+}
+
+@MainActor
+final class DescriptionCopyController: NSObject, NSWindowDelegate {
+  let state: DescriptionCopyState
+  var window: NSWindow?
+  var timer: Timer?
+  var completed = false
+
+  init(
+    _ description: String,
+    write: @escaping (String) -> Bool = { text in
+      NSPasteboard.general.clearContents()
+      return NSPasteboard.general.setString(text, forType: .string)
+    }
+  ) {
+    state = DescriptionCopyState(description, write: write)
+  }
+
+  func start() {
+    NSApplication.shared.setActivationPolicy(.regular)
+    NSApplication.shared.mainMenu = NSMenu()
+    let window = NSWindow(
+      contentRect: NSRect(x: 0, y: 0, width: 690, height: 360),
+      styleMask: [.titled, .closable], backing: .buffered, defer: false)
+    window.title = "單欄描述複製：隱私風險確認"
+    window.isRestorable = false
+    window.isReleasedWhenClosed = false
+    window.sharingType = .none
+    window.delegate = self
+    self.window = window
+    let stack = NSStackView()
+    stack.orientation = .vertical
+    stack.spacing = 20
+    stack.edgeInsets = NSEdgeInsets(top: 26, left: 30, bottom: 26, right: 30)
+    let warning = NSTextField(
+      wrappingLabelWithString:
+        "只有按下「複製單一描述」才會把這一欄完整文字寫入剪貼簿；此窗不顯示原文。\n"
+        + "其他程式、剪貼簿同步或歷史工具可能讀取並留存；你手動貼給 AI 後，內容可能離開 Mac 並留於服務或對話。\n"
+        + "安全檢查不能保證排除未知秘密，也不能保證清除。我們不讀取既有剪貼簿、不自動還原或清除、不自動傳送。\n"
+        + "複製只記操作，不代表語義確認或 PKCE 證明。30 秒未操作即取消本次機會。")
+    stack.addArrangedSubview(warning)
+    let copy = MouseOnlyCopyButton(
+      title: "複製單一描述", target: self, action: #selector(copyDescription(_:)))
+    copy.bezelStyle = .rounded
+    copy.keyEquivalent = ""
+    let cancel = NSButton(title: "取消", target: self, action: #selector(cancel))
+    cancel.bezelStyle = .rounded
+    cancel.keyEquivalent = "\u{1b}"
+    stack.addArrangedSubview(copy)
+    stack.addArrangedSubview(cancel)
+    window.contentView = stack
+    window.defaultButtonCell = nil
+    window.initialFirstResponder = cancel
+    window.center()
+    window.makeKeyAndOrderFront(nil)
+    NSApplication.shared.activate(ignoringOtherApps: true)
+    timer = Timer(timeInterval: 30, repeats: false) { [weak self] _ in
+      MainActor.assumeIsolated { self?.finish(.expired) }
+    }
+    if let timer { RunLoop.main.add(timer, forMode: .common) }
+  }
+
+  @objc func copyDescription(_ sender: MouseOnlyCopyButton) {
+    guard !completed, sender.handlingMouseClick else { return }
+    state.explicitMouseClick(true)
+    finish(state.status ?? .unreviewable)
+  }
+
+  @objc func cancel() { finish(.cancelled) }
+  func windowWillClose(_ notification: Notification) { finish(.cancelled) }
+
+  func finish(_ status: DescriptionCopyStatus) {
+    guard !completed else { return }
+    completed = true
+    timer?.invalidate()
+    timer = nil
+    state.end(status)
+    window?.orderOut(nil)
+    window?.contentView = nil
+    window?.delegate = nil
+    window?.close()
+    window = nil
+    emitCopy(state.status ?? .unreviewable)
+  }
+}
+
 // V: Same installed-only operation for normal v2 and the compile-time synthetic runner.
 struct LocalTranslationResult: Sendable {
   var status: String
@@ -431,14 +583,25 @@ func translateForReview(
   }
   var parser = InputParser(bytes: Array(input))
   var parsedDescription = parser.description()
+  let requestProtocolVersion = parser.protocolVersion
   input = Data()
   parser = InputParser(bytes: [])
   guard parsedDescription != nil else { emit(ReviewOutput(), status: 2) }
-  if CommandLine.arguments.dropFirst() == ["--protocol-check"] { emit(ReviewOutput()) }
+  if CommandLine.arguments.dropFirst() == ["--protocol-check"] {
+    if requestProtocolVersion == 3 { emitCopy(.unreviewable) }
+    emit(ReviewOutput())
+  }
   guard CommandLine.arguments.count == 1 else { emit(ReviewOutput(), status: 2) }
-  let controller = ReviewController(parsedDescription!)
-  parsedDescription = nil
-  controller.start()
-  NSApplication.shared.run()
+  if requestProtocolVersion == 3 {
+    let controller = DescriptionCopyController(parsedDescription!)
+    parsedDescription = nil
+    controller.start()
+    NSApplication.shared.run()
+  } else {
+    let controller = ReviewController(parsedDescription!)
+    parsedDescription = nil
+    controller.start()
+    NSApplication.shared.run()
+  }
 
 #endif

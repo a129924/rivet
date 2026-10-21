@@ -714,14 +714,51 @@ def read_helper_output(process, seconds):
     return bytes(output)
 
 
-def launch_semantic_helper(description, protocol_check=False):
+COPY_STATUSES = {"copied", "cancelled", "expired", "unreviewable"}
+
+
+def validate_copy_output(raw, returncode=0):
+    if returncode != 0 or not isinstance(raw, bytes) or len(raw) > 512:
+        return {"copy_status": "unreviewable"}
+    try:
+        obj = strict_object(raw.decode("utf-8", errors="strict"))
+    except UnicodeError:
+        obj = None
+    if (obj is None or set(obj) != {"protocol_version", "copy_status"}
+            or type(obj.get("protocol_version")) is not int or obj["protocol_version"] != 3
+            or not isinstance(obj.get("copy_status"), str) or obj["copy_status"] not in COPY_STATUSES):
+        return {"copy_status": "unreviewable"}
+    return {"copy_status": obj["copy_status"]}
+
+
+def launch_copy_helper(description):
+    return launch_semantic_helper(description, protocol_version=3)
+
+
+def copy_semantic_candidate(candidate, helper=launch_copy_helper):
+    description, cleaned = candidate.description, candidate.cleanup_completed
+    candidate.clear()
+    if not cleaned or not description:
+        return {"copy_status": "unreviewable"}
+    try:
+        return helper(description)
+    except (Exception, KeyboardInterrupt):
+        return {"copy_status": "unreviewable"}
+    finally:
+        description = ""
+
+
+def launch_semantic_helper(description, protocol_check=False, protocol_version=1):
     """Only caller's gated candidate enters anonymous stdin, never argv/env/file/log."""
-    if not privacy_allowed(description, ()):
-        return semantic_unknown("privacy_gate")
+    def unavailable(reason="helper_unavailable", status="unreviewable"):
+        return {"copy_status": "unreviewable"} if protocol_version == 3 else semantic_unknown(reason, status)
+
+    if protocol_version not in {1, 3} or not privacy_allowed(description, ()):
+        return unavailable("privacy_gate")
     source = Path(__file__).with_name("pkce_semantic_review.swift")
-    payload = json.dumps({"protocol_version": 1, "description": description}, ensure_ascii=False).encode("utf-8")
+    payload = json.dumps({"protocol_version": protocol_version, "description": description}, ensure_ascii=False).encode("utf-8")
     if len(payload) > 16384:
-        return semantic_unknown("privacy_gate")
+        return unavailable("privacy_gate")
     try:
         # Compiler output has no candidate. Any runtime stderr byte rejects the record; never forward it.
         started = time.monotonic()
@@ -731,7 +768,7 @@ def launch_semantic_helper(description, protocol_check=False):
                                       stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                                       timeout=30, check=False)
             if compiled.returncode:
-                return semantic_unknown("helper_unavailable")
+                return unavailable("helper_unavailable")
             remaining = max(0.001, 100 - (time.monotonic() - started))
             command = [binary] + (["--protocol-check"] if protocol_check else [])
             # Bounded reads prevent a malformed child from flooding parent memory/output.
@@ -743,23 +780,24 @@ def launch_semantic_helper(description, protocol_check=False):
                         process.stdin.close()
                         output = read_helper_output(process, remaining)
                         process.wait(timeout=max(0.001, remaining))
-                    return validate_semantic_output(output, process.returncode)
+                    return (validate_copy_output(output, process.returncode) if protocol_version == 3
+                            else validate_semantic_output(output, process.returncode))
                 except Stop as problem:
                     process.kill()
                     process.wait()
                     if problem.args == ("helper_protocol",):
-                        return semantic_unknown("helper_protocol")
-                    return semantic_unknown("helper_timeout", "expired")
+                        return unavailable("helper_protocol")
+                    return unavailable("helper_timeout", "expired")
                 except subprocess.TimeoutExpired:
                     process.kill()
                     process.wait()
-                    return semantic_unknown("helper_timeout", "expired")
+                    return unavailable("helper_timeout", "expired")
                 finally:
                     if process.poll() is None:
                         process.kill()
                         process.wait()
     except (OSError, ValueError, subprocess.SubprocessError):
-        return semantic_unknown("helper_unavailable")
+        return unavailable("helper_unavailable")
     finally:
         payload = b""
         description = ""
@@ -891,7 +929,8 @@ def main(argv=None):
         print("用法：python3 -B pkce_negative_probe.py --case missing|wrong；只在本機TTY隱藏輸入配置。離線校準：--calibrate-semantic-review（無網路/配置）。")
         return 0
     semantic_requested = len(args) == 3 and args[2] == "--review-semantics"
-    if semantic_requested:
+    copy_requested = len(args) == 3 and args[2] == "--copy-description-for-ai"
+    if semantic_requested or copy_requested:
         args = args[:2]
     if len(args) != 2 or args[0] != "--case" or args[1] not in CASES:
         print(json.dumps(safe_result("input_unavailable", "unknown"), sort_keys=True))
@@ -899,7 +938,7 @@ def main(argv=None):
     result = safe_result("input_unavailable", "unknown")
     result["case"] = args[1]
     client_id = secret = ""
-    candidate = SemanticCandidate() if semantic_requested else None
+    candidate = SemanticCandidate() if semantic_requested or copy_requested else None
     try:
         if not sys.stdin.isatty() or not sys.stderr.isatty():
             raise Stop("input_unavailable")
@@ -911,7 +950,7 @@ def main(argv=None):
             raise Stop("input_unavailable")
         print("請只完成這一次新授權；回呼後返回終端。勿複製瀏覽器URL或配置。", flush=True)
         with time_budget(300):
-            if semantic_requested:
+            if semantic_requested or copy_requested:
                 result = run_case(args[1], client_id, secret, semantic_candidate=candidate)
             else:
                 result = run_case(args[1], client_id, secret)
@@ -927,7 +966,10 @@ def main(argv=None):
     finally:
         client_id = secret = ""
     if candidate is not None:
-        result["provider_semantic_observation"] = review_semantic_candidate(candidate)
+        if copy_requested:
+            result.update(copy_semantic_candidate(candidate))
+        else:
+            result["provider_semantic_observation"] = review_semantic_candidate(candidate)
     if not result["remote_rejected"] and not result["token_present"]:
         result["diagnostic_class"] = STOP_CLASSES.get(result["reason"], result["diagnostic_class"])
     print(json.dumps(result, sort_keys=True))

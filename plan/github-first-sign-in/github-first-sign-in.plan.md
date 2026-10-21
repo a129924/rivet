@@ -6,6 +6,48 @@
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
 
+## W：最小受限實作 amendment（W02 pending）
+
+沿469f2b0／原feature／DraftPR61。Human已批准單欄clipboard／手動AI閱讀例外與先offline驗證；技術見technical-spec W。現在只四planning，W02獨立approved前不code／fixture；OAuth0、不live、不自動交換／AI傳送。U/V及全部歷史保留，失敗機譯不接入。
+
+### 精確manifest（W02後依必要slice授權，非已交付清單）
+
+Modify11：
+- `apps/GitHubSignInVerification/tools/pkce_negative_probe.py`
+- `apps/GitHubSignInVerification/tools/test_pkce_negative_probe.py`
+- `apps/GitHubSignInVerification/tools/pkce_semantic_review.swift`
+- `apps/GitHubSignInVerification/tools/README.md`
+- `analysis/github-first-sign-in/requirements.md`
+- `analysis/github-first-sign-in/technical-spec.md`
+- `plan/github-first-sign-in/github-first-sign-in.plan.md`
+- `plan/github-first-sign-in/github-first-sign-in.step.md`
+- `README.md`
+- `docs/architecture/github-first-sign-in.md`
+- `plan/github-first-sign-in/evidence/pkce-semantic-review.md`（只加W，不改舊段）
+
+Written1：`apps/GitHubSignInVerification/tools/fixtures/semantic-review-ai-v1.json`（全新公開synthetic，Tester作者／獨立Reviewer先核freeze）。Deleted0。正式source/API/App/tests、6foreign dirty、舊fixture／evidence／圖／其他topic唯讀，不讀寫／暫存／還原foreign。
+
+### bounded slice九欄（每次開始／完成都逐項列實際子集）
+
+In-Scope＝既定gate/cleanup後copy-onlyUI／privateprotocol／CLIopt-in、controlled及新盲AI校準；Out-Of-Scope＝live/OAuth/正式契約/機譯/自動傳送/歷史改判；ReadOnly＝上述foreign及非slice檔；Written＝只有Tester的新AI16fixture，planned與actual分開；Deleted＝0；Modify＝11paths內必要精確子集，完成附actualdiff不把未改列交付；Goal＝單欄明確copy與可驗證AI語義方法；Non-Goal＝copy不算confirmation/proof、不保證clipboard／未知秘密／服務留存消失；TestCase＝WC01–WC04，層級與未執行明示。
+
+W01四planning→W02獨立approved→W03 Tester新fixture＋核標Reviewer freeze→W04 Implementer bounded工具→W05獨立Tester→W06獨立codeReviewer／requiredfixclosed→W07兩盲AI＋Tester共識核分。root與全新Reviewer作兩reader，核標人不參加；root先固定回答，第二reader不見前答，root不得見labels或核標細節。不要另寫框架／CLI校準引擎。原授權topiccommit/push原Draft61／localboundedmap照既有review後進行，不新PR/worktree/merge；方法失敗記實際結果並停，不准live或改標重試。
+
+WC01＝原gate／cleanup／v1回歸、protocol3嚴格schema／bounds／stderr與互斥flags；WC02＝mockclipboard驗證只有明確click一次、Enter/timeout/cancel/late不copy，無rawstdoutfile／自動傳送；WC03＝獨立Tester可作一次無秘密synthetic macOS UI檢查，clipboard寫入主要用mock，不冒稱Humanlivepassed；WC04＝新16盲讀、完整否定條件因果角色、分歧unknown、共識9/9＋7/7，repo只enum。任一越界／未達標明示，OAuth仍0。現在未執行tests／copy／AI判讀。
+
+### W 最新外部狀態
+
+外部獨立Plan-Reviewer已明示W02 approved、無required fix。W03新fixture由獨立Tester作者開始，W04 Implementer開始WC01–WC04範圍的工具／受控接點；盲校準須待核標freeze與真實交接，不預填Tester／Reviewer／reader結果。契約／manifest不變，OAuth0；本次只四planning狀態登錄，未碰code／fixture／答案。
+
+
+### W04／W07 實際交接與待驗（先只更新非共寫六docs）
+
+Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fixture已freeze，W04三檔工具完成；獨立W05 Tester親跑67tests／3.850s／exit0、hash一致、Swift6compile／strictformat／lint／diffcheck0、mockclipboard及CLI互斥AST檢查通過；獨立W06 codeReview approved、無required fix，僅offline。新AI16兩blindreader各9/9decisive＋7/7unknown、分歧0，Tester已核分，labels未改；只代表該synthetic set，不推廣未知provider描述或當PKCEproof。真nativeUI／clipboard仍未驗，無actual provider raw／live。W08publication／Humanreviewpending；OAuth新增0、正常v1及U/V/PQRT歷史保留，失敗中文route不接入。
+
+W實際manifest為11Modify（8docs＋CLI/helper/test）＋1Written新AIfixture、Deleted0；不把fixture作者歸Implementer。本次Tester凍結後，Plan-Creator僅同步8owned docs（四planning／README／toolsREADME／OAuth長期doc／既有evidence）的外部最終事實，保留Tester舊段，不改code或fixture。現有Humancopy／AI例外已批准offline，不是仍僅可規劃；W05／W06外部結果已收到；publication與Humanreview仍pending，不新增授權停點、不代最終publicationreview。
+
+本slice九欄：In-Scope＝8owned docs最終外部facts／授權與待辦；Out-Of-Scope＝code/fixture/foreign/live/OAuth/Git；ReadOnly＝凍結code／新舊fixture／歷史段落／六foreign；Written＝0；Deleted＝0；Modify＝既定8docs；Goal＝凍結交publicationreview，之後原授權交付；Non-Goal＝不以67mock或AIset當nativeUI／providerproof；TestCase＝登錄獨立67/compile/strict/AST與9+7×2/分歧0，native仍未驗，本角色未新測。
+
 ## V：繁中 synthetic／offline 校準受限計畫（現行；V02 pending）
 
 原feature／feat/github-first-sign-in／DraftPR61，基線fbbc2fb0，不新worktree／PR／merge。技術集中 [technical-spec V](../../analysis/github-first-sign-in/technical-spec.md)。Human已同意本機繁中offline；installed前置已由外部Tester核實，不當語義pass。現在V01只Modify四planning、Written/Deleted0；V02獨立approved前不改工具／新fixture。U06舊16／6/9＋2/7及57tests／P/Q/R/T與App/canvas原證據保留，OAuth0。

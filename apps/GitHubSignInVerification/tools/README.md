@@ -106,3 +106,9 @@ Helper停用文字選取/編輯/自動偵測、空白app menu、不提供copy/ex
 ## V：研究core已保留，中文入口未交付
 
 V03新fixture已獨立approved／frozen；V04a只保留installed-only translator core與compile-time固定fixture runner作研究證據，正常binary無dump、CLI未改。V05a唯一真引擎序列16/16技術成功（2.646s、exit0、stderrfalse），58受控／compile／strict通過；獨立V06a語義fidelity failed／needs-rework，至少8處術語／角色失真，不編造精確語義通過數。另一次bounded code Reviewer approved、無required fix／不需額外驗證，僅研究工具code，不推翻fidelity失敗。中文GUI／CLI／Human校準未執行且停止，不宣稱繁中能力已交付。語言包installed、OAuth新增0；U06／PQRT／App/API/canvas歷史保留。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。 本輪沒有可操作的繁中校準命令，計畫中的 `--calibrate-semantic-review-zh` 未實作，不要執行或重試引擎16例。test-only runner只能編譯條件下讀唯一新fixture／frozenSHA／空stdin，不是通用dump或live入口。原scratch產物不可讀且無原bytes hash，當次實際synthetic譯文由Tester工具輸出直接交Reviewer，不能宣稱原產物目前可稽核或追補。
+
+## W：copy-only 已實作，仍只離線驗證
+
+Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fixture已freeze，W04三檔工具完成；獨立W05 Tester親跑67tests／3.850s／exit0、hash一致、Swift6compile／strictformat／lint／diffcheck0、mockclipboard及CLI互斥AST檢查通過；獨立W06 codeReview approved、無required fix，僅offline。新AI16兩blindreader各9/9decisive＋7/7unknown、分歧0，Tester已核分，labels未改；只代表該synthetic set，不推廣未知provider描述或當PKCEproof。真nativeUI／clipboard仍未驗，無actual provider raw／live。W08publication／Humanreviewpending；OAuth新增0、正常v1及U/V/PQRT歷史保留，失敗中文route不接入。 新opt-in `--copy-description-for-ai` 與 `--review-semantics` 互斥；本輪**不要執行任何 `--case`／OAuth**，旗標存在不給新額度。沒有opt-in仍原v1。private protocol_version3（不是diagnostic_version3）僅有限copy_status；原parent strictgate與清理完成後才helper，完整單欄<=4096UTF8bytes，中文風險告知不顯原文，明確click才寫clipboard一次，Enter／取消／逾時不copy，不自動傳送、不rawstdoutfiles。copy不是semantic confirmation。實際剪貼簿仍可能被其他程式／同步／history讀取或留存，AI服務也可能保存；gate與清理不保證未知秘密或全清除。
+
+help目前尚未列出新copy旗標，是discoverability限制、非required fix；本節已明列旗標與互斥關係，仍不是本輪執行live `--case` 命令的授權。

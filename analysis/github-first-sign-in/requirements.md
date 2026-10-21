@@ -5,6 +5,21 @@
 - Branch：`feat/github-first-sign-in`；base／Draft PR target：`dev`。
 - 配對：[technical-spec](technical-spec.md)、[plan](../../plan/github-first-sign-in/github-first-sign-in.plan.md)、[step](../../plan/github-first-sign-in/github-first-sign-in.step.md)。
 
+## W：單欄明確複製與 AI 閱讀例外（待獨立規劃審查）
+
+基線 `469f2b07eb425728b2b08eb3b8c9f09623b2c675`，原feature／branch／DraftPR61。Human已明確批准單欄copy與AI閱讀例外、實作並先離線驗證：只允許gate後完整error_description<=4096 UTF8bytes，Human主動copy、手動貼AI；不整份response／自動傳送。Clipboard其他程式／UniversalClipboard／history及AI服務可能留存，gate不能保證未知秘密或完全清除；此殘餘風險已告知並接受。OAuth新增0，正式source／App及6foreign dirty不碰，U/V與全部歷史保留，不接失敗機譯。
+
+Goal是可明確操作的單slot copy工具與獨立盲AI語義校準；copy不等於Human語義確認或PKCEproof。技術見technical-spec W，精確manifest／九欄見plan W。現在只四planning Modify、Written/Deleted0，W02獨立approved前不code／newfixture，不自產approval。任何新live仍未授權。
+
+### W 最新外部狀態
+
+外部獨立Plan-Reviewer已明示W02 approved、無required fix。W03新fixture由獨立Tester作者開始，W04 Implementer開始WC01–WC04範圍的工具／受控接點；盲校準須待核標freeze與真實交接，不預填Tester／Reviewer／reader結果。契約／manifest不變，OAuth0；本次只四planning狀態登錄，未碰code／fixture／答案。
+
+
+### W04 實際凍結／W07盲校準結果（外部交接，優先於開始狀態）
+
+Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fixture已freeze，W04三檔工具完成；獨立W05 Tester親跑67tests／3.850s／exit0、hash一致、Swift6compile／strictformat／lint／diffcheck0、mockclipboard及CLI互斥AST檢查通過；獨立W06 codeReview approved、無required fix，僅offline。新AI16兩blindreader各9/9decisive＋7/7unknown、分歧0，Tester已核分，labels未改；只代表該synthetic set，不推廣未知provider描述或當PKCEproof。真nativeUI／clipboard仍未驗，無actual provider raw／live。W08publication／Humanreviewpending；OAuth新增0、正常v1及U/V/PQRT歷史保留，失敗中文route不接入。 W02approved後的既定copy／AI例外已是實作授權，先前V「僅規劃」屬歷史。只有已批准單欄clipboard＋Human手動貼AI，不擴大為整response／自動AI或agent讀畫面。新旗標`--copy-description-for-ai`存在但不叫Human執行`--case`；本輪沒有actual provider raw／live。W05／W06外部結果已登錄；nativeUI未驗仍不能預填通過，publication與Humanreview待辦。
+
 ## V：本機繁中 synthetic 驗證與校準（現行規劃，待獨立審查）
 
 沿原 feature／branch／DraftPR61，基線 `fbbc2fb0`。Human 已明確同意新增 Apple on-device 元件讀 gate 後 description，僅本機繁中 offline 方案及驗證；原文／譯文僅本機記憶體短暫處理，live 不向 agent／Reviewer／CUA 顯露或保存，不雲端／不自下載。新增 OAuth=0，正式 Swift／public contracts／v3 grammar／proof／outcome 不變。

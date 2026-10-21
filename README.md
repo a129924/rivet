@@ -58,3 +58,7 @@ Human指示續行後，獨立CLI新增實際browserURL/HTTP prepared Request被�
 ### V：本機繁中先驗結果（研究工具，未交付中文能力）
 
 V03新fixture已獨立approved／frozen；V04a只保留installed-only translator core與compile-time固定fixture runner作研究證據，正常binary無dump、CLI未改。V05a唯一真引擎序列16/16技術成功（2.646s、exit0、stderrfalse），58受控／compile／strict通過；獨立V06a語義fidelity failed／needs-rework，至少8處術語／角色失真，不編造精確語義通過數。另一次bounded code Reviewer approved、無required fix／不需額外驗證，僅研究工具code，不推翻fidelity失敗。中文GUI／CLI／Human校準未執行且停止，不宣稱繁中能力已交付。語言包installed、OAuth新增0；U06／PQRT／App/API/canvas歷史保留。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。 原scratch JSONL已無法再讀且無原bytes hash，語義來源限Tester當次輸出直接交Reviewer的實際synthetic譯文，不追補或重跑。[來源與限制](plan/github-first-sign-in/evidence/pkce-semantic-review.md)。
+
+### W：單欄copy與AI閱讀的目前實作狀態
+
+Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fixture已freeze，W04三檔工具完成；獨立W05 Tester親跑67tests／3.850s／exit0、hash一致、Swift6compile／strictformat／lint／diffcheck0、mockclipboard及CLI互斥AST檢查通過；獨立W06 codeReview approved、無required fix，僅offline。新AI16兩blindreader各9/9decisive＋7/7unknown、分歧0，Tester已核分，labels未改；只代表該synthetic set，不推廣未知provider描述或當PKCEproof。真nativeUI／clipboard仍未驗，無actual provider raw／live。W08publication／Humanreviewpending；OAuth新增0、正常v1及U/V/PQRT歷史保留，失敗中文route不接入。 已實作的opt-in旗標為 `--copy-description-for-ai`，不代表現在可執行任何 `--case`；無新授權／交換／實際provider原文。只在gate及cleanup後，Human明確點擊才copy完整error_description<=4096UTF8bytes，不自動傳送、不顯示或寫出原文。Clipboard／同步／history／其他程式及AI服務留存風險仍在，不能保證未知秘密或完全清除。

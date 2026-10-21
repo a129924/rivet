@@ -9,6 +9,34 @@
 - 最後更新：2026-10-21，Implementer；主提交/hooks/push/原PR讀回/localmap完成，收尾帳本隨後同步。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
+## W：現行規劃帳本（不改 U/V 歷史）
+
+來源469f2b0，原feature／branch／PR61。Current phase＝最終publicationreview／交付待辦；Current step＝W08；Current status＝pending；W02approved與外部W06codeapproved／無required fix已登錄，僅offline，Humanreviewpending。Human已批准單欄copy/AI例外與offline，風險界線見technical-spec W；OAuth0、6foreign readonly。
+
+| ID | Status | Owner role | 完成條件／證據 |
+|---|---|---|---|
+| W01 | completed | Plan-Creator | 只四planning最小契約／11Modify+1Written／九欄／fixedcriteria，不自審 |
+| W02 | completed | Plan-Reviewer | 外部獨立approved、無required fix |
+| W03 | completed | Tester→核標Reviewer | final新AI16 approved/frozen，labels未改，來源見safe evidence |
+| W04 | completed | Implementer | CLI/helper/test凍結，原gate/cleanup/v1保留 |
+| W05 | completed | Tester | 親跑67tests/3.850s/exit0、hash一致、compile/strict/diffcheck0及mock/ASTpassed，native未驗 |
+| W06 | completed | Reviewer | 外部獨立codeReview approved、無required fix，僅offline |
+| W07 | completed | root＋全新Reviewer→Tester | 各9/9＋7/7、分歧0，由Tester獨立核分；只新synthetic set、無OAuth |
+| W08 | pending | Implementer→Human | finalpublicationreview後原授權commit/push原Draft61；Humanreviewpending，不merge |
+
+本輪完成九欄：In-Scope＝四planning W；Out-Of-Scope＝code/newfixture/test/copy/AI判讀/Git/OAuth；ReadOnly＝其餘全部含foreign6及歷史；Written＝0；Deleted＝0；Modify＝requirements/spec/plan/step四既有planning；Goal＝可供W02獨立審；Non-Goal＝不代approved或預填方法通過；TestCase＝WC01–04全未執行。已停止編輯供review。
+
+### W 最新外部狀態
+
+外部獨立Plan-Reviewer已明示W02 approved、無required fix。W03新fixture由獨立Tester作者開始，W04 Implementer開始WC01–WC04範圍的工具／受控接點；盲校準須待核標freeze與真實交接，不預填Tester／Reviewer／reader結果。契約／manifest不變，OAuth0；本次只四planning狀態登錄，未碰code／fixture／答案。
+
+### W 最終外部交接／publication待辦
+
+Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fixture已freeze，W04三檔工具完成；獨立W05 Tester親跑67tests／3.850s／exit0、hash一致、Swift6compile／strictformat／lint／diffcheck0、mockclipboard及CLI互斥AST檢查通過；獨立W06 codeReview approved、無required fix，僅offline。新AI16兩blindreader各9/9decisive＋7/7unknown、分歧0，Tester已核分，labels未改；只代表該synthetic set，不推廣未知provider描述或當PKCEproof。真nativeUI／clipboard仍未驗，無actual provider raw／live。W08publication／Humanreviewpending；OAuth新增0、正常v1及U/V/PQRT歷史保留，失敗中文route不接入。
+
+本次僅8owned docs同步，Written/Deleted0；code/fixture/foreign與歷史段落未改，未Git/test。九欄沿plan最新本slice記錄；W05／W06是外部明示結果，不是本角色自產approval。help未列copy旗標僅discoverability限制、非requiredfix；最終publicationreview尚待，不把nativeUI未驗或syntheticpass改寫成live核准。
+
+
 ## V：現行 planning ledger（保留 U 及所有歷史）
 
 - 更新：2026-10-21，Plan-Creator；來源fbbc2fb0，原feature／branch／DraftPR61，6他人Appdirty不讀寫。
@@ -836,3 +864,15 @@ Human已明示手動操作：看到文字不能複製，便任選選項，足以
 九欄：In-Scope＝V05a受控／compile／邊界／真engine一次；Out-Of-Scope＝source/label修改、GUI/Human/OAuth/Git；ReadOnly＝工具/fixtures/正式source/他人App/歷史圖證據；Written＝0；Deleted＝0；Modify＝semantic evidence與step自身事實；Goal＝交V06a可核對證據；Non-Goal＝不代Reviewer或Human核准；TestCase＝58pass/strict0/邊界pass/16translated技術成功，語義待V06a。
 
 V05a輸出交接補註：當次工具回傳已完整保留16筆實際公開synthetic JSONL，並直接轉錄其translated_text予Reviewer。Reviewer讀scratch回No suchfile；Tester先曾讀到原檔3924bytes，後續hash檢查亦回No suchfile。未執行cleanup或重跑，故不提供未量測的原產物SHA，也不聲稱scratch目前可讀；Review使用同次工具回傳轉錄，絕非reference重建。此留存限制不被16translated技術數取代，語義verdict仍由Reviewer決定。
+
+### W03 fixture與W synthetic兩reader核分：Tester實際結果
+
+唯一新AI16 fixture經獨立核標Reviewer明示approved後freeze，SHA38946829d2181e6a279e34de5ad1ce6221fb67fc53f53efbaf7a67b0c6001245／4910bytes，核分親查一致。Tester作者/核分者不兼reader；核標人不兼reader。第一root先封存，第二全新Reviewer只見同source投影且不見前答，兩份均16unique完整，各9/9decisive＋7/7abstain；分歧0，consensus9/9＋7/7，固定synthetic門檻達到。safe enums與來源投影SHA見semantic evidence。未改labels/criteria、未重作答案；copy工具尚待W04完成/W05驗證/W06code review，這不是live或PKCEproof放行，OAuth0。
+
+九欄：In-Scope＝W03 fixture/核標交接/獨立synthetic核分；Out-Of-Scope＝工具修改/GUI/live/OAuth/Git；ReadOnly＝工具及正式source/六foreign App/舊歷史fixtures與圖；Written＝唯一semantic-review-ai-v1.json；Deleted＝0；Modify＝semantic evidence與step自身結果；Goal＝凍結資料與可核對校準分數；Non-Goal＝不代code/live approval；TestCase＝16/schema/分布/SHA/無精確舊source重用、兩reader與consensus9/9＋7/7。
+
+### W05 獨立 Tester 實際交接（2026-10-21）
+
+來源469f2b0＋Wdirtydiff，CLI/helper/test三凍結SHA一致，詳semantic evidence。親跑67tests／3.850秒／exit0，含Swift6 compile、v1/v3協定及mockclipboard；helper strictformat/SwiftLint --no-cache均exit0/0violations，diffcheck0。source核exact2field protocol3/四status、clickonly/noEnter/30scommon-mode/terminal與lateguard、cleanup-before-helper及既有privacy/pipe/stderr/watchdog。另AST/noTTY optin/互斥safe拒絕通過，fixtureSHA未改、readonly選定diff空、無pycache。未發現requiredfailure；help未列copyflag作discoverability限制交Reviewer，未代approved。未GUI/nativeclipboard/translation/OAuth/Git，未重跑盲讀或未變Swiftroot/App；實機native互動不冒稱通過，交W06。
+
+九欄：In-Scope＝WC01–02受控與WC03 source/mock層；Out-Of-Scope＝code/labels修改、nativeGUI/clipboard/translation/live/Git；ReadOnly＝工具/fixtures/正式source/六foreignApp/歷史圖證據；Written＝0；Deleted＝0；Modify＝semantic evidence與step自身結果；Goal＝交W06獨立實測證據；Non-Goal＝不代review/Human/native/遠端核准；TestCase＝67pass/strict0/diffcheck0/AST/noTTY/readonly/fixtureSHA通過，native未驗證。

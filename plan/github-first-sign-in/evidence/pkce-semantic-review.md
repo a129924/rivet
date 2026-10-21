@@ -223,3 +223,37 @@ V04b ChineseGUI／CLI、V05b完整後半驗證、原後半V06b與V07 Human calib
 ### 文件slice完成九欄
 
 In-Scope＝實際技術／語義／code verdict、來源限制與停止；Out-Of-Scope＝code/fixture/CLI/GUI/OAuth/新方法／重跑追補／Git；ReadOnly＝工具/新舊fixture/舊evidence段落/正式App/六他人dirty；Written＝0；Deleted＝0；Modify＝既定8owned docs，僅本evidence追加；Goal＝交實際docdiff獨立review；Non-Goal＝不自產approved或編造語義分數／中文交付；TestCase＝登錄58controlled/compile/strict、唯一engine16translated及外部verdict，本角色未執行驗證。
+
+## W：兩盲 reader 公開 synthetic 核分（2026-10-21）
+
+來源基線469f2b0＋W受限dirtydiff；唯一新fixture `apps/GitHubSignInVerification/tools/fixtures/semantic-review-ai-v1.json`，schema_version1、16筆全新公開synthetic。獨立核標Reviewer明示approved／無requiredfix，凍結SHA `38946829d2181e6a279e34de5ad1ce6221fb67fc53f53efbaf7a67b0c6001245`（4910bytes）；核分時親查未變。作者兼scorer不是blindreader；核標Reviewer不參與兩reader。來源投影只有id/description，未帶expected/ref，compact JSON投影SHA `94bafd68942815d65846fe0f5bb3e983713629a44dba41f07be54072e29e9cfb`。
+
+第一reader root先固定一次答案；第二為全新Reviewer、fork none，明示僅見同一source投影/四enum、未見第一答案或fixturelabels。此盲性依角色明示交接，非測量模型內部或服務留存。兩份各16unique完整對應；獨立Tester依frozenlabels核分：reader1 decisive9/9、abstain7/7；reader2 decisive9/9、abstain7/7；分歧0，按分歧一律indeterminate規則計共識仍9/9＋7/7，達本synthetic固定門檻。沒有調整labels、重作reader回答或修改criteria。
+
+封存safe enum（兩reader相同）：w01 client_redirect_configuration_asserted；w02 indeterminate；w03 verifier_mismatch_asserted；w04 grant_or_code_asserted；w05 indeterminate；w06 indeterminate；w07 client_redirect_configuration_asserted；w08 verifier_mismatch_asserted；w09 indeterminate；w10 grant_or_code_asserted；w11 indeterminate；w12 client_redirect_configuration_asserted；w13 indeterminate；w14 verifier_mismatch_asserted；w15 grant_or_code_asserted；w16 indeterminate。
+
+這是公開synthetic方法校準成績，非code approval／copy UI驗證、非任意provider描述泛化、非live授權、非PKCE或遠端拒絕原因proof。W04工具仍由Implementer進行，W05／W06未因此完成；新增OAuth0，既有正式能力／PQRSTUV歷史與預算不改。不保存或重貼actual provider raw。
+
+本slice九欄：In-Scope＝W03 fixture造作／獨立核標freeze及兩reader封存答案核分；Out-Of-Scope＝工具source/UI/live/OAuth/Git與自代review；ReadOnly＝工具/正式source/六foreign Appdirty/舊fixtures/歷史證據/圖；Written＝唯一 `apps/GitHubSignInVerification/tools/fixtures/semantic-review-ai-v1.json`；Deleted＝0；Modify＝本evidence追加與step自身結果；Goal＝給W校準可核對分數與邊界；Non-Goal＝不代code/live/遠端proof核准；TestCase＝16unique、schema/分布/大小/無舊description精確重用/frozenSHA通過；兩reader及consensus9/9＋7/7，無分歧。
+
+## W05 獨立 Tester：copy-only controlled 驗證（2026-10-21）
+
+來源469f2b0＋W受限dirtydiff，親查三份凍結source SHA一致：CLI `26894482d275636d4e736a648b0366ee6ce6b980e5fafb0683b80b40544ff0b9`；helper `8505134d2130f1f99a1339cb9abbccabe894c2db73575c60d759d542a5a5e405`；test `62d1849c1d1b16351b27b4b6ea1247c75a24a8c6fdf9b3c32908e733c3fde0c5`。
+
+- 親跑 `python3 -B -m unittest discover -s apps/GitHubSignInVerification/tools -p test_pkce_negative_probe.py`：67 tests、3.850秒、exit0。包含正常helper Swift6實際編譯、strict v1/v3 protocol-check、同source mock clipboard state harness及既有回歸；未啟動視窗／原生clipboard。新9項涵蓋四status/schema/互斥options、cleanup及candidate先clear、錯誤不echo、stderr/watchdog、安全main、一次明確copy與terminal/late/failure。
+- helper `swift format lint --strict` exit0；`swiftlint lint --strict --no-cache` exit0、0 violations；`git diff --check` exit0。另親查AST與CLI noTTY copy opt-in／互斥flags：均exit2、stderrfalse、input_unavailable、indeterminate、proof=false；noTTY copy只回copy_status=unreviewable，未索取配置或啟動helper。
+- source核對：protocol3 exact input兩keys／output兩keys、四有限copy status；不加入semantic確認。copy action須在left-mouse事件追蹤中，keyDown／keyEquivalent不可copy、defaultButtonCell=nil；30秒common-mode timer、completed／terminal guard阻late。window只有中文風險文字，不display描述。唯一native寫入點為明確mouse action的注入write；不讀既有clipboard、無自動copy／還原／清除／傳送。以上為source＋mock證據，不宣稱實機AppKit事件或clipboard互動通過。
+- run_case finally清observer／attempt／fields／body／context／配置後標cleanup_completed；main先清client/secret才launch；candidate先clear再交單欄、stdin匿名pipe，parent output512bytes／stderr任byte拒絕／100秒watchdog、異常kill，無rawstdoutfile或rawexception。未更改正式outcome/proof。help目前未列新copy旗標，這是可發現性限制，非本契約指定requiredfailure，交Reviewer判定。
+- frozen AI fixture SHA維持38946829…6001245；選定正式Sources/Tests/rootPackage/experiments與兩舊fixture相對HEAD diff空，無pycache/pyc，未動六foreign Appdirty。未重跑盲讀，未Swiftroot/App全測、GUI/nativeclipboard/Humanlive／translation/OAuth/Git。
+
+受控層未發現required failure，交W06獨立Reviewer；不代code批准。既有兩reader共識9/9＋7/7只代表synthetic校準，不能替代本次未驗證nativeUI/clipboard，也不等於live或PKCEproof。
+
+本slice九欄：In-Scope＝WC01–02 controlled/schema/cleanup/compile/checks與WC03 source/mock層；Out-Of-Scope＝修改code/labels、nativeclipboard/GUI/translation/live/OAuth/Git；ReadOnly＝所有工具/source/fixtures/六foreignApp/舊歷史與圖；Written＝0；Deleted＝0；Modify＝本evidence追加與step自身事實；Goal＝交獨立codeReviewer實測結果及限制；Non-Goal＝不代review/Human/native或遠端核准；TestCase＝67pass/strict0/diffcheck0/AST/noTTY/readonly/fixturehash通過，nativeUI/clipboard互動未驗證。
+
+## W06 外部最終code verdict與W08待辦
+
+獨立Reviewer已明示W06 codeReview approved、無required fix，僅offline。W05親跑67tests／3.850s／exit0、凍結sourcehash一致、Swift6compile／strictformat／SwiftLint／diffcheck0、mockclipboard及CLI互斥ASTpassed，完整來源保留前節，不重跑或覆寫。W03 final fixture SHA `38946829d2181e6a279e34de5ad1ce6221fb67fc53f53efbaf7a67b0c6001245`不變；W07兩盲reader各9/9＋7/7、分歧0、共識達該set門檻，均由Tester獨立核分，labels未改，不推廣未知描述。
+
+W04 completed、W05 completed、W06 approved、W07 syntheticpassed；W08publication與Humanreviewpending。真nativeUI／clipboard仍未驗；copy不是semantic confirmation／proof，無actual provider raw、OAuth新增0／未放live。help未列copy旗標是discoverability限制、非requiredfix，toolsREADME已明列旗標／互斥／本輪禁止live命令。正常v1、U/V/PQRT與失敗中文route歷史不改。
+
+本文件slice九欄：In-Scope＝8docs外部最終facts與限制；Out-Of-Scope＝code/fixture/labels/foreign/live/OAuth/Git；ReadOnly＝所有凍結工具/fixture與舊evidence段落；Written＝0；Deleted＝0；Modify＝既定8owned docs；Goal＝交最終publicationreview；Non-Goal＝不代nativeUI或live核准、不泛化setpassed；TestCase＝只登錄獨立67與盲9+7結果，沒有本角色新測試。

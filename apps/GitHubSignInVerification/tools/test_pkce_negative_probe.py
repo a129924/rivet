@@ -1064,5 +1064,161 @@ dispatchMain()
         self.assertTrue(all(value is True for value in checks.values()))
 
 
+class DescriptionCopyTests(unittest.TestCase):
+    def test_four_exact_statuses_and_no_semantic_proof(self):
+        for status in probe.COPY_STATUSES:
+            raw = json.dumps({"protocol_version":3,"copy_status":status}).encode()
+            self.assertEqual(probe.validate_copy_output(raw), {"copy_status":status})
+
+    def test_copy_protocol_rejects_malformed_records_without_echo(self):
+        invalid = [b'{}', b'{"protocol_version":true,"copy_status":"copied"}',
+                   b'{"protocol_version":3.0,"copy_status":"copied"}',
+                   b'{"protocol_version":3,"copy_status":"copied","copy_status":"copied"}',
+                   b'{"protocol_version":3,"copy_status":"copied","extra":"private-sentinel"}',
+                   b'{"protocol_version":3,"copy_status":"unknown"}',
+                   b'{"protocol_version":3,"copy_status":"copied"} trailing', b'\xff', b'x'*513]
+        for raw in invalid:
+            self.assertEqual(probe.validate_copy_output(raw), {"copy_status":"unreviewable"})
+        self.assertEqual(probe.validate_copy_output(b'{"protocol_version":3,"copy_status":"copied"}', 1),
+                         {"copy_status":"unreviewable"})
+
+    def test_mutually_exclusive_and_duplicate_options_never_start(self):
+        with mock.patch.object(probe, "run_case") as run, mock.patch.object(probe.getpass,"getpass") as prompt, \
+             contextlib.redirect_stdout(io.StringIO()):
+            for options in [["--review-semantics","--copy-description-for-ai"],
+                            ["--copy-description-for-ai","--copy-description-for-ai"], ["--unknown"]]:
+                self.assertEqual(probe.main(["--case","wrong"]+options), 2)
+        run.assert_not_called()
+        prompt.assert_not_called()
+
+    def test_copy_requires_cleanup_and_clears_candidate_before_helper(self):
+        for ready in [False, True]:
+            candidate = probe.SemanticCandidate()
+            candidate.description = "Harmless synthetic sentence."
+            candidate.cleanup_completed = ready
+            def helper(text):
+                self.assertEqual(candidate.description, "")
+                self.assertEqual(text, "Harmless synthetic sentence.")
+                return {"copy_status":"copied"}
+            called = mock.Mock(side_effect=helper)
+            self.assertEqual(probe.copy_semantic_candidate(candidate,called)["copy_status"],
+                             "copied" if ready else "unreviewable")
+            self.assertEqual(called.call_count, int(ready))
+
+    def test_copy_exception_never_echoes_candidate_or_error(self):
+        candidate = probe.SemanticCandidate()
+        candidate.description = "Harmless synthetic sentence."
+        candidate.cleanup_completed = True
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            result = probe.copy_semantic_candidate(candidate, mock.Mock(side_effect=ValueError("private-sentinel")))
+        self.assertEqual(result, {"copy_status":"unreviewable"})
+        self.assertEqual(out.getvalue()+err.getvalue(), "")
+
+    def test_parent_v3_stderr_or_watchdog_never_claims_copy(self):
+        for reason in ["helper_protocol", "timeout"]:
+            child = mock.MagicMock()
+            child.__enter__.return_value = child
+            child.poll.return_value = 0
+            with mock.patch.object(probe.subprocess,"run",return_value=mock.Mock(returncode=0)), \
+                 mock.patch.object(probe.subprocess,"Popen",return_value=child), \
+                 mock.patch.object(probe,"read_helper_output",side_effect=probe.Stop(reason)), \
+                 mock.patch.object(probe,"time_budget",return_value=contextlib.nullcontext()):
+                self.assertEqual(probe.launch_copy_helper("Harmless synthetic text."), {"copy_status":"unreviewable"})
+            child.kill.assert_called_once()
+
+    def test_main_copy_launch_occurs_after_configuration_cleanup_and_keeps_outcome(self):
+        def fake_run(_case, _client, _secret, semantic_candidate):
+            semantic_candidate.description = "Harmless synthetic text."
+            semantic_candidate.cleanup_completed = True
+            return probe.safe_result()
+        def fake_copy(candidate):
+            frame = inspect.currentframe().f_back
+            while frame is not None and frame.f_code.co_name != "main":
+                frame = frame.f_back
+            self.assertEqual(frame.f_locals["client_id"], "")
+            self.assertEqual(frame.f_locals["secret"], "")
+            candidate.clear()
+            return {"copy_status":"copied"}
+        out, err = io.StringIO(), io.StringIO()
+        with mock.patch.object(probe.sys.stdin,"isatty",return_value=True), \
+             mock.patch.object(probe.sys.stderr,"isatty",return_value=True), \
+             mock.patch.object(probe.getpass,"getpass",side_effect=["fixture-client","fixture-secret"]), \
+             mock.patch.object(probe,"run_case",side_effect=fake_run), \
+             mock.patch.object(probe,"copy_semantic_candidate",side_effect=fake_copy), \
+             contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            self.assertEqual(probe.main(["--case","wrong","--copy-description-for-ai"]), 2)
+        result = json.loads(out.getvalue().splitlines()[-1])
+        self.assertEqual(result["copy_status"], "copied")
+        self.assertEqual(result["outcome"], "indeterminate")
+        self.assertFalse(result["pkce_rejection_proven"])
+        self.assertNotIn("fixture-secret", out.getvalue()+err.getvalue())
+
+    def test_swift_copy_state_mock_clipboard_only_explicit_once_and_terminal(self):
+        source = Path(probe.__file__).with_name("pkce_semantic_review.swift").read_text().split("// V_NORMAL_ENTRY",1)[0]
+        harness = r'''
+Task { @MainActor in
+  var writes = 0
+  var copiedExactly = false
+  let state = DescriptionCopyState("Synthetic private sentinel.", write: { text in
+    writes += 1
+    copiedExactly = text == "Synthetic private sentinel."
+    return true
+  })
+  var checks: [String: Bool] = [:]
+  checks["no_auto_copy"] = writes == 0 && state.status == nil
+  state.explicitMouseClick(false)
+  checks["keyboard_rejected"] = writes == 0 && state.status == nil
+  state.explicitMouseClick(true)
+  state.explicitMouseClick(true)
+  checks["explicit_once"] = writes == 1 && copiedExactly && state.status == .copied
+  for terminal in [DescriptionCopyStatus.expired, .cancelled, .unreviewable] {
+    let stopped = DescriptionCopyState("Synthetic text.", write: { _ in writes += 1; return true })
+    stopped.end(terminal)
+    stopped.explicitMouseClick(true)
+    checks[terminal.rawValue] = stopped.status == terminal && writes == 1
+  }
+  let failed = DescriptionCopyState("Synthetic text.", write: { _ in writes += 1; return false })
+  failed.explicitMouseClick(true)
+  failed.explicitMouseClick(true)
+  checks["failure_terminal"] = failed.status == .unreviewable && writes == 2
+  FileHandle.standardOutput.write(try! JSONSerialization.data(withJSONObject: checks))
+  exit(checks.values.allSatisfy { $0 } ? 0 : 1)
+}
+dispatchMain()
+'''
+        with tempfile.TemporaryDirectory(prefix="rivet-copy-state-") as folder:
+            path = Path(folder)/"main.swift"
+            path.write_text(source+harness)
+            binary = str(Path(folder)/"controlled")
+            compiled = subprocess.run(["/usr/bin/xcrun","swiftc","-swift-version","6",str(path),"-o",binary],
+                                      stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=30)
+            self.assertEqual(compiled.returncode,0,"copy state controlled harness compile failed")
+            result = subprocess.run([binary],stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=5)
+        self.assertEqual(result.returncode,0)
+        self.assertEqual(result.stderr,b"")
+        self.assertTrue(all(json.loads(result.stdout).values()))
+
+    def test_swift_v3_protocol_check_has_only_finite_copy_status(self):
+        with tempfile.TemporaryDirectory(prefix="rivet-copy-protocol-") as folder:
+            binary = str(Path(folder)/"helper")
+            source = str(Path(probe.__file__).with_name("pkce_semantic_review.swift"))
+            compiled = subprocess.run(["/usr/bin/xcrun","swiftc","-swift-version","6",source,"-o",binary],
+                                      stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=30)
+            self.assertEqual(compiled.returncode,0,"copy protocol compile failed")
+            for raw in [b'{"protocol_version":3,"description":"Harmless text."}',
+                        b'{"description":"Harmless text.","protocol_version":3}']:
+                result = subprocess.run([binary,"--protocol-check"],input=raw,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=5)
+                self.assertEqual(result.returncode,0)
+                self.assertEqual(result.stderr,b"")
+                self.assertEqual(json.loads(result.stdout),{"protocol_version":3,"copy_status":"unreviewable"})
+            for raw in [b'{"protocol_version":true,"description":"Harmless text."}',
+                        b'{"protocol_version":3,"description":"Harmless text.","descri\\u0070tion":"Other text."}',
+                        b'{"protocol_version":3,"description":"Harmless text."} trailing']:
+                result = subprocess.run([binary,"--protocol-check"],input=raw,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=5)
+                self.assertNotEqual(result.returncode,0)
+                self.assertEqual(probe.validate_copy_output(result.stdout,result.returncode),{"copy_status":"unreviewable"})
+
+
 if __name__ == "__main__":
     unittest.main()
