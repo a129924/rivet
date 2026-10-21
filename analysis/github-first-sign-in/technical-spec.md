@@ -95,4 +95,4 @@ Human 已明確拆 Mission，本段是本 topic 執行契約的 ownership 收斂
 - 正式 GitHubIntegration configuration／factories／session／exchanger／errors，以及全部既有 credential／provider／scope／clients／lifecycle source 唯讀；日後可整個移除驗證 App 而保留正式 OAuth 能力。
 - 使用新的 test-mode key，hosted test scheme 與 entry 一致，早於 live dependencies 建立檢查；test 移動後不啟動真 OAuth。App dependencies 只保留 GitHubIntegration 與既有 HTTP product。
 - frozen sequence v1/v2 與既有生成 HTML／receipts 不變；建立 v3 spec／獨立 basename 交付；責任 canvas 建立 scene-v2.js／index-v2.html。真實改動與每個輸出先納 manifest。
-- 舊正常 OAuth＋再次查詢證據可沿用但明示來源基線；新 host 真登入 pending。反向 PKCE、canvas 互動視覺及其他既有未驗證項目不自動變成通過。不讀取或保存先前 callback／code／state／secret。
+- 舊正常 OAuth＋再次查詢證據可沿用但明示來源基線；本 amendment 核准時新 host 真登入 pending；2026-10-21 已於來源 `e941d88` 觀察正向真實 API 與再次查詢通過，見 amendment evidence。反向 PKCE、canvas 互動視覺及其他既有未驗證項目不自動變成通過。不讀取或保存先前 callback／code／state／secret。

@@ -2,11 +2,11 @@
 
 - Topic：`github-first-sign-in`。
 - Phase／Current step：A07 Human review。
-- Current status：A04 verification completed；交獨立 Reviewer。
+- Current status：A07 human-check；新host正向live與再次API已觀察通過，其餘Human review／反向PKCE／canvas互動仍pending。
 - Upstream verdict：approved；獨立 Plan-Reviewer 明示 A02 approved，無 required fix（2026-10-20）。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
 - 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
-- 最後更新：2026-10-20，Tester；A04親跑完成，實際結果及限制見 verification-host-amendment.md。
+- 最後更新：2026-10-21，Tester；依Human協助與主agent實際UI觀察記錄A07新host正向驗收，見 verification-host-amendment.md。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
 ## 現行 amendment ledger
@@ -19,15 +19,15 @@ Human 已確認「正式 OAuth 實作能力＋獨立 GitHubSignInVerification Ap
 | A02 | completed | Plan-Reviewer | 獨立planning範圍/manifest/九欄/驗證審查 | 獨立 Plan-Reviewer 明示 A02 approved | approved |
 | A03a | completed | Implementer | approved後App/project/UI/test bounded搬移 | A03a完成九欄；16rename與精確diff已由Tester／Reviewer核對 | 需A02 approved |
 | A03b | completed | Implementer | 長期docs/修訂圖/來源聲明與工具驗證 | A03b完成九欄；v3／canvas v2收據與來源聲明 | 依A02契約 |
-| A04 | completed | Tester | root/consumer/app/format/lint/隔離/圖驗證 | verification-host-amendment.md：275 root／13 consumer／9 app passed；strict checks及圖validate/hash通過 | 新host live/canvas互動/反向PKCE pending；不代A05核准 |
+| A04 | completed | Tester | root/consumer/app/format/lint/隔離/圖驗證 | verification-host-amendment.md：275 root／13 consumer／9 app passed；strict checks及圖validate/hash通過 | A04當時新host live pending；2026-10-21正向另見A07；canvas互動/反向PKCE仍pending |
 | A05 | completed | Reviewer | 獨立review及requiredfixes關閉 | 獨立 Reviewer 明示 approved，無 required fix；見 amendment evidence | approved |
 | A06 | completed | Implementer | staged語意→commit→push→更新原DraftPR61與local真diffPRLens | 回修commit `81fe01f3377abbf7e7382d2c77fc756034c4fffc` 已push；原PR61標題/描述已更新；local真diff map於交付產生 | user已授權，需A05approved |
-| A07 | human-check | Human；Tester記錄 | 原PRhumanreview、新hostlive適用項目 | 舊live基線來源可沿用；新hostlive與反向PKCE pending | 不讀取或保存機密 |
+| A07 | human-check | Human；Tester記錄 | 原PRhumanreview、新hostlive適用項目 | e941d88新host正常授權及真/user、同程序再次查詢observed passed；反向PKCE與全部Human review仍pending | 不讀取或保存機密 |
 
 ## 現行 Blockers／Human Check
 
 - 無新增重大scope決策缺口；A02獨立Plan-Reviewer明示approved（無required fix），Tester已完成，獨立code Reviewer明示approved，無required fix。
-- 新驗證App真登入尚未執行，可保留Human pending；正常授權／再次API的舊證據來源基線明列，不冒充新host。反向PKCE、canvas互動視覺、全部遠端refresh/401及跨重啟仍未通過。
+- 2026-10-21 Human自行配置並授權；主agent觀察e941d88新驗證App正常授權→真/user及再次查詢通過。既有VerificationHostDerivedData測試後build、正常模式、未重建；身分有效但不存值。反向PKCE、canvas互動視覺、全部遠端refresh/401及跨重啟仍未通過，全部Human review尚未完成。
 - 舊canvas的file-URL policy限制沿用，不改其他路徑繞過。圖若必要驗證受限則如實記pending，不宣稱完整視覺通過。
 - user已授權本topic回修/commit/push/更新原DraftPR，無重大問題不重問；不得新worktree/PR或merge。重大contract/scope或外部系統設定變更才停受影響動作回Human。
 
@@ -198,3 +198,9 @@ In-Scope：AT01–AT05；Out-Of-Scope：code/Git/live/其他worktree；ReadOnly�
 - 已push原 `origin/feat/github-first-sign-in`，並更新[原Draft PR #61](https://github.com/a129924/rivet/pull/61)標題與描述：正式OAuth能力＋獨立驗證App，正式產品登入UI尚未交付。
 - 本筆交付記錄commit只改帳本/evidence，不改受驗source。最終head的local PRLens map於外部topic scratch validate/render，實際SHA/結果隨PR及交付回報提供，無上傳。
 - A07停點：Human review。新host真登入、反向PKCE、canvas互動及既有未驗證路徑pending；不merge、不建立/移除worktree。
+
+## A07：2026-10-21 真人協助正向驗收記錄
+
+Human自行輸入配置與完成OAuth；主agent以CUA觀察獨立GitHubSignInVerification初次真/user成功且身分欄位有效，並操作再次查詢，AX確認apiSuccess=true、busy=false、knownFailure=false，未重新授權。來源e941d88；既有VerificationHostDerivedData測試後build的產品source與該版本一致，正常模式，非重建新build。詳見amendment evidence的A07。
+
+Tester本輪只記錄明示結果，不跑測試、不操作live app、不改code或Git；只修改本step與verification-host-amendment.md，不保存任何身分或機密值。新host正向與再次查詢observed passed；反向PKCE／遠端refresh與401／canvas互動／全部Human review維持pending，不代Reviewer核准。

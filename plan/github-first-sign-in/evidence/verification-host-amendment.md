@@ -5,7 +5,7 @@
 - Implementer：16筆rename已完成，共用UI及其測試收納App；無正式OAuth/lifecycle/PRInbox/rootPackage source diff。九欄與精確manifest見plan/step。
 - A04 獨立 Tester 已完成以下親跑與隔離核對；不代表 A05 Reviewer approved。
 - 圖：Archify v3九checks、零errors/warnings，4viewport與4截圖實看；canvas v2 validate/build零errors/warnings，互動視覺Human pending。舊frozen圖指紋未變，工具收據見相應docs。
-- 舊正常OAuth與再次API證據屬e63eeb2舊host，可沿用但不是新host已真登入。新host真登入、反向PKCE與其他未驗證遠端項目Human pending。
+- 舊正常OAuth與再次API證據屬e63eeb2舊host；2026-10-21已另取得e941d88新host正常授權與同程序再次API的實際觀察，見A07。反向PKCE與其他未驗證遠端項目仍Human pending。
 - Graphify 0.9.73無圖、source fallback；PRLens local真commit diff待交付。未讀取或保存先前callback/code/state/secret。
 
 ## A04 獨立 Tester 實際驗證
@@ -35,7 +35,7 @@ Root 減少一項 Presentation test、驗證 App 增加一項 app-local Presenta
 
 ### 限制與結果分層
 
-沒有 required test failure。舊正常授權及再次 API 僅為 e63eeb2 舊 host 證據；新 host live、反向 PKCE、canvas 互動、完整遠端 refresh/401、持久化仍未驗證。本輪未操作舊 live app、讀取真 secret 或保存 callback。全部受控 pass 不代表 Human 接受或獨立 Reviewer approved。
+A04當時沒有 required test failure。當時舊正常授權及再次 API 僅為 e63eeb2 舊 host 證據，新 host live 仍未驗證；2026-10-21的新host結果另記A07。反向 PKCE、canvas 互動、完整遠端 refresh/401、持久化仍未驗證。本輪未操作舊 live app、讀取真 secret 或保存 callback。全部受控 pass 不代表 Human 接受或獨立 Reviewer approved。
 
 ### 九欄完成交接（Tester）
 
@@ -56,3 +56,16 @@ Root 減少一項 Presentation test、驗證 App 增加一項 app-local Presenta
 ## A06 發布記錄
 
 回修commit `81fe01f3377abbf7e7382d2c77fc756034c4fffc` 已push原feature branch；原[Draft PR #61](https://github.com/a129924/rivet/pull/61)標題與描述已更新。全部pre-commit hooks通過；本交付記錄只改文件。真base/head的PRLens本機map於最終head後產生，結果在PR與交付回報。仍停Human review，未merge，所有Human pending不變。
+
+## A07：2026-10-21 新驗證 App 真人協助驗收
+
+來源版本：`e941d88`。使用既有 `.build/github-first-sign-in/VerificationHostDerivedData` 測試後 build，產品 source 與該版本一致；本次沒有重建新 build，以正常模式執行。
+
+Human 自行輸入 OAuth App 配置並完成瀏覽器授權，只回報靜態 callback 頁文字。主 agent 以 CUA 觀察獨立 GitHubSignInVerification 視窗：初次真實 `/user` 查詢成功，身分欄位有效；主 agent 再操作「再次查詢」，完成後 AX 確認 `apiSuccess=true`、`busy=false`、`knownFailure=false`，未重新授權。Tester 依 Human 與主 agent 明示觀察記錄，沒有另操作 live app 或重跑測試。
+
+- 新 host 正常授權 → 真實 `/user`：observed passed。
+- 同程序再次查詢：observed passed，身分欄位有效；本紀錄不保存其值。
+- 反向 PKCE、完整遠端 refresh／401、canvas 互動視覺：仍 pending／未驗證。
+- 全部 Human review、merge 或 topic 完成：未宣稱通過。
+
+本次只更新本 evidence 與 step 的 A07 事實，不新增實作、manifest 或 gate，不更改歷史測試與審查結果；未執行測試、build、Git mutation，不保存帳號、Client ID、secret、callback URL、code、state、token 或 screenshot。

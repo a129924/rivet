@@ -58,7 +58,7 @@
 
 [既有 OAuth 架構](../../docs/architecture/github-oauth-dual-client.md) 與 [scope step](../../plan/github-client-scope-composition/github-client-scope-composition.step.md) 是既有契約依據。E001 證明獨立 loopback callback，E002 正向證明六欄與 /user，反向 PKCE 仍未定；E003 是受限 refresh／rotation 實證，均不取代新驗證 App 驗收。
 
-GitHub 官方：[OAuth authorization／offline_access／S256／loopback／secret](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)、[/user 與 private response scopes](https://docs.github.com/en/rest/users/users#get-the-authenticated-user)。本 topic 沒有待補造的重大產品決策；個人實際配置與新驗證 App live 結果仍待 Human。
+GitHub 官方：[OAuth authorization／offline_access／S256／loopback／secret](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)、[/user 與 private response scopes](https://docs.github.com/en/rest/users/users#get-the-authenticated-user)。本 topic 沒有待補造的重大產品決策；2026-10-21，Human 已自行提供配置並完成新驗證 App 正向授權；agent 觀察真實 API 與再次查詢通過，來源 `e941d88`。反向 PKCE、canvas 及完整 Human review 仍 pending；最新脫敏紀錄見 amendment evidence。
 
 ## Amendment 驗收
 

@@ -152,3 +152,7 @@ A03 文件圖作者文字繁中；固定 UI／HTML lang English fallback。責�
 Graphify／PR Lens 是導覽／理解輔助，不是新增 OAuth 業務驗收或外部服務依賴；失敗記 concrete limitation，保留 source／diff fallback與既有 review gate。必要長期圖交付未完成則文件仍 pending，不冒稱完成。工具暫存、DerivedData、機密輸入皆不入版控；evidence 只放必要脫敏結果。
 
 出現 scope／locked contract 衝突、越界刪改、無法符合既有 bundle、真實結果推翻契約、需新系統安全設定或外部 OAuth App 變更時，停止受影響動作並回 human-check／Scope Gap，繼續不受影響的已授權工作。個人 secret／live互動待 Human，不擅取 gh credential，不以未執行宣稱通過，不越過獨立 verdict。
+
+## A07 真人驗證狀態（2026-10-21）
+
+以上A03 Non-Goal與AT05的pending是搬移實作當時狀態，不預填遠端通過。現已由Human在來源 `e941d88` 獨立驗證App自行輸入配置並完成授權；agent觀察真實API成功與再次查詢通過，未重新授權。這是既有A07驗收事實，不變更範圍／manifest／contract。反向PKCE、canvas互動、完整遠端refresh/401與全部Human review仍未因此通過；最新來源與歸因見step及verification-host-amendment evidence。

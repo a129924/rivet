@@ -27,7 +27,7 @@ Hosted TestAction 使用 `GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1`；entry 
 
 ## 版本來源與限制
 
-基線 `e63eeb21b4774adafc5f8a822ac474df7e0bdc22` 的舊 `apps/Rivet` 外殼曾由 Human 完成正常授權，agent 觀察實際 API 與再次查詢成功。其能力證據可沿用，舊外殼名稱不代表產品 UI 已交付；不能冒充新驗證 App 已真登入。新 host 真登入與反向 PKCE enforcement 仍 Human pending，所有遠端 refresh／401、跨重啟也未因此通過。E001–E003 實驗保留原限制。
+基線 `e63eeb21b4774adafc5f8a822ac474df7e0bdc22` 的舊 `apps/Rivet` 外殼曾由 Human 完成正常授權，agent 觀察實際 API 與再次查詢成功。其能力證據可沿用，舊外殼名稱不代表產品 UI 已交付；不能冒充新驗證 App 已真登入。2026-10-21，Human 在來源版本 `e941d88c0b3a7bfc117ecf9f0ccecfe7e86e65d7` 的獨立驗證 App 自行輸入配置、完成真實授權；agent 觀察初次實際 API 成功與有效身分欄位，再操作「再次查詢」並確認成功，未重新授權。使用既有受控建置產物，並非本次重新建置；產品 source 與該版本一致。只記有效／成功等分類，不保存身分值、配置、callback 或截圖。新 host 正向與再次查詢已觀察通過；反向 PKCE enforcement、全部遠端 refresh／401、跨重啟及完整 Human review 仍未因此通過。E001–E003 實驗保留原限制。
 
 現行 [責任 canvas v2](diagrams/github-first-sign-in/index-v2.html) 與 [授權 sequence v3](diagrams/github-first-sign-in/authorization-sequence-v3.html) 反映驗證 host。舊 frozen 圖原樣保留為歷史來源，不作現行產品事實；[工具／視覺限制](diagrams/github-first-sign-in/visual-review.md) 分列自動檢查與實看。
 

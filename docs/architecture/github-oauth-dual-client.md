@@ -148,4 +148,4 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 
 `GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
 
-舊版 `e63eeb2` 的正向授權及同程序再次 API 查詢可作來源證據；本次新 host 真登入、反向 PKCE、完整遠端 refresh／401 與持久化仍未因此驗證。詳見 [首次 OAuth 契約](github-first-sign-in.md)。
+2026-10-21，Human 在來源版本 `e941d88` 的獨立驗證 App 完成真實授權；agent 觀察實際 API 成功與同程序再次查詢成功。舊版 `e63eeb2` 證據另保留；反向 PKCE、完整遠端 refresh／401 與持久化仍未因此驗證。詳見 [首次 OAuth 契約](github-first-sign-in.md)。
