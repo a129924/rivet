@@ -28,3 +28,11 @@
 - 僅 `sdd-workflow-contract` 定義或理解 SDD；其他 skill 必須以完成自身工作所需的最小輸入、輸出與安全邊界獨立運作，不假設 topic artifacts、phase、verdict 或其他角色職責存在。
 
 GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic HTTPClient 執行固定 refresh POST；public `OAuthTokenFetcher.refresh` 使用 typed `OAuthTokenRefreshError`。只有可信純 error 的憑證拒絕映射為 `.authenticationRequired`；設定錯誤維持 `.refresh` 且可再次嘗試。輪替未知與遠端已接受後的 persistence failure 停止該 provider，保留 store。這些 GitHub-specific 分類屬於 GitHubIntegration；通用 HTTPClient 與各 BC 的業務 failure 邊界維持。[完整契約](architecture/github-oauth-dual-client.md)記錄取消與過期行為。
+
+## 完整流程驗證與正式產品的歸屬
+
+`github-persistent-connection` 交付獨立 `apps/GitHubConnectionVerification` 驗證工具與受限可行性結果，不交付正式產品登入。其UI、OAuth session、DPK adapter、coordinator、probe、App-local refresh／DTO、停止觀察tracker、受控時鐘／收據及測試均收在驗證App；不改共用RivetPresentation、production public API或internal visibility。既有provider／scope／雙client責任維持。
+
+驗證App可使用既有public契約；production不得反向依賴驗證App。移除整個App後，原production仍可build／test。驗證用tracker只觀察實際refresh／save結果，不能額外呼snapshot偽裝純觀測，也不能為驗證增加production控制開關或收據API。取消仍等原tracked Task settled；重授權先退休、成功保存新bundle才建立新generation，舊provider不復活。
+
+本次真GitHub與真DPK、fake-only失敗測試、受控到期各自分列，舊host觀察保留來源版本。[新版完整流程結果](../plan/github-persistent-connection/evidence/verification-host-live.md)僅證受限環境可行；profile更新後讀回仍未驗證、Human已接受限制，不推論自然到期、certificate rotation或公開分發。完整歸屬及圖面見[長期說明](architecture/github-oauth-dual-client.md#獨立驗證-app-與可行性結果)。

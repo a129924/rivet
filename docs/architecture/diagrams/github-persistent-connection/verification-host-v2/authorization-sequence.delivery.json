@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-persistent-connection/verification-host-v2/authorization-sequence.json",
+  "output": "docs/architecture/diagrams/github-persistent-connection/verification-host-v2/authorization-sequence.html",
+  "specification": {
+    "sha256": "90ff2756f6c5869166f71fc9a95f847b193b4996e645b9bbd5940555cc5124d9",
+    "bytes": 4615
+  },
+  "artifact": {
+    "sha256": "6822566a659e4251115984c843b07bb3ecb9a61e51cf44fcc0cecc0e119a343d",
+    "bytes": 708855
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

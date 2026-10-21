@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "驗證 App 首次授權：保存後才建立連線",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1250,
+      800
+    ]
+  },
+  "participants": [
+    {
+      "id": "auth-product",
+      "type": "frontend",
+      "label": "驗證協調"
+    },
+    {
+      "id": "auth-store",
+      "type": "database",
+      "label": "驗證 DPK"
+    },
+    {
+      "id": "auth-relay",
+      "type": "backend",
+      "label": "本機 callback"
+    },
+    {
+      "id": "auth-session",
+      "type": "security",
+      "label": "驗證授權"
+    },
+    {
+      "id": "auth-browser",
+      "type": "external",
+      "label": "瀏覽器"
+    },
+    {
+      "id": "auth-github",
+      "type": "external",
+      "label": "GitHub.com"
+    },
+    {
+      "id": "auth-provider",
+      "type": "backend",
+      "label": "既有連線"
+    }
+  ],
+  "messages": [
+    {
+      "id": "auth-step-1",
+      "from": "auth-product",
+      "to": "auth-store",
+      "y": 180,
+      "label": "先保存設定",
+      "variant": "security"
+    },
+    {
+      "id": "auth-step-2",
+      "from": "auth-store",
+      "to": "auth-product",
+      "y": 213,
+      "label": "保存成功",
+      "variant": "return"
+    },
+    {
+      "id": "auth-step-3",
+      "from": "auth-product",
+      "to": "auth-relay",
+      "y": 246,
+      "label": "綁定 127.0.0.1 動態 port",
+      "variant": "default"
+    },
+    {
+      "id": "auth-step-4",
+      "from": "auth-relay",
+      "to": "auth-product",
+      "y": 279,
+      "label": "ready／redirect URI",
+      "variant": "return"
+    },
+    {
+      "id": "auth-step-5",
+      "from": "auth-product",
+      "to": "auth-session",
+      "y": 312,
+      "label": "建立 state／PKCE verifier",
+      "variant": "security"
+    },
+    {
+      "id": "auth-step-6",
+      "from": "auth-session",
+      "to": "auth-browser",
+      "y": 345,
+      "label": "開啟 PKCE 授權網址",
+      "variant": "default"
+    },
+    {
+      "id": "auth-step-7",
+      "from": "auth-browser",
+      "to": "auth-github",
+      "y": 378,
+      "label": "使用者授權",
+      "variant": "emphasis"
+    },
+    {
+      "id": "auth-step-8",
+      "from": "auth-github",
+      "to": "auth-browser",
+      "y": 411,
+      "label": "code＋state",
+      "variant": "return"
+    },
+    {
+      "id": "auth-step-9",
+      "from": "auth-browser",
+      "to": "auth-relay",
+      "y": 444,
+      "label": "GET /oauth/callback",
+      "variant": "default"
+    },
+    {
+      "id": "auth-step-10",
+      "from": "auth-relay",
+      "to": "auth-session",
+      "y": 477,
+      "label": "檢查 callback／state",
+      "variant": "security"
+    },
+    {
+      "id": "auth-step-11",
+      "from": "auth-session",
+      "to": "auth-github",
+      "y": 510,
+      "label": "POST exchange／30 秒",
+      "variant": "security"
+    },
+    {
+      "id": "auth-step-12",
+      "from": "auth-github",
+      "to": "auth-session",
+      "y": 543,
+      "label": "完整六欄 bundle",
+      "variant": "return"
+    },
+    {
+      "id": "auth-step-13",
+      "from": "auth-session",
+      "to": "auth-product",
+      "y": 576,
+      "label": "只交回 bundle，不保存",
+      "variant": "return"
+    },
+    {
+      "id": "auth-step-14",
+      "from": "auth-product",
+      "to": "auth-store",
+      "y": 609,
+      "label": "完整保存 credential",
+      "variant": "security"
+    },
+    {
+      "id": "auth-step-15",
+      "from": "auth-store",
+      "to": "auth-product",
+      "y": 642,
+      "label": "確認保存成功",
+      "variant": "return"
+    },
+    {
+      "id": "auth-step-16",
+      "from": "auth-product",
+      "to": "auth-provider",
+      "y": 675,
+      "label": "建立唯一 provider／scope，再取得 GET /user",
+      "variant": "emphasis"
+    },
+    {
+      "id": "auth-step-17",
+      "from": "auth-provider",
+      "to": "auth-product",
+      "y": 708,
+      "label": "有效帳號結果",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "完整流程的驗證工具",
+      "items": [
+        "UI、session、DPK 都屬獨立驗證 App",
+        "取消／拒絕／錯誤 callback 不保存憑證",
+        "新授權完整保存後才建立 provider／scope"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "可行性結果有明確界線",
+      "items": [
+        "本輪真授權與 API 成功，Human 回報 0 提示",
+        "不整合正式 Rivet 入口或 PR 業務",
+        "profile 更新後讀回仍未驗證"
+      ]
+    }
+  ]
+}

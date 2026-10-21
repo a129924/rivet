@@ -1,0 +1,144 @@
+{
+  "changedW06FilesSinceReview": [
+    "experiments/E007/README.md",
+    "experiments/E007/Sources/ProfileRenewalProbe.swift",
+    "experiments/E007/Tests/test_protocol.py",
+    "experiments/E007/scripts/run_profile_renewal.py"
+  ],
+  "checks": [
+    {
+      "appLaunches": 0,
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E007/Tests -v",
+      "exitCode": 0,
+      "failed": 0,
+      "passed": 28,
+      "pythonControls": 21,
+      "securityOperations": 0,
+      "swiftCoreCases": 7,
+      "swiftHarness": "swiftc -swift-version 6 -D E007_TESTING；temporary MemoryStore harness",
+      "testCount": 28
+    },
+    {
+      "command": "swift format lint --strict experiments/E007/Sources/ProfileRenewalProbe.swift",
+      "exitCode": 0,
+      "fileCount": 1
+    },
+    {
+      "command": "swiftlint lint --no-cache --strict experiments/E007/Sources/ProfileRenewalProbe.swift",
+      "exitCode": 0,
+      "fileCount": 1,
+      "seriousViolations": 0,
+      "violations": 0
+    },
+    {
+      "command": "xcodebuild build -project experiments/E007/ProfileRenewalProbe.xcodeproj -scheme ProfileRenewalProbe -configuration Debug -destination platform=macOS,arch=arm64 -derivedDataPath <independent-temporary-DerivedData> CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -quiet",
+      "exitCode": 0,
+      "independentDerivedData": true,
+      "signingAllowed": false,
+      "warningImpact": "本次 macOS App unsigned build 仍 exit 0；不構成 simulator 或 runtime 驗證",
+      "warnings": [
+        "sandbox/cache access",
+        "FSEvents unavailable",
+        "CoreSimulator service unavailable",
+        "Xcode plist type assertions"
+      ]
+    }
+  ],
+  "experiment": "E007",
+  "limitations": [
+    "本 approved 僅支持準備層；不等於真 profile renewal、DPK、零提示或產品成功。",
+    "AppMain marker wiring 以 source 與 unsigned build 核對，沒有執行 GUI 或真 Security。",
+    "真 A/B profile、提示、live cleanup/timebox 均未驗證；仍須獨立 Reviewer 與 Human fresh ready。",
+    "未修改 source、測試期望、production、E001–E006 或 step ledger；只新增本 r1 收據。",
+    "未保存 raw logs、本機絕對路徑、profile/certificate identifiers 或 secrets。"
+  ],
+  "liveState": {
+    "appLaunchPerformed": false,
+    "availabilityIsReady": false,
+    "dpkAdoptionApproved": false,
+    "freshHumanReadyProvided": false,
+    "provisioningPerformed": false,
+    "securityAccessPerformed": false,
+    "signingPerformed": false,
+    "status": "未執行",
+    "t0Started": false
+  },
+  "preservedControls": [
+    "同 profile rejection、same App ID/group/certificate/DR。",
+    "setup-inclusive 35/45 固定窗口、cutoff 停新測量、逾時仍可 cleanup。",
+    "Human whole-stage／exact machine SHA 與無效 SHA 無法判定。",
+    "固定假六欄、UUID DPK service/account/group；renewal 僅 load、精確 delete＋read-absent。",
+    "default no-live、exclusive receipts／symlink guards、可能寫入後先清理才 export。"
+  ],
+  "previousImmutableReceipts": {
+    "experiments/E007/evidence/preparation-review.json": {
+      "preserved": true,
+      "sha256": "04a53e1c0310ef5e3b9d1a7c46571de117e048e8b5c913aa02bb32c5852991eb"
+    },
+    "experiments/E007/evidence/preparation-tests.json": {
+      "preserved": true,
+      "sha256": "14a228214834db283aec28b5d8a3e7ceba094cc3e07a07e5325acafa115fc2a5"
+    }
+  },
+  "recordedUTC": "2026-10-19T08:29:35.346257+00:00",
+  "requiredFixes": [],
+  "resolvedFindings": [
+    {
+      "basis": "README 仍明列本輪 owned root 內副本清理、root 外 Human-owned App／Apple assets 保留。",
+      "id": "RF-T01",
+      "status": "resolved"
+    },
+    {
+      "exportFixtureResult": "synthetic sensitive free-text sentinel 與私人路徑未出現在任何輸出的 JSON；使用 temporary fake SOURCE，沒有 repository live receipts、Security 或 App 操作。",
+      "id": "RF-R01",
+      "sourceReferences": [
+        "experiments/E007/scripts/run_profile_renewal.py:181",
+        "experiments/E007/scripts/run_profile_renewal.py:506"
+      ],
+      "status": "resolved",
+      "tests": [
+        "test_public_human_projection_preserves_counts_and_machine_binding_only",
+        "test_export_does_not_copy_human_free_text_to_repository"
+      ],
+      "verification": "public_observation 使用明列欄位與有限 action/purpose，其他分類 other；statement 不公開。保留 exact machineReceiptSHA256 與原私有 Human bytes 的 privateObservationSHA256；public file bytes 由 final.index 記錄。"
+    },
+    {
+      "appMainWiringVerification": "targeted source inspection＋完整 unsigned App compile；未以 GUI 執行 AppMain。",
+      "id": "RF-R02",
+      "sourceReferences": [
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:223",
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:350",
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:361",
+        "experiments/E007/scripts/run_profile_renewal.py:195",
+        "experiments/E007/scripts/run_profile_renewal.py:212"
+      ],
+      "status": "resolved",
+      "tests": [
+        "test_swift_marker_distinguishes_guard_from_actual_read",
+        "test_guard_or_technical_failure_before_valid_read_is_indeterminate",
+        "test_invalid_machine_identity_or_shape_is_indeterminate",
+        "test_actual_read_rejection_and_mismatch_are_failures",
+        "test_valid_read_and_observation_can_be_classified_success",
+        "test_invalid_human_sha_cannot_be_classified_success"
+      ],
+      "verification": "ProbeCore 為 reference type，marker 初始 false、實際 load port 前 true。AppMain 先保存同一 selectedOperation，再呼叫 perform；結束後將 operation.readAttempted 寫入機器收據，未建立 operation 的 guard failure 保留 false。read_outcome 先驗 namespace／phase／profile／binary／window／時間／read marker，guard、technical 與無效形狀保持無法判定；可信 read 的 missing／invalidData／comparison／有限 accessDenied 才可失敗。"
+    }
+  ],
+  "revision": "r1",
+  "role": "Tester",
+  "schemaVersion": 1,
+  "scope": "RF-R01／RF-R02 bounded fix 的獨立 fake-only 準備驗證",
+  "sourceSHA256": {
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/project.pbxproj": "8cb08f416dc753c49b9bc3ea447ce5c75fa3ffb97388d198895b7a50ad0e6b7b",
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/xcshareddata/xcschemes/ProfileRenewalProbe.xcscheme": "93b4e8876aafc7dfdeb35e24c837cb5ab6266dc3133c34f08fab8e610c97b3d5",
+    "experiments/E007/README.md": "6b43e3a1126b2ff4795a5a1799350eea35c889b61acc2bd94ee7edae054e8676",
+    "experiments/E007/Resources/Info.plist": "9d7ad64ccf83deee5e1b6a09802362214640b19e6f1ba25313aa02a14b33f8c4",
+    "experiments/E007/Resources/ProfileRenewalProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "experiments/E007/Sources/ProfileRenewalProbe.swift": "1c55ea950ddd9841cf1ba372ef7da190e6bb86127f798dfd8983d71edfe73958",
+    "experiments/E007/Tests/test_protocol.py": "7798a5c8463ebec7e0b8574247f81679cab07e56b52e4a311cc8bf985036e65f",
+    "experiments/E007/scripts/run_profile_renewal.py": "62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484"
+  },
+  "step": "S04a",
+  "topic": "github-persistent-connection",
+  "verdict": "approved"
+}
