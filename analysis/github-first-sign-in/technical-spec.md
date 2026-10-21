@@ -96,3 +96,36 @@ Human 已明確拆 Mission，本段是本 topic 執行契約的 ownership 收斂
 - 使用新的 test-mode key，hosted test scheme 與 entry 一致，早於 live dependencies 建立檢查；test 移動後不啟動真 OAuth。App dependencies 只保留 GitHubIntegration 與既有 HTTP product。
 - frozen sequence v1/v2 與既有生成 HTML／receipts 不變；建立 v3 spec／獨立 basename 交付；責任 canvas 建立 scene-v2.js／index-v2.html。真實改動與每個輸出先納 manifest。
 - 舊正常 OAuth＋再次查詢證據可沿用但明示來源基線；本 amendment 核准時新 host 真登入 pending；2026-10-21 已於來源 `e941d88` 觀察正向真實 API 與再次查詢通過，見 amendment evidence。反向 PKCE、canvas 互動視覺及其他既有未驗證項目不自動變成通過。不讀取或保存先前 callback／code／state／secret。
+
+## 8. P 輪追加技術契約：獨立反向 PKCE CLI
+
+本節為 `d11f343` 後現行追加契約，優先於歷史 canvas pending 敘述；不修改正式 OAuth/session、Swift App 或既有實驗。Human 已驗收現行 canvas v2 內容／流程／責任、拖曳、縮放可讀、聚焦說明及明暗可讀。正常登入／再次查詢沿用 e941d88 來源；本輪不做遠端 refresh／401。
+
+### 輸入與單次操作
+
+`apps/GitHubSignInVerification/tools/pkce_negative_probe.py` 僅 Python standard library；唯一 case 參數 `--case missing|wrong`。client ID 與 secret 由本機 TTY getpass 讀取，不從 args／env／檔案／Swift App／gh credential 取得；無安全TTY時有限失敗並結束，不降級明文輸入。
+
+每 process 只一個新 state、原 verifier／S256 challenge、新瀏覽器授權及 callback code，最多一次 token POST；不先執行 positive、不 retry、不跨 process 保存或重用值。missing 的 form 完全省略 code_verifier；wrong 使用另一個 43 字元 base64url verifier，確認其 SHA-256 challenge 不同後才送。兩 case 各新 process，本輪最多兩次新授權；取消或不明結果不自行加跑第三次。
+
+其它條件沿用 GitHub.com authorize/token 固定 HTTPS endpoints、Human同一client配置、scope offline_access、IPv4 127.0.0.1 動態port／oauth/callback、S256、相同當次 redirect_uri、POST form encoding／Accept JSON。工具不載入既有 app 記憶體；秘密及所有嘗試資料只在本process記憶體，結束即丟棄。
+
+### 有界 callback／HTTP
+
+listener 只綁127.0.0.1動態port；先ready再開瀏覽器。只收 GET、exact Host（127.0.0.1:當次port）與 /oauth/callback，無userinfo/fragment，拒絕重複query欄位、錯state及code/error同現或缺失；code或error只能單值。最多16 connections，每連線headers 8KiB／read 5秒、不讀取或接受request body／非零Content-Length／Transfer-Encoding，無效callback不消耗仍有效嘗試；有效callback原子claim一次，後續不交換。回覆靜態頁，不echo query；禁用HTTP access/error logs。
+
+授權總期限5分鐘（monotonic），POST僅在期限內，timeout不超過剩餘期限或30秒較小者。固定TLS token endpoint、無redirect、無proxy環境繼承、無cache/cookies、無自動retry；response最多64KiB。逾期／超限／HTTP或JSON異常皆有限分類，不print raw body／URL／exception或traceback；頂層包含輸入失敗、Ctrl-C與unexpected error的安全終止。
+
+### Fail-closed 判準及安全報告
+
+1. JSON object 中存在任一 access_token／refresh_token key（包括空值、混合error、異常type）即 failed／token_returned；不使用、不保存token。其他意外non-JSON body不打印，indeterminate。
+2. passed 僅允許HTTP2xx或400、純error（無token／成功payload）且error精確為 `missing_code_verifier`、`incorrect_code_verifier`、`invalid_code_verifier`、`code_verifier_required` 之一。這是工具的保守辨識allowlist，不宣稱GitHub官方保證這些error名稱；不以自由文字描述或substring推斷通過。
+3. `bad_verification_code` 一律 indeterminate／generic_code_rejection，即使描述出現verifier字詞也不升級；safe remoteRejected可為true，仍不是PKCE通過。client config、redirect、expired、授權拒絕、timeout、network、未知error／shape／HTTP均indeterminate。無法確認原因不算PKCE通過。
+4. stdout只允許case／三值status／有限HTTP分類或status整數／有限error分類／必要布林（fresh_attempt、single_exchange、token_present、verifier_field_omitted、wrong_challenge_differs等）。未知遠端error映射unknown，不透出原字串；不輸出clientID、secret、code、state、verifier、token、raw body、callback／authorize URL或exception。輸出不自動寫檔，證據僅人工轉錄此安全分類。
+
+E002 runner會先positive、沒有missing case且把generic bad_verification_code視為通過，不能沿用作本輪判準。官方[授權文件](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)要求有challenge時提供原verifier；[token錯誤文件](https://docs.github.com/en/apps/oauth-apps/maintaining-oauth-apps/troubleshooting-oauth-app-access-token-request-errors)中的bad_verification_code也可能是錯誤或過期code，不專指PKCE。2026-10-21已讀官方內容；不引用任何機密範例。
+
+工具僅驗證外部拒絕行為，不改正式實作邊界或圖中ownership，故不需新圖或改frozen specs。fake callback／transport tests詳見PK01–PK06；Human只在獨立Tester及Reviewer完成後執行，一次一步，不索取機密到對話。
+
+### P06 最新執行狀態（2026-10-21）
+
+以上遠端pending為P01規劃時狀態；現已由Human依固定helper與判準完成missing/wrong各一次新授權/單次交換，兩個安全報告均HTTP400、unknown_error/unknown、無token，結論皆indeterminate，不宣稱PKCE enforcement通過。工具最終SHA659809be53ac21a76e5417fffd9bd082c41cf3c1fe93116d3cb1a6cc32901699（d11f343基線後dirty source），兩case間未修改。總預算2/2已用盡，停止授權與重試，無rawbody可追補；後續診斷需另訂有限契約與新預算。Canvas Human驗收passed，遠端refresh/401本輪不做、保持pending，全部PR Humanreview尚未完成。詳見pkce-negative-verification evidence與step；範圍/manifest/既定判準不變。

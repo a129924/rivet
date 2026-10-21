@@ -5,6 +5,96 @@
 - 沿用原 feature worktree／[Draft PR #61](https://github.com/a129924/rivet/pull/61)，不建新 worktree／PR、不在 dev 實作、不 merge。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
+
+## P 輪現行最小 amendment（2026-10-21；先於既有 A/S 歷史契約適用）
+
+- Source HEAD：`d11f343`；feat/github-first-sign-in／原feature worktree／Draft PR61不變。只在feature實作，不建新worktree/PR、不merge；已授權同topic commit/push/更新原PR，不重問發布授權。
+- Human已驗收來源d11f343的index-v2.html：內容／流程／責任、拖曳、縮放可讀、聚焦說明、light/dark皆通過。file-URL policy原限制不繞過；不重畫frozen圖。
+- 依序canvas驗收記錄→反向PKCE工具與受控驗證→Human兩case。正常授權/再次API沿用e941d88，不重做；遠端refresh/401本輪不做。正式產品登入UI仍未交付。
+
+### 唯一現行 manifest
+
+Written（精確新檔）：
+
+- `apps/GitHubSignInVerification/tools/pkce_negative_probe.py`
+- `apps/GitHubSignInVerification/tools/test_pkce_negative_probe.py`
+- `apps/GitHubSignInVerification/tools/README.md`
+- `plan/github-first-sign-in/evidence/pkce-negative-verification.md`
+
+Modify（只限本輪契約、canvas真實Human結果、PKCE實際結果/限制，不改舊證據結論）：
+
+- `analysis/github-first-sign-in/requirements.md`
+- `analysis/github-first-sign-in/technical-spec.md`
+- `plan/github-first-sign-in/github-first-sign-in.plan.md`
+- `plan/github-first-sign-in/github-first-sign-in.step.md`
+- `docs/architecture/github-first-sign-in.md`
+- `docs/architecture/diagrams/github-first-sign-in/visual-review.md`
+- `docs/architecture/diagrams/github-first-sign-in/BUILD.md`
+- `docs/architecture/diagrams/github-first-sign-in/tool-evidence.md`
+- `plan/github-first-sign-in/evidence/verification-host-amendment.md`
+- `README.md`
+- `docs/design-principles.md`
+- `docs/architecture/README.md`
+- `docs/architecture/github-oauth-dual-client.md`
+
+最後四長期入口只允許同步最新Human觀察與仍pending限制，無新產品承諾。Deleted：無；rename：無。App Swift sources/tests/project/scheme、root Package與lock、GitHubIntegration所有source/tests/consumer、既有lifecycle、E001–E003及其它experiments、所有frozen圖spec/HTML/receipts/圖源、其他topic/worktree、skill/tool設定全部ReadOnly。先前A/S允許寫入的source/圖不能當成本輪授權。
+
+### 每個 implementation slice 九欄
+
+- In-Scope：P03a獨立stdlib CLI與fake tests／README；P03b允許文件與canvas來源紀錄。
+- Out-Of-Scope：正式session bypass、SwiftApp變更、新sharedmodule/experimenttopic、positive/API/remote refresh/401、保存機密、其他topic/worktree。
+- ReadOnly：上述完整ReadOnly清單及d11f343來源。
+- Written：該slice從四個精確新檔選取的planned／actualpaths，不把清單當完成。
+- Deleted：無。
+- Modify：該slice精確允許文件＋用途；完成記actualdiff。
+- Goal：反向missing/wrong各fresh單次交換且不誤報PKCE通過，canvasHuman事實有來源。
+- Non-Goal：不把generic拒絕當PKCE通過、不宣稱遠端refresh/401或產品UI交付。
+- TestCase：PK01–PK06、實際命令/結果/證據/限制；Human遠端兩case執行前均pending。
+
+### 步驟與停點
+
+| Step | Owner role | 完成條件 |
+|---|---|---|
+| P01 | Plan-Creator | 四planning追加最小manifest／判準／九欄，保留A/S與正向live歷史 |
+| P02 | Plan-Reviewer | 獨立明示approved才可實作；不沿用A02核准 |
+| P03a/P03b | Implementer | 各slice開始/完成九欄；新工具/測試/README與允許文件 |
+| P04 | Tester | fake-only PK01–PK06、差異/readonly確認、必要checks；不live |
+| P05 | Reviewer | 獨立source/scope/evidence review，requiredfix完成後明示verdict |
+| P06 | Human | 一次一步ask-question；missing與wrong各新process各一次授權，最多兩次；不讓機密進對話 |
+| P07 | Tester → Reviewer | 安全結果轉錄、來源/限制與分類複核；非通過結果仍如實保留，不因indeterminate自動擴做 |
+| P08 | Implementer → Human | 獨立核可後topiccommit→push→更新原DraftPR61/local真diffPRLens→humanreview；不merge |
+
+Human最多兩次新授權已明確授權；不額外跑positive、不自動重試。若failed token_present或indeterminate，不使用token、不擴跑/改正式契約，記結果與scopegap如適用，再交Human；indeterminate不是passed，也不必為完成文件偽造結論。P06需Human輸入，停在該humanboundary，不讀既有secret。
+
+### TestCase／命令／判準
+
+| ID | 受控驗證與實際結果要求 |
+|---|---|
+| PK01 | missing form沒有code_verifier key；wrong 43字元且challenge不同；每次fixture新state/verifier/challenge/code，不positive或API |
+| PK02 | 正確host/path/GET/state/排他code-error才單次claim；缺失/重複/錯state/重複callback零額外POST；fresh不同、無retry/code reuse |
+| PK03 | fake deadline／timeout／oversize／body／HTTP異常／redirect／proxy/cookie/cache配置及取消cleanup；header8KiB/connection16/read5s/auth5min/response64KiB/POST30s有界 |
+| PK04 | token或mixed/空token值→failed；只pure allowlisted verifier error及2xx/400→passed；bad_verification_code/config/expired/network/unknown/shape/http→indeterminate |
+| PK05 | stdout finite allowlist、getpass-only/noTTY failclosed；unknownerrors不echo；秘密/rawpayload/URL/exception/traceback不落stdout/stderr/磁碟；fake sentinel redaction |
+| PK06 | readonlysource相對d11f343不變；canvasHuman來源與正常login分列；README可重現，兩case新process/一次一步、safe evidence無機密；PRLens真diff/Graphify受限 |
+
+```sh
+python3 -B -m unittest discover -s apps/GitHubSignInVerification/tools -p 'test_pkce_negative_probe.py'
+```
+
+Human在原feature directory的本機terminal依序（每一步前等待Human結果）：
+
+```sh
+python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --case missing
+python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --case wrong
+```
+
+CLI實作/分類/安全界線以technical-spec §8為locked contract。P04只跑fake tests與必要靜態/差異checks；root/consumer/app source未動時沿用既有275/13/9及strict evidence，hooks若執行照實記。新CLI不得產生__pycache__或rawlog證據。長期docs/證據只記安全case/status/分類/布林及來源，不貼callback/任何機密。
+
+Graphify延用0.9.73/no-auto-refresh/無可用圖targetedsource fallback；PRLens0.11.0僅本機scratch真base/head diff validate/render，不上傳、不改repo工具設定。不新建／修改Archify或責任圖，現行canvasHuman通過與filepolicy限制並存，無需重跑視覺工具。
+
+---
+
+
 ## 1. 現行 Goal 與九欄
 
 交付為「正式 OAuth 實作能力＋獨立 GitHubSignInVerification App」。正式 Rivet 產品登入 UI 尚未交付。基線已完成 OAuth，本次只搬移並澄清驗證外殼，不重做正式能力。
@@ -156,3 +246,7 @@ Graphify／PR Lens 是導覽／理解輔助，不是新增 OAuth 業務驗收或
 ## A07 真人驗證狀態（2026-10-21）
 
 以上A03 Non-Goal與AT05的pending是搬移實作當時狀態，不預填遠端通過。現已由Human在來源 `e941d88` 獨立驗證App自行輸入配置並完成授權；agent觀察真實API成功與再次查詢通過，未重新授權。這是既有A07驗收事實，不變更範圍／manifest／contract。反向PKCE、canvas互動、完整遠端refresh/401與全部Human review仍未因此通過；最新來源與歸因見step及verification-host-amendment evidence。
+
+### P06 最新執行狀態（2026-10-21）
+
+以上遠端pending為P01規劃時狀態；現已由Human依固定helper與判準完成missing/wrong各一次新授權/單次交換，兩個安全報告均HTTP400、unknown_error/unknown、無token，結論皆indeterminate，不宣稱PKCE enforcement通過。工具最終SHA659809be53ac21a76e5417fffd9bd082c41cf3c1fe93116d3cb1a6cc32901699（d11f343基線後dirty source），兩case間未修改。總預算2/2已用盡，停止授權與重試，無rawbody可追補；後續診斷需另訂有限契約與新預算。Canvas Human驗收passed，遠端refresh/401本輪不做、保持pending，全部PR Humanreview尚未完成。詳見pkce-negative-verification evidence與step；範圍/manifest/既定判準不變。

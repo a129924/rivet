@@ -1,15 +1,50 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：A07 Human review。
-- Current status：A07 human-check；新host正向live與再次API已觀察通過，其餘Human review／反向PKCE／canvas互動仍pending。
-- Upstream verdict：approved；獨立 Plan-Reviewer 明示 A02 approved，無 required fix（2026-10-20）。
+- Phase／Current step：P08 提交與原Draft PR更新。
+- Current status：Tester evidence-check completed，待P07獨立Reviewer；兩case均indeterminate，總2/2預算已用完。
+- Upstream verdict：P02 approved，獨立Plan-Reviewer明示無required fix。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
 - 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
-- 最後更新：2026-10-21，Tester；依Human協助與主agent實際UI觀察記錄A07新host正向驗收，見 verification-host-amendment.md。
+- 最後更新：2026-10-21，Tester；P07安全報告／分類／來源／readonly／manifest複核完成，交獨立Reviewer；沒有live或新預算。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
-## 現行 amendment ledger
+## P 輪現行 ledger（優先於以下 A/S 歷史）
+
+- 本輪來源d11f343；原feature/branch/PR61、不新建不merge。正常e941d88授權＋再次查詢保留，不重做。遠端refresh/401本輪不做。
+- Human已驗收d11f343 index-v2.html內容/流程/責任、拖曳、縮放可讀、聚焦說明、明暗可讀。此為Human明示事實；agent仍不繞過file-URL policy。以下A/S的canvas pending只代表歷史當時狀態。
+- missing/wrong反向PKCE均已執行且indeterminate；E002判準不能沿用。每case新process、新code、單次POST，總最多兩次授權，不positive/API/retry。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
+|---|---|---|---|---|---|
+| P01 | completed | Plan-Creator | 四planning精確追加manifest/判準/九欄 | 本輪四文件；官方兩來源已讀；只讀基線 | 未自審 |
+| P02 | completed | Plan-Reviewer | 獨立planning判準/安全界線審查 | 獨立Plan-Reviewer明示approved、無required fix | approved |
+| P03a/P03b | completed | Implementer | approved後CLI/tests/README及允許文件，各slice九欄 | P03a/P03b九欄及精確diff；工具21tests，R1關閉 | P02approved |
+| P04 | completed | Tester | fake-only PK01–PK06/必要checks/readonly確認 | pkce-negative-verification.md：最終21tests exit0（含R1）；help/noTTY/syntax/readonly/frozen23/hash/manifest通過 | 不live，不代P05核准 |
+| P05 | completed | Reviewer | 獨立review/required fixes完成 | 獨立Reviewer approved；R1已關閉，21tests通過 | approved |
+| P06 | completed | Human | 一次一步missing/wrong各fresh授權單POST | missing/wrong各1/1；兩者HTTP400 unknown_error/unknown、無token，均indeterminate | 總2/2用完，不retry或改判 |
+| P07 | completed | Tester → Reviewer | 記錄安全結果並獨立複核分類/來源/限制 | Tester已完成安全報告/來源/分類/預算/readonly核對，見pkce-negative-verification.md | 待獨立Reviewer；兩case indeterminate，不passed |
+| P08 | in-progress | Implementer → Human | review後commit/push/更新原DraftPR61/local真diffmap→humanreview | 待真SHA/URL/map | user已授權，不merge |
+
+### P 輪 Blockers／Human Check
+
+P02已獨立approved，無required fix；不沿用歷史A02。Canvas現行Human視覺已通過但browser policy限制未解除。反向兩case只有P05核可後交Human本機terminal以getpass自行輸入，逐步等待；秘密不進對話。未知error、generic bad_verification_code、timeout/expired/config不算passed；有token即failed並丟棄，不使用、不增加第三次授權。遠端refresh/401、跨重啟及完整PR human review仍未驗證／完成，不自動升級。
+
+### P01 九欄完成交接
+
+- In-Scope：四planning追加反向PKCE工具受限manifest與判準、記canvasHuman已驗收來源。
+- Out-Of-Scope：實作/測試/live/Git操作、正式SwiftApp及OAuth/實驗改動。
+- ReadOnly：既有文件/四planning、d11f343來源、官方授權及token錯誤文件。
+- Written：無新repository檔案。
+- Deleted：無。
+- Modify：analysis/github-first-sign-in/requirements.md；analysis/github-first-sign-in/technical-spec.md；plan/github-first-sign-in/github-first-sign-in.plan.md；plan/github-first-sign-in/github-first-sign-in.step.md。
+- Goal：給獨立Plan-Reviewer完整最小追加契約。
+- Non-Goal：不宣稱工具/反向驗證完成或planning approved；不重做正常login/remote refresh。
+- TestCase：未執行；PK01–PK06交Tester、遠端missing/wrong保持pending。
+
+---
+
+## A 輪歷史 amendment ledger
 
 Human 已確認「正式 OAuth 實作能力＋獨立 GitHubSignInVerification App」；正式 Rivet 產品登入 UI 尚未交付。舊host命名與產品交付說法由此決策取代，以下歷史區保留作來源，不構成現行執行契約。
 
@@ -204,3 +239,103 @@ In-Scope：AT01–AT05；Out-Of-Scope：code/Git/live/其他worktree；ReadOnly�
 Human自行輸入配置與完成OAuth；主agent以CUA觀察獨立GitHubSignInVerification初次真/user成功且身分欄位有效，並操作再次查詢，AX確認apiSuccess=true、busy=false、knownFailure=false，未重新授權。來源e941d88；既有VerificationHostDerivedData測試後build的產品source與該版本一致，正常模式，非重建新build。詳見amendment evidence的A07。
 
 Tester本輪只記錄明示結果，不跑測試、不操作live app、不改code或Git；只修改本step與verification-host-amendment.md，不保存任何身分或機密值。新host正向與再次查詢observed passed；反向PKCE／遠端refresh與401／canvas互動／全部Human review維持pending，不代Reviewer核准。
+
+## P03a 開始九欄（Implementer）
+
+- In-Scope：獨立stdlib negative CLI、fake tests及README。
+- Out-Of-Scope：Swift／正式能力／實驗／正常login/API/refresh/401、新module。
+- ReadOnly：d11f343的全部既有code、圖、experiments及工具設定。
+- Written：apps/GitHubSignInVerification/tools/pkce_negative_probe.py；同目錄test_pkce_negative_probe.py、README.md。
+- Deleted：無。
+- Modify：step本次狀態；不改任何既有source。
+- Goal：missing/wrong各fresh單POST、安全TTY輸入與failclosed分類。
+- Non-Goal：不把mock pass當遠端PKCE通過；兩case live仍pending。
+- TestCase：PK01–PK06；先新增代表性red，再完整受控green，交獨立Tester。
+
+## P03b 開始九欄（Implementer）
+
+- In-Scope：現行canvas Human五項passed紀錄、工具命令/安全判準與來源。
+- Out-Of-Scope：改frozen圖、重做live/API、記機密或代Human未做結果。
+- ReadOnly：所有圖與既有歷史結果。
+- Written：plan/github-first-sign-in/evidence/pkce-negative-verification.md。
+- Deleted：無。
+- Modify：P manifest指定四planning、docs/architecture/github-first-sign-in.md、diagrams/github-first-sign-in的visual-review.md/BUILD.md/tool-evidence.md、evidence/verification-host-amendment.md；入口四docs僅實際結果/限制同步。
+- Goal：canvasHuman來源d11f343與helper受控/遠端層級分明。
+- Non-Goal：尚未執行negative，不預填passed；remoteRefresh/401保持pending。
+- TestCase：PK06 source/manifest/證據核對；圖不重生。
+
+## P03a 完成九欄（Implementer）
+
+- In-Scope：獨立CLI、fixturetests與README實作完成。
+- Out-Of-Scope：未改正式Swift/GitHubIntegration/experiments，未live/positive/API/refresh/401。
+- ReadOnly：d11f343既有source/project/tests/frozen圖/設定。
+- Written：tools/pkce_negative_probe.py、test_pkce_negative_probe.py、README.md三個精確manifest新檔。
+- Deleted：無。
+- Modify：只有step進度，無舊產品source diff。
+- Goal：missing真的omit；wrong43字元且challenge不同；獨立fresh/singlePOST、TTYhidden、boundedcallback/HTTP與failclosedreport已受控驗證。
+- Non-Goal：受控green不代表GitHub遠端通過。
+- TestCase：20tests green，red為新module未存在；中間fixture問題與最終sourceSHA見pkce-negative-verification.md。交獨立Tester。
+
+## P03b 完成九欄（Implementer）
+
+- In-Scope：canvasHuman結果及CLI說明/限制/來源。
+- Out-Of-Scope：未改圖、未讀秘密或代填遠端結果。
+- ReadOnly：所有frozen圖與先前evidence結果。
+- Written：evidence/pkce-negative-verification.md。
+- Deleted：無。
+- Modify：docs/architecture/github-first-sign-in.md；圖目錄visual-review.md/BUILD.md/tool-evidence.md；evidence/verification-host-amendment.md；四planning依自身與外部事實更新。
+- Goal：Human canvas五項passed來源d11f343，舊pending保留為歷史；helper/遠端/完整Humanreview分層。
+- Non-Goal：missing/wrong live仍pending，完整遠端refresh/401本輪不做。
+- TestCase：PK06差異/manifest/source核對待Tester；圖無生成或修改。
+
+## P04 獨立 Tester 完成九欄
+
+- In-Scope：PK01–PK06受控測試、CLIhelp/noTTY、syntax、hash、manifest／readonly／no-pycache。
+- Out-Of-Scope：真OAuth/live App/秘密/遠端refresh401/Git/其他worktree。
+- ReadOnly：工具source與全部正式source/tests/project/experiments/frozen圖。
+- Written：無；-B無bytecode。
+- Deleted：無。
+- Modify：evidence/pkce-negative-verification.md與本step自身結果。
+- Goal：獨立可核對的受控與範圍證據交P05。
+- Non-Goal：不核准自己的產出、不代Human執行或判missing/wrong通過。
+- TestCase：20tests exit0；help0、無TTY兩case2且有限安全輸出/無stderr；syntax／readonly／23frozen／manifest通過，pycache0。正式Swift未變沿用275/13/9歷史，未跑hooks。CLI SHA與P03交接一致，詳見evidence。
+
+P06 missing/wrong各0/1仍pending；完整遠端refresh401本輪不做。受控結果不等於P05approved或遠端GitHub通過。
+
+## P03a R1 原slice回修九欄（Implementer）
+
+- In-Scope：P05唯一required fix：阻止getpass echo失敗降級明文，first/second prompt fixture驗證。
+- Out-Of-Scope：新需求、正式能力或任何live操作。
+- ReadOnly：全部既有Swift/圖/experiments，原manifest不變。
+- Written：無額外新檔。
+- Deleted：無。
+- Modify：tools/pkce_negative_probe.py及test_pkce_negative_probe.py；本帳本與pkce-negative-verification.md自身事實。
+- Goal：getpass warning立即中止，不開瀏覽器或授權、不echo/traceback。
+- Non-Goal：不宣稱Reviewer已複核或真人PKCE通過。
+- TestCase：root21tests green；新SHA與原因見evidence，交獨立Tester定點重驗再P05複核。兩Human預算尚未使用。
+
+### P04/P05 R1 getpass fallback 獨立重驗
+
+Tester親跑完整21tests exit0（含first/second getpass fallback warning不可進run_case）；無TTY missing/wrong各exit2、安全JSON、stderr空；ASTsyntaxpass、pycache0。CLI最終SHA659809be53ac21a76e5417fffd9bd082c41cf3c1fe93116d3cb1a6cc32901699，工具指紋與來源分層見pkce-negative-verification.md；修前20tests/hash保留歷史。
+
+只Modify該evidence與本step，ReadOnly工具與正式source，Written/Deleted無；Goal是R1獨立證據交P05，Non-Goal是不代核准或真OAuth。沒有live、Git或Human預算消耗，兩case各0/1仍pending。其餘未變範圍不擴測。
+
+## P05 外部核准／P06 起點
+
+獨立Reviewer明示approved，R1已關閉。兩次getpass禁止明文fallback，first/second warning tests與Tester21tests/noTTY安全退出通過。可逐步交Human執行；helper SHA659809be53ac21a76e5417fffd9bd082c41cf3c1fe93116d3cb1a6cc32901699固定，不在兩case間改判準。此刻missing/wrong皆0/1，啟動等待TTY不等於已授權；必須收到Human實際結果後記錄，不預填通過。
+
+## P06 missing 已執行
+
+2026-10-21，Human安全JSON：fresh/callback_claimed/single_exchange/omitted皆true，HTTP400、remote_rejected=true、token_present=false、unknown_error/unknown。按固定判準indeterminate，不當成PKCE通過。helper SHA未變。missing預算1/1已用盡，不重跑、不重用code；wrong預算0/1，下一步獨立新process。完整結果待P07 Tester／Reviewer複核。
+
+## P06 wrong／Human執行結束
+
+2026-10-21，Human安全JSON：fresh/callback_claimed/single_exchange/wrong_challenge_differs皆true、omitted=false，HTTP400、remote_rejected=true、token_present=false、unknown_error/unknown。按既定判準indeterminate；missing/wrong各1/1，總2/2預算用盡，停止新授權，不重用code、不增加第三次。Helper SHA659809be...1699未改，兩case之間沒有改程式或allowlist。原因無法從安全unknown分類追補，不索取raw body或機密；後續若需診斷另定契約/預算。本輪執行與紀錄可交付，不等於PKCE結論已通過，完整遠端refresh/401與全部Human review仍pending。
+
+## P07 Tester 脫敏複核完成
+
+In-Scope：兩safeJSON與既定分類/來源/預算/manifest最小核對；Out-Of-Scope：live/全測試/App秘密/Git/工具改動；ReadOnly：工具與正式source及docs；Written/Deleted：無；Modify：pkce-negative-verification.md與本step；Goal：交P07Reviewer可核對證據；Non-Goal：不代核准、不歸因unknown；TestCase：轉錄與safeJSON一致，最終SHA與P05一致，readonlydiff空/manifest內/pycache0。missing及wrong皆HTTP400 unknown_error/unknown、無token，均indeterminate；各1/1總2/2用完，不再授權或重試。詳見evidence；獨立Reviewer尚待明示結果。
+
+## P07 外部最終 verdict／P08 開始
+
+獨立Reviewer明示approved、無required fix：兩safe report依事前固定判準均indeterminate，未將HTTP400/remoteRejected當PKCE通過；來源/歸因/各1/1總2/2預算與未知原因限制一致，無機密，舊結果未改。只允許按既有授權提交紀錄與更新原DraftPR61；不再授權/重試/擴判準，不merge，停Humanreview。

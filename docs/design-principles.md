@@ -33,4 +33,4 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 
 `GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
 
-2026-10-21，Human 在來源版本 `e941d88` 的獨立驗證 App 完成真實授權；agent 觀察實際 API 成功與同程序再次查詢成功。舊版 `e63eeb2` 證據另保留；反向 PKCE、完整遠端 refresh／401 與持久化仍未因此驗證。詳見 [首次 OAuth 契約](architecture/github-first-sign-in.md)。
+2026-10-21，Human 在來源版本 `e941d88` 的獨立驗證 App 完成真實授權；agent 觀察實際 API 成功與同程序再次查詢成功。舊版 `e63eeb2` 證據另保留；現行 canvas v2 的人工互動已通過。2026-10-21 反向 PKCE missing／wrong 各執行一次，均 HTTP400 拒絕但原因 unknown，兩者結論皆無法判定；完整遠端 refresh／401 本輪不執行，持久化亦未因此驗證。詳見 [首次 OAuth 契約](architecture/github-first-sign-in.md)。

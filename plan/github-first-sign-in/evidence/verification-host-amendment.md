@@ -69,3 +69,11 @@ Human 自行輸入 OAuth App 配置並完成瀏覽器授權，只回報靜態 ca
 - 全部 Human review、merge 或 topic 完成：未宣稱通過。
 
 本次只更新本 evidence 與 step 的 A07 事實，不新增實作、manifest 或 gate，不更改歷史測試與審查結果；未執行測試、build、Git mutation，不保存帳號、Client ID、secret、callback URL、code、state、token 或 screenshot。
+
+## 2026-10-21 Canvas Human 驗收補充
+
+Human自行開啟當前文件所連index-v2.html，來源d11f343；內容/流程/責任、拖曳、縮放可讀、聚焦說明、明暗兩主題逐步明示passed。agent未重新自動實看，未繞過既有URLpolicy，圖檔未變。此補充不改A04/A05當時pending事實；反向PKCE見獨立新證據，遠端refresh/401本輪不做。
+
+## 2026-10-21 反向 PKCE 本輪結果
+
+Missing與wrong已依獨立helper、固定判準各執行一次新授權及單POST，Human安全報告皆HTTP400／remote_rejected=true／token_present=false／unknown_error。兩者均無法判定PKCE原因，總2/2預算用盡，未重試/重用code/保存rawbody或機密。詳細來源與限制見pkce-negative-verification.md；本輪無新增正常登入/API或遠端refresh/401，後者仍pending。

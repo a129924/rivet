@@ -32,3 +32,9 @@ Hosted TestAction 使用 `GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1`；entry 
 現行 [責任 canvas v2](diagrams/github-first-sign-in/index-v2.html) 與 [授權 sequence v3](diagrams/github-first-sign-in/authorization-sequence-v3.html) 反映驗證 host。舊 frozen 圖原樣保留為歷史來源，不作現行產品事實；[工具／視覺限制](diagrams/github-first-sign-in/visual-review.md) 分列自動檢查與實看。
 
 持久化／DPK／跨重啟及正式產品 host 的後續整合另行規劃，不假定驗證 host 就是產品。四份 planning 與本次精確搬移契約見 `analysis/github-first-sign-in/`、`plan/github-first-sign-in/`。
+
+## 現行 canvas 與反向 PKCE 驗證（2026-10-21）
+
+Human已自行開啟來源d11f343的現行canvas v2，逐步確認文字/箭頭及責任邊界、拖曳、縮放可讀、點選聚焦/說明、明暗切換皆通過。圖與frozen來源未修改，agent未繞過browser URL policy；先前工具限制與歷史pending保留。
+
+反向PKCE只使用驗證App旁的[獨立CLI](../../apps/GitHubSignInVerification/tools/README.md)，不改正式OAuth／SwiftApp，不擴張public API。missing/wrong各一個新process、新code及單POST，不重做正向/API；Human本機TTY隱藏輸入配置。固定allowlist以外均不冒稱PKCE通過，generic bad_verification_code無法歸因。2026-10-21已依序執行missing與wrong，各新process／一次授權／單次POST；Human安全報告均HTTP400、remote_rejected=true、token_present=false、unknown_error/unknown，按固定判準皆無法判定，不宣稱PKCE enforcement通過。兩次預算已用盡，未保存原body/description，不能追補原因或事後改allowlist，不重試。結果見[脫敏證據](../../plan/github-first-sign-in/evidence/pkce-negative-verification.md)。完整遠端refresh/401本輪不執行、保持pending。

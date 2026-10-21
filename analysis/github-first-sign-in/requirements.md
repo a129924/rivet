@@ -66,3 +66,21 @@ GitHub 官方：[OAuth authorization／offline_access／S256／loopback／secret
 - 共用 RivetPresentation 不再公開或包含 GitHubConnectionView／GitHubConnectionPresentation；PR Inbox Presentation 原樣保留。
 - root／consumer／app build-test、適用 format／lint 通過；正式 OAuth 與既有 lifecycle source 不因搬移改變。
 - 文件、精確 rename/delete manifest、修訂圖及原 Draft PR 如實反映「正式 OAuth 能力＋獨立驗證 App」，不宣稱正式產品登入 UI 已交付。
+
+## P 輪現行追加範圍（2026-10-21，優先於較舊 pending 敘述）
+
+本輪來源 `d11f343`；沿用 feat/github-first-sign-in、原 feature worktree 與 Draft PR #61，不建新 worktree／PR、不 merge。既有正式 OAuth、獨立驗證 App 及 `e941d88` 正常授權／再次 API 已完成，不重做。正式 Rivet 產品登入 UI 仍未交付。
+
+Human 已針對現行 `index-v2.html`／來源 `d11f343` 明示：內容／流程／責任可接受、拖曳正常、縮放可讀、聚焦說明正常、明暗皆可讀。這是 Human canvas 驗收，不是 agent 已取得 file-URL 瀏覽權限；既有 browser policy 不繞過。前文 canvas pending 屬歷史狀態。
+
+本輪 Goal：先保存上述 canvas Human 結果，再以獨立、Python standard-library CLI 準備及執行 missing／wrong verifier 反向 PKCE；每 case 獨立新程序／新授權／新 code／單次交換，結果分別為 passed、failed 或 indeterminate。最多兩次新授權，不自動重試；遠端 refresh／401 本輪明確不做。
+
+新增工具置於驗證 App 旁 tools，不新增 shared module、experiment topic、正式 bypass 或 Swift App 功能。正式 session 不提供 negative 開關。機密只由 Human 在本機終端以 getpass 輸入，agent 不讀取既有配置、secret 或先前 callback/code/state。
+
+反向通過必須是沒有 token 的純 OAuth error、HTTP 2xx／400，且明確 verifier-specific 分類。generic bad_verification_code 只代表 GitHub 拒絕，PKCE 原因無法判定；expired／network／config／未知錯誤不算通過。任何 access／refresh token 回傳均為該 negative case failed，立即丟棄、不使用、不呼叫 API。
+
+驗收 PK01–PK06 及精確 manifest 見 plan P 輪 amendment。Human 每次只處理一步；新 missing／wrong 遠端結果仍 pending，不用正常登入或舊 E002 代填。既有全部 Human review、跨重啟與遠端 refresh／401 未驗證項目仍如實保留。
+
+### P06 最新執行狀態（2026-10-21）
+
+以上遠端pending為P01規劃時狀態；現已由Human依固定helper與判準完成missing/wrong各一次新授權/單次交換，兩個安全報告均HTTP400、unknown_error/unknown、無token，結論皆indeterminate，不宣稱PKCE enforcement通過。工具最終SHA659809be53ac21a76e5417fffd9bd082c41cf3c1fe93116d3cb1a6cc32901699（d11f343基線後dirty source），兩case間未修改。總預算2/2已用盡，停止授權與重試，無rawbody可追補；後續診斷需另訂有限契約與新預算。Canvas Human驗收passed，遠端refresh/401本輪不做、保持pending，全部PR Humanreview尚未完成。詳見pkce-negative-verification evidence與step；範圍/manifest/既定判準不變。
