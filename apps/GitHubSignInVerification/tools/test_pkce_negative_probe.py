@@ -996,5 +996,73 @@ class SemanticStderrBoundaryTests(unittest.TestCase):
             child.stderr.close()
 
 
+
+class InstalledTranslationCoreTests(unittest.TestCase):
+    # Controlled stubs only; never invoke the installed engine or read independent holdout.
+    def test_private_core_bounds_timeout_cancellation_and_late_result(self):
+        source = Path(probe.__file__).with_name("pkce_semantic_review.swift").read_text()
+        core = source.split("// V_NORMAL_ENTRY", 1)[0]
+        harness = r"""
+func delayedSyntheticResult() async -> LocalTranslationResult {
+  await withCheckedContinuation { continuation in
+    DispatchQueue.global().asyncAfter(deadline: .now() + 0.04) {
+      continuation.resume(returning: LocalTranslationResult(status: "translated", text: "受控合成文字。"))
+    }
+  }
+}
+Task {
+  var checks: [String: Bool] = [:]
+  checks["valid_chinese"] = translatedTextAllowed("受控合成文字。")
+  checks["empty_rejected"] = !translatedTextAllowed("   ")
+  checks["limit_rejected"] = !translatedTextAllowed(String(repeating: "中", count: 2731))
+  checks["url_rejected"] = !translatedTextAllowed("https://example.invalid")
+  checks["bidi_rejected"] = !translatedTextAllowed("中\u{202e}文")
+  checks["control_rejected"] = !translatedTextAllowed("中\n文")
+  checks["opaque_rejected"] = !translatedTextAllowed(String(repeating: "x", count: 24))
+  let valid = await translateForReview("Controlled source.", operation: { _ in
+    LocalTranslationResult(status: "translated", text: "受控合成文字。")
+  })
+  checks["controlled_translation"] = valid.status == "translated"
+  let bad = await translateForReview("Controlled source.", operation: { _ in
+    LocalTranslationResult(status: "translated", text: "https://example.invalid")
+  })
+  checks["controlled_invalid_rejected"] = bad.status == "translation_failed" && bad.text.isEmpty
+  let timed = await translateForReview("Controlled source.", seconds: 0.005, operation: { _ in
+    await delayedSyntheticResult()
+  })
+  checks["deadline_not_waiting_for_worker"] = timed.status == "timed_out" && timed.text.isEmpty
+  try? await Task.sleep(for: .milliseconds(60))
+  checks["late_did_not_replace_result"] = timed.status == "timed_out" && timed.text.isEmpty
+  let task = Task {
+    await translateForReview("Controlled source.", operation: { _ in await delayedSyntheticResult() })
+  }
+  task.cancel()
+  let cancelled = await task.value
+  checks["cancelled_no_text"] = cancelled.status == "cancelled" && cancelled.text.isEmpty
+  let invalidSource = await translateForReview(String(repeating: "x", count: 4097), operation: { _ in
+    LocalTranslationResult(status: "translated", text: "不應使用。")
+  })
+  checks["source_limit"] = invalidSource.status == "translation_failed" && invalidSource.text.isEmpty
+  FileHandle.standardOutput.write(try! JSONSerialization.data(withJSONObject: checks))
+  exit(checks.values.allSatisfy { $0 } ? 0 : 1)
+}
+dispatchMain()
+"""
+        with tempfile.TemporaryDirectory(prefix="rivet-translation-core-") as folder:
+            path = Path(folder) / "main.swift"
+            path.write_text(core + harness)
+            binary = str(Path(folder) / "core-tests")
+            compiled = subprocess.run(["/usr/bin/xcrun", "swiftc", "-swift-version", "6", str(path), "-o", binary],
+                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=30)
+            self.assertEqual(compiled.returncode, 0, "controlled core harness compile failed")
+            result = subprocess.run([binary], stdin=subprocess.DEVNULL,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=5)
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.stderr, b"")
+        checks = json.loads(result.stdout)
+        self.assertEqual(len(checks), 13)
+        self.assertTrue(all(value is True for value in checks.values()))
+
+
 if __name__ == "__main__":
     unittest.main()

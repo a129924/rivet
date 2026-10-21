@@ -102,3 +102,7 @@ Helper停用文字選取/編輯/自動偵測、空白app menu、不提供copy/ex
 ### U06 最新結果：停止校準與 live
 
 來源 `f420901a1076537c4f7aa0404fe31509b8bdc889`。Human已完成正式16-case offline calibration；獨立Tester核frozenSHA／16唯一映射後，decisive6/9、abstain2/7，未達9/9＋7/7，calibration_threshold_met=false。U06 completed-not-qualified，方法needs-rework、停Human；此前pending是執行前狀態，不是重跑指示。Human不懂英文是方法語言前提未滿足，不是使用者過失。不要再執行上面的16-case命令，不改fixture／labels、不新增UI/code/OAuth。57controlledpass／U05codeapproved仍成立，不能放行live或當OAuthbug／PKCEfailed；獨立Reviewer結果處置approved只限文件記錄與停止。smoke受手動操作中止、不是16case；R→T1/1已耗盡與本輪新OAuth0不變。Human最新已同意本機繁中offline候選及Apple on-device元件讀gate後description，但所需語言資產未齊、目前不可用；Human已同意自行下載，待完成回報才重查；既有inventory仍supported非installed，未翻譯／下載／新查，live未授權、OAuth0，機譯不能proof。
+
+## V：研究core已保留，中文入口未交付
+
+V03新fixture已獨立approved／frozen；V04a只保留installed-only translator core與compile-time固定fixture runner作研究證據，正常binary無dump、CLI未改。V05a唯一真引擎序列16/16技術成功（2.646s、exit0、stderrfalse），58受控／compile／strict通過；獨立V06a語義fidelity failed／needs-rework，至少8處術語／角色失真，不編造精確語義通過數。另一次bounded code Reviewer approved、無required fix／不需額外驗證，僅研究工具code，不推翻fidelity失敗。中文GUI／CLI／Human校準未執行且停止，不宣稱繁中能力已交付。語言包installed、OAuth新增0；U06／PQRT／App/API/canvas歷史保留。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。 本輪沒有可操作的繁中校準命令，計畫中的 `--calibrate-semantic-review-zh` 未實作，不要執行或重試引擎16例。test-only runner只能編譯條件下讀唯一新fixture／frozenSHA／空stdin，不是通用dump或live入口。原scratch產物不可讀且無原bytes hash，當次實際synthetic譯文由Tester工具輸出直接交Reviewer，不能宣稱原產物目前可稽核或追補。

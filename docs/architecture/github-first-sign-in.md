@@ -58,3 +58,7 @@ Human指示續行後，獨立CLI新增實際browserURL/HTTP prepared Request被�
 ### U06 最新結果：方法未達資格，停止 live
 
 來源 `f420901a1076537c4f7aa0404fe31509b8bdc889`。獨立 Tester 已核對 frozen fixture SHA／16 個唯一映射，正式 offline 校準為 decisive **6/9**、abstain **2/7**，未達 9/9＋7/7，`calibration_threshold_met=false`；U06 completed-not-qualified，方法 needs-rework，停 Human 決策。Human 明示不懂英文，屬方法語言前提未滿足，不是使用者過失。獨立 Reviewer 的結果處置 approved 僅准文件記錄與停止；57 項受控測試與原 U05 code approved 保留，不放行 live、不代表正式 OAuth bug 或 PKCE failed。先前 pending 是執行前歷史；smoke 是另一次受手動操作中止的事件，不算這 16 cases。新 OAuth=0、R→T1/1 已耗盡與正常 App/API/canvas／P/Q/R/T 歷史不變。不改 frozen fixture、不重跑16、不新實作；Human最新已同意本機繁中offline候選，但語言資產未齊、目前不可用；Human已同意自行下載，待完成回報才重查；既有inventory仍supported非installed，未翻譯／下載／新查，live仍未授權。[安全結果](../../plan/github-first-sign-in/evidence/pkce-semantic-review.md)。
+
+## V：實際研究結果與停止
+
+V03新fixture已獨立approved／frozen；V04a只保留installed-only translator core與compile-time固定fixture runner作研究證據，正常binary無dump、CLI未改。V05a唯一真引擎序列16/16技術成功（2.646s、exit0、stderrfalse），58受控／compile／strict通過；獨立V06a語義fidelity failed／needs-rework，至少8處術語／角色失真，不編造精確語義通過數。另一次bounded code Reviewer approved、無required fix／不需額外驗證，僅研究工具code，不推翻fidelity失敗。中文GUI／CLI／Human校準未執行且停止，不宣稱繁中能力已交付。語言包installed、OAuth新增0；U06／PQRT／App/API/canvas歷史保留。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。 原scratch JSONL不可再讀、未量測原bytes SHA，Reviewer依據Tester同次工具輸出直接轉交的synthetic譯文，非reference重建；不追補。[證據界線](../../plan/github-first-sign-in/evidence/pkce-semantic-review.md)。

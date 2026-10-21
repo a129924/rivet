@@ -5,6 +5,27 @@
 - Branch：`feat/github-first-sign-in`；base／Draft PR target：`dev`。
 - 配對：[technical-spec](technical-spec.md)、[plan](../../plan/github-first-sign-in/github-first-sign-in.plan.md)、[step](../../plan/github-first-sign-in/github-first-sign-in.step.md)。
 
+## V：本機繁中 synthetic 驗證與校準（現行規劃，待獨立審查）
+
+沿原 feature／branch／DraftPR61，基線 `fbbc2fb0`。Human 已明確同意新增 Apple on-device 元件讀 gate 後 description，僅本機繁中 offline 方案及驗證；原文／譯文僅本機記憶體短暫處理，live 不向 agent／Reviewer／CUA 顯露或保存，不雲端／不自下載。新增 OAuth=0，正式 Swift／public contracts／v3 grammar／proof／outcome 不變。
+
+Human 回報下載完成後，外部 Tester 以同一 inventory source 重查 en→zh-Hant／en→zh-TW，均 installed，compile/run exit0、stderrfalse；未 session／translate／UI／OAuth。這取代先前資產待下載的當時狀態，只證前置資產就緒，不是機譯忠實或方法通過。
+
+Goal：先用全新 bilingual synthetic holdout 與真 on-device engine 驗證語義忠實，通過才接上可操作的繁中 offline 校準入口，讓 Human 只讀中文。中文畫面固定標示「本機機器翻譯／非遠端證明」，不以英文fallback、不責怪Human。技術／protocol／隱私集中 [technical-spec V 節](technical-spec.md)，manifest／九欄／先後見 [plan V 節](../../plan/github-first-sign-in/github-first-sign-in.plan.md)。
+
+機譯 gate 是16/16語義忠實，非逐字相同或模板命中；Human 將來另明確操作新的9/9 decisive＋7/7 unknown校準，兩者分別記錄。任一引擎不可用／錯誤／失真即停，不接GUI、不請Human、不改ref／label配合；通過也不放行live、不當PKCEproof。
+
+本輪僅四planning Modify，Written／Deleted0，V02獨立approved前不改toolcode／不建新fixture。U06舊英文16／6/9＋2/7未qualified、57controlled／原codeapproval、P/Q/R/T未知與R→T1/1耗盡、正常App/API/canvaspassed全部保留，不沿用或翻譯舊16來過門檻。六份他人Appdirty不碰；不新worktree／PR／merge。新live／OAuth一概未授權。
+
+### V 最新外部狀態紀錄
+
+外部獨立Plan-Reviewer已明示V02 approved、無required fix，可由V03起續行，無額外offline停點。V03獨立Tester造新fixture in-progress；V04a Implementer core／runner in-progress，可並行且不依賴labels，但真翻譯必等V03 Reviewer核標freeze。V04b GUI仍pending，必等V06a16/16 fidelity明示approved。OAuth0，技術／manifest不變；此為外部事實登錄，不是新增quality結論。
+
+
+### V 本輪實際結果（優先於先前in-progress／pending）
+
+V03新fixture已獨立approved／frozen；V04a只保留installed-only translator core與compile-time固定fixture runner作研究證據，正常binary無dump、CLI未改。V05a唯一真引擎序列16/16技術成功（2.646s、exit0、stderrfalse），58受控／compile／strict通過；獨立V06a語義fidelity failed／needs-rework，至少8處術語／角色失真，不編造精確語義通過數。另一次bounded code Reviewer approved、無required fix／不需額外驗證，僅研究工具code，不推翻fidelity失敗。中文GUI／CLI／Human校準未執行且停止，不宣稱繁中能力已交付。語言包installed、OAuth新增0；U06／PQRT／App/API/canvas歷史保留。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。 這是先驗機譯方法未達門檻，不是Human過失、正式OAuthbug或PKCEfailed；不以installed／16translated／受控tests當語義或Humanpassed。原scratch JSONL不可再讀且無原bytes hash，結果來源限Tester當次工具輸出直接轉交Reviewer的實際synthetic譯文，不能重建／追補。AI reader只獲規劃授權，不作實際揭露或傳遞契約已核准。
+
 ## U：Human-only 語義 review（規劃來源保留；現行實作事實見本節末）
 
 來源 `9f603f81d77040a2e06ad178062e8cfecc4de468`，沿用原 feature worktree／branch／Draft PR61。Human 已接受本機原文可見性的殘餘風險，僅同意方案進入規劃；初步獨立方案複核的四項 fixes 滿足不等於本輪 formal planning 或 implementation approval。

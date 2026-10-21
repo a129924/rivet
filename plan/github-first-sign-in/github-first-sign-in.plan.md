@@ -6,6 +6,96 @@
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
 
+## V：繁中 synthetic／offline 校準受限計畫（現行；V02 pending）
+
+原feature／feat/github-first-sign-in／DraftPR61，基線fbbc2fb0，不新worktree／PR／merge。技術集中 [technical-spec V](../../analysis/github-first-sign-in/technical-spec.md)。Human已同意本機繁中offline；installed前置已由外部Tester核實，不當語義pass。現在V01只Modify四planning、Written/Deleted0；V02獨立approved前不改工具／新fixture。U06舊16／6/9＋2/7及57tests／P/Q/R/T與App/canvas原證據保留，OAuth0。
+
+### V 精確候選 manifest（只在 V02 後分slice授權）
+
+Modify11（每項精確檔，不是目錄授權）：
+
+1. `apps/GitHubSignInVerification/tools/pkce_negative_probe.py`
+2. `apps/GitHubSignInVerification/tools/test_pkce_negative_probe.py`
+3. `apps/GitHubSignInVerification/tools/pkce_semantic_review.swift`
+4. `apps/GitHubSignInVerification/tools/README.md`
+5. `analysis/github-first-sign-in/requirements.md`
+6. `analysis/github-first-sign-in/technical-spec.md`
+7. `plan/github-first-sign-in/github-first-sign-in.plan.md`
+8. `plan/github-first-sign-in/github-first-sign-in.step.md`
+9. `README.md`
+10. `docs/architecture/github-first-sign-in.md`
+11. `plan/github-first-sign-in/evidence/pkce-semantic-review.md`（只追加V，不改既有U／歷史段落）
+
+Written1：`apps/GitHubSignInVerification/tools/fixtures/semantic-review-zh-v1.json`（獨立Tester建／Reviewer先核freeze，Implementer只schema/hash）。Deleted0。正式source/API、App/tests、rootpackage、舊Englishfixture、過去evidence段落／frozen圖、他topic及6他人Appdirty全部readonly；不讀寫／暫存／還原外部dirty。譯文runner binary／synthetic檢查輸出僅外部scratch，不加repo檔；語義收據在既有evidence追加。任何未列path先回修計畫。
+
+### V 路由：先真引擎語義，再UI，沒有新增Human批准停點
+
+| ID | Owner role | 完成條件／允許子集 |
+|---|---|---|
+| V01 | Plan-Creator | 只四planning新增V契約，現在完成後交V02，不自審 |
+| V02 | Plan-Reviewer | 獨立approved才V03；formal verdict pending |
+| V03 | Tester→Reviewer | 建新bilingual16，核source/ref/labels/schema後freeze／交schema+SHA；只新fixture與自身evidence/step |
+| V04a | Implementer | helper同一translate function＋固定synthetic-only runner／controlled接點；必要CLI test、helper、自身evidence/step；不先接ChineseGUI |
+| V05a | Tester | 先真on-device runner16序列／每例一次／無retry／360秒總watchdog、不開GUI；輸出只新frozen synthetic給Reviewer |
+| V06a | Reviewer | 獨立逐例fidelity16/16及translator來源核查，明示approved才V04b；一例失真／錯誤／未ready停止，不請Human／不改標 |
+| V04b | Implementer | 在既定工具內完成v2UI／Chinese CLI與tests，再更新指定docs；不得讀holdout答案 |
+| V05b | Tester | 完整controlled／strictformat／lint／v1回歸／privacy與protocol；不自動開Human校準 |
+| V06b | Reviewer | 獨立code／scope／安全／實際fidelity與evidence；fixes回原bounded slice→Tester→Reviewer |
+| 工具交付 | Implementer | requiredfixclosed後依原topic授權commit/push原Draft61／local bounded PR Lens，不新增發布批准停點、不merge |
+| V07 | Human；Tester記錄 | 明確操作 `python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review-zh`，只中文新9+7；現在pending、不自動啟動 |
+
+V05a有技術失敗立即停；V06a發現語義失真停後續，不浪費接GUI／再請Human。先驗成功也不預填V05b/V06b或Human達標。任何live／OAuth／新code授權均0，舊英文16不重跑、不當V成績。
+
+### 每個 slice 開始／完成都必須同九欄
+
+- In-Scope：列該row責任、技術節與精確manifest子集；不得把整mission任改。
+- Out-Of-Scope：live/OAuth／正式Swift契約／任意語言／雲端下載／舊16改標或重判／他人dirty。
+- ReadOnly：正式source/App/tests／舊fixture／歷史evidence／圖／他topic與非本slice檔案；V03freeze後fixture也readonly。
+- Written：planned與actual分列；只有V03可建唯一新fixture，Implementer不能建立標準答案。
+- Deleted：0。
+- Modify：開始逐檔列必要子集，完成記實際diff與來源；本輪V01只有四planning。
+- Goal：該階段可觀察結果／gate；先translator fidelity再UI，不把不同層級證據互代。
+- Non-Goal：不怪Human、不把機譯／controlled／inventory當proof／遠端／Humanpassed，不保證全機無網路／任意秘密偵測／OSzero。
+- TestCase：VT IDs、synthetic/實際引擎/Human層級、命令／SHA／結果；未執行與已通過分開，不放expectedlabels到Human或工具。
+
+### VT 驗證／停止
+
+| ID | 驗證 |
+|---|---|
+| VT01 | installed-only／canRequestDownloads=false／isReady、固定en→zh-Hant、20秒deadline及不可用失敗；不translationTask/prepare/cloud/download；mac26+工具限制、正式mac15不改 |
+| VT02 | v1exact兩key/五field與100秒不變；v2exact兩key/七field、16KiB/4096/512bounds、stderr任一byteunknown、120秒parent、finite translation_status／source軸與proof獨立 |
+| VT03 | 新16source/ref/labels先獨立核freeze；同函式test-only固定path/hash／stdin空／無任意dump／正常binary無入口；真engine16/16polarity/modality/因果/角色／無增刪因，任一不符即停 |
+| VT04 | 完整譯文<=8192bytes／空白不可信超限拒顯、不截斷；URL/control/bidi/opaque保守gate；先gatecleanup→launch、無英文fallback、中文固定機譯非proof標示、30/20/60秒及cancel/late/exception |
+| VT05 | 獨立中文offline命令不進live/IDsecret/socket/browser；shuffle且工具不讀比ref/labels／不自評，只safeopaqueobs由Tester核分；v1與原57相關回歸不冒充Vpassed |
+| VT06 | Human將來只看新中文16、9/9＋7/7才達標，全unknown不pass；不改ref/label配合，不自動點UI，達標也無live額度 |
+
+本輪不執行測試或圖工具。V04/V05只做工具範圍tests、helper strictformat／SwiftLint，不掃App/tests或改他人dirty；新真engine輸出清楚標synthetic，agent永不見live原文／譯文。未來publication沿原PR真diff的受限PR Lens策略；不新圖／module／實驗或工具設定。現交V02，不自行宣告approved。
+
+### V 最新外部狀態紀錄
+
+外部獨立Plan-Reviewer已明示V02 approved、無required fix，可由V03起續行，無額外offline停點。V03獨立Tester造新fixture in-progress；V04a Implementer core／runner in-progress，可並行且不依賴labels，但真翻譯必等V03 Reviewer核標freeze。V04b GUI仍pending，必等V06a16/16 fidelity明示approved。OAuth0，技術／manifest不變；此為外部事實登錄，不是新增quality結論。
+
+
+### V 本輪 actual 結果與 bounded 文件回寫
+
+V03新fixture已獨立approved／frozen；V04a只保留installed-only translator core與compile-time固定fixture runner作研究證據，正常binary無dump、CLI未改。V05a唯一真引擎序列16/16技術成功（2.646s、exit0、stderrfalse），58受控／compile／strict通過；獨立V06a語義fidelity failed／needs-rework，至少8處術語／角色失真，不編造精確語義通過數。另一次bounded code Reviewer approved、無required fix／不需額外驗證，僅研究工具code，不推翻fidelity失敗。中文GUI／CLI／Human校準未執行且停止，不宣稱繁中能力已交付。語言包installed、OAuth新增0；U06／PQRT／App/API/canvas歷史保留。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。
+
+Actual implementation僅 `apps/GitHubSignInVerification/tools/pkce_semantic_review.swift`、`apps/GitHubSignInVerification/tools/test_pkce_negative_probe.py` 的研究core／test變更，及V03由獨立Tester建立並核准freeze的新 `semantic-review-zh-v1.json`。CLI.py沒有改，Chinese protocol/UI/CLI等planned能力未交付；先前11Modify／1Written是允許範圍，不是實際完成清單。獨立Reviewer已允許保留core+compile-time固定fixture runner作研究證據，不將V04b等標完成。
+
+原scratch JSONL不可再讀且無原bytes hash，語義來源只限Tester同次工具輸出直接轉交Reviewer的實際synthetic譯文，不以reference重建、不追補／重跑。V06a失敗依既定門檻停止V04b／V05b／V06b與V07；新增bounded code review approved只涵蓋保留的研究工具，無required fix／不需額外驗證，不等於後半Chinese產品能力review完成。Human最新只允許AI reader方案規劃；具體欄位／傳遞與實際原文揭露／bridge仍未批准，留後續獨立草稿／review，不擴本V。
+
+本次docs-only九欄：
+
+- In-Scope：記actual研究core／技術成功與fidelity失敗、來源限制、停止及Human決策界線。
+- Out-Of-Scope：code／fixture／CLI／GUI／live/OAuth、重跑或追補scratch、批准新reader/privacy方法、commit/push。
+- ReadOnly：所有code/fixtures、正式App/tests及6他人dirty、舊evidence段落／U/Q/P/R/T／圖／非manifest檔；不讀label或機密。
+- Written：0（本文件slice；V03新fixture另屬Tester既有結果）。
+- Deleted：0。
+- Modify：requirements.md、technical-spec.md、plan、step四planning；README.md；tools/README.md；docs/architecture/github-first-sign-in.md；既有evidence/pkce-semantic-review.md，均沿原精確paths，只本slice owned docs。
+- Goal：可交獨立文件review的真實研究結果，不宣稱中文能力交付。
+- Non-Goal：不自產quality結論，不把codeapproval／技術16/16當語義passed，不編造精確通過數。
+- TestCase：只登錄已明示58controlled／compile／strict與唯一engine16/16、2.646s／exit0／stderrfalse及外部fidelity/code verdict；本角色不跑新驗證。
+
 ## U：Human-only 語義 review（規劃來源保留；最新離線交付事實見本節末）
 
 來源 `9f603f81d77040a2e06ad178062e8cfecc4de468`；原 feature／branch／Draft PR61 不變。Human 同意原文可見性方案進入規劃，不等於實作或新 OAuth 授權；初步 Reviewer 四 fixes 滿足不是 U02 formal verdict；現獨立 Plan-Reviewer 已另明示 U02 approved、無 required fix，只核准本次四檔 planning，整體停 Human／human-check。技術方案集中於 [technical-spec U 節](../../analysis/github-first-sign-in/technical-spec.md)，本節不重寫歷史判準或證據。

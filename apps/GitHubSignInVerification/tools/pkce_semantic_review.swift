@@ -1,5 +1,7 @@
 import AppKit
+import CryptoKit
 import Foundation
+import Translation
 
 // Private bounded single-record helper. No credential, case, outcome or expected label enters.
 struct ReviewOutput: Encodable {
@@ -255,18 +257,188 @@ final class ReviewController: NSObject, NSWindowDelegate {
   }
 }
 
-var input = (try? FileHandle.standardInput.read(upToCount: 16385)) ?? Data()
-guard input.count <= 16384, String(data: input, encoding: .utf8) != nil else {
-  emit(ReviewOutput(), status: 2)
+// V: Same installed-only operation for normal v2 and the compile-time synthetic runner.
+struct LocalTranslationResult: Sendable {
+  var status: String
+  var text = ""
 }
-var parser = InputParser(bytes: Array(input))
-var parsedDescription = parser.description()
-input = Data()
-parser = InputParser(bytes: [])
-guard parsedDescription != nil else { emit(ReviewOutput(), status: 2) }
-if CommandLine.arguments.dropFirst() == ["--protocol-check"] { emit(ReviewOutput()) }
-guard CommandLine.arguments.count == 1 else { emit(ReviewOutput(), status: 2) }
-let controller = ReviewController(parsedDescription!)
-parsedDescription = nil
-controller.start()
-NSApplication.shared.run()
+
+func translatedTextAllowed(_ text: String) -> Bool {
+  guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+    text.utf8.count <= 8192
+  else { return false }
+  let blocked: Set<UInt32> = [
+    0x061c, 0x200e, 0x200f, 0x202a, 0x202b, 0x202c,
+    0x202d, 0x202e, 0x2066, 0x2067, 0x2068, 0x2069,
+  ]
+  guard
+    !text.unicodeScalars.contains(where: {
+      $0.value < 32 || (0x7f...0x9f).contains($0.value) || blocked.contains($0.value)
+    })
+  else { return false }
+  let patterns = [
+    #"(?i)(?:[a-z][a-z0-9+.-]*://|www\.|https?%3a|https?&#|https?\\u003a)"#,
+    #"(?<![A-Za-z0-9_])[A-Za-z0-9_+/=-]{24,}(?![A-Za-z0-9_])"#,
+  ]
+  return !patterns.contains { text.range(of: $0, options: .regularExpression) != nil }
+}
+
+func installedTranslation(_ source: String) async -> LocalTranslationResult {
+  guard #available(macOS 26.0, *) else {
+    return LocalTranslationResult(status: "unavailable")
+  }
+  guard !Task.isCancelled else { return LocalTranslationResult(status: "cancelled") }
+  let english = Locale.Language(identifier: "en")
+  let chinese = Locale.Language(identifier: "zh-Hant")
+  guard await LanguageAvailability().status(from: english, to: chinese) == .installed else {
+    return LocalTranslationResult(status: "unavailable")
+  }
+  guard !Task.isCancelled else { return LocalTranslationResult(status: "cancelled") }
+  // This session never leaves its worker task. No download UI or prepareTranslation call.
+  let session = TranslationSession(installedSource: english, target: chinese)
+  defer { session.cancel() }
+  guard !session.canRequestDownloads, await session.isReady else {
+    return LocalTranslationResult(status: "unavailable")
+  }
+  guard !Task.isCancelled else { return LocalTranslationResult(status: "cancelled") }
+  do {
+    let response = try await session.translate(source)
+    guard !Task.isCancelled else { return LocalTranslationResult(status: "cancelled") }
+    guard translatedTextAllowed(response.targetText) else {
+      return LocalTranslationResult(status: "translation_failed")
+    }
+    return LocalTranslationResult(status: "translated", text: response.targetText)
+  } catch {
+    return LocalTranslationResult(status: Task.isCancelled ? "cancelled" : "translation_failed")
+  }
+}
+
+private actor TranslationDeadline {
+  private var continuation: CheckedContinuation<LocalTranslationResult, Never>?
+  private var terminal: LocalTranslationResult?
+  private var worker: Task<Void, Never>?
+  private var timer: Task<Void, Never>?
+
+  func run(
+    _ source: String, seconds: Double,
+    operation: @escaping @Sendable (String) async -> LocalTranslationResult
+  ) async -> LocalTranslationResult {
+    if let terminal { return terminal }
+    return await withCheckedContinuation { continuation in
+      self.continuation = continuation
+      worker = Task.detached { [weak self] in
+        let result = await operation(source)
+        await self?.finish(result)
+      }
+      timer = Task { [weak self] in
+        do {
+          try await Task.sleep(for: .seconds(seconds))
+          await self?.finish(LocalTranslationResult(status: "timed_out"))
+        } catch {
+          // Timer cancellation never changes the already sealed result.
+        }
+      }
+    }
+  }
+
+  func finish(_ result: LocalTranslationResult) {
+    guard terminal == nil else { return }
+    terminal = result
+    continuation?.resume(returning: result)
+    continuation = nil
+    worker?.cancel()
+    timer?.cancel()
+    worker = nil
+    timer = nil
+  }
+}
+
+func translateForReview(
+  _ source: String, seconds: Double = 20,
+  operation: @escaping @Sendable (String) async -> LocalTranslationResult = installedTranslation
+) async -> LocalTranslationResult {
+  guard !source.isEmpty, source.utf8.count <= 4096 else {
+    return LocalTranslationResult(status: "translation_failed")
+  }
+  let deadline = TranslationDeadline()
+  return await withTaskCancellationHandler {
+    let result = await deadline.run(source, seconds: seconds, operation: operation)
+    guard !Task.isCancelled else { return LocalTranslationResult(status: "cancelled") }
+    guard result.status != "translated" || translatedTextAllowed(result.text) else {
+      return LocalTranslationResult(status: "translation_failed")
+    }
+    return result
+  } onCancel: {
+    Task { await deadline.finish(LocalTranslationResult(status: "cancelled")) }
+  }
+}
+
+#if SYNTHETIC_TRANSLATION_VALIDATION
+  // This entry is absent from the normal GUI build. Only frozen public synthetic input may exit.
+  struct SyntheticTranslationFixture: Decodable {
+    let schemaVersion: Int
+    let cases: [Record]
+    struct Record: Decodable {
+      let id: String
+      let description: String
+    }
+    private enum CodingKeys: String, CodingKey {
+      case schemaVersion = "schema_version"
+      case cases
+    }
+  }
+
+  func runFrozenSyntheticTranslations() async -> Int32 {
+    guard CommandLine.arguments.count == 1,
+      ((try? FileHandle.standardInput.read(upToCount: 1)) ?? Data()).isEmpty
+    else { return 2 }
+    let path = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .appendingPathComponent("fixtures/semantic-review-zh-v1.json")
+    let expectedSHA = "2be946fe6ce64f5ed29e39aaa8c183e336b5112271e1482f7410f9ee3d387827"
+    guard let raw = try? Data(contentsOf: path), raw.count <= 131072,
+      SHA256.hash(data: raw).map({ String(format: "%02x", $0) }).joined() == expectedSHA,
+      let fixture = try? JSONDecoder().decode(SyntheticTranslationFixture.self, from: raw),
+      fixture.schemaVersion == 1, fixture.cases.count == 16
+    else { return 2 }
+    for (index, record) in fixture.cases.enumerated() {
+      guard record.id == String(format: "v%02d", index + 1),
+        !record.description.isEmpty, record.description.utf8.count <= 4096
+      else { return 2 }
+      let result = await translateForReview(record.description)
+      var output = [
+        "kind": "public_synthetic_translation_validation", "id": record.id,
+        "translation_status": result.status,
+      ]
+      if result.status == "translated" { output["translated_text"] = result.text }
+      guard let encoded = try? JSONSerialization.data(withJSONObject: output, options: .sortedKeys)
+      else { return 2 }
+      FileHandle.standardOutput.write(encoded)
+      FileHandle.standardOutput.write(Data([10]))
+      if result.status != "translated" { return 2 }
+    }
+    return 0
+  }
+#endif
+
+// V_NORMAL_ENTRY
+#if SYNTHETIC_TRANSLATION_VALIDATION
+  Task { exit(await runFrozenSyntheticTranslations()) }
+  dispatchMain()
+#else
+  var input = (try? FileHandle.standardInput.read(upToCount: 16385)) ?? Data()
+  guard input.count <= 16384, String(data: input, encoding: .utf8) != nil else {
+    emit(ReviewOutput(), status: 2)
+  }
+  var parser = InputParser(bytes: Array(input))
+  var parsedDescription = parser.description()
+  input = Data()
+  parser = InputParser(bytes: [])
+  guard parsedDescription != nil else { emit(ReviewOutput(), status: 2) }
+  if CommandLine.arguments.dropFirst() == ["--protocol-check"] { emit(ReviewOutput()) }
+  guard CommandLine.arguments.count == 1 else { emit(ReviewOutput(), status: 2) }
+  let controller = ReviewController(parsedDescription!)
+  parsedDescription = nil
+  controller.start()
+  NSApplication.shared.run()
+
+#endif

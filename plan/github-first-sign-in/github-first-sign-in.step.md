@@ -9,6 +9,50 @@
 - 最後更新：2026-10-21，Implementer；主提交/hooks/push/原PR讀回/localmap完成，收尾帳本隨後同步。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
+## V：現行 planning ledger（保留 U 及所有歷史）
+
+- 更新：2026-10-21，Plan-Creator；來源fbbc2fb0，原feature／branch／DraftPR61，6他人Appdirty不讀寫。
+- Current phase：V bounded offline preparation；Current step：V03／V04a；Current status：in-progress；V02 formal planning verdict＝外部獨立Plan-Reviewer明示approved、無required fix。
+- Human已明確同意本機繁中offline／on-device讀gate後description；原文譯文只本機短暫處理，live對agent不露不存，不自下載／不cloud。OAuth新額度0，v1／正式契約／proof不變。
+- Human下載完成後外部Tester同source inventory再查兩語言組合均installed、compile/run0、stderrfalse；sourceSHA不變，未session/translate/UI/OAuth。只是前置，不是V fidelity/Humanpass。
+
+| ID | Status | Owner role | 完成條件／evidence |
+|---|---|---|---|
+| V01 | completed | Plan-Creator | 四planning新增V、11Modify/1Written候選／九欄／VT與先引擎後GUI順序；非品質approval |
+| V02 | completed | Plan-Reviewer | 外部獨立Plan-Reviewer明示approved、無required fix，依V03起續行，無額外offline停點 |
+| V03 | in-progress | Tester→Reviewer | 獨立Tester建立新fixture；source/ref/labels/schema尚待Reviewer核標freeze，之後才真翻譯 |
+| V04a | in-progress | Implementer | core／同函式translator與runner並行準備，不依賴labels；真翻譯必等V03核標freeze |
+| V05a | pending | Tester | 真engine16一次序列／無retry／不開GUI；結果未執行 |
+| V06a | pending | Reviewer | 實際synthetic譯文16/16語義忠實才approved，否則停後續 |
+| V04b | pending | Implementer | 只有V06aapproved才ChineseUI/CLI／controlledtests/docs |
+| V05b | pending | Tester | 完整controlled/strict/privacy/protocol，結果待補 |
+| V06b | pending | Reviewer | 獨立code/actualfidelity/evidence/fixesclosed才工具交付 |
+| 工具交付 | pending | Implementer | 原授權topiccommit/push原Draft61/localboundedmap；不merge、不新增批准停點 |
+| V07 | pending | Human；Tester記錄 | 人類明確操作新中文offline9+7；不自動UI/live |
+
+### V Blockers／Human Check
+
+V02外部獨立approved／無required fix已登錄，不是本角色自行核准。V03／V04a並行in-progress，真翻譯先等V03核標freeze；V04b GUI仍pending且必等V06a16/16 fidelity明示approved，無額外offline停點。U06 completed-not-qualified、6/9＋2/7與舊English16／四SHA永久保留，舊57controlled／U05codeapproved不當Vpassed。P/Q/R/T、App/API/canvaspassed與R→T1/1耗盡不變，新OAuth0。V07人類操作仍pending；機譯gate不過即停，不繼續GUI或請Human，不改標／重試配合。
+
+### V01 完成九欄（本輪實際）
+
+In-Scope＝四planning V契約／路由；Out-Of-Scope＝code/newfixture/tests/Git/live／翻譯執行；ReadOnly＝其他全部及六他人dirty／U舊資料；Written＝0；Deleted＝0；Modify＝requirements.md、technical-spec.md、plan、step四既有planning精確paths；Goal＝可交V02獨立審；Non-Goal＝不代approved或預填engine/Human成功；TestCase＝VT01–VT06全未執行，只記外部installed inventoryfacts。
+
+### V 最新外部狀態紀錄
+
+外部獨立Plan-Reviewer已明示V02 approved、無required fix，可由V03起續行，無額外offline停點。V03獨立Tester造新fixture in-progress；V04a Implementer core／runner in-progress，可並行且不依賴labels，但真翻譯必等V03 Reviewer核標freeze。V04b GUI仍pending，必等V06a16/16 fidelity明示approved。OAuth0，技術／manifest不變；此為外部事實登錄，不是新增quality結論。
+
+
+### V 本輪最新結果與停止（優先於in-progress／pending歷史）
+
+V03新fixture已獨立approved／frozen；V04a只保留installed-only translator core與compile-time固定fixture runner作研究證據，正常binary無dump、CLI未改。V05a唯一真引擎序列16/16技術成功（2.646s、exit0、stderrfalse），58受控／compile／strict通過；獨立V06a語義fidelity failed／needs-rework，至少8處術語／角色失真，不編造精確語義通過數。另一次bounded code Reviewer approved、無required fix／不需額外驗證，僅研究工具code，不推翻fidelity失敗。中文GUI／CLI／Human校準未執行且停止，不宣稱繁中能力已交付。語言包installed、OAuth新增0；U06／PQRT／App/API/canvas歷史保留。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。
+
+Current phase＝AI reader方案可規劃、待後續派遣；Current step＝V06a結果處置；Current status＝V方法needs-rework／AI規劃已允許，實際欄位傳遞未批准。V03 completed/approved/frozen；V04a completed-research-only；V05a completed-technical-success；V06a failed/needs-rework。V04b／V05b／原後半V06b／V07 not-executed-stopped，另一次研究core bounded code Reviewer approved、無required fix／不需額外驗證，不能冒充GUI或fidelity核准。
+
+來源限 `fbbc2fb0` 加V受限diff；原scratch JSONL不可再讀且無原bytes hash，使用Tester當次工具輸出直接交Reviewer的實際synthetic譯文，不追補。至少8處術語／角色失真，不自算精確通過數。58controlled與installed只證其對應層級。原U06英語未qualified、16obs、PQRT未知／預算與App/canvaspassed不改。OAuth0；Human只允許AI reader規劃，未批准實際揭露／bridge或新reader實作。
+
+本slice九欄：In-Scope＝8owned docs實際結果/限制/停止；Out-Of-Scope＝code/fixture/CLI/GUI/live/新方法/Git/重跑追補；ReadOnly＝code與fixture/既有證據及6他人Appdirty；Written＝0；Deleted＝0；Modify＝plan本slice列明8docs；Goal＝交文件review，不宣稱中文交付；Non-Goal＝不代核准、不把技術/語義混用；TestCase＝只登錄外部58/compile/strict/一次engine與獨立verdict，無新測試。
+
 ## U：現行 planning ledger（優先於上方 T08 標頭與以下歷史執行授權）
 
 - 更新：2026-10-21，Plan-Creator；來源 `9f603f81d77040a2e06ad178062e8cfecc4de468`，同 feature／branch／Draft PR61。
@@ -784,3 +828,11 @@ P2 stderrfix親跑57tests exit0、helperstrictformat0/SwiftLint0violations，CLI
 #### Synthetic smoke Human外部確認（取代是否操作pending）
 
 Human已明示手動操作：看到文字不能複製，便任選選項，足以解釋confirmed/revealtrue。故本次為受Human操作中止的synthetic smoke，不是自然timeoutpassed、不是16case holdout/9+7成績；完整UI/timeout仍未驗證。未重測/改code，僅補外部事實後凍結；不存原句、不要求複製。
+
+### V05a 獨立 Tester 實際交接（2026-10-21）
+
+來源fbbc2fb0＋V受限dirtydiff；凍結helper/test/新fixture三SHA親查一致，詳semantic evidence。獨立58controlled tests pass；helper strictformat0；SwiftLint首次cache權限exit1但0violations，--no-cache重驗exit0/0violations。normal與test-only Swift6 scratch compile均pass；normal無dump入口且空/未知args安全unreviewable exit2，test-only非空stdin/args exit2空輸出。唯一真engine16序列一次／無retry：16 translated、exit0、2.646s、stderrfalse、schema有效、總watchdog/overflow未觸發。公開synthetic輸出已交V06a Reviewer逐例判fidelity，Tester不代approved；V04b與Human仍待後續gate。未GUI/下載/OAuth/Git，readonly選定diff空／舊英文fixture SHA不變／無pycache，六他人Appdirty未碰。
+
+九欄：In-Scope＝V05a受控／compile／邊界／真engine一次；Out-Of-Scope＝source/label修改、GUI/Human/OAuth/Git；ReadOnly＝工具/fixtures/正式source/他人App/歷史圖證據；Written＝0；Deleted＝0；Modify＝semantic evidence與step自身事實；Goal＝交V06a可核對證據；Non-Goal＝不代Reviewer或Human核准；TestCase＝58pass/strict0/邊界pass/16translated技術成功，語義待V06a。
+
+V05a輸出交接補註：當次工具回傳已完整保留16筆實際公開synthetic JSONL，並直接轉錄其translated_text予Reviewer。Reviewer讀scratch回No suchfile；Tester先曾讀到原檔3924bytes，後續hash檢查亦回No suchfile。未執行cleanup或重跑，故不提供未量測的原產物SHA，也不聲稱scratch目前可讀；Review使用同次工具回傳轉錄，絕非reference重建。此留存限制不被16translated技術數取代，語義verdict仍由Reviewer決定。

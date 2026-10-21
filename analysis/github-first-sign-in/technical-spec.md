@@ -3,6 +3,57 @@
 - Topic：`github-first-sign-in`；2026-10-20 Plan-Creator 驗證 host amendment，已獲獨立 Plan-Reviewer A02 approved（無required fix）。
 - 配對：[requirements](requirements.md)、[plan／manifest](../../plan/github-first-sign-in/github-first-sign-in.plan.md)、[step](../../plan/github-first-sign-in/github-first-sign-in.step.md)。
 
+## V：本機繁中 offline 技術契約（待 V02，未實作）
+
+本節為 Human 已同意的本機繁中離線範圍；現在只四planning，V02獨立approved前不得code／newfixture。所有 live／OAuth仍未授權、額度0；不接入 `--case` 負測流程，不改正式Swift／public API／App macOS15基線、v1協定、v3 grammar、proof／outcome或U歷史。以下是V02後各bounded steps的契約，不預填可行性或校準passed。
+
+### V1. 已核前置與 runtime
+
+基線fbbc2fb0；Human已回下載完成。外部Tester在macOS26.5.2／SDK26.5／Xcode26.6／Swift6.3.2，以原inventory source重查en→zh-Hant及en→zh-TW，兩者installed，compile/run0、stderrfalse，sourceSHA仍 `ce6e738621fafc8c71b744db13dd7da3383cf90aaf9cc1b2b55e68ba9ed380bf`；未初始化session／translate／prepareTranslation／UI／OAuth。這只是資產條件，不代表實際翻譯或語義忠實已驗證。
+
+LanguageAvailability.status(from:to:)是async nonthrowing；macOS26+的installed-only TranslationSession init是同步nonthrowing，translate為async throws，isReady為async bool。只固定source=en、target=zh-Hant；zh-TW inventory僅為前置佐證，不提供任意language或自動fallback。核對canRequestDownloads=false，不符或isReady=false即有限unavailable，不用translationTask／prepareTranslation／Safari／一般cloud翻譯，不下載或請求下載。
+
+Session限同一private Task內建立及使用，不跨actor共享，不宣稱MainActor／Sendable保證。取消／關窗會cancel Task、封鎖generation並拒late結果，不假定cancel會立即中止SDK工作。中文private工具需macOS26+及本輪核實的SDK26.5／Xcode26.6／Swift6.3.2；較舊SDK建置未驗證，不默改root／consumer基線。v1的語義／協定／100秒watchdog不變。
+
+Apple官方TranslationSession說明內容on-device且不入其metrics；usage／bundleID／language metadata及OS留痕／immutable記憶體physicalzero限制仍保留，不聲稱測得全機無網路。CLI自身不建立HTTP/socket/browser或索取ID/secret。
+
+### V2. 最小 private protocol 與顯示
+
+v1 exact兩key input／五field output原樣。v2 input仍exact `{"protocol_version":2,"description":"..."}`，版本即固定繁中，無任意language／URL。沿用strict UTF8／JSON、raw description<=4096bytes／總input<=16KiB／stdout<=512bytes、duplicate/extra/trailing/type/oversize拒絕、stderr任一byte即unknown，不forward。v2 output exact七fields：原五fields（version值2）加 `display_language="zh-Hant"`、`translation_status`。
+
+translation_status只為not_requested／translated／unavailable／translation_failed／timed_out／cancelled；原review_status五enum不變。只有translated且Human confirmed／reveal_started／user_confirmed均相符才產生decisive觀測；不可用／失敗等一律indeterminate，安全static reason，無raw exception。空白／不可信／超過8192 UTF8bytes的譯文一律translation_failed＋unreviewable，不截斷後判讀；完整譯文另保守gate URL/control/bidi/opaque，命中整段不顯示，不宣稱偵測所有秘密或幻覺。
+
+Parent已知secret gate與先cleanup後launch完全沿U，不保留context給新元件、不放寬。密封30秒，Human按顯示才開始翻譯（處理中不顯原文），translation deadline20秒，成功才reveal完整中文最多60秒，無第二次。中文畫面固定「本機機器翻譯／非遠端證明」，loading／失敗無English fallback。v2 parent watchdog120秒，v1仍100秒；逾時／取消／異常封鎖late結果並關閉／結束helper，無原文或譯文stdout/stderr/log/file/argv/env/clipboard/screenshot，不以await已cancel Task當作工作已結束。
+
+CLI新增 `python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review-zh`，只讀新frozen synthetic set，不接live；不讀／比較expectedlabels、不自評，SystemRandom shuffle與opaque correlation＋安全observations交獨立Tester核分，UI不見id／label／case／outcome。report新觀測review_source=`local_human_on_device_translation`，仍非proof，不改原outcome／pkce_rejection_proven／v3grammar。Human將來只看中文，不能讓其再讀英文；不自動啟動UI／校準。
+
+### V3. 全新 fixture 與先驗機譯 gate
+
+V03由獨立Tester建立唯一新 `semantic-review-zh-v1.json`，Reviewer先核source English／reference_zh／expected_category及schema、labels、SHA後freeze，Implementer只收schema/hash、不看答案。不沿用或翻譯舊English16。共16全新：3明確mismatch／3grant／3config／7abstain（否定、條件、例子、多候選、矛盾、不完整、未知各一）。後續不為結果改ref／label；失敗保留，不能偷換fixture過關。
+
+先V04a只完成同一private translate function及test-only runner，再V05a Tester真engine／V06a Reviewer獨立逐例看polarity、modality、因果、角色、無新增或刪因；16/16語義忠實才明示fidelity approved。非逐字相等／模板命中，不讀label自評。任一技術錯誤／未ready立刻終止；Reviewer發現任一語義失真即停後續GUI／Human／live，不重試或改標。只有此gate明示approved才V04b完成Chinese UI／CLI，然後V05b完整controlled驗證／V06b code review。無額外Human批准停點。
+
+### V4. 同函式 test-only synthetic runner
+
+在同一private helper以編譯條件 `SYNTHETIC_TRANSLATION_VALIDATION` 建立runner，呼叫與正常v2完全同一translate function／installed-only設定／完整譯文gate；無generic debug dump／bypass、新target或module。它只讀既定新fixture精確路徑加硬編碼V03 frozen SHA；stdin必空，不接受任意文字／路徑／language或其它輸入。只投影id/description，不讀比ref／labels；輸出只有這組明確標為公開synthetic的id、中文譯文及必要有限狀態，供獨立Reviewer核語義。正常GUIbinary不含dump入口，正常v1/v2絕無原文／譯文stdout。
+
+Tester於外部scratch編譯／執行，16序列每例至多一次、無retry，單例20秒、整輪watchdog360秒；技術失敗立即停止，保存安全失敗facts，不能自動第二輪。輸出只這組frozen synthetic可給Reviewer看，live原文／譯文agent永不可見。可於既有semantic evidence附受控合成語義結果；不改舊證據段落／U結果。
+
+V05b再驗strict v1回歸／v2schema、失敗timeout取消late、完整8192bytes譯文gate、parentcleanup、stderrbyte、defaultnoUI、test-only固定路徑／SHA／emptystdin／無任意dump、英文不fallback、無網路／配置CLI入口。真engine16/16與controlledtests都不等於Human9+7。V07在code/fidelity required fixes closed且工具交付後，由Human明確操作新中文set，9/9 decisive正確＋7/7 unknown才達標；全unknown不pass。即使達標，live仍0、任何新OAuth必另行授權。
+
+### V 最新外部狀態紀錄
+
+外部獨立Plan-Reviewer已明示V02 approved、無required fix，可由V03起續行，無額外offline停點。V03獨立Tester造新fixture in-progress；V04a Implementer core／runner in-progress，可並行且不依賴labels，但真翻譯必等V03 Reviewer核標freeze。V04b GUI仍pending，必等V06a16/16 fidelity明示approved。OAuth0，技術／manifest不變；此為外部事實登錄，不是新增quality結論。
+
+
+### V 實際實作邊界、結果與來源限制
+
+V03新fixture已獨立approved／frozen；V04a只保留installed-only translator core與compile-time固定fixture runner作研究證據，正常binary無dump、CLI未改。V05a唯一真引擎序列16/16技術成功（2.646s、exit0、stderrfalse），58受控／compile／strict通過；獨立V06a語義fidelity failed／needs-rework，至少8處術語／角色失真，不編造精確語義通過數。另一次bounded code Reviewer approved、無required fix／不需額外驗證，僅研究工具code，不推翻fidelity失敗。中文GUI／CLI／Human校準未執行且停止，不宣稱繁中能力已交付。語言包installed、OAuth新增0；U06／PQRT／App/API/canvas歷史保留。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。
+
+本節前述v2 protocol／ChineseGUI／ChineseCLI是事前計畫，非已交付能力。實際只helper的同函式installed-only core、compile-time `SYNTHETIC_TRANSLATION_VALIDATION` 固定新fixture runner與相關controlled test；正常binary仍v1且無dump，不接live，不新增public/shared module。原CLI未改，不把planned manifest每項當actual delivery。獨立Reviewer已允許保留上述研究core；獨立bounded code approved與V06a fidelity failed分開記，無code required fix，不自行另加驗證。
+
+V05a原scratch JSONL現已不可讀，無原bytes hash；唯一語義來源是Tester同次工具輸出直接轉交Reviewer的16筆實際公開synthetic譯文，非reference重建，不追補hash／原文、不重跑以冒充原產物。Reviewer至少8處術語／角色失真，未給精確通過數，本記錄不推算8/16或其它數字。V04b及其完整測試／GUI review、V07 Human都停止未執行；AI reader已可另行規劃，但實際原文揭露／bridge／欄位／傳遞仍未批准，OAuth0；本V實作與既有privacy邊界不變。
+
 ## U：Human-only 原文語義 review（既定技術與規劃來源；離線已授權實作）
 
 本節只定義未來候選，不修改 §11 或 P/Q/R/T 歷史、正式 OAuth／public API／lifecycle。本輪來源 `9f603f81d77040a2e06ad178062e8cfecc4de468`；Human 可見性風險已接受進入規劃，獨立 Plan-Reviewer 已明示 U02 formal planning verdict approved、無 required fix；整體停 Human／human-check，未授權實作／校準／live，新 OAuth 額度 0。下列「必須」是未來另行放行後的契約，不是現在的操作授權。

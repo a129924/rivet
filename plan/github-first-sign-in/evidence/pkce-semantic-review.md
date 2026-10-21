@@ -180,3 +180,46 @@ Human最新同意本機繁中方案與offline驗證，允許未來Apple on-devic
 外部Tester一次scratch Swift6 compile/run：macOS26.5.2／SDK26.5／Xcode26.6，exit0、stderr_present=false；sourceSHA `ce6e738621fafc8c71b744db13dd7da3383cf90aaf9cc1b2b55e68ba9ed380bf`。僅Translation.LanguageAvailability.status(from:to:)查en→zh-Hant及en→zh-TW，兩者supported非installed，只證所需組合資產未齊，非每個語言都未安裝。未init session／translate／prepareTranslation／下載／UI／OAuth，scratch自清、無repo新檔；這是environmentinventory，不是新工具／experiment或機譯成效驗證。
 
 Apple官方installedSource初始化／canRequestDownloads支援macOS26+同步nonthrowing且不要求下載；on-device內容不入其metrics，並非Safari／系統雲端翻譯。現無實際機譯／中文工具／新holdout，候選尚不可用，Human已同意自行下載，等待完成回報才重查；既有inventory仍supported非installed，本輪未翻譯／下載／新查，不先建Vimplementationplan／fixture。機譯不能proof；原U06結果與先前smoke、四SHA及歷史均保留。本slice仍Modify8／Written0／Deleted0，只文件。
+
+## V04a Implementer：先驗同函式 translator（2026-10-21）
+
+V02 外部獨立 verdict approved／無 required fix，由主 agent 明示；本段只記實作與受控事實，不代 V05a／V06a 核准。
+
+- 新 private `translateForReview`／`installedTranslation` 固定 en→zh-Hant、installed-only session，核 installed、canRequestDownloads=false、isReady；session 只在單一 worker task 建立／使用並 defer cancel，不下載、不 prepareTranslation／translationTask／cloud、不跨 task 共用。20 秒一次性結果 gate 取消 worker 但不 await 其作為 settlement；late 結果不覆蓋終值，技術 timeout 後 runner 停止。完整譯文的非空白／8192 UTF8 bytes／URL/control/bidi/opaque gate 與將來正常 v2 為同一函式，沒有截斷後判讀。
+- normal binary 保持既有 v1 入口，尚未接 Chinese UI 或 CLI。`SYNTHETIC_TRANSLATION_VALIDATION` 才包含 synthetic runner；固定新 fixture 路徑、硬編碼最終 frozen SHA、空 stdin、無 args，只 Codable 投影 id/description，不讀或比較 reference_zh／expected_category 值。輸出僅此 frozen 公開 synthetic 的 id、有限 translation_status 及成功的完整中文譯文，供獨立 Reviewer；不接受任意文字／路徑或 language。
+- V03 最終 fixture SHA `2be946fe6ce64f5ed29e39aaa8c183e336b5112271e1482f7410f9ee3d387827` 由獨立 Reviewer approved／tinyfixclosed 後主 agent 傳達。Implementer未開啟fixture內容、參考譯文或labels，也未跑真引擎16例。
+- 親跑 normal 及 test-only Swift6 compile，均 exit0；58項離線測試全部通過（原57＋Swift stub-operation harness，13個安全布林），涵蓋完整譯文gate、受控成功／失敗、短化deadline、取消及非合作late結果不替換終值。所有 operation 均stub，沒有呼叫真engine。helper strict format／SwiftLint exit0，0 violations。test-only binary對非空stdin及任意args都在讀fixture前exit2，stdout/stderr均空；未執行空stdin真16。
+- 凍結helper SHA `ebf1c606a0417aaf9f4592b64938720f499f9735db0fbe042a9576fa9929255d`；test SHA `7cb786a2e4722fd81269394e0e71e40ca7b96b221be8fb6b699037bbb928b812`。CLI、既有v1協定與英文fixture未改。下一步 V05a Tester 執行真引擎16例，各一次／無retry，總360秒外部watchdog；V06a獨立Reviewer逐例16/16 fidelity approved前，不進Chinese UI/CLI。這些gate目前pending，不能以58tests或installed inventory代填。
+
+V04a完成九欄：In-Scope＝同函式installed-only core／compile-time固定synthetic runner及controlled tests；Out-Of-Scope＝Chinese UI/CLI、真人校準、live/OAuth、ref/label與正式App；ReadOnly＝CLI/v1 policy、舊fixture/歷史段落/圖/正式source及6他人App；Written＝0（新fixture由獨立Tester建立）；Deleted＝0；Modify＝helper／test與本evidence追加；Goal＝交獨立真engine與fidelity gate的凍結來源；Non-Goal＝不自評機譯或Human，不保證SDK立即響應取消／全機無網路；TestCase＝58controlledpass＋兩種compile＋strictchecks，真引擎與V06a／Human全pending。未GUI／翻譯／下載／OAuth／Git。
+
+## V05a 獨立 Tester：固定 synthetic 真引擎一次序列（2026-10-21）
+
+來源 `fbbc2fb0ca6960f7f714fd5c85d3b39f9c4215e5` 加 V 受限 dirty diff；helper SHA `ebf1c606a0417aaf9f4592b64938720f499f9735db0fbe042a9576fa9929255d`、test SHA `7cb786a2e4722fd81269394e0e71e40ca7b96b221be8fb6b699037bbb928b812`、新fixture SHA `2be946fe6ce64f5ed29e39aaa8c183e336b5112271e1482f7410f9ee3d387827` 均親查與核准凍結一致。既有 macOS26.5.2／SDK26.5／Xcode26.6 與 installed inventory 前提沿用。
+
+- 親跑 `python3 -B -m unittest discover -s apps/GitHubSignInVerification/tools -p test_pkce_negative_probe.py`：58 tests／2.739秒／exit0；全為受控測試。`swift format lint --strict` helper exit0。SwiftLint首次0 violations但因cache寫權限exit1；`swiftlint lint --strict --no-cache`同helper重驗exit0、0 violations，非source修正。無pycache／pyc。
+- 在scratch以 `xcrun swiftc -swift-version 6 -module-cache-path <scratch-cache>` 分別編譯正常binary與加 `-D SYNTHETIC_TRANSLATION_VALIDATION` binary，均exit0。正常binary空stdin及不支援dump參數皆exit2、固定v1 unreviewable／indeterminate、reveal/userconfirmed false、stderrfalse，無dump入口；最初檢查錯把正常拒絕應有的安全JSON預期為空，已依既有協定核對，非產品failure。test-only binary額外args／非空stdin皆exit2、stdout/stderr空，未進engine。
+- 固定runner空stdin／無args，唯一真engine序列只執行一次：16 records／16 translated，exit0，2.646秒；stderr_present=false、360秒外部watchdog未觸發、stdout未超界、逐筆public-synthetic schema有效。每例呼叫同一20秒deadline函式，未retry。只有新凍結公開synthetic譯文存於外部scratch交獨立Reviewer，無actual provider資料。
+- 選定readonly paths（正式Sources／Tests／rootPackage／experiments／既有圖／CLI／舊英文fixture）相對HEAD diff空；他人六份Appdirty未觸碰。舊英文fixture SHA保持 `d1567758e9dfb2861886510f8c41a3a03174be805c6b7979e8f28d850e9a2ea5`。未GUI／下載／OAuth／Human校準／Git，未重跑未變Swiftroot或App。
+
+本次16/16是技術成功數，不是語義忠實度結論；已交V06a獨立Reviewer逐例核對，未自行評分／approved。V04b GUI仍須等該明示verdict。新OAuth0，舊歷史結果／預算不變。
+
+九欄：In-Scope＝V05a core controlled／compile／failclosed及唯一真engine序列；Out-Of-Scope＝code/labels改動、GUI/Human/live/OAuth/Git；ReadOnly＝所有工具/fixture與正式source、六他人Appdirty／歷史證據／圖；Written＝0（本slice）；Deleted＝0；Modify＝本evidence追加與step自身結果；Goal＝提供V06a實際凍結來源及公開synthetic輸出；Non-Goal＝不代語義或Human核准／不以installed與tests當方法成立；TestCase＝58pass、strict0、編譯/拒絕邊界pass、真engine16 translated；fidelity待Reviewer。
+
+V05a輸出交接補註：當次工具回傳已完整保留16筆實際公開synthetic JSONL，並直接轉錄其translated_text予Reviewer。Reviewer讀scratch回No suchfile；Tester先曾讀到原檔3924bytes，後續hash檢查亦回No suchfile。未執行cleanup或重跑，故不提供未量測的原產物SHA，也不聲稱scratch目前可讀；Review使用同次工具回傳轉錄，絕非reference重建。此留存限制不被16translated技術數取代，語義verdict仍由Reviewer決定。
+
+## V06a 實際語義結果、保留範圍與停止
+
+V03新fixture已獨立approved／frozen，V04a只保留synthetic研究core與compile-time固定fixture runner；正常binary無dump，CLI未改，沒有ChineseGUI／ChineseCLI或新Human校準。獨立Reviewer已允許保留此研究範圍。另獨立bounded code Reviewer明示approved、無required fix、不需額外驗證；這只涵蓋研究code，與V06a語義fidelity failed／needs-rework分開。
+
+V05a唯一真引擎序列為16records／16translated、2.646s、exit0、stderr_present=false；58受控tests／normal及test-only compile／strictformat與SwiftLint通過，前文來源／SHA保留。**這個16/16是技術成功數，不是語義通過數。** V06a獨立Reviewer對當次實際synthetic譯文判定至少8處術語／角色失真，16/16 fidelity門檻未達；未提供精確語義通過數，不推算8/16或其它成績，不改ref／label配合。
+
+### 原產物與傳遞限制
+
+原scratch JSONL已無法再讀，沒有量測其原bytes hash。語義review來源僅是Tester當次工具輸出直接轉交Reviewer的實際16筆公開synthetic譯文，不是reference重建；不追補原檔、hash或重跑後冒充原產物。這項留存限制仍在，不因code approved或技術成功消失。
+
+V04b ChineseGUI／CLI、V05b完整後半驗證、原後半V06b與V07 Human calibration均未執行且停止；不宣稱繁中能力已交付。語言資產installed不等於語義passed；V06a失敗不是Human過失、正式OAuthbug或PKCEfailed。Human最新允許規劃AI閱讀經安全檢查的描述，並接受資料可能離Mac／留於對話服務及gate殘餘風險；僅規劃，實際原文揭露／bridge／具體欄位與傳遞方式尚未批准，OAuth0，不擴V實作。U06舊16／6/9＋2/7、P/Q/R/T與R→T1/1耗盡、正常App/API/canvaspassed原樣保留。
+
+### 文件slice完成九欄
+
+In-Scope＝實際技術／語義／code verdict、來源限制與停止；Out-Of-Scope＝code/fixture/CLI/GUI/OAuth/新方法／重跑追補／Git；ReadOnly＝工具/新舊fixture/舊evidence段落/正式App/六他人dirty；Written＝0；Deleted＝0；Modify＝既定8owned docs，僅本evidence追加；Goal＝交實際docdiff獨立review；Non-Goal＝不自產approved或編造語義分數／中文交付；TestCase＝登錄58controlled/compile/strict、唯一engine16translated及外部verdict，本角色未執行驗證。
