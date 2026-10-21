@@ -159,12 +159,18 @@ class NegativeProbeTests(unittest.TestCase):
         self.assertIsNone(probe.read_headers(connection, deadline))
         self.assertEqual(connection.recv.call_count, 3)  # previous oversize + two 3s chunks
 
-    def test_only_exact_verifier_error_and_accepted_http_can_pass(self):
-        for error in probe.VERIFIER_ERRORS:
+    def test_only_case_specific_verifier_error_and_accepted_http_can_pass(self):
+        for error, case in [("missing_code_verifier", "missing"),
+                            ("code_verifier_required", "missing"),
+                            ("incorrect_code_verifier", "wrong")]:
             for status in [200, 201, 400]:
-                self.assertEqual(probe.classify(status, json.dumps({"error": error}).encode())["outcome"], "passed")
+                self.assertEqual(probe.classify(status, json.dumps({"error": error}).encode(), case)["outcome"], "passed")
             for status in [302, 401, 500]:
-                self.assertEqual(probe.classify(status, json.dumps({"error": error}).encode())["outcome"], "indeterminate")
+                self.assertEqual(probe.classify(status, json.dumps({"error": error}).encode(), case)["outcome"], "indeterminate")
+            opposite = "wrong" if case == "missing" else "missing"
+            self.assertEqual(probe.classify(400, json.dumps({"error": error}).encode(), opposite)["outcome"], "indeterminate")
+        for case in ["missing", "wrong", None]:
+            self.assertEqual(probe.classify(400, b'{"error":"invalid_code_verifier"}', case)["outcome"], "indeterminate")
 
     def test_generic_code_rejection_is_never_pkce_pass(self):
         result = probe.classify(200, b'{"error":"bad_verification_code","error_description":"code_verifier is invalid"}')
@@ -324,7 +330,98 @@ class NegativeProbeTests(unittest.TestCase):
         self.assertFalse(result["single_exchange"])
         self.assertEqual(set(result), {"case", "outcome", "reason", "http_status", "remote_error",
             "remote_rejected", "token_present", "fresh_attempt", "callback_claimed", "single_exchange",
-            "verifier_field_omitted", "wrong_challenge_differs"})
+            "verifier_field_omitted", "wrong_challenge_differs", "diagnostic_version",
+            "diagnostic_class", "description_class", "description_present",
+            "description_mentions_verifier", "signals_conflict", "pkce_rejection_proven"})
+
+    def test_fixed_description_templates_and_normalization(self):
+        expected_counts = {"verifier_required": 5, "verifier_mismatch": 5,
+                           "verifier_invalid_unspecified": 4, "code_problem": 2,
+                           "configuration": 1, "redirect": 1, "auth": 1}
+        self.assertEqual({key: len(value) for key, value in probe.DESCRIPTIONS.items()}, expected_counts)
+        for category, templates in probe.DESCRIPTIONS.items():
+            for text in templates:
+                for normalized in [text, "  " + text.upper().replace(" ", "  ") + ".  "]:
+                    for case in ["missing", "wrong"]:
+                        body = json.dumps({"error": "invalid_grant", "error_description": normalized}).encode()
+                        result = probe.classify(400, body, case)
+                        self.assertEqual(result["description_class"], category)
+                        expected = (case, category) in {("missing", "verifier_required"), ("wrong", "verifier_mismatch")}
+                        self.assertEqual(result["pkce_rejection_proven"], expected)
+                        self.assertEqual(result["outcome"] == "passed", expected)
+                        self.assertEqual(result["diagnostic_version"], 2)
+
+    def test_known_generic_refinement_unknown_and_conflicts(self):
+        descriptions = {"verifier_required": "code_verifier is required",
+                        "verifier_mismatch": "code_verifier is incorrect",
+                        "code_problem": "the code passed is incorrect or expired",
+                        "configuration": "the client_id and/or client_secret passed are incorrect"}
+        for error in ["invalid_grant", "invalid_request", "bad_verification_code", "invalid_code_verifier"]:
+            for case, category in [("missing", "verifier_required"), ("wrong", "verifier_mismatch")]:
+                result = probe.classify(400, json.dumps({"error": error, "error_description": descriptions[category]}).encode(), case)
+                self.assertTrue(result["pkce_rejection_proven"])
+        strong = {"missing_code_verifier": "verifier_required", "code_verifier_required": "verifier_required",
+                  "incorrect_code_verifier": "verifier_mismatch", "incorrect_client_credentials": "configuration",
+                  "invalid_client": "configuration", "unauthorized_client": "configuration",
+                  "invalid_scope": "configuration", "redirect_uri_mismatch": "redirect", "access_denied": "auth"}
+        for error, category in strong.items():
+            for desc_category, text in descriptions.items():
+                result = probe.classify(400, json.dumps({"error": error, "error_description": text}).encode(), "missing")
+                self.assertEqual(result["signals_conflict"], category != desc_category)
+                if category != desc_category:
+                    self.assertEqual(result["outcome"], "indeterminate")
+                    self.assertFalse(result["pkce_rejection_proven"])
+        for error in ["fixture-private-error", "server_error", "temporarily_unavailable", "unsupported_grant_type"]:
+            result = probe.classify(400, json.dumps({"error": error, "error_description": descriptions["verifier_required"]}).encode(), "missing")
+            self.assertEqual(result["outcome"], "indeterminate")
+            self.assertNotIn("fixture-private-error", json.dumps(result))
+
+    def test_keyword_negation_extra_text_and_long_description_are_not_evidence(self):
+        for text in ["code_verifier", "code_verifier is not required", "code_verifier is required fixture-secret",
+                     "fixture-secret code_verifier is required", "code_verifier is required..", "x" * 513]:
+            result = probe.classify(400, json.dumps({"error": "invalid_grant", "error_description": text}).encode(), "missing")
+            self.assertEqual(result["outcome"], "indeterminate")
+            self.assertEqual(result["description_class"], "unknown")
+            self.assertEqual(result["description_mentions_verifier"], "code_verifier" in text)
+            self.assertNotIn("fixture-secret", json.dumps(result))
+        for text in [None, 42, {"private": "fixture-secret"}, ["fixture-secret"]]:
+            result = probe.classify(400, json.dumps({"error": "invalid_grant", "error_description": text}).encode(), "missing")
+            self.assertEqual(result["diagnostic_class"], "json")
+            self.assertTrue(result["description_present"])
+            self.assertEqual(result["description_class"], "unknown")
+            self.assertNotIn("fixture-secret", json.dumps(result))
+            self.assertFalse(result["pkce_rejection_proven"])
+
+    def test_v2_diagnostic_categories_and_stdout_redaction(self):
+        for error, category in [("bad_verification_code", "code_problem"), ("invalid_grant", "code_problem"),
+                                ("invalid_client", "configuration"), ("redirect_uri_mismatch", "redirect"),
+                                ("access_denied", "auth"), ("invalid_code_verifier", "verifier_invalid_unspecified")]:
+            self.assertEqual(probe.classify(400, json.dumps({"error": error}).encode(), "missing")["diagnostic_class"], category)
+        self.assertEqual(probe.classify(500, b'{"error":"missing_code_verifier"}', "missing")["diagnostic_class"], "http")
+        for reason, category in [("network", "network"), ("timeout", "timeout"), ("authorization_refused", "auth"), ("response_limit", "http")]:
+            def send(*_args):
+                raise probe.Stop(reason)
+            result = probe.run_case("missing", "fixture-id", "fixture-secret", acquire=acquire_fixture, send=send)
+            self.assertEqual(result["diagnostic_class"], category)
+            self.assertEqual(result["diagnostic_version"], 2)
+        body = b'{"error":"fixture-private-error","error_description":"fixture-private-description code_verifier"}'
+        stdout, stderr = io.StringIO(), io.StringIO()
+        actual_run = probe.run_case
+        def fixture_run(case, client, secret):
+            return actual_run(case, client, secret, acquire=acquire_fixture, send=lambda *_args: (400, body))
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr), \
+             mock.patch.object(probe.sys.stdin, "isatty", return_value=True), \
+             mock.patch.object(probe.sys.stderr, "isatty", return_value=True), \
+             mock.patch.object(probe.getpass, "getpass", side_effect=["fixture-id", "fixture-secret"]), \
+             mock.patch.object(probe, "run_case", side_effect=fixture_run):
+            self.assertEqual(probe.main(["--case", "missing"]), 2)
+        output = stdout.getvalue() + stderr.getvalue()
+        for sentinel in ["fixture-private-error", "fixture-private-description", "fixture-id", "fixture-secret", "fixture-code", "Traceback"]:
+            self.assertNotIn(sentinel, output)
+        report = json.loads(stdout.getvalue().splitlines()[-1])
+        self.assertEqual(report["remote_error"], "unknown")
+        self.assertTrue(report["description_mentions_verifier"])
+        self.assertFalse(report["pkce_rejection_proven"])
 
 
 if __name__ == "__main__":

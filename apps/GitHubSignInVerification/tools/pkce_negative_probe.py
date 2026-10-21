@@ -21,7 +21,43 @@ VERIFIER_ERRORS = {
     "missing_code_verifier", "incorrect_code_verifier",
     "invalid_code_verifier", "code_verifier_required",
 }
-CONFIG_ERRORS = {"incorrect_client_credentials", "redirect_uri_mismatch", "unverified_user_email"}
+# Q §9：事前固定；live 後不可為配合結果擴張。
+ERROR_CLASSES = {
+    "missing_code_verifier": "verifier_required",
+    "code_verifier_required": "verifier_required",
+    "incorrect_code_verifier": "verifier_mismatch",
+    "invalid_code_verifier": "verifier_invalid_unspecified",
+    "incorrect_client_credentials": "configuration",
+    "invalid_client": "configuration", "unauthorized_client": "configuration",
+    "invalid_scope": "configuration", "redirect_uri_mismatch": "redirect",
+    "access_denied": "auth", "bad_verification_code": "code_problem",
+    "invalid_grant": "code_problem", "invalid_request": "unknown",
+    "unsupported_grant_type": "unknown", "server_error": "unknown",
+    "temporarily_unavailable": "unknown",
+}
+SAFE_ERRORS = {value: value for value in ERROR_CLASSES}
+REFINABLE_ERRORS = {"invalid_request", "invalid_grant", "bad_verification_code", "invalid_code_verifier"}
+STRONG_CLASSES = {"configuration", "redirect", "auth", "verifier_required", "verifier_mismatch"}
+DESCRIPTIONS = {
+    "verifier_required": (
+        "missing required parameter: code_verifier", "the code_verifier is required",
+        "code_verifier is required", "the code_verifier parameter is required",
+        "invalid request: missing code_verifier"),
+    "verifier_mismatch": (
+        "the code_verifier does not match the code_challenge",
+        "code_verifier does not match code_challenge", "the code_verifier passed is incorrect",
+        "code_verifier is incorrect", "invalid request: code_verifier does not match code_challenge"),
+    "verifier_invalid_unspecified": (
+        "invalid parameter: code_verifier", "the code_verifier is invalid", "invalid code_verifier",
+        "the code_verifier parameter is invalid or missing"),
+    "code_problem": ("the code passed is incorrect or expired", "the authorization code is invalid or expired"),
+    "configuration": ("the client_id and/or client_secret passed are incorrect",),
+    "redirect": ("the redirect_uri must match the registered callback url for this application",),
+    "auth": ("the user denied access to your application",),
+}
+DESCRIPTION_CLASSES = {text: category for category, texts in DESCRIPTIONS.items() for text in texts}
+STOP_CLASSES = {"network": "network", "timeout": "timeout", "authorization_refused": "auth",
+                "response_limit": "http"}
 SAFE_REASONS = {
     "verifier_rejected", "token_returned", "generic_code_rejection", "configuration_rejected",
     "unknown_error", "unexpected_response", "http_unconfirmed", "network", "timeout",
@@ -283,15 +319,28 @@ def strict_object(body, allow_duplicates=False):
         return None
 
 
-def classify(status, body):
-    result = {"outcome": "indeterminate", "reason": "unexpected_response",
-              "http_status": status if type(status) is int and 100 <= status <= 599 else None,
-              "remote_error": "unknown", "remote_rejected": False, "token_present": False}
+def safe_result(reason="unexpected_response", category="json"):
+    return {"outcome": "indeterminate", "reason": reason, "http_status": None,
+            "remote_error": "unknown", "remote_rejected": False, "token_present": False,
+            "diagnostic_version": 2, "diagnostic_class": category,
+            "description_class": "absent", "description_present": False,
+            "description_mentions_verifier": False, "signals_conflict": False,
+            "pkce_rejection_proven": False}
+
+
+def classify(status, body, case=None):
+    result = safe_result()
+    result["http_status"] = status if type(status) is int and 100 <= status <= 599 else None
     obj = strict_object(body, allow_duplicates=True)
     if obj is None:
         return result
+    # Presence is factual even when token/shape/duplicate guards reject the payload.
+    result["description_present"] = "error_description" in obj
+    if result["description_present"]:
+        result["description_class"] = "unknown"
     if "access_token" in obj or "refresh_token" in obj:
-        result.update(outcome="failed", reason="token_returned", token_present=True)
+        result.update(outcome="failed", reason="token_returned", token_present=True,
+                      diagnostic_class="token_returned")
         return result
     obj = strict_object(body)
     if obj is None:
@@ -302,16 +351,38 @@ def classify(status, body):
     if any(not isinstance(value, str) for value in obj.values()):
         return result
     result["remote_rejected"] = True
-    known = VERIFIER_ERRORS | CONFIG_ERRORS | {"bad_verification_code"}
-    result["remote_error"] = error if error in known else "unknown"
+    result["remote_error"] = SAFE_ERRORS.get(error, "unknown")
+    result["description_present"] = "error_description" in obj
+    if result["description_present"]:
+        description = obj["error_description"]
+        # Hint only; never participates in the proof predicate.
+        result["description_mentions_verifier"] = "code_verifier" in description.lower()
+        category = "unknown"
+        if len(description) <= 512:
+            normalized = " ".join(description.strip().lower().split())
+            if normalized.endswith("."):
+                normalized = normalized[:-1]
+            category = DESCRIPTION_CLASSES.get(normalized, "unknown")
+        result["description_class"] = category
     if type(status) is not int or not (200 <= status <= 299 or status == 400):
-        result["reason"] = "http_unconfirmed"
-    elif error in VERIFIER_ERRORS:
-        result.update(outcome="passed", reason="verifier_rejected")
-    elif error == "bad_verification_code":
+        result.update(reason="http_unconfirmed", diagnostic_class="http")
+        return result
+    category = ERROR_CLASSES.get(error, "unknown")
+    description_class = result["description_class"]
+    if category in STRONG_CLASSES and description_class not in {"absent", "unknown", category}:
+        result["signals_conflict"] = True
+    elif error in REFINABLE_ERRORS and description_class in {"verifier_required", "verifier_mismatch"}:
+        category = description_class
+    result["diagnostic_class"] = category
+    expected = {"missing": "verifier_required", "wrong": "verifier_mismatch"}.get(case)
+    if expected is not None and category == expected and not result["signals_conflict"]:
+        result.update(outcome="passed", reason="verifier_rejected", pkce_rejection_proven=True)
+    elif category == "code_problem":
         result["reason"] = "generic_code_rejection"
-    elif error in CONFIG_ERRORS:
+    elif category in {"configuration", "redirect"}:
         result["reason"] = "configuration_rejected"
+    elif category == "auth":
+        result["reason"] = "authorization_refused"
     else:
         result["reason"] = "unknown_error"
     return result
@@ -319,8 +390,7 @@ def classify(status, body):
 
 def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=time.monotonic):
     attempt = Attempt.create(case)
-    result = {"outcome": "indeterminate", "reason": "internal_error", "http_status": None,
-              "remote_error": "unknown", "remote_rejected": False, "token_present": False}
+    result = safe_result("internal_error", "unknown")
     try:
         deadline = Deadline(clock=clock)
         code, redirect = acquire(client_id, attempt, deadline)
@@ -329,7 +399,7 @@ def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=
         fields = exchange_fields(client_id, secret, code, redirect, attempt)
         status, body = send(fields, deadline)
         deadline.remaining()
-        result = classify(status, body)
+        result = classify(status, body, case)
     except Stop as error:
         reason = error.args[0] if error.args else "internal_error"
         result["reason"] = reason if reason in SAFE_REASONS else "internal_error"
@@ -338,6 +408,8 @@ def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=
     except Exception:
         result["reason"] = "internal_error"
     finally:
+        if not result["remote_rejected"] and not result["token_present"]:
+            result["diagnostic_class"] = STOP_CLASSES.get(result["reason"], result["diagnostic_class"])
         result.update(case=case, fresh_attempt=True, callback_claimed=attempt.claimed,
                       single_exchange=attempt.exchanged, verifier_field_omitted=case == "missing",
                       wrong_challenge_differs=(challenge(attempt.verifier) != challenge(attempt.wrong_verifier))
@@ -352,9 +424,10 @@ def main(argv=None):
         print("用法：python3 -B pkce_negative_probe.py --case missing|wrong；只在本機TTY隱藏輸入配置。")
         return 0
     if len(args) != 2 or args[0] != "--case" or args[1] not in CASES:
-        print('{"outcome":"indeterminate","reason":"input_unavailable"}')
+        print(json.dumps(safe_result("input_unavailable", "unknown"), sort_keys=True))
         return 2
-    result = {"case": args[1], "outcome": "indeterminate", "reason": "input_unavailable"}
+    result = safe_result("input_unavailable", "unknown")
+    result["case"] = args[1]
     client_id = secret = ""
     try:
         if not sys.stdin.isatty() or not sys.stderr.isatty():
@@ -379,6 +452,8 @@ def main(argv=None):
         result["reason"] = "internal_error"
     finally:
         client_id = secret = ""
+    if not result["remote_rejected"] and not result["token_present"]:
+        result["diagnostic_class"] = STOP_CLASSES.get(result["reason"], result["diagnostic_class"])
     print(json.dumps(result, sort_keys=True))
     return {"passed": 0, "failed": 1, "indeterminate": 2}[result["outcome"]]
 

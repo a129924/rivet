@@ -84,3 +84,15 @@ Human 已針對現行 `index-v2.html`／來源 `d11f343` 明示：內容／流�
 ### P06 最新執行狀態（2026-10-21）
 
 以上遠端pending為P01規劃時狀態；現已由Human依固定helper與判準完成missing/wrong各一次新授權/單次交換，兩個安全報告均HTTP400、unknown_error/unknown、無token，結論皆indeterminate，不宣稱PKCE enforcement通過。工具最終SHA659809be53ac21a76e5417fffd9bd082c41cf3c1fe93116d3cb1a6cc32901699（d11f343基線後dirty source），兩case間未修改。總預算2/2已用盡，停止授權與重試，無rawbody可追補；後續診斷需另訂有限契約與新預算。Canvas Human驗收passed，遠端refresh/401本輪不做、保持pending，全部PR Humanreview尚未完成。詳見pkce-negative-verification evidence與step；範圍/manifest/既定判準不變。
+
+## Q 輪現行診斷 amendment（2026-10-21；優先於舊 P 判準）
+
+本輪基線 `82489b68ff21e955611bde1e9028fff21dc68e74`，沿用原 feature worktree／feat/github-first-sign-in／Draft PR61；不在dev實作、不新worktree/PR、不merge。只改善獨立negative CLI的有限脫敏診斷，再missing／wrong各一次freshcode、單POST；本輪新額度總2次，逐步等待Human，不自動重試。P輪2/2已用完，兩者unknown／indeterminate原樣保留；不追補原body、不重用、不改判。
+
+Goal是區分已知OAuth拒絕與精確verifier證據，不把一般invalid_grant或bad_verification_code當PKCE證明；新增diagnostic_version=2讓Human辨識新工具。正式OAuth不是已確認bug，不能宣稱enforcement已驗證；case與原因不相符、unknown、衝突及未明確verifier訊息仍indeterminate。機密/raw description僅記憶體，不輸出或保存。
+
+本輪不改transport、loopback、TTY/getpass防fallback、PKCE生成／單次策略，不改Swift App／正式GitHubIntegration／rootPackage／實驗／圖。Canvas Human passed及e941d88正常授權／再次API來源沿用，不重做positive/API/remote refresh/401。精確manifest與九欄見plan Q，分類鎖定technical-spec §9。規劃時新Human兩case結果pending；只有獨立planningreview→implementation→Tester/codeReviewer後才能執行。此為執行前契約，現行實際結果見下方Q06摘要（兩case均indeterminate、Q2/2用盡）。
+
+### Q06 實際執行摘要（判準不變）
+
+2026-10-21，Q05獨立approved/R1closed後，Human以凍結version2 CLI另取missing/wrong各一個新code、各單次exchange。兩案皆HTTP400 invalid_grant/code_problem/generic_code_rejection、remote_rejected=true、token_present=false；description存在並提及verifier，但description_class=unknown，signals_conflict=false、pkce_rejection_proven=false。按事前§9兩者皆indeterminate；不得以hint、HTTP400或一般invalid_grant當PKCE證明。missing/wrong各1/1、Q總2/2用盡，停止新授權/重試/擴模板；P舊2/2 unknown歷史保留。來源82489b6+Q受限diff、CLI SHA `0d1d912473f44315eeadecca94b8cf6f1e31caea06e1ed821dfe8679b3f01a51`。原始描述未保存，無法可靠專指拒絕原因；完整安全JSON/來源與限制見新pkce-diagnostics-v2.md。正式OAuth/credential/provider/scope/refresh/401未改，正常login/API/canvas不重做，完整遠端refresh/401及完整PR Human review仍pending。

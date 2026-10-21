@@ -6,6 +6,74 @@
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
 
+## Q 輪現行最小診斷 amendment（2026-10-21；先於P/A/S歷史契約）
+
+基線 `82489b68ff21e955611bde1e9028fff21dc68e74`，原feature/feat/github-first-sign-in/原DraftPR61，不新worktree/PR、不dev實作、不merge。已授權同topic commit/push/更新原PR，不重問。P輪2/2 unknown/indeterminate原樣保留且不可追補原body/重用/改判；Q新增兩次授權額度，missing/wrong各fresh單POST各一次。不得重做positive/API/remote refresh/401。
+
+現行執行結果：Q06已完成，missing/wrong均indeterminate，各1/1總2/2用盡；以下pending及流程表是執行前條件，詳末尾Q06實際摘要及新evidence。不改原判準，Q07複核進行中。
+
+### Q精確manifest（取代較舊廣泛寫入授權）
+
+Modify：
+
+- `apps/GitHubSignInVerification/tools/pkce_negative_probe.py`（僅有限分類/安全診斷version2）
+- `apps/GitHubSignInVerification/tools/test_pkce_negative_probe.py`（新版matrix及既有回歸）
+- `apps/GitHubSignInVerification/tools/README.md`（新版安全輸出及Human逐步命令/額度）
+- `analysis/github-first-sign-in/requirements.md`
+- `analysis/github-first-sign-in/technical-spec.md`
+- `plan/github-first-sign-in/github-first-sign-in.plan.md`
+- `plan/github-first-sign-in/github-first-sign-in.step.md`
+- `docs/architecture/github-first-sign-in.md`
+- `README.md`
+- `docs/design-principles.md`
+- `docs/architecture/README.md`
+- `docs/architecture/github-oauth-dual-client.md`
+
+最後五份長期docs僅同步最新觀察/限制，不添加產品需求。Written唯一新檔：`plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md`。Deleted/rename：無。舊`pkce-negative-verification.md`及其它歷史evidence、全部圖、E001–E003、SwiftApp、rootPackage、GitHubIntegration與既有lifecycle、其它topic/worktree全部ReadOnly。CLI transport/TTY-getpass警告防fallback/loopback/PKCE生成/單次與無retry策略亦ReadOnly，不能因診斷需求改它們。CanvasHumanpassed與e941d88正常login來源沿用，無新圖/ownership改變。
+
+### 每implementation slice九欄
+
+- In-Scope：Q03a有限診斷分類/測試/工具README；Q03b新證據及允許文件最新狀態。
+- Out-Of-Scope：transport/TTY/loopback/生成政策、正式能力bug修正、新API/module、重判P結果、positive/API/refresh/401。
+- ReadOnly：上列ReadOnly及82489b6來源；Q不是較舊P寫入授權延伸。
+- Written：唯一新pkce-diagnostics-v2.md，開始記planned、完成才actual。
+- Deleted：無。
+- Modify：每slice從Q精確list選actualpaths/hunks，不把清單視為完成。
+- Goal：有限OAuth診斷及case-specific verifier證據，Human可辨識version2。
+- Non-Goal：不保證遠端回應命中模板，不把generic拒絕/invalid_grant當enforcement證明。
+- TestCase：QD01–QD05、實際命令/結果/來源；新Humanmissing/wrong執行前pending。
+
+### Q流程
+
+| Step | Owner role | 完成條件 |
+|---|---|---|
+| Q01 | Plan-Creator | 四planning最小追加manifest/固定判準/來源，保留P結果 |
+| Q02 | Plan-Reviewer | 獨立approved後才Q03，不能沿用P核准 |
+| Q03a/Q03b | Implementer | 兩slice開始/完成九欄，分類/測試與文件 |
+| Q04 | Tester | fake-only QD01–QD05與既有回歸、readonly檢查 |
+| Q05 | Reviewer | 獨立review、required fixes完成且approved才live |
+| Q06 | Human | ask-question一次一步，先missing再wrong各freshprocess／一次授權／單POST；總2次 |
+| Q07 | Tester → Reviewer | safe version2結果來源/分類/限制記錄並獨立複核 |
+| Q08 | Implementer → Human | review後staged語意→topiccommit/push/原PR更新/local真diffmap→humanreview |
+
+unknown/indeterminate/failed如實記，不自動增加授權、取得rawbody或事後改表；重大scope/contract問題才停受影響工作交Human。正式能力非已確認bug，不宣稱PKCE enforcement通過。
+
+### QD驗證
+
+| ID | Cases |
+|---|---|
+| QD01 | §9每個固定description完整模板、<=512/normalize/absent/nonstring/超長；known/unknowncode與所有case矩陣 |
+| QD02 | required/mismatch/invalid-unspecified、case不符、強config/redirect/auth優先及已知description衝突；badcode/invalidgrant單獨不pass |
+| QD03 | 僅提及verifier/否定詞/前後附sentinel/未知模板/未知error不得pass；token優先failed/JSONduplicate/mixed/HTTP/network/timeout有限分類 |
+| QD04 | capture全部stdout/stderr含rawerror/desc/secret/code/state/token/URL/exception sentinels不得洩漏；diagnostic_version=2與全safeenum/bool；TTY/getpass防fallback與無retry既有regression |
+| QD05 | transport/TTY/loopback/PKCE生成及readonlysource相對82489b6未改；P舊證據原樣，version2新結果只入新evidence；Human總2次、一次一步 |
+
+Fake command：`python3 -B -m unittest discover -s apps/GitHubSignInVerification/tools -p 'test_pkce_negative_probe.py'`。Human在原featuredirectory本機terminal、每步等待結果：`python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --case missing`，再獨立新process `--case wrong`；輸入由原安全getpass處理，不將機密貼對話。收到diagnostic_version=2才記本輪；舊version不得冒充新結果。root/consumer/app未改者沿用既有證據，必要hooks照實記，不重做live正常授權。
+
+Graphify既有受限sourcefallback；PRLens僅local scratch真base/head diff重新validate/render，不上傳、不改toolconfig。無新圖，frozen artifacts全readonly。
+
+---
+
 ## P 輪現行最小 amendment（2026-10-21；先於既有 A/S 歷史契約適用）
 
 - Source HEAD：`d11f343`；feat/github-first-sign-in／原feature worktree／Draft PR61不變。只在feature實作，不建新worktree/PR、不merge；已授權同topic commit/push/更新原PR，不重問發布授權。
@@ -250,3 +318,7 @@ Graphify／PR Lens 是導覽／理解輔助，不是新增 OAuth 業務驗收或
 ### P06 最新執行狀態（2026-10-21）
 
 以上遠端pending為P01規劃時狀態；現已由Human依固定helper與判準完成missing/wrong各一次新授權/單次交換，兩個安全報告均HTTP400、unknown_error/unknown、無token，結論皆indeterminate，不宣稱PKCE enforcement通過。工具最終SHA659809be53ac21a76e5417fffd9bd082c41cf3c1fe93116d3cb1a6cc32901699（d11f343基線後dirty source），兩case間未修改。總預算2/2已用盡，停止授權與重試，無rawbody可追補；後續診斷需另訂有限契約與新預算。Canvas Human驗收passed，遠端refresh/401本輪不做、保持pending，全部PR Humanreview尚未完成。詳見pkce-negative-verification evidence與step；範圍/manifest/既定判準不變。
+
+### Q06 實際執行摘要（判準不變）
+
+2026-10-21，Q05獨立approved/R1closed後，Human以凍結version2 CLI另取missing/wrong各一個新code、各單次exchange。兩案皆HTTP400 invalid_grant/code_problem/generic_code_rejection、remote_rejected=true、token_present=false；description存在並提及verifier，但description_class=unknown，signals_conflict=false、pkce_rejection_proven=false。按事前§9兩者皆indeterminate；不得以hint、HTTP400或一般invalid_grant當PKCE證明。missing/wrong各1/1、Q總2/2用盡，停止新授權/重試/擴模板；P舊2/2 unknown歷史保留。來源82489b6+Q受限diff、CLI SHA `0d1d912473f44315eeadecca94b8cf6f1e31caea06e1ed821dfe8679b3f01a51`。原始描述未保存，無法可靠專指拒絕原因；完整安全JSON/來源與限制見新pkce-diagnostics-v2.md。正式OAuth/credential/provider/scope/refresh/401未改，正常login/API/canvas不重做，完整遠端refresh/401及完整PR Human review仍pending。

@@ -1,13 +1,46 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：Human review（本輪交付完成）。
-- Current status：Tester evidence-check completed，待P07獨立Reviewer；兩case均indeterminate，總2/2預算已用完。
-- Upstream verdict：P02 approved，獨立Plan-Reviewer明示無required fix。
+- Phase／Current step：Q08 topic交付。
+- Current status：in-progress；Q07 approved無required fix，兩case均indeterminate，Q2/2用盡。
+- Upstream verdict：Q07 approved，無required fix；Q05 R1已關閉。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
 - 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
-- 最後更新：2026-10-21，Tester；P07安全報告／分類／來源／readonly／manifest複核完成，交獨立Reviewer；沒有live或新預算。
+- 最後更新：2026-10-21，Implementer；依外部Q07approved開始已授權交付。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
+
+## Q 輪現行 ledger（優先於以下P/A/S歷史）
+
+本輪來源82489b68ff21e955611bde1e9028fff21dc68e74，原feature/branch/PR61不變。P兩case已2/2用完，unknown/indeterminate不能補原body或重判；Q新missing/wrong各fresh單POST一次、總2次。CanvasHumanpassed、e941d88正常login保留；本輪不重做positive/API/remote refresh/401。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker/verdict |
+|---|---|---|---|---|---|
+| Q01 | completed | Plan-Creator | 四planning精確manifest/固定描述matrix/九欄 | 本輪四planning | 未自審 |
+| Q02 | completed | Plan-Reviewer | 獨立planning審查明示verdict | 獨立Plan-Reviewer明示approved、無required fix | approved |
+| Q03a/Q03b | completed | Implementer | 分類/test/README及新evidence，slice九欄 | Q03及R1完成，25tests green | Q02approved |
+| Q04 | completed | Tester | fakeQD01–QD05/舊回歸/readonly | 新evidence：25tests exit0，help/noTTY/AST/hash/19模板/readonly/manifest通過 | Q05唯一R1已獨立重驗/關閉 |
+| Q05 | completed | Reviewer | 獨立code/scope/evidence/required fixes | Reviewer approved、唯一R1closed | approved |
+| Q06 | completed | Human | 一次一步missing/wrong各fresh單次，總2次 | version2兩case HTTP400 invalid_grant/code_problem、無token、unknown description | 均indeterminate，2/2用盡 |
+| Q07 | completed | Tester → Reviewer | 記錄/複核來源分類及限制 | Tester已核對兩safeJSON/§9/來源/預算/readonly/五docs與三planning摘要，見新evidence | Reviewer明示approved、無required fix，不重判舊P |
+| Q08 | in-progress | Implementer → Human | commit/push/update同PR/local真diffmap→humanreview | 待真SHA/URL | 已授權，不merge |
+
+### Q Blockers/Human Check
+
+Q02已獨立approved，無required fix。Q05approved/R1closed後已完成兩case，均indeterminate，各1/1總2/2用盡。停止新授權；generic/unknown/conflict/原因不符不算pass；不追rawtext/機密、不擴表、不加第三次授權。正式能力不是已確認bug，remote refresh/401與完整PR humanreview仍未完成。
+
+### Q01 九欄完成交接
+
+- In-Scope：四planning追加診斷version2、預先固定模板/matrix、精確manifest與新兩次Human額度。
+- Out-Of-Scope：實作/測試/live/Git；修改transport/TTY/loopback/生成及正式Swift能力。
+- ReadOnly：既有四planning/CLI分類來源與呼叫端已查官方依據，舊P結果。
+- Written：無新repository檔案。
+- Deleted：無。
+- Modify：analysis/github-first-sign-in/requirements.md；analysis/github-first-sign-in/technical-spec.md；plan/github-first-sign-in/github-first-sign-in.plan.md；plan/github-first-sign-in/github-first-sign-in.step.md。
+- Goal：給獨立Plan-Reviewer最小可執行Q契約。
+- Non-Goal：不自審、不宣稱新diagnostics或PKCE已通過；不重判P。
+- TestCase：QD01–QD05未執行；Human新missing/wrong皆pending。
+
+---
 
 ## P 輪現行 ledger（優先於以下 A/S 歷史）
 
@@ -346,3 +379,83 @@ In-Scope：兩safeJSON與既定分類/來源/預算/manifest最小核對；Out-O
 - 全部pre-commit hooks通過。提交後default sandbox重查fixture時loopback綁定遭拒，屬環境限制；相同source以既有授權升權重跑21tests全pass。未因此改碼/改判準/重做遠端授權。
 - 本筆收尾只更新帳本/evidence，正式source及helper SHA保持相同；最終head的local PRLens map另在外部scratch validate/render，結果隨PR及交付回報，不上傳。
 - 總2/2新授權用完，停止新授權/重試；原body未保存，unknown不能追補。Canvas Human已passed，PKCE enforcement仍未獲證；remote refresh/401本輪未執行、pending。完整PR Human review仍待，不merge、不新建/移除worktree或PR。
+
+## Q03a／Q03b 開始九欄
+
+- In-Scope：§9分類/report version2、fixturetests/README與新診斷證據及指定長期docs。
+- Out-Of-Scope：正式Swift、transport/TTY/loopback/隨機生成、live操作與舊P重判。
+- ReadOnly：全部正式source、舊P證據、frozen圖與CLI授權/交換傳輸。
+- Written：plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md。
+- Deleted：無。
+- Modify：Q精確manifest的3tools、4planning與5長期docs。
+- Goal：固定有限完整模板與case/conflict判準，安全區分拒絕與PKCE證明。
+- Non-Goal：不把受控通過當遠端通過，不修改live後判準。
+- TestCase：QD01–QD05，先受控red→green，再獨立Tester及Reviewer。
+
+## Q03a／Q03b 完成九欄與交接
+
+- In-Scope：version2有限分類/report、25fixtures、README與指定docs/新evidence。
+- Out-Of-Scope：未live、未改正式Swift/傳輸/TTY/loopback/隨機生成或舊P結果。
+- ReadOnly：舊P證據、全部正式source/tests/project/experiments/frozen圖。
+- Written：evidence/pkce-diagnostics-v2.md。
+- Deleted：無。
+- Modify：Q manifest指定3tools、4planning、5長期docs。
+- Goal：完成既定19模板/case/conflict與安全診斷，交獨立Tester。
+- Non-Goal：不自審、不把受控green當GitHub遠端結論。
+- TestCase：red25tests中5error/1failure；green25tests exit0，詳新evidence。Human各0/1，總0/2。
+
+## Q04 獨立 Tester 完成九欄
+
+In-Scope：QD01–QD05；Out-Of-Scope：live/秘密/Git/code修改；ReadOnly：工具/正式source/TTY/傳輸/loopback/生成/P歷史/圖；Written/Deleted：無；Modify：pkce-diagnostics-v2.md與本step自身事實；Goal：實跑及契約疑點交Q05；Non-Goal：不代核准/不預填遠端；TestCase：25tests pass、help0、noTTY各2版本2安全輸出/stderr空、AST/19模板精確比對/readonly/manifest pass、pycache0。CLI504b4a...6484與交接一致。
+
+非string error_description實際被report為description_present=false/absent，與原欄存在語義不符，已回報主agent，交獨立Reviewer判定required fix；不會誤報PKCEpass，但不能隱藏。Human新0/2未使用。
+
+## Q03a R1 原 slice 回修九欄
+
+- In-Scope：Q05唯一required fix，非string description的presence metadata。
+- Out-Of-Scope：passed判準/模板/transport/TTY/loopback/正式能力/live。
+- ReadOnly：Q manifest readonly及舊P歷史，19模板與case判準。
+- Written：無額外新檔。
+- Deleted：無。
+- Modify：CLI/test兩檔及step/新evidence自身證據。
+- Goal：可解析欄位存在即present=true，不合格式仍unknown/json/indeterminate。
+- Non-Goal：不把metadata改動當新判準或真人通過。
+- TestCase：null/number/object/array presence與sentinel；red為presence false，待green/獨立重驗。
+
+### Q04/Q05 R1 metadata 獨立重驗
+
+Tester親跑完整25tests exit0，另null/number/object/array四fixture均presence=true/classunknown/json/indeterminate/provenfalse。最終CLI SHA0d1d912473f44315eeadecca94b8cf6f1e31caea06e1ed821dfe8679b3f01a51，tools指紋6e01680d63e2f0647ab33c38aaa71306d27270d0950e39ac52fb2c199178d073；舊hash與疑點保留歷史。readonlydiff空/ASTpass/既有readonlyfunction未變/pycache0。
+
+只Modify新evidence與本step自身R1；In-Scope為定點重驗，Out-Of-Scope為live/Git/code修改，ReadOnly工具/正式source，Written/Deleted無；Goal交Q05，Non-Goal不代核准，TestCase如上。Q Human0/2未動，交獨立Reviewer關閉required fix。
+
+## Q05 外部核准／Q06 開始
+
+獨立Reviewer approved、唯一R1closed，可交Q06；Tester獨立25tests及null/number/object/array metadata/sentinel重驗通過。live前固定CLI SHA `0d1d912473f44315eeadecca94b8cf6f1e31caea06e1ed821dfe8679b3f01a51`、tools指紋 `6e01680d63e2f0647ab33c38aaa71306d27270d0950e39ac52fb2c199178d073`，基線82489b6+Qdirtydiff。19模板/case/conflict/passed規則不再改。Human新missing/wrong各0/1，總0/2；先missing，再另process wrong，逐步安全JSON收集；未live前不填結果。
+
+## Q06 missing 已執行
+
+Human安全version2 JSON：HTTP400 invalid_grant/code_problem、generic_code_rejection，remote_rejected=true、token_present=false；description存在、unknown、mentions_verifier=true但非證據，signals_conflict=false、pkce_rejection_proven=false。fresh/callback/singleexchange/omit皆true。依固定§9為indeterminate，不擴模板/不追原文。來源82489b6+Qdirtydiff及凍結CLI SHA未變，詳新evidence。missing1/1已用盡、wrong0/1，總1/2；下一步只允許獨立新process/code的wrong一次。
+
+## Q06 wrong 完成／Q07 交接
+
+Human安全version2 JSON：HTTP400 invalid_grant/code_problem/generic_code_rejection、remote_rejected=true、無token、description_present及mentions_verifier=true但class unknown；conflict=false/proven=false，fresh/callback/single_exchange/wrong_challenge_differs皆true、omitted=false。凍結CLI hash兩case之間未改；按事前§9為indeterminate。與missing一樣無法可靠專指PKCE，詳新evidence。Q兩case各1/1總2/2用盡，P舊2/2另保留，不追rawbody/不擴模板/不重用code/不第三次。正式能力非已確認bug，不重做正常login/API，remote refresh/401 pending。交Q07，不代外部核准。
+
+## Q07 Tester 脫敏複核完成
+
+In-Scope＝safeJSON/§9/來源預算/readonly/docs核對；Out-Of-Scope＝live/全測試/秘密/Git/code變更；ReadOnly＝工具/正式source/舊P/圖；Written/Deleted＝無；Modify＝新evidence與本step；Goal＝給獨立Reviewer來源一致結果；Non-Goal＝不代核准或推論PKCE成敗；TestCase＝兩報告逐欄一致、CLI0d1d912...1a51/tools6e01680...d073不變、readonlydiff空/pycache0、五docs與三planning最新摘要一致。
+
+兩case均invalid_grant/code_problem、description unknown但提及verifier，依事前固定§9保持indeterminate，proven=false；各1/1總2/2用盡、停止授權/重試/重用。P舊2/2保留，refresh401與完整PRHumanreview仍pending。沒有重跑25tests或live，交Q07獨立Reviewer。
+
+## Q07 外部最終 verdict／Q08 開始九欄
+
+獨立Reviewer明示approved、無required fix，可Q08；兩案invalid_grant+unknown description只能indeterminate，hint不是PKCE證明。來源/歸因/限制/Q2/2及P歷史一致，不merge，停Humanreview。
+
+- In-Scope：staged語意檢查、同topic commit/push、原DraftPR61描述與local真diffmap更新。
+- Out-Of-Scope：live/重試/擴模板/merge/新worktree或PR。
+- ReadOnly：凍結CLI、正式能力與全部Qreadonly/P歷史圖。
+- Written：無額外repo檔案；localmap只在scratch。
+- Deleted：無。
+- Modify：Qmanifest指定docs/step/新evidence自身交付事實，原PR描述。
+- Goal：可追溯交付並停Humanreview。
+- Non-Goal：不把PR或工具交付當PKCEenforcement通過。
+- TestCase：staged/diffcheck/必要hooks、map validate/render、remoteSHA/PRstate。

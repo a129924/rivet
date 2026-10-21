@@ -129,3 +129,43 @@ E002 runner會先positive、沒有missing case且把generic bad_verification_cod
 ### P06 最新執行狀態（2026-10-21）
 
 以上遠端pending為P01規劃時狀態；現已由Human依固定helper與判準完成missing/wrong各一次新授權/單次交換，兩個安全報告均HTTP400、unknown_error/unknown、無token，結論皆indeterminate，不宣稱PKCE enforcement通過。工具最終SHA659809be53ac21a76e5417fffd9bd082c41cf3c1fe93116d3cb1a6cc32901699（d11f343基線後dirty source），兩case間未修改。總預算2/2已用盡，停止授權與重試，無rawbody可追補；後續診斷需另訂有限契約與新預算。Canvas Human驗收passed，遠端refresh/401本輪不做、保持pending，全部PR Humanreview尚未完成。詳見pkce-negative-verification evidence與step；範圍/manifest/既定判準不變。
+
+## 9. Q 輪現行診斷版本2（優先於 §8 的舊P四errorcode判準）
+
+基線82489b68ff21e955611bde1e9028fff21dc68e74；僅改CLI分類及安全報告，不改transport/TTY防fallback/loopback/PKCE生成與單次POST。P輪unknown/indeterminate歷史不可重判。新missing/wrong各freshprocess單POST，總2次；工具與證據均標diagnostic_version=2。
+
+### 事前固定有限詞彙
+
+已知remote_error enum＝原四verifier code（missing_code_verifier、incorrect_code_verifier、invalid_code_verifier、code_verifier_required）、既有incorrect_client_credentials／redirect_uri_mismatch／bad_verification_code，加invalid_request、invalid_grant、invalid_client、unauthorized_client、access_denied、unsupported_grant_type、invalid_scope、server_error、temporarily_unavailable；其餘永遠unknown，不echo原值。已知值只輸出預定enum，不轉印原始error。保留有限http/outcome/布林，新增：diagnostic_version=2、diagnostic_class、description_class、description_present、description_mentions_verifier、signals_conflict、pkce_rejection_proven。
+
+diagnostic_class有限值：verifier_required、verifier_mismatch、verifier_invalid_unspecified、token_returned、json、http、network、timeout、auth、configuration、redirect、code_problem、unknown（輸入/取消/internal安全失敗可映射unknown，原有限reason保留）。description_class只允許下表class及absent／unknown。description_present只表示原欄存在；description_mentions_verifier僅安全提示布林，不參與passed。
+
+raw error/description只存記憶體。description須為string、長度<=512字元；只strip／lower／空白折疊，再移除至多一個末尾句點，然後以下固定完整句比對。超長、非string、附加字、否定句、僅含verifier字詞皆unknown；不做substring／wildcard通過。以下是synthetic supported wording，非GitHub官方保證，live後不得增加模板再回改結果。
+
+| description_class | 正規化後允許的完整句（分號分隔） |
+|---|---|
+| verifier_required | `missing required parameter: code_verifier`; `the code_verifier is required`; `code_verifier is required`; `the code_verifier parameter is required`; `invalid request: missing code_verifier` |
+| verifier_mismatch | `the code_verifier does not match the code_challenge`; `code_verifier does not match code_challenge`; `the code_verifier passed is incorrect`; `code_verifier is incorrect`; `invalid request: code_verifier does not match code_challenge` |
+| verifier_invalid_unspecified | `invalid parameter: code_verifier`; `the code_verifier is invalid`; `invalid code_verifier`; `the code_verifier parameter is invalid or missing` |
+| code_problem | `the code passed is incorrect or expired`; `the authorization code is invalid or expired` |
+| configuration | `the client_id and/or client_secret passed are incorrect` |
+| redirect | `the redirect_uri must match the registered callback url for this application` |
+| auth | `the user denied access to your application` |
+
+### 固定判定優先序與matrix
+
+1. 任一top-level access_token／refresh_token key（含空值／mixed／非string）仍failed、pkce_rejection_proven=false，不使用token。
+2. format/JSON duplicate keys/mixed成功欄位/未知shape、HTTP非2xx/400或unsupported情境均indeterminate；對應有限json/http/unknown。network/timeout亦各有限class，絕不洩漏原exception。
+3. 可信純error下：missing_code_verifier／code_verifier_required給required；incorrect_code_verifier給mismatch；invalid_code_verifier只給invalid_unspecified，不能單憑invalid就passed。
+4. generic invalid_request／invalid_grant／bad_verification_code及invalid_code_verifier，只有精確完整description為required或mismatch才可取得相應verifier evidence。一般invalid_grant或bad_verification_code自身僅code_problem；unknown error即使description精確或提及verifier也不passed。
+5. 強configuration errors（incorrect_client_credentials、invalid_client、unauthorized_client、invalid_scope）、redirect_uri_mismatch、access_denied分別維持configuration/redirect/auth優先；不能被verifier描述升級。unsupported_grant_type/server_error/temporarily_unavailable仍indeterminate（unknown）。強error與已知不相容description class設signals_conflict=true並indeterminate；強verifier required/mismatch與已知不同description class亦衝突。未知/absent description自身不構成已知相反訊號。invalid_unspecified可被上述精確required/mismatch細化。
+6. passed須同時可信純error、HTTP2xx/400、無token/格式問題、無conflict、非unknown且case對應：missing只能verifier_required；wrong只能verifier_mismatch。不同case marker及invalid_unspecified/code_problem/unknown一律indeterminate。pkce_rejection_proven只在passed為true；remote_rejected可在可信純error為true，不等於PKCE證明。
+7. description_mentions_verifier無論true/false均不能影響上述判定；所有safe欄位由枚舉/布林產生。raw error/description/exception、secret/code/state/verifier/token、body/URL一律不輸出、不保存、不traceback。未知description不echo。
+
+受控QD01–QD05覆蓋每模板、matrix/case/強訊號衝突/否定與附加sentinel、安全output及既有21tests回歸。Human使用新版工具，各case一次，若unknown或failed仍記實際結果，不追body、不追加第三次、不事後擴表。
+
+來源：GitHub[授權](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)與[token errors](https://docs.github.com/en/apps/oauth-apps/maintaining-oauth-apps/troubleshooting-oauth-app-access-token-request-errors)；[RFC7636 §4.6](https://www.rfc-editor.org/rfc/rfc7636.html#section-4.6)與[RFC6749 §5.2](https://www.rfc-editor.org/rfc/rfc6749.html#section-5.2)由呼叫端已查證：mismatch可用invalid_grant，但invalid_grant也涵蓋其他grant問題，所以單憑它不是PKCE證據。固定模板只是本工具有限辨識契約。
+
+### Q06 實際執行摘要（判準不變）
+
+2026-10-21，Q05獨立approved/R1closed後，Human以凍結version2 CLI另取missing/wrong各一個新code、各單次exchange。兩案皆HTTP400 invalid_grant/code_problem/generic_code_rejection、remote_rejected=true、token_present=false；description存在並提及verifier，但description_class=unknown，signals_conflict=false、pkce_rejection_proven=false。按事前§9兩者皆indeterminate；不得以hint、HTTP400或一般invalid_grant當PKCE證明。missing/wrong各1/1、Q總2/2用盡，停止新授權/重試/擴模板；P舊2/2 unknown歷史保留。來源82489b6+Q受限diff、CLI SHA `0d1d912473f44315eeadecca94b8cf6f1e31caea06e1ed821dfe8679b3f01a51`。原始描述未保存，無法可靠專指拒絕原因；完整安全JSON/來源與限制見新pkce-diagnostics-v2.md。正式OAuth/credential/provider/scope/refresh/401未改，正常login/API/canvas不重做，完整遠端refresh/401及完整PR Human review仍pending。

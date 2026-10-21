@@ -24,15 +24,19 @@ Client ID／Secret 皆 getpass 隱藏輸入，無TTY直接安全結束。按 Ctr
 
 missing 完全省略 code_verifier 欄位；wrong 送另一個43字元base64url verifier，先確認其challenge與授權challenge不同。其餘固定HTTPS endpoint、offline_access、同次redirect、headers與form encoding保持相同。callback先ready後開瀏覽器，限定127.0.0.1、GET、exact Host/path/state及單次claim；8KiB headers、每連線5秒、最多16connections、授權到POST總5分鐘。POST完整I/O硬性上限為剩餘授權期限或30秒較小者，response上限64KiB；無redirect、proxy env、cookie、cache或retry。
 
-## 事前固定判準
+## 事前固定判準：diagnostic_version 2
 
-- `passed`：HTTP2xx或400、純error無任何token／成功payload，error精確為 missing_code_verifier、incorrect_code_verifier、invalid_code_verifier、code_verifier_required。這是保守辨識allowlist，不宣稱GitHub官方保證error名稱。自由文字description不參與通過判定。
-- `failed`：JSON object存在access_token或refresh_token key，包含空值、混合error與異常type；不使用、不保存回應token。
-- `indeterminate`：一般bad_verification_code、配置／redirect／email錯誤、拒絕授權、expired／timeout／network、unknown／shape／HTTP異常等。remote_rejected=true只代表收到error，不代表PKCE通過。
+- `passed`：可信純error、HTTP2xx或400、無token/格式問題、訊號無衝突，且missing對應verifier_required、wrong對應verifier_mismatch。四個verifier error不再一律通過：單獨invalid_code_verifier只屬verifier_invalid_unspecified，不能證明拒絕原因。
+- `failed`：JSON object存在access_token或refresh_token key，包含空值、混合error與異常type；不使用、不保存token。
+- `indeterminate`：一般code拒絕、配置/redirect/授權、網路/HTTP/JSON/逾時、未知或衝突訊號及case不符。`remote_rejected=true`只代表可信error，`pkce_rejection_proven=true`才表示本工具固定判準已獲證。
 
-stdout只輸出固定提示與安全JSON：case、outcome、reason、有限remote_error、HTTP整數及必要布林。未知error映射unknown，沒有clientID、secret、code、state、verifier、token、body、URL或exception文字。退出碼passed=0、failed=1、indeterminate=2；不能單憑非零就當PKCE enforcement通過。
+有限error、19個完整description模板、normalize與case/conflict matrix在[technical-spec §9](../../../analysis/github-first-sign-in/technical-spec.md#9-q-輪現行診斷版本2優先於-8-的舊p四errorcode判準)事前鎖定。description只在記憶體內完整比對：最多512字元，strip/lower/空白折疊/至多一個末尾句點；不輸出原文。模板是synthetic supported wording，非GitHub官方保證。invalid_grant涵蓋多種grant問題，本身不是PKCE證據；unknown error不能被description升級。`description_mentions_verifier`只是提示，不參與passed；否定句、附加字、未知描述不當證據。live後不擴表配合結果。
 
-來源：[GitHub授權契約](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)、[token錯誤說明](https://docs.github.com/en/apps/oauth-apps/maintaining-oauth-apps/troubleshooting-oauth-app-access-token-request-errors)。bad_verification_code亦可能指code錯誤或過期，所以不可專指PKCE。
+stdout只輸出固定提示與安全JSON：case、outcome、reason、有限remote_error、HTTP整數/必要布林，加diagnostic_version、diagnostic_class、description_class、description_present、description_mentions_verifier、signals_conflict、pkce_rejection_proven。無clientID、secret、code、state、verifier、token、原始error/description/body/URL或exception文字。退出碼passed=0、failed=1、indeterminate=2；不能單憑非零當PKCE enforcement通過。
+
+P輪兩次已用完，missing/wrong均HTTP400、unknown/indeterminate；原始回應未保存，不可追補或重判。Q輪新版各case另一次新授權/新code/單POST，總上限2次；不重用、不重試、不第三次。逐步交Human，required fixes關閉後才live。
+
+來源：[GitHub授權契約](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)、[token錯誤說明](https://docs.github.com/en/apps/oauth-apps/maintaining-oauth-apps/troubleshooting-oauth-app-access-token-request-errors)、[RFC7636 §4.6](https://www.rfc-editor.org/rfc/rfc7636.html#section-4.6)、[RFC6749 §5.2](https://www.rfc-editor.org/rfc/rfc6749.html#section-5.2)。
 
 ## 受控測試
 
@@ -40,4 +44,4 @@ stdout只輸出固定提示與安全JSON：case、outcome、reason、有限remot
 python3 -B -m unittest discover -s apps/GitHubSignInVerification/tools -p 'test_pkce_negative_probe.py'
 ```
 
-只有fixture與本機loopback，沒有真OAuth、秘密或GitHub呼叫。-B避免產生__pycache__；不安裝依賴、不改工具設定。遠端證據見topic `evidence/pkce-negative-verification.md`，不得把mock green當成真實passed。
+只有fixture與本機loopback，沒有真OAuth、秘密或GitHub呼叫。-B避免產生__pycache__；不安裝依賴、不改工具設定。P歷史證據見topic `evidence/pkce-negative-verification.md`；Q新版見 `evidence/pkce-diagnostics-v2.md`，不得把mock green當成真實passed。

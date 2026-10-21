@@ -38,3 +38,7 @@ Hosted TestAction 使用 `GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1`；entry 
 Human已自行開啟來源d11f343的現行canvas v2，逐步確認文字/箭頭及責任邊界、拖曳、縮放可讀、點選聚焦/說明、明暗切換皆通過。圖與frozen來源未修改，agent未繞過browser URL policy；先前工具限制與歷史pending保留。
 
 反向PKCE只使用驗證App旁的[獨立CLI](../../apps/GitHubSignInVerification/tools/README.md)，不改正式OAuth／SwiftApp，不擴張public API。missing/wrong各一個新process、新code及單POST，不重做正向/API；Human本機TTY隱藏輸入配置。固定allowlist以外均不冒稱PKCE通過，generic bad_verification_code無法歸因。2026-10-21已依序執行missing與wrong，各新process／一次授權／單次POST；Human安全報告均HTTP400、remote_rejected=true、token_present=false、unknown_error/unknown，按固定判準皆無法判定，不宣稱PKCE enforcement通過。兩次預算已用盡，未保存原body/description，不能追補原因或事後改allowlist，不重試。結果見[脫敏證據](../../plan/github-first-sign-in/evidence/pkce-negative-verification.md)。完整遠端refresh/401本輪不執行、保持pending。
+
+### Q 輪：獨立反向 PKCE 診斷 version 2
+
+本輪僅改善獨立驗證 CLI 的有限脫敏分類，不改正式 OAuth、credential/provider/scope或refresh/401契約。事前固定完整模板與case/衝突規則，區分GitHub拒絕及已證明PKCE拒絕；僅提及verifier、一般invalid_grant或unknown都不是通過證據。P兩次HTTP400 unknown/indeterminate保留，不追補原回應。Q新missing/wrong各一次、總2/2已用完：兩案HTTP400 invalid_grant/code_problem、無token，description unknown且mentions_verifier=true，均無法判定；hint不能證明PKCE原因，不擴表或重試。受控25tests通過不代表遠端通過。[新版來源與證據](../../plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md)。正常登入/再次查詢及canvas既有Human結果沿用；正式Rivet產品登入UI、完整遠端refresh/401仍未交付或pending。
