@@ -237,3 +237,13 @@ Tester 明示 required fixes 無：四主判準及三前置／連續性確認均
 ### M03 獨立 Reviewer 結果與發布交接
 
 Reviewer 明示 **approved**（M03 文件成果審查），required fixes 無。已確認六文件分開 Human／原碼／agent 現況、保留A07／C01／歷史，受限成功不擴張trace／產品UX／PKCE；staged恰六份文件且排除launcher。此approval不代表Human接受PR。依先前topic交付授權準備文件commit／push／同一Draft PR；尚未完成的Git／hooks／工具圖不預填，發布結果以實際commit與PR讀回為準，H01不merge。
+
+### M03-G01 實際文件發布與 Human 停點
+
+2026-10-21，文件提交 `1705e339f1ee023d334fb7b38cc414976592b1c7`（docs(github-account-login): 記錄 E009 真人驗證與證據界線）已實際push。staged六檔全為Markdown，launcher／另一worktree Swift及並行工作未納入。六項hooks全過：whitespace、EOF、Swift format、consumer contract、SwiftLint、renderer check；不當作新OAuth證據。
+
+[Draft PR #63](https://github.com/a129924/rivet/pull/63)已更新並讀回：base dev、head為上述主提交、changed_files=6、Draft=true、merged=false。PR說明區分Human回報／原碼推論／agent現況；保留C01與缺口，不把產品或PKCE當通過。
+
+PR Lens 0.11.0 對實際 base `16606b89b8e3e6b61523c23aa0be9653c1ea7b44` 至主提交的六文件diff：validate／render exit0，3 lanes／8 nodes／8 edges／3 steps／1 SVG；manifest headSha吻合，graph contentHash=81e29102de81f3cb92e7bce841d9ea6b。產物只在外部本機暫存，未上傳；此為主提交收據，後續帳本提交的map需按真正最終head更新，不冒稱此hash屬後續版本。
+
+M03文件驗證、獨立審查及主提交發布完成；E009受限成功之證據資格不變。當前停在H01 Human review，Human尚未接受PR，不merge。此後僅同步本筆已發生的發布紀錄，按原topic授權提交／push，不新增真人操作。
