@@ -50,3 +50,7 @@ Human指示續行後，獨立CLI新增實際browserURL/HTTP prepared Request被�
 ### U：Human-only 離線語義 review 工具
 
 已實作 private Swift/AppKit helper 與無網路校準入口 `python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review`，U03／U04 已完成、獨立 U05 approved（P2 closed、無其他 required fix），可交付工具並由 Human 明確參與正式 offline 校準。若將來另准 live，原文只能通過 gate 後由 Human 短暫閱讀，agent／Reviewer 不看、不保存；新增 `provider_semantic_observation` 只是 Human attestation，不改 proof／outcome。工具以 SystemRandom 打散 synthetic cases，不讀／比較 `expected_category`、不自評；末尾僅輸出 opaque correlation_id 與有限 observations，交獨立 Tester 核分。P2 selectors/stderr 回修後，獨立 Tester 親跑 57 項受控測試通過、strict format／SwiftLint 均 exit 0；完整 UI／clipboard／restoration／timeout 實證及 U06 Human 9+7 校準仍 pending，單次 smoke 不當作校準通過。新增 OAuth=0，共享 R→T 1/1 已用盡；[操作與限制](apps/GitHubSignInVerification/tools/README.md)。
+
+### U06 最新結果：方法未達資格，停止 live
+
+來源 `f420901a1076537c4f7aa0404fe31509b8bdc889`。獨立 Tester 已核對 frozen fixture SHA／16 個唯一映射，正式 offline 校準為 decisive **6/9**、abstain **2/7**，未達 9/9＋7/7，`calibration_threshold_met=false`；U06 completed-not-qualified，方法 needs-rework，停 Human 決策。Human 明示不懂英文，屬方法語言前提未滿足，不是使用者過失。獨立 Reviewer 的結果處置 approved 僅准文件記錄與停止；57 項受控測試與原 U05 code approved 保留，不放行 live、不代表正式 OAuth bug 或 PKCE failed。先前 pending 是執行前歷史；smoke 是另一次受手動操作中止的事件，不算這 16 cases。新 OAuth=0、R→T1/1 已耗盡與正常 App/API/canvas／P/Q/R/T 歷史不變。不改 frozen fixture、不重跑16、不新實作；Human最新已同意本機繁中offline候選，但所需installed語言資產未齊、目前不可用；Human已同意自行下載，待完成回報才重查；既有inventory仍supported非installed，未翻譯／下載／新查，live仍未授權。[安全結果](plan/github-first-sign-in/evidence/pkce-semantic-review.md)。

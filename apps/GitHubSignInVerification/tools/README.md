@@ -98,3 +98,7 @@ Parent先在當次已知context下gate：strict pure OAuth error、完整未截�
 Helper停用文字選取/編輯/自動偵測、空白app menu、不提供copy/export，window不restorable且sharingType none；目前僅實作與protocol受控驗證，尚未以synthetic互動完整驗證copy/export/restoration、timeout和異常關閉，不能宣稱OS無留痕或任意截圖防護。請勿截圖/複製/記錄原文；agent/Reviewer/CUA不得看live原文。
 
 本輪新增OAuth=0；共享R→T1/1已用盡，P/Q/R/T歷史不可回填或重判。正常App/API/canvaspassed不重做。任何將來live仍須另行明確授權，不能因offline校準通過自動執行。
+
+### U06 最新結果：停止校準與 live
+
+來源 `f420901a1076537c4f7aa0404fe31509b8bdc889`。Human已完成正式16-case offline calibration；獨立Tester核frozenSHA／16唯一映射後，decisive6/9、abstain2/7，未達9/9＋7/7，calibration_threshold_met=false。U06 completed-not-qualified，方法needs-rework、停Human；此前pending是執行前狀態，不是重跑指示。Human不懂英文是方法語言前提未滿足，不是使用者過失。不要再執行上面的16-case命令，不改fixture／labels、不新增UI/code/OAuth。57controlledpass／U05codeapproved仍成立，不能放行live或當OAuthbug／PKCEfailed；獨立Reviewer結果處置approved只限文件記錄與停止。smoke受手動操作中止、不是16case；R→T1/1已耗盡與本輪新OAuth0不變。Human最新已同意本機繁中offline候選及Apple on-device元件讀gate後description，但所需語言資產未齊、目前不可用；Human已同意自行下載，待完成回報才重查；既有inventory仍supported非installed，未翻譯／下載／新查，live未授權、OAuth0，機譯不能proof。

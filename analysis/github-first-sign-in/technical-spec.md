@@ -64,6 +64,20 @@ U03–U05 的離線工作現可準備及執行，Human 校準仍在 U06 停點�
 單次 smoke 紀錄為 30.534s／stderr=false／confirmed＋indeterminate。Human 回報看到文字、當時不能複製並隨意選取，可解釋人工觸發；不據此判自然 timeout、技術性全面禁複製或 Human holdout passed。完整 UI／timeout 等與正式 9+7 校準仍 pending，沒有新增 OAuth。
 
 
+### U06 實際結果與語言前提（現行停止點）
+
+來源 `f420901a1076537c4f7aa0404fe31509b8bdc889`。獨立Tester核對frozen fixture SHA與16唯一映射後，decisive6/9、abstain2/7，既定9/9＋7/7門檻未達，calibration_threshold_met=false；U06 completed-not-qualified／method needs-rework，停Human，禁止live。Human明示不懂英文，故英文方法前提未滿足；不是使用者過失、不表示正式OAuthbug或PKCEfailed。57項controlledpass、U05codeapproved及既有四個凍結SHA不變；結果處置由獨立Reviewer approved，範圍僅記錄與停止。
+
+先前smoke受Human手動操作中止，不併入本次16-case校準，也不當自然timeout。當時pending與P/Q/R/T原證據不改，App/API/canvaspassed保留，R→T1/1已用盡、新OAuth0；不改label／fixture、不重跑16、不做新code/UI。新語言方案尚未決策／未授權：可另研究Apple官方on-device framework，但機譯不能當proof，任何新本機元件讀取description都須Human確認；本次無實作／安裝／下載。
+
+### V 前置唯讀 inventory facts（不是工具實作或新 experiment）
+
+Human 已准新增 Apple on-device 元件在未來 offline 範圍讀 gate 後 description，原文／譯文僅本機記憶體短暫視窗，agent不看不存；不雲端／不自下載，live未授權、OAuth0。Apple官方 TranslationSession 的 installedSource 初始化在 macOS26+ 為同步 nonthrowing，canRequestDownloads=false、不會要求下載；on-device內容不進其metrics，不是一般Safari／系統雲端翻譯。
+
+外部 Tester 在 macOS26.5.2／SDK26.5／Xcode26.6 執行一次 scratch Swift6 compile/run，exit0、stderr_present=false；source SHA `ce6e738621fafc8c71b744db13dd7da3383cf90aaf9cc1b2b55e68ba9ed380bf`。只呼叫 Translation.LanguageAvailability.status(from:to:) 查 en→zh-Hant 與 en→zh-TW，兩者 supported、非 installed，只證所需語言組合資產未齊，不推論每個語言都沒裝。未初始化session、未translate／prepareTranslation／下載／UI／OAuth；scratch自清、repository無新檔。
+
+目前沒有實際機譯／中文工具／新holdout，不能宣稱方法成立或機譯可當proof。繁中候選目前不可用，Human已同意自行下載，等待完成回報才重查；既有inventory仍supported非installed，本輪未翻譯／下載／新查，不建立V implementation plan或fixture；U06原16observations／6/9＋2/7未達資格與四凍結SHA保留。
+
 ## 1. 責任與 additive public 面
 
 GitHubIntegration 保持 non-BC；不依賴 PR BC。獨立 GitHubSignInVerification App composition 獨占 coordinator、完整程序內 store、provider 與 scope；其 app-local Presentation 只有 display-ready input／intent，不再由 RivetPresentation 公開。App 的 Network-framework relay 與預設瀏覽器 opener 是平台 adapter，GitHub-specific 檢查與交換留在 GitHubIntegration。

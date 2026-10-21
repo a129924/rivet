@@ -81,6 +81,27 @@
 單次 smoke 紀錄為 30.534s／stderr=false／confirmed＋indeterminate。Human 回報看到文字、當時不能複製並隨意選取，可解釋人工觸發；不據此判自然 timeout、技術性全面禁複製或 Human holdout passed。完整 UI／timeout 等與正式 9+7 校準仍 pending，沒有新增 OAuth。
 
 
+### U06 最新正式校準結果與停止（優先於此前pending）
+
+- Source commit：`f420901a1076537c4f7aa0404fe31509b8bdc889`；原feature／DraftPR61不變，工具／test／helper／fixture四SHA不變。
+- Current phase：Human 方法決策；Current step：U06；Current status：completed-not-qualified；method disposition：needs-rework／human-check。
+- 外部Tester已核凍結16唯一映射與fixtureSHA一致：decisive6/9、abstain2/7，未達9/9＋7/7，calibration_threshold_met=false。
+- 外部獨立Reviewer結果處置approved，只准文件記錄與停止，不放行live或新方案。原U03/U04 completed、57controlledpassed與U05codeapproved維持，不推論OAuthbug／PKCEfailed。
+- Human明示不懂英文，英文方法前提未滿足，不是使用者過失。先前smoke受手動操作中止，與本16case分開，不作自然timeout或holdoutpass。
+- P/Q/R/T、正常App/API/canvaspassed、R→T1/1已耗盡與本次新OAuth0保留；禁止改fixture／重跑16／新UI／OAuth／code。新語言方案未授權，停Human。
+
+本slice九欄：In-Scope＝安全結果／外部核分／語言前提／停止；Out-Of-Scope＝fixture/label改動、重跑、code/UI/OAuth/安裝下載/Git；ReadOnly＝工具/四SHA/fixture/歷史/其他檔及6他人Appdirty；Written＝0；Deleted＝0；Modify＝plan最新U06列明8tracked docs；Goal＝記錄not-qualified並停Human；Non-Goal＝不代核准、不責怪Human、不宣稱PKCEfailed；TestCase＝僅登錄獨立16unique/SHA與6/9、2/7，無新測試。
+
+### 最新 Human 繁中決策與 V 前置停點
+
+- Human已同意本機繁中方案與offline驗證／新增Apple on-device元件讀gate後description；原文／譯文只本機記憶體短暫視窗、agent不看不存，不雲端／不自下載，live未授權、OAuth0。
+- 外部Tester一次唯讀environmentinventory：macOS26.5.2／SDK26.5／Xcode26.6，Swift6 compile/run exit0、stderrfalse；en→zh-Hant與en→zh-TW均supported非installed，僅證組合資產未齊，不能說各語言皆未裝。未session／translate／prepareTranslation／下載／UI／OAuth，scratch自清無新檔。
+- Current phase：等待Human自行下載完成回報；Current status：human-check。Human已明示「願意，我自行下載後回報」，尚未回報完成；完成回報後才重查。既有inventory仍supported非installed，本輪未翻譯／下載／新查，尚無Vimplementationplan／中文工具／新holdout或方法成立證據。
+- U06仍completed-not-qualified、6/9＋2/7及16obs保留，57controlled/U05codeapproval與App/canvas/PQRT歷史不改。此筆只Modify既定8docs、Written/Deleted0，不Git／test或新元件工作。
+
+外部獨立Reviewer已明示本次actual8docs approved、無required fix，可依原授權交publisher docs commit／push／更新DraftPR61；本角色僅登錄，不執行Git。Docs交付九欄：In-Scope＝U06結果／inventory／最新Human下載意願；Out-Of-Scope＝Vcode/fixture/翻譯下載重查/OAuth；ReadOnly＝非manifest全部及他人Appdirty／frozen歷史；Written＝0；Deleted＝0；Modify＝既定8tracked docs；Goal＝凍結交publisher並停Human完成回報；Non-Goal＝不宣稱下載完成／installed／方法通過；TestCase＝僅登錄外部actualdocdiff approved，無新測試／查詢。
+
+
 ## T 輪現行ledger（優先於R停止及以下Q/P/A/S歷史）
 
 來源90646c2，原feature/branch/PR61不變。T已授權私有診斷version3實作，不能因遠端結論可能unknown只停止。**共享R→T唯一預算現1/1用盡**；R當時未用，T沿用同1次，無新增額度。T06僅wrong新code單POST一次，無positive/API/refresh401/第二次。P/Q indeterminate、R調查、e941d88正常login及canvaspass保留。

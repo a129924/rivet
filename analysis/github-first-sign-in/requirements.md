@@ -29,6 +29,16 @@ P／Q 各 2/2 與 indeterminate、R 調查及 T 實際結果保留；共享 R→
 
 安全替代現為 SystemRandom 打散 synthetic cases、UI不見labels/id；工具不讀／比較 expected_category、不自評，只於末尾回傳 opaque correlation_id＋有限 observations，供獨立 Tester 評分，9+7 標準不變。原自評寫入曾被 auto-review 拒絕、未執行且未重試；採已允許的外部獨立評分方案。原文仍只可在 gate 後由 Human 短暫看，agent／Reviewer 不看、不保存；獨立觀測軸不改 proof／outcome。OAuth=0、U06 Human 停點與 P/Q/R/T／App/canvas 歷史不變，本記錄只登錄已明示的外部驗證／review事實，不宣稱 Human 校準或遠端通過；既有 topic 發布授權有效，工具交付後停 U06，不另造發布批准停點。
 
+### U06 最新結果與方法資格
+
+來源 `f420901a1076537c4f7aa0404fe31509b8bdc889`；外部獨立 Tester 已核凍結 SHA 與16唯一映射：decisive6/9、abstain2/7，未達既定9/9＋7/7，calibration_threshold_met=false。U06 completed-not-qualified／method needs-rework，下一步 Human 方法決策，禁止 live。Human 明示不懂英文，方法語言前提未滿足，不是使用者過失；原57controlled pass／U05codeapproved仍成立，不推導正式OAuthbug或PKCEfailed。獨立Reviewer結果處置approved僅文件記錄與停止，舊pending／smoke保留歷史，smoke不算16case。正常App/API/canvaspassed、P/Q/R/T及R→T1/1耗盡保留；新OAuth0，不改fixture、不重跑16／新UI／code。新語言方案只是未授權候選，另待Human，不能以機譯作proof。
+
+### 最新 Human 決策與 V 前置停點（僅文件）
+
+Human 已同意「本機繁中方案與離線驗證」，允許未來 Apple on-device 元件讀取 gate 後 description；原文／譯文只在本機記憶體短暫視窗，agent 不看、不保存，不用雲端、不自下載，live 仍未授權／OAuth0。此同意不改 U06 的6/9＋2/7與未達資格歷史。
+
+外部唯讀 inventory 顯示 en→zh-Hant／en→zh-TW 為 supported 而非 installed，所需語言資產尚未齊全，繁中候選目前不可用；不表示每個語言都沒安裝。Human已同意自行下載，尚未回報完成，等待完成回報才重查；既有inventory仍supported非installed，本輪未翻譯／下載／新查，無中文工具／新holdout或方法成立證據，不建立V implementation plan。詳細前置 facts 見 technical-spec 同節。
+
 ## Goal
 
 單一使用者從獨立 GitHubSignInVerification App 輸入個人自有 GitHub.com OAuth App 配置，經系統預設瀏覽器完成授權；取得符合既有模型的完整 credential bundle 後，當次程序使用既有 provider／scope 執行 `GET /user`，呈現實際 `login` 與 `id`，並能再次查詢。

@@ -136,6 +136,32 @@ U03–U05 可做受控工具開發與 synthetic 技術驗證，不能把未來 H
 
 已允許安全替代：SystemRandom打散synthetic，UI不見labels/id；工具不讀／比較expected_category、不自評，末尾僅opaque correlation_id＋有限observations由獨立Tester核分。原自評寫入被auto-review拒絕未執行、未重試，未改9+7標準／manifest／原proof/outcome。U06仍Human停點、不自動校準；新增OAuth0，live另需明確授權，R→T1/1與全部歷史不改。本次只登錄外部U04／U05事實，不自產approval、不改code／fixture／凍結evidence。原topic commit／push／更新DraftPR61授權有效，可交Implementer完成既定12file工具交付，之後停U06 Human，不另造發布授權停點。
 
+### U06 結果處置：docs-only 記錄與停止（現行唯一寫入範圍）
+
+基線 `f420901a1076537c4f7aa0404fe31509b8bdc889`，原feature／branch／DraftPR61不變。外部獨立Tester已核frozen fixture SHA與16唯一映射：decisive6/9、abstain2/7，calibration_threshold_met=false，未達9/9＋7/7。U06 completed-not-qualified、method needs-rework，停Human方法決策、禁止live。Human不懂英文是方法前提未滿足，不是人類過失；57controlledpass／U05codeapproved保留，不宣稱OAuthbug或PKCEfailed。獨立Reviewer已approved結果處置，僅准本docs記錄與停止，不授權新方法或code。
+
+本slice九欄：
+
+- In-Scope：安全16筆實際選擇、外部核分／處置、英文方法不適用與停止狀態。
+- Out-Of-Scope：改frozen fixture／labels、重跑16、新UI／code／OAuth、翻譯方案實作／安裝／下載、Git／發布。
+- ReadOnly：除下列8tracked docs以外全部；包括6份他人dirty App/tests，不讀寫／暫存／還原；凍結工具／fixture／四SHA／P/Q/R/T及smoke歷史不改。
+- Written：0。
+- Deleted：0。
+- Modify：僅下列8個精確paths；只加最新U06結果，當時pending保留為歷史。
+- Goal：如實記completed-not-qualified、calibration_threshold_met=false與Human方法決策停點，禁止live。
+- Non-Goal：不責怪Human、不改proof/outcome、不把57tests或機譯當語義校準／遠端PKCE證明。
+- TestCase：僅登錄外部Tester的16unique/SHA核對、6/9及2/7；不自行重算、測試或讀expectedlabels／raw。
+
+Modify8：`analysis/github-first-sign-in/requirements.md`；`analysis/github-first-sign-in/technical-spec.md`；`plan/github-first-sign-in/github-first-sign-in.plan.md`；`plan/github-first-sign-in/github-first-sign-in.step.md`；`README.md`；`docs/architecture/github-first-sign-in.md`；`apps/GitHubSignInVerification/tools/README.md`；`plan/github-first-sign-in/evidence/pkce-semantic-review.md`。
+
+smoke為此前受手動操作中止的獨立事件，不算16case，不回改當時pending。App/API/canvaspassed、P/Q/R/T unknown與共享R→T1/1耗盡不變，新OAuth0。新語言方案另待Human；Apple官方on-device framework只可作未授權研究候選，不能將機譯當proof，任何新本機元件讀description仍需Human確認。本次不執行任何新元件工作。
+
+### V 前置狀態：僅記錄資產缺口，尚不建立實作計畫
+
+最新Human已同意本機繁中offline候選及新增Apple on-device元件讀gate後description，原文／譯文僅本機記憶體短暫Human視窗，agent不看不存；不雲端／不自下載，live仍未授權、OAuth0。外部一次唯讀inventory compile/run exit0／stderrfalse，en→zh-Hant及en→zh-TW皆supported非installed，所需資產未齊而候選目前不可用；詳technical-spec的V前置facts，不作新工具／experiment或方法通過證據。
+
+Human已同意自行下載，等待完成回報才重查；既有inventory仍supported非installed，本輪未翻譯／下載／新查，不建立V工具implementation plan／新fixture，不執行session／prepareTranslation／UI／OAuth。此docs slice仍Modify8、Written0、Deleted0，沿U06九欄及相同readonly邊界，只登錄前置facts／授權／停點；不改U06 frozen16obs／6/9＋2/7未qualified，不把機譯當proof。
+
 ## T 輪現行最小診斷改善（優先於R停止及Q/P/A/S寫入授權）
 
 來源HEAD90646c2；原feature/feat/github-first-sign-in/原DraftPR61，不dev實作、不建worktree/PR、不merge。User已要求實作最小改善，採technical-spec§11的version3 actualprepared觀測＋bounded grammar/hints，不以無法保證遠端結論停止。沿用R唯一未使用額度，**共享R→T規劃時0/1、T06後現1/1用盡**，不是新增預算；case選wrong，一次fresh單POST，不第二次。

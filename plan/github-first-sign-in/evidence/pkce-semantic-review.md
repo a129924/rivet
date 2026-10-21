@@ -129,3 +129,54 @@ Tester自己的Written只有frozenholdout；Modify只有本evidence/step，沒�
 ### 單次synthetic smoke：Human外部事實補充
 
 Human隨後明示曾手動操作該synthetic視窗：看到文字不能複製，便任選一個選項。這能解釋confirmed/reveal_started=true/user_confirmed=true；是否有外部操作不再pending。**本次synthetic smoke受Human操作中止，不是自然timeoutpassed，也不是Human holdout或9+7成績。** 沒有因這筆補充改判code或重測，完整UI／自然timeout行為仍未驗證。主agent已向Human說明不需／不應複製原文，只閱讀後選分類；此紀錄不保存描述原句。
+
+## U06 正式 Human offline calibration：未達資格
+
+Source commit：`f420901a1076537c4f7aa0404fe31509b8bdc889`。沿既有frozen CLI／test／helper／fixture四SHA，未改bytes；外部獨立Tester已核凍結16個唯一映射及fixtureSHA一致，沒有重新抽題或讀live原文。**decisive6/9、abstain2/7；既定門檻9/9＋7/7未達，calibration_threshold_met=false。** 這是外部Tester核分，本文件作者不讀expectedlabels、不自行重算。
+
+Human明示不懂英文：英文方法語言前提未滿足，不是使用者過失。U06 completed-not-qualified、method needs-rework，停Human方法決策。外部獨立Reviewer明示結果處置approved，僅文件記錄與停止；原57controlledtests pass／U05codeapproved仍成立，不能據此放行live、不表示正式OAuthbug或PKCEfailed。
+
+### 安全 Human observations（只有實際選擇）
+
+共同metadata：`reason=human_confirmed`、`reveal_started=true`、`review_source=local_human`、`review_status=confirmed`、`user_confirmed=true`。外部Tester已核16cases／16unique；下表無expectedlabel／description，correlation僅為既定opaque識別。這些是Human選擇，不是provider或PKCE原因證明。
+
+| correlation_id | Human semantic_category |
+|---|---|
+| `9607720f9f1c07df` | `verifier_mismatch_asserted` |
+| `b8c9573532d1cdd0` | `verifier_mismatch_asserted` |
+| `97ce842ec69dee17` | `verifier_mismatch_asserted` |
+| `64f6ec689229f82b` | `verifier_mismatch_asserted` |
+| `6fd1b3e081a50a23` | `grant_or_code_asserted` |
+| `95b6504a8bd60df3` | `client_redirect_configuration_asserted` |
+| `4d14d5d4f7193b74` | `grant_or_code_asserted` |
+| `75af07890985d922` | `verifier_mismatch_asserted` |
+| `2f015d970c0be4dd` | `verifier_mismatch_asserted` |
+| `29881aad8730c5ab` | `verifier_mismatch_asserted` |
+| `a50656c6edf2f06a` | `client_redirect_configuration_asserted` |
+| `105a9cef3903c748` | `indeterminate` |
+| `2055254ee30aaae1` | `indeterminate` |
+| `4c4f62330d76370f` | `indeterminate` |
+| `92ec86fa88925dab` | `verifier_mismatch_asserted` |
+| `1632c29ecdece3db` | `verifier_mismatch_asserted` |
+
+### 邊界與本slice九欄
+
+此前30.534s／stderrfalse／confirmed-indeterminate smoke已由Human說明手動操作中止，原筆保留，不併入本16case、不當自然timeout。當時pending是執行前歷史；P/Q/R/T unknown／預算、正常App/API/canvaspassed、共享R→T1/1已耗盡不變，本次新OAuth0。禁止改frozenfixture／labels、重跑16、新UI/code或OAuth；新語言方案未決策／未授權，機譯不能proof，新增本機元件讀description須Human確認，沒有實作／安裝／下載。
+
+- In-Scope：安全16筆選擇、已明示外部核分／處置、語言方法不適用與停止。
+- Out-Of-Scope：讀fixturelabels／raw／機密、重跑／重判舊案、新code/UI/OAuth、Git／發布。
+- ReadOnly：frozen工具／fixture四SHA與本節以前全部既有證據；其他非manifest檔與6份他人Appdirty。
+- Written：0。
+- Deleted：0。
+- Modify：本次plan U06列明的8tracked docs；本evidence只追加本節，不覆寫舊結果。
+- Goal：可追溯記錄not-qualified與Human方法決策停點，禁止live。
+- Non-Goal：不責怪Human、不代產approval、不把57tests當語義／遠端成功、不宣稱PKCEfailed。
+- TestCase：只登錄外部Tester16unique/SHA核對及6/9、2/7；未執行測試／校準／OAuth。
+
+## V 前置：外部唯讀語言資產 inventory
+
+Human最新同意本機繁中方案與offline驗證，允許未來Apple on-device元件讀gate後description；原文／譯文只本機記憶體短暫視窗，agent不看不存，不雲端／不自下載；live未授權、新OAuth0。這不回改U06原16obs或decisive6/9／abstain2/7未達門檻。
+
+外部Tester一次scratch Swift6 compile/run：macOS26.5.2／SDK26.5／Xcode26.6，exit0、stderr_present=false；sourceSHA `ce6e738621fafc8c71b744db13dd7da3383cf90aaf9cc1b2b55e68ba9ed380bf`。僅Translation.LanguageAvailability.status(from:to:)查en→zh-Hant及en→zh-TW，兩者supported非installed，只證所需組合資產未齊，非每個語言都未安裝。未init session／translate／prepareTranslation／下載／UI／OAuth，scratch自清、無repo新檔；這是environmentinventory，不是新工具／experiment或機譯成效驗證。
+
+Apple官方installedSource初始化／canRequestDownloads支援macOS26+同步nonthrowing且不要求下載；on-device內容不入其metrics，並非Safari／系統雲端翻譯。現無實際機譯／中文工具／新holdout，候選尚不可用，Human已同意自行下載，等待完成回報才重查；既有inventory仍supported非installed，本輪未翻譯／下載／新查，不先建Vimplementationplan／fixture。機譯不能proof；原U06結果與先前smoke、四SHA及歷史均保留。本slice仍Modify8／Written0／Deleted0，只文件。
