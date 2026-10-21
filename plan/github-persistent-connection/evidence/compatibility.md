@@ -1,3 +1,5 @@
+> **歷史版本：正式產品歸屬與完成宣稱已撤回。** 下方原文保留 `ca00bc074f77fa21a7fac1aaae07dc1059de5b01` 的觀察／hash／verdict；source commit `7e81b7799a20e49f2cb7209706ebe5b3fd9c7f18` 僅供追溯，真人build實際在commit前，仍依原文source-hash provenance，不能改稱由該commit建置。舊host與0提示不冒充搬移後驗收。請讀[新host結果](verification-host-live.md)、[新版歸屬清單](verification-host-manifest.md)及[獨立審查](verification-host-review.md)；profile更新後讀回仍未驗證、使用者已接受限制。
+
 # S06a：Public API 與相容性獨立驗證
 
 - 日期：2026-10-20 UTC 07:47；角色：獨立 Tester。

@@ -1,3 +1,5 @@
+> **歷史圖表索引：此版 production 歸屬已撤回。** 下方原文與原native圖／收據保留 `ca00bc0`，source `7e81b77` 僅供追溯；當時真人build在commit前，依原sourcehash，不能當新驗證App已驗收。請改讀[獨立驗證App v2圖](verification-host-v2/BUILD.md)與[新host真人結果](../../../../plan/github-persistent-connection/evidence/verification-host-live.md)。本頁原產品完成／舊UI或API敘述僅屬歷史，未回改工具receipt。
+
 # GitHub 持續連線：圖表重建
 
 本組圖依正式 source 與已獨立核對的 S08 證據建立；不執行產品、GitHub、Keychain 或 Apple 設定操作。作者內容為繁體中文，識別字保留 source 名稱。Archify 的固定 Viewer UI／HTML lang 採 English fallback（省略 meta.locale）；classic、still，沒有作者動畫。Canvas 也保留技能 viewer 的固定英文控制。

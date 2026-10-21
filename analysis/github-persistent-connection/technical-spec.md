@@ -1,97 +1,95 @@
-# GitHub 持續連線：技術契約
+# GitHub 持續連線：獨立驗證 App 技術契約
 
-- Topic：`github-persistent-connection`；原契約／第二輪方法已審查；2026-10-20 第二輪主假設仍未知；Human 已接受唯一 renewal 未驗證例外，其餘契約不變。
-- 配對：[需求](requirements.md)、[執行計畫與 manifest](../../plan/github-persistent-connection/github-persistent-connection.plan.md)、[帳本](../../plan/github-persistent-connection/github-persistent-connection.step.md)。
+- Topic：`github-persistent-connection`；2026-10-21 scope correction，待獨立 Plan-Reviewer。
+- 本文取代舊正式產品定位／新增正式 public API 決策；舊版在 `ca00bc0`，僅供歷史。配對：[需求](requirements.md)、[計畫及精確 manifest](../../plan/github-persistent-connection/github-persistent-connection.plan.md)、[帳本](../../plan/github-persistent-connection/github-persistent-connection.step.md)。
 
-## 0. 已鎖定的 host 前提（RF01）
+## 九欄與檔案契約
 
-產品 Rivet.app 與 E007 ProfileRenewalProbe.app 均限定 macOS 15+、Swift language mode 6、Apple Development 簽章及有效 embedded development profile，設定 `ENABLE_DEBUG_DYLIB=NO`；首版不啟用 App Sandbox。實際 Team／profile／私人安裝路徑由 Human 私下選定，不入版控，repository 只保留參數占位、必要 hashes／布林。
+精確逐檔 from／to、Written／Deleted／Modify／ReadOnly 以配對 plan §2 為唯一 manifest；本技術契約不授權額外檔案。
 
-產品安裝位置由 Human 首次選定單一 private path，在本輪 fresh-process／真正重建驗證前固定；不同 binary 均替換同一路徑的 Rivet.app，不改位置重測。原始路徑只在私有 runtime configuration／run manifest，repository 收據記其 hash 與 same-install-location 布林，不記本機絕對路徑。
-
-E007 固定使用該輪私有 runroot 下 `current/ProfileRenewalProbe.app`；原 profile 寫入與新 profile 唯讀均在此同一路徑替換 App 後啟動。兩版須相同 App ID／private group／certificate，且 profile bytes 真正不同並各自在操作時有效；不重設 runroot／t0 來延長窗口。這些前提由 V01（E007）、V06（產品真儲存／提示）及 V08（signed build／host tests）核對，不以 build 成功代替 profile／路徑／提示證據。
-
-## 1. 責任與 public surfaces
-
-GitHubIntegration 保持 non-BC；不依賴 PR BC。App composition 保留單一 provider／scope；provider 獨占 restore、expiry-first refresh、rotation persistence、snapshot version／single-flight。Clients 維持 request-local snapshot 及 HTTP 401 最多一次 recovery retry。既有 public signatures、concrete client visibility、通用 HTTP auth、各 BC failure boundary 不變。
-
-新增 public API 的型別／位置如下；error 均為有限 classification，沒有原始 payload：
-
-- `GitHubOAuthAppConfiguration`：`init(clientID: String, clientSecret: String) throws`，非空欄位，Sendable；description／debugDescription／reflection redaction。ID 與 secret 不出現在錯誤。
-- `GitHubOAuth.makeTokenFetcher(configuration:) throws -> any OAuthTokenFetcher`：把 public configuration 轉成既有 internal fetcher Configuration，沿用 production refresh transport；不公開 concrete 或 transport injection。
-- `GitHubOAuth.makeAuthorizationSession(configuration:redirectURI:) throws -> GitHubOAuthAuthorizationSession`；session actor 公開 `authorizationURL`、`complete(callbackURL:) async throws -> GitHubOAuthCredentialBundle`、`cancel()`。Façade 擁有 state／PKCE／callback 檢查／初次 exchange，不保存資料。
-- `GitHubOAuthDataProtectionStores.init(accessGroup: String, service: String)`；公開 `configurationStore: any GitHubOAuthAppConfigurationStore`、`inspectCredential() async throws -> GitHubOAuthStoredCredential?`、`credentialStore(clientID:) -> any OAuthCredentialStore`。`GitHubOAuthStoredCredential` 是完整驗證後的 `clientID`＋bundle；configuration store 為 async load／save，missing 為 nil。新增型別留在計畫所列四個新檔，不公開 Security concrete。
-- `OAuthTokenProvider.disposition() -> OAuthTokenProviderDisposition`，actor 呼叫須 await；值僅 `notStopped`／`authenticationRequired`／`stopped`。由現有 unavailableError 推導：nil 為 notStopped、authenticationRequired 同名、其餘 terminal error 為 stopped；不發動工作，不重設狀態，不暴露 reason／version／error。
-
-既有 prepare／client error 只留下 lifecycle stage，不能區分 nonterminal refresh 與 rotationIndeterminate，因此 additive disposition 是必要觀測；它不是新的 readiness 保證。既有 OAuthCredentialStore、bundle、snapshot、fetcher、scope、REST／GraphQL signatures 均不改。
-
-## 2. Authorization 與 callback
-
-固定 GitHub.com HTTPS endpoints。Authorize 請求只有 `offline_access` 作本 Mission 所需 scope，不索取 repo 權限。state 與 verifier 各用獨立 32 bytes cryptographic randomness、base64url 無 padding；S256 challenge 由 verifier SHA-256 產生。不把 secret 放入 browser URL。GitHub web exchange 及其 refresh 都仍需要 client secret；PKCE 不取代 secret。[官方契約](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
-
-App 的 Network-framework listener 僅綁 `127.0.0.1`、系統分配 port，path 固定 `/oauth/callback`；listener ready 後才建立 session／開瀏覽器。自有 OAuth App 註冊 `http://127.0.0.1/oauth/callback`；實際 authorize／exchange 使用同一帶 port redirect URI。每 session 最多五分鐘，只容許一個 active session。
-
-Relay 只處理 GET、最多 8 KiB request headers／target、單 connection 五秒讀取上限；其他 path 靜態 404，不輸出 query。Relay 不驗證 OAuth state；它把 callback URL 交同一 session façade。Session 檢查 exact scheme／host／port／path、無 user-info／fragment、唯一相符 state，以及 code／error 排他且單值；缺值、重複、錯誤 state 或 invalid callback 終止 session，不 exchange、不保存。`access_denied` 有效 callback 分類 denied；使用者等待階段取消分類 cancelled；session 過期分類 expiredSession。重複 complete 或 cancelled session 不重用 code。
-
-接受 callback 後 UI 停用取消；POST exchange 30 秒 timeout、ephemeral session、無 cookie／cache、不跟隨 redirect、不自動重送，form body 包含 client_id／client_secret／code／redirect_uri／code_verifier，Accept JSON。僅接受可信 2xx、沒有 error 混雜、六欄完整且非空 token、bearer、正數兩個期限及有限 receivedAt 的 DTO；由同一 receivedAt 計算完整 bundle。scope 可為空，不假設回應會含 offline_access 字串。錯誤分為 clientConfiguration、exchangeRejected、transport、invalidTokenResponse 等有限分類，不傳遞 body／URL／underlying error。所有路徑關 listener、釋放 code／verifier；瀏覽器回靜態結束文字。
-
-## 3. DPK 與同 App 修復
-
-正式 service 固定 `local.rivet.github.oauth.v1`，accounts 為 `configuration`、`credential`。group 由 signed host 的唯一 private group 注入；兩個 items 使用 kSecClassGenericPassword，所有 add／query／update 明指定 DPK=true、synchronizable=false、group／service／account；新增為 AfterFirstUnlockThisDeviceOnly，不加 presence／biometry／ACL。各 value 單次完整 update；不存在才 add，duplicate 僅重試完整 update；同 process store actor 序列化。不存在為 nil，denied／unavailable／corrupt／identityMismatch 為不同有限 store errors，不能將 entitlement／授權拒絕當作 missing。
-
-Configuration JSON schemaVersion=1，完整 clientID＋clientSecret。Credential envelope schemaVersion=1，clientID＋完整六欄 bundle；dates 使用 JSON millisecondsSince1970，必須有限，允許已過期日期以支援 restore；tokens 非空、bearer、scope 字串。未知版本或任何必要欄位解碼失敗整個 payload 都是不可信，不從損毀資料撈 ID。Codec 不新增公用 bundle Codable conformance，不改 production DTO。
-
-Inspect 和 bound credential store 共用嚴格 codec。完整 credential envelope 的 ID 是已連線身分權威；fetcher configuration、bound store、fresh load 一律同 ID，mismatch 禁止發送 token。兩 items 不作跨 item transaction，也不宣稱 crash-atomic pair。
-
-| 狀態 | 固定處理 |
+| 欄位 | 技術約束 |
 |---|---|
-| 兩者 absent | 首次輸入設定；先保存 configuration，成功才開授權 |
-| valid configuration＋absent／corrupt credential | 沿用 configuration ID；重新授權成功後完整覆寫 credential |
-| valid credential＋absent／corrupt configuration | 鎖定 credential ID，重輸同 App secret；先保存 configuration，再重新授權 |
-| 兩者 valid、ID mismatch | 以 credential ID 修復設定；禁止使用另一設定建立 fetcher |
-| 存在 corrupt 且皆無可信 ID | Human recovery：使用者提供並明確確認原 App ID／secret後才修復及重新授權；無法自動驗證歷史身分，不默認切 App |
-| 任一 denied／unavailable | 保留 items，僅明確重試，不修復覆寫 |
+| In-Scope | 獨立驗證 App 的完整 OAuth／DPK／restore／refresh／輪替讀回／API、controlled expiry／receipt 與必要測試 |
+| Out-Of-Scope | 正式產品整合、PR #61 合流或去重、新正式 API、E007 新輪次與帳號管理 |
+| ReadOnly | plan R；既有正式 public contracts／internal visibility、Package 與 locks、E007／舊 native evidence |
+| Written | plan D 表的新路徑、W01–W07；local source／UI／adapters／tracker／tests／project／新證據圖 |
+| Deleted | plan D19 舊 production 路徑，保留舊安裝 App／真 DPK 與 Apple 資產 |
+| Modify | plan M01–M06；四正式檔精確撤 topic delta，其餘僅 scope／truth／banner |
+| Goal | App 單向使用既有 contracts；移除整個 App 時 production 無需修改仍 build／test |
+| Non-Goal | 任何驗證專用 production 契約／共用 UI／control／receipt，或冒稱新 App 已沿用舊 live 通過 |
+| TestCase | plan TC01–TC10，尤其 local tracker／refresh、settlement／test guard／隔離與真人六段 |
 
-設定保存失敗不開授權；設定保存後取消／grant 失敗保留設定和原 credential。已有 credential 時 ID 鎖定，只容許在修復／重新授權更正同 ID secret。沒有新的跨 item rollback；不得恢復可能遠端已失效的 token。
+## 1. Ownership 與依賴
 
-## 4. Composition、settlement 與顯示
+所有本 topic 新增 authorization／configuration／DPK adapter、UI、composition、relay、probe、受控到期、收據與相關測試收於 `apps/GitHubConnectionVerification`。跟 PR #61 `apps/GitHubSignInVerification` 一樣使用獨立 Xcode App／hosted tests，App-local UI 不連 `RivetPresentation`；只借其分離方式，不搬用／修改／去重其 implementation。
 
-App coordinator 獨占 provider／scope；所有 prepare／GET /user／重試透過同一 admission gate，一次一個 tracked Task。不得把 provider／clients 洩漏給旁路 caller。取消 UI caller／返回畫面不移除 task handle，也不視為 settled；直到實際 Task.result 完成才清除。工作未完成時，任何 configuration save、credential 修復或 reauth 回 operationInProgress，使用者待完成再觸發；不排第二 session。
+App 只依賴既有 `GitHubIntegration` 與 `RivetHTTPClient` public products，以及系統 frameworks Foundation／SwiftUI／AppKit／Network／Security／CryptoKit／Observation／Synchronization／Darwin。正式 targets 不依賴 App；Package.swift、既有產品清單、production internal visibility 不改。App-local型別／函式採 internal／private，不能藉 production `@testable import` 取得 internal。
 
-目前 provider 的 self-owned shared Task 經 snapshot／replacement await Task.value；prepare／clients 亦等待該 await 後才傳遞取消。因此此受限入口追蹤實際 operation Task 可證明 shared work settled，不新增 quiescence API、不允許 cancellation early-return。舊 refresh／save 完成前禁止新 bundle write。V04 必須以 latch 控制驗證此先後，不以 sleep 推定。
+`OAuthCredentialStore`／`OAuthTokenFetcher`／bundle／snapshot／`OAuthTokenProvider`／`GitHubClientScope`／REST／GraphQL 等 topic 前 public 契約原樣保留；四個原正式修改檔精確撤本 topic delta。**不保留或新增任何正式契約**，包含撤回 `OAuthTokenProviderDisposition`／`disposition()` 及本輪 public factories／configuration／authorization／DPK surfaces。若實作發現不可撤回，先報具體必要性，不默認保留。
 
-所有 reauth／credential 修復均在 settled 後退休舊 provider／scope，包括不改 configuration 的分支；取消、grant 失敗、save 失敗都不能恢復。只有新授權完整 bundle 保存成功才能建立新 provider。正常新程序啟動可用同 ID 有效資料建立初始 restore provider，此例外不得用於本程序繞過退休。
+既有 internal `GitHubOAuthHTTPTokenFetcher`、`GitHubOAuthEndpoints`、`GitHubOAuthTokenResponse` 不擴大 visibility。App-local `VerificationOAuthHTTPTokenFetcher`／`VerificationOAuthEndpoints`／`VerificationOAuthTokenResponse` 自持所需HTTP refresh與DTO／URLs，public bundle只透過既有 public initializer 建立；複製既有有限policy是驗證App內實作，不抽共用重構。
 
-暫時 prepare 失敗保留同 provider，只接受使用者明確 retry；用 disposition 判斷 stopped 時不可重建；authenticationRequired 引導 reauth。原 provider rotationIndeterminate／accepted persistence failure 停止與 store 保留規則不改。Clients 保持每 execution fresh snapshot、401 最多一次 resend。
+## 2. 名稱、identity 與 host
 
-GET /user 透過 scope.rest，headers 為 GitHub JSON Accept、固定 User-Agent `Rivet`，不擴張 shared header framework。僅 200 且可解碼有效 id／非空 login 才呈現當前帳號；403／其他 status 為 probe failure，不觸發一般 refresh。重新授權一開始清除舊帳號顯示，不把歷史資料當現況。API 暫時失敗可明確重試，不能錯誤宣告未保存的連線成功。
+| 項目 | 鎖定值 |
+|---|---|
+| 路徑／project | `apps/GitHubConnectionVerification/GitHubConnectionVerification.xcodeproj` |
+| App target／module／scheme／product | `GitHubConnectionVerification`／`GitHubConnectionVerification.app` |
+| Test target／module／product | `GitHubConnectionVerificationTests`／`GitHubConnectionVerificationTests.xctest` |
+| bundle ID | `local.rivet.github-connection-verification`；tests 加 `.tests` |
+| group | `$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)`，唯一驗證私有group，不沿舊 `local.rivet.app` |
+| service／accounts | `local.rivet.github-connection-verification.oauth.v1`；`configuration`／`credential` |
+| Info.plist group key | `GitHubConnectionVerificationKeychainAccessGroup` |
+| UI／window | `GitHubConnectionVerification — GitHub 持續連線驗證`，常駐「驗證用途，非 Rivet 正式產品」 |
+| User-Agent／queue | `GitHubConnectionVerification`／`local.rivet.github-connection-verification.oauth.loopback` |
+| test key | `GITHUB_CONNECTION_VERIFICATION_UNIT_TEST_MODE=1` |
+| 受控 key | `GITHUB_CONNECTION_VERIFICATION_MODE=expire-restored-once|observe`；`GITHUB_CONNECTION_VERIFICATION_RECEIPT` |
+| TEST_HOST | `$(BUILT_PRODUCTS_DIR)/GitHubConnectionVerification.app/Contents/MacOS/GitHubConnectionVerification`；BUNDLE_LOADER指向它 |
 
-最小 SwiftUI leaf 只有 display-ready input／intent、SecureField、登入／取消等待／明確重試／重新授權按鈕與帳號文字，不加入 PR UI。App 的 hosted unit tests 透過 shared scheme 的 `RIVET_UNIT_TEST_MODE=1` 選 fake dependencies，App entry 在任何 live dependency／task 建立前檢查；test mode 不觸發 OAuth／Security／產品啟動還原。測試要驗證 live-call counters 為零。
+macOS15+／Swift6、Debug ONLY_ACTIVE_ARCH=YES、ENABLE_DEBUG_DYLIB=NO、non-Sandbox、有效 embedded development profile／Apple Development簽章。Team／profile／certificate／安裝原始路徑只在本機私有 setup，repo不入raw identity。使用原免費PersonalTeam與既有certificate；不能產生新certificate或修改安全設定。真人前確認新的驗證bundle identity可由既有Team簽章，失敗即停，不切換舊產品identity。固定Human個人Applications中的**新** `GitHubConnectionVerification.app`；如已有不同來源同名App先停，不能覆蓋未知資產。保留原 `Rivet.app`／真items，無遷移。重啟與重建只替換本輪proven-owned新驗證App同位置。
 
-## 5. E007 與證據約束
+## 3. Authorization、refresh 與 callback
 
-E007 建立前已確認未占用；沿用已審查的獨立 fake-only host 與 runner，不另設實驗編號；E006 source／receipt 只讀，不依賴已清理的私有 App／setup。run t0 在 setup 前持久化，45 分鐘窗口內包含 Human Xcode reprovision／建置；35 分鐘停止新增測量並開始 cleanup，不能 reset／延長。原 profile 與 updated profile 必須真正不同 bytes、有效且授權相同 App ID／private group／certificate／GUI user；不改 profile bytes 偽造差異。raw IDs／profiles／proof 留在 proven-owned 私有 scratch，repo 收據僅必要 hashes／布林。
+維持原已實作安全及失敗契約：GitHub.com固定HTTPS endpoints；scope `offline_access`，state／verifier獨立32bytes cryptographicrandom，base64url／S256。自有OAuth App註冊 `http://127.0.0.1/oauth/callback`；listener只綁127.0.0.1系統port，ready後才開始授權，authorize與exchange相同實際帶port redirect。exact scheme／host／port／path，禁止userinfo／fragment，state/code/error唯一值且互斥，invalid／denied／cancelled／expired分列。單session5分鐘，GET callback、8KiB header／target、connection5秒，其他path404；靜態callback結束文字明示驗證App，不含query。
 
-先用 A-profile App 寫完整假 A，再由 B-profile App 在 fresh process 唯讀 A；renewal read 六欄相符且 Human 全程零提示為成功。前提完整但拒絕或超標為失敗；不能取得 B-profile、前提不足／觀察不全為無法判定。初始正常存取仍受首次 ≤1 提示約束。每段 Human ready／觀察綁 machine SHA，machine promptCount=null 不回填。未執行／成功／失敗／無法判定與任務完成否分列。遇新 certificate／安全設定／付費要求即停；不 revoke 或刪 Human Apple 資產。
+Exchange／refresh使用30秒ephemeral transport、無cookie／cache、不跟redirect、不自動重送。code exchange含clientID／secret／code／redirectURI／verifier；refresh含clientID／secret／refresh token／grant_type。six-field DTO嚴格驗證token非空、bearer、正expires與有限receivedAt／dates，scope允許空。refresh可信純error：bad_refresh_token→credentialRejected；incorrect_client_credentials→clientConfiguration；混token／無法判明／未知回應→rotationIndeterminate。beforeRequest取消可再次明確嘗試；afterRequestStarted停止。可信accepted回應優先於取消，必須先保存。全程不曝raw body／underlying敏感資料。
 
-第二輪唯一增加的外部變動是：首存與 Human 全段觀察完成、私有 project 停止／關閉後，從本輪保留 A App 的 embedded profile 解碼 UUID，綁 `private/first.json` 的 profile／certificate／group 證明，只探 Apple 文件所述兩個 cache 位置中該 UUID 的兩種副檔名（最多四個精確候選）；不得列舉帳號資產或清空目錄。候選須為目前使用者擁有的非 symlink regular file，profile bytes 等於 A，UUID／App ID／certificate／private group 均相符且能證明只屬本輪，否則停止。逐檔 exclusive 私有備份、原路徑／metadata／hash journal、fsync 及備份再雜湊與恢復可用性檢查全部完成，才暫移已證明的精確檔案。這是本機可逆移出，不是 revoke／portal 刪除。保留原 certificate，不啟用 CLI provisioning updates。A 建置前先在本輪私有 project-specific 設定將 GUI DerivedData 指向 owned runroot 的 `DerivedData`，不改全域設定；A／B 各由 Human GUI Build 一次，Tester 只 preflight／run。精確 APP_A／APP_B 必須來自各次實際 GUI Build 的 built products，核對同 owned DerivedData、本輪 project／凍結 source 及 embedded profile，不能拿 CLI／A 舊 App 當 B；輸出或來源不明即停止，不猜外部 DerivedData、不另建或重建第二次。原始路徑只留私有 journal，來源／同位置的有限布林記既有 tester-validation，不新增框架。Human 重開同私有 Xcode，先確認同一 project-specific DerivedData 設定，再只按 Build 一次取得 B；bytes 不同且既有同身分／雙向 DR 檢查通過，才允許原 runner `phase read`。詳細手動操作與停止點見 [E007 §9](../../experiments/E007/README.md#9-第二輪受限補驗證方法已獨立計畫審查)。
+## 4. DPK 與修復
 
-第二輪無論結果，都先用保留 A App 精確刪本輪 UUID item／read-absent並取得 Human 清理觀察，再停 Build／關專案，逐檔恢復原 cache bytes 並核對 hash；原位置已同 bytes 可視為已恢復，其他 bytes 衝突不得覆寫。恢復失敗或衝突時保留私有 backup／journal，停於 human-check，不執行 `export-clean`，不宣稱清理完成；新下載 B profile 保留。只有全部恢復並核對後才允許 export／移除 private root。既有 runner 不會自動核對外部 cache 恢復，此順序由 Tester／Human 人工核對並硬停止，不虛稱新增自動 guard。
+驗證App-local兩generic-password items；每次明確DPK=true、synchronizable=false、uniquegroup／service／account，add為AfterFirstUnlockThisDeviceOnly，無presence／biometry／ACL。完整update，不存在才add，duplicate僅重試完整update；actor序列化。兩items不是跨item transaction。
 
-只清本輪 UUID DPK items 和 proven-owned scratch／App copies／DerivedData，保留 immutable evidence。清理與 timebox 各自報告；以下原路由只記當時前置，現行 Human 例外見本節末：當時 gate 為失敗／無法判定停止 adapter 採用（後續 Human 受限例外見本節末），成功也必須經 Tester／Reviewer 真實判讀及 Human 採用決策；第二輪全部原判準成立且無重大問題時，依 Human 本次「通過就回產品」條件授權前進 S05，不重問同一許可。目前尚未成立，不預填觀察或成功。
+Configuration schemaVersion1含clientID／secret；credential envelope version1含clientID／完整六欄，millisecondsSince1970 dates有限且可已過期、tokens非空／bearer／scope字串。整份codec可信才能取ID；不新增production Codable。denied／unavailable／corrupt／identityMismatch分列，不能當missing。
 
-官方 [Personal Team](https://developer.apple.com/help/account/basics/about-your-developer-account) profile 七日到期；有效 profile 是產品可用前提，過期期間不可用。一次 renewal 不保證已過期恢復、certificate rotation 或所有週期。真 GitHub、真 DPK、受控時鐘／fakes 各自標記，不記錄原始秘密或回應。
+| 情況 | 行為 |
+|---|---|
+| both absent | 輸入自有設定；先保存configuration再授權 |
+| valid config，credential absent/corrupt | 同configID重新授權成功才完整覆寫credential |
+| valid credential，config absent/corrupt/mismatch | credentialID權威，鎖同ID修復secret，先保存config再重新授權 |
+| 無可信ID且有corrupt | Human明確提供並確認原AppID／secret；不猜App身分 |
+| denied/unavailable | 保留items，僅明確重試，不修復覆寫 |
 
-### E007 方法執行現況（事實回寫）
+新App新namespace不接觸舊items。無logout／revoke／自動刪除／rollback到可能已失效token。
 
-上述是第二輪事前方法，現已完成唯一額外嘗試；不再等待 fresh ready 或啟動新窗口。A GUI 產物、私有 project-specific owned DerivedData、凍結 source／原 certificate 均經 Tester 當輪核對；A 六欄相符、Human 首段 0 提示。匹配 cache 一份，raw backup 一份 bytes／hash 相符，但原 xattrs=0、backup／check xattrs=1（系統 provenance），完整 restore-check 未通過，因此原 cache 未移出、未 refetch、未建置 B、未讀回更新 profile。不能由此外推普遍不可恢復。原 bytes／identity／metadata／xattrs 在 export 前完全未變，requiredRestore=0／notRequired，無 restore 操作；humanRecoveryConfirmed=false 表示無須新恢復確認，不是未解確認。假 item 與 owned root 如期清理。
+## 5. Coordinator 與本地停止觀察
 
-[第二輪結果及收據](../../experiments/E007/README.md#10-第二輪唯一補驗證實際結果)已由 Tester／Reviewer approved，僅指有限證據與安全收尾；主假設無法判定，原 runner taskComplete=false。唯一額外輪用完，原條件式回產品授權未成立；其後 Human 已明確接受未知並修 gate，受限採用記錄如下，非改寫上述實驗判讀。
+App-owned唯一provider／scope；全程一次一個tracked operation Task。UI取消不釋放admission，await實際Task.value settled才清handle；舊shared refresh/save settled前不可寫configuration／新bundle。所有reauth／修復先退休舊provider／scope，包括取消、grant或save失敗都不恢復；新授權完整保存後才能建新provider。正常fresh process初次restore允許依同ID資料建provider，不可在同程序用重建繞過停止。
 
-### Human 接受未知：唯一採用前置例外
+`VerificationLifecycleObservation`是每一provider generation一份App-local、併發安全tracker，透過包裝 **真實** `OAuthTokenFetcher.refresh`／`OAuthCredentialStore.save` 記錄已發生結果：credentialRejected→authenticationRequired；rotationIndeterminate／afterRequestStarted取消→stopped；accepted rotation後save失敗→stopped；knownTechnical／clientConfiguration／beforeRequest取消保持非terminal。save前必須已有本輪accepted-refresh標記，初次授權保存不誤標terminal。tracker與provider同generation一起建立／退休，保留原error/cancellation傳遞。可信accepted但連續已過期rotation達provider原limit的非terminal行為不得擅改。
 
-Human 實際決策：「接受 profile 更新後尚未驗證的限制，修訂 gate 並繼續產品實作」。本次只解除「renewal 必須先驗證成功」的採用前置；其他驗收維持，仍保留連線失效處理與重新授權路徑。S04e 已依該決策完成；S05 待本 gate delta 獨立回查後進入既有 bounded implementation，不再要求新的 E007 run／fresh 45 分鐘或採用許可。E007 兩輪 unknown／phase 2 未執行與當時 Reviewer human-check 收據 immutable。
+分類只讀local tracker及正在處理的既有public error，不再次呼叫snapshot／replacementSnapshot、不額外prepare／網路探測、不暴露provider內部、不宣稱完整複刻其state。scope可能抹除底層error時，tracker仍由相同實際wrapper取得事實；未知技術失敗保持有限fallback，禁止默認重建。temporary明確retry原provider。latch測試覆蓋settlement、兩輪refresh／save與所有terminal分類；不能以sleep推定完成。
 
-只接受同身分 profile 更新後讀回的未驗證限制；仍要求有效 embedded profile、同 Mac／GUI user／App ID／private group／原 certificate、固定位置，保留七日到期與過期不可用、已過期恢復／cert rotation／公開發行未驗證界線。§0–§4 的 ownership／API／儲存錯誤與同 App repair／reauth／settlement 不改。V06–V09 與真實／受控分列全部保留，尤其產品提示首次≤1／fresh 0／rebuild 0、輪替後新程序、真遠端 refresh、provider accepted-rotation 保存失敗停止、denied 不覆寫及雙 client lifecycle；不聲稱產品或 refresh 已驗證。
+GET /user只用scope.rest，固定Accept／驗證User-Agent，200＋positiveid／nonemptylogin才呈現帳號；403等為probe failure。重新授權清舊顯示；雙client原有限401 policy不改。
 
-S05 驗證維護：既有 `StaticIsolationTests.swift` 的 target source／import 精確 allowlist 須同步已核准 W02 四檔；只允許 plan M02 所列兩個 HTTPClient 與兩個 Security 路徑例外，保留其他隔離斷言，不改 runtime／public 契約；此 manifest delta 待獨立回查。
+## 6. 受控到期、收據與測試隔離
+
+`GitHubExpiryValidation`及其store/fetcher wrappers全部App-local。只有明確環境key才開；trusted restore後單次把provider注入clock指向原expiry，accepted真refresh並真save後回realclock。原OSclock、fetcher receivedAt與保存dates不改。observe新程序不得強制到期。六欄digest、pairChanged、attempt／accepted／savecounts、PID／observationID、source／binary／identityhash建立輪替證據；不記rawsecret。私有0700ownedparent、0600exclusive receipt，不覆寫未知檔，不掃全機。單一pairChanged不得虛稱個別tokenhash已測。
+
+App entry最先檢查新testkey，早於任何DPK／listener／OAuth／restore／validation初始化；scheme注入同key，hosted fake-only測試驗證live counters全0。App-local XCTest可採用既有Testing測試框架，但不得殘留root測試依賴；module import改新App，不加productiontesthooks。
+
+## 7. 證據與文件
+
+E00732檔逐bytes保留、兩輪unknown及profile更新未驗證限制沿用。原5個evidence只頂部加歷史banner，不改觀察／hash／verdict；標source version、當時precommitbuild、scope宣稱現已撤回，連新版。四舊圖scene／spec／HTML／native receipts／PNG不改，用原BUILD／visual-review／tool-evidence頂部historyindex標明舊版且指向新圖。新圖另revision，反映App-local與production單向依賴、無dispositionAPI。
+
+新host真人六段在實際操作前全pending：簽章準備、首次真授權保存API、samebinaryfresh、真CleanBuildfresh、受控expiry真refreshsave、輪替後無forcefresh。每段先通知Human留意系統提示，收到後才寫count；不重用舊0次、不預填。有效profile／同identity與固定位置、首次≤1／fresh0／rebuild0保留。首次段、重啟、重建、refresh、輪替後fresh均需新host新provenance；controlled不等naturalexpiry。無法配合時停Human段，其他非相依工作先完成。
+
+README／design-principles／architectureREADME／dual-clientdoc修成「驗證工具與可行性結果／限制」，既有productionlifecycle保持，不宣稱正式產品登入完成。archify／architecture-canvas依skills真QA；pr-lens使用真base/head與覆蓋邊界，graphify禁自動refresh並沿可用graph或sourcefallback，不能為此去建索引／裝hooks／改工具設定／公開發布。

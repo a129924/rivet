@@ -4,12 +4,12 @@
 
 鎖定 GitHub OAuth App 的可 refresh、會過期 credential bundle shared token lifecycle：`GitHubIntegration` 已交付 `OAuthTokenProvider` runtime 與 adapter ports，以及 public GraphQL Query／Mutation 與 authenticated REST GET／POST／PUT／PATCH 契約。GraphQL client 在 HTTP 401 回報實際 snapshot，透過 provider recovery 後重送原 operation／variables 一次；第二次 401 終止。ready Scope 組合兩個 internal client，共用 caller-owned provider instance；跨 target contracts 已交付，完整 REST endpoint 能力仍延後。
 
-這是長期**架構文件**；internal Query／Mutation client 的受限 runtime 契約與驗證見 `github-graphql-infra-foundation` 與 `github-graphql-mutation-foundation` topics，`github-client-scope-composition` 已交付雙 client ready Scope；產品 composition root 已由 `apps/Rivet` 交付，見下方正式產品持續連線。
+這是長期**架構文件**；internal Query／Mutation client 的受限 runtime 契約與驗證見 `github-graphql-infra-foundation` 與 `github-graphql-mutation-foundation` topics，`github-client-scope-composition` 已交付雙 client ready Scope；正式產品 composition root 仍延後；獨立驗證 App 及受限可行性結果見下方專節。
 
 ## Non-Goal
 
-- 已交付 internal OAuth App token-response DTO → public immutable credential bundle mapping，以及 public `OAuthCredentialStore`／`OAuthTokenFetcher` ports、`TokenSnapshot` 與 actor-isolated `OAuthTokenProvider` finite failure contract；DPK storage schema 已由本文件的正式產品章節定義；internal refresh adapter 已定義固定 endpoint 與 form payload。
-- 已交付 OAuth authorization code、PKCE、callback 與初次 sign-in；logout、revoke、多帳號、PAT 與 GitHub Enterprise 仍不在本次範圍。
+- 已交付 internal OAuth App token-response DTO → public immutable credential bundle mapping，以及 public `OAuthCredentialStore`／`OAuthTokenFetcher` ports、`TokenSnapshot` 與 actor-isolated `OAuthTokenProvider` finite failure contract；不定義 Keychain credential storage schema；internal refresh adapter 已定義固定 endpoint 與 form payload。
+- 正式 GitHubIntegration 不在本 topic 實作 OAuth authorization code、PKCE、callback 或產品初次 sign-in；相關驗證實作只在獨立驗證 App。logout、revoke、多帳號、PAT 與 GitHub Enterprise 仍不在範圍。
 - 不定義 Domain endpoint、DTO、GraphQL schema、rate limit、pagination、一般 retry 或各 Bounded Context 的 failure mapping。
 - 不修改 `RivetHTTPClient`，也不讓其 `Auth`／`AuthFlow` 成為 OAuth runtime driver。
 
@@ -20,7 +20,7 @@
 ```text
 Facade（layer 外的 application composition root）
   ├─ bare RivetHTTPClient / URLSessionTransport
-  ├─ GitHubOAuthDataProtectionStores（DPK 完整 bundle，已交付）
+  ├─ OAuthCredentialStore adapter（deferred）
   ├─ GitHubOAuthHTTPTokenFetcher（internal bare HTTP refresh，已交付）
   ├─ OAuthTokenProvider(OAuthCredentialStore, OAuthTokenFetcher)
   └─ GitHubClientScope.prepare(provider:)
@@ -32,7 +32,7 @@ Facade（layer 外的 application composition root）
 - Facade 是 layer 外的 application composition root，只負責 composition：建立並保留唯一共享的 `OAuthTokenProvider` instance，以 prepare 完成本地 readiness，再由 Scope 注入 REST 與 GraphQL client；不在每個工作前重新 prepare，也不改變各 BC 的 `Facade → UseCase → Port` 層級方向。
 - `RivetHTTPClient`／`URLSessionTransport` 是 bare、generic、GitHub-unaware foundation；bare `HTTPClient` 只執行 raw HTTP request，不認識 OAuth、Bearer、TokenProvider、401 recovery 或 retry，也不直接建立或驅動 `AuthFlow`。
 - `RivetHTTPClient` 既有 internal `AuthRequester` runtime：它注入 `Requester` 與 caller-provided generic `Auth`，建立並驅動 generic `AuthFlow` 的 `.send(HTTPRequest) → raw HTTPResponse → receive(response)` loop，直到 `.finish`；flow 保有 authentication decision。這條 generic capability 不持有 credential、retry 或 GitHub OAuth lifecycle。
-- 已交付 schema 接受 GitHub OAuth App 的六欄 refreshable、expiring token response，並由 internal DTO 在 caller-supplied `receivedAt` 映射為 public immutable `GitHubOAuthCredentialBundle`。public `OAuthCredentialStore`／`OAuthTokenFetcher` ports 在 adapter boundary 使用完整 bundle；internal bare-HTTP refresh adapter 已交付；DPK OAuth adapter 已交付，與 legacy 單一 token store 分離。
+- 已交付 schema 接受 GitHub OAuth App 的六欄 refreshable、expiring token response，並由 internal DTO 在 caller-supplied `receivedAt` 映射為 public immutable `GitHubOAuthCredentialBundle`。public `OAuthCredentialStore`／`OAuthTokenFetcher` ports 在 adapter boundary 使用完整 bundle；internal bare-HTTP refresh adapter 已交付；OAuth Keychain adapter 未交付。
 - `OAuthTokenProvider` 是唯一 lifecycle owner：記憶體 credential、restore、expiry-first refresh、accepted rotation persistence、version 與 single-flight。remote rotation accepted 後的 persistence failure 使 provider 永久 unavailable；它不持有、不接收、不重送 `HTTPRequest` 或 Apollo operation。
 - `TokenSnapshot` 是 public immutable、`Equatable`、`Sendable` client input，只包含 access token 與 version；`hasSameVersion(as:)` 只比較 version。refresh token 與完整 bundle 不會暴露給 client。
 - 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration。另已交付的 async `GitHubAccessTokenProvider` 只表示 token acquisition；新的 OAuth provider 不 conform 或 bridge 它，也不實作 request、transport、401 classification 或 retry。
@@ -44,13 +44,13 @@ Facade（layer 外的 application composition root）
 2. 每個 client 走自己的 transport route 送出原工作。
 3. 401 是此 lifecycle 唯一的**回應狀態**復原觸發；expiry check 是 Provider 交付 snapshot 前的內部責任，不是 response-status policy。非 401 回應由 consuming BC 的 local Infra 依自己的 adapter boundary 處理；403、repository permission 與 resource visibility 不觸發 refresh。
 4. 收到 401 時，client 回報**實際使用的 snapshot**。若 provider 已有更高 version，直接回傳目前 snapshot；若仍是相同 stale version，僅 single-flight refresh 一次。
-5. 已交付 provider 在 refresh 成功時接受遠端 rotated credential bundle，先持久化完整新 bundle，再更新記憶體 snapshot/version，最後讓等待者取得新版 snapshot。僅可確認未造成輪替的 technical failure 允許再次更新；無法確認的輪替狀態停止 provider，儲存資料仍保留；若遠端 rotation 已接受而本地 persistence 失敗，provider 不再交付 snapshot，產品提供明確重新授權路徑，不恢復可能失效的舊 token。
+5. 已交付 provider 在 refresh 成功時接受遠端 rotated credential bundle，先持久化完整新 bundle，再更新記憶體 snapshot/version，最後讓等待者取得新版 snapshot。僅可確認未造成輪替的 technical failure 允許再次更新；無法確認的輪替狀態停止 provider，儲存資料仍保留；若遠端 rotation 已接受而本地 persistence 失敗，provider 不再交付 snapshot，credential reconciliation 留待後續獨立 topic。
 6. 原 client 以新版 snapshot 重送自己的原 request／operation 一次；每個原工作最多 retry 一次。
 
 | 狀況 | Outcome |
 | --- | --- |
-| 無 credential | provider 回傳 `.missingCredential`；產品提供授權入口 |
-| credential store load failure | provider 回傳 `.restore`；產品區分儲存失敗並提供明確重試 |
+| 無 credential | provider 回傳 `.missingCredential`；Facade re-auth deferred |
+| credential store load failure | provider 回傳 `.restore`；Keychain adapter／client outcome deferred |
 | 純 error 的可信 2xx／4xx `bad_refresh_token` | `.authenticationRequired`；provider 不再交付舊 snapshot |
 | 純 error 的可信 2xx／4xx `incorrect_client_credentials`、缺少 app 設定、送出前已知失敗 | `.refresh`；保留 bundle，後續可再次更新 |
 | 5xx、未知／混合／無效回應、送出後無可信回應 | `.refresh(rotationIndeterminate)`；停止 provider 並保留 store |
@@ -66,7 +66,7 @@ internal `GitHubOAuthHTTPTokenFetcher` 使用固定 GitHub token endpoint、POST
 
 取消某 caller 不取消 shared refresh。可信回應已取得時仍解析並依真實結果更新狀態；有效 rotated pair 必須先保存。送出前取消為 nonterminal cancellation；送出後取消而無可信回應，當次回 cancellation，後續未取消 caller 收到 terminal `.refresh(rotationIndeterminate)`。GraphQL 在 provider await boundary 保留 caller cancellation。
 
-access token 過期先觸發更新，不以 refreshTokenExpiresAt 預先拒絕。兩次成功更新並保存後仍到期的 local exhaustion 維持 nonterminal `.refresh`，後續 snapshot 與 replacement 均可再更新。重新授權後建立新 provider；產品 re-auth flow 已交付；明確退休舊 provider 後，僅新完整 bundle 保存成功可建立新 provider。
+access token 過期先觸發更新，不以 refreshTokenExpiresAt 預先拒絕。兩次成功更新並保存後仍到期的 local exhaustion 維持 nonterminal `.refresh`，後續 snapshot 與 replacement 均可再更新。重新授權後建立新 provider；產品 re-auth flow 與 reconciliation 未交付。
 
 ## Boundary 與後續 Topic
 
@@ -82,39 +82,39 @@ GraphQL interceptor 對當次 snapshot 建立 `BearerAuth`，經 public、nonthr
 
 OAuth technical failure 不跨越成 shared BC failure contract；未來由 consuming BC 的 local Infra 映射為該 BC 自己的 failure contract。
 
-初次 OAuth sign-in、authorization code + PKCE 與 callback 已由 `github-persistent-connection` 交付；logout／revoke 與 multi-account 仍須獨立 topic。本文件 supersede `github-integration-auth-boundary` 的 PAT-only、REST-only authorizer 方向；該歷史 topic 僅保留 traceability，沒有被改寫或刪除。
+初次 OAuth sign-in、authorization code + PKCE、callback、logout／revoke 與 multi-account 必須以獨立 topic 處理。本文件 supersede `github-integration-auth-boundary` 的 PAT-only、REST-only authorizer 方向；該歷史 topic 僅保留 traceability，沒有被改寫或刪除。
 
-## 正式產品持續連線
+## 獨立驗證 App 與可行性結果
 
-`github-persistent-connection` 將登入、保存、重啟還原、刷新與 API 使用接成單一產品流程。責任以[產品責任 canvas](diagrams/github-persistent-connection/responsibility-canvas.html)為準；[初次授權 sequence](diagrams/github-persistent-connection/authorization-sequence.html)、[還原／刷新／重授權 sequence](diagrams/github-persistent-connection/restore-refresh-reauth-sequence.html)與[連線 lifecycle](diagrams/github-persistent-connection/connection-lifecycle.html)補足時間與狀態，重建與 QA 見 [BUILD](diagrams/github-persistent-connection/BUILD.md)。較早雙 client 圖仍描述其局部 runtime；產品圖擴充其組合，不改 ownership。
+`github-persistent-connection` 驗證「GitHub登入 → 完整保存 → 重啟還原 → 自動刷新 → 輪替後新程序讀回 → API」是否可行；交付 [`GitHubConnectionVerification`](../../apps/GitHubConnectionVerification/README.md) 工具及受限結果，不是正式Rivet產品登入能力。先前 `apps/Rivet`、正式Sources／共用UI及新增正式API的歸屬宣稱已撤回。production Sources／Tests／Package精確保持topic前 `16606b89`，不與PR #61去重／合流或抽共用層。
 
-### 組合與授權契約
+### 驗證所有權與依賴
 
-- [RivetApp](../../apps/Rivet/Sources/RivetApp.swift) 是最小 macOS 15+／Swift 6 GUI host，非 sandbox、`ENABLE_DEBUG_DYLIB=NO`。Debug 採目前 Mac 架構；不據此宣稱 Intel／Release 分發支援。Team、AppID、access group、有效 embedded profile 與固定安裝位置由私有本機設定注入；原免費 Personal Team 與既有 Apple Development certificate 的受限驗收不代表公開 packaging／notarization。
-- [Coordinator](../../apps/Rivet/Sources/GitHubConnectionCoordinator.swift) 獨占一個 provider／scope，以及 prepare、GET/user、重試共用的 tracked operation admission gate。UI 取消後仍等原 Task.result settled；未結束時設定保存、修復或重授權回 `operationInProgress`，不排第二 session。所有重授權／修復先清除舊帳號並退休原 provider／scope；取消、grant 或保存失敗皆不得復活舊 provider。暫時 prepare 失敗可明確重試同 provider，terminal disposition 不以新 provider 繞過。
-- [Presentation leaf](../../Sources/Presentation/GitHubConnection/GitHubConnectionView.swift) 只接受 display-ready 資料與 intent，含 SecureField 與有限操作，不依賴 GitHubIntegration。設定保存成功才開啟授權；denied／unavailable 保留兩個儲存項目，僅明確重試。可信 credential clientID 是修復權威；corrupt 資料不抽取 clientID，不做跨 item rollback。[完整 repair table](../../analysis/github-persistent-connection/technical-spec.md)保留全部分支。
-- `GitHubOAuthAppConfiguration` 驗證 clientID／clientSecret 並遮蔽 description、debug 與 reflection。`GitHubOAuth` factory 交付 production fetcher 與 actor 授權 session；concrete HTTP／Security helpers 保持 internal。session 的 state 與 verifier 各取獨立 32 bytes 安全亂數，使用 S256 PKCE、`offline_access`、client secret exchange；secret 不進 authorize URL。
-- [Loopback relay](../../apps/Rivet/Sources/GitHubLoopbackCallbackRelay.swift) 只綁 `127.0.0.1` 動態 port；ready 後才建立 session／開瀏覽器。僅接受 GET `/oauth/callback`，8 KiB 上限、連線讀取 5 秒、session 最多 5 分鐘；其他 path 靜態 404。session 驗證 exact scheme／host／port／path、state、重複 query 與 code/error 排他；無 userinfo／fragment，code 僅消費一次。callback 接受後停用取消，交換限 30 秒；所有出口關 listener，回應與診斷不含完整 callback query。
-- 初次交換與 refresh 採固定 GitHub endpoint、ephemeral transport、禁止 redirect／cookie／cache，無一般 retry；可信純成功回應須完整六欄、bearer、有效有限到期秒數，scope 可空。production token receipt 依真時鐘建立，public credential bundle 不加入 Codable。
-- [Account probe](../../apps/Rivet/Sources/GitHubAccountProbe.swift) 走 `scope.rest`，明傳 GitHub JSON Accept 與 `User-Agent: Rivet`，只有 HTTP 200、有效 id 與非空 login 顯示帳號；403 等不觸發額外 refresh。REST／GraphQL 仍共用原 provider lifecycle，HTTP 401 recovery 最多一次。
+[新版責任canvas](diagrams/github-persistent-connection/verification-host-v2/responsibility-canvas.html)呈現驗證App單向使用既有public GitHubIntegration／RivetHTTPClient，無RivetPresentation或production反向依賴；[授權sequence](diagrams/github-persistent-connection/verification-host-v2/authorization-sequence.html)、[還原與輪替sequence](diagrams/github-persistent-connection/verification-host-v2/restore-refresh-reauth-sequence.html)及[生命週期](diagrams/github-persistent-connection/verification-host-v2/connection-lifecycle.html)補時間／狀態，真工具QA見[BUILD](diagrams/github-persistent-connection/verification-host-v2/BUILD.md)。原雙client圖仍描述既有局部runtime，未改ownership。
 
-### DPK 保存與停止語意
+- [驗證entry](../../apps/GitHubConnectionVerification/Sources/GitHubConnectionVerificationApp.swift)與scheme／product／module皆明示驗證；最早testguard在DPK、listener、OAuth、restore與validation之前。App-local UI常駐「驗證用途，非Rivet正式產品」。只有明確環境才啟用controlled／receipt，production沒有對應開關。
+- [Coordinator](../../apps/GitHubConnectionVerification/Sources/GitHubConnectionCoordinator.swift)擁有唯一provider／scope與tracked operation Task；UI取消仍等待實際settlement才放行憑證改寫。重授權與修復先退休，cancel／grant／save失敗不復活舊連線；新完整bundle保存後才建立新generation，暫時失敗明確retry原provider。
+- [授權session](../../apps/GitHubConnectionVerification/Sources/GitHubOAuthAuthorizationSession.swift)只回bundle，不保存；state及verifier各32安全亂數、S256 PKCE、offline_access、exact callback、一次code。relay只綁127.0.0.1動態port，GET `/oauth/callback`、8KiB、讀取5秒、session5分鐘。exchange／refresh使用固定HTTPS、ephemeral／不跟redirect／cookie／cache、30秒、無一般retry；secret不入authorize URL。
+- [驗證refresh](../../apps/GitHubConnectionVerification/Sources/VerificationOAuthHTTPTokenFetcher.swift)、URLs與six-field DTO留App-local，既有productioninternal fetcher／DTO／endpoints未擴visibility；公共bundle不新增Codable。[本地tracker](../../apps/GitHubConnectionVerification/Sources/VerificationLifecycleObservation.swift)一份對應一個providergeneration，包真refresh／save結果分類terminal；查詢零額外snapshot／prepare／store／network，不新增production `disposition()`。
+- [驗證probe](../../apps/GitHubConnectionVerification/Sources/GitHubAccountProbe.swift)使用scope.rest的GET/user，明傳Accept及User-Agent `GitHubConnectionVerification`，僅200／positive ID／非空login才確認帳號。雙client仍共用原provider、HTTP401僅最多一次recovery，沒有PR業務整合。
 
-[`GitHubOAuthDataProtectionStores`](../../Sources/BoundedContexts/GitHubIntegration/Stores/GitHubOAuthDataProtectionStores.swift) 在精確 access group、service `local.rivet.github.oauth.v1` 下保存 `configuration`、`credential` 兩個 generic-password items。每次 query／update／add 皆 DPK=true、synchronizable=false；新增採 AfterFirstUnlockThisDeviceOnly。共用 actor 序列化 update-first，absent 才 add，duplicate 僅補 update 一次。不假設兩個 items 有跨 item transaction。
+### 驗證 App 的 DPK schema 與修復
 
-兩個嚴格 version 1 envelopes 分別保存 App 設定與 clientID-bound 六欄 bundle；日期使用有限 JSON milliseconds，允許 expired bundle 由 provider 決定刷新。未知版本、必要缺欄、非法型態或值為 corrupt；credential ID 不符為 identityMismatch。missing 僅限真正 item-not-found；denied／unavailable／corrupt 不當空資料覆寫。`inspectCredential()` 只交付嚴格解碼後的可信 clientID／bundle。舊 `KeychainTokenStore` 仍是 legacy 單一 access-token store，無自動遷移或實驗資料沿用。
+[App-local stores](../../apps/GitHubConnectionVerification/Sources/GitHubOAuthDataProtectionStores.swift)只使用新bundle `local.rivet.github-connection-verification`、private group `$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)`及service `local.rivet.github-connection-verification.oauth.v1`。configuration／credential兩generic-password items，每次DPK=true／synchronizable=false，add為AfterFirstUnlockThisDeviceOnly，actor序列化update-first／missing才add／duplicate補一次update；不假設跨itemtransaction。兩version1 envelopes嚴格保存clientID／secret及clientID-bound六欄，日期有限milliseconds；missing／denied／unavailable／corrupt／identityMismatch分列。
 
-refresh accepted 後必須先完整保存輪替結果，再交付新 snapshot；保存失敗依既有 provider 永久停止契約，不回退舊 token。`disposition()` 是純讀觀測：notStopped、authenticationRequired 與其他 stopped，不讀 store 或 refresh。產品提供明確重新授權，不自動復活舊 provider。
+完整可信credentialID為修復權威，corrupt不偷取ID；無可信ID時需Human確認原OAuthApp，denied／unavailable不覆寫。新namespace不遷移舊RivetApp／legacyaccess-tokenstore／實驗資料，不提供logout／revoke。refresh accepted後真保存成功才交snapshot，失敗沿既有provider停止契約、不回退可能已失效token；驗證App提供明確重新授權。
 
-### 已驗證與限制
+### 新 host 實測與證據界線
 
-[正式入口證據](../../plan/github-persistent-connection/evidence/product-e2e.md)與[真實儲存證據](../../plan/github-persistent-connection/evidence/storage-live.md)經獨立 S08a Tester／S08b Reviewer 核對：首次真授權／保存／GET/user、同版本完整退出後新程序還原、真正 GUI Clean 後新 binary 同身分還原、受控 provider 到期後真 GitHub refresh accepted 1 次與 DPK 保存 1 次、輪替後新程序讀回且 refresh/save 為 0，五段 Human 全程皆 0 系統提示。
+2026-10-21 [新host真人證據](../../plan/github-persistent-connection/evidence/verification-host-live.md)由Tester逐段執行並結合Human實答，R06a–f approved／requiredFixes=[]：首次真OAuth／DPK保存／GETuser、samebinaryfresh、真GUI Clean後不同binary同identityfresh、受控providerexpiry真GitHubrefresh accepted1／DPKsave1、輪替後observefresh讀回同新六欄digest且refresh/save0；同帳號，各段Human提示皆0。這是受限可行性，不代最終成果review或正式產品採用。
 
-受控到期是明確 opt-in 的 provider clock，並非等待自然 8 小時。未改系統時間或持久 bundle 日期；token fetch receipt 用真時鐘，新 bundle 保存後 provider clock 回真時間。後一程序六欄 hash 與 accepted／persisted 完整新 bundle 一致，aggregate `tokenPairChanged=true`；沒有個別 token hashes，不能主張每個 token 各自變更。初次正常程序沒有觀測 digest，不補造初始 hash。受控開關只供驗收，正常模式使用 Date.init，細節見 [BUILD](diagrams/github-persistent-connection/BUILD.md)。
+初次observe在emptyconfiguration的start就exclusive寫出，沒有grant後digest，不能把其0計數當登入後receipt或補造觀測；初bundle完整digest在R06c新程序首次讀回。controlledexpiry只改provider注入clock，不改OSclock、HTTPresponse receipt或persisteddates，真accepted＋save後回real；不等自然8小時已測。aggregatetokenPairChanged只證pair不同，沒有個別tokenhash。新真人source是當時feature工作樹快照；sourcecommit不是建置起點，依manifest／sourcehash／privateprojectdelta與原生機器收據追溯。
 
-[契約測試](../../plan/github-persistent-connection/evidence/contracts.md)及[相容性證據](../../plan/github-persistent-connection/evidence/compatibility.md)涵蓋取消／拒絕／無效 callback、完整 repair table、儲存失敗與 terminal、並行 settlement、client policy、test-mode 零 live dependencies；它們是 fake 或受控測試，不是刻意破壞真 credential 的 live 驗收。已通過 29 hosted tests、root 226 tests／25 suites 與 consumer 13 tests／3 suites，不重複相加早期子集合。
+[R04契約與測試](../../plan/github-persistent-connection/evidence/verification-host-contracts.md)、[隔離證據](../../plan/github-persistent-connection/evidence/verification-host-isolation.md)與[R05獨立review](../../plan/github-persistent-connection/evidence/verification-host-review.md)分別記fake失敗契約、78hosted／202production／12consumer及整個App缺席仍build/test，不把它們冒充真服務。signed私人project只注入原Team、等tokenrunpath陣列及XcodeobjectVersion56→60，repo source不改；完整歸屬／SHA見[manifest](../../plan/github-persistent-connection/evidence/verification-host-manifest.md)。
 
-適用同一 Mac／GUI 使用者、AppID／access group／certificate、固定安裝位置與有效 profile。免費 Personal Team profile 的 7 日有效期內成立；過期區間不可用，certificate rotation、公開分發、其他機器與多程序 refresh 協調不在證據內。E007 兩輪皆 unknown，profile 更新後 read 未執行；Human 明示接受此唯一 gate 例外，並未把它改成通過。以下 E001–E007 保持當時歷史結論，內文的 deferred 不代表否定後續本產品交付。
+同Mac／同GUI使用者／有效embeddedprofile／相同AppID、privategroup與原certificate／固定新安裝位置是前提。免費PersonalTeamprofile有限有效期，過期期間不可用；自然到期、已過期恢復、certificate rotation、公開分發、跨機／多程序協調未驗證。E007兩輪profile更新後read均未執行、主假設unknown；Human已接受「profile更新後讀回仍未驗證」限制，不開第三輪。同profile Clean重建不能當profile更新成功。
+
+2026-10-20舊Rivet名義host／圖／五份evidence保留為 `ca00bc0` 原版本歷史，code `7e81b77` 僅供追溯；當時真build在commit前，仍以原sourcehash為據。舊0提示／approval不補新版結果，原正式產品交付宣稱已撤回。E001–E006與E007原結論不改，新版資料不反寫舊native receipts。
 
 ## E001 受限可行性依據
 

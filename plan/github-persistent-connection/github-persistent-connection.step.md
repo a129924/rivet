@@ -1,3 +1,124 @@
+# GitHub 持續連線：驗證產物歸屬回修帳本
+
+- Topic：`github-persistent-connection`；最後更新：2026-10-21，Reviewer（R09最終獨立成果／宣稱／來源審查）。
+- Phase：既定topic交付；Current step：R10；Current status：pending。
+- Upstream verdict：approved（2026-10-21 獨立Reviewer R09；requiredFixes=[]；成果／宣稱／來源核對完成，只交已授權R10，R11Humanreview未代填）。
+- 本輪Human指令撤回正式產品定位，交付完整獨立驗證App／可行性結果／限制。沿原featureworktree、branch `feat/github-persistent-connection`、DraftPR #62／base dev；不在dev實作，不改PR #61。
+- 四正式artifacts：[requirements](../../analysis/github-persistent-connection/requirements.md)、[technical-spec](../../analysis/github-persistent-connection/technical-spec.md)、[plan](github-persistent-connection.plan.md)、本step。
+
+## 現行 Steps（只有本節是本輪路由）
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
+|---|---|---|---|---|---|
+| R01 | completed | Plan-Creator | 本輪scope、精確actionmanifest、Appidentity／依賴／歷史與真人分段寫入四artifacts | 2026-10-21本四份修訂；非自審／approval | verdict=null，交R02 |
+| R02 | completed | Plan-Reviewer | 獨立審scope及四artifacts，明示verdict／fixes | 下列 R02 獨立審查收據及四 artifacts 受審 SHA | approved；requiredFixes=[]；R03 待 Implementer 執行 |
+| R03 | completed | Implementer | planD19／M01-M02污染撤回，完整App-local實作與自驗，W05逐檔清單 | verification-host-manifest／contracts／isolation；下列R03自驗收據 | 僅implementation完成；交R04獨立Tester，非自審approval |
+| R04 | completed | Tester | 獨立TC01–TC07、排除整個驗證App仍productionbuild/test | verification-host-contracts／isolation／review；下列獨立收據 | approved；requiredFixes=[]；只交R05 |
+| R05 | completed | Reviewer | 獨立source／dependency／terminaltracker／testsreview | verification-host-review R05及私有獨立收據 | approved；requiredFixes=[]；只交R06 |
+| R06a | completed | Tester＋Human | 新host原Team/cert選定、簽章／有效profile／新identitygroup與新固定位置核對；Human提示觀察 | verification-host-live：本輪真machine／逐段Human0，未用舊host結果 | approved；requiredFixes=[]；僅R06 scope |
+| R06b | completed | Tester＋Human | 新host首次真OAuth→DPKconfig／credential保存→GET/user有效帳號 | verification-host-live：本輪真machine／逐段Human0，未用舊host結果 | approved；requiredFixes=[]；僅R06 scope |
+| R06c | completed | Tester＋Human | 同binary完整退出、新PIDrestoreAPI | verification-host-live：本輪真machine／逐段Human0，未用舊host結果 | approved；requiredFixes=[]；僅R06 scope |
+| R06d | completed | Tester＋Human | 真CleanBuild不同binary同identitysamepath、新PIDrestoreAPI | verification-host-live：本輪真machine／逐段Human0，未用舊host結果 | approved；requiredFixes=[]；僅R06 scope |
+| R06e | completed | Tester＋Human | 受控providerexpiry→真GitHubrefresh→真DPKsave→API、realclock恢復 | verification-host-live：本輪真machine／逐段Human0，未用舊host結果 | approved；requiredFixes=[]；僅R06 scope |
+| R06f | completed | Tester＋Human | 新observePID讀回輪替六欄digest並API、不force／不refresh/save | verification-host-live：本輪真machine／逐段Human0，未用舊host結果 | approved；requiredFixes=[]；僅R06 scope |
+| R07 | completed | Implementer | 文件宣稱及revision圖／nativeQA／工具實證 | v2 BUILD／visual-review／tool-evidence、R07 manifest與下列作者收據 | 僅作者完成；交R08獨立Tester，未自審approval |
+| R08 | completed | Tester | 獨立TC08/TC09證據／圖／privacy／immutablehash核對 | contracts／isolation／review R08與私有獨立收據 | approved；requiredFixes=[]；只交R09 |
+| R09 | completed | Reviewer | 獨立成果／宣稱／scope／新舊來源review | verification-host-review R09及私有獨立收據 | approved；requiredFixes=[]；只交R10 |
+| R10 | pending | Implementer | stagedtopic語意/message→mandatoryhooks→commit→真PRLensmap／有限Graphify→正常push→更新原DraftPR並readback | 尚未執行本輪發布；舊PR存在不算本輪完成 | 已授權，不重問開始／commit；不merge |
+| R11 | pending | Human | 原DraftPRhumanreview | 尚待 | 最終停點，不代填接受 |
+
+## Blockers
+
+- 尚無已證實不可解除技術 blocker。R02 已由獨立 Plan-Reviewer 明示 approved／requiredFixes=[]；R03完成implementation，R04獨立Tester及R05獨立Reviewer均approved／requiredFixes=[]；R06a–f新host真人機器結果及逐段Human實答已完成，R07文件圖經R08獨立Tester及R09獨立Reviewer approved／requiredFixes=[]，只交R10既定交付；不代R11Humanreview或merge。
+- 新驗證host六段均已以本輪來源驗證：首次授權保存API、完整退出還原、真正Clean重建、受控真refresh及輪替新程序讀回；setup／build及五結果段Human均實答0。R07文件／revision圖及R08獨立Tester已完成；R09最終獨立成果審查已approved；仍待R10真commit／工具／push／原DraftPR更新及R11Humanreview，不能冒稱已發布。
+- profile更新後讀回仍unknown／Human已接受限制，不阻擋現scope，不開第三輪E007；不擴張成豁免其他新hostlive。
+- 重大scope／正式API不可撤回、新certificate／安全設定／cache變動／付費要求即停並報具體必要性；不得默認保留production污染或借舊identity。
+
+## Human Check 與授權
+
+2026-10-21 Human已明確授權本輪規劃／必要審查→獨立App回修→適當測試→必要真人逐段通知→topiccommit／push／更新原DraftPR #62→humanreview。不重問是否開始或已授權commit。stageddiff語意與message、mandatoryhooks、獨立角色仍遵守。不得merge。
+
+沿用原免費PersonalTeam／既有AppleDevelopmentcertificate；rawsecret只在SecureField，rawidentity／profile／私有path不入repo。原Rivet.app、真DPKitems、Appleprofiles／certificate保留；新namespace不遷移它們。每真人段通知留意授權視窗，Human實際回報才記count；舊host各段0次保持歷史，不能複製到R06。
+
+## 本輪九欄與交接
+
+| 欄位 | 本輪交接 |
+|---|---|
+| In-Scope | planD／M／W精確manifest及TC01–TC10，完整獨立驗證流程與歸屬宣稱回修 |
+| Out-Of-Scope | 正式產品整合、PR #61合流／去重、新正式API、E007新run、logout/revoke、Apple安全變動 |
+| ReadOnly | planR及dev／其他worktrees；E007／舊native圖／原版本observationsimmutable |
+| Written | 新App與新版evidence／revision圖精確leaves |
+| Deleted | D表19個本topic新增舊production路徑 |
+| Modify | M01–M06；四正式檔精確回base，banner-only歷史導覽／證據 |
+| Goal | 完整流程App可操作，production脫離App仍build/test；來源真實可追溯 |
+| Non-Goal | 宣稱正式產品完成、保留驗證production契約／共用UI／開關／工具、預填真人結果 |
+| TestCase | TC01–TC10及R06六段，依slice逐檔與case交付，不能只帶目錄 |
+
+Handoff：phase=既定topic交付；current_step=R10/pending；upstream_verdict=R09 independent Reviewer approved／requiredFixes=[]；assigned_role=Implementer；next_objective=依已授權stagedtopic語意／message及mandatoryhooks、commit、真PRLensmap／有限Graphify、正常push與更新原DraftPR62並readback。R11Humanreview保持最終停點；profile更新unknown維持，不新增圖面接受gate、不merge。以下歷史不是現行 handoff。
+
+## R02 獨立 Plan-Reviewer 收據（2026-10-21）
+
+- 明示 verdict：**approved**；requiredFixes：`[]`。本角色獨立於四份 artifacts 作者，只審 planning 可執行性，不批准尚未執行的 source／測試／新 host 真人結果，也不替 Human 接受。
+- 已讀專案 README／design-principles／AGENTS／architecture README／OAuth 長期文件、plan-reviewer 與 SDD 兩份 references；對照 PR #61 實際獨立 App 入口、project 產品依賴與分離 amendment、既有 public ports／provider terminal policy，未修改該 PR。
+- 四份 artifacts 一致定位完整獨立 GitHubConnectionVerification 驗證工具；D19＋M01/M02 四檔撤回基準、production／root tests／Package zero-diff 與 App 缺席測試可核對；本地 refresh／endpoints／DTO 及同 generation wrapper tracker 可沿既有 public ports 實作，不需新增正式 API／visibility，也不以再呼叫 snapshot 觀察停止。
+- 新 bundle／group／service／環境 key／product／scheme／module／test host／常駐 UI 均明示驗證；九欄及精確 from/to／新 leaves／保留清單、逐檔 action/hash 記錄足以約束搬移。E00732 與舊 native 圖 immutable、舊 host provenance／banner-only、profile renewal unknown／Human 例外和新 host 六段 pending 互不混用。
+- 必要自動測試、terminal／settlement／clock／receipt、production 排除 App build/test、逐段 Human 新真人驗證、revision 圖真工具 QA、PR Lens 真 commit 覆蓋與 Graphify bounded fallback 均已涵蓋；原 branch／worktree／PR62、不動 dev／不合流 #61、不 merge 的交付邊界一致。工具如需未列 native leaf 依既定最小 amendment 再查，不擴目錄授權。
+- 受審 SHA-256：requirements `2598a7def3021d930fdfab4b3dfa1a5745a3294d80f0c35cdfbf367f51440773`；technical-spec `161d40239f7d7c4b9ed6e424b24f5f0e53d4db7ea18526d26ef9d2df66862f59`；plan `13ca04cf409943b3a545f664ba11d75b6c009d10feb0e328e0ad0687e787e6bc`；本 step 收據前 `cf9b27bc4e6e6df26dbb57b7a96044620ab957f5a4c4d25593b3d8d203c3a228`。本次只記自身 R02 收據／狀態，不修受審 requirements／spec／plan；未執行 build／tests／App／憑證／Git mutation／發布。寫後停止本角色檔案修改，供既定 R03 handoff。
+
+## R03 Implementer 實作與自驗收據（2026-10-21）
+
+- 引用外部R02 approved／requiredFixes=[]，依D19／M4／W01–W05受限執行；沒有重設scope／新增正式API／visibility／gate／與PR61去重合流。19個原正式新增路徑已搬入新驗證App並刪舊，四既有正式檔確認HEAD未偏離後精確還base16606b89，rootSources／Tests／Package整體zero-diff。逐檔舊／新SHA、30新Appleaves與61immutable保留項見 [manifest](evidence/verification-host-manifest.md)。
+- App target／scheme／product／module／bundle／group／service／env／TEST_HOST全新驗證identity；畫面常駐「驗證用途，非Rivet正式產品」。App僅依既有GitHubIntegration／RivetHTTPClient publicproducts與系統frameworks，不連RivetPresentation。App-local endpoints／sixfieldDTO／refresh自持有限policy；productioninternal不可見測試改用publicports，不擴權。
+- Coordinator每providergeneration建本地Mutex tracker，以實際fetcher.refresh／store.save wrappers記錄terminal facts；純查詢不呼snapshot／prepare／網路／store。初次grant保存不誤停，accepted後savefail停、每次成功save清marker，第二輪失敗仍停；twoexpiredrotationlimit保持非terminal。原settlement／singleadmission／retirement／noresurrection／repair表與錯誤分類保留。
+- TDD實際trackerplaceholder紅燈：5tests／1suite、33issues；補最小本地狀態後綠燈。最終普通unsignedbuild exit0，完整fakehostedtests xcresult78passed／0failed／0skipped（29XCTest＋49SwiftTesting、參數107runs）；featurebaseline202tests／22suites、publicconsumer12／3均pass。最初機械編譯／工具參數失敗有私有log，不冒稱行為red；最終命名／error匹配收斂後重新核完整78。
+- 在owned0700獨立scratch逐檔複製當前1128trackedfiles、排除整個apps，普通swiftbuild exit0及相同productiontests202／22pass，production檔不需改。24Swiftleaves strictformat／SwiftLint0violations、plistlint3OK、schemeXML／pins一致／imports／buildsettings與diffprivacy檢查通過。沒有install依賴／改hook／跳必要檢查。
+- E00732／舊native圖29逐bytes不變；舊evidence5與舊導覽3未改，banner與長期docs／revision圖留既定R07。W05 live／review只建立pending框架，所有新host真人／Human提示null；availability不等開始。未啟動真App／DPK／瀏覽器，不動原安裝App／真items／Appleassets／dev。
+- 本角色只宣稱R03implementation完成，交R04Tester→R05Reviewer；未commit／push／改PR或自審通過。從handoff後停止repo／step寫入，供獨立驗證。profile更新仍未驗證、Human接受限制保持。
+
+## R04 Tester 獨立交付（2026-10-21）
+
+- 適用TC01–TC07；43交接SHA、D19from/to、M4basebytes與Sources／Tests／Package整體zero-diff、E00732／舊native29（另對ca00bc0）皆相符；受審62statusleaves／30Appleaves精確manifest通過。
+- 自有當前source snapshot新Appunsignedbuild exit0、完整fakehosted原生xcresult78passed／0failed／0skipped（49SwiftTesting＋29XCTest，動態參數107runs）；localtracker／refresh／settlement／noresurrection／earlyguard0live／controlledclock及receiptnegative均pass。24Swiftstrictformat／SwiftLint0、三plist／scheme／pins／privacy／diffcheck通過。
+- 自有另一份當前source snapshot排除整個apps，普通swiftbuild exit0、productiontests202／22及publicconsumer12／3pass，production無需修改。KeychainTokenStoreTests明示skip避免真legacyKeychain；首次sandboxcache權限失敗後循正式escalation重跑，非sourcefailure或略過檢查。
+- 本角色未改source／tests／受審manifest、真App／DPK／Apple資產／dev，無Gitmutation；只追加自己的contracts／isolation／review及step。原生logs／xcresult與完整私有收據SHA `6e4a6724f82e039a1f391579b066b024bf9d3b28b9e52e7ec0ce38701964a1b1`可追溯。
+- verdict=approved，requiredFixes=[]；交R05獨立Reviewer，從此停止repo／step寫入。R06全部新hostlive／Human提示仍pending／null；availability不等freshready。R07舊宣稱與新版圖修正尚未完成；profile更新仍未驗證、Human接受限制不變，不宣稱整topic完成。
+
+## R05 Reviewer 獨立交付（2026-10-21）
+
+- 直接source／dependency審查未發現requiredfix；D19撤回／M4回base、production Sources／Tests／Package／packages zero-diff，App-local完整驗證流程與同generation tracker／settlement／terminal／noresurrection符合鎖定契約，沒有新增正式API或PR61合流。
+- 34source/project/test、61immutable、12原生log與4Tester evidence SHA相符；核R04 fakehosted78／0／0、productionApp缺席普通build／202tests／22suites、consumer12／3及strictformat／lint／plist／pins／deps收據。未重跑已綠suite、未操作live。詳 [R05收據](evidence/verification-host-review.md#r05-獨立-reviewer-收據2026-10-21)。
+- verdict=approved；requiredFixes=[]；私有收據SHA `eb17d6faaaabd86a0bec5be73334013db1202ddd409bd20b4ecc1de7416e84d8`。只交R06a新host真人準備；R06全部pending／promptCount=null，availability不等已操作，R07文件圖及後續審查／發布尚未完成。舊host0次／舊approval不挪用，profile更新仍未驗證、Human已接受限制不變。
+- 僅寫本角色review／step，沒有source／tests／Gitmutation／dev／真App／DPK／Apple／外部write；此刻停止repo寫入。
+
+## R06a–f Tester 真人可行性驗證交付（2026-10-21）
+
+- 新run t0=03:19:42Z（臺灣11:19:42），未另設45分鐘窗口。setup、build、首次授權、samebinaryfresh、Cleanrebuildfresh、controlledrefresh、rotatedfresh七項Human均逐段實答0；Human確認親自在新App輸ID／secret並完成真授權。沒有預填、借用舊host或以browser靜態文字當API成功。
+- 精確正常Quit／新PID鏈80099→82770→85789→86552→90031；固定新安裝位置、常駐驗證label、每次validsameaccount。真Clean後builtproduct不存在、再GUI Build的原生compile／link／codesignlog、新binary633192…7f67異於初f81133…ad0f；原certificate／Team／group／有效profile與currentMac授權相符，非profile更新。
+- 首receipt在空設定start已exclusive輸出，未觀測grant後digest；R06c新程序首次直接觀測完整已保存六欄19112c07…65547。R06e受控providerclock觸發真GitHub attempt1／accepted1／真DPKsave1，accepted=persisted新b27c24f9…c3e36、clock回real；R06f observe無force／refresh0／save0，restore=providerload=相同新digest。只證aggregatepairChanged，不宣稱自然到期／個別tokenhash。
+- R05受審source與61immutable、repoApp30hash再次核未改；私有Xcode僅App Debug選Team、兩Debugrunpaths等tokenarray序列化與objectVersion56→60，已如實記，不將私有project說成repo byte-identical。production對base零diff保持。
+- 來源／binary／profile／原生收據與Human/UI sidecar hashes、UTC界線及限制見verification-host-live。原新App／舊RivetApp與真DPK／Apple資產及ownedprivate證據全保留，無清理／revoke／第三輪E007；profile更新仍未驗證、Human接受限制不變。
+- R06 bounded verdict=approved，requiredFixes=[]，Current R07 pending交Implementer；只更新live／review／自己step，從handoff後停止repo／step寫入。不自批R08/R09／全topic，不Git／merge；無下一真人需求。
+
+## R08 獨立 Tester 文件圖與來源交付（2026-10-21）
+
+- verdict=approved／requiredFixes=[]，適用TC08／TC09及必要manifest來源回查。106action＝status、87受審hash／32v2leaves、143currentlinks／privacy／diffcheck全通；8historybanner原ca00bc0suffix、61immutable、R06live／真機器／7Human0鏈及README-only新舊來源核符。production含packages對basezero-diff。
+- 三Archify重新showcase9/9零錯警；全新ownedprivatebytecopy四尺寸visual-check全pass，12canonicalPNG逐張親看。Canvas獨立5bands19boxes17edges零錯警、nativebuild逐bytes相同，再以privateChrome截圖親看；Coordinator保存／publicport注入／tracker／settlement語意與source一致。nativepending不手改，非自動Human接受。
+- 本角色讀必要archify／canvas／prlens／graphify技能；真PRLens0.11.0／Graphify0.9.73確認，後者每次禁autorefresh。無usablegraph／config，sourcefallback如實；真修訂commit map留R10。未Swift／live重跑、App／DPK／Apple／Git操作，不修受審source／docs／圖，只有自己的四個既定收據／step。
+- 私有收據SHA `13cd20f8af19d5fd342613af002d56656bfc10353bc883ce64426707a3e334b3`；詳contracts／isolation／review。Current R09 pending交獨立Reviewer，停止所有repo／step寫入。profile更新unknown／Human接受、controlled非自然、首grant後digest未觀測及aggregatepairChanged限制保持，不自批全topic／發布／Humanreview。
+
+## R09 最終獨立 Reviewer 交付（2026-10-21）
+
+- verdict=approved；requiredFixes=[]。四正式契約與本輪驗證定位一致，四長期docs撤正式產品claims，新舊live來源／README-only版本界線及歸屬清單完整，無production新增契約或PR61合流。
+- 87受審hash／R08四收據hash、61immutable／8原文suffix／R06十一machine-Human收據鏈及29個未改App compiled／resource／project／test葉檔核符，production對basezero-diff。新host七項Human0、兩真binary／獨立PID及六欄輪替鏈一致；首grant後digest未觀測、controlled非自然／aggregate非個別token與profile更新unknown限制不改。
+- 親看真Canvas與三張nativePNG，ownership／Coordinator保存／tracker／settlement／noresurrection與source一致；核R08原生9/9／四尺寸／12PNG／Canvas5/19/17零錯警及byteidentity證據。未重跑綠Swift／live／native工具、不代修source／docs／圖。詳 [R09審查](evidence/verification-host-review.md#r09-最終獨立-reviewer-收據2026-10-21)。
+- 私有獨立收據SHA `7f371d4cd30302b502a891d49ca7372b2f28c191da7d9e35c2ddc020dcf89945`；Current R10 pending，交既定已授權topiccommit／真PRLensmap／hooks／push／原DraftPR62更新，再R11Humanreview；不再加Human圖面接受gate、不merge／不預填發布或CI結果。只寫review／自身step，無App／DPK／Apple／dev／Gitmutation／外部write，完成停寫。
+
+## 歷史帳本封存（2026-10-20，非本輪路由）
+
+以下保留原 `ca00bc0` 帳本完整內容，包含當時正式產品定位、舊approval、Human接受、commits與PR交付；**正式產品定位及交付完成宣稱現已撤回**。舊S01–S12 status／verdict僅對原版本，不能放行R02–R11。sourcecommit7e81b77只供追溯，真人實際build在commit前，依原sourcehash／private收據鏈，不改寫為該commit之後執行。舊E007unknown與實際Human例外保留。舊原始內容如下：
+
+---
+
 # GitHub 持續連線：執行帳本
 
 - Topic：`github-persistent-connection`
@@ -396,3 +517,20 @@ bd00c3e4b266b1703448b91aff220731241a5335 docs(github-connection): 記錄持續�
 - 本段與tool-evidence是最後doc-only交付收據，message `docs(github-connection): 記錄 Draft PR 與交付收據`；它不屬於PRLens的原code-head覆蓋範圍。此commit完成hooks後正常push，最終本地／遠端／Drafthead及乾淨feature與dev讀回由交接訊息提供；不將自指commitSHA硬寫成本段自身hash。
 - 本role的temporaryfeature dependency symlink僅供完整hooks，最後hook後精確移除，不動dev deps／父dir；ownprivatecopy／兩generatedplist backups及PRLens／Chrome scratch保留供核。沒有新追蹤output／工具config／Apple設定／App或credential操作。
 - S12交付範圍已達DraftPRHumanreview；不請指定第三方reviewer、不comment別人、不merge／tag／release。有效profile／七日到期／renewalunknown Human例外、controlled非自然到期／初始digest未測等限制完整保留。
+
+## R07 Implementer 文件與 v2 圖交付（2026-10-21）
+
+- 引用外部R04Tester、R05Reviewer及R06a–fTester approved／requiredFixes=[]；新host真授權、DPK、fresh／真CleanBuild／controlledrefresh／輪替後fresh與Human各段0只引用原R06收據。本role未重跑Swift／真App／DPK／Apple操作，不代R08／R09獨立批准。
+- 四長期docs撤正式產品交付／正式DPKadapter等錯誤歸屬，保留topic前正式provider／scope／雙client責任，新增完整獨立驗證工具／有限可行性與限制。五舊evidence＋三舊圖導覽只prepend historybanner，原ca00bc0全文bytes作suffix保留；code7e81b77與commit前實際buildsourcehash界線明確。E00732／舊native29完全不改。
+- 新v2精確32leaves：scene／CanvasnativeHTML、BUILD／visual／tool三MD，及三張Archify各9leaves。作者繁中、固定ViewerUI／HTMLlang Englishfallback、classicstill／無發布。Canvas真validate5bands／19boxes／17edges零錯警、nativebuild、1440×1100全新私有Chrome真截圖親看；runtimeport呼叫不等productionimport，沒有反向編譯依賴。
+- 三Archify逐candidate真validate，最後deliver各showcase9/9、0errors／0warnings，nativevisual-check四尺寸皆pass；12個最小／最大light／darkPNG已全部view_image親看，不縮字／裁切／手改generatedreceipt。nativevisualReviewpending保持。lifecycle保留laneID與4個實際label／shortsegment診斷逐一修正，收斂後凍結；沒有新nativeleaf超manifest。
+- PRLens真version0.11.0，本輪尚無sourcecommit不造map／basehead；R10真ca00bc0→修訂sourcehead後map與coverage，後docscommit範圍另標。Graphify唯一CLI帶GRAPHIFY_NO_AUTO_REFRESH=1，真version0.9.73；無既有graph，真targetedrg/sourcefallback，不buildgraph／config／hooks／install／upload。
+- Dispatcher明示W01 AppREADME屬本輪文件修正，僅doc-only更新新host成功現況；原R03／R05／R06三十檔hash收據不改、READMEoldhash保留，其他29App檔對R06仍同bytes，不冒稱current30全一致。新manifest涵蓋所有source／planning／docs／evidence／v2及61immutable，mutable本身由外部handoff綁hash；95個現行docslinks、8banner-onlysuffix、privacy／whitespace／source-livehash／productionzero-diff皆核對。
+- R07作者完成→R08Tester→R09Reviewer；尚未commit／push／改原DraftPR62、不merge。profile更新仍未驗證、Human已接受限制；controlled不等naturalexpiry、初grantpostdigest未觀測／R06c首次讀回、aggregatepairChanged界線不變。本role交接後停止所有repo／step寫入。
+
+## R10 source topic commit 與真 map（2026-10-21）
+
+- 外部R08Tester、R09Reviewer已approved／requiredFixes=[]，本role依Human明確本輪topiccommit→push→更新原DraftPR授權，不重問已確認的發布。每組先從stageddiff核單一語意與message，不skipmandatoryhooks；沒有merge／force／指定第三方通知。
+- code `b63af3e51d04487f651ba2fb521fd056f53f1af1`，message `fix(github-connection): 將完整流程驗證隔離至獨立 App`；53from/to原始paths、rename-aware36entries，D19＋M4撤回及App30完整一組，不混其他docs。trim／EOF／Swiftformat／consumer／SwiftLint／renderer6項hooks均Passed。featurerenderer依賴由唯讀dev現有相同pins複製到own0700copy，5內部symlinks皆只指owncopy，未install或回連dev；最後hook後精確移除本roletemporaryfeaturelink。
+- PRLens真ca00bc0→此codehead：4lanes／14nodes／16edges／1flow／3steps、53/53sourcepaths union＋7unchanged鄰居、真validate/render與4nativeSVG／Chrome截圖親看。後docs/evidence/v2commits明列不在map，詳v2/tool-evidence。Graphify沿既有禁refresh sourcefallback，不buildgraph／改config。
+- 下一組staged僅53個planning／docs／evidence／v2leaves，message `docs(github-connection): 修正驗證定位與分版可行性證據`。尚未完成本輪push／原DraftPR更新，不提前填remote結果；source／真人／native圖皆不改、不重跑。

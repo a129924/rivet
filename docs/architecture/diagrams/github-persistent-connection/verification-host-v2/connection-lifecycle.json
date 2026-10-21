@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "驗證 App 生命週期：同 generation 重試",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1100,
+      680
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "正常連線與新授權"
+    },
+    {
+      "id": "verify-retry",
+      "label": "暫時失敗"
+    },
+    {
+      "id": "terminal",
+      "label": "舊 provider 停止"
+    }
+  ],
+  "states": [
+    {
+      "id": "verify-restore",
+      "type": "start",
+      "label": "載入與核對",
+      "lane": "main",
+      "col": 0
+    },
+    {
+      "id": "verify-prepare",
+      "type": "active",
+      "label": "連線工作",
+      "lane": "main",
+      "col": 2
+    },
+    {
+      "id": "verify-ready",
+      "type": "success",
+      "label": "帳號就緒",
+      "lane": "main",
+      "col": 4
+    },
+    {
+      "id": "verify-temporary",
+      "type": "failure",
+      "label": "暫時技術失敗",
+      "lane": "verify-retry",
+      "col": 0
+    },
+    {
+      "id": "verify-reauth",
+      "type": "waiting",
+      "label": "退休後重授權",
+      "lane": "verify-retry",
+      "col": 2
+    },
+    {
+      "id": "verify-stopped",
+      "type": "failure",
+      "label": "舊 provider 停止",
+      "lane": "terminal",
+      "col": 1
+    }
+  ],
+  "transitions": [
+    {
+      "id": "verify-restore-prepare",
+      "from": "verify-restore",
+      "to": "verify-prepare",
+      "label": "同 ID 還原"
+    },
+    {
+      "id": "verify-prepare-ready",
+      "from": "verify-prepare",
+      "to": "verify-ready",
+      "label": "有效帳號",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        600,
+        112
+      ]
+    },
+    {
+      "id": "verify-ready-reauth",
+      "from": "verify-ready",
+      "to": "verify-reauth",
+      "label": "settled 後先退休",
+      "variant": "security",
+      "labelAt": [
+        710,
+        224
+      ]
+    },
+    {
+      "id": "verify-new-grant",
+      "from": "verify-reauth",
+      "to": "verify-prepare",
+      "label": "新 bundle 保存成功",
+      "variant": "emphasis"
+    },
+    {
+      "id": "verify-temporary-failure",
+      "from": "verify-prepare",
+      "to": "verify-temporary"
+    },
+    {
+      "id": "verify-explicit-retry",
+      "from": "verify-temporary",
+      "to": "verify-prepare",
+      "label": "同 provider 重試",
+      "variant": "emphasis",
+      "labelAt": [
+        340,
+        230
+      ]
+    },
+    {
+      "id": "verify-rotation-stop",
+      "from": "verify-prepare",
+      "to": "verify-stopped",
+      "label": "失效／輪替未知／保存失敗",
+      "variant": "security",
+      "labelAt": [
+        530,
+        390
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "App-local admission 與 settlement",
+      "items": [
+        "UI 取消不代表 Task 已 settled",
+        "忙碌時新設定／重授權回 operationInProgress",
+        "不排第二 session，完成後由使用者再觸發"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "舊 provider 不復活",
+      "items": [
+        "本地 tracker 觀察實際停止，需重新授權",
+        "重授權與修復都先退休原 provider／scope",
+        "取消／grant／保存失敗不恢復原 provider"
+      ]
+    }
+  ]
+}

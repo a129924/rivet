@@ -1,3 +1,5 @@
+> **歷史圖表索引：此版 production 歸屬已撤回。** 下方原文與原native圖／收據保留 `ca00bc0`，source `7e81b77` 僅供追溯；當時真人build在commit前，依原sourcehash，不能當新驗證App已驗收。請改讀[獨立驗證App v2圖](verification-host-v2/BUILD.md)與[新host真人結果](../../../../plan/github-persistent-connection/evidence/verification-host-live.md)。本頁原產品完成／舊UI或API敘述僅屬歷史，未回改工具receipt。
+
 # 實際視覺檢查
 
 ## 自動化結果與作者目視

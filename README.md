@@ -21,7 +21,7 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
 
-`apps/Rivet` 已提供正式 GitHub 連線入口：OAuth App 設定、瀏覽器授權、DPK 完整憑證保存、重啟還原、自動刷新與唯讀帳號結果。簽章與私有 runtime 設定由本機注入，不將秘密或 Apple 身分寫入 repository。完整 REST endpoint 能力與各 BC adapters 仍延後。合法 raw REST 與 Apollo partial／errors-only responses 保持；有限 technical errors 與 cancellation 不形成 shared BC failure contract。
+完整 REST endpoint 能力、各 BC adapters、Keychain OAuth credential adapter、初次 OAuth 授權與產品登入仍延後。合法 raw REST 與 Apollo partial／errors-only responses 保持；有限 technical errors 與 cancellation 不形成 shared BC failure contract。
 
 Rivet 目前是可公開的 architecture baseline repository。它保留產品與架構決策、Bounded Context Map，以及 Swift／Node 版本基線；root Swift package 已包含受限的產品實作。
 
@@ -29,4 +29,8 @@ Rivet 目前是可公開的 architecture baseline repository。它保留產品�
 
 GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic HTTPClient 執行固定 refresh POST；public `OAuthTokenFetcher.refresh` 使用 typed `OAuthTokenRefreshError`。只有可信純 error 的憑證拒絕映射為 `.authenticationRequired`；設定錯誤維持 `.refresh` 且可再次嘗試。輪替未知與遠端已接受後的 persistence failure 停止該 provider，保留 store。這些 GitHub-specific 分類屬於 GitHubIntegration；通用 HTTPClient 與各 BC 的業務 failure 邊界維持。[完整契約](docs/architecture/github-oauth-dual-client.md)記錄取消與過期行為。
 
-GitHub 持續連線已通過受限真實驗收：首次授權、同版本新程序、同身分 GUI 重建、受控到期後的真 GitHub refresh／DPK 保存，以及輪替後新程序讀回；五段 Human 均回報 0 次系統提示。適用有效 profile、同機同使用者與相同 App 身分等前提；profile 更新後讀回仍未驗證，已由 Human 接受此限制。詳見[長期契約與證據界線](docs/architecture/github-oauth-dual-client.md#正式產品持續連線)及[責任圖與流程圖](docs/architecture/diagrams/github-persistent-connection/BUILD.md)。這不表示 PR Inbox／Reader 已連接真資料。
+## GitHub 整條流程可行性驗證
+
+[`GitHubConnectionVerification`](apps/GitHubConnectionVerification/README.md) 是獨立驗證工具，畫面明示驗證用途；交付的是「登入 → 保存 → 重啟還原 → 自動刷新 → 輪替後讀回 → API」的可行性結果與限制。初次授權、DPK adapter、UI、coordinator、probe、受控到期與收據全部位於該 App；正式 Sources、共用 RivetPresentation 與 root package 保持 topic 前契約。移除整個驗證 App 後 production 仍可建置與測試，沒有新增正式產品登入能力。
+
+2026-10-21 新驗證 App 已通過真 GitHub 授權／DPK 保存、同版本新程序還原、同身分真正 Clean／Build 還原、受控 provider 到期觸發真刷新與保存、輪替後新程序讀回與同帳號 API；各段 Human 系統提示皆0次。適用有效 profile、同機同GUI使用者、相同AppID／private group／原certificate。profile更新後讀回仍未驗證、使用者已接受限制；受控觸發不代表自然到期已測。詳見[新版真人證據](plan/github-persistent-connection/evidence/verification-host-live.md)、[責任與流程圖](docs/architecture/diagrams/github-persistent-connection/verification-host-v2/BUILD.md)及[逐檔歸屬清單](plan/github-persistent-connection/evidence/verification-host-manifest.md)。舊2026-10-20 Rivet名義host結果保留為原版本歷史，不能冒充本 App 的驗收或正式產品交付。
