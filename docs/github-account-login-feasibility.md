@@ -85,3 +85,7 @@ Human 後續明示將驗證程式碼加入同一 PR #63；前輪文件-only 限�
 #### M04 獨立檢查結論與交付範圍
 
 Tester 的最終 hosted mock 為 17 definitions／18 executions、0 failures，binary 重新凍結 RF01 已解除。獨立 Reviewer 在 architecture overview 的現況句修正後明示 approved、required fixes=[]；只審本 38 paths，不代表產品採用或新真人成功。M04 準備按既有授權提交／推送原分支、交同 PR #63；PR metadata 待主方更新與讀回，尚不宣稱已更新 PR。M03／C01／PKCE 與 production 限制保留，Human review 不自動通過。
+
+#### M04 同分支交付收據（2026-10-21）
+
+驗證工具與既有依賴已以 `7cc4f35b90d07a2dc0160c7354a1c636cc414d18` 提交並 push 原分支，交同一 PR #63；精確 38 paths，六 commit hooks 全 pass。獨立 Tester 已解除最終 binary 重凍結 RF01，Reviewer 修正架構總覽後 approved、無 required fixes。PR metadata／實際 Draft 與 head 讀回待主方完成；本筆不聲稱已更新 PR 說明或 Human 已接受，不 merge。M03 Human 層級受限成功及產品／PKCE／custody 限制維持。

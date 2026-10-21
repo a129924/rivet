@@ -341,3 +341,19 @@ Implementer 檢查：host `xcodebuild test` exit 0（17 tests／5 suites）、�
 Tester 已完成局部核對並解除 RF01：補測試產物後 17 definitions／18 executions、0 failures；最終 normal build 與 launcher／現行 M04 指紋均為 `781e1413dfae1f14ef46369c65c82435c76f7aebcee1154e452bcd671aae7153`，38 檔範圍及 26 reuse 相等。Reviewer 唯一 required fix 為 architecture overview 的舊「初次 authorization 未交付」敘述；已分開既有 initial factory／session／exchange 與 deferred 產品登入／持久化 adapter，局部複核後明示 **approved，required fixes=[]**。
 
 現行：M04-V completed、RF01 cleared；M04-R completed／approved；M04-G in-progress。依既有 Human direct topic commit／push 與同 PR #63 授權，精確 stage 38 paths，staged 語意核對後提交；PR metadata 由主方後續更新與讀回，本 agent 不編輯 PR、不開新 PR。H01 尚未接受、不 merge。commit／push 真實結果另記，不預填 SHA 或發布成功。
+
+#### M04-G 實際主提交與同分支 push 收據（2026-10-21）
+
+主提交 `7cc4f35b90d07a2dc0160c7354a1c636cc414d18`：`chore(github-auth): 納入可重現的登入可行性驗證工具`。staged 恰 38 paths（26 new／12 modified、+2479／-6）；commit 六 hooks 全 pass（whitespace、EOF、Swift format、consumer contract、SwiftLint、renderer check），已實際 push 到既有 `docs/github-account-login-feasibility`。未新建 branch／PR、未 OAuth、未 merge，來源 worktree 與 dev 未寫入。
+
+本節為一次 docs-only 收據補記；最終 head 與 PR Lens validate／render／manifest 的真實結果由外部交付收據及最終回報記錄，不為內嵌自身 SHA 無限追加 commit。工具圖不替代 code review 或 OAuth 證據。
+
+| ID | Status | Owner | Condition | Evidence | Blocker | Verdict |
+| --- | --- | --- | --- | --- | --- | --- |
+| M04-V | completed | Tester | RF01 解除、指紋及局部文件核對 | 17 definitions／18 executions／0 failures；781e1413… 與 launcher 相符 | 無 | null |
+| M04-R | completed | Reviewer | architecture overview required fix 局部複核 | 明示 approved、required fixes=[] | 無 | approved |
+| M04-G-code | completed | Implementer | 精確提交並 push 原分支 | 上述主提交、六 hooks／push exit 0；收據補記另隨 docs-only 提交 | 無 | null |
+| M04-G-meta | planned | Implementer（主方） | 更新同 PR #63 metadata 並讀回真實 diff／head／Draft 狀態 | 待主方執行；此 agent 未改 PR metadata | 待交接 | null |
+| H01 | pending | Human | metadata 核對後交 Human review | 尚未接受，不 merge | 前置 M04-G-meta | null |
+
+現行停於 PR metadata／Human review 交接；M04 code 已提交／推送，aggregate 不冒稱整體 PR 核對與 Human 接受已完成。歷史 M03／C01／PKCE 限制與產品 B 撤回不變。
