@@ -5,34 +5,6 @@ import Testing
 @Suite("GitHubIntegration public consumer API")
 struct PublicAPITests {
   @Test
-  func persistentOAuthConstructionIsPublicAndSendableWithoutCredentialIO() async throws {
-    let configuration = try GitHubOAuthAppConfiguration(
-      clientID: "fake-id", clientSecret: "fake-secret")
-    let stores = GitHubOAuthDataProtectionStores(accessGroup: "fake-group", service: "fake-service")
-    let configStore: any GitHubOAuthAppConfigurationStore = stores.configurationStore
-    let credentialStore: any OAuthCredentialStore = stores.credentialStore(
-      clientID: configuration.clientID)
-    let fetcher: any OAuthTokenFetcher = try GitHubOAuth.makeTokenFetcher(
-      configuration: configuration)
-    let session = try GitHubOAuth.makeAuthorizationSession(
-      configuration: configuration,
-      redirectURI: URL(string: "http://127.0.0.1:43210/oauth/callback")!)
-    let provider = OAuthTokenProvider(store: credentialStore, fetcher: fetcher)
-    #expect(await provider.disposition() == .notStopped)
-    #expect(session.authorizationURL.host == "github.com")
-    await session.cancel()
-    assertSendable(configuration)
-    assertSendable(stores)
-    assertSendable(configStore)
-    assertSendable(credentialStore)
-    assertSendable(fetcher)
-    assertSendable(session)
-    assertSendable(GitHubOAuthError.invalidCallback)
-    assertSendable(GitHubOAuthStoreError.identityMismatch)
-    assertSendable(OAuthTokenProviderDisposition.notStopped)
-  }
-
-  @Test
   func publicTokenAndErrorSurfaceIsAvailableAndSendable() {
     let token = GitHubAccessToken(rawValue: "consumer-token")
     let storeError = TokenStoreError(

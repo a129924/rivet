@@ -12,12 +12,6 @@ private enum ExpiredRotationExhaustionError: Error, Sendable {
   case reachedLimit
 }
 
-public enum OAuthTokenProviderDisposition: Sendable {
-  case notStopped
-  case authenticationRequired
-  case stopped
-}
-
 public actor OAuthTokenProvider {
   private static let maximumPersistedExpiredRotations = 2
 
@@ -53,15 +47,6 @@ public actor OAuthTokenProvider {
     self.fetcher = fetcher
     self.now = now
     self.onInFlightTaskJoin = onInFlightTaskJoin
-  }
-
-  /// Pure observation of existing terminal state. This does not restore, refresh, or reset work.
-  public func disposition() -> OAuthTokenProviderDisposition {
-    switch unavailableError {
-    case nil: .notStopped
-    case .authenticationRequired: .authenticationRequired
-    case .some: .stopped
-    }
   }
 
   public func snapshot() async throws(OAuthTokenProviderError) -> TokenSnapshot {
