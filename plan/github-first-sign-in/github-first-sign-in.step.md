@@ -1,12 +1,12 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：T08 topic交付。
-- Current status：in-progress；T07approved無required fix，共享R→T1/1用盡、停止授權。
+- Phase／Current step：Human review（T08主提交交付完成）。
+- Current status：human-check；T07approved，主提交已push/原DraftPR更新；共享R→T1/1用盡，wrong indeterminate。
 - Upstream verdict：T07 approved，無required fix；T05code review及T04驗證已通過。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
 - 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
-- 最後更新：2026-10-21，Implementer；依外部T07approved開始已授權交付。
+- 最後更新：2026-10-21，Implementer；主提交/hooks/push/原PR讀回/localmap完成，收尾帳本隨後同步。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
 ## T 輪現行ledger（優先於R停止及以下Q/P/A/S歷史）
@@ -21,8 +21,8 @@
 | T04 | completed | Tester | fake RD01–RD05/Readonly/既有回歸 | v3 evidence：36tests exit0、額外10bool與safeout/AST/hash/readonly全pass | 不live、不代T05核准 |
 | T05 | completed | Reviewer | 獨立code/scope/evidence/requiredfixesclosed | 獨立Reviewer明示approved、無required fix | approved |
 | T06 | completed | Human | freezeSHA後wrong一次，safeversion3JSON | 共享R→T1/1；local consistent、HTTP400 invalid_grant/無token、完整grammar none | indeterminate，停止新授權 |
-| T07 | completed | Tester → Reviewer | safe結果/來源/判準/預算複核 | Tester已核對safeJSON/§11/hash/預算/readonly與現行文件；見v3evidence | 待Reviewer，不回改PQR |
-| T08 | in-progress | Implementer → Human | topiccommit/push/原PR61更新/localmap→humanreview | 待真SHA/URL | 不merge |
+| T07 | completed | Tester → Reviewer | safe結果/來源/判準/預算複核 | Tester核對一致，Reviewer明示approved、無required fix | 仍indeterminate，不回改PQR |
+| T08 | human-check | Implementer → Human | topiccommit/push/原PR61更新/localmap→humanreview | 主提交403287a已push、原PR讀回OPEN/Draft、localmap完成；本筆收尾隨後同步 | 不merge、共享1/1用盡 |
 
 ### T Blockers/Human Check
 
@@ -653,3 +653,17 @@ In-Scope：safeJSON/§11/hash/預算/文件/readonly；Out-Of-Scope：live/36tes
 - Goal：將已驗證的工具/安全結果交付並停Humanreview。
 - Non-Goal：不把工具/本機gate交付當遠端PKCEpassed。
 - TestCase：staged/diffcheck/既有hooks、remoteSHA/PR讀回、map validate/render。
+
+## T08 實際交付與完成九欄
+
+- In-Scope：同topic v3交付與收尾帳本。
+- Out-Of-Scope：新授權/重試/修改凍結判準/merge/新worktree或PR。
+- ReadOnly：凍結CLI/test/正式能力/所有舊evidence/frozen圖。
+- Written：無額外repo檔案；localmap在scratch。
+- Deleted：無。
+- Modify：本step與v3 evidence交付事實；原DraftPR描述已更新。
+- Goal：`403287a2c4d9abd081fb841ba56369a250c415a7` 已push原branch，原PR61讀回OPEN/isDraft=true/相同HEAD，工具bytes與真人來源一致。
+- Non-Goal：本機gate及工具交付不代表遠端PKCE因果獲證；唯一額度1/1已用盡，不再執行。
+- TestCase：staged精確10檔/diffcheck/all既有hooks passed；localPRLens真base16606b8→403287a validate/render通過（4lanes/15nodes/21edges/4steps）且manifest正確。Graphify受限sourcefallback，無build/upload；frozen圖未改。
+
+本筆只收尾兩文件，隨後commit/push並同步最終HEAD localmap及原PR；不改工具或重跑未變且已通過tests。wrong indeterminate、localconsistent為本次實際新增資訊；共享R→T唯一1/1用盡，P/Q/R歷史保留，正常App/canvaspassed不重做。完整遠端refresh401及完整Humanreview仍pending，正式產品登入UI未交付，停Humanreview不merge。

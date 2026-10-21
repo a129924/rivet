@@ -125,3 +125,11 @@ T05核准後Human自行隱藏輸入配置並完成唯一一次新授權。Human�
 ## T07 獨立最終 Reviewer verdict
 
 外部明示approved、無required fix，可T08。safe report/凍結§11/文件一致，localprepared一致已獲報告而完整語義未命中，維持indeterminate；未以hint肯定原因、以falsehint排其它原因或把under_5s當code_age。共享R→T1/1已用盡，舊來源/證據/readonly保留。可commit/push/更新原DraftPR61，停止新授權/重試，停Humanreview不merge。
+
+## T08 交付來源與停止點
+
+主提交 `403287a2c4d9abd081fb841ba56369a250c415a7` 已push原feat/github-first-sign-in；原DraftPR61已更新v3實作/新增本機資訊/Human wrong觀察/indeterminate原因/共享1/1用盡及歷史保留，讀回OPEN、isDraft=true、相同HEAD。staged精確10檔、diffcheck與全部既有precommit hooks（whitespace/EOF/Swiftformat/consumercontract/SwiftLint/renderer）passed，未繞過。CLI/test bytes與T05凍結及T06真人來源相同，未live後改判準。
+
+PRLens pinned0.11.0以真base `16606b89b8e3e6b61523c23aa0be9653c1ea7b44` → head `403287a2c4d9abd081fb841ba56369a250c415a7` 本機scratch validate/render通過，4lanes/15nodes/21edges/4steps，manifest head已核對；無上傳/新server。Graphify仍無可用圖，受限targeted sourcefallback、不build/extract/provider/upload；Archify/canvas frozen不改、原Human證據沿用。
+
+本筆只文件收尾，隨後commit/push及最終HEAD map/原PR同步，不改工具或重做授權。診斷改善已交付；本次localprepared gate通過，但遠端PKCE原因仍indeterminate，沒有passed/failed結論。共享R→T唯一1/1已用盡，停止所有新授權/重試/第二次/positive/refresh401；P/Q/R與App/canvas歷史保留，完整Humanreview待完成，不merge。
