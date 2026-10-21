@@ -1,12 +1,12 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：Q08 topic交付。
-- Current status：in-progress；Q07 approved無required fix，兩case均indeterminate，Q2/2用盡。
+- Phase／Current step：Human review（Q08交付已完成）。
+- Current status：human-check；Q07approved，主提交已push/原DraftPR更新；Q2/2用盡、兩案無法判定。
 - Upstream verdict：Q07 approved，無required fix；Q05 R1已關閉。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
 - 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
-- 最後更新：2026-10-21，Implementer；依外部Q07approved開始已授權交付。
+- 最後更新：2026-10-21，Implementer；主提交/hooks/push/PR讀回及localmap完成，收尾帳本隨後同步。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
 ## Q 輪現行 ledger（優先於以下P/A/S歷史）
@@ -22,7 +22,7 @@
 | Q05 | completed | Reviewer | 獨立code/scope/evidence/required fixes | Reviewer approved、唯一R1closed | approved |
 | Q06 | completed | Human | 一次一步missing/wrong各fresh單次，總2次 | version2兩case HTTP400 invalid_grant/code_problem、無token、unknown description | 均indeterminate，2/2用盡 |
 | Q07 | completed | Tester → Reviewer | 記錄/複核來源分類及限制 | Tester已核對兩safeJSON/§9/來源/預算/readonly/五docs與三planning摘要，見新evidence | Reviewer明示approved、無required fix，不重判舊P |
-| Q08 | in-progress | Implementer → Human | commit/push/update同PR/local真diffmap→humanreview | 待真SHA/URL | 已授權，不merge |
+| Q08 | human-check | Implementer → Human | commit/push/update同PR/local真diffmap→humanreview | 主提交acdbcb8已push；原DraftPR61讀回OPEN/Draft，local真diffmap驗證完成；本筆收尾帳本隨後同步 | 停Humanreview，不merge |
 
 ### Q Blockers/Human Check
 
@@ -459,3 +459,17 @@ In-Scope＝safeJSON/§9/來源預算/readonly/docs核對；Out-Of-Scope＝live/�
 - Goal：可追溯交付並停Humanreview。
 - Non-Goal：不把PR或工具交付當PKCEenforcement通過。
 - TestCase：staged/diffcheck/必要hooks、map validate/render、remoteSHA/PRstate。
+
+## Q08 實際交付與完成九欄
+
+- In-Scope：同topic交付已完成，收尾帳本/evidence同步。
+- Out-Of-Scope：未新增授權/retry/擴模板/merge/新worktree或PR。
+- ReadOnly：正式能力/凍結CLI及舊P證據/全部圖。
+- Written：無額外repository檔案；localmap在外部scratch。
+- Deleted：無。
+- Modify：本step及pkce-diagnostics-v2.md自身交付紀錄；原DraftPR描述已更新。
+- Goal：主提交 `acdbcb80b857bf3caedd231e0e1cc3b65c07f4ec` 已push至原branch；原PR61讀回OPEN/isDraft=true/相同HEAD。
+- Non-Goal：工具與PR交付不代表PKCEenforcement獲證；不merge，停止新授權。
+- TestCase：staged單topic13檔/diffcheck通過；所有既有precommit hooks passed；localPRLens真base16606b8→acdbcb8 validate/render通過，4lanes/15nodes/21edges/4walkthrough，manifest已讀。Graphify仍無可用圖/sourcefallback、無build/upload，frozen圖未改。
+
+本筆僅收尾文件，隨後commit/push並按最終HEAD重新同步localmap及原PR；不再跑未變source的已通過tests。Q兩case各1/1總2/2用盡，均indeterminate；P歷史原樣保留。完整遠端refresh/401繼續pending，正式Rivet產品登入UI未交付，完整PR Humanreview待完成。

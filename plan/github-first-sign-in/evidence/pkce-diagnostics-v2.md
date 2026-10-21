@@ -125,3 +125,11 @@ Tester複核完成，交Q07獨立Reviewer，不等於遠端PKCE通過或整體Hu
 ## Q07 獨立最終 Reviewer verdict
 
 外部明示approved、無required fix，可Q08。兩案version2安全結果符合凍結§9，invalid_grant+unknown description僅支持indeterminate；verifier hint非證明。來源/Human歸因/限制/Q總2/2一致，P歷史保留，未見秘密或誇大結論。允許同topic commit/push/更新原DraftPR61，停止新增授權/重試/擴模板，停Humanreview，不merge。
+
+## Q08 交付來源與停止點
+
+主提交 `acdbcb80b857bf3caedd231e0e1cc3b65c07f4ec` 已push原feat/github-first-sign-in；原DraftPR61已更新兩case觀察/無法判定依據/新舊預算/來源/限制，讀回OPEN、isDraft=true及該HEAD。staged精確13檔、diffcheck與既有precommit hooks（whitespace/EOF/Swiftformat/consumercontract/SwiftLint/renderer）全通過，未繞過。CLI與tools最終指紋與Q05/Q06相同。
+
+PRLens pinned0.11.0對真base `16606b89b8e3e6b61523c23aa0be9653c1ea7b44` → head `acdbcb80b857bf3caedd231e0e1cc3b65c07f4ec`，本機scratch graph validate/render通過，4lanes/15nodes/21edges/4steps；manifest head正確，無上傳/新server。Graphify沿用無可用圖的受限targetedsourcefallback，未build/extract/provider/upload；Archify/canvas責任未變，frozen artifacts全readonly、既有Human證據沿用。
+
+本筆為僅文件收尾，隨後提交/同步最終HEAD map與原PR，不改工具或重跑真人。最終Q兩case各1/1總2/2用盡，均無法判定；不把invalid_grant/verifier hint當PKCE證明，不擴表/重試。P舊unknown原樣保留。完整遠端refresh/401、正式產品登入UI/持久化與完整PR Humanreview未因此完成，不merge。
