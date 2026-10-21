@@ -2,8 +2,8 @@
 
 - Topic：`github-account-login-feasibility`
 - 最後更新：2026-10-21，Implementer；轉錄獨立 Plan-Reviewer 明示結果。
-- 目前 phase：文件發布
-- 目前 step：G01／in-progress
+- 目前 phase：Human review
+- 目前 step：H01／human-check
 - 上游 verdict：獨立 Reviewer 明示 R01 approved，無 required fix；V01 TC01–TC05 已通過。
 - [執行契約](github-account-login-feasibility.plan.md)；[需求](../../analysis/github-account-login-feasibility/requirements.md)；[技術依據](../../analysis/github-account-login-feasibility/technical-spec.md)。
 
@@ -16,18 +16,18 @@
 | D01 | completed | Implementer | P02 明示 approved 後，新增長期 docs 結論並回鏈 technical-spec，不改其他檔案範圍。 | 已新增 `docs/github-account-login-feasibility.md`；保留官方契約、90646c21 來源 pin／e941d88 執行版本區別、PKCE 限制及產品 B 撤回。 | 無 | null |
 | V01 | completed | Tester | D01 交接後驗 TC01–TC05，報告 links／source pins／五檔 scope／無秘密與本機絕對路徑；不新增測試或實驗。 | 獨立 Tester 親跑 inline Python／唯讀 Git：五檔聯集、15 相對連結、6 唯一固定 permalink 的 object／行號、證據分類與敏感資訊檢核通過；無 required fix。詳下方 V01 紀錄。 | 無 | null |
 | R01 | completed | Reviewer | 獨立審查五文件與 Tester 證據，明示 verdict，要求修正交適當角色。 | 獨立 Reviewer 已讀五檔及 V01，確認五文件聯集、來源版本及觀察／推論界線，明示 approved，無 required fix；不代稱後續工具與發布完成。 | 無 | approved |
-| G01 | in-progress | Implementer | R01 approved 後檢 staged 語意／message，按既有授權 commit、push、開 Draft PR；以真實 base／head 五文件 diff 嘗試 PR Lens 本機 validate／render，記結果或具體 fallback，不 merge。 | 待真實 commit SHA、push、Draft PR URL 及外部工具結果；不得預填。 | 無；staged 語意、hooks、發布及本機 map 待執行 | null |
-| H01 | pending | Human | Draft PR 交付後由 Human review；agent 停止，不自行 merge。 | 待 G01 真實交付及 Human 決定。 | 前置 G01 未完成 | null |
+| G01 | completed | Implementer | R01 approved 後檢 staged 語意／message，按既有授權 commit、push、開 Draft PR；以真實 base／head 五文件 diff 嘗試 PR Lens 本機 validate／render，記結果或具體 fallback，不 merge。 | 主提交 `c9063ebe6c1c18c256c978c0cb092705423cc38d` 已 push；Draft PR #63 已建立；hooks 全過，主提交 PR Lens validate／render 成功。詳下方 G01 實際紀錄；本筆為收尾帳本。 | 無 | null |
+| H01 | human-check | Human | Draft PR 交付後由 Human review；agent 停止，不自行 merge。 | [Draft PR #63](https://github.com/a129924/rivet/pull/63)，base dev；待 Human 決定。 | Human review 待進行，不是自動核准 | human-check |
 
 ## Blockers
 
-目前無已確認的外部 blocker；P02 起各步驟的正常前置依賴不是整個 topic 的 human-check。GitHub keyring auth 已由呼叫端在必要權限下確認，sandbox 初次失敗不記為 token invalid。
+目前無阻止文件交付的外部 blocker。P02／R01 的獨立 approval 與 V01 文件驗證已記錄；最終停於 H01 Human review。GitHub keyring auth 已確認可用，sandbox 初次失敗不是 token invalid。
 
 PR #61 的歷史 P／Q／R 人審或 indeterminate 不作本 topic 前置 gate。產品 B 與 S01–S06 已撤回，無待實作狀態。若需超出五文件 manifest 或新技術實驗，停止並交回 scope 決策。
 
 ## Human Check
 
-H01 僅在 G01 實際交付 Draft PR 後生效。使用者本輪已明示 topic commit／push／Draft PR 授權，不重複要求相同確認；仍保留 staged 語意檢查、獨立審查及不 merge 邊界。當前尚未到達此停點，不能據此跳過 P02–G01。
+H01 僅在 G01 實際交付 Draft PR 後生效。使用者本輪已明示 topic commit／push／Draft PR 授權，不重複要求相同確認；仍保留 staged 語意檢查、獨立審查及不 merge 邊界。P02–G01 已依序完成；當前到達 H01，等待 Human review，不自行 merge。
 
 ## 更新規則
 
@@ -57,8 +57,23 @@ H01 僅在 G01 實際交付 Draft PR 後生效。使用者本輪已明示 topic 
 - 兩項初始自設字串重複檢查誤判已改為符合原契約的語義核對；未為此修改文件或改變實驗判準。本輪不是 OAuth 實驗。
 - 未執行 Swift／產品／真人 OAuth，未把後續 commit hooks、PR Lens、push 或 Draft PR 預填通過。
 
-本次只將 Tester 明示結果加入本新帳本；其餘受驗四文件 bytes 未變。獨立 Reviewer 尚待派遣，此紀錄不是成果 approval。
+本次只將 Tester 明示結果加入本新帳本；其餘受驗四文件 bytes 未變。V01 記錄當時獨立 Reviewer 尚待派遣，此紀錄不是成果 approval；後續明示結果另見 R01。
 
 ## R01 獨立成果審查
 
 2026-10-21，Reviewer 明示 **approved**，required fixes 為空。已獨立讀取五文件及 V01，確認 tracked diff 與非 ignored untracked 聯集恰為五檔；無 source／tests／App／實驗改動。來源 pin、A07 執行版本及推論／觀察界線清楚；未把文件檢核當成 OAuth 或零配置 UX 實證。此 approval 不宣稱後續 hooks、PR Lens 或發布已完成。
+
+## G01 實際發布紀錄
+
+2026-10-21，依使用者本輪明示的 topic commit／push／Draft PR 授權執行，未要求重複確認。
+
+- staged diff 為同一 topic 五份新文件，`git diff --cached --check` 通過，無其他 source／tests／App／實驗變更。
+- 主提交：[c9063ebe6c1c18c256c978c0cb092705423cc38d](https://github.com/a129924/rivet/commit/c9063ebe6c1c18c256c978c0cb092705423cc38d)，message 為 `docs(github-account-login): 保存可行性結論與證據界線`，已 push 至 `docs/github-account-login-feasibility`。
+- 此主提交既有 hooks 全部通過：trailing whitespace、EOF、Swift format、GitHubIntegration consumer contract、SwiftLint、renderer check。這些 checks 不是新的 OAuth 真人證據。
+- [Draft PR #63](https://github.com/a129924/rivet/pull/63) 已實際建立，base `dev`，OPEN／Draft，未 merge；建立時 head 為上述主提交。
+- PR Lens CLI 0.11.0 對真實 base `16606b89b8e3e6b61523c23aa0be9653c1ea7b44` 至上述主提交的五文件 diff：validate exit 0、render exit 0，3 lanes／7 nodes／7 edges／3 walkthrough steps／1 SVG。已讀回 manifest，其 headSha 與主提交一致；graph contentHash 為 `67c5ab9b2c426ae3357c61eee3cc34b5`，SVG contentHash 為 `375c90f3dfcac8973cae3646c9166d29`。
+- `graph.json`、source diff／manifest 與 SVG 僅保存在外部本機暫存，未加入 repo 或上傳。這是主提交的實際收據，不冒稱尚未生成的後續 head；收尾發布會以實際最終 head 再產本機 map。
+- Graphify 無既有 graph，維持定向 source fallback，未呼叫 CLI 或建圖；Archify 本輪不產圖。
+- 本筆僅同步發布與 Human 停點，不改可行性結論、測試結果、產品 scope 或既有歷史證據；收尾提交仍限本 topic。
+
+TC06 的 agent 文件交付部分已完成；Human 是否接受仍待決。不得把 Draft PR、hooks 或工具圖當成產品驗收或 PKCE enforcement 通過。
