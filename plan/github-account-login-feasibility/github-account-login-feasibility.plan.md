@@ -63,3 +63,9 @@ Tester 驗文件、來源與 scope，不跑產品測試或真人 OAuth；結果�
 順序為獨立 Plan-Reviewer → Implementer 建長期文件 → Tester → 獨立 Reviewer → topic commit／push／Draft PR → Human。帳本逐步記錄實際證據，不以 status 代替 approval；Human boundary 僅在前置交付完成後生效，不提前阻斷文件工作。
 
 若出現範圍外改動需求、未解來源衝突或工具權限問題，記錄具體限制交回，不擴成產品實作。每項新增技術工作須說明排除哪個未知、既有證據為何不足；本輪未知已由文件／來源解決，後續是明示保存交付而非新實驗。完成 Draft PR 後停於 Human review，不 merge。
+
+## 後續 Human 正向重驗增補（2026-10-21）
+
+本節記錄文件交付後的使用者追加授權，不追溯改寫原文件階段 scope。使用既有驗證 App，事前限一次新授權、以有效帳號與 API 成功為判準，不新增程式、實驗或產品入口；不動用反向 PKCE 預算，也不增加重試或再次查詢。Human 已確認本輪完成新授權，agent 已觀察四項結果布林，詳 technical-spec L01。
+
+本次九欄交接：Goal 為保存本輪重驗；Non-Goal 為零配置產品與 PKCE enforcement 證明；In-Scope 為 Human 確認與安全 UI 結果紀錄；Out-Of-Scope 為 source／tests／App／新實驗／其他 topic；ReadOnly 為既有工具與 binary；Written 無新檔；Modify 為本 topic 既有五份文件追加本次紀錄；Deleted 無；TestCase 為結果來源、binary 指紋、版本界線、文檔連結及敏感資訊檢核。完整 PR 仍待 Human review，不 merge。

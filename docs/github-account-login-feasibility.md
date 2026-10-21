@@ -53,3 +53,11 @@
 - [固定來源與技術依據](../analysis/github-account-login-feasibility/technical-spec.md)
 - [執行契約](../plan/github-account-login-feasibility/github-account-login-feasibility.plan.md)
 - [狀態帳本](../plan/github-account-login-feasibility/github-account-login-feasibility.step.md)
+
+## 後續本輪真人證據（2026-10-21 新增）
+
+文件交付後，使用者要求以既有驗證 App 進行正向真人重驗，並確認剛在本輪完成登入授權。agent 隨後只觀察結果布林：`apiSuccess=true`、`busy=false`、`failureVisible=false`、`identityDisplayed=true`。**此次既有工具的正常授權與帳號結果呈現重驗成功。**
+
+執行 binary SHA-256 為 `648435704a5a335040cb8abc6ad0f1841304500c4b9ab2dd96d79b1af7078a31`，未重新 build，process 路徑比對相符；未建立與 source commit 的 build provenance。沒有抓取 raw HTTP／callback 或重發授權，因此 Human 新授權確認、UI 結果與原碼契約推論必須分開。
+
+此補充不覆寫歷史 A07，也不把原文件階段的「未真人重驗」改寫成當時已完成。零配置產品 UX、公開發行與 PKCE enforcement 仍未獲證；PR review 亦未因登入成功而自動通過。詳見[本輪 L01 來源與限制](../analysis/github-account-login-feasibility/technical-spec.md#l012026-10-21-本輪真人正向重驗新增)。

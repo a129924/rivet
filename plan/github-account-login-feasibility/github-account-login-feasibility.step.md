@@ -77,3 +77,18 @@ H01 僅在 G01 實際交付 Draft PR 後生效。使用者本輪已明示 topic 
 - 本筆僅同步發布與 Human 停點，不改可行性結論、測試結果、產品 scope 或既有歷史證據；收尾提交仍限本 topic。
 
 TC06 的 agent 文件交付部分已完成；Human 是否接受仍待決。不得把 Draft PR、hooks 或工具圖當成產品驗收或 PKCE enforcement 通過。
+
+## L01 後續真人正向重驗
+
+- 狀態：成功；本輪受限正向重驗完成，不代表原 PR Human review 完成。
+- Human 確認：本輪剛完成登入授權。
+- agent 觀察：2026-10-21 06:15:08 UTC，`apiSuccess=true`、`busy=false`、`failureVisible=false`、`identityDisplayed=true`。
+- 執行物：既有 App，binary SHA-256 `648435704a5a335040cb8abc6ad0f1841304500c4b9ab2dd96d79b1af7078a31`；路徑比對相符，未重建、不綁定未證實 source revision。
+- 帳號、App 憑證、callback 與 raw HTTP 值均不寫入紀錄；沒有觸發額外授權、再次查詢或負向案例。
+- 界線：Human 新授權陳述與 UI 結果各自標示；零配置 UX、PKCE enforcement 與原 Human-review 限制保留。
+- Owner role：Human 負責新授權確認；Implementer 負責安全 UI 觀察與紀錄。
+- 本次僅追加本 topic 五份文件，獨立 Reviewer 已明示 approved，無 required fix；按既有授權準備提交原 branch／Draft PR，沒有新 Swift、App 或實驗。
+
+### L01 文件複核
+
+獨立 Reviewer 已讀五檔 diff，明示 **approved**，required fixes 為空；`git diff --check` 通過，L01 連結 anchor 合理。Human 新授權、UI 布林、binary 指紋與原碼推論分層清楚，未見敏感原值或本機絕對路徑。此複核不代表 Human 已接受 PR，H01 仍待人類決定。

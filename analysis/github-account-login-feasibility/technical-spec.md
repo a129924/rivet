@@ -42,3 +42,21 @@ Graphify 未見既有 `graph.json`，已用定向 `rg` fallback，未執行 Grap
 本輪文字足夠，Archify 2.16 不產圖；若未來真需 sequence，先說明排除哪個未知與文字為何不足，遵守 showcase 九 checks、零 error／warning、validate／deliver／visual-check、繁中作者內容、英文 viewer fallback、本機不發布。任何圖均不是 OAuth 實驗證據。
 
 PR Lens 0.11.0 用本 topic 真實五文件 diff，詳執行契約；無 config 時不假設存在，不自動安裝、上傳或改配置。
+
+## L01：2026-10-21 本輪真人正向重驗（新增）
+
+- 觀察紀錄時間：2026-10-21 06:15:08 UTC。這是後續使用者要求的既有工具重驗，不是新產品交付或新的 PKCE 實驗。
+- 事前範圍：最多一次新授權，成功必須看到有效帳號與 API 查詢成功；取消、逾時或錯誤即停止，不自動重試。不安排反向 PKCE、refresh／401 或額外再次查詢。
+- Human 明示確認：「是，我剛在這輪完成登入授權」。這項確認用來區別本次新授權與先前留下的成功畫面。
+- agent 在 Human 確認後以 AX 僅輸出結果布林：`apiSuccess=true`、`busy=false`、`failureVisible=false`、`identityDisplayed=true`。
+- 判讀：**本輪既有驗證 App 正向重驗成功**。Human 確認新授權，agent 觀察到有效帳號結果呈現；不是由 callback 或 build 單獨推定。
+
+### 執行物與來源界線
+
+使用既有 GitHubSignInVerification.app，未重新 build；唯讀 process 檢查確認與預期 executable 路徑相符。其 binary SHA-256 為 `648435704a5a335040cb8abc6ad0f1841304500c4b9ab2dd96d79b1af7078a31`。本輪未建立 binary 與目前 source checkout 的一對一 build provenance，因此不把此結果冒稱為 90646c21、e941d88 或其他 source commit 的重驗。
+
+agent 沒有重新觸發授權或操作「再次查詢」。本次沒有擷取 raw HTTP status／response、token POST 或 callback；正常授權依 Human 明示，帳號查詢結果依驗證 App UI 與已查原碼契約判讀，不冒稱獨立 network trace。
+
+沒有確認本輪設定由誰於何時輸入；既有工具仍包含配置欄位。因此此證據不證明終端使用者零配置產品 UX、Production custody 或 PKCE enforcement。P／Q／後續反向驗證的舊結果與耗盡預算不變，不據此追加負向授權。
+
+repository 紀錄不保存 client ID、secret、帳號原值、token、code、state、verifier、callback URL 或 screenshot。結果只保存 Human 確認、上述四布林、時間、binary 指紋與限制。原 A07 與文件階段的歷史事實不改判。
