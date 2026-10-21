@@ -83,3 +83,12 @@ verdict=approved，requiredFixes=[]。獨立於R07作者直接核四長期docs�
 - 受審source三SHA及C04非自身mutable的7個輸入SHA直接相符；scope恰9檔，58份歷史immutable逐bytes對HEAD保持。production Sources／Tests／Package／packages／Rivet host對16606b89 zero-diff，新App及全部圖無本輪delta，dev乾淨，diffcheck通過。原32來源與61immutable表已明示為歷史，三檔新版另表，不覆寫舊收據或hash；新runner未真人驗收、自然到期未驗、profile更新unknown／Human接受限制保持。合成失敗與成功OS fsync順序不代表物理停電耐久。
 - 私有獨立收據SHA `3916f05d86d77a35cd8317a20eba8e52a8de4f164169c001453c60f7276bc33d`；C04收據SHA `ddb5c096e0aa8a6d6b0e57a4e3a0cf5e569880953698b4180cd6b2dd32f17b01`。本角色只寫本review與C05帳本，沒有source/tests修正、Git mutation、remote／真人／Apple／Keychain操作。現停止repo寫入。
 - 交已授權C06 staged語意/message＋完整mandatoryhooks→topiccommit／normalpush，再C07以真commit/tests回覆原thread、resolve僅已處理thread、pagination與Ready PR head讀回→humanreview；不轉回Draft、不merge。PR描述若仍稱E00732全部source immutable，僅更正為三檔版本化修正＋其餘29歷史不變，不擴改其他圖文或重開真人gate。
+
+
+## C06／C07 RF-C01 已授權交付（2026-10-21）
+
+C05 approved後，staged精確九檔為單一RF-C01修復語意；依Human本輪明確指令直接提交 `bf0db99db01bd5d405878cfb1ec74b27afa5b2e5`（`fix(e007): 先耐久匯出證據再執行可恢復清理`）並normalpush原branch。六mandatoryhooks全Passed、無skip。renderer依賴使用已核相同lock／設定的owned私有副本，暫存link不連回dev，交付收尾精確移除；沒有工具config／依賴／lock變更。
+
+[實際thread回覆](https://github.com/a129924/rivet/pull/62#discussion_r4333819632)已列commit、36Python＋4獨立fresh-process CLI、耐久export與兩階段／resume契約及舊版本／未真人界線；發送成功後才resolve `PRRT_kwDOUFu0Cc6upRad`，server `isResolved=true`。全pagination conversation／reviews／threads與每threadcomments讀回為1／3／1及2，0 unresolved、無新finding；新增作者COMMENTED空body是本次回覆review，無需另處理。原PR62仍Ready OPEN、base dev、原feature，checks=[]，未merge。PRbody只修E007原32檔歷史宣稱為三檔版本化修正＋其餘29不變，保留原run來源，追加實際fix／限制。
+
+本次不重跑已綠36／4測試，僅完整mandatoryhooks。archify原圖與QA維持、系統責任／sequence無變；既有PRLensmap不涵本次E007安全修正，不造新map成功；Graphify仍targeted-source fallback，未建graph／改config／upload。58歷史、原新版真人收據與App、productionzero保持；本runner仍無新版真人／第三輪E007，自然到期與profile更新限制不變。最後doc-only收據提交／normalpush後的真refs與乾淨worktrees在私有交付收據及Dispatcher核對，不自造selfSHA；停humanreview。

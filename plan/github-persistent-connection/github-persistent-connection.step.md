@@ -2,8 +2,8 @@
 
 ## 現行路由：PR comment RF-C01
 
-- 最後更新：2026-10-21，Reviewer；phase=comment-fix publication；current_step=C06；status=pending。
-- 上游：獨立Reviewer `needs-rework`，thread `PRRT_kwDOUFu0Cc6upRad`／comment `4333613564`。本作者不產生approval。
+- 最後更新：2026-10-21，Implementer；phase=human review；current_step=C07；status=completed。
+- 上游：C05獨立Reviewer `approved`／requiredFixes=[]，RF-C01已解除；原finding thread `PRRT_kwDOUFu0Cc6upRad`／comment `4333613564`，現已回覆並resolve。本作者不產生approval。
 - Human已授權修正→commit→push→reply/resolve；原Ready PR62/feature不變，不動dev、不merge。此現行補充優先於下方R11歷史停點；R／S舊狀態不擦除。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
@@ -13,12 +13,12 @@
 | C03 | completed | Implementer | C-M01–03與08/09必要部分red-green／自驗／清單 | 下列C03及manifest／review、私有red-green logs | selftests completed；不自審，交C04 |
 | C04 | completed | Tester | C-T01–07與58唯讀/privacy/productionzero獨立核對 | review C04獨立收據；36Python＋4組獨立CLI／fresh-process resume、hash/privacy/scope | approved；requiredFixes=[]；只交C05 |
 | C05 | completed | Reviewer | RF-C01/scope/recovery/claims獨立審查 | review C05獨立收據；source協定／C03-C04 hashes／9scope／58immutable及歷史界線 | approved；requiredFixes=[]；RF-C01解除，只交C06 |
-| C06 | pending | Implementer | staged語意/message、mandatoryhooks、topiccommit/normalpush | 待真refs | C05 approved；無新Human gate |
-| C07 | pending | Implementer | 原thread回覆真commit/tests、resolveonlyaddressed、全pagination讀回 | 待真comment/thread/head | 完成後humanreview，不merge |
+| C06 | completed | Implementer | staged語意/message、mandatoryhooks、topiccommit/normalpush | `bf0db99db01bd5d405878cfb1ec74b27afa5b2e5`；六項hooks全Passed／normalpush | C05 approved後執行；未force／merge |
+| C07 | completed | Implementer | 原thread回覆真commit/tests、resolveonlyaddressed、全pagination讀回 | [真回覆](https://github.com/a129924/rivet/pull/62#discussion_r4333819632)；server resolved=true，1thread／0unresolved | Ready OPEN／checks=[]；停humanreview，不merge |
 
 ### 本輪 Blockers／Human Check
 
-RF-C01 C03實作與自驗完成，C04獨立驗證及C05獨立審查均approved／requiredFixes=[]；RF-C01已解除，C06/C07發布及thread處理尚待。C02 已獨立 approved／requiredFixes=[]。不需要新真人操作或新E007。自然到期仍未驗、profile更新後讀回unknown/Human已接受限制不改。原R11 human-check不阻擋Human已明確授權的此輪回修，修後再交humanreview。重大scope或權限問題才停交Human，不把未回覆當批准。
+RF-C01 C03實作與自驗完成，C04獨立驗證及C05獨立審查均approved／requiredFixes=[]；C06修復commit／normalpush與C07原thread真回覆／resolve／全pagination已完成，停humanreview。C02 已獨立 approved／requiredFixes=[]。不需要新真人操作或新E007。自然到期仍未驗、profile更新後讀回unknown/Human已接受限制不改。原R11 human-check不阻擋Human已明確授權的此輪回修，修後再交humanreview。重大scope或權限問題才停交Human，不把未回覆當批准。
 
 ### 九欄及 handoff
 
@@ -52,6 +52,13 @@ Handoff：topic=github-persistent-connection；phase=comment-fix planning review
 - verdict=approved；requiredFixes=[]；RF-C01已解除。直接source/protocol審查核先durable staging/index/checkpoint、RENAME_EXCL no-clobber發布與parent fsync／核對後才cleanup；immutable index pending／兩false，actualrootgone後completion才兩true且綁indexSHA。部分刪除與刪後completion失敗可fresh-process恢復，未知collision／identity／hash改變與原guards保持；詳[review C05](evidence/verification-host-review.md#c05-rf-c01-獨立-reviewer-收據2026-10-21)。
 - 核C03真red/green與C04收據／36cases／4CLI原生證據hash，9scope／58immutable／productionbasezero／App圖無delta／devclean／diffcheck；未重跑已綠suite或真人。私有獨立收據SHA `3916f05d86d77a35cd8317a20eba8e52a8de4f164169c001453c60f7276bc33d`。舊證據版本及新版無live／自然到期未驗／profile更新unknown-Humanaccepted保持。
 - Handoff：topic=github-persistent-connection；phase=comment-fix publication；四artifacts=present/changed；current_step=C06/pending；upstream_verdict=approved（C05）；assigned_role=Implementer；blockers=[]；next_objective=已授權staged語意/message／完整hooks→topiccommit／normalpush，再C07回覆原thread實commit/tests→resolve→全pagination及Ready PR refs讀回→humanreview，不merge、不轉Draft。只寫自己review/step，現停止repo寫入；未預填commit／push／thread結果。
+
+### C06／C07 發布與原 thread 收據（2026-10-21）
+
+- 讀git-commit-convention，以staged恰9個核准leaf檢查單一RF-C01語意及message；依Human本輪「直接commit→push→resolve threads」明確授權執行。修復commit `bf0db99db01bd5d405878cfb1ec74b27afa5b2e5`，message=`fix(e007): 先耐久匯出證據再執行可恢復清理`。trim／EOF／swift-format／consumer／SwiftLint／renderer六mandatoryhooks全Passed，無skip；normalpush原branch成功，未force／merge。
+- PR62描述僅修E007三檔版本化安全修正／其餘29歷史與Ready事實，追加本fix與實證；無新PR、不轉Draft。[原thread回覆](https://github.com/a129924/rivet/pull/62#discussion_r4333819632)引用真commit、durable staging／RENAME_EXCL／checkpoint／兩階段真實狀態／retry與36Python＋4freshCLI。回覆成功後才resolve唯一已處理thread，server isResolved=true。
+- 全pagination讀回conversation1／reviews3／threads1及threadcomments2，全部pageInfo已耗盡；0 unresolved，無新未處理建議（新增第三份COMMENTED為本次作者空body回覆review）。PR仍Ready OPEN／base dev／原featurebranch，checks=[]，不稱CI綠。
+- 本段與manifest／review的doc-only交付收據由下一次完整hooks提交；不自填該提交的selfSHA。最終local／origin／PRhead與乾淨feature／dev、owned temporary rendererlink精確移除由私有交付收據及Dispatcher讀回核實。source／58歷史／App／真人／production不再修改；自然到期未驗、profile更新unknown／Human接受限制保持。
 
 ---
 

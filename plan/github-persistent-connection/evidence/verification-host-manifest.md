@@ -276,3 +276,8 @@ R10只追加既定step／本manifest／v2tool-evidence的真commit與工具facts
 | Modify `experiments/E007/scripts/run_profile_renewal.py` | `62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484` | `d43f54b8713fc99e33321144f6501f090d30699ed9eed46be54531a1960f97d1` |
 
 其餘Modify僅現行四份planning artifacts與本manifest／review，共九個精確leaf；Written僅owned synthetic／runtime temp，Deleted無trackedfile。production Sources／Tests／Package／packages對16606b89 zero-diff、新App與全部圖相對本輪HEAD無delta、dev乾淨。checkpoint的rawpaths只存private，沒有新增repo runreceipt或外部依賴／工具config。新版SHA不替換歷史收據內值；本表與帳本為mutable，不自指。
+
+
+### C06／C07 發布來源
+
+上述三檔新版及C01–C05必要契約／收據，共九個核准leaves已提交 `bf0db99db01bd5d405878cfb1ec74b27afa5b2e5` 並normalpush。其後只追加既有step／本manifest／review三檔的真hooks、PRbody／thread回覆與resolve事實，無新leaf／source變更。所有舊SHA仍代表各自歷史受審快照；既有PRLensmap不涵本次E007修正。最終doc-only提交的refs／hash由私有handoff與Dispatcher核對，無自指SHA，無新真人／runreceipt或production變更。
