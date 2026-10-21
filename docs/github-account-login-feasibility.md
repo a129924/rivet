@@ -1,0 +1,55 @@
+# GitHub Account Login 可行性結論
+
+日期：2026-10-21；Topic：`github-account-login-feasibility`。
+
+## 問題與結論
+
+當 Rivet 開發端準備有效的 GitHub.com OAuth App 設定時，終端使用者能否只經 GitHub 登入與授權，由程式交換 token、確認帳號，而不用自行註冊 App、輸入 client ID／secret 或貼 token？
+
+**這條技術路線可行；本次不需要新實驗。** 此結論適用於有效 App 設定、既定 callback 與允許存取帳號資料的授權條件，不代表正式零配置登入畫面已交付或經本輪真人驗證。
+
+終端使用者免配置與 OAuth 完全不使用 App 憑證是不同命題。本結論只支持前者的技術可行性。
+
+## 官方契約與配置責任
+
+2026-10-21 查閱的 [GitHub OAuth web flow](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#web-application-flow) 以 App client ID 發起授權，使用 client ID／secret 與 authorization code 交換 token，再以 token 呼叫 `/user` 確認身分。PKCE 不免除 web flow 的 secret 要求；單純瀏覽器返回不構成帳號確認。
+
+[GitHub REST 認證文件](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api#using-basic-authentication) 區分 App credentials 與授權使用者。由開發端準備 App 設定、使用者只處理 GitHub 登入與同意，符合該配置模型；這是文件與程式結構推論，不能寫成零配置產品 UX 的真人觀察。
+
+## 原碼與歷史證據
+
+本輪讀取固定來源 `90646c21bd9e6f0f19644f04efa39ef1c033a139`。這些來源屬既有實作 lineage，不在本 topic 的 dev 基線；此文件沒有將其程式碼帶入 dev。
+
+| 證據 | 支持範圍 |
+| --- | --- |
+| [App configuration](https://github.com/a129924/rivet/blob/90646c21bd9e6f0f19644f04efa39ef1c033a139/Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift#L7) | caller 可提供配置；initializer 不要求設定來自終端使用者畫面。 |
+| [OAuth composition](https://github.com/a129924/rivet/blob/90646c21bd9e6f0f19644f04efa39ef1c033a139/Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuth.swift#L12) | 配置進入正式 session 與 code exchange 路徑，token 可由程式取得。 |
+| [Account probe](https://github.com/a129924/rivet/blob/90646c21bd9e6f0f19644f04efa39ef1c033a139/apps/GitHubSignInVerification/Sources/GitHubAccountProbe.swift#L20) | GET `/user` 必須 HTTP 200、正整數 id、非空 login，才判定有效帳號。 |
+| [A07 保存紀錄](https://github.com/a129924/rivet/blob/90646c21bd9e6f0f19644f04efa39ef1c033a139/plan/github-first-sign-in/evidence/verification-host-amendment.md#L60) | 記錄執行版本 `e941d88` 的真人授權、真實 `/user` 及同程序再次查詢成功；當時 Human 手填驗證 App 配置。 |
+
+`90646c21…` 是保存紀錄及本輪原碼的來源 pin，`e941d88` 是 A07 的執行版本。兩者不可混用，也不能把歷史觀察當成目前版本的重驗。
+
+本 topic 基線為 `16606b89b8e3e6b61523c23aa0be9653c1ea7b44`；[該版 README](https://github.com/a129924/rivet/blob/16606b89b8e3e6b61523c23aa0be9653c1ea7b44/README.md) 仍將首次 OAuth／產品登入列為 deferred。既有分支已具授權能力，不等於本基線已有正式產品入口。
+
+## 證據限制與決策影響
+
+- 已有正向證據支持授權、token exchange 與有效帳號查詢；完整零配置 UX 未經本輪真人驗證。
+- [原 topic 帳本](https://github.com/a129924/rivet/blob/90646c21bd9e6f0f19644f04efa39ef1c033a139/plan/github-first-sign-in/github-first-sign-in.step.md#L1) 的 P／Q 反向 PKCE 各 2／2 預算耗盡且 indeterminate，保留原判讀與 Human-review 限制。本 topic 不重跑或宣稱解除。
+- PR #61 僅為既有實作與歷史證據來源，不是本次分支、合併或審查的前置依賴。
+- 公開發行的 native secret custody、持久化、多帳號、完整 refresh／401 與 repository permissions 未由本輪證明。[OAuth App 最佳實務](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/best-practices-for-creating-an-oauth-app) 相關限制不因本結論解除。
+- 曾提出的 `apps/Rivet` 產品 slice、launcher、UI、composition、產品測試及 S01–S06 已撤回，不是待執行工作。
+
+## 為何不建立實驗
+
+官方契約、caller-owned configuration 與歷史正向紀錄足以回答本次受限技術問題。沒有發現必須透過執行才能排除、且會改變技術選擇的新未知；產品入口尚缺屬交付缺口，不能作為建立 App 或新實驗的理由。
+
+本輪沒有新增 Swift、實驗目錄、真人授權或產品測試。Build、測試通過、callback、圖表與文件驗證均不能單獨代替主要假設的證據。
+
+未來只有先說清楚「要排除哪個決策未知」及「現有證據為何不足」，才重新依 feasibility-validation 設定假設、區辨操作、成功／失敗／無法判定條件及有限投入上限。最小實驗只能使用確認未占用的 `experiments/E###/`，本輪不預留編號。
+
+## 追溯
+
+- [需求與撤回紀錄](../analysis/github-account-login-feasibility/requirements.md)
+- [固定來源與技術依據](../analysis/github-account-login-feasibility/technical-spec.md)
+- [執行契約](../plan/github-account-login-feasibility/github-account-login-feasibility.plan.md)
+- [狀態帳本](../plan/github-account-login-feasibility/github-account-login-feasibility.step.md)
