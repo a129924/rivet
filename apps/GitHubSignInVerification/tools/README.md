@@ -1,5 +1,9 @@
 # 單次反向 PKCE 驗證
 
+## R 輪現行停止提示（2026-10-21）
+
+唯讀調查來源21e2542，未找到有依據的新遠端歸因辨識契約，依Human限制本輪不修改CLI/分類、不選case、不安排真人授權，R **0/1未使用**。下列missing/wrong命令與兩次額度是P/Q歷史操作說明，不是R執行指示，不得自行重跑或消耗R唯一額度。P/Q各2/2及unknown/indeterminate結果保留，不追原始描述、不改模板；已成功的App登入/API不重做。詳見[調查證據](../../../plan/github-first-sign-in/evidence/pkce-diagnostic-investigation.md)。
+
 此 Python standard-library CLI 只驗證 GitHub.com 對缺少／錯誤 verifier 的遠端拒絕。它不載入正式 GitHubIntegration、Swift App 記憶體或既有 credential，不建立連線或執行 API／refresh／401。正式產品登入 UI 未交付。
 
 正常登入與再次查詢已由來源 e941d88 驗證，本工具不重做 positive。E002 沒有 missing case，且其 generic bad_verification_code 判準不能沿用；本工具保留該結果為「無法判定」。

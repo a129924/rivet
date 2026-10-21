@@ -6,6 +6,55 @@
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
 
+## R 輪現行docs-only調查收斂（優先於Q/P/A/S寫入及live契約）
+
+來源HEAD21e2542；原feature worktree／feat/github-first-sign-in／原DraftPR61，無dev實作、新worktree/PR或merge。User授權新一次且無可靠資訊增益則停止；本輪決定不消耗，R **0/1未使用**，不選case、不改CLI/判準、不live。P2/2與Q2/2 indeterminate歷史readonly；e941d88正常login/user/requery及canvasHumanpassed沿用。
+
+### 精確manifest
+
+Modify：
+
+- `analysis/github-first-sign-in/requirements.md`
+- `analysis/github-first-sign-in/technical-spec.md`
+- `plan/github-first-sign-in/github-first-sign-in.plan.md`
+- `plan/github-first-sign-in/github-first-sign-in.step.md`
+- `README.md`
+- `docs/architecture/github-first-sign-in.md`
+- `apps/GitHubSignInVerification/tools/README.md`
+
+最後三檔僅追加R現行停止／預算與來源提示，不改舊Q歷史判準或結果。Written唯一新檔：`plan/github-first-sign-in/evidence/pkce-diagnostic-investigation.md`。Deleted/rename無。其餘所有code/tests（包括CLI與test）、正式Swift、rootPackage、全部圖、舊所有evidence、其它docs/topics/worktrees、工具config全部ReadOnly。較舊Q/P allowlist不能作本輪寫入授權。
+
+### R03 bounded slice九欄
+
+- In-Scope：只寫允許docs/evidence，調查fact/inference/noevidence分層、來源與停止結論。
+- Out-Of-Scope：CLI/分類/transport更動、新模板、live/選case、讀配置/rawbody、新experiment/module/publicAPI、positive/API/refresh/401。
+- ReadOnly：上述全部readonly及21e2542來源；舊P/Q原結果與e941d88正常pass不可重判。
+- Written：唯一pkce-diagnostic-investigation.md，開始記planned、完成才actual。
+- Deleted：無。
+- Modify：該slice從七個精確Modify paths選actualpaths/hunks；不掃改其它docs。
+- Goal：有來源的調查與停止理由，R0/1未用、PKCE仍indeterminate。
+- Non-Goal：不宣稱所有bug已排除、正式OAuth有bug或enforcement通過；不擴預算。
+- TestCase：RI01–RI03，實際命令/布林/來源/hash/限制，不能把本機檢查冒充live。
+
+### R流程與最小驗證
+
+| Step | Owner role | 完成條件 |
+|---|---|---|
+| R01 | Plan-Creator | 四planning最小追加，明示無live及manifest |
+| R02 | Plan-Reviewer | 獨立planning verdict，舊Qapproved不替代 |
+| R03 | Implementer | approved後docs/evidence bounded開始/完成九欄 |
+| R04 | Tester | 獨立最小facts/hash/manifest/readonly/來源驗證，可親跑11bool，不重跑25或Swifttests |
+| R05 | Reviewer | 獨立docs/scope/evidence review及required fixes關閉 |
+| R06 | Implementer → Human | staged語意→topiccommit/push→更新原DraftPR/localmap必要同步→Humanreview |
+
+RI01：核對technical-spec§10 source facts及官方來源，11bool若親跑則記命令/輸入為RFC公開向量與syntheticfixture、全部結果，無網路/機密。RI02：21e2542相對diff只在本manifest，CLI/tests/正式source/舊evidence/圖hash不變；R0/1未用，P/Q不改判。RI03：每層fact/inference/noevidence及停止理由與來源一致；正常pass/反向indeterminate/未驗證refresh401分列，無rawdescription/secret/URL/code/state/token值。
+
+root已完成11bool檢查是上游實際事實；Tester須獨立核對或親跑後記自己的結果，不把planning當測試收據。不需重跑25tests或Swift受控suite，必要hooks實際執行照實記。無新人類驗證步驟，無OAuth命令讓Human執行。
+
+Graphify沿既有受限sourcefallback；PRLens若交付head變更須以真base/head在localscratch必要同步validate/render，無上傳。無圖內容變更，不重畫、不重新發布。無重大scope/contract問題時依已授權同topic commit/push/更新原PR完成，不重問；人類停點為PR review，不消耗R授權。
+
+---
+
 ## Q 輪現行最小診斷 amendment（2026-10-21；先於P/A/S歷史契約）
 
 基線 `82489b68ff21e955611bde1e9028fff21dc68e74`，原feature/feat/github-first-sign-in/原DraftPR61，不新worktree/PR、不dev實作、不merge。已授權同topic commit/push/更新原PR，不重問。P輪2/2 unknown/indeterminate原樣保留且不可追補原body/重用/改判；Q新增兩次授權額度，missing/wrong各fresh單POST各一次。不得重做positive/API/remote refresh/401。

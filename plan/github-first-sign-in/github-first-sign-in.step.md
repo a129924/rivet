@@ -1,13 +1,44 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：Human review（Q08交付已完成）。
-- Current status：human-check；Q07approved，主提交已push/原DraftPR更新；Q2/2用盡、兩案無法判定。
-- Upstream verdict：Q07 approved，無required fix；Q05 R1已關閉。
+- Phase／Current step：R06 topic文件交付。
+- Current status：in-progress；R05approved無required fix，R0/1未使用、不選case。
+- Upstream verdict：R05 approved，無required fix；R04獨立11bool/來源核對通過。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
 - 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
-- 最後更新：2026-10-21，Implementer；主提交/hooks/push/PR讀回及localmap完成，收尾帳本隨後同步。
+- 最後更新：2026-10-21，Implementer；依外部R05approved開始文件交付。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
+
+## R 輪現行ledger（優先於Q/P/A/S歷史）
+
+來源HEAD21e2542；原feature/branch/PR61不變、不dev實作、不建新worktree/PR、不merge。本輪僅docs調查收斂，無工具更動/新live；R新額度 **0/1未使用**，未選case，不可當已執行或passed。P2/2 unknown與Q2/2 code_problem/unknown-description皆indeterminate歷史保留；正常e941d88與canvasHumanpassed不重做。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker/verdict |
+|---|---|---|---|---|---|
+| R01 | completed | Plan-Creator | 四planning最小追加fact/inference/noevidence/停止與精確manifest | 本輪四planning | 未自審 |
+| R02 | completed | Plan-Reviewer | 獨立planning審查明示結果 | 獨立Plan-Reviewer明示approved，無required fix | approved |
+| R03 | completed | Implementer | 允許docs/唯一new evidence，各九欄 | 調查matrix/來源/停止提示已完成 | R02approved |
+| R04 | completed | Tester | 最小source/來源/hash/manifest/readonly驗證，可重跑11bool | investigation evidence：親跑11/11true；CLI/testbytes/manifest/readonly/links核對通過 | 不live、不重跑25/Swift、不代R05核准 |
+| R05 | completed | Reviewer | 獨立docs/scope/evidence review與required fixes | Reviewer明示approved、無required fix | approved |
+| R06 | in-progress | Implementer → Human | commit/push/更新原DraftPR/localmap必要同步→humanreview | 待真SHA/URL | 不merge、不消耗R1次 |
+
+### R Blockers／Human Check
+
+R02已獨立approved，無required fix。未找到可靠的新遠端歸因資訊增益方案，本輪依Human限制停止CLI/live而交付文件，不把未使用預算視為blocker或自動執行授權。上游11bool是無網路受控事實，不是live證明；真client配置/服務端狀態/rawdescription語義仍noevidence。PKCE enforcement保持indeterminate，正式OAuth未確認bug。完整PR Humanreview及遠端refresh/401仍pending／本輪不做。
+
+### R01 九欄完成交接
+
+- In-Scope：四planning追加docs-only manifest、分層調查/停止、R0/1未用與獨立流程。
+- Out-Of-Scope：code/tests/工具修改、live/選case/Git、讀取配置/rawdescription或重判P/Q。
+- ReadOnly：README/design/SDDskills、四planning當前狀態與呼叫端source調查結果/官方依據。
+- Written：無新repository檔案。
+- Deleted：無。
+- Modify：analysis/github-first-sign-in/requirements.md；analysis/github-first-sign-in/technical-spec.md；plan/github-first-sign-in/github-first-sign-in.plan.md；plan/github-first-sign-in/github-first-sign-in.step.md。
+- Goal：交獨立Plan-Reviewer受限docs-only契約。
+- Non-Goal：不自審、不宣稱工具/live/獨立驗證完成，不擴預算。
+- TestCase：RI01–RI03本角色未執行；上游11bool只記來源，交Tester獨立核對。
+
+---
 
 ## Q 輪現行 ledger（優先於以下P/A/S歷史）
 
@@ -473,3 +504,47 @@ In-Scope＝safeJSON/§9/來源預算/readonly/docs核對；Out-Of-Scope＝live/�
 - TestCase：staged單topic13檔/diffcheck通過；所有既有precommit hooks passed；localPRLens真base16606b8→acdbcb8 validate/render通過，4lanes/15nodes/21edges/4walkthrough，manifest已讀。Graphify仍無可用圖/sourcefallback、無build/upload，frozen圖未改。
 
 本筆僅收尾文件，隨後commit/push並按最終HEAD重新同步localmap及原PR；不再跑未變source的已通過tests。Q兩case各1/1總2/2用盡，均indeterminate；P歷史原樣保留。完整遠端refresh/401繼續pending，正式Rivet產品登入UI未交付，完整PR Humanreview待完成。
+
+## R03 文件 slice 開始九欄
+
+- In-Scope：調查候選原因/事實/推論/缺口、新evidence與現行R停止提示。
+- Out-Of-Scope：工具code/判準/測試code/正式能力/圖/live或重判歷史。
+- ReadOnly：21e2542所有code/tests/正式契約、P/Q全部舊evidence與圖、非manifestdocs。
+- Written：plan/github-first-sign-in/evidence/pkce-diagnostic-investigation.md。
+- Deleted：無。
+- Modify：七個manifest文件，四planning已由R01追加；本slice同步step、README、OAuth長期doc與toolsREADME。
+- Goal：記錄有依據的調查及不浪費R唯一一次額度的停止決策。
+- Non-Goal：不產生新遠端語義結論、不將未用預算當測試通過。
+- TestCase：RI01–03，主agent11bool已通過，交獨立Tester確認來源/readonly/manifest。
+
+## R03 文件 slice 完成九欄
+
+- In-Scope：來源/候選原因分層/唯一new調查evidence與現行停止提示。
+- Out-Of-Scope：未改工具code/tests/判準/正式能力/圖；無live、無重判舊結果。
+- ReadOnly：所有code/tests/正式契約、P/Q所有舊evidence與圖、其餘docs/topics/worktrees。
+- Written：evidence/pkce-diagnostic-investigation.md。
+- Deleted：無。
+- Modify：本step、README、docs/architecture/github-first-sign-in.md、tools/README.md；四planning R01屬同精確manifest。
+- Goal：完成具證據邊界的docs-only調查；R0/1未用、不選case，交Tester。
+- Non-Goal：沒有新遠端診斷資訊、不宣稱PKCEpassed/failed或未來方案不可能。
+- TestCase：11bool上游exit0，RI01–03待獨立Tester核對來源/hash/manifest/readonly。
+
+## R04 獨立 Tester 完成九欄
+
+In-Scope：RI01–RI03來源/11bool/hash/manifest/readonly/links/分層；Out-Of-Scope：code/tests/live/選case/Git/秘密；ReadOnly：工具及正式source/舊evidence/圖；Written/Deleted：無；Modify：新investigation evidence與本step自身事實；Goal：交R05獨立有限驗證；Non-Goal：不代核准或證明遠端PKCE；TestCase：11/11true、CLI/testbytes不變、manifest與readonly核對通過、pycache0、相對targets存在。tools README更新後指紋efa508498f0c274b16e30f635228f118f1b8e8ed3fb88a55dffa0ab4bf1b7c94，不能沿用R前指紋。
+
+R0/1未用、未選case；P/Q各2/2與indeterminate保留、正向e941/canvaspass沿用。無required驗證失敗，交R05；未重跑25/Swift或OAuth。詳見investigation evidence。
+
+## R05 外部核准／R06 開始九欄
+
+獨立Reviewer明示approved、無required fix：11bool/來源與synthetic邊界一致，未重判P/Q或宣稱PKCE，停止理由只限現有材料，R0/1未使用/未選case，正向與canvas保留。可提交文件/push/更新原DraftPR61，停Humanreview，不merge或新增授權。
+
+- In-Scope：staged單topic語意檢查、文件commit/push、原PR及local真diffmap必要同步。
+- Out-Of-Scope：live/code變更/改判準/新worktree或PR/merge。
+- ReadOnly：全部code/tests/正式契約/舊evidence/frozen圖/其它topic。
+- Written：無額外repo檔案；map只在scratch。
+- Deleted：無。
+- Modify：R精確manifest之step/新evidence自身交付事實、原PR描述。
+- Goal：交付具來源的調查結果並停Humanreview。
+- Non-Goal：不把docs交付當PKCE證明或R已執行。
+- TestCase：staged/必要hooks/remoteSHA/原PR讀回及localmap validate/render；R0/1不動。

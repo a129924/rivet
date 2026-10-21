@@ -169,3 +169,24 @@ raw error/description只存記憶體。description須為string、長度<=512字�
 ### Q06 實際執行摘要（判準不變）
 
 2026-10-21，Q05獨立approved/R1closed後，Human以凍結version2 CLI另取missing/wrong各一個新code、各單次exchange。兩案皆HTTP400 invalid_grant/code_problem/generic_code_rejection、remote_rejected=true、token_present=false；description存在並提及verifier，但description_class=unknown，signals_conflict=false、pkce_rejection_proven=false。按事前§9兩者皆indeterminate；不得以hint、HTTP400或一般invalid_grant當PKCE證明。missing/wrong各1/1、Q總2/2用盡，停止新授權/重試/擴模板；P舊2/2 unknown歷史保留。來源82489b6+Q受限diff、CLI SHA `0d1d912473f44315eeadecca94b8cf6f1e31caea06e1ed821dfe8679b3f01a51`。原始描述未保存，無法可靠專指拒絕原因；完整安全JSON/來源與限制見新pkce-diagnostics-v2.md。正式OAuth/credential/provider/scope/refresh/401未改，正常login/API/canvas不重做，完整遠端refresh/401及完整PR Human review仍pending。
+
+## 10. R 輪現行唯讀調查結論（docs-only，不改§9判準）
+
+來源21e2542。本節優先於舊Q/P新授權流程；R新授權最多1次但因未找到可靠資訊增益方案而不使用，0/1，本輪無live、無工具修改。
+
+### Fact（來源及可重現邊界）
+
+- 主agent及獨立Explorer唯讀來源調查未見實際組裝bug證據。CLI以32randombytes產生43字元base64url，對原verifier的ASCII bytes做SHA256後base64url；每process fresh、callback單claim、token單POST。authorize/exchange使用相同clientID/redirect變數。missing真省略verifier；wrong用另一合法verifier且challenge不同。正式Swift同樣使用S256及對應參數。配置型別只用trim判全空後保存原字串；CLI只檢非空/上限而不trim，兩者均不自動trim使用值；不能推論Human輸入有空白。
+- 主agent已進行無網路fixture檢查：RFC7636 AppendixB向量、兩case的urlencode/decode、code、same-client/redirect/challenge、合法shape及negativeflags，共11個布林全true。這是公開向量及synthetic fixture的受控本機條件，非live、不消耗R額度；不證明過往實際encoded wire或服務端grant狀態，也不回填歷史runtime布林。Tester可獨立重跑，不把它當遠端歸因。
+- 官方[GitHub授權](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)／[token errors](https://docs.github.com/en/apps/oauth-apps/maintaining-oauth-apps/troubleshooting-oauth-app-access-token-request-errors)、[RFC7636 §4.1/4.2/4.6/AppendixB](https://www.rfc-editor.org/rfc/rfc7636.html)、[RFC6749 §5.2](https://www.rfc-editor.org/rfc/rfc6749.html#section-5.2)已由呼叫端查證：S256依原verifier計算；GitHub code期限10分鐘，client/redirect需正確；127.0.0.1 loopback允許當次port與設定port不同，動態port差異自身不是已證明錯誤；invalid_grant可有多種原因，不能單獨證明PKCE拒絕。官方未保證Q的19個synthetic描述模板。
+- CLI urllib禁proxy與App URLSession的設定、form用+與%20（空白form編碼等價）、callback parser細節有差異；這些差異本身不證明拒絕原因或bug。
+
+### Inference（明示推論，不當遠端事實）
+
+既有fixture和source可排查特定本機組裝條件，但wire booleans無法證明遠端實際拒絕原因。增加猜測描述模板／keyword沒有可靠語義保證。在已查官方及現有工具材料下，尚無有依據的新遠端辨識契約，故依Human條件本輪停止工具/live工作，只交付調查文件。這不是斷言任何未來安全語義方案不可能或所有診斷方案均無價值。
+
+若日後取得可靠語義契約，wrong使用合法verifier但錯誤proof，可能比missing更聚焦mismatch；此為未來候選推論，**不是本輪case選擇或執行授權**。
+
+### No evidence／未確認
+
+真實client配置是否與App完全相同、服務端當次grant/redirect/client狀態，以及未保存description的語義都未確認。不讀取App配置、不追補原rawbody／description／callback或secret。P/Q結果與舊evidence保持readonly。正式OAuth未有已確認bug，不擴成修復任務；PKCE enforcement仍indeterminate。Canvas及正常登入已pass的來源不被本輪推翻，遠端refresh/401本輪不做。

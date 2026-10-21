@@ -96,3 +96,13 @@ Goal是區分已知OAuth拒絕與精確verifier證據，不把一般invalid_gran
 ### Q06 實際執行摘要（判準不變）
 
 2026-10-21，Q05獨立approved/R1closed後，Human以凍結version2 CLI另取missing/wrong各一個新code、各單次exchange。兩案皆HTTP400 invalid_grant/code_problem/generic_code_rejection、remote_rejected=true、token_present=false；description存在並提及verifier，但description_class=unknown，signals_conflict=false、pkce_rejection_proven=false。按事前§9兩者皆indeterminate；不得以hint、HTTP400或一般invalid_grant當PKCE證明。missing/wrong各1/1、Q總2/2用盡，停止新授權/重試/擴模板；P舊2/2 unknown歷史保留。來源82489b6+Q受限diff、CLI SHA `0d1d912473f44315eeadecca94b8cf6f1e31caea06e1ed821dfe8679b3f01a51`。原始描述未保存，無法可靠專指拒絕原因；完整安全JSON/來源與限制見新pkce-diagnostics-v2.md。正式OAuth/credential/provider/scope/refresh/401未改，正常login/API/canvas不重做，完整遠端refresh/401及完整PR Human review仍pending。
+
+## R 輪現行調查收斂（優先於Q/P/A/S執行指示）
+
+來源HEAD `21e2542`；沿用原feature worktree、feat/github-first-sign-in與Draft PR61，不在dev實作、不建新worktree/PR、不merge。本輪docs-only：記錄唯讀調查所得及停止決定，不修改CLI／診斷判準、不執行新OAuth。
+
+Human新授權上限1次且明示沒有可靠資訊增益就停止。現有調查沒有找到足以讓唯一一次新授權可靠增加遠端歸因資訊的方案，故R預算為 **0/1未使用**，本輪不選case、不消耗。這不是已跑、通過或新增授權額度；將來有可靠方案須另確認流程，不因本文件自動執行。
+
+P2/2 unknown與Q2/2 invalid_grant/code_problem、description unknown／mentions_verifier=true均仍indeterminate；舊證據不追body、不重用、不改判。e941d88正式驗證App正常授權／真/user／再次查詢及canvas Human passed原樣沿用，不重做。正式OAuth未發現實際組裝bug證據；不能因此聲稱已排除所有bug或已驗證PKCE enforcement。正式Rivet產品登入UI、遠端refresh/401及跨重啟仍未交付或未驗證。
+
+本輪Goal是清楚分開fact／inference／no evidence，交付有來源的停止結論；不再增加猜測模板或keyword，不讀App配置或原始描述，不新增experiment/module/public API。精確manifest與R01–R06九欄／最小驗證見plan R。

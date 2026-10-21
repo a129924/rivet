@@ -38,3 +38,7 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 ### Q 輪：獨立反向 PKCE 診斷 version 2
 
 本輪僅改善獨立驗證 CLI 的有限脫敏分類，不改正式 OAuth、credential/provider/scope或refresh/401契約。事前固定完整模板與case/衝突規則，區分GitHub拒絕及已證明PKCE拒絕；僅提及verifier、一般invalid_grant或unknown都不是通過證據。P兩次HTTP400 unknown/indeterminate保留，不追補原回應。Q新missing/wrong各一次、總2/2已用完：兩案HTTP400 invalid_grant/code_problem、無token，description unknown且mentions_verifier=true，均無法判定；hint不能證明PKCE原因，不擴表或重試。受控25tests通過不代表遠端通過。[新版來源與證據](plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md)。正常登入/再次查詢及canvas既有Human結果沿用；正式Rivet產品登入UI、完整遠端refresh/401仍未交付或pending。
+
+### R 輪：唯讀診斷調查與停止
+
+來源21e2542；既有CLI的RFC S256公開向量及兩case fixture組裝共11bool通過，未找到實際組裝bug證據。固定完整句辨識有限，但未保存的description不能重建；真client配置/服務端grant狀態仍未知。在已查官方及現有工具材料下，未取得可靠的新遠端辨識契約，依Human條件不修改工具、不選case、不執行新授權，R **0/1未使用**。P/Q各2/2及indeterminate歷史原樣保留，正常登入/再次API/canvaspassed不重做；正式OAuth契約未變，完整遠端refresh/401及完整Humanreview仍pending。[候選原因、證據與限制](plan/github-first-sign-in/evidence/pkce-diagnostic-investigation.md)。
