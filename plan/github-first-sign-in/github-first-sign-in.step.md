@@ -1,7 +1,7 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：P08 提交與原Draft PR更新。
+- Phase／Current step：Human review（本輪交付完成）。
 - Current status：Tester evidence-check completed，待P07獨立Reviewer；兩case均indeterminate，總2/2預算已用完。
 - Upstream verdict：P02 approved，獨立Plan-Reviewer明示無required fix。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
@@ -24,7 +24,7 @@
 | P05 | completed | Reviewer | 獨立review/required fixes完成 | 獨立Reviewer approved；R1已關閉，21tests通過 | approved |
 | P06 | completed | Human | 一次一步missing/wrong各fresh授權單POST | missing/wrong各1/1；兩者HTTP400 unknown_error/unknown、無token，均indeterminate | 總2/2用完，不retry或改判 |
 | P07 | completed | Tester → Reviewer | 記錄安全結果並獨立複核分類/來源/限制 | Tester已完成安全報告/來源/分類/預算/readonly核對，見pkce-negative-verification.md | 待獨立Reviewer；兩case indeterminate，不passed |
-| P08 | in-progress | Implementer → Human | review後commit/push/更新原DraftPR61/local真diffmap→humanreview | 待真SHA/URL/map | user已授權，不merge |
+| P08 | completed | Implementer → Human | review後commit/push/更新原DraftPR61/local真diffmap→humanreview | 工具/證據799cc8cddeecb5fc2e297e7335d7711440c1cf2a已push，原PR61結果已更新；finalhead localmap隨交付提供 | 停Humanreview，不merge |
 
 ### P 輪 Blockers／Human Check
 
@@ -339,3 +339,10 @@ In-Scope：兩safeJSON與既定分類/來源/預算/manifest最小核對；Out-O
 ## P07 外部最終 verdict／P08 開始
 
 獨立Reviewer明示approved、無required fix：兩safe report依事前固定判準均indeterminate，未將HTTP400/remoteRejected當PKCE通過；來源/歸因/各1/1總2/2預算與未知原因限制一致，無機密，舊結果未改。只允許按既有授權提交紀錄與更新原DraftPR61；不再授權/重試/擴判準，不merge，停Humanreview。
+
+## P08 實際交付與停止點
+
+- 工具/測試/脫敏證據commit `799cc8cddeecb5fc2e297e7335d7711440c1cf2a` 已push原 `feat/github-first-sign-in`；[原Draft PR61](https://github.com/a129924/rivet/pull/61)已更新canvas passed、missing/wrong indeterminate、remote refresh/401 pending。
+- 全部pre-commit hooks通過。提交後default sandbox重查fixture時loopback綁定遭拒，屬環境限制；相同source以既有授權升權重跑21tests全pass。未因此改碼/改判準/重做遠端授權。
+- 本筆收尾只更新帳本/evidence，正式source及helper SHA保持相同；最終head的local PRLens map另在外部scratch validate/render，結果隨PR及交付回報，不上傳。
+- 總2/2新授權用完，停止新授權/重試；原body未保存，unknown不能追補。Canvas Human已passed，PKCE enforcement仍未獲證；remote refresh/401本輪未執行、pending。完整PR Human review仍待，不merge、不新建/移除worktree或PR。

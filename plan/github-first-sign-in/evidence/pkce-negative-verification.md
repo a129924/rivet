@@ -123,3 +123,7 @@ Tester複核完成，交P07獨立Reviewer；不是PKCE remote passed或整體Hum
 ## P07 獨立 Reviewer 明示結果
 
 2026-10-21，主agent轉錄外部Reviewer：**approved，無required fix**。兩個安全報告皆indeterminate，沒有以HTTP400或remoteRejected升級PKCEpassed；來源、Human歸因、各1/1總2/2預算及未知原因限制一致，無機密，歷史結果未改。可以commit/push更新原DraftPR61，不再授權/重試/改判準，停Humanreview且不merge。Reviewer只讀，未測試或遠端操作。
+
+## P08 發布記錄
+
+工具/測試/證據commit `799cc8cddeecb5fc2e297e7335d7711440c1cf2a` 已push原feature，原[Draft PR61](https://github.com/a129924/rivet/pull/61)已更新三類結果。全部hooks通過；提交後一次default sandbox fixture重查因loopback權限受限，升權執行同21tests全pass，source/hash不變，無新遠端操作。收尾文件commit只記交付；最終head的local PRLens validate/render結果隨PR/交付回報。兩case仍indeterminate、2/2預算用盡，不改判或重試；停完整Human review、不merge。
