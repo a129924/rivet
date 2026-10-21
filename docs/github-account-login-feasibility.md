@@ -56,8 +56,14 @@
 
 ## 後續本輪真人證據（2026-10-21 新增）
 
+> **2026-10-21 更正（以此為準）：使用者隨後明確表示沒有遇到 GitHub 登入畫面，也沒有進行 GitHub 登入授權。L01「本輪新授權／正向重驗成功」判定撤回，狀態改為「無法判定」。以下原判讀只保留為已被更正的歷史，不是有效成功證據。**
+
 文件交付後，使用者要求以既有驗證 App 進行正向真人重驗，並確認剛在本輪完成登入授權。agent 隨後只觀察結果布林：`apiSuccess=true`、`busy=false`、`failureVisible=false`、`identityDisplayed=true`。**此次既有工具的正常授權與帳號結果呈現重驗成功。**
 
 執行 binary SHA-256 為 `648435704a5a335040cb8abc6ad0f1841304500c4b9ab2dd96d79b1af7078a31`，未重新 build，process 路徑比對相符；未建立與 source commit 的 build provenance。沒有抓取 raw HTTP／callback 或重發授權，因此 Human 新授權確認、UI 結果與原碼契約推論必須分開。
 
 此補充不覆寫歷史 A07，也不把原文件階段的「未真人重驗」改寫成當時已完成。零配置產品 UX、公開發行與 PKCE enforcement 仍未獲證；PR review 亦未因登入成功而自動通過。詳見[本輪 L01 來源與限制](../analysis/github-account-login-feasibility/technical-spec.md#l012026-10-21-本輪真人正向重驗新增)。
+
+### C01 更正與目前結論
+
+使用者明確否認本輪有看到 GitHub 登入畫面或進行授權，故撤回上述 L01 成功判定。本輪狀態為**無法判定**，真人新授權路徑未完成驗證。UI 曾呈現成功與帳號結果的觀察保留，但沒有本輪流程關聯，不能證明新授權或新的帳號查詢，也不能推定畫面來源。技術路線的原文件／歷史依據仍僅在原條件內成立。詳見[判讀更正](../analysis/github-account-login-feasibility/technical-spec.md#c01l01-判讀更正2026-10-21)。

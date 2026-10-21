@@ -66,6 +66,22 @@ Tester 驗文件、來源與 scope，不跑產品測試或真人 OAuth；結果�
 
 ## 後續 Human 正向重驗增補（2026-10-21）
 
+> **2026-10-21 更正（以此為準）：使用者隨後明確表示沒有遇到 GitHub 登入畫面，也沒有進行 GitHub 登入授權。L01「本輪新授權／正向重驗成功」判定撤回，狀態改為「無法判定」。以下原判讀只保留為已被更正的歷史，不是有效成功證據。**
+
 本節記錄文件交付後的使用者追加授權，不追溯改寫原文件階段 scope。使用既有驗證 App，事前限一次新授權、以有效帳號與 API 成功為判準，不新增程式、實驗或產品入口；不動用反向 PKCE 預算，也不增加重試或再次查詢。Human 已確認本輪完成新授權，agent 已觀察四項結果布林，詳 technical-spec L01。
 
 本次九欄交接：Goal 為保存本輪重驗；Non-Goal 為零配置產品與 PKCE enforcement 證明；In-Scope 為 Human 確認與安全 UI 結果紀錄；Out-Of-Scope 為 source／tests／App／新實驗／其他 topic；ReadOnly 為既有工具與 binary；Written 無新檔；Modify 為本 topic 既有五份文件追加本次紀錄；Deleted 無；TestCase 為結果來源、binary 指紋、版本界線、文檔連結及敏感資訊檢核。完整 PR 仍待 Human review，不 merge。
+
+### C01 更正範圍與九欄
+
+本次要排除的是「L01 是否足以證明本輪新授權」的證據誤判。使用者最新更正與缺少流程關聯已足以撤回成功，不需新技術實驗；此處只更正既有紀錄，不增加待執行登入工作。
+
+- Goal：撤回 L01 成功判定，保留 UI 觀察及更正歷史。
+- Non-Goal：定位畫面來源、重跑登入或交付產品。
+- In-Scope：五份文件與既有 Draft PR 的 C01 更正。
+- Out-Of-Scope：Swift、App、憑證／session 清理、重試、新實驗與其他 topic。
+- ReadOnly：既有 topic 文件、bounded diff 與 PR 狀態；不再讀取或操作登入 UI。
+- Written：無新檔。
+- Modify：本 topic requirements、technical-spec、plan、step 與長期 docs 五份既有文件，以及 PR 說明。
+- Deleted：無；原誤判明標為已撤回歷史。
+- TestCase：五檔均有顯著更正；現行狀態一致為無法判定；歷史成功語句不得當現行證據；無新登入、秘密或程式碼變更；連結與 diff 檢核。

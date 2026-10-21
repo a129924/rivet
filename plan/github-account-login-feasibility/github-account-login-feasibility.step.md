@@ -80,6 +80,8 @@ TC06 的 agent 文件交付部分已完成；Human 是否接受仍待決。不�
 
 ## L01 後續真人正向重驗
 
+> **2026-10-21 更正（以此為準）：使用者隨後明確表示沒有遇到 GitHub 登入畫面，也沒有進行 GitHub 登入授權。L01「本輪新授權／正向重驗成功」判定撤回，狀態改為「無法判定」。以下原判讀只保留為已被更正的歷史，不是有效成功證據。**
+
 - 狀態：成功；本輪受限正向重驗完成，不代表原 PR Human review 完成。
 - Human 確認：本輪剛完成登入授權。
 - agent 觀察：2026-10-21 06:15:08 UTC，`apiSuccess=true`、`busy=false`、`failureVisible=false`、`identityDisplayed=true`。
@@ -92,3 +94,16 @@ TC06 的 agent 文件交付部分已完成；Human 是否接受仍待決。不�
 ### L01 文件複核
 
 獨立 Reviewer 已讀五檔 diff，明示 **approved**，required fixes 為空；`git diff --check` 通過，L01 連結 anchor 合理。Human 新授權、UI 布林、binary 指紋與原碼推論分層清楚，未見敏感原值或本機絕對路徑。此複核不代表 Human 已接受 PR，H01 仍待人類決定。
+
+## C01 使用者更正後的現行狀態
+
+- ID：C01；Owner role：Implementer；文件更正與獨立複核完成；commit／push 待執行。
+- 使用者明確表示未遇到 GitHub 登入畫面，也未進行 GitHub 授權；L01 原「成功／完成」撤回，現行狀態為**無法判定**，本輪真人新授權驗證未完成。
+- 當時 UI 四布林與 binary 指紋保留為觀察，不再作本輪新授權或新帳號查詢的證據；沒有足夠依據判斷畫面來源。
+- 前述 L01 Reviewer approved 只記錄當時文件複核，所依賴的 Human 新授權前提已被更正，不能作現行 L01 成功背書；原 A07／V01／R01 的歷史範圍不擴張。
+- 完成條件：五檔顯著撤回、關聯連結可解析、獨立複核、同一分支更正 commit／push 及 PR 讀回；尚未完成的發布不預填。
+- 本次沒有再登入、授權、查帳號、清除憑證或 session，也沒有新 Swift／App／實驗。H01 PR Human review 保持待決，不 merge。
+
+### C01 文件複核
+
+獨立 Reviewer 明示 **approved**，required fixes 無；確認五檔撤回一致、現行狀態為無法判定、無畫面來源歸因或新 request 聲稱，C01 anchor 合理、`git diff --check` 通過。Implementer 的五檔更正標示、現行狀態、相對連結及本機路徑檢核亦通過。以上均為文件檢核，不是新的 OAuth 實證或 PR Human approval；發布結果以實際 commit／PR 讀回為準。
