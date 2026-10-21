@@ -114,7 +114,15 @@ class NegativeProbeTests(unittest.TestCase):
             thread.start()
             return True
 
-        code, redirect = probe.authorize("fixture-id", attempt, probe.Deadline(5), opener=opener)
+        deadline = probe.Deadline(5)
+        deadline.observer = mock.Mock()
+        observed_urls = []
+        def recording_opener(url):
+            observed_urls.append(url)
+            return opener(url)
+        code, redirect = probe.authorize("fixture-id", attempt, deadline, opener=recording_opener)
+        self.assertEqual(deadline.observer.observe_authorization.call_count, 1)
+        self.assertTrue(deadline.observer.observe_authorization.call_args.args == (observed_urls[0], redirect))
         for thread in threads:
             thread.join(timeout=3)
             self.assertFalse(thread.is_alive())
@@ -332,7 +340,11 @@ class NegativeProbeTests(unittest.TestCase):
             "remote_rejected", "token_present", "fresh_attempt", "callback_claimed", "single_exchange",
             "verifier_field_omitted", "wrong_challenge_differs", "diagnostic_version",
             "diagnostic_class", "description_class", "description_present",
-            "description_mentions_verifier", "signals_conflict", "pkce_rejection_proven"})
+            "description_mentions_verifier", "signals_conflict", "pkce_rejection_proven",
+            "description_match_source", "local_checks", "description_mentions_challenge",
+            "description_mentions_pkce", "description_has_missing_word", "description_has_mismatch_word",
+            "description_has_invalid_word", "description_has_expired_word",
+            "description_has_client_word", "description_has_redirect_word"})
 
     def test_fixed_description_templates_and_normalization(self):
         expected_counts = {"verifier_required": 5, "verifier_mismatch": 5,
@@ -349,7 +361,7 @@ class NegativeProbeTests(unittest.TestCase):
                         expected = (case, category) in {("missing", "verifier_required"), ("wrong", "verifier_mismatch")}
                         self.assertEqual(result["pkce_rejection_proven"], expected)
                         self.assertEqual(result["outcome"] == "passed", expected)
-                        self.assertEqual(result["diagnostic_version"], 2)
+                        self.assertEqual(result["diagnostic_version"], 3)
 
     def test_known_generic_refinement_unknown_and_conflicts(self):
         descriptions = {"verifier_required": "code_verifier is required",
@@ -403,7 +415,7 @@ class NegativeProbeTests(unittest.TestCase):
                 raise probe.Stop(reason)
             result = probe.run_case("missing", "fixture-id", "fixture-secret", acquire=acquire_fixture, send=send)
             self.assertEqual(result["diagnostic_class"], category)
-            self.assertEqual(result["diagnostic_version"], 2)
+            self.assertEqual(result["diagnostic_version"], 3)
         body = b'{"error":"fixture-private-error","error_description":"fixture-private-description code_verifier"}'
         stdout, stderr = io.StringIO(), io.StringIO()
         actual_run = probe.run_case
@@ -422,6 +434,218 @@ class NegativeProbeTests(unittest.TestCase):
         self.assertEqual(report["remote_error"], "unknown")
         self.assertTrue(report["description_mentions_verifier"])
         self.assertFalse(report["pkce_rejection_proven"])
+
+    def observed_run(self, case="wrong", mutate_request=None, mutate_url=None, elapsed=0,
+                     body=b'{"error":"invalid_grant","error_description":"The code verifier does not match the code challenge supplied in the authorization request."}',
+                     duplicate=False):
+        now = [0]
+        deadline_ref = []
+        actual_observations = []
+        original_observe = probe.PreparedRequestObserver.observe_token
+        def track_observation(observer, request):
+            actual_observations.append(request)
+            original_observe(observer, request)
+        request_class = probe.urllib.request.Request
+        def acquire(client, attempt, deadline):
+            deadline_ref.append(deadline)
+            redirect = "http://127.0.0.1:1234/oauth/callback"
+            url = probe.authorization_url(client, redirect, attempt)
+            if mutate_url:
+                url = mutate_url(url)
+            deadline.observer.observe_authorization(url, redirect)
+            if duplicate:
+                deadline.observer.observe_authorization(url, redirect)
+            return acquire_fixture(client, attempt, deadline)
+        def request(*args, **kwargs):
+            value = request_class(*args, **kwargs)
+            if mutate_request:
+                mutate_request(value)
+            now[0] = elapsed
+            return value
+        response = mock.MagicMock()
+        response.__enter__.return_value = response
+        response.code, response.read.return_value = 400, body
+        opener = mock.Mock()
+        opener.open.return_value = response
+        with mock.patch.object(probe.urllib.request, "Request", side_effect=request), \
+             mock.patch.object(probe.PreparedRequestObserver, "observe_token", track_observation), \
+             mock.patch.object(probe, "make_opener", return_value=opener), \
+             mock.patch.object(probe, "time_budget", return_value=contextlib.nullcontext()):
+            result = probe.run_case(case, "fixture-id", "fixture-secret", acquire=acquire, clock=lambda: now[0])
+        self.assertIsNone(deadline_ref[0].observer)
+        self.assertEqual(opener.open.call_count, 1)
+        self.assertEqual(len(actual_observations), 1)
+        self.assertIs(actual_observations[0], opener.open.call_args.args[0])
+        return result
+
+    def test_v3_full_grammar_aliases_quotes_suffixes_and_legacy_priority(self):
+        for verifier, challenge in [("code verifier", "code challenge"),
+                                    ("code-verifier", "code-challenge"), ("code_verifier", "code_challenge")]:
+            for quote in ["", "'", '"', "`"]:
+                for prefix in ["", "pkce verification failed: ", "pkce validation failed: "]:
+                    for suffix in ["", " supplied in the authorization request", " provided with authorization request",
+                                   " sent during the authorization request", " associated with the authorization code",
+                                   " for this authorization request"]:
+                        text = prefix + "the " + quote + verifier + quote + " does not match the " + quote + challenge + quote + suffix
+                        report = probe.classify(400, json.dumps({"error":"invalid_grant","error_description":text}).encode(), "wrong")
+                        self.assertEqual(report["description_class"], "verifier_mismatch")
+                        self.assertEqual(report["outcome"], "passed")
+        for text in ["code verifier is required", "the 'code-verifier' parameter is missing",
+                     "missing required `code verifier` parameter", "code verifier was not provided"]:
+            report=probe.classify(400,json.dumps({"error":"invalid_grant","error_description":text}).encode(),"missing")
+            self.assertEqual(report["description_class"],"verifier_required")
+            self.assertEqual(report["outcome"],"passed")
+        for verb in ["doesn't match", "did not match"]:
+            report=probe.classify(400,json.dumps({"error":"invalid_grant","error_description":"code verifier supplied "+verb+" code challenge"}).encode(),"wrong")
+            self.assertEqual(report["description_match_source"],"bounded_grammar")
+        for text in ["the code verifier was invalid", "code-verifier is incorrect", "pkce verification failed"]:
+            report=probe.classify(400,json.dumps({"error":"invalid_grant","error_description":text}).encode(),"wrong")
+            self.assertEqual(report["description_class"],"verifier_invalid_unspecified")
+            self.assertFalse(report["pkce_rejection_proven"])
+        exact=probe.classify(400,b'{"error":"invalid_grant","error_description":"code_verifier is incorrect"}',"wrong")
+        self.assertEqual(exact["description_class"],"verifier_mismatch")
+        self.assertEqual(exact["description_match_source"],"legacy_exact")
+
+    def test_v3_rejects_negation_free_tail_bad_quotes_unknown_and_case_conflict(self):
+        for text in ["code verifier does not match code challenge but it is valid", "code verifier is not required",
+                     "if code verifier does not match code challenge", "code verifier may be invalid",
+                     "'code verifier does not match code challenge", "code verifier does not match code challenge'",
+                     "code verifier matches code challenge", "code verifier does not match code challenge; fixture-private"]:
+            result=probe.classify(400,json.dumps({"error":"invalid_grant","error_description":text}).encode(),"wrong")
+            self.assertEqual(result["outcome"],"indeterminate")
+            self.assertEqual(result["description_match_source"],"none")
+        text="code verifier does not match code challenge for this authorization request"
+        for error, case in [("fixture-private-error","wrong"),("invalid_client","wrong"),("invalid_grant","missing")]:
+            result=probe.classify(400,json.dumps({"error":error,"error_description":text}).encode(),case)
+            self.assertFalse(result["pkce_rejection_proven"])
+            self.assertNotIn("fixture-private",json.dumps(result))
+
+    def test_v3_hints_are_ascii_bounded_and_never_proof(self):
+        text="PKCE: missing required code verifier; mismatch code challenge invalid expired client_id redirect_uri fixture-private"
+        result=probe.classify(400,json.dumps({"error":"invalid_grant","error_description":text}).encode(),"wrong")
+        for key in ["description_mentions_verifier","description_mentions_challenge","description_mentions_pkce",
+                    "description_has_missing_word","description_has_mismatch_word","description_has_invalid_word",
+                    "description_has_expired_word","description_has_client_word","description_has_redirect_word"]:
+            self.assertTrue(result[key])
+        self.assertEqual(result["outcome"],"indeterminate")
+        self.assertNotIn("fixture-private",json.dumps(result))
+        for text in ["prefix_code_verifier_suffix unexpired clientish redirector", "x"*513+" code_verifier"]:
+            report=probe.classify(400,json.dumps({"error":"invalid_grant","error_description":text}).encode(),"wrong")
+            self.assertFalse(report["description_mentions_verifier"])
+            self.assertFalse(report["description_has_expired_word"])
+            self.assertFalse(report["description_has_client_word"])
+            self.assertFalse(report["description_has_redirect_word"])
+
+    def test_v3_observes_real_prepared_request_and_allows_consistent_wrong(self):
+        result=self.observed_run()
+        checks=result["local_checks"]
+        for key in ["authorization_observed","token_request_observed","authorization_shape_valid",
+                    "token_request_shape_valid","client_id_same","redirect_same","code_same"]:
+            self.assertTrue(checks[key])
+        self.assertEqual(checks["local_consistency"],"consistent")
+        self.assertEqual(checks["submitted_verifier"],"valid_different")
+        self.assertEqual(result["outcome"],"passed")
+        self.assertEqual(result["description_match_source"],"bounded_grammar")
+
+    def test_v3_prepared_body_mutations_are_not_case_inferences(self):
+        for key,value,failed_check in [("client_id","other-client","client_id_same"),
+                                      ("redirect_uri","http://127.0.0.1:5678/oauth/callback","redirect_same"),
+                                      ("code","other-code","code_same"),("client_secret","other-secret","token_request_shape_valid")]:
+            def mutate(request):
+                fields=dict(urllib.parse.parse_qsl(request.data.decode()))
+                fields[key]=value
+                request.data=urllib.parse.urlencode(fields).encode()
+            result=self.observed_run(mutate_request=mutate)
+            self.assertFalse(result["local_checks"][failed_check])
+            self.assertEqual(result["local_checks"]["local_consistency"],"inconsistent")
+            self.assertEqual(result["outcome"],"indeterminate")
+            self.assertFalse(result["pkce_rejection_proven"])
+        def omit(request):
+            fields=dict(urllib.parse.parse_qsl(request.data.decode()))
+            fields.pop("code_verifier")
+            request.data=urllib.parse.urlencode(fields).encode()
+        result=self.observed_run(mutate_request=omit)
+        self.assertEqual(result["local_checks"]["submitted_verifier"],"omitted")
+        self.assertEqual(result["outcome"],"indeterminate")
+        for mutation in [lambda r: setattr(r,"method","GET"),
+                         lambda r: setattr(r,"data",r.data+b"&code_verifier=duplicate"),
+                         lambda r: setattr(r,"data",r.data.replace(b"code_verifier=",b"code_verifier=%21"))]:
+            result=self.observed_run(mutate_request=mutation)
+            self.assertEqual(result["local_checks"]["local_consistency"],"inconsistent")
+            self.assertFalse(result["pkce_rejection_proven"])
+
+    def test_v3_actual_url_mutation_and_duplicate_observation_are_rejected(self):
+        result=self.observed_run(mutate_url=lambda url:url.replace("code_challenge_method=S256","code_challenge_method=plain"))
+        self.assertFalse(result["local_checks"]["authorization_shape_valid"])
+        self.assertEqual(result["outcome"],"indeterminate")
+        result=self.observed_run(duplicate=True)
+        self.assertEqual(result["local_checks"]["local_consistency"],"inconsistent")
+        self.assertEqual(result["outcome"],"indeterminate")
+
+    def test_v3_unobserved_is_not_consistent_and_token_failure_keeps_priority(self):
+        result=probe.run_case("wrong","fixture-id","fixture-secret",acquire=acquire_fixture,
+                              send=lambda *_args:(400,b'{"error":"incorrect_code_verifier"}'))
+        self.assertEqual(result["local_checks"]["local_consistency"],"unobserved")
+        self.assertEqual(result["outcome"],"indeterminate")
+        self.assertFalse(result["pkce_rejection_proven"])
+        result=self.observed_run(duplicate=True,body=b'{"access_token":"fixture-private-token"}')
+        self.assertEqual(result["outcome"],"failed")
+        self.assertNotIn("fixture-private-token",json.dumps(result))
+
+    def test_v3_time_buckets_are_callback_return_to_preparation_not_code_age(self):
+        for elapsed,bucket,consistent in [(0,"under_5s",True),(4.999,"under_5s",True),(5,"under_30s",True),
+                                          (29.999,"under_30s",True),(30,"older",True),(-1,"unobserved",False)]:
+            result=self.observed_run(elapsed=elapsed)
+            self.assertEqual(result["local_checks"]["callback_return_to_request_prepared"],bucket)
+            self.assertEqual(result["local_checks"]["local_consistency"]=="consistent",consistent)
+
+    def test_v3_public_rfc_vector_and_observer_clear(self):
+        self.assertEqual(probe.challenge("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"),"E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM")
+        a=probe.Attempt.create("wrong")
+        observer=probe.PreparedRequestObserver(a,"fixture-id","fixture-secret",lambda:0)
+        observer.observe_authorization(probe.authorization_url("fixture-id","http://127.0.0.1:1234/oauth/callback",a),"http://127.0.0.1:1234/oauth/callback")
+        observer.callback_returned("fixture-code","http://127.0.0.1:1234/oauth/callback")
+        observer.clear()
+        self.assertEqual(observer.authorization,{})
+        self.assertEqual(observer.client_id,"")
+        self.assertEqual(observer.secret,"")
+        self.assertEqual(observer.code,"")
+        self.assertIsNone(observer.returned_at)
+
+    def test_v3_same_original_verifier_and_header_mutation_cannot_pass(self):
+        attempt=probe.Attempt.create("wrong")
+        original_verifier=attempt.verifier
+        def mutate(request):
+            fields=dict(urllib.parse.parse_qsl(request.data.decode()))
+            fields["code_verifier"]=original_verifier
+            request.data=urllib.parse.urlencode(fields).encode()
+        with mock.patch.object(probe.Attempt,"create",return_value=attempt):
+            result=self.observed_run(mutate_request=mutate)
+        self.assertEqual(result["local_checks"]["submitted_verifier"],"valid_same")
+        self.assertEqual(result["outcome"],"indeterminate")
+        result=self.observed_run(mutate_request=lambda r:r.add_header("Content-Type","application/json"))
+        self.assertFalse(result["local_checks"]["token_request_shape_valid"])
+        self.assertFalse(result["pkce_rejection_proven"])
+
+    def test_v3_failure_always_detaches_and_clears_observer_context(self):
+        captured=[]
+        def acquire(client,attempt,deadline):
+            observer=deadline.observer
+            redirect="http://127.0.0.1:1234/oauth/callback"
+            observer.observe_authorization(probe.authorization_url(client,redirect,attempt),redirect)
+            captured.append((observer,deadline))
+            raise RuntimeError("fixture-private-exception")
+        result=probe.run_case("wrong","fixture-id","fixture-secret",acquire=acquire)
+        observer,deadline=captured[0]
+        self.assertIsNone(deadline.observer)
+        self.assertEqual(observer.authorization,{})
+        for value in [observer.client_id,observer.secret,observer.code,observer.redirect,observer.callback_redirect]:
+            self.assertEqual(value,"")
+        self.assertIsNone(observer.attempt)
+        self.assertIsNone(observer.clock)
+        self.assertIsNone(observer.returned_at)
+        self.assertEqual(result["outcome"],"indeterminate")
+        self.assertNotIn("fixture-private-exception",json.dumps(result))
 
 
 if __name__ == "__main__":

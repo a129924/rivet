@@ -1,13 +1,46 @@
 # 正式 OAuth 能力與獨立驗證 App：執行帳本
 
 - Topic：`github-first-sign-in`。
-- Phase／Current step：Human review（R06文件交付已完成）。
-- Current status：human-check；R05approved，調查主提交已push/原DraftPR更新；R0/1未使用。
-- Upstream verdict：R05 approved，無required fix；R04獨立11bool/來源核對通過。
+- Phase／Current step：T08 topic交付。
+- Current status：in-progress；T07approved無required fix，共享R→T1/1用盡、停止授權。
+- Upstream verdict：T07 approved，無required fix；T05code review及T04驗證已通過。
 - Branch：`feat/github-first-sign-in`；base `dev`；[原 Draft PR #61](https://github.com/a129924/rivet/pull/61)。
 - 回修基線：`e63eeb21b4774adafc5f8a822ac474df7e0bdc22`；沿用原 feature worktree，不在 dev／其他worktree實作，不建新PR／worktree、不merge。
-- 最後更新：2026-10-21，Implementer；主提交/hooks/push/原PR讀回/localmap完成，收尾帳本隨後同步。
+- 最後更新：2026-10-21，Implementer；依外部T07approved開始已授權交付。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
+
+## T 輪現行ledger（優先於R停止及以下Q/P/A/S歷史）
+
+來源90646c2，原feature/branch/PR61不變。T已授權私有診斷version3實作，不能因遠端結論可能unknown只停止。**共享R→T唯一預算現1/1用盡**；R當時未用，T沿用同1次，無新增額度。T06僅wrong新code單POST一次，無positive/API/refresh401/第二次。P/Q indeterminate、R調查、e941d88正常login及canvaspass保留。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker/verdict |
+|---|---|---|---|---|---|
+| T01 | completed | Plan-Creator | 四planning固定§11診斷/manifest/九欄/共享預算 | 本輪四planning | 未自審 |
+| T02 | completed | Plan-Reviewer | 獨立planning明示verdict | 獨立Plan-Reviewer明示approved，無required fix | approved |
+| T03a/T03b | completed | Implementer | bounded code/tests/docs及九欄 | 精確diff及36tests green，見v3 evidence | T02approved |
+| T04 | completed | Tester | fake RD01–RD05/Readonly/既有回歸 | v3 evidence：36tests exit0、額外10bool與safeout/AST/hash/readonly全pass | 不live、不代T05核准 |
+| T05 | completed | Reviewer | 獨立code/scope/evidence/requiredfixesclosed | 獨立Reviewer明示approved、無required fix | approved |
+| T06 | completed | Human | freezeSHA後wrong一次，safeversion3JSON | 共享R→T1/1；local consistent、HTTP400 invalid_grant/無token、完整grammar none | indeterminate，停止新授權 |
+| T07 | completed | Tester → Reviewer | safe結果/來源/判準/預算複核 | Tester已核對safeJSON/§11/hash/預算/readonly與現行文件；見v3evidence | 待Reviewer，不回改PQR |
+| T08 | in-progress | Implementer → Human | topiccommit/push/原PR61更新/localmap→humanreview | 待真SHA/URL | 不merge |
+
+### T Blockers/Human Check
+
+T02已獨立approved、無required fix；T04親跑36tests及安全/readonly核對通過，T05已明示approved、無required fix。實作/Tester/Reviewer/requiredfixclosed及freezeSHA後才用共享唯一1次，不能T前偷偷live。prepared觀測不是遠端wire/grant/code發行時間證明；grammar是事前支持句法非GitHub保證，結果可unknown仍如實記。無機密/URL/body/description輸出或保存、live後不擴表。正式OAuth未確認bug；正常pass不重做、remote refresh401不做，完整PR Humanreview仍pending。
+
+### T01 九欄完成交接
+
+- In-Scope：四planning追加最小version3私有診斷/固定grammar/prepared觀測/共享預算。
+- Out-Of-Scope：code/tests/live/Git、自審、改正式OAuth/傳輸安全策略。
+- ReadOnly：README/design/SDD及現行planning、CLI必要私有觀測接點，舊evidence/正式source。
+- Written：無新repository檔案。
+- Deleted：無。
+- Modify：analysis/github-first-sign-in/requirements.md；analysis/github-first-sign-in/technical-spec.md；plan/github-first-sign-in/github-first-sign-in.plan.md；plan/github-first-sign-in/github-first-sign-in.step.md。
+- Goal：交獨立Plan-Reviewer可實作的T受限契約，不再只收斂停止。
+- Non-Goal：不宣稱planningapproved/新診斷或PKCE遠端通過，不擴預算。
+- TestCase：RD01–RD05未執行；T06wrong共享0/1尚未使用。
+
+---
 
 ## R 輪現行ledger（優先於Q/P/A/S歷史）
 
@@ -562,3 +595,61 @@ R0/1未用、未選case；P/Q各2/2與indeterminate保留、正向e941/canvaspas
 - TestCase：staged單topic8文件/diffcheck/all既有hooks passed；localPRLens真base16606b8→d8ad344 validate/render通過（4lanes/15nodes/21edges/4walkthrough），manifest已核對。Graphify受限sourcefallback，無build/upload；圖未改。
 
 本筆只收尾兩文件，隨後commit/push及最終head map/原PR同步；不改工具或消耗R額度，不重跑已pass且未變的tests。P/Q各2/2及indeterminate歷史保留，R0/1未使用/未選case；完整遠端refresh/401與整體Humanreview仍pending，停Humanreview不merge。
+
+## T03a／T03b 開始九欄
+
+- In-Scope：version3被動prepared觀測、有限fullmatch grammar/hints、fixturetests及指定docs/新evidence。
+- Out-Of-Scope：正式能力/API、交換算法/endpoint/timeout/retry、TTY/loopback安全策略、任何live。
+- ReadOnly：所有正式source/tests、experiments/frozen圖/PQR舊evidence/其它topic。
+- Written：evidence/pkce-diagnostics-v3.md。
+- Deleted：無。
+- Modify：T精確9Modify；先CLI/test，再README/docs/evidence自身結果。
+- Goal：增加真實prepared input及安全語彙/關係資訊；通過必須觀測一致。
+- Non-Goal：不保證遠端詞句命中，不把fixture當PKCE證明，不擴共享唯一額度。
+- TestCase：RD01–RD05，先red→green，再獨立Tester/Reviewer；Human0/1。
+
+## T03a／T03b 完成九欄
+
+- In-Scope：version3 prepared觀測/有限grammar/hints/local gate、36fixtures、指定docs/新evidence。
+- Out-Of-Scope：未改正式source/API/算法/endpoint/timeout/retry/TTY/loopback安全政策、未live。
+- ReadOnly：正式source/tests/實驗/frozen圖/PQR歷史與其它topics。
+- Written：evidence/pkce-diagnostics-v3.md。
+- Deleted：無。
+- Modify：9manifest文件；CLI/test/README、四planning及指定README/長期doc。
+- Goal：完成可受控證明的安全資訊增益，交獨立Tester/Reviewer。
+- Non-Goal：不自審/不保證遠端詞句命中/不以fixture冒充PKCE通過。
+- TestCase：red34中5failure/7error→green34，補關鍵identity/cleanup後最終36tests exit0；Human共享0/1未用。
+
+## T04 獨立 Tester 完成九欄
+
+In-Scope：RD01–05/36tests/help/noTTY/AST/hash/schema/sentinel/scope；Out-Of-Scope：live/機密/Git/code修改/未變Swift；ReadOnly：工具與核心傳輸/TTY/loopback/交換/正式source/舊PQR圖證據；Written/Deleted：無；Modify：v3evidence與本step自身T04；Goal：獨立實跑交T05；Non-Goal：不代核准或當遠端PKCE證明；TestCase：36tests、實際URL四mutation/非有限clock三種/schema與output三項額外共10bool及safeCLI/sourcechecks全pass。
+
+CLI a72072c752baf4594704ecede984553db295303ca70141ef30a7280aa0324ba0、test1e93c9ab39209ba858751a3e46db95ffaf3e5cf1471747f95d8c1753dd16d43e與交接一致；無required test failure。共享R→T0/1未用。T02舊pending/null佔位已回報主agent依外部明示approved修正；Tester不代判。詳見新v3 evidence，交T05。
+
+## T05 外部核准／T06 起點
+
+獨立Reviewer approved、無required fix，可交T06；T04獨立36tests/額外10bool及安全輸出/readonly通過。CLI SHA `a72072c752baf4594704ecede984553db295303ca70141ef30a7280aa0324ba0`、test SHA `1e93c9ab39209ba858751a3e46db95ffaf3e5cf1471747f95d8c1753dd16d43e`，tools指紋bd446be3a71b7af6e0b17bcd8cfaa03084d6906f68cda68e74dfeedd5626bd3b，來源90646c2+T受限dirtydiff。live前已核對凍結，不再修改grammar/判準。共享R→T唯一0/1尚未用，Human只wrong一次/newcode/單POST，只收安全version3JSON，完成即停；不重試或新增positive。
+
+## T06 完成／T07 交接
+
+Human安全version3 JSON已記錄：本機actualprepared shape/bindings/code/negative均一致，local consistent/valid_different/under_5s；HTTP400 invalid_grant、無token、完整描述unknown/none，verifier/challenge/mismatch hints true但非proof，依§11 indeterminate/provenfalse。CLI/test與T05凍結相同，未改grammar/判準。共享R→T唯一1/1用盡，停止任何新授權/重試/第二次，不重用code或索取rawbody。只做允許文件結果更新（README變動使tools指紋變，CLI/test保持），PQR歷史/正式能力/frozen圖不動，交獨立Tester/Reviewer，不代核准。
+
+## T07 Tester 安全結果複核完成
+
+In-Scope：safeJSON/§11/hash/預算/文件/readonly；Out-Of-Scope：live/36tests/秘密/Git/工具變更；ReadOnly：CLI/tests/正式source/舊PQR及圖；Written/Deleted：無；Modify：v3evidence與本step自身T07；Goal：交獨立Reviewer；Non-Goal：不代核准或從hint重建句子；TestCase：全欄轉錄一致、CLI/testhash凍結、readonly/manifest/pycache0/最新文件核對通過。結果為localconsistent但完整grammar none、一般invalidgrant，依§11維持indeterminate，不是PKCEproof。
+
+共享R→T1/1已用盡（同R原額度），不得第二次或retry。README更新後tools指紋ae1dad2d8a1e9fb813fd8c23be88d4d57497a4b264328144f2f06bd51d1febbe，live前bd446開頭指紋保留歷史；CLI/test仍T05凍結版。無新requiredfix，交T07Reviewer，不改舊PQR結果。
+
+## T07 外部核准／T08 開始九欄
+
+獨立Reviewer明示approved、無required fix：safe report/凍結§11/文件一致，本機prepared gate通過但完整語義未命中，仍indeterminate；未以hint/falsehint/timebucket推定遠端原因。共享R→T1/1用盡，舊證據與readonly保留。可commit/push/更新原DraftPR61，停止任何新授權/重試，停Humanreview不merge。
+
+- In-Scope：staged單topic檢查、commit/push、原PR及local真diffmap同步。
+- Out-Of-Scope：新授權/重試/改grammar或判準/merge/新worktree或PR。
+- ReadOnly：凍結CLI/test及正式能力/圖/PQR舊evidence。
+- Written：無額外repo檔案；localmap只在scratch。
+- Deleted：無。
+- Modify：Tmanifest內step/新evidence自身交付事實、原PR描述。
+- Goal：將已驗證的工具/安全結果交付並停Humanreview。
+- Non-Goal：不把工具/本機gate交付當遠端PKCEpassed。
+- TestCase：staged/diffcheck/既有hooks、remoteSHA/PR讀回、map validate/render。

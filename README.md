@@ -42,3 +42,7 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 ### R 輪：唯讀診斷調查與停止
 
 來源21e2542；既有CLI的RFC S256公開向量及兩case fixture組裝共11bool通過，未找到實際組裝bug證據。固定完整句辨識有限，但未保存的description不能重建；真client配置/服務端grant狀態仍未知。在已查官方及現有工具材料下，未取得可靠的新遠端辨識契約，依Human條件不修改工具、不選case、不執行新授權，R **0/1未使用**。P/Q各2/2及indeterminate歷史原樣保留，正常登入/再次API/canvaspassed不重做；正式OAuth契約未變，完整遠端refresh/401及完整Humanreview仍pending。[候選原因、證據與限制](plan/github-first-sign-in/evidence/pkce-diagnostic-investigation.md)。
+
+### T 輪現行：有限診斷 version 3
+
+Human指示續行後，獨立CLI新增實際browserURL/HTTP prepared Request被動觀測、local一致性gate、有限完整句法及純詞彙hints。只輸出安全enum/布林，未知仍可無法判定，未觀測或不一致不能passed；這是本機prepared證據，不冒稱遠端wire。正式OAuth/credential/provider/scope/refresh401與公開API不變。36項受控測試、獨立Tester/Reviewer已通過；凍結版本後Human完成wrong一次，共享R→T **1/1已用盡**。實際prepared local一致、valid_different、under_5s；HTTP400 invalid_grant、無token，verifier/challenge/mismatch提示為true但完整grammar未命中，仍無法判定PKCE原因。停止重試/第二次/positive/refresh401，不以hint或本機gate當遠端證明。P/Q/R舊證據與正常App/canvaspassed保留。[version3來源與限制](plan/github-first-sign-in/evidence/pkce-diagnostics-v3.md)。

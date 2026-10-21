@@ -5,6 +5,8 @@ import dataclasses
 import getpass
 import hashlib
 import json
+import math
+import re
 import secrets
 import signal
 import socket
@@ -62,13 +64,174 @@ SAFE_REASONS = {
     "verifier_rejected", "token_returned", "generic_code_rejection", "configuration_rejected",
     "unknown_error", "unexpected_response", "http_unconfirmed", "network", "timeout",
     "browser_unavailable", "authorization_refused", "callback_limit", "response_limit",
-    "input_unavailable", "cancelled", "internal_error",
+    "input_unavailable", "cancelled", "internal_error", "local_observation_unconfirmed",
 }
 AUTH_URL = "https://github.com/login/oauth/authorize"
 TOKEN_URL = "https://github.com/login/oauth/access_token"
 HEADER_LIMIT = 8192
 BODY_LIMIT = 65536
 CONNECTION_LIMIT = 16
+
+
+# §11: finite fields/phrases only. No raw phrase is returned.
+VERIFIER_ALIASES = ("code_verifier", "code verifier", "code-verifier")
+CHALLENGE_ALIASES = ("code_challenge", "code challenge", "code-challenge")
+HINT_WORDS = {
+    "description_mentions_verifier": VERIFIER_ALIASES,
+    "description_mentions_challenge": CHALLENGE_ALIASES,
+    "description_mentions_pkce": ("pkce",),
+    "description_has_missing_word": ("missing", "required", "not provided"),
+    "description_has_mismatch_word": ("mismatch", "mismatched", "does not match", "doesn't match", "did not match"),
+    "description_has_invalid_word": ("invalid", "incorrect"),
+    "description_has_expired_word": ("expired",),
+    "description_has_client_word": ("client", "client_id", "client_secret"),
+    "description_has_redirect_word": ("redirect", "redirect_uri"),
+}
+
+
+def field_pattern(aliases):
+    values = [re.escape(quote + alias + quote) for alias in aliases for quote in ("", "'", '\"', "`")]
+    return "(?:" + "|".join(values) + ")"
+
+
+V_FIELD, C_FIELD = field_pattern(VERIFIER_ALIASES), field_pattern(CHALLENGE_ALIASES)
+GRAMMAR_PREFIX = r"(?:pkce verification failed: |pkce validation failed: )?"
+MISMATCH_SUFFIX = (r"(?: (?:supplied|provided|sent) (?:in|with|during) (?:the )?authorization request"
+                   r"| associated with (?:the )?authorization code| for (?:this|the) authorization request)?")
+GRAMMAR = (
+    ("verifier_required", GRAMMAR_PREFIX + rf"(?:(?:the )?{V_FIELD}(?: parameter)? (?:is required|is missing|was not provided)|missing (?:required )?{V_FIELD}(?: parameter)?)"),
+    ("verifier_mismatch", GRAMMAR_PREFIX + rf"(?:the )?{V_FIELD}(?: (?:provided|supplied))? (?:does not match|doesn't match|did not match) (?:the )?{C_FIELD}" + MISMATCH_SUFFIX),
+    ("verifier_invalid_unspecified", GRAMMAR_PREFIX + rf"(?:the )?{V_FIELD}(?: parameter)? (?:is|was) (?:incorrect|invalid)"),
+    ("verifier_invalid_unspecified", r"pkce verification failed"),
+)
+
+
+def description_metadata(text):
+    hints = {key: False for key in HINT_WORDS}
+    if not isinstance(text, str) or len(text) > 512:
+        return "unknown", "none", hints
+    normalized = " ".join(text.strip().lower().split())
+    if normalized.endswith("."):
+        normalized = normalized[:-1]
+    for key, words in HINT_WORDS.items():
+        hints[key] = any(re.search(r"(?<![A-Za-z0-9_])" + re.escape(word) + r"(?![A-Za-z0-9_])", normalized)
+                         is not None for word in words)
+    if normalized in DESCRIPTION_CLASSES:
+        return DESCRIPTION_CLASSES[normalized], "legacy_exact", hints
+    for category, pattern in GRAMMAR:
+        if re.fullmatch(pattern, normalized):
+            return category, "bounded_grammar", hints
+    return "unknown", "none", hints
+
+
+def empty_local_checks():
+    return {"authorization_observed": False, "token_request_observed": False,
+            "authorization_shape_valid": False, "token_request_shape_valid": False,
+            "client_id_same": False, "redirect_same": False, "code_same": False,
+            "submitted_verifier": "unobserved", "callback_return_to_request_prepared": "unobserved",
+            "local_consistency": "unobserved"}
+
+
+class PreparedRequestObserver:
+    """Private passive observer. Sensitive comparisons stay in memory; only report escapes."""
+    def __init__(self, attempt, client_id, secret, clock):
+        self.attempt, self.client_id, self.secret, self.clock = attempt, client_id, secret, clock
+        self.authorization = {}
+        self.code = self.redirect = self.callback_redirect = ""
+        self.returned_at = None
+        self.duplicate = False
+        self.report = empty_local_checks()
+
+    @staticmethod
+    def unique_form(value):
+        pairs = urllib.parse.parse_qsl(value, keep_blank_values=True, strict_parsing=True, max_num_fields=8)
+        result = dict(pairs)
+        if len(result) != len(pairs):
+            raise ValueError()
+        return result
+
+    def observe_authorization(self, url, redirect):
+        if self.report["authorization_observed"]:
+            self.duplicate = True
+            return
+        self.report["authorization_observed"] = True
+        self.redirect = redirect
+        try:
+            parsed = urllib.parse.urlsplit(url)
+            self.authorization = self.unique_form(parsed.query)
+            expected = {"client_id": self.client_id, "redirect_uri": redirect, "scope": "offline_access",
+                        "state": self.attempt.state, "code_challenge": challenge(self.attempt.verifier),
+                        "code_challenge_method": "S256"}
+            self.report["authorization_shape_valid"] = (
+                parsed.scheme + "://" + parsed.netloc + parsed.path == AUTH_URL
+                and not parsed.fragment and parsed.username is None and parsed.password is None
+                and self.authorization == expected)
+        except (ValueError, TypeError, UnicodeError):
+            self.report["authorization_shape_valid"] = False
+
+    def callback_returned(self, code, redirect):
+        if self.returned_at is not None:
+            self.duplicate = True
+            return
+        self.code, self.callback_redirect, self.returned_at = code, redirect, self.clock()
+
+    def observe_token(self, request):
+        if self.report["token_request_observed"]:
+            self.duplicate = True
+            return
+        self.report["token_request_observed"] = True
+        if self.returned_at is not None:
+            elapsed = self.clock() - self.returned_at
+            if math.isfinite(elapsed) and elapsed >= 0:
+                self.report["callback_return_to_request_prepared"] = (
+                    "under_5s" if elapsed < 5 else "under_30s" if elapsed < 30 else "older")
+        try:
+            fields = self.unique_form(request.data.decode("ascii"))
+            required = {"client_id", "client_secret", "code", "redirect_uri"}
+            headers = {key.lower(): value for key, value in request.header_items()}
+            self.report["token_request_shape_valid"] = (
+                request.full_url == TOKEN_URL and request.get_method() == "POST"
+                and headers.get("accept") == "application/json"
+                and headers.get("content-type") == "application/x-www-form-urlencoded"
+                and headers.get("cache-control") == "no-store"
+                and required <= set(fields) <= required | {"code_verifier"}
+                and all(fields[key] for key in required) and fields["client_secret"] == self.secret)
+            self.report["client_id_same"] = fields.get("client_id") == self.authorization.get("client_id") == self.client_id
+            self.report["redirect_same"] = fields.get("redirect_uri") == self.authorization.get("redirect_uri") == self.callback_redirect == self.redirect
+            self.report["code_same"] = bool(self.code) and fields.get("code") == self.code
+            verifier = fields.get("code_verifier")
+            if verifier is None:
+                submission = "omitted"
+            elif re.fullmatch(r"[A-Za-z0-9_-]{43}", verifier) is None:
+                submission = "invalid"
+            elif verifier == self.attempt.verifier:
+                submission = "valid_same"
+            elif challenge(verifier) != self.authorization.get("code_challenge"):
+                submission = "valid_different"
+            else:
+                submission = "invalid"
+            self.report["submitted_verifier"] = submission
+        except (ValueError, TypeError, UnicodeError, AttributeError):
+            self.report["submitted_verifier"] = "invalid"
+            self.report["token_request_shape_valid"] = False
+
+    def snapshot(self):
+        report = dict(self.report)
+        if self.duplicate:
+            report["local_consistency"] = "inconsistent"
+        elif report["authorization_observed"] and report["token_request_observed"]:
+            expected = "omitted" if self.attempt.case == "missing" else "valid_different"
+            valid = all(report[key] for key in ("authorization_shape_valid", "token_request_shape_valid",
+                                                "client_id_same", "redirect_same", "code_same"))
+            valid = valid and report["submitted_verifier"] == expected
+            valid = valid and report["callback_return_to_request_prepared"] != "unobserved"
+            report["local_consistency"] = "consistent" if valid else "inconsistent"
+        return report
+
+    def clear(self):
+        self.authorization.clear()
+        self.client_id = self.secret = self.code = self.redirect = self.callback_redirect = ""
+        self.returned_at = self.attempt = self.clock = None
 
 
 class Stop(Exception):
@@ -110,6 +273,7 @@ class Attempt:
 class Deadline:
     def __init__(self, seconds=300, clock=time.monotonic):
         self.clock = clock
+        self.observer = None
         self.end = clock() + seconds
 
     def remaining(self):
@@ -241,7 +405,10 @@ def authorize(client_id, attempt, deadline, opener=open_browser):
         listener.listen(8)
         host = f"127.0.0.1:{listener.getsockname()[1]}"
         redirect = f"http://{host}/oauth/callback"
-        if not opener(authorization_url(client_id, redirect, attempt)):
+        url = authorization_url(client_id, redirect, attempt)
+        if deadline.observer is not None:
+            deadline.observer.observe_authorization(url, redirect)
+        if not opener(url):
             raise Stop("browser_unavailable")
         accepted = 0
         while accepted < CONNECTION_LIMIT:
@@ -282,6 +449,8 @@ def send_token(fields, deadline):
                                      headers={"Accept": "application/json",
                                               "Content-Type": "application/x-www-form-urlencoded",
                                               "Cache-Control": "no-store"}, method="POST")
+    if deadline.observer is not None:
+        deadline.observer.observe_token(request)
     try:
         with time_budget(timeout):
             try:
@@ -322,10 +491,11 @@ def strict_object(body, allow_duplicates=False):
 def safe_result(reason="unexpected_response", category="json"):
     return {"outcome": "indeterminate", "reason": reason, "http_status": None,
             "remote_error": "unknown", "remote_rejected": False, "token_present": False,
-            "diagnostic_version": 2, "diagnostic_class": category,
+            "diagnostic_version": 3, "diagnostic_class": category,
             "description_class": "absent", "description_present": False,
             "description_mentions_verifier": False, "signals_conflict": False,
-            "pkce_rejection_proven": False}
+            "pkce_rejection_proven": False, "description_match_source": "not_applicable",
+            "local_checks": empty_local_checks(), **{key: False for key in HINT_WORDS}}
 
 
 def classify(status, body, case=None):
@@ -338,9 +508,10 @@ def classify(status, body, case=None):
     result["description_present"] = "error_description" in obj
     if result["description_present"]:
         result["description_class"] = "unknown"
+        result["description_match_source"] = "none"
     if "access_token" in obj or "refresh_token" in obj:
         result.update(outcome="failed", reason="token_returned", token_present=True,
-                      diagnostic_class="token_returned")
+                      diagnostic_class="token_returned", description_match_source="not_applicable")
         return result
     obj = strict_object(body)
     if obj is None:
@@ -354,16 +525,8 @@ def classify(status, body, case=None):
     result["remote_error"] = SAFE_ERRORS.get(error, "unknown")
     result["description_present"] = "error_description" in obj
     if result["description_present"]:
-        description = obj["error_description"]
-        # Hint only; never participates in the proof predicate.
-        result["description_mentions_verifier"] = "code_verifier" in description.lower()
-        category = "unknown"
-        if len(description) <= 512:
-            normalized = " ".join(description.strip().lower().split())
-            if normalized.endswith("."):
-                normalized = normalized[:-1]
-            category = DESCRIPTION_CLASSES.get(normalized, "unknown")
-        result["description_class"] = category
+        category, source, hints = description_metadata(obj["error_description"])
+        result.update(description_class=category, description_match_source=source, **hints)
     if type(status) is not int or not (200 <= status <= 299 or status == 400):
         result.update(reason="http_unconfirmed", diagnostic_class="http")
         return result
@@ -391,9 +554,13 @@ def classify(status, body, case=None):
 def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=time.monotonic):
     attempt = Attempt.create(case)
     result = safe_result("internal_error", "unknown")
+    observer = PreparedRequestObserver(attempt, client_id, secret, clock)
+    deadline = None
     try:
         deadline = Deadline(clock=clock)
+        deadline.observer = observer
         code, redirect = acquire(client_id, attempt, deadline)
+        observer.callback_returned(code, redirect)
         deadline.remaining()
         attempt.claim_exchange()
         fields = exchange_fields(client_id, secret, code, redirect, attempt)
@@ -408,6 +575,12 @@ def run_case(case, client_id, secret, acquire=authorize, send=send_token, clock=
     except Exception:
         result["reason"] = "internal_error"
     finally:
+        if deadline is not None:
+            deadline.observer = None
+        result["local_checks"] = observer.snapshot()
+        if result["outcome"] == "passed" and result["local_checks"]["local_consistency"] != "consistent":
+            result.update(outcome="indeterminate", pkce_rejection_proven=False, reason="local_observation_unconfirmed")
+        observer.clear()
         if not result["remote_rejected"] and not result["token_present"]:
             result["diagnostic_class"] = STOP_CLASSES.get(result["reason"], result["diagnostic_class"])
         result.update(case=case, fresh_attempt=True, callback_claimed=attempt.claimed,

@@ -190,3 +190,66 @@ raw error/description只存記憶體。description須為string、長度<=512字�
 ### No evidence／未確認
 
 真實client配置是否與App完全相同、服務端當次grant/redirect/client狀態，以及未保存description的語義都未確認。不讀取App配置、不追補原rawbody／description／callback或secret。P/Q結果與舊evidence保持readonly。正式OAuth未有已確認bug，不擴成修復任務；PKCE enforcement仍indeterminate。Canvas及正常登入已pass的來源不被本輪推翻，遠端refresh/401本輪不做。
+
+## 11. T 輪現行diagnostic version3（取代R停止指示，保持正式能力不變）
+
+來源90646c2。只做獨立CLI私有被動觀測與有限描述句法，不改正式API、交換算法、endpoint、timeout、retry、TTY/getpass防fallback或loopback安全規則。沿用R尚未消耗的唯一1次：共享R→T規劃時0/1、T06後現1/1用盡，選wrong；無新增預算、無第二次。結果可能仍indeterminate，不能因此不實作已授權改善。
+
+### A. 觀測實際prepared inputs，不建立mirror
+
+在authorize實際把URL傳給browser opener的位置被動觀測該同一URL；在send_token建立urllib Request後、呼叫open前，最多一次觀測該同一Request。不得從case推算真值或另重建等價URL/body代替。可在Deadline加private optional observer，由run_case安裝並finally解除；Attempt可有只在記憶體的authorization binding與布林，clear清除所有原始值/時間/observer參照。不變更exchange_fields、不增加POST/retry或新傳輸策略。
+
+safe `local_checks` 固定鍵：
+
+| Key | 型別／定義 |
+|---|---|
+| authorization_observed | bool，實際opener參數已觀測才true |
+| token_request_observed | bool，實際Request已建立並觀測才true |
+| authorization_shape_valid | bool，固定AUTH_URL之HTTPS/host/path、無userinfo/fragment、query唯一且只既有client_id/redirect_uri/scope/state/code_challenge/code_challenge_method，值分別符合當次輸入/redirect/Attempt.state、offline_access、S256與原verifier實算challenge |
+| token_request_shape_valid | bool，固定TOKEN_URL/POST、既有Accept JSON/Content-Type form/Cache-Control no-store、body可嚴格解form且欄位唯一，只既有client_id/client_secret/code/redirect_uri及可選code_verifier，必要值非空且secret等於當次輸入；不輸出任何實際值 |
+| client_id_same | bool，兩次實際觀測的client_id與當次輸入相等 |
+| redirect_same | bool，兩次實際觀測redirect與acquire回傳redirect相等 |
+| code_same | bool，Request實際code與acquire回傳code相等 |
+| submitted_verifier | enum unobserved/omitted/valid_same/valid_different/invalid；從實際form判定，重複或非當前43字元base64url合法shape為invalid；valid_same等於原verifier，valid_different為合法且不同並且challenge不同 |
+| callback_return_to_request_prepared | enum unobserved/under_5s/under_30s/older；從acquire返回到Request prepared觀測，以同一monotonic clock，0<=delta<5、5<=delta<30、delta>=30；非有限/負值為unobserved，不名為code_age |
+| local_consistency | enum unobserved/consistent/inconsistent；未完整觀測為unobserved；觀測完整但shape/bindings/negative提交/time不符為inconsistent；全部符合才consistent |
+
+尚未觀測的布林預設false，不能默認true，且observed guards先於判定。正確negative提交：missing必須omitted；wrong必須valid_different（合法43字元且challenge不同），不能valid_same。重複觀測視不一致，不以最後一次覆蓋。以上只證明本機prepared inputs，非遠端wire或發行/接收時間/遠端grant證明。observed原始字串/Request不得持久或輸出；observer只讀，不改Request/metadata。
+
+run_case最終passed另要求local_consistency=consistent與case對應negative提交；缺席/不一致一律indeterminate、pkce_rejection_proven=false。token_present仍failed優先，即使localchecks有問題也不降為indeterminate。classify可獨立受控測試，但不能繞過run_case最終gate。錯誤/取消仍輸出有限safe version3 result，finally解除observer並clear。
+
+### B. 固定有界fullmatch grammar及純hints
+
+沿用Q <=512字元string限制、strip/lower/空白折疊/移除至多一個terminal period。先查原19 legacy exact模板，保留其分類；之後才試以下完整句法。每個field alias限V=`code_verifier`/`code verifier`/`code-verifier`，C=`code_challenge`/`code challenge`/`code-challenge`；每個field可無包裹或完整成對單引號、雙引號、backtick，不接受不成對或任意其它字。以re.fullmatch消耗整句，無wildcard/free tail/substring；以下括號?是有限選項，不允許任意插詞。
+
+可選固定prefix僅 `pkce verification failed: ` 或 `pkce validation failed: `。所列V/C代表上述有限field matcher，其餘字為literal：
+
+| description_class | 完整grammar（prefix可有可無） |
+|---|---|
+| verifier_required | `(the )?V( parameter)? (is required|is missing|was not provided)`；`missing (required )?V( parameter)?` |
+| verifier_mismatch | `(the )?V( (provided|supplied))? (does not match|doesn't match|did not match) (the )?C`，之後最多一個下列固定suffix |
+| verifier_invalid_unspecified | `(the )?V( parameter)? (is|was) (incorrect|invalid)`；另完整句 `pkce verification failed` 只算本class |
+
+mismatch suffix只能無、` (supplied|provided|sent) (in|with|during) (the )?authorization request`、` associated with (the )?authorization code`、` for (this|the) authorization request`。沒有其它tail/標點/negation變體。legacy例如`code_verifier is incorrect`仍先走既有exact分類，不因新invalid grammar重判。
+
+新增 `description_match_source` enum：legacy_exact / bounded_grammar / none / not_applicable；可信可分類description命中19模板或grammar才前兩者，有description但未命中/超限/非string為none，無可用description情境（缺欄、非JSON、token優先等）為not_applicable，不輸出原句。
+
+新增純hint booleans：description_mentions_challenge、description_mentions_pkce、description_has_missing_word、description_has_mismatch_word、description_has_invalid_word、description_has_expired_word、description_has_client_word、description_has_redirect_word；沿用mentions_verifier。只對<=512正規化string判斷，否則全false。用ASCII詞邊界（左右不得為[A-Za-z0-9_]）匹配有限字/phrase：
+
+- mentions_verifier：V三alias；mentions_challenge：C三alias；mentions_pkce：`pkce`。
+- missing_word：`missing`/`required`/`not provided`；mismatch_word：`mismatch`/`mismatched`/`does not match`/`doesn't match`/`did not match`。
+- invalid_word：`invalid`/`incorrect`；expired_word：`expired`；client_word：`client`/`client_id`/`client_secret`；redirect_word：`redirect`/`redirect_uri`。
+
+hints可在未知描述中提供語彙資訊，絕不參與passed/proof/conflict推導，不重建/保存原句、不回推舊Q原始描述。
+
+### C. 保留Q安全matrix與單次Human流程
+
+只在可信純error、HTTP2xx/400、無token/shape問題、knownerror可取精確required/mismatch證據、case對應且無conflict才有classify passed。unknown error即使grammar命中也不pass；強config/auth/redirect優先、case衝突、invalid_unspecified/一般invalid_grant不pass。run_case再加A的actualprepared一致性gate；hint永不參與。token key優先failed，無論內容/混合/空值；不使用token。grammar是事前支持句法，非GitHub官方保證或預言本次訊息一定命中。
+
+T06前固定CLI及test SHA與判準；獨立Tester/Reviewer/requiredfixclosed後，Human僅wrong：fresh新state/challenge/code、單POST、共享R→T唯一1次用完即停，不positive/API/refresh401/第二次、不讀App配置。只收safe diagnostic_version=3 JSON。其資訊增益是actualprepared本機觀測、有限關係grammar或額外不參與proof的hints；未知結果仍如實記，不live後擴表。P/Q/R舊evidence與正常e941d88/canvaspass保留。
+
+T03實作的有限reason補充：classify原本passed但run_case實際觀測gate缺席/不一致時，固定`local_observation_unconfirmed`、indeterminate/proven=false；這不是遠端error原文，也不變更其它error優先規則。
+
+### T06 實際結果（既定判準不變）
+
+2026-10-21，T05 approved且版本SHA凍結後，Human完成共享R→T唯一wrong新授權/新code/單POST，現在1/1已用盡，停止任何重試/第二次。安全version3報告：actualprepared local_consistency=consistent、valid_different、client/redirect/code/shape一致、callback返回至準備Request under_5s；HTTP400 invalid_grant、無token，verifier/challenge/mismatch hints true但description_class=unknown/match_source=none，按§11仍indeterminate/proven=false。local gate是新增本機證據，不能替代完整語義；hints不證明原因、false hints不排除其它grant問題，under_5s不是code_age。CLI/test SHA未改，來源90646c2+T受限dirtydiff，詳v3 evidence。PQR舊結果/預算/正常App/canvaspassed保留，不追原文或擴表；遠端refresh401及完整Humanreview pending。

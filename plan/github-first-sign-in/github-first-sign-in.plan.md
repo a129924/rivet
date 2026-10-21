@@ -6,6 +6,71 @@
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
 
+## T 輪現行最小診斷改善（優先於R停止及Q/P/A/S寫入授權）
+
+來源HEAD90646c2；原feature/feat/github-first-sign-in/原DraftPR61，不dev實作、不建worktree/PR、不merge。User已要求實作最小改善，採technical-spec§11的version3 actualprepared觀測＋bounded grammar/hints，不以無法保證遠端結論停止。沿用R唯一未使用額度，**共享R→T規劃時0/1、T06後現1/1用盡**，不是新增預算；case選wrong，一次fresh單POST，不第二次。
+
+現行T06已完成：唯一wrong的localprepared一致，HTTP400 invalid_grant/無token但完整grammar未命中，依事前§11仍indeterminate；共享R→T1/1用盡，停止新授權。以下pending及流程為執行前契約，實際結果見T06摘要及v3 evidence，T07複核中。
+
+### T精確manifest
+
+Modify：
+
+- `apps/GitHubSignInVerification/tools/pkce_negative_probe.py`
+- `apps/GitHubSignInVerification/tools/test_pkce_negative_probe.py`
+- `apps/GitHubSignInVerification/tools/README.md`
+- `analysis/github-first-sign-in/requirements.md`
+- `analysis/github-first-sign-in/technical-spec.md`
+- `plan/github-first-sign-in/github-first-sign-in.plan.md`
+- `plan/github-first-sign-in/github-first-sign-in.step.md`
+- `README.md`
+- `docs/architecture/github-first-sign-in.md`
+
+Written唯一：`plan/github-first-sign-in/evidence/pkce-diagnostics-v3.md`。Deleted/rename：無。CLI僅私有診斷/Attempt/Deadline/authorize/send_token/run_case為被動prepared觀測允許更動；交換算法/endpoint/timeout/retry/TTY防fallback/loopback安全規則不可改，exchange_fields不改。所有正式Swift/credential/provider/scope/refresh401、其它code/tests、實驗、圖、全部舊PQR evidence、其它docs/topic/worktree皆ReadOnly，不新API/module。不重做e941d88正常positive/API或canvaspass，不讀App配置。
+
+### 每slice九欄
+
+- In-Scope：T03a §11私有observations/grammar/hints與tests；T03b允許docs/新evidence與來源預算提示。
+- Out-Of-Scope：正式API/傳輸策略/交換算法/endpoint/timeout/retry/TTY/loopback安全改動、新module、positive/API/refresh401、回改舊evidence。
+- ReadOnly：上述完整ReadOnly及90646c2來源，R歷史停止不等於本輪禁止已授權私有改善。
+- Written：唯一v3 evidence，開始為planned，完成才actual。
+- Deleted：無。
+- Modify：每slice從九個精確paths列actualhunks/paths；不以全清單代完成。
+- Goal：actualprepared本機一致性與bounded全句關係診斷，safe version3結果有可辨識新資訊。
+- Non-Goal：不證明遠端wire/code發行時間/grant狀態，不保證遠端PKCE結果可判定，不新增預算。
+- TestCase：RD01–RD05及實際命令/來源/結果/限制；Human前freezeSHA，wrong新唯一1次pending。
+
+### T流程
+
+| Step | Owner role | 完成條件 |
+|---|---|---|
+| T01 | Plan-Creator | 四planning具§11固定grammar/觀測/manifest/共享預算與九欄 |
+| T02 | Plan-Reviewer | 獨立approved，不沿用R/Q核准 |
+| T03a/T03b | Implementer | approved後boundedimplementation/docs，各slice開始/完成九欄 |
+| T04 | Tester | fake RD01–RD05/既有回歸及ReadOnly核對 |
+| T05 | Reviewer | 獨立code/scope/evidence review，requiredfixesclosed |
+| T06 | Human | live前freezeSHA，一次一步ask-question，僅wrong新code單POST，共享R→T0/1→1/1 |
+| T07 | Tester → Reviewer | safe version3 JSON/來源/分類/預算/限制獨立記錄及複核 |
+| T08 | Implementer → Human | topiccommit/push/更新原DraftPR61/localPRLens受限Graphify→Humanreview |
+
+R0/1只是額度歷史，T沿用同1次；任何帳本不能並列成R剩1次加T新1次。T06若失敗或indeterminate也消耗該唯一授權，無第二次、不補rawbody或live後改表。不讀secret，Human只在terminal隱藏輸入，不貼callback/配置。沒有重大scope問題依已授權commit/push/原PR更新完成，不重問。
+
+### RD tests（fake-only，無新傳輸策略）
+
+| ID | Cases |
+|---|---|
+| RD01 | RFC7636 publicvector；actualURL/Request觀測且不mirror；故意mutation client/redirect/code/state/challenge/method/duplicateform/verifiershape皆可detect；未observed不默認true、不pass |
+| RD02 | §11每grammar型態/三alias/成對quotes/有限prefix/suffix，legacy19優先；negation/extratail/不成對引號/超長/未知句拒絕；hint有無不影響proof |
+| RD03 | known/unknownerror、strong優先、description/caseconflict、token優先failed、shape/HTTP/network/timeout矩陣；classify獨立可測但run_case須actualconsistency及negativegate |
+| RD04 | fakeclock timebucket在0/5/30邊界與負/非有限；callback-return而非code_age；observer每prepared事件至多一次及finally解除/Attempt.clear；單POST/no retry/TTY fallback既有回歸 |
+| RD05 | capture全部stdout/stderr含secret/clientID/code/state/verifier/challenge/rawURL/body/error/exception sentinel；safeversion3 enums/bools；sourceReadonly/舊PQR evidence/預算/凍結SHA與safeJSON來源核對 |
+
+Fake命令：`python3 -B -m unittest discover -s apps/GitHubSignInVerification/tools -p 'test_pkce_negative_probe.py'`。root/consumer/appsource未動沿用已通過證據，必要hooks實跑照實記。Human僅在T05approved後於原featureterminal執行一次`python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --case wrong`，確認safeversion3JSON，不另跑missing或positive。
+
+PRLens真base/head diff僅local scratch validate/render，Graphify既有受限sourcefallback；無新圖ownership，不改frozen圖/toolconfig、不上傳。正式產品登入UI及遠端refresh401仍未交付／本輪不驗證。
+
+---
+
 ## R 輪現行docs-only調查收斂（優先於Q/P/A/S寫入及live契約）
 
 來源HEAD21e2542；原feature worktree／feat/github-first-sign-in／原DraftPR61，無dev實作、新worktree/PR或merge。User授權新一次且無可靠資訊增益則停止；本輪決定不消耗，R **0/1未使用**，不選case、不改CLI/判準、不live。P2/2與Q2/2 indeterminate歷史readonly；e941d88正常login/user/requery及canvasHumanpassed沿用。
@@ -371,3 +436,7 @@ Graphify／PR Lens 是導覽／理解輔助，不是新增 OAuth 業務驗收或
 ### Q06 實際執行摘要（判準不變）
 
 2026-10-21，Q05獨立approved/R1closed後，Human以凍結version2 CLI另取missing/wrong各一個新code、各單次exchange。兩案皆HTTP400 invalid_grant/code_problem/generic_code_rejection、remote_rejected=true、token_present=false；description存在並提及verifier，但description_class=unknown，signals_conflict=false、pkce_rejection_proven=false。按事前§9兩者皆indeterminate；不得以hint、HTTP400或一般invalid_grant當PKCE證明。missing/wrong各1/1、Q總2/2用盡，停止新授權/重試/擴模板；P舊2/2 unknown歷史保留。來源82489b6+Q受限diff、CLI SHA `0d1d912473f44315eeadecca94b8cf6f1e31caea06e1ed821dfe8679b3f01a51`。原始描述未保存，無法可靠專指拒絕原因；完整安全JSON/來源與限制見新pkce-diagnostics-v2.md。正式OAuth/credential/provider/scope/refresh/401未改，正常login/API/canvas不重做，完整遠端refresh/401及完整PR Human review仍pending。
+
+### T06 實際結果（既定判準不變）
+
+2026-10-21，T05 approved且版本SHA凍結後，Human完成共享R→T唯一wrong新授權/新code/單POST，現在1/1已用盡，停止任何重試/第二次。安全version3報告：actualprepared local_consistency=consistent、valid_different、client/redirect/code/shape一致、callback返回至準備Request under_5s；HTTP400 invalid_grant、無token，verifier/challenge/mismatch hints true但description_class=unknown/match_source=none，按§11仍indeterminate/proven=false。local gate是新增本機證據，不能替代完整語義；hints不證明原因、false hints不排除其它grant問題，under_5s不是code_age。CLI/test SHA未改，來源90646c2+T受限dirtydiff，詳v3 evidence。PQR舊結果/預算/正常App/canvaspassed保留，不追原文或擴表；遠端refresh401及完整Humanreview pending。

@@ -106,3 +106,17 @@ Human新授權上限1次且明示沒有可靠資訊增益就停止。現有調�
 P2/2 unknown與Q2/2 invalid_grant/code_problem、description unknown／mentions_verifier=true均仍indeterminate；舊證據不追body、不重用、不改判。e941d88正式驗證App正常授權／真/user／再次查詢及canvas Human passed原樣沿用，不重做。正式OAuth未發現實際組裝bug證據；不能因此聲稱已排除所有bug或已驗證PKCE enforcement。正式Rivet產品登入UI、遠端refresh/401及跨重啟仍未交付或未驗證。
 
 本輪Goal是清楚分開fact／inference／no evidence，交付有來源的停止結論；不再增加猜測模板或keyword，不讀App配置或原始描述，不新增experiment/module/public API。精確manifest與R01–R06九欄／最小驗證見plan R。
+
+## T 輪現行最小診斷改善（優先於R停止及舊Q/P執行契約）
+
+來源HEAD `90646c2`，沿用原feature/feat/github-first-sign-in/原DraftPR61，不dev實作、不建worktree/PR、不merge。Human已明確要求繼續實作最小改善，不能因無法保證PKCE遠端結論再次只交停止文件。
+
+交付diagnostic_version=3：（A）被動觀測實際交給browser opener的授權URL及send_token實際建立的prepared Request，僅輸出本機一致性布林/有限enum；（B）保留19完整模板並加事前固定fullmatch句法，另有不參與proof的有限詞彙hints。prepared request不是遠端wire、code發行時間或grant狀態證明；即使改善後結果仍可能unknown/indeterminate。
+
+沿用R唯一尚未使用的1次額度，**共享R→T預算目前0/1**，不是T新增1次；核准、實作、獨立Tester/Reviewer及requiredfixclosed後，僅wrong一個freshcode/單POST，無第二次/positive/API/refresh401，不讀App配置。wrong送合法43字元但challenge不同的verifier，可減少缺欄位/shape歧義；此為選案理由，不是預告通過。
+
+正式Swift/API/lifecycle、交換算法/endpoint/timeout/retry/TTY防fallback/loopback安全不變。P/Q既有indeterminate與R調查歷史全保留；e941d88正常login/user/requery、canvasHumanpassed不重做。新機密由Human本機隱藏輸入，一次一步ask-question，只收safe version3 JSON；live前freeze SHA，live後不擴表或回推舊rawdescription。
+
+### T06 實際結果（既定判準不變）
+
+2026-10-21，T05 approved且版本SHA凍結後，Human完成共享R→T唯一wrong新授權/新code/單POST，現在1/1已用盡，停止任何重試/第二次。安全version3報告：actualprepared local_consistency=consistent、valid_different、client/redirect/code/shape一致、callback返回至準備Request under_5s；HTTP400 invalid_grant、無token，verifier/challenge/mismatch hints true但description_class=unknown/match_source=none，按§11仍indeterminate/proven=false。local gate是新增本機證據，不能替代完整語義；hints不證明原因、false hints不排除其它grant問題，under_5s不是code_age。CLI/test SHA未改，來源90646c2+T受限dirtydiff，詳v3 evidence。PQR舊結果/預算/正常App/canvaspassed保留，不追原文或擴表；遠端refresh401及完整Humanreview pending。
