@@ -1,6 +1,6 @@
 # GitHub 連線驗證結果摘要
 
-來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。本文彙整當時已有證據，不新增實驗、真人測量或正式產品採用決策。[導覽](README.md)列出各來源入口。
+來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`。本文彙整已有證據，不新增實驗、真人測量或正式產品採用決策。[導覽](README.md)列出各來源入口。
 
 ## E001–E007：已知結果與不能推論之處
 
@@ -35,6 +35,23 @@ E007 [第一輪](E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98c
 
 自動驗證另列：[契約測試](../plan/github-persistent-connection/evidence/verification-host-contracts.md)為 fake-only unsigned hosted **78 tests**；[隔離驗證](../plan/github-persistent-connection/evidence/verification-host-isolation.md)以當前 source 排除整個 App 後，production 普通 build、**202 tests／22 suites**、consumer **12 tests／3 suites**通過。真 legacy Keychain suite 明示未跑，未刪原測試。production Sources／Tests／Package／locks 還原 topic 前 `16606b89` 基線，沒有驗證專用正式 API、共用 UI、控制或反向依賴；逐檔歸屬與版本見[manifest](../plan/github-persistent-connection/evidence/verification-host-manifest.md)，獨立結果見[review](../plan/github-persistent-connection/evidence/verification-host-review.md)。這些通過不等正式產品登入能力已完成。
 
+## PR #61：正式初次 OAuth 能力與單次反向收尾
+
+[PR #61](https://github.com/a129924/rivet/pull/61) 已於 2026-10-22T03:17:27Z 合併；本節以合併點 `14d0832f042720889993d769b4cbfb720078e6b1` 的[長期說明](https://github.com/a129924/rivet/blob/14d0832f042720889993d769b4cbfb720078e6b1/docs/architecture/github-first-sign-in.md)及[安全證據](https://github.com/a129924/rivet/blob/14d0832f042720889993d769b4cbfb720078e6b1/plan/github-first-sign-in/evidence/pkce-semantic-review.md)為索引。真實執行的工具來源仍為 `4dbf3df`，不把文件合併 commit 冒充測量版本。
+
+正式 `GitHubIntegration` 保留初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential／provider／scope／clients。獨立 `GitHubSignInVerification` 收納配置及驗證 UI、loopback relay、coordinator、程序內完整 store、probe 與 hosted tests；使用真 OAuth／API，正式 Rivet 產品登入 UI 尚未交付。來源 `e941d88` 的正常登入、真 API 與同程序再次查詢成功，與 PR #62 的 DPK／跨重啟／refresh 驗收分開。
+
+| X 收尾層級 | 實際結果與界線 |
+|---|---|
+| Native 正常操作 | 明確 click copy、Human 手貼公開 synthetic 句並逐字核對通過；不涵自然 timeout／cancel／Enter／late、OS 清除或無留痕。 |
+| 唯一 wrong HTTP 事實 | 新授權／新 code／單 POST；HTTP400 invalid_grant、remote_rejected=true、無 token。本機 prepared 一致，提交合法但不同 verifier、challenge 不同。 |
+| Provider 描述語義 | 兩獨立 AI 先封存一致 `verifier_mismatch_asserted`，來源 `provider_description_ai_review`；屬 provider 對當次拒絕的 mismatch claim，不是普遍 enforcement 或遠端 wire 證明。 |
+| 保留的自動結果 | v3 outcome=indeterminate、pkce_rejection_proven=false、description_class=unknown、match_source=none；AI 軸不改既有判準或歷史。 |
+
+新 X 預算 **1/1 已用盡**，本輪結束、沒有 retry／第二次／追加研究。P／Q 各 2/2、共享 R→T 1/1 的耗盡與舊 unknown、missing 無法判定均不回改；E002 的 2/2 與 overall unknown 仍是其獨立歷史。僅支持這次新授權、合法但不同 proof 的交換被拒且 provider 歸因 verifier 不符，不泛化所有設定／帳號／missing。正式登入 topic 的完整遠端 refresh／401 未因此驗證；PR #62 的受控到期真 refresh 是另一驗證 App 與來源的結果。
+
+67 項工具受控測試與獨立 code review 沿原凍結證據，X 沒有重跑它們。原文只走已批准的單欄 clipboard／Human 手動 AI 閱讀例外；索引不保存描述原文、秘密、callback、code、state 或 token，不保證剪貼簿／同步／AI 服務留存消失。
+
 ## 版本與仍未驗證的範圍
 
 2026-10-20 舊 Rivet 名義 host 的[原端到端紀錄](../plan/github-persistent-connection/evidence/product-e2e.md)及圖、0次提示保留為 `ca00bc0` 歷史，正式產品歸屬與完成宣稱已撤回，不能冒充新 App 驗收。舊 source `7e81b77` 僅供追溯；新舊真人 build 都依當時工作樹 source SHA、私有 project 與原生 build log 識別，不偽稱由後來才產生的 commit 建置。
@@ -45,4 +62,4 @@ E007 [第一輪](E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98c
 - profile 更新後讀回（Human 已接受限制）及已過期 profile 的恢復。
 - certificate rotation、跨使用者／跨機器及公開分發。
 
-本摘要只涵上述來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。文件補充與後續 Git 收尾依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)另記實際結果；本文不預填 tag、刪除 refs、移除 worktree 或後續 PR 的完成狀態。
+本摘要只涵上述已合併 PR #62／#61 的各自來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。文件補充與後續 Git 收尾依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)另記實際結果；本文不預填 tag、刪除 refs、移除 worktree 或後續 PR 的完成狀態。
