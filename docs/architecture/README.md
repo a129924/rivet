@@ -70,6 +70,8 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 
 ## 文件導覽
 
+- [GitHub PKCE missing-verifier 補證界線](github-pkce-missing-verifier-feasibility.md)：本輪只完成離線調查與工作流，真人未執行，歷史 missing 歸因仍未知。
+
 - [GitHub 初次登入與驗證工具](github-first-sign-in.md)：已交付的一次性授權 session／exchange 與獨立 host；不代表正式產品登入或持久化。
 
 - [設計原則](../design-principles.md)：Rivet 的產品取捨與工作方法。
