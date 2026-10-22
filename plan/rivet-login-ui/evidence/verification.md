@@ -1,6 +1,22 @@
 # Rivet 登入 UI：IM-01 自我驗證
 
-2026-10-22；branch `feat/rivet-login-ui`；base `14d0832f042720889993d769b4cbfb720078e6b1`。所有寫入僅在已授權 feature worktree；沒有 commit／push／PR。以下是 Implementer 自我證據，不能取代獨立 Tester／Reviewer verdict。
+2026-10-22；branch `feat/rivet-login-ui`；base `14d0832f042720889993d769b4cbfb720078e6b1`。所有寫入僅在已授權 feature worktree。IM-01初始尚未commit／push／PR；目前code commit與發布停點以下節為準。本文保留Implementer歷史及獨立Tester／Reviewer交接，不混同各角色verdict。
+
+## 本地交付與發布停點（目前狀態）
+
+Code commit已完成：`98f057324419d33926850d926483080c3f3ca633`，message `feat(presentation): 新增原生登入畫面與假資料展示`，36檔（實際32 Written＋4 Modify）。完整staged diff單一topic／原件bytes／凍結圖SHA核對完成；pre-commit trim、EOF、Swiftformat、GitHubIntegration consumer、SwiftLint與renderer-check全部passed。第一次renderer工具缺依賴的失敗及其frozen-lock補齊已在下方保留，沒有SKIP／no-verify。
+
+使用者原已明示「commit by topic → push → open Draft PR → Human review」，這份授權保留。實際兩次正常非force `git push -u origin feat/rivet-login-ui` 都在工具執行前被自動approval review拒絕，並未推送；唯讀ls-remote確認遠端feature branch不存在。沒有第三次retry、改transport、用connector送objects或其他繞過動作，沒有建立PR。
+
+目的地已驗證為既有 `https://github.com/a129924/rivet.git`，GitHub repository `a129924/rivet`、public、owner `a129924`、目前帳號ADMIN／push權限。第二次自動拒絕仍認為原先「push」授權未明確包含將此payload公開至具體目的地，要求Human明確確認「將本topic的程式、測試、使用者原始素材、文件與圖面公開推送到此repository」。這是自動審核額外要求的公開發布確認，不改寫成Human從未授權push；目前等候該明確確認，未假稱已同意或已成功發布。
+
+PL-01已由獨立Reviewer完成本地change map，Dispatcher正式交接：真base `14d0832f042720889993d769b4cbfb720078e6b1` → code head `98f057324419d33926850d926483080c3f3ca633`；pinned CLI validate／render均exit0。1 view、4 lanes、9 nodes、11 edges、4 walkthrough steps；包含必要unchanged neighbors與file refs。Graph contentHash `19c75381ffa577574cd8fc8f3ece66b3`；SVG 17311 bytes、1708×596。Reviewer已核source／manifest／SVG XML labels，沒有raster visual review，不宣稱圖像實看。
+
+外置成果採symbolic位置：`$TOPIC_SCRATCH/pr-lens/98f0573/graph.json`、`rendered/manifest.json`、`rendered/login-ui-change-light-b14b12a647503ffbc6daf5bfc15d66e9.svg`。此map只對上述code commit，不含之後兩檔本地交付紀錄的metadata commit，不冒稱final-head map；未上傳、未發布或附到PR。
+
+TE-01親跑focused10／root284／debug／release／format／scoped0及baseline比較、第2輪Archify新證據獨立核對與RV-01 approved／P2 closed均保留。Root strict lint仍39＝37舊experiment逐條baseline一致＋2原樣封存scaffold，production／tests scoped0。Native四份PNG、實際互動／Keyboard／VoiceOver等AX仍pending；Bounded source／evidence approval供Draft交付，不代表完整原生驗收或Human最終UI採用。GH-01未建立，等待公開push確認後的正式發布動作；HC-01採用決策仍pending。
+
+本節為本地metadata收尾；不在自身內容回填尚未成立的metadata commit SHA，不重新執行Swift／產圖／PR Lens，也不進行任何remote操作。
 
 ## PR-02 後 bounded fix：目前狀態
 

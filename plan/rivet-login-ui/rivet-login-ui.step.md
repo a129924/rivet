@@ -11,10 +11,11 @@
 
 ## Current Phase
 
-- Phase：Dispatcher 已交接 PR-02 approved；bounded fix 完成。TE-01 獨立驗證已完成本輪可執行部分，partial verification；最新 native 證據受工具／權限限制 pending，交 RV-01 判讀。
-- Current Step：TE-01，`completed`；指本輪獨立驗證與缺口分類完成，不表示全部 TestCase passed。RV-01 pending；不得以自動 pass 取代 native／Human 驗收。
-- Upstream verdict：Planner `approved` 僅限 planning preparation sufficient；上游亦回報對話草稿品質 approved。正式 Plan-Reviewer PR-01 `approved`，由 Dispatcher 本輪明確交接，無 required fix；不自推 approval。
-- IM-01 已完成 bounded source／tests／素材及第1輪圖面修正；root tests／containment 已驗，native 最新證據仍 pending。未 commit／push／Draft PR。
+- Phase：本地code／證據已保存，push被自動approval review阻擋，等待Human明確公開發布確認。
+- Current Step：IM-02 code commit completed／push blocked；PL-01本地map completed；GH-01未建立。
+- Upstream verdict：PR-01／PR-02 approved；TE-01 partial verification；RV-01 approved、唯一P2 closed，無其他required fix。這些不替代Native驗收或Human採用。
+- Code commit：`98f057324419d33926850d926483080c3f3ca633`；36檔；全部commit hooks passed。Feature／dev在收尾前皆clean，未push／PR。
+- Native四份PNG、互動與AX仍pending；rootlint39的baseline／原樣素材分類保留。
 
 ## Artifact Register
 
@@ -36,16 +37,17 @@
 | PC-02 | completed | Plan-Creator | 僅修四文件：新增唯一第4 Modify、LU-08 測試／lint 驗收與真實限制，scope／API／工具契約不變。 | 唯讀確認既有 StaticIsolationTests 與 manifest，四文件同步完成；未改測試／產品、未重跑，不自審 approval。 |
 | PR-02 | completed | Plan-Reviewer | 獨立正式審查 PC-02 delta，核對最小 expected-set 同步、路徑集合、lint baseline／no-regression 與證據不冒 pass。 | Dispatcher 明示交接 approved、無 required fix；既有 PR-01 不代替本 delta。 |
 | TE-01 | completed | Tester | 獨立執行 LU-01～11，分列自動／native／工具結果與缺口。 | partial verification：親跑 focused10／root284、debug/release、format/scopedlint pass；baseline37=現有37、raw素材新增2原樣保留；Archify validate／hash／四圖實看pass。CGWindow真存在但CUA選窗阻塞、capture preflight=false；native四圖／互動／AX pending。見 verification TE-01。 |
-| RV-01 | completed | Reviewer | 獨立審查 source／diff／tests／native／paths／Archify；未 commit 的 PR Lens 可先 pending，以 direct bounded diff review。 | 待執行；需明示 verdict，不能由 map 或 tests 推導。 |
-| IM-02 | in-progress | Implementer | RV-01 approved 後依已授權範圍檢查 staged semantic boundary／message，按 topic commit 並 push feature branch。 | 待執行；Human 已授權直接動作，不加重複確認；實際 SHA／push result 後填。 |
-| PL-01 | pending | Reviewer | 以實際 base／head commits 在外置 scratch 建立並 validate／render PR Lens；核對 unchanged neighbours／file refs／overlay。 | 真 head 未有前 map pending；使用真 SHA，不寫 workingtree provenance；失敗 direct-review fallback 並記錄限制。此工具不是新增 correctness gate。 |
-| GH-01 | pending | Observer/Dispatcher | 依既有授權用 connector 建立 Draft PR，目標 dev，附驗證與限制。 | 待 push 後執行；PR URL／狀態後填。不 merge／release。 |
+| RV-01 | completed | Reviewer | 獨立審查source／tests／證據與單一P2回修，明示verdict。 | Dispatcher交接approved，唯一PAT failure edge P2 closed，無其他required fix；僅供bounded Draft交付，Native／Human採用仍pending。 |
+| IM-02 | blocked | Implementer | 已授權topic staged review／commit後push feature branch。 | 本地code commit `98f057324419d33926850d926483080c3f3ca633`完成、全部hooks passed；兩次push均在執行前遭auto-review拒絕，遠端branch不存在，未第三retry／繞過。等待Human具體公開payload確認。 |
+| PL-01 | completed | Reviewer | 以真base／code head完成外置本地map與pinned validate／render。 | `14d0832`→`98f0573`，validate／render exit0；1view／4lanes／9nodes／11edges／4steps。只含code commit，未含之後metadata；無raster實看。詳verification目前狀態。 |
+| GH-01 | blocked | Observer/Dispatcher | push後依授權建立目標dev的Draft PR。 | 尚未push，未建立PR；等待Human明確公開發布確認，不merge／release。 |
 | HC-01 | pending | Human | Draft PR 與完整證據交 Human review，決定採用／調整／放棄。 | 尚無交付採用決策；HC-00 執行授權不等於成果採用。 |
+| HC-PUB | pending | Human | 回覆自動approval review要求的具體公開發布確認。 | 原直接push／Draft授權保留；auto-review額外要求明確將本topic程式／測試／原始素材／文件圖面公開至`a129924/rivet`，尚未確認，不冒已批准。 |
 
 ## Blockers／證據邊界
 
 - 正式 PR-01／PR-02 approved 由 Dispatcher 交接；root target-set expected-set 的兩行最小修復已完成，Tester focused10／root284親跑passed。Root strict lint仍exit2；baseline37逐條等值、raw素材新增2原樣，scoped0，不冒稱rootlint通過。
-- 原生GUI取證未完成：真CGWindows onscreen；CUA選窗阻塞271秒，capture preflight=false、指定窗擷取exit1。圖面validate／hash／四尺寸receipt與四圖實看已獨立核對；不得推定native通過。Git／PR仍未執行。
+- 原生GUI取證未完成：真CGWindows onscreen；CUA選窗阻塞271秒，capture preflight=false、指定窗擷取exit1。圖面validate／hash／四尺寸receipt與四圖實看已獨立核對；不得推定native通過。Code commit已完成；push兩次auto-review拒絕未執行，PR未建立。
 - Graphify 沒圖可 source fallback；PR Lens 必須真 SHA；GUI 環境／Keyboard Navigation／VoiceOver 未驗分支如實 pending／blocked。
 - Archify Showcase diagnostics 與 perceptual correction 的停止規則分開適用，以 technical-spec／plan 原值為準，不把兩者合成一個兩輪上限。
 - Exact paths 之外的 repo 輸出或 scope／baseline 衝突回 planning；外置 scratch 不加入 repo／staged diff。
@@ -56,7 +58,7 @@ HC-00 是方案接受及直接執行授權。Staged diff 邊界與 message 檢�
 
 ## Last Updated
 
-2026-10-22（Asia/Taipei）；TE-01獨立親跑及限制分類完成，partial verification。PR-01／PR-02 approved 與 IM-01 needs-rework 歷史保留；最新native證據pending，RV-01待獨立判讀。本輪只更新verification／step。
+2026-10-22（Asia/Taipei）；本地code commit完成、PL-01真codehead本地map完成；push兩次auto-review拒絕未執行。只更新兩檔交付紀錄，等待Human明確公開payload確認；原直接push授權與歷史證據保留，Native／最終採用仍pending。
 
 ## PC-02：必要測試契約修正與已知驗證限制
 
@@ -194,3 +196,12 @@ Dispatcher正式交接PR-02 approved、無required fix。只對新增第4Modify�
 Dispatcher已交接正式RV-01 `approved`，唯一P2圖契約修正closed，沒有其他required fix；此approval供bounded code／evidence的Draft交付，不表示Native完整驗收或Human採用。TE-01自動驗證與第2輪Archify新證據已獨立核對；四份Native PNG、互動與AX仍pending，不建placeholder。
 
 IM-02進行中：核對feature branch與固定base、dev仍dev且clean；實際32個Written＋4個Modify共36檔，無ReadOnly／其他topic變更。依Human已明示的直接topic commit／push授權，stage後仍檢查單一語意與message `feat(presentation): 新增原生登入畫面與假資料展示`；本紀錄尚未宣稱commit／push成功或填SHA。PR Lens及Draft PR留後續正式交付，不merge／release。
+
+
+## 本地交付收尾／公開發布確認停點
+
+Code commit `98f057324419d33926850d926483080c3f3ca633`已完成36檔與全部hooks，feature clean；dev仍dev且clean。依Human原「commit by topic→push→Draft PR」指令嘗試push兩次，但autoapproval均在命令執行前拒絕。既有origin已核對public `a129924/rivet`、owner同名、ADMIN／push權限，第二次仍要求明確將本topic程式／測試／使用者原始素材／文件與圖面公開至此repo的Human確認。這是工具審核的額外要求，不抹掉原授權；沒有第三retry或換通道，遠端feature branch不存在，noPR。
+
+PL-01獨立Reviewer本地map已完成，真base14d0832→codehead98f0573；pinnedvalidate／render exit0，external symbolic path與contentHash詳verification。Reviewer只核source／manifest／SVG XML labels，未做raster視覺review；map不包含本次兩檔metadata收尾，不假稱final-head provenance。
+
+本次只更新verification／step，按既有topic commit授權建立本地docs metadata commit，不push／remote／PR；不在自身文件預填該commit SHA。Native四PNG／互動／AX及Human最終採用保持pending。
