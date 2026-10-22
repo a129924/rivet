@@ -11,7 +11,7 @@ public struct RivetLoginView: View {
   @State private var token = RivetLoginTokenInput()
   @FocusState private var focus: Focus?
   @AccessibilityFocusState private var statusFocused: Bool
-  private enum Focus: Hashable { case primary, token, cancel, retry }
+  private enum Focus: Hashable { case primary, secureToken, visibleToken, cancel, retry }
 
   public init(
     phase: RivetLoginPhase, footer: String, onIntent: @escaping (RivetLoginIntent) -> Void
@@ -23,6 +23,7 @@ public struct RivetLoginView: View {
 
   private var palette: RivetLoginPalette { RivetLoginPalette(dark: scheme == .dark) }
   private var scale: CGFloat { bodySize / 13 }
+  private var tokenFocus: Focus { token.showsToken ? .visibleToken : .secureToken }
 
   public var body: some View {
     GeometryReader { geometry in
@@ -127,17 +128,17 @@ public struct RivetLoginView: View {
       Group {
         if token.showsToken {
           TextField("github_pat_…", text: $token.text)
+            .focused($focus, equals: .visibleToken)
         } else {
           SecureField("github_pat_…", text: $token.text)
+            .focused($focus, equals: .secureToken)
         }
       }
       .textFieldStyle(.plain).font(.system(size: 12 * scale, design: .monospaced))
-      .focused($focus, equals: .token)
       .accessibilityLabel("Personal access token — example input only")
       .onSubmit(submitToken)
       Button(token.showsToken ? "Hide" : "Show") {
         token.showsToken.toggle()
-        focus = .token
       }
       .buttonStyle(.plain).foregroundStyle(palette.secondary)
       .accessibilityLabel(token.showsToken ? "Hide token" : "Show token")
@@ -147,8 +148,14 @@ public struct RivetLoginView: View {
     .overlay {
       RoundedRectangle(cornerRadius: 9)
         .stroke(
-          focus == .token ? Color.accentColor : palette.border,
-          lineWidth: focus == .token || contrast == .increased ? 2 : 1)
+          focus == tokenFocus ? Color.accentColor : palette.border,
+          lineWidth: focus == tokenFocus || contrast == .increased ? 2 : 1)
+    }
+    .task(id: token.showsToken) {
+      // Allow the previous text control to resign before focusing its replacement.
+      await Task.yield()
+      guard !Task.isCancelled else { return }
+      focus = tokenFocus
     }
   }
 
@@ -285,9 +292,9 @@ public struct RivetLoginView: View {
   private func moveFocus() {
     switch phase {
     case .welcome: focus = .primary
-    case .tokenEntry: focus = .token
+    case .tokenEntry: focus = tokenFocus
     case .waitingForBrowser: focus = .cancel
-    case .failure(let failure): focus = failure.origin == .token ? .token : .retry
+    case .failure(let failure): focus = failure.origin == .token ? tokenFocus : .retry
     default:
       focus = nil
       statusFocused = true
