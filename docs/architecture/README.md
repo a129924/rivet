@@ -1,5 +1,7 @@
 # Rivet 架構規範
 
+登入 UI topic 已新增 non-BC `RivetLoginView` 與獨立 `RivetLoginDemo` 假資料展示：七態、PAT 本地編輯、原生主窗與獨立控制窗；沒有連接正式 OAuth／PAT、GitHub API 或儲存。Focused 自我測試與 Demo build 通過；root284tests及 lifecycle 四尺寸containment自驗通過，原生完整驗收仍待獨立驗證，未宣稱正式產品登入已交付。詳見 [登入 UI 說明](../presentation/login-ui.md)。
+
 本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline；PR Reader WebView diff 的 Facade／UseCase orchestration、Validator、Parser、Renderer internal concrete stages、fixture 驅動的 DOM Output 與 WKWebView host／live transport，以及 `RivetHTTPClient` 的最小 HTTP 介面切片已有實作；viewed-state persistence 仍未實作；Swift Reader-to-WebView bridge 與 callable TS adapter 已實作。Root Swift package 另包含 non-BC `RivetPresentation` target，已實作原生 SwiftUI `PullRequestRow` leaf、display-ready Presentation input、提供 parent-owned 單選、焦點、鍵盤選取和安全 Open PR intent 的 `PullRequestList`，以及接受 parent 文案和 filter Binding 的獨立 `InboxHeader`。Header 的三個 filter 是 Presentation 選項，不定義或執行 PR membership／filtering。該 target 不依賴任何 Bounded Context，也不包含 Domain／Application mapper；完整 Inbox 的首列 fallback、Reader 導覽與 app menu 尚未實作。除本文件已列明的受限實作外，不宣稱其他產品能力已完成。
 
 ## 架構方向
