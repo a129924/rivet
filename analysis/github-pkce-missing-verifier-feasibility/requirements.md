@@ -37,10 +37,18 @@ Observer 已交接本輪官方契約與工具來源的唯讀查證，尚待 M03 
 6. 舊 planning／evidence 保持原樣；新結論另記來源。實驗四態與本輪任務完成否分開，缺口未解不得因此放行原決策。
 7. 交付只在 feature worktree，完成獨立審查後按 topic commit、push、Draft PR，再交 Human review；不能在 dev worktree 實作。
 
-## 授權與完成語意
+## 授權與完成語意（離線交付當時）
 
 Human 已接受對話計畫，明確授權 feature worktree、受限離線交付、按 topic commit／push／Draft PR；不包含新 OAuth 或實際 provider 原文揭露。當前真人狀態為「未執行」，新增授權 0，未建立新實驗。
 
 本輪離線調查及可 review 交付可以完成，即使 missing 的歸因仍無法判定。需要 live 才能解答時，列出具體缺口並停 Human boundary；不將缺口說成漏洞或正式採用核准。
 
 相關：[執行契約](../../plan/github-pkce-missing-verifier-feasibility/github-pkce-missing-verifier-feasibility.plan.md)／[狀態帳本](../../plan/github-pkce-missing-verifier-feasibility/github-pkce-missing-verifier-feasibility.step.md)。
+
+## L01 本輪授權更新（2026-10-22 執行前）
+
+Human 現在明示可開始本輪一次真人 OAuth，另允許沿用安全 gate 後手動 copy／AI 判讀方式，並確認 OAuth App 沿用 X 輪 client／secret 與 callback。此更新只開啟既有條件式 L01，不核准 merge、工具修改或補次。前文未授權／OAuth 0 描述是離線交付當時；目前額度 0/1 使用，實驗仍未執行，執行契約見 [E008](../../experiments/E008/README.md)。
+
+## E008 結果更新（現況）
+
+本輪唯一機會 1/1 已使用。安全 JSON 顯示單次 missing 交換 HTTP400／invalid_grant、無 token 鍵且 prepared consistent／omitted。兩名獨立 reader 的 provider_claim 一致為 verifier_required，但當次因果判讀 not_asserted／asserted 有分歧，按原判準無法判定；不重判、不補次，不新增工具。原 CLI indeterminate／proven=false 保持；結果交獨立 Tester／Reviewer，未代替 Human review。

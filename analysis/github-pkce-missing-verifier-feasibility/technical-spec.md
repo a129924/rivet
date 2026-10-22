@@ -40,7 +40,7 @@
 
 ## 安全原文與兩名盲判
 
-本輪尚未授權原文揭露；需要時另由 Human 明示可見性與傳遞方式，並確認剪貼簿／同步／history／其他程式及 AI 服務可能留存的殘餘風險，不承諾完全清除。
+離線交付時未授權原文揭露；2026-10-22 Human 已另行明示本輪安全 gate 後手動傳遞／兩名獨立 AI 判讀，並接受剪貼簿／同步／history／其他程式及 AI 服務可能留存的殘餘風險。不承諾完全清除。
 
 只允許可信純 error 的完整單欄描述，最多 4096 UTF-8 bytes，沿用既有 secret／URL／control／opaque gate；整段拒絕就停止，不截斷或繞過。cleanup 後透過匿名 pipe 交 native helper，Human 明確點擊一次 copy 並手動傳遞，沿用 30 秒 timeout，不自動送出。正常 copy 的歷史證據不延伸成 cancel、timeout、OS 清除已驗證。
 
@@ -53,3 +53,11 @@
 - graphify 固定 `graphifyy 0.9.73`，每次 CLI 均設定 `GRAPHIFY_NO_AUTO_REFRESH=1`。沒有可用 graph 就定向 source fallback，不自動 build；既存 graph 先核對 revision／source，query budget 1500，重要關係回原始碼確認。不裝／升級，不啟用 provider、semantic、hooks、stamp、upload。
 - pr-lens 固定 CLI `0.11.0`，以真實 base／head SHA 與 `git diff --find-renames <base>...<head>` 為依據；bounded map 保留必要 unchanged neighbors／source refs。於 repo 外暫存 validate／render 並讀 manifest，不安裝、不發布／上傳、不寫 repo config。實際 PR 有既存設定才沿用；無 diff 標 pending，失敗退回直接 diff。
 - archify 只做本 topic 一張靜態 workflow，作者繁中、最多 12 主要節點、`meta.quality_profile=showcase`。逐次 validate 且交付前九項檢查零 error／warning；deliver 保存 spec／HTML SHA receipts，visual-check 四尺寸 1440×900、1600×1000、1920×1080、2048×1320，人工看 light／dark 截圖後才聲稱 visual review 完成。不寫秘密，不新增架構邊界，不發布 artifact.cafe。繁中省略 `meta.locale` 並揭露 Viewer UI／HTML lang 的英文 fallback。
+
+## L01 執行前紀錄
+
+Human 已授權本輪一次新 OAuth 並確認同一 OAuth App 配置適用性；不讀秘密、不修改工具。完整八段設計與固定人工語義要求見 [E008](../../experiments/E008/README.md)，四態／三層證據與停止條件沿用本設計。工具來源 `d067c2c`、三檔 SHA 凍結，0/1 使用，尚未執行。
+
+## E008 執行結果與判準保持
+
+[安全 JSON](../../experiments/E008/safe-result.json)已回報當次 HTTP400／invalid_grant／無 token、fresh／single、prepared consistent／omitted；這不是遠端 wire。兩名只見描述＋固定判準的全新 reader 已先封存，共同 verifier_required 聲明及不一致的當次因果分開保存。依原分歧停止規則，主要假設無法判定，不改判準、CLI 模板、原始 outcome／proof 或歷史結果。1/1 已用盡；原文不再保存、重建或重新判讀。此前未執行／0/1 文字是執行前快照，當前結果見 [E008](../../experiments/E008/README.md)。

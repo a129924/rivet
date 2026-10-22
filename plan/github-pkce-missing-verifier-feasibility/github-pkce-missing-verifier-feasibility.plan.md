@@ -51,3 +51,11 @@ TC04–TC07 的真人分支現在未執行；目前只驗證文件契約，不�
 ## 完成與停止
 
 無須實驗則保留來源、版本、事實、推論、限制與決策影響；需要但未准 live 則保留具體缺口，以未執行及 Human boundary 交付。實驗四態與本輪任務完成否分開；無法判定須列缺失與限制，不能放行受阻的安全決策。可信反例只交原變更流程。所有歷史額度／原文同意不延續；正式登入 UI 仍依原計畫推進。
+
+## L01 本輪執行授權（2026-10-22）
+
+Human 明示開始一次真人 OAuth；另外允許安全 gate 後手動單欄 copy 與兩名獨立 AI 判讀，確認 OAuth App 同 client／secret／callback 設定。只開啟既有條件式 L01，固定一次／新 code／單交換、開始授權即耗唯一機會，不補次。執行前設計記於 [E008](../../experiments/E008/README.md)；其 README／本 topic 的必要狀態及有限結果屬本輪可寫入範圍，所有舊 topic／工具／歷史實驗仍唯讀。當前未執行，0/1 使用，M08 Human review 不視為已完成。
+
+## E008 收尾範圍
+
+Human 單次操作與先封存的兩 reader 結果已取得，1/1 使用；因果分歧按事前規則無法判定，原 CLI 結果不覆寫。後續只整合 E008／本 topic 有限證據，更新新長期文件及最小索引，交獨立 Tester／Reviewer後依原授權 topic commit／push 更新 Draft PR #65，再停 Human review。不追加 OAuth／reader、不重判原文，不改舊 topic 或正式程式。
