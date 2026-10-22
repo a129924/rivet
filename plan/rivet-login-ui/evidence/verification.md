@@ -2,7 +2,24 @@
 
 2026-10-22；branch `feat/rivet-login-ui`；base `14d0832f042720889993d769b4cbfb720078e6b1`。所有寫入僅在已授權 feature worktree。IM-01初始尚未commit／push／PR；目前code commit與發布停點以下節為準。本文保留Implementer歷史及獨立Tester／Reviewer交接，不混同各角色verdict。
 
-## RV-02 後交付準備（目前狀態）
+## Draft PR 交付／Human review（目前狀態）
+
+RV-02正式`approved`／required fix `None`，Show／Hide focus defect closed；TE-04最終source的Show／Hide四次＋rapid4、Back／Reset／submit departure與canonical Return／Escape，以及新版四份真native圖已獨立通過bounded驗證。完整Tab／Shift-Tab traversal、VoiceOver實際朗讀／announcement、大字、IncreaseContrast與ReduceMotion啟用條件仍pending Human。公開payload授權與成果採用分開；Human尚未決定採用。
+
+IM-04已完成commit `6fc18b3c040997155d84ca85abba48abc1a61d6c`（`fix(presentation): 保留 PAT 顯示切換後的輸入焦點`），精確7檔，完整hooks全passed。Human明確同意將程式／測試／原始素材／文件圖面公開到`a129924/rivet`後，正常非force push成功，`ls-remote`精確feature branch SHA與該commit一致；舊兩次自動拒絕保留為歷史，不再是blocker。
+
+GH-01由Dispatcher透過connector建立並attach [Draft PR #66](https://github.com/a129924/rivet/pull/66)：draft=true、base=`dev`（建立時API SHA `613a505025774b3841ab73b4ed3b8774be38274a`）、source head=`6fc18b3c040997155d84ca85abba48abc1a61d6c`。目前交HC-01 Human review，沒有merge／release；本輪只補兩份metadata，不再改source、tests、四張native PNG或凍結Archify。後續metadata commit不在自身文件預填SHA。
+
+### PL-02：實際 PR source 變更圖
+
+獨立Reviewer依真PR base `613a505025774b3841ab73b4ed3b8774be38274a` → source head `6fc18b3c040997155d84ca85abba48abc1a61d6c` 完成本地map；三點diff merge-base=`14d0832f042720889993d769b4cbfb720078e6b1`，共40files。Pinned CLI0.11.0 validate／render均exit0；1view／4lanes／10nodes／12edges／6steps，23個file refs已對exact source head核對。只核source／manifest與SVG XML labels，沒有raster實看，map不取代correctness review。
+
+- Graph SHA-256：`188661884b6a923cfaae627816d16931c1bf8f19485d64433799fb55f45ee1cb`；contentHash=`ada650d6d967b53c01374cd8dc692432`。
+- SVG：18851bytes、1708×596；contentHash=`c4f3346b5587256a984bf8c43a58a932`。
+- 外置位置：`$TOPIC_SCRATCH/pr-lens/6fc18b3/graph.json`、`SOURCE.md`、`rendered/manifest.json`、`rendered/login-ui-change-light-c4f3346b5587256a984bf8c43a58a932.svg`。未上傳或發布map。
+- 此map明確bounded於source `6fc18b3`，不包含本輪後續兩份metadata變更，不能冒稱最終metadata head map；不為metadata自參照重產圖。
+
+## RV-02 後交付準備（歷史）
 
 Dispatcher交接獨立RV-02正式`approved`、required fix `None`：TE-03 Show／Hide焦點缺陷已closed。TE-04已獨立親驗最終source／debug與wrapper binary SHA一致、Show／Hide四次＋rapid4保值／focus、Back／Reset／submit departure與canonical Return／Escape；新版四份1×原生PNG及IM-03／TE-04 logs已核對。Public API／七態／PAT清除不變。完整traversal、VoiceOver實際朗讀、大字、IncreaseContrast／ReduceMotion啟用條件仍pending Human，不把bounded通過當全部原生驗收或UI採用。
 
