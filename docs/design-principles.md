@@ -13,7 +13,7 @@
 - 每個 Domain BC 的 Core、UseCase 與 Port 不依賴 GitHub 外部協定或 transport；該 BC 未來自己的 Infra 負責 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping。
 - 外部 GitHub DTO、HTTP status、OAuth／Keychain 細節與 infrastructure failure 不得洩漏到核心 BC，也不得形成 BC-to-BC compile-time dependency。
 - 每個 BC 擁有自己的 failure contract；即使 `GitHubIntegration` 未來對 raw transport 或 GitHub error 作 technical classification，也只有各 BC Infra 可將它映射為該 BC 語意，絕不形成 shared BC failure contract。
-- `GitHubIntegration` 是已實作的 non-BC shared GitHub-specific integration module；目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及 public、`Sendable`、async 的 `GitHubAccessTokenProvider` token-acquisition contract。後者尚無 PAT 或 OAuth conformer，且不處理 lifecycle、request、transport、401 recovery 或 retry。同一 target 已公開 REST 四 methods／雙入口與 GraphQL Query／Mutation contracts，並提供 caller-owned provider 的 ready Scope；各 BC adapters 仍延後。完整 REST endpoint 能力、Keychain credential adapter 與初次 OAuth 授權整合、共通 request headers／API version、pagination、rate limit、一般 retry 與 shared configuration 仍為 deferred capability；未來只有各 BC Infra 可採用跨 target 的 shared technical capability，它不進入 Core、UseCase 或 Port，也不依賴任何 BC。endpoint-specific media type、DTO translation、BC failure mapping 與 business meaning 留在各 BC Infra。
+- `GitHubIntegration` 是已實作的 non-BC shared GitHub-specific integration module；目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及 public、`Sendable`、async 的 `GitHubAccessTokenProvider` token-acquisition contract。後者尚無 PAT 或 OAuth conformer，且不處理 lifecycle、request、transport、401 recovery 或 retry。同一 target 已公開 REST 四 methods／雙入口與 GraphQL Query／Mutation contracts，並提供 caller-owned provider 的 ready Scope；各 BC adapters 仍延後。完整 REST endpoint 能力、Keychain credential adapter、共通 request headers／API version、pagination、rate limit、一般 retry 與 shared configuration 仍為 deferred capability；未來只有各 BC Infra 可採用跨 target 的 shared technical capability，它不進入 Core、UseCase 或 Port，也不依賴任何 BC。endpoint-specific media type、DTO translation、BC failure mapping 與 business meaning 留在各 BC Infra。
 - `GitHubIntegration` 另已交付 OAuth credential lifecycle runtime：adapter-facing `OAuthCredentialStore`／`OAuthTokenFetcher` ports 與 actor-isolated `OAuthTokenProvider` 負責 restore、expiry-first refresh、rotation persistence、snapshot version 與 single-flight。client 只取得 `TokenSnapshot(accessToken, version)`；已交付的 Query／Mutation／REST clients 重用此 runtime，HTTP 401 分類與原工作的最多一次 recovery retry 屬於 client，不屬 provider。Keychain OAuth credential adapter 與各 BC adapters 仍延後。
 - Presentation Session 是 UI 狀態，不是假裝成 Bounded Context。
 - `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
@@ -28,6 +28,18 @@
 - 僅 `sdd-workflow-contract` 定義或理解 SDD；其他 skill 必須以完成自身工作所需的最小輸入、輸出與安全邊界獨立運作，不假設 topic artifacts、phase、verdict 或其他角色職責存在。
 
 GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic HTTPClient 執行固定 refresh POST；public `OAuthTokenFetcher.refresh` 使用 typed `OAuthTokenRefreshError`。只有可信純 error 的憑證拒絕映射為 `.authenticationRequired`；設定錯誤維持 `.refresh` 且可再次嘗試。輪替未知與遠端已接受後的 persistence failure 停止該 provider，保留 store。這些 GitHub-specific 分類屬於 GitHubIntegration；通用 HTTPClient 與各 BC 的業務 failure 邊界維持。[完整契約](architecture/github-oauth-dual-client.md)記錄取消與過期行為。
+
+## 正式 OAuth 能力與獨立驗證 App
+
+`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
+
+2026-10-21，Human 在來源版本 `e941d88` 的獨立驗證 App 完成真實授權；agent 觀察實際 API 成功與同程序再次查詢成功。舊版 `e63eeb2` 證據另保留；現行 canvas v2 的人工互動已通過。2026-10-21 反向 PKCE missing／wrong 各執行一次，均 HTTP400 拒絕但原因 unknown，兩者結論皆無法判定；完整遠端 refresh／401 本輪不執行，持久化亦未因此驗證。詳見 [首次 OAuth 契約](architecture/github-first-sign-in.md)。
+
+### Q 輪：獨立反向 PKCE 診斷 version 2
+
+本輪僅改善獨立驗證 CLI 的有限脫敏分類，不改正式 OAuth、credential/provider/scope或refresh/401契約。事前固定完整模板與case/衝突規則，區分GitHub拒絕及已證明PKCE拒絕；僅提及verifier、一般invalid_grant或unknown都不是通過證據。P兩次HTTP400 unknown/indeterminate保留，不追補原回應。Q新missing/wrong各一次、總2/2已用完：兩案HTTP400 invalid_grant/code_problem、無token，description unknown且mentions_verifier=true，均無法判定；hint不能證明PKCE原因，不擴表或重試。受控25tests通過不代表遠端通過。[新版來源與證據](../plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md)。正常登入/再次查詢及canvas既有Human結果沿用；正式Rivet產品登入UI、完整遠端refresh/401仍未交付或pending。
+
+兩個驗證 App 分屬首次登入與持續連線 topic，證據與來源版本各自保留；下節的持續連線驗收不回填首次登入 topic 的歷史 pending，兩者都不代表正式 Rivet 產品登入 UI 已交付。
 
 ## 完整流程驗證與正式產品的歸屬
 

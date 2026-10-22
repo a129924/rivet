@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "w01",
+      "description": "The authorization server authenticated a different application than the one to which this request was addressed. That client identity discrepancy caused this refusal; the submitted proof was not evaluated.",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "w02",
+      "description": "An operator attached the sentence \"the verifier differs from the challenge\" as an example of a possible diagnostic. The attachment does not state that this happened in the current exchange, and no actual rejection cause is supplied.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "w03",
+      "description": "The authorization code was located and remained eligible for redemption. The server nevertheless refused this redemption because the verifier presented now did not produce the challenge bound to that code.",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "w04",
+      "description": "This authorization code had already been consumed by a completed redemption. Its prior use, rather than any finding about the proof key, is why the server refused the current redemption.",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "w05",
+      "description": "The investigation ruled out a mismatch between verifier and challenge as the cause of this refusal. It did not identify an expired code, a client configuration fault, or any other actual cause.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "w06",
+      "description": "Either a revoked grant or an unacceptable proof could explain this response. The available report cannot distinguish those alternatives and does not assert that either one occurred.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "w07",
+      "description": "The submitted callback address belongs to a different registration from the callback permitted for this client. The server rejected the exchange on that registration mismatch, before inspecting the authorization code or verifier.",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "w08",
+      "description": "Although the application credentials were accepted, proof verification found that the submitted verifier corresponds to a different challenge from the one saved for this authorization. That discrepancy caused the refusal.",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "w09",
+      "description": "Were a code previously redeemed, a new redemption would have to fail. This statement describes that rule only; it neither reports prior redemption nor establishes the reason for the response being examined.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "w10",
+      "description": "The user revoked this grant before the exchange reached the server. The refusal is attributed to that revocation; the report explicitly makes no adverse finding about the verifier.",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "w11",
+      "description": "The server refused the exchange because the client registration",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "w12",
+      "description": "The secret supplied for the named application is not a credential registered to that application. Client authentication therefore failed, and that failure is the stated reason no token was issued.",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "w13",
+      "description": "The report asserts that verifier comparison alone caused the rejection. The same report also asserts that verifier comparison succeeded and played no part in rejecting it. Neither assertion is withdrawn or given precedence.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "w14",
+      "description": "For this request, the saved challenge belongs to the correct authorization, but hashing the supplied verifier yields a different value. The server states that this failed correspondence, not code expiry, prevented issuance.",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "w15",
+      "description": "The authorization represented by this code was withdrawn by the resource owner. The server denied redemption because that grant is no longer active, even though the application configuration passed validation.",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "w16",
+      "description": "The exchange was refused, but the diagnostic record was omitted from this response. The response gives no explanation from which the rejecting condition can be established.",
+      "expected_category": "indeterminate"
+    }
+  ]
+}
