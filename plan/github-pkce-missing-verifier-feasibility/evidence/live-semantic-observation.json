@@ -1,0 +1,24 @@
+{
+  "experiment": "E008",
+  "source": "human_manual_description",
+  "reader_independence": "fresh_context_description_and_fixed_criteria_only",
+  "readers": [
+    {
+      "id": "A",
+      "pkce_causality": "not_asserted",
+      "provider_claim": "verifier_required"
+    },
+    {
+      "id": "B",
+      "pkce_causality": "asserted",
+      "provider_claim": "verifier_required"
+    }
+  ],
+  "provider_claim_consensus": true,
+  "pkce_causality_consensus": false,
+  "experiment_status": "無法判定",
+  "safe_cli_result_received": true,
+  "retry_allowed": false,
+  "safe_cli_result": "../../../experiments/E008/safe-result.json",
+  "raw_description_saved_to_repo_or_files": false
+}
