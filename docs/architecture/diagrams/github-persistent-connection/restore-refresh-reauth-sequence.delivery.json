@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-persistent-connection/restore-refresh-reauth-sequence.json",
+  "output": "docs/architecture/diagrams/github-persistent-connection/restore-refresh-reauth-sequence.html",
+  "specification": {
+    "sha256": "9c65826b91c5d0204422f73770135646f107ba9b7018ca2e0c5dec18a979c542",
+    "bytes": 3835
+  },
+  "artifact": {
+    "sha256": "6e4824e66f0b68ecedfec14e39a60da625a75a51eb60cab57c80d5ccbf341c8a",
+    "bytes": 704919
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

@@ -97,3 +97,11 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 ### Q 輪：獨立反向 PKCE 診斷 version 2
 
 本輪僅改善獨立驗證 CLI 的有限脫敏分類，不改正式 OAuth、credential/provider/scope或refresh/401契約。事前固定完整模板與case/衝突規則，區分GitHub拒絕及已證明PKCE拒絕；僅提及verifier、一般invalid_grant或unknown都不是通過證據。P兩次HTTP400 unknown/indeterminate保留，不追補原回應。Q新missing/wrong各一次、總2/2已用完：兩案HTTP400 invalid_grant/code_problem、無token，description unknown且mentions_verifier=true，均無法判定；hint不能證明PKCE原因，不擴表或重試。受控25tests通過不代表遠端通過。[新版來源與證據](../../plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md)。正常登入/再次查詢及canvas既有Human結果沿用；正式Rivet產品登入UI、完整遠端refresh/401仍未交付或pending。
+
+兩個驗證 App 分屬首次登入與持續連線 topic，證據與來源版本各自保留；下節的持續連線驗收不回填首次登入 topic 的歷史 pending，兩者都不代表正式 Rivet 產品登入 UI 已交付。
+
+## GitHub 持續連線獨立驗證 App
+
+`github-persistent-connection` 的正式交付是 [`GitHubConnectionVerification`](../../apps/GitHubConnectionVerification/README.md) 驗證工具、可行性結果及限制。所有初次授權、DPK adapter、UI、coordinator、probe、受控clock／receipt與tests留在App-local；不新增BC或正式產品登入能力。production Sources／Tests／Package對topic前基準zero-diff，既有provider／scope／雙client／generic HTTP責任不變；不留新增正式停止API、共用UI或驗證依賴。
+
+[新版責任canvas與流程圖](diagrams/github-persistent-connection/verification-host-v2/BUILD.md)反映驗證App單向使用既有public契約；provider在runtime經注入port呼叫App-localadapter，不形成production反向import。整個移除驗證App後production build／tests仍通過。[完整契約／結果界線](github-oauth-dual-client.md#獨立驗證-app-與可行性結果)連至本輪新host真人證據；舊production歸屬圖與原測量只作歷史保留。profile更新後讀回維持未驗證、Human已接受限制。

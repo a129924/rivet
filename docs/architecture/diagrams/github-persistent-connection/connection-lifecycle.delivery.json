@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "docs/architecture/diagrams/github-persistent-connection/connection-lifecycle.json",
+  "output": "docs/architecture/diagrams/github-persistent-connection/connection-lifecycle.html",
+  "specification": {
+    "sha256": "730a7d58eb2ee283a2da01560049e2478a6986128e54f80f76c49dd611ecd66e",
+    "bytes": 3117
+  },
+  "artifact": {
+    "sha256": "b6d98dab3380ae10c40685045d5b926f035a88c90fbbe66044fc84e1832172ca",
+    "bytes": 700775
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

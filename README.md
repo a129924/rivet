@@ -66,3 +66,11 @@ Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fi
 ## X：唯一 wrong 收尾（2026-10-22）
 
 來源`4dbf3df`，工具凍結未改。native正常明確copy／Human手貼核對passed；本次唯一wrong為HTTP400 invalid_grant／無token／遠端拒絕，兩獨立AI的單欄語義共識為`verifier_mismatch_asserted`（`provider_description_ai_review`）。fresh／single及prepared一致、valid_different／challenge不同只支持這一次拒絕且provider歸因verifier不符，不是普遍enforcement／wire證明。自動v3仍indeterminate／provenfalse、description unknown／match none，所有歷史保留；原文不保存。新預算1/1 used，本輪結束、不得再執行case／OAuth／研究。正常APIpassed、missing舊unknown及refresh/401pending不變；native正常路徑不推論timeout／cancel／OS清除，67既有測試未重跑。[安全來源與三層限制](plan/github-first-sign-in/evidence/pkce-semantic-review.md)。文件待最終獨立review／原PR61交付後Human review，無新增Human操作。
+
+兩個驗證 App 分屬首次登入與持續連線 topic，證據與來源版本各自保留；下節的持續連線驗收不回填首次登入 topic 的歷史 pending，兩者都不代表正式 Rivet 產品登入 UI 已交付。
+
+## GitHub 整條流程可行性驗證
+
+[`GitHubConnectionVerification`](apps/GitHubConnectionVerification/README.md) 是獨立驗證工具，畫面明示驗證用途；交付的是「登入 → 保存 → 重啟還原 → 自動刷新 → 輪替後讀回 → API」的可行性結果與限制。初次授權、DPK adapter、UI、coordinator、probe、受控到期與收據全部位於該 App；正式 Sources、共用 RivetPresentation 與 root package 保持 topic 前契約。移除整個驗證 App 後 production 仍可建置與測試，沒有新增正式產品登入能力。
+
+2026-10-21 新驗證 App 已通過真 GitHub 授權／DPK 保存、同版本新程序還原、同身分真正 Clean／Build 還原、受控 provider 到期觸發真刷新與保存、輪替後新程序讀回與同帳號 API；各段 Human 系統提示皆0次。適用有效 profile、同機同GUI使用者、相同AppID／private group／原certificate。profile更新後讀回仍未驗證、使用者已接受限制；受控觸發不代表自然到期已測。詳見[新版真人證據](plan/github-persistent-connection/evidence/verification-host-live.md)、[責任與流程圖](docs/architecture/diagrams/github-persistent-connection/verification-host-v2/BUILD.md)及[逐檔歸屬清單](plan/github-persistent-connection/evidence/verification-host-manifest.md)。舊2026-10-20 Rivet名義host結果保留為原版本歷史，不能冒充本 App 的驗收或正式產品交付。

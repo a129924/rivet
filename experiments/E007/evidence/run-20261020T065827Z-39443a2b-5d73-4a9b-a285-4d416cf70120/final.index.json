@@ -1,0 +1,44 @@
+{
+  "cleanupComplete": true,
+  "completedBeforeDeadline": true,
+  "endedUTC": "2026-10-20T07:20:14.453347+00:00",
+  "files": {
+    "cleanup.human.json": {
+      "bytes": 429,
+      "sha256": "aa8942c0da28cff0e149d007041219ee644ba44d4ed2e8d0c7070d299127eeea"
+    },
+    "cleanup.machine.json": {
+      "bytes": 578,
+      "sha256": "26125b6a8f902420f9aa49497559226f32139bc3eb8c5c7fb10c169b4122afef"
+    },
+    "phase-1.human.json": {
+      "bytes": 429,
+      "sha256": "55164b78e9a0df1c0d62b47940fc807b3e2ac2ccc89b7658f45c2f0b312ae464"
+    },
+    "phase-1.machine.json": {
+      "bytes": 754,
+      "sha256": "af8830c32241409bf9a125f02be1de8fccc764598bfca789eac182b603db826c"
+    },
+    "preflight.machine.json": {
+      "bytes": 177,
+      "sha256": "a65c857e564678ac9a8a7a98227aab4e61a8e6fbe9a336ed14a67f2fa4489096"
+    },
+    "window.json": {
+      "bytes": 459,
+      "sha256": "c6bd6786abce95affb4105ec983bc6154e507016913e24937d39d29f6de829d1"
+    }
+  },
+  "humanProjectClosedDeclared": true,
+  "namespace": "39443a2b-5d73-4a9b-a285-4d416cf70120",
+  "observationMode": "human-only",
+  "privateFilesRemoved": true,
+  "scope": "live receipts; independent Tester/Reviewer receipts are added separately",
+  "sourceSHA256": {
+    "ProfileRenewalProbe.xcodeproj/project.pbxproj": "8cb08f416dc753c49b9bc3ea447ce5c75fa3ffb97388d198895b7a50ad0e6b7b",
+    "Resources/Info.plist": "9d7ad64ccf83deee5e1b6a09802362214640b19e6f1ba25313aa02a14b33f8c4",
+    "Resources/ProfileRenewalProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Sources/ProfileRenewalProbe.swift": "1c55ea950ddd9841cf1ba372ef7da190e6bb86127f798dfd8983d71edfe73958",
+    "scripts/run_profile_renewal.py": "62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484"
+  },
+  "synthetic": false
+}

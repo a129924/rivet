@@ -38,3 +38,13 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 ### Q 輪：獨立反向 PKCE 診斷 version 2
 
 本輪僅改善獨立驗證 CLI 的有限脫敏分類，不改正式 OAuth、credential/provider/scope或refresh/401契約。事前固定完整模板與case/衝突規則，區分GitHub拒絕及已證明PKCE拒絕；僅提及verifier、一般invalid_grant或unknown都不是通過證據。P兩次HTTP400 unknown/indeterminate保留，不追補原回應。Q新missing/wrong各一次、總2/2已用完：兩案HTTP400 invalid_grant/code_problem、無token，description unknown且mentions_verifier=true，均無法判定；hint不能證明PKCE原因，不擴表或重試。受控25tests通過不代表遠端通過。[新版來源與證據](../plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md)。正常登入/再次查詢及canvas既有Human結果沿用；正式Rivet產品登入UI、完整遠端refresh/401仍未交付或pending。
+
+兩個驗證 App 分屬首次登入與持續連線 topic，證據與來源版本各自保留；下節的持續連線驗收不回填首次登入 topic 的歷史 pending，兩者都不代表正式 Rivet 產品登入 UI 已交付。
+
+## 完整流程驗證與正式產品的歸屬
+
+`github-persistent-connection` 交付獨立 `apps/GitHubConnectionVerification` 驗證工具與受限可行性結果，不交付正式產品登入。其UI、OAuth session、DPK adapter、coordinator、probe、App-local refresh／DTO、停止觀察tracker、受控時鐘／收據及測試均收在驗證App；不改共用RivetPresentation、production public API或internal visibility。既有provider／scope／雙client責任維持。
+
+驗證App可使用既有public契約；production不得反向依賴驗證App。移除整個App後，原production仍可build／test。驗證用tracker只觀察實際refresh／save結果，不能額外呼snapshot偽裝純觀測，也不能為驗證增加production控制開關或收據API。取消仍等原tracked Task settled；重授權先退休、成功保存新bundle才建立新generation，舊provider不復活。
+
+本次真GitHub與真DPK、fake-only失敗測試、受控到期各自分列，舊host觀察保留來源版本。[新版完整流程結果](../plan/github-persistent-connection/evidence/verification-host-live.md)僅證受限環境可行；profile更新後讀回仍未驗證、Human已接受限制，不推論自然到期、certificate rotation或公開分發。完整歸屬及圖面見[長期說明](architecture/github-oauth-dual-client.md#獨立驗證-app-與可行性結果)。

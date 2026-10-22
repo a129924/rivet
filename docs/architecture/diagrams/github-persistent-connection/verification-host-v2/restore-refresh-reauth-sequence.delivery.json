@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-persistent-connection/verification-host-v2/restore-refresh-reauth-sequence.json",
+  "output": "docs/architecture/diagrams/github-persistent-connection/verification-host-v2/restore-refresh-reauth-sequence.html",
+  "specification": {
+    "sha256": "e93b852eb17c738352cf9cc9bafb1cd77df3d63221e20bb60af67a0a6552600a",
+    "bytes": 4522
+  },
+  "artifact": {
+    "sha256": "6acdda69e45e85fcfb6d516651c2ffb9aefdf337742c4fd751fc9febce6e58fc",
+    "bytes": 707838
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

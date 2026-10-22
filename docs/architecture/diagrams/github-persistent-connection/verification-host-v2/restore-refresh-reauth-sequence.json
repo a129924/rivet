@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "驗證 App 還原與輪替：先保存再使用",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1250,
+      800
+    ]
+  },
+  "participants": [
+    {
+      "id": "verify-app",
+      "type": "frontend",
+      "label": "驗證協調"
+    },
+    {
+      "id": "verify-store",
+      "type": "database",
+      "label": "驗證 DPK"
+    },
+    {
+      "id": "baseline-provider",
+      "type": "backend",
+      "label": "既有 provider"
+    },
+    {
+      "id": "verify-fetcher",
+      "type": "security",
+      "label": "驗證 refresh"
+    },
+    {
+      "id": "remote-github",
+      "type": "external",
+      "label": "GitHub.com"
+    },
+    {
+      "id": "baseline-clients",
+      "type": "backend",
+      "label": "既有雙 client"
+    }
+  ],
+  "messages": [
+    {
+      "id": "rotation-step-1",
+      "from": "verify-app",
+      "to": "verify-store",
+      "y": 180,
+      "label": "嚴格 inspect／核對 ID",
+      "variant": "security"
+    },
+    {
+      "id": "rotation-step-2",
+      "from": "verify-store",
+      "to": "verify-app",
+      "y": 215,
+      "label": "可信完整 bundle",
+      "variant": "return"
+    },
+    {
+      "id": "rotation-step-3",
+      "from": "verify-app",
+      "to": "baseline-provider",
+      "y": 250,
+      "label": "同 generation prepare",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rotation-step-4",
+      "from": "baseline-provider",
+      "to": "verify-store",
+      "y": 285,
+      "label": "經 wrapper restore",
+      "variant": "default"
+    },
+    {
+      "id": "rotation-step-5",
+      "from": "verify-store",
+      "to": "baseline-provider",
+      "y": 320,
+      "label": "完整六欄",
+      "variant": "return"
+    },
+    {
+      "id": "rotation-step-6",
+      "from": "baseline-provider",
+      "to": "verify-fetcher",
+      "y": 355,
+      "label": "到期 single-flight refresh",
+      "variant": "security"
+    },
+    {
+      "id": "rotation-step-7",
+      "from": "verify-fetcher",
+      "to": "remote-github",
+      "y": 390,
+      "label": "POST refresh／30 秒",
+      "variant": "security"
+    },
+    {
+      "id": "rotation-step-8",
+      "from": "remote-github",
+      "to": "verify-fetcher",
+      "y": 425,
+      "label": "接受完整新 bundle",
+      "variant": "return"
+    },
+    {
+      "id": "rotation-step-9",
+      "from": "verify-fetcher",
+      "to": "baseline-provider",
+      "y": 460,
+      "label": "tracker 記 accepted；回 bundle",
+      "variant": "return"
+    },
+    {
+      "id": "rotation-step-10",
+      "from": "baseline-provider",
+      "to": "verify-store",
+      "y": 495,
+      "label": "保存完整輪替結果",
+      "variant": "security"
+    },
+    {
+      "id": "rotation-step-11",
+      "from": "verify-store",
+      "to": "baseline-provider",
+      "y": 530,
+      "label": "真保存成功；clock 回 real",
+      "variant": "return"
+    },
+    {
+      "id": "rotation-step-12",
+      "from": "baseline-provider",
+      "to": "baseline-clients",
+      "y": 565,
+      "label": "共用 fresh snapshot",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rotation-step-13",
+      "from": "verify-app",
+      "to": "baseline-clients",
+      "y": 600,
+      "label": "唯讀 GET /user",
+      "variant": "default"
+    },
+    {
+      "id": "rotation-step-14",
+      "from": "baseline-clients",
+      "to": "remote-github",
+      "y": 635,
+      "label": "帶當次 Bearer 的 request",
+      "variant": "security"
+    },
+    {
+      "id": "rotation-step-15",
+      "from": "remote-github",
+      "to": "baseline-clients",
+      "y": 670,
+      "label": "200／有效帳號",
+      "variant": "return"
+    },
+    {
+      "id": "rotation-step-16",
+      "from": "baseline-clients",
+      "to": "verify-app",
+      "y": 705,
+      "label": "呈現同一帳號",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "停止觀察留在驗證 App",
+      "items": [
+        "wrapper 只記實際 refresh／save 結果",
+        "查 tracker 不額外 snapshot 或網路 I/O",
+        "輪替未知／接受後保存失敗停止，不重建繞過"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "新程序確認已保存輪替",
+      "items": [
+        "真 refresh accepted 1、DPK save 1",
+        "下一個 observe 程序讀回相同六欄 digest",
+        "受控 provider 到期不代表自然到期已驗證"
+      ]
+    }
+  ]
+}
