@@ -1,6 +1,6 @@
 # GitHub 連線驗證結果摘要
 
-來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`。本文彙整已有證據，不新增實驗、真人測量或正式產品採用決策。[導覽](README.md)列出各來源入口。
+來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本文彙整已有證據，不新增實驗、真人測量或正式產品採用決策。[導覽](README.md)列出各來源入口。
 
 ## E001–E007：已知結果與不能推論之處
 
@@ -52,9 +52,49 @@ E007 [第一輪](E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98c
 
 67 項工具受控測試與獨立 code review 沿原凍結證據，X 沒有重跑它們。原文只走已批准的單欄 clipboard／Human 手動 AI 閱讀例外；索引不保存描述原文、秘密、callback、code、state 或 token，不保證剪貼簿／同步／AI 服務留存消失。
 
+## PR #63／E009：首次登入、授權與有效帳號
+
+[PR #63](https://github.com/a129924/rivet/pull/63) 於 **2026-10-22T03:51:18Z** 合併，固定來源為 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`，最後 feature head 為 `fe9af0dbbbbf2cf72befd45fec23488e5ebf55c2`。[E009 原始分層紀錄](https://github.com/a129924/rivet/blob/fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4/experiments/E009/README.md)及[長期結論與 C01 更正](https://github.com/a129924/rivet/blob/fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4/docs/github-account-login-feasibility.md)採固定 permalink；此舊文件分支沒有 E009，故不使用指向缺檔的相對連結。合併 commit 是保存來源，不冒充真人或本機 build 的執行版本。
+
+### M03：Human 回報與事前判準
+
+Human 親自回報五步：使用工具的本次網址手動開啟；看見登入頁並完成登入；看見授權頁並親自同意；看見 callback 收到提示；返回工具看見 API 成功與帳號結果。另逐項確認三個前置／同輪條件：獨立／無痕 browser session 不共用原登入狀態且開始時未登入；測試帳號操作前尚未授權此 App；使用 E009 新版同一次手動準備的網址，API 成功在 300 秒內，期間未重啟／再啟動／改用舊網址。
+
+| 事前判準 | 判讀與來源 |
+|---|---|
+| 看見 GitHub 登入頁 | Human 明示確認。 |
+| 完成登入 | Human 明示確認；未獨立確認是否出現 2FA。 |
+| 看見並親自同意授權 | Human 明示確認。 |
+| 同流程取得有效帳號 | Human 確認同輪 API 成功／帳號結果，配合原碼契約支持。 |
+
+因此 **M03 為受限成功**，僅成立於上述 Human 陳述的單輪條件；不等於 agent 獨立看見全程。
+
+| 證據層級 | 實際取得與限制 |
+|---|---|
+| Human 觀察 | 上述五步與三項補充確認；不以 agent 未見錯誤代替。 |
+| Agent 觀察 | 當時程序 executable 路徑、磁碟 binary／六份 source snapshot 指紋核對；M03 binary 為 `990917ac41d5543f342b6f32bc45daf8c665e44a67fa7d82e2da6379ec74e877`。不是歷史 PID／整輪關聯收據。 |
+| 來源推論 | 同一 session／relay 的網址、callback 與單次 exchange，之後 probe；HTTP 200、正 id、trim 後非空 login 才是有效帳號。不是當輪 HTTP status／body／token POST 的獨立擷取。 |
+| 未取得 | 全程 UI、network trace／server log、精確起訖與獨立計時、歷史 session 關聯、實際配置供給者／是否使用互動 launcher、當時主對話 ready 收據及 2FA 提示。 |
+
+C01 已撤回 L01 的「新授權成功」判定，仍為無法判定；M03 是其後的新證據，沒有覆寫更正、A07 或 M01／M02 當時的未執行紀錄。A07 的 `e941d88` 真 API／再次查詢及 E002、P／Q、R→T、X 的來源、額度與判讀均保持各自歷史；M03 不新增反向 PKCE 證明或額度。
+
+### M04 工具交付與合併相容性
+
+PR #63 已納入同 repository 的初次 OAuth runtime、完整 `GitHubSignInVerification` host／必要 tests，以及 E009 一次性開發端 launcher。手動網址沿用同一 session／state／verifier、最多 300 秒、單輪後停止；開發端以 hidden TTY 供給程序環境配置，登入驗證者沒有配置欄位。Launcher 契約含 binary／程序身分核對、拒絕既有 App，不以秘密 argv／檔案／log 傳遞；這是工具機制，不追溯證明 M03 實際如何供給。
+
+M04 的 hosted mock 為 17 definitions／18 executions、0 failures，root 275 tests／34 suites；helper synthetic／strict checks 與六 commit hooks 通過。其後兩次同步 dev 的合併只處理文件／source 相容性；涉及 host 的最後一次依序 build-for-testing、test-without-building、normal build 通過，仍為 17 definitions／18 executions、0 failures，未重跑 root 全 suite 或新增真人授權。最後本機候選 binary 為 `66aa6f9af216198df2e982aa2e9295fc16f9124e05a848aadac9676ae57dba2f`；M04 先前 `781e1413…`／`96ee9b…` 與 M03 `990917ac…` 均保留各版歷史。合併、重建或 mock 通過都不構成新的 live 結果，也不保證其他環境重建同 hash。
+
+結果不外推完整零配置產品 UX、正式產品入口、production secret custody、persistence、公開發行或普遍 PKCE enforcement；不吸收並行 PKCE／產品 UI topic 成果。
+
+### #63 已完成的 Git 收尾
+
+Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peeled commit 與 `fccaf2b6` 一致；原 topic local／remote branch 與 managed worktree 已正常移除，沒有 force 或 GitHub Release。這是 #63 收尾事實，不代表本兩份索引的 Draft PR #64 已合併。
+
 ## 版本與仍未驗證的範圍
 
 2026-10-20 舊 Rivet 名義 host 的[原端到端紀錄](../plan/github-persistent-connection/evidence/product-e2e.md)及圖、0次提示保留為 `ca00bc0` 歷史，正式產品歸屬與完成宣稱已撤回，不能冒充新 App 驗收。舊 source `7e81b77` 僅供追溯；新舊真人 build 都依當時工作樹 source SHA、私有 project 與原生 build log 識別，不偽稱由後來才產生的 commit 建置。
+
+下段有效 profile／private group／原 certificate 等前提專指 PR #62 的 DPK 持續連線驗證；PR #63／E009 的獨立 SignIn host 使用 [ad hoc 簽章、不需 Team／profile／Keychain entitlement](https://github.com/a129924/rivet/blob/fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4/docs/architecture/github-first-sign-in.md#L19)，不套用該組儲存前提。
 
 已知可行性依賴有效 profile、同 Mac／GUI 使用者、相同 AppID／private group／原 certificate 等前提。以下均保留未驗證：
 
@@ -62,4 +102,4 @@ E007 [第一輪](E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98c
 - profile 更新後讀回（Human 已接受限制）及已過期 profile 的恢復。
 - certificate rotation、跨使用者／跨機器及公開分發。
 
-本摘要只涵上述已合併 PR #62／#61 的各自來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。文件補充與後續 Git 收尾依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)另記實際結果；本文不預填 tag、刪除 refs、移除 worktree 或後續 PR 的完成狀態。
+本摘要只涵上述已合併 PR #62／#61／#63 的各自來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引由既有 Draft PR #64 交付，本次修訂尚未合併至 dev，不預填其完成狀態。
