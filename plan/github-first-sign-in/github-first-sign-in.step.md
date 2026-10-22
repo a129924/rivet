@@ -9,6 +9,25 @@
 - 最後更新：2026-10-21，Implementer；主提交/hooks/push/原PR讀回/localmap完成，收尾帳本隨後同步。
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[plan](github-first-sign-in.plan.md)。
 
+## X：現行最小收尾帳本（2026-10-22）
+
+Current phase＝最終結果／actual-doc-diff review；Current step＝X07；Current status＝in-progress（docs已凍結待獨立Reviewer）；Upstream verdict＝X02外部獨立Plan-Reviewer approved、無required fix；外部Reviewer明示native gate可前進。Human收尾授權已明示。呼叫端核實publisher `4dbf3df`已交付原PR61，W08當時pending不改。Tester唯讀preflight確認現有helper可走protocol3 native公開synthetic。最新外部交接：已沿W現有Human check授權執行一次，launcher返回copied、總5.157s（含compile）／exit0／stderr可判空；Human已手貼與固定公開合成句相同，獨立Tester比對與外部Reviewer native gate已明示passed／可前進。native操作未讀UI／clipboard／secret且無OAuth／重試。其後Human已完成唯一wrong；新X預算1/1 used，實際safeJSON與三層整合由Tester凍結於本帳本末尾及semantic evidence X。六foreign唯讀hash合`4485ee0f9af238f2ef4bf0d2df922a4d965018934447cc97e6e2535a43371442`由外部Tester提供，本角色未讀其內容。
+
+| ID | Status | Owner role | 完成條件／證據 |
+|---|---|---|---|
+| X01 | completed | Plan-Creator | 四planning最小追加；不改工具／其他docs／歷史 |
+| X02 | completed | Plan-Reviewer | 外部獨立approved、無required fix |
+| X03 | completed | Tester＋Human | copied／5.157s／exit0／stderr空，Human手貼同公開句、獨立比對passed，XC01，不再執行native |
+| X04 | completed | Reviewer | 外部明示native gate可前進；準備交唯一wrong命令，不新增native操作 |
+| X05 | completed | Tester＋Human | 唯一wrong完成、safeJSON已交接，fresh/callback/single true；1/1 used不再補，XC02 |
+| X06 | in-progress | root＋全新Reviewer reader→Tester→Reviewer | 兩reader先封存一致verifier_mismatch_asserted；Tester三層安全整合已凍結，最終Reviewer待辦，XC03 |
+| X07 | in-progress | Plan-Creator→Reviewer→Implementer | 8docs最小收尾已凍結；待最終actualdiff review後原授權commit/push原Draft61，XC04 |
+| X08 | pending | Human | 交付後停Human review，不merge／追加嘗試 |
+
+Blockers＝目前無新增工具修正需求，待最終獨立Reviewer核實際支持範圍／docdiff。Human Check＝只餘X08交付後review，不新增操作。新X預算1/1 used，本輪結束，不再研究／授權／retry；共享R→T歷史1/1耗盡不變。HTTP拒絕／provider語義claim／本次單wrong受限支持分開，v3自動indeterminate／provenfalse及所有歷史保留。完整外部Tester安全結果見本帳本末尾與semantic evidence X；正常APIpassed、missing舊unknown、refresh/401pending不變。
+
+本slice九欄：In-Scope＝8owned docs實際收尾／外部facts；Out-Of-Scope＝原文／code／新OAuth／研究／圖／Git；ReadOnly＝工具／fixtures／六foreign及歷史；Written＝0；Deleted＝0；Modify＝既定八docs；Goal＝凍結交最終Reviewer再publisher；Non-Goal＝不產自審或普遍PKCE／wire結論；TestCase＝登錄native正常路徑passed、唯一wrong安全JSON及兩readerenum一致，不重跑67，未涵native timeout/cancel／OS或refresh401。本角色未Git／test／native／OAuth。
+
 ## W：現行規劃帳本（不改 U/V 歷史）
 
 來源469f2b0，原feature／branch／PR61。Current phase＝最終publicationreview／交付待辦；Current step＝W08；Current status＝pending；W02approved與外部W06codeapproved／無required fix已登錄，僅offline，Humanreviewpending。Human已批准單欄copy/AI例外與offline，風險界線見technical-spec W；OAuth0、6foreign readonly。
@@ -876,3 +895,9 @@ V05a輸出交接補註：當次工具回傳已完整保留16筆實際公開synth
 來源469f2b0＋Wdirtydiff，CLI/helper/test三凍結SHA一致，詳semantic evidence。親跑67tests／3.850秒／exit0，含Swift6 compile、v1/v3協定及mockclipboard；helper strictformat/SwiftLint --no-cache均exit0/0violations，diffcheck0。source核exact2field protocol3/四status、clickonly/noEnter/30scommon-mode/terminal與lateguard、cleanup-before-helper及既有privacy/pipe/stderr/watchdog。另AST/noTTY optin/互斥safe拒絕通過，fixtureSHA未改、readonly選定diff空、無pycache。未發現requiredfailure；help未列copyflag作discoverability限制交Reviewer，未代approved。未GUI/nativeclipboard/translation/OAuth/Git，未重跑盲讀或未變Swiftroot/App；實機native互動不冒稱通過，交W06。
 
 九欄：In-Scope＝WC01–02受控與WC03 source/mock層；Out-Of-Scope＝code/labels修改、nativeGUI/clipboard/translation/live/Git；ReadOnly＝工具/fixtures/正式source/六foreignApp/歷史圖證據；Written＝0；Deleted＝0；Modify＝semantic evidence與step自身結果；Goal＝交W06獨立實測證據；Non-Goal＝不代review/Human/native/遠端核准；TestCase＝67pass/strict0/diffcheck0/AST/noTTY/readonly/fixtureSHA通過，native未驗證。
+
+### X 獨立 Tester 收尾交接（2026-10-22）
+
+來源4dbf3df與三凍結工具SHA親查一致。唯一公開synthetic native正常視窗回copied／5.157秒／exit0，Human手貼內容與預定公開句逐字相同，外部Reviewer明示nativegate可前進；不涵timeout/cancel/clipboard清理/OS無痕。X02approved後Human執行唯一wrong＋copy，新budget1/1用盡。root安全欄位交接：HTTP400 invalid_grant、remote_rejectedtrue/tokenfalse；fresh/callback/singletrue、localconsistent/valid_different、shape/client/redirect/code一致、wrongchallengedifferenttrue/omittedfalse；兩獨立reader先於JSON各封存verifier_mismatch_asserted，無分歧，provider_description_ai_review只記語義claim。可支持當次合法但不同proof的交換被拒且provider將原因指向verifier不符；不是普遍PKCE或遠端wire證明。工具outcomeindeterminate/provenfalse、unknown/none與歷史原樣，完整安全JSON轉錄與來源限制見semantic evidence。無描述原文入檔、無新retry/positive/研究/refresh401。交Reviewer，不代approved。
+
+九欄：In-Scope＝X native既成結果/安全JSON/雙readerenum/三層收尾；Out-Of-Scope＝描述原文/秘密/新OAuth/研究/code/labels/Git；ReadOnly＝工具/正式source/fixtures/六foreignApp/全部歷史圖證據；Written＝0；Deleted＝0；Modify＝semantic evidence與本step自身事實；Goal＝交Reviewer實際支持範圍；Non-Goal＝不代全域proof或核准；TestCase＝native正常路徑/安全schema/sourcehash/本機條件/雙enum一致核對完成，不重跑未變測試或live。

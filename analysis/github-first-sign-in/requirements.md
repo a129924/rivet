@@ -5,6 +5,18 @@
 - Branch：`feat/github-first-sign-in`；base／Draft PR target：`dev`。
 - 配對：[technical-spec](technical-spec.md)、[plan](../../plan/github-first-sign-in/github-first-sign-in.plan.md)、[step](../../plan/github-first-sign-in/github-first-sign-in.step.md)。
 
+## X：已授權最小收尾（2026-10-22，待獨立規劃審查）
+
+Human已授權收尾；沿原feature／PR61／已交付HEAD `4dbf3df`。W08舊pending保留為當時歷史，最新publisher交付已由呼叫端核實。Tester唯讀preflight確認現有`launch_copy_helper`可走protocol3 native公開synthetic，無工具修正或新框架需要。
+
+先以無秘密公開synthetic完成native明確clickcopy，Human手貼公開句；不得讀clipboard。獨立Tester／Reviewer確認此離線方法可用且安全後，才執行新授權wrong一次：新auth／newcode／單一token POST，新X預算0/1→1/1，不retry／第二次。離線失敗或方法不安全即停止、不花live預算；此新預算不回補共享R→T已耗盡1/1。
+
+只允許既有gate後完整error_description<=4096UTF8bytes，Human主動copy手動貼AI；沿已接受的clipboard／同步／其他程式／AI服務留存及未知秘密殘餘風險。root與全新獨立reader僅看此description，各自先封存再討論；分歧／模糊／gate拒絕維持unknown。分開記HTTP遠端拒絕、provider聲稱mismatch及受限實驗支持範圍，不以keyword判pass、不改既有v3outcome或歷史。具體執行及八檔上限見plan X；本輪只四planning，未執行native／OAuth／判讀。
+
+### X 最終實際結果（外部Tester交接，優先於先前執行前狀態）
+
+來源`4dbf3df`、工具三SHA未變。native正常clickcopy／Human手貼核對passed；唯一wrong已完成，新預算1/1 used、本輪結束。HTTP400 invalid_grant／無token／遠端拒絕；兩獨立AI僅就單欄描述封存一致`verifier_mismatch_asserted`，來源`provider_description_ai_review`。配合本次fresh／single及prepared一致、valid_different／challenge不同，只支持這一次wrong交換被拒且provider歸因verifier不符，非普遍PKCE證明。自動v3仍indeterminate／provenfalse、description unknown／match none，歷史不改。完整安全來源見semantic evidence X；missing舊unknown、正常APIpassed與refresh/401pending保留。停止研究／追加授權；文件待最終獨立review及原PR交付後Human review，不增加新操作。
+
 ## W：單欄明確複製與 AI 閱讀例外（待獨立規劃審查）
 
 基線 `469f2b07eb425728b2b08eb3b8c9f09623b2c675`，原feature／branch／DraftPR61。Human已明確批准單欄copy與AI閱讀例外、實作並先離線驗證：只允許gate後完整error_description<=4096 UTF8bytes，Human主動copy、手動貼AI；不整份response／自動傳送。Clipboard其他程式／UniversalClipboard／history及AI服務可能留存，gate不能保證未知秘密或完全清除；此殘餘風險已告知並接受。OAuth新增0，正式source／App及6foreign dirty不碰，U/V與全部歷史保留，不接失敗機譯。

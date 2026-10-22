@@ -257,3 +257,75 @@ In-Scope＝實際技術／語義／code verdict、來源限制與停止；Out-Of
 W04 completed、W05 completed、W06 approved、W07 syntheticpassed；W08publication與Humanreviewpending。真nativeUI／clipboard仍未驗；copy不是semantic confirmation／proof，無actual provider raw、OAuth新增0／未放live。help未列copy旗標是discoverability限制、非requiredfix，toolsREADME已明列旗標／互斥／本輪禁止live命令。正常v1、U/V/PQRT與失敗中文route歷史不改。
 
 本文件slice九欄：In-Scope＝8docs外部最終facts與限制；Out-Of-Scope＝code/fixture/labels/foreign/live/OAuth/Git；ReadOnly＝所有凍結工具/fixture與舊evidence段落；Written＝0；Deleted＝0；Modify＝既定8owned docs；Goal＝交最終publicationreview；Non-Goal＝不代nativeUI或live核准、不泛化setpassed；TestCase＝只登錄獨立67與盲9+7結果，沒有本角色新測試。
+
+## X 獨立 Tester：Human nativecheck 與唯一 wrong 三層整合（2026-10-22）
+
+來源 HEAD `4dbf3dfff44e941f582e8609c4e9f840cc962d91`。親查工具仍凍結：CLI SHA `26894482d275636d4e736a648b0366ee6ce6b980e5fafb0683b80b40544ff0b9`、helper SHA `8505134d2130f1f99a1339cb9abbccabe894c2db73575c60d759d542a5a5e405`、test SHA `62d1849c1d1b16351b27b4b6ea1247c75a24a8c6fdf9b3c32908e733c3fde0c5`。未改code/fixtures/foreign App。
+
+### 已完成 native 正常操作層
+
+Human明示ready後，Tester只一次以既有正常launch_copy_helper及固定公開synthetic句啟動protocol3原生視窗。唯一回傳copied，5.157秒含編譯，exec exit0；Human自行滑鼠點copy、手貼公開句，Tester核對與預定source逐字完全相同。主agent後交獨立Reviewer，外部明示nativegate可前進。agent未讀既有clipboard或視窗原文、無截圖；無第二窗/重試/OAuth。這通過正常window→明確Human copy→手貼內容核對路徑，不涵30秒自然timeout、cancel/Enter/late native互動、剪貼簿清理還原或OS無留痕。
+
+### 本次 live 安全結果（非原文）
+
+X02外部approved、nativegate可前進後，Human自行執行唯一wrong＋copy；新auth開始前預算已記1/1，取消/失敗亦不補。Human先主動貼單欄描述供兩reader各自封存，之後另選取最後安全JSON，避免先複製JSON覆蓋唯一description。Tester未取得或讀寫描述原文。以下完整安全JSON由Human貼入、root原樣交接，Tester以排版格式轉錄且全部欄位值一致；非Tester直接讀Human原訊息，不附rawhash。欄名已對照凍結CLI，未由描述推導任何值。
+
+```json
+{
+  "callback_claimed": true,
+  "case": "wrong",
+  "copy_status": "copied",
+  "description_class": "unknown",
+  "description_has_client_word": false,
+  "description_has_expired_word": false,
+  "description_has_invalid_word": false,
+  "description_has_mismatch_word": true,
+  "description_has_missing_word": false,
+  "description_has_redirect_word": false,
+  "description_match_source": "none",
+  "description_mentions_challenge": true,
+  "description_mentions_pkce": false,
+  "description_mentions_verifier": true,
+  "description_present": true,
+  "diagnostic_class": "code_problem",
+  "diagnostic_version": 3,
+  "fresh_attempt": true,
+  "http_status": 400,
+  "local_checks": {
+    "authorization_observed": true,
+    "authorization_shape_valid": true,
+    "callback_return_to_request_prepared": "under_5s",
+    "client_id_same": true,
+    "code_same": true,
+    "local_consistency": "consistent",
+    "redirect_same": true,
+    "submitted_verifier": "valid_different",
+    "token_request_observed": true,
+    "token_request_shape_valid": true
+  },
+  "outcome": "indeterminate",
+  "pkce_rejection_proven": false,
+  "reason": "generic_code_rejection",
+  "remote_error": "invalid_grant",
+  "remote_rejected": true,
+  "signals_conflict": false,
+  "single_exchange": true,
+  "token_present": false,
+  "verifier_field_omitted": false,
+  "wrong_challenge_differs": true
+}
+```
+
+### 三層結論與限制
+
+1. **HTTP事實**：本次wrong單交換回HTTP400／invalid_grant、remote_rejected=true、token_present=false；GitHub確實拒絕這一次交換。
+2. **provider描述語義**：root先僅見描述封存verifier_mismatch_asserted（reason=explicit_actual_mismatch_assertion），全新獨立reader僅見同描述、不見case/JSON/前答，封存verifier_mismatch_asserted（reason=explicit_current_verifier_challenge_mismatch、hypothetical_only=false）。無分歧，共識來源provider_description_ai_review。這是provider明確聲稱當次verifier/challenge不符，不是v3模板命中或客觀遠端機制證明。只保存enum，不保存任何描述／判讀原文。reader獨立性依主agent明示交接。
+3. **受限單次實驗**：fresh/callback/single=true；實際prepared inputs之shape/client/redirect/code一致，wrong送valid_different、challenge不同且未省略verifier。可支持「這一次新授權、提交合法但不同proof的交換被拒，且provider描述將其歸因於verifier不符」的當次負向驗證觀察。不能由此證明所有PKCE配置、所有帳號或missing/任意句型；本機prepared不是遠端wire，under_5s不是code_age，false hints不排除其他原因。
+
+自動CLI完整保留outcome=indeterminate／pkce_rejection_proven=false、description_class=unknown／match_source=none；人工AI語義軸不覆寫它，不擴模板／改判準／改歷史。copy成功、HTTP400或keyword各自不等於proof。新X唯一1/1用盡，停止授權／重試／第二次／positive／研究；正常API與遠端refresh/401不重做，後者仍未因此驗證。此處為獨立Tester整合實際安全事實，交獨立Reviewer判收尾，不代approved。
+
+本slice九欄：In-Scope＝X安全結果/雙reader有限enum/既有localshape source及三層整合；Out-Of-Scope＝描述原文/secret/新OAuth或研究/工具與labels改動/Git；ReadOnly＝工具/fixtures/正式source/六foreign App/舊歷史證據及圖；Written＝0；Deleted＝0；Modify＝本evidence追加與step自身結果；Goal＝交獨立Reviewer具來源與限制的收尾證據；Non-Goal＝不代proof/全域PKCE/Reviewer或Human核准；TestCase＝native正常路徑passed、safeJSON與凍結schema/工具hash核對、兩reader一致及當次local條件符合；不重跑67tests/盲set、不進行新live。
+
+### X 文件收尾狀態
+
+本輪唯一1/1 used、操作結束；上列獨立Tester原段／安全JSON／三層限制保留，原文不追加、不追補。8owned docs最小回寫已凍結，待最終獨立Reviewer／原授權topiccommit-push原PR61，之後停Human review，不新增操作或研究。文件slice九欄沿plan X收尾記錄；Written0／Deleted0、Modify八docs，工具／圖／foreign未改，未重跑67或任何live。

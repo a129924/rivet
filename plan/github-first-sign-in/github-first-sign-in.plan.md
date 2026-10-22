@@ -6,6 +6,22 @@
 - 配對：[requirements](../../analysis/github-first-sign-in/requirements.md)、[technical-spec](../../analysis/github-first-sign-in/technical-spec.md)、[step](github-first-sign-in.step.md)。
 
 
+## X：最小收尾 execution amendment（2026-10-22）
+
+原feature／PR61／publisher已交付`4dbf3df`，不重寫W08歷史pending。依requirements／technical-spec X，Human已授權公開synthetic native copy→離線安全gate→wrong一次，不再新增授權停點；仍需獨立planning／執行結果審查。現在只四planning Modify，Written0／Deleted0。
+
+精確docs-only允許manifest（Modify最多8，非宣稱全改）：`analysis/github-first-sign-in/requirements.md`、`analysis/github-first-sign-in/technical-spec.md`、`plan/github-first-sign-in/github-first-sign-in.plan.md`、`plan/github-first-sign-in/github-first-sign-in.step.md`、`plan/github-first-sign-in/evidence/pkce-semantic-review.md`、`apps/GitHubSignInVerification/tools/README.md`、`docs/architecture/github-first-sign-in.md`、`README.md`（僅真需要才回寫）。Written0／Deleted0；工具code／fixtures／正式source／六foreign／圖／其他topic／全部舊證據ReadOnly，禁止暫存或還原foreign。
+
+每個開始／完成slice均列九欄並附實際子集：In-Scope＝現有工具公開synthetic native clickcopy、Human手貼與單次wrong／雙盲語義結論、安全docs回寫；Out-Of-Scope＝工具修正／框架／翻譯／第二次OAuth／自動傳送／歷史改判；ReadOnly＝上述非manifest與舊歷史；Written＝0；Deleted＝0；Modify＝八檔內實際必要paths，今次僅四planning；Goal＝有界收尾、如實分層結果後交付；Non-Goal＝copy／provider statement非普遍PKCEproof，不保證未知秘密或留存消失；TestCase＝XC01 native公開synthetic明確click＋手貼／cancel-timeout拒絕不通過、XC02安全gate與budget0/1→1/1單auth單code單POST／不retry、XC03兩reader完整語義先封存／分歧unknown／三層分離、XC04獨立文件review與原PR交付。每項僅記實測，不另建測試／診斷code。
+
+路由：X01四planning→X02獨立Plan-Reviewer→X03 Tester＋Human公開synthetic native→X04 Reviewer核離線方法；不通過即停不花新budget→X05 Human＋Tester單次wrong（開始即耗1/1）→X06 root＋全新reader分別封存、Tester安全結果／獨立Reviewer核支持範圍→X07必要docs回寫／獨立actualdiff review／既有授權topiccommit-push原Draft61→X08 Human review停點。不建新branch／PR、不merge。結果unknown亦如實交付，不增加第二次；任何方法不安全立即停。
+
+### X 本輪實際收尾與交付
+
+X02外部approved、nativegate可前進後，唯一wrong已完成，1/1 used不補。獨立Tester已凍結safeJSON與三層結論：當次HTTP400 invalid_grant／無token／拒絕；兩獨立reader共識`verifier_mismatch_asserted`屬provider聲稱；本次fresh/single與prepared一致／合法不同verifier及challenge不同支持該單次負向觀察。完整限制見spec X／semantic evidence X；原v3 indeterminate／provenfalse與歷史不改。源`4dbf3df`三工具SHA未變，未改工具／圖、不重測67；本輪操作結束、不再研究或授權。原授權docs commit/push原PR61，最終Reviewer後停Human review，無新Human操作步驟。
+
+本slice九欄：In-Scope＝8owned docs最小實際結果／結束狀態；Out-Of-Scope＝原文／工具／新OAuth／研究／圖／Git操作；ReadOnly＝工具／fixtures／六foreign／全部歷史；Written＝0；Deleted＝0；Modify＝上列八docs（本次actual均有安全狀態增量，不含code）；Goal＝凍結交最終actualdiff Reviewer，再交publisher；Non-Goal＝不代approved／不當普遍PKCE或wire證明；TestCase＝登錄Tester native正常passed與唯一wrong安全三層整合，67未重跑、refresh/401仍pending。
+
 ## W：最小受限實作 amendment（W02 pending）
 
 沿469f2b0／原feature／DraftPR61。Human已批准單欄clipboard／手動AI閱讀例外與先offline驗證；技術見technical-spec W。現在只四planning，W02獨立approved前不code／fixture；OAuth0、不live、不自動交換／AI傳送。U/V及全部歷史保留，失敗機譯不接入。

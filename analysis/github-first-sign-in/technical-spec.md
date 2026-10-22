@@ -3,6 +3,20 @@
 - Topic：`github-first-sign-in`；2026-10-20 Plan-Creator 驗證 host amendment，已獲獨立 Plan-Reviewer A02 approved（無required fix）。
 - 配對：[requirements](requirements.md)、[plan／manifest](../../plan/github-first-sign-in/github-first-sign-in.plan.md)、[step](../../plan/github-first-sign-in/github-first-sign-in.step.md)。
 
+## X：沿現有工具的收尾執行契約（2026-10-22）
+
+基線與授權見requirements X；不改工具、正式API、既有diagnostic_version=3或helper protocol_version=3，不加模板／翻譯／診斷框架，不調用V機譯。先以現有`launch_copy_helper`完成一次公開synthetic native視窗：Human明確clickcopy並手貼公開句；agent／Tester不得讀clipboard或以畫面取原文，copy僅操作證據，不是語義proof。取消／逾時／拒絕／手貼未完成不算通過；由獨立Tester記實際安全結果、Reviewer核方法安全，失敗即停且live預算仍0/1。
+
+只有離線gate通過才將X預算在新auth開始前記為1/1；一次wrong使用新auth／newcode／單POST，取消／失敗亦不補發、不retry。沿原known-secret／pure-error／URL等gate與helper前cleanup，僅完整<=4096UTF8bytes的error_description可由Human明確copy手貼；整response、secretcontext、rawstdout/log/file不准。gate拒絕或無可判讀描述即unknown，不繞過安全條件。runtime安全JSON與sourceversion可存，原文只走已批准的單欄clipboard／AI例外，不入repo／logs／files。
+
+root先只看description並封存四enum結論，再交全新獨立reader；第二reader不看前答／case／預期結果，核對完整因果／否定／條件／角色後獨立封存。分歧或模糊一律unknown，repo只存enum與安全來源`provider_description_ai_review`。HTTP拒絕是傳輸事實；provider聲稱verifier不符只屬描述語義；受限單次wrong實驗最多支持當次條件，不能推廣所有PKCE或以keyword／copy成功改判既有outcome／pkce_rejection_proven。已校準synthetic不保證未知provider句型可判；此次可誠實以unknown結束。
+
+### X 收尾結果及支持邊界
+
+獨立Tester已凍結安全JSON／三層整合，來源HEAD`4dbf3dfff44e941f582e8609c4e9f840cc962d91`及原CLI/helper/test三SHA不變。HTTP400 invalid_grant／tokenfalse／remote_rejectedtrue是當次事實；兩獨立reader先封存一致`verifier_mismatch_asserted`只屬`provider_description_ai_review`語義claim。fresh_attempt／callback_claimed／single_exchange及實際prepared shape/client/code/redirect一致、valid_different／wrong_challenge_differs支持當次負向觀察，不證一般enforcement或wire，under_5s不等於code age。自動v3原outcome=indeterminate／pkce_rejection_proven=false／description_class=unknown／description_match_source=none全部保留，未以AI或keyword改判。原文不入文件，完整安全證據引用既有semantic evidence X。
+
+native正常明確copy→Human手貼路徑passed不涵自然timeout／cancel／Enter／late／OS清除；工具未改、不重測67。新預算1/1 used，無retry／第二次／研究；missing歷史indeterminate、既有正常APIpassed、完整refresh/401pending不變。
+
 ## W：最小 copy-only private 契約（待 W02）
 
 沿基線469f2b0。只擴私有工具，不改正式API／v1流程／diagnostic_version=3／outcome或pkce_rejection_proven；不調用V機譯core。CLI新增opt-in `--copy-description-for-ai`，與`--review-semantics`互斥；沒有opt-in仍原v1，錯誤參數不啟動流程。此為未來case的有限plumbing，本輪不執行任何--case／OAuth／交換，不自動AI呼叫。

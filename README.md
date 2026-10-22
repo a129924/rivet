@@ -62,3 +62,7 @@ V03新fixture已獨立approved／frozen；V04a只保留installed-only translator
 ### W：單欄copy與AI閱讀的目前實作狀態
 
 Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fixture已freeze，W04三檔工具完成；獨立W05 Tester親跑67tests／3.850s／exit0、hash一致、Swift6compile／strictformat／lint／diffcheck0、mockclipboard及CLI互斥AST檢查通過；獨立W06 codeReview approved、無required fix，僅offline。新AI16兩blindreader各9/9decisive＋7/7unknown、分歧0，Tester已核分，labels未改；只代表該synthetic set，不推廣未知provider描述或當PKCEproof。真nativeUI／clipboard仍未驗，無actual provider raw／live。W08publication／Humanreviewpending；OAuth新增0、正常v1及U/V/PQRT歷史保留，失敗中文route不接入。 已實作的opt-in旗標為 `--copy-description-for-ai`，不代表現在可執行任何 `--case`；無新授權／交換／實際provider原文。只在gate及cleanup後，Human明確點擊才copy完整error_description<=4096UTF8bytes，不自動傳送、不顯示或寫出原文。Clipboard／同步／history／其他程式及AI服務留存風險仍在，不能保證未知秘密或完全清除。
+
+## X：唯一 wrong 收尾（2026-10-22）
+
+來源`4dbf3df`，工具凍結未改。native正常明確copy／Human手貼核對passed；本次唯一wrong為HTTP400 invalid_grant／無token／遠端拒絕，兩獨立AI的單欄語義共識為`verifier_mismatch_asserted`（`provider_description_ai_review`）。fresh／single及prepared一致、valid_different／challenge不同只支持這一次拒絕且provider歸因verifier不符，不是普遍enforcement／wire證明。自動v3仍indeterminate／provenfalse、description unknown／match none，所有歷史保留；原文不保存。新預算1/1 used，本輪結束、不得再執行case／OAuth／研究。正常APIpassed、missing舊unknown及refresh/401pending不變；native正常路徑不推論timeout／cancel／OS清除，67既有測試未重跑。[安全來源與三層限制](plan/github-first-sign-in/evidence/pkce-semantic-review.md)。文件待最終獨立review／原PR61交付後Human review，無新增Human操作。
