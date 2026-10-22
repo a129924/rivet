@@ -1,5 +1,65 @@
 # GitHub 持續連線：驗證產物歸屬回修帳本
 
+## 現行路由：合併後驗證摘要與收尾（D）
+
+- 2026-10-21 Reviewer：D05完成；phase=postmerge documentation publication；current_step=D06；status=pending；upstream_verdict=approved（D05，requiredFixes=[]）。
+- prep已核PR62 MERGED、M=`aa16de91b560027325419b7bc904d831851c9fcb`；原路徑切新`docs/github-connection-validation-summary`，HEAD=M且無upstream，原feature refs仍1c8保留。這是已完成準備，不等未做tag／刪branch／移worktree成功。Human最新明確授權適用，不重問。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
+|---|---|---|---|---|---|
+| D01 | completed | Plan-Creator | 六檔manifest／facts界線／Git安全與外部收尾收據補充 | 本四artifacts、prep既有收據；只改四份 | verdict=null，交D02 |
+| D02 | completed | Plan-Reviewer | 獨立審D補充 | 下列 D02 獨立規劃審查收據／受審 SHA | approved；requiredFixes=[]；只交D03 |
+| D03 | completed | Implementer | 新兩索引與適用帳本／來源交接 | 新README／VALIDATION-SUMMARY；下列來源與自驗收據 | implementation complete；不自審，交D04 |
+| D04 | completed | Tester | D-T01與六檔scope／links／privacy | 下列D04收據；29links／14來源SHA／1191未改tracked葉檔 | approved；requiredFixes=[]；只交D05 |
+| D05 | completed | Reviewer | facts／claims／lifecycle獨立審查 | 下列D05收據；14來源SHA／29links／六檔scope與1191原葉檔保持 | approved；requiredFixes=[]；只交D06 |
+| D06 | pending | Implementer | stagedmessage／fullhooks／docscommit/push/follow-up Draft PR | 待真commit/PR/refs | D05approved；不改dev／closedPR、不merge |
+| D07 | pending | Implementer | annotatedtag exactM normalpush／peeled核對 | 待真tag | collision停，不release |
+| D08 | pending | Implementer | fresh原remoteOID核1c8→delete；local原feature -d | 待客觀refs | 保留新docsrefs，變更停 |
+| D09 | pending | Implementer | 已push/0ahead/clean/untracked0/unlocked/nondetached→目標外normalremove | 待外部ownedprivatehandoff/final | 無force/prune；不為回填帳本重建worktree |
+
+Blockers／Human Check：D02、D04與D05均已approved／requiredFixes=[]，D03文件已完成；D06–D09尚待，未預填發布或收尾結果。沿新docs branch、原worktree、六檔manifest及requirements D九欄；所有source／App／graphs／realtests／Apple資產只讀，已安裝App不Quit。重大collision／dirty／未知資產停該步報，不新Humangate。最終follow-up Draft PR仍humanreview，不merge。
+
+Handoff：topic=github-persistent-connection；phase=postmerge planning review；四artifacts=changed；current_step=D02/pending；locked_decisions=六檔/原mergeM固定tag/新docsbranch與DraftPR/正常刪原feature及worktree/保留新docsrefs與所有驗收資產/不dev實作不merge；upstream_verdict=needs-rework（Planner scope finding，非本作者判決）；blockers=D02未審；assigned_role=Plan-Reviewer；next_objective=獨立審D補充。以下C/R/S全保留歷史，舊「不得刪branch／停humanreview」限制以Human最新明確授權的D契約為準。
+
+### D02 獨立 Plan-Reviewer 收據（2026-10-21）
+
+- verdict=approved；requiredFixes=[]。實讀專案README／design-principles／AGENTS、plan-reviewer／SDD及topic/routing契約、worktree-manager與pre-remove checklist、四artifacts的D補充；直接核兩新索引尚不存在，屬Written，四份artifacts僅追加D而不擴C source授權。其餘source／實驗／native圖／R06與production只讀，六檔界線明確。
+- 對E001–E007 README、新驗證App README及R06真人證據做必要來源抽查：E002 PKCE／overall unknown、E004真SQLite與fake credentials／refresh、E005 legacy 0/0/1 UX fail、E006有效同profile真DPK 0/0/0、E007兩輪renewal未執行及Human接受限制、新App真OAuth／DPK／受控真刷新與輪替fresh各自界線與D契約一致。不是完整索引已寫好或D04驗證完成；逐條引用／links／privacy／claims仍交既定D03–D05。不以其他open PR／E009補成功，亦不把controlled當自然到期、既有Rivet名義host當新App／正式產品。
+- lineage與操作設計一致：上游prep提供PR62已MERGED及固定M／parents／原headancestor和tree相同；本角色未另執行Git／remote重驗。D06把新文件保存至新docs branch及follow-up Draft PR，D07 annotated tag精確指原M而非新docshead，D08僅fresh核仍為原OID的舊refs正常刪除，D09以新docs branch已push／clean／untracked0／0ahead／nonlocked／nondetached最新證據由目標外正常remove；保留新docs refs與安裝App／真DPK／Apple及私有驗收資產。Human最新明確remove授權不等舊release推定，也不要求新docs PR先merge。collision／未知狀態按既定停點，不force／prune／盲刪。
+- 最終客觀tag／refs／worktree收據留目標外owned private handoff及final／必要PRbody，不為回填已刪工作樹帳本重建或改dev；mandatoryhooks不跳過，不重跑無關Swift／live／native圖。D03→獨立D04→獨立D05→既定發布／收尾順序足以執行，不加新Human批准或不相關gate。
+- 受審SHA-256：requirements `0e60ac05837a19b5529416d2749c156b4ad58b0160f5c2e2c7a03c4b6bd4e6a0`；technical-spec `1184369c2bbe20b40ba6d413d73f02d4000d0bdd8c64cba2e771006870ca790e`；plan `635c73446332f1e3d724c9a1f6b85711661ff97337aec6dae5120426e95ca67c`；step收據前 `6b372e60573b36853f6cb835d2e082456808bcf8708eb0f9cd7102ec13489385`，均直接讀回與交接一致。
+- 本角色只記自身D02 step狀態／收據，未改受審前三artifacts、兩索引、source／圖／原證據，未執行tests、Git mutation或remote／真人／Apple／Keychain操作；現停止寫入。現行handoff：topic=github-persistent-connection；phase=postmerge documentation implementation；current_step=D03/pending；upstream_verdict=approved；blockers=[]；assigned_role=Implementer；next_objective=依六檔D契約新增兩索引與真實來源交接，再交D04獨立Tester；後續tag／刪refs／remove結果仍pending。
+
+### D03 Implementer 來源交接（2026-10-21）
+
+- 新增 `experiments/README.md` 導覽及 `experiments/VALIDATION-SUMMARY.md` 分來源摘要，依PR62合併點M及E001–E007原README／必要run收據、新AppREADME與五份verification-host evidence核對。E002正向成功但反向／overall unknown、E005最新0/0/1 UX fail、E006真DPK假bundle同profile0/0/0與10/16 unknown逾時歷史、E007兩輪renewal未測／Human接受限制分列；新App真OAuth／真DPK／controlled expiry真refresh與輪替fresh不冒稱natural或正式產品。舊Rivet版本／source provenance、grant後digest未觀測、aggregate pair界線、78／202／12及legacy suite未跑均保留。
+- 只寫上述兩新檔與自身step；前三planning artifacts維持D02受審SHA，其餘source／舊實驗／App／五份evidence／native圖／production及dev不改。UTF-8／relative links／privacy／whitespace／六檔scope與只讀來源相符的自驗結果由私有handoff記錄；沒有新Swift／真人／圖工具重測。`.github/workflows`確認不存在，不推論tag必定觸發release。
+- 不自產approval，不記D04/D05或Git收尾成功；D06–D09仍pending。沒有commit／push／PR／tag／刪refs／remove，已安裝App未Quit、DPK／Apple與私有驗收資產保留。現停止repo寫入，交D04獨立Tester。
+- Handoff：topic=github-persistent-connection；phase=postmerge documentation verification；四artifacts=present/changed；current_step=D04/pending；locked_decisions=六檔/已合併M來源/新docsbranch/兩索引非新實測/所有原證據只讀/原mergeM後續tag與normalcleanup/不dev實作不merge新PR；upstream_verdict=approved（D02 planning）；blockers=D04/D05未驗審；assigned_role=Tester；next_objective=獨立D-T01來源／links／privacy及六檔邊界核對。
+
+
+### D04 獨立 Tester 收據（2026-10-21）
+
+- verdict=**approved**；requiredFixes=[]；只交D05獨立Reviewer。本角色獨立於D03作者，直接讀兩新索引與E001–E007 README、新App README／真人／contracts／isolation／manifest／review及舊host來源；未修改受審兩索引、前三planning artifacts或任何原來源。
+- facts逐條相符：E001只callback；E002正向六欄／API成功、反向PKCE及overall unknown、2/2用盡；E003單次真rotation及舊refresh拒絕不等持久化／自動刷新；E004真SQLite配假bundle／fetcher／clock，不證加密或正式採用；E005最新0/0/1使重建UXfail，保留早期unknown；E006有效同profile真DPK假bundle0/0/0與10/16 setup unknown／逾時歷史分列；E007兩輪renewal read未做，第二輪move/refetch/B皆0，Human接受限制不改pass、不開第三輪。
+- 新驗證App六流程七項Human觀察均0，setup/build與後五段各有來源；controlled provider clock觸發真GitHub attempt1/accepted1及真DPK save1，輪替後fresh讀回同六欄digest／同帳號API、無refresh/save。grant後digest未直接觀測、fresh才首次觀測、aggregatepairChanged非各tokenhash、同profileClean非renewal及controlled非natural皆明示；舊2026-10-20 Rivet名義host與source commit／實際build provenance分開，不宣稱正式產品登入。hosted78、production202/22及consumer12/3、App缺席普通build/test、legacy suite未跑與來源一致。本輪未重跑測試或真人。
+- RF-C01 bf0db99及36Python＋4freshCLI只作合成durableexport／checkpoint／cleanup修正，非新版live／掉電／renewal。兩新索引未吸收其他open PR／E009；後續tag／refs／worktree／PR結果仍pending，不造完成。
+- 獨立Python／Git read-only核對：D03六SHA與14來源SHA相符；29相對links實際存在；UTF-8、行尾／EOF、敏感marker與本機絕對路徑檢查、`git diff --check`通過；diff精確四Modify＋兩Written，無其他leaf。其餘合併點M的1191tracked葉檔逐bytes未變，source／App／舊證據／全部圖只讀。D02前三planning SHA保持；dev仍乾淨未改。
+- 直接核HEAD與branch為既定docs branch／M；M parents=16606b89及1c8e2c85，commit時間轉UTC為2026-10-21T06:56:54Z，M與原feature tree相同；production對16606基線zero-diff。`.github/workflows`不存在，不宣稱tag觸發release。未fetch、更新refs、commit/push、遠端write或cleanup；未操作已安裝App／PID／DPK／Apple／私有驗收資產，未跑Swift／live／native圖或工具重產。
+- 私有獨立D04收據SHA `96794814c8ff001617ef8012586c1e84ae64b8d07690efd2cd5fd923264a9025`。本角色只寫自身D04帳本／收據；現停止repo寫入。Handoff：topic=github-persistent-connection；phase=postmerge documentation review；四artifacts=present/changed；current_step=D05/pending；locked_decisions=六檔/原M來源/兩新索引非重測/原證據只讀/保留新docsrefs/後續tag指M/normalcleanup/不dev不merge；upstream_verdict=approved（D04）；blockers=D05未審；assigned_role=Reviewer；next_objective=獨立審facts／claims／lifecycle契約與六檔scope後明示verdict，未做D06–D09不預填。
+
+
+### D05 獨立 Reviewer 收據（2026-10-21）
+
+- verdict=**approved**；requiredFixes=[]。本角色獨立於D03作者及D04 Tester，直接審兩新索引、四份D契約及主要E001–E007／新App／R06／contracts／isolation／歷史來源；未修改受審索引、planning規格或來源。E001 callback-only、E002正向成功但反向PKCE/overall unknown、E003單次真rotation、E004真SQLite配fake、E005最新0/0/1 UXfail、E006有效同profile假bundle0/0/0與10/16 unknown/逾時、E007兩輪renewal未read／Human接受限制均區分正確。
+- 新App六流程七項Human0及真服務／真DPK／controlledexpiry真refresh accepted1-save1／輪替fresh同digest與API符合R06；未觀測grant後digest、aggregatepairChanged不等各tokenhash、controlled非natural、同profile重建非renewal及正式產品未交付均明示。78hosted／202production-22suites／12consumer-3suites、App缺席build/test及legacy suite未跑與來源一致；舊Rivet名義host與build工作樹／後產commit provenance未混用。RF-C01的36Python＋4freshCLI只證合成export/recovery修正，未冒稱新版live／掉電或renewal，沒有吸收他人open PR/E009。
+- 直接核D03/D04來源hash及獨立D04收據SHA；14原來源SHA、兩索引與前三planning SHA均相符，29relative links存在。scope恰四Modify＋兩Written，1191其餘合併點M tracked leaves逐bytes不變；四artifacts的原合併內容完整保留為suffix，production對16606b89 zero-diff，dev乾淨，diffcheck通過。當前HEAD=M、branch為既定docs分支，無新source／App／圖／驗收資料delta。
+- lifecycle契約正確維持D06–D09待執行：新docsrefs遠端保存與follow-up Draft PR不automerge；annotatedtag精確指原M，freshcollision/OID檢查後才正常刪原feature refs，worktree安全條件成立後由目標外正常remove。新docsrefs、安裝App、DPK／Apple及私有驗收資產保留；客觀最終收據留外部，不為回填已刪worktree重建或寫dev。兩新索引未預填tag、PR或清理成功；不新增Human gate。
+- 私有獨立D05收據SHA `61f714898d0fb3e77faa453ce4bb3a72082454a4600f626b4a2b3f8348bdab7c`；D04收據SHA `96794814c8ff001617ef8012586c1e84ae64b8d07690efd2cd5fd923264a9025`。本角色只記自身step收據／D05狀態，未重跑Swift／真人／native圖，未Git mutation、remote、App／DPK／Apple操作。現停止repo寫入。
+- Handoff：topic=github-persistent-connection；phase=postmerge documentation publication；四artifacts=present/changed；current_step=D06/pending；upstream_verdict=approved（D05）；requiredFixes=[]；blockers=[]；assigned_role=Implementer；next_objective=既定staged語意/message/fullhooks→docscommit/push/follow-up Draft PR→exactM tag→fresh原refs正常刪除→safe worktree remove／外部實際收據。保留新docsrefs供humanreview，不merge，未做後續結果皆不預填。
+
+---
+
 ## 現行路由：PR comment RF-C01
 
 - 最後更新：2026-10-21，Implementer；phase=human review；current_step=C07；status=completed。

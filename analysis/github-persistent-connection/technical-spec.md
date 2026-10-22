@@ -1,5 +1,17 @@
 # GitHub 持續連線：獨立驗證 App 技術契約
 
+## 現行補充：合併後文件與 Git lifecycle 契約（D01，待獨立審查）
+
+- 鎖定 merge M=`aa16de91b560027325419b7bc904d831851c9fcb`，parents為`16606b89b8e3e6b61523c23aa0be9653c1ea7b44`及原feature `1c8e2c85fe417daf4ad20dfdaa5e2604edf07631`；prep已核原feature是ancestor且tree相同、origin/dev=M。原dev工作樹仍舊commit且乾淨，不更新它。
+- 原路徑目前改掛 `docs/github-connection-validation-summary`，起點M、無upstream；原feature `feat/github-persistent-connection` local／remote暫保留。新增兩docs由原README／證據逐項引用；facts範圍見plan，未驗明列，不用其他open PR能力補成功。
+- 新docs commit正常push此docs branch並開follow-up **Draft PR，base dev**；不向已合併PR62追加commit、不直接寫dev、不merge新PR。tag候選`v0.1.55-github-persistent-connection-verification`為annotated、精確指M，**不是後續docs commit**；目前無collision，建立／push前再查namespace，正常push，非GitHubrelease。
+- 清理原remote feature前即時核OID仍為上述1c8，再正常delete；若已不存在只記客觀狀態，若不同即停，不刪新進展。local原feature須非attached且M已保存其歷史，用`-d`，不`-D`。新docs branch local／remote一律保留。
+- worktree移除前核docs branch已push且0ahead、tracked乾淨、untracked0、非locked／非detached、路徑仍為原目標；從目標外正常`git worktree remove`，不force／prune。docs follow-up PR可仍open：本步只移除已遠端保存的工作目錄，不能誤套「新docs PR必須先merge」或刪其refs。prep查明owned ignored `.build`／兩pycache無source／私有證據，不新增泛用刪除權限。
+- tag競爭、原remote OID變、dirty／untracked／未push／locks／未知資產即停受影響步驟並回報，不覆寫、不擴清理。保留已安裝驗證App（不Quit）、真DPK、profiles／certificate及所有私有驗收資產。
+- 最後tag annotated與peeled=M、refs／PR／worktree registration／原path不存在、原branch absence、devclean等結果寫目標外owned private handoff並final／必要PRbody；不可預填，不能為刪除後回寫step再建worktree或改dev。source／架構不改，無新Swift/live/native圖重驗；mandatoryhooks照常。
+
+---
+
 ## 現行補充：RF-C01 export-clean 契約（待獨立 Plan-Reviewer）
 
 本補充僅解鎖 plan C-M01–03，其他歷史證據不改。原兩輪使用 `62dece35` 的工具，不是新runner；下方App契約繼續有效。九欄見requirements現行補充，精確檔案與cases見plan。

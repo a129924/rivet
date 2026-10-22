@@ -1,5 +1,37 @@
 # GitHub 持續連線：驗證產物歸屬回修計畫
 
+## 現行補充：合併後摘要與收尾（D，待獨立 Plan-Reviewer）
+
+Human已授權此受限延續；requirements D九欄與spec D Git契約優先，下方C九檔授權不擴張到本次。精確六檔：Modify `analysis/github-persistent-connection/requirements.md`、`analysis/github-persistent-connection/technical-spec.md`、`plan/github-persistent-connection/github-persistent-connection.plan.md`、`plan/github-persistent-connection/github-persistent-connection.step.md`；Written `experiments/README.md`、`experiments/VALIDATION-SUMMARY.md`。兩新檔此前local dev／feature及remote API均不存在，不稱改既有。無其他repo寫入／tracked刪除。
+
+### 摘要 facts 與驗證
+
+D-T01：兩索引依實際來源寫繁中與相對links，覆蓋E001–E007 README、新App README、新五份verification-host evidence及必要舊版歷史來源；每項分已驗／未驗與服務／儲存／合成來源，不輸出rawtoken／secret／code／callbackquery／Appleidentity／本機絕對路徑。最小facts如下，作者仍須逐項核source：
+
+- E001真callback code/state，不exchange；E002正向exchange六欄＋GET/user成功，但負向PKCE／總體unknown、兩次quota耗完；E003單次真refresh／rotation／同user API與舊refresh `bad_refresh_token`成功，不證保存／產品自動刷新。
+- E004真SQLite配fake tokens／refresh，驗跨process／atomic／singleflight／errorcases，不證加密／正式採用；E005legacy資料成功，最新提示0/0/1使重建UXfail，保留早期unknown，不外推DPK；E006 fakebundle＋真DPK在同有效profile／原免費Team/cert下fresh／真CleanBuild提示0/0/0，非真OAuth／refresh／renewal，保留10/16 setup逾時unknown歷史。
+- E007兩輪unknown且renewal read未執行：第一B同profilebytes；第二xattr備份預檢停止，cachemove/refetch/B皆0；Human接受限制不改pass，不第三輪。RF-C01 `bf0db99`的36Python＋4freshCLI只證合成durableexport/checkpoint/cleanup修正，非新live／掉電／renewal實驗。
+- PR62新GitHubConnectionVerification於2026-10-21完成真OAuth/DPK/fresh/真CleanBuild/provider受控到期→真refresh accepted1/save1/輪替fresh/同account GETuser，六流程七項Human分段皆0。controlled非natural；grant後digest未觀測、fresh才首次觀測；aggregatepairChanged非逐tokenhash。舊2026-10-20 Rivet名義host結果另標歷史版本。hosted78/root202（22suites）/consumer12（3suites），App缺席production build/test成功，Sources/Tests/Package/locks回16606基線，不等正式產品能力。
+- 自然到期、profile更新讀回、expiredprofile恢復、certrotation、跨機／跨user與公開分發未驗。PR60/61/63截至prep仍OPEN，其他worktree E009dirty不碰；不發明E008或稱這些PR已合併。
+
+D-T02：只六檔staged diff、來源links／privacy與必要格式、正常全部mandatoryhooks；D-T03依spec逐步freshverify PR／tag/M／refs／已push docs branch／目標worktree與dev。無source改動，不新跑Swift/live／圖；archify/pr-lens/graphify既有產物只讀、不建圖／索引或新增產物擴scope。
+
+| Step | Owner | 順序與完成條件 |
+|---|---|---|
+| D01 | Plan-Creator | 四artifacts短補充，交獨立審查，不自產approval |
+| D02 | Plan-Reviewer | 獨立scope／facts界線／安全Git契約approved才進D03 |
+| D03 | Implementer | 僅六檔：新增兩索引、真實帳本交接；不改舊來源 |
+| D04 | Tester | 獨立D-T01／六檔scope／links／privacy |
+| D05 | Reviewer | 獨立facts／claims／lifecycle契約與來源審查 |
+| D06 | Implementer | staged語意/message→正常fullhooks→commit→push新docsbranch→follow-up Draft PR base dev；PR62不再commit，不merge |
+| D07 | Implementer | 重新查tagnamespace，annotated候選tag exactM並normalpush／peeled核對；非release |
+| D08 | Implementer | fresh查原remote仍1c8才刪，local原feature -d；保留新docsrefs |
+| D09 | Implementer | fresh查乾淨／已push0ahead／untracked0／unlocked nondetached，目標外正常remove原worktree；客觀結果留外部ownedprivatehandoff／final，停止repo寫入 |
+
+D06–D09依Human明確授權，不新增確認；遇spec停點只停受影響步驟回報，不force／prune／未知刪除。最終新docs PR停humanreview、不merge；D09後不為填step重建worktree或寫dev。
+
+---
+
 ## 現行補充：PR comment RF-C01（待獨立 Plan-Reviewer）
 
 Human 已授權必要回修→topic commit→push→回覆／resolve，沿原featureworktree/branch/Ready PR62，不改dev、不merge。獨立Reviewer needs-rework：[4333613564](https://github.com/a129924/rivet/pull/62#discussion_r4333613564)，thread `PRRT_kwDOUFu0Cc6upRad`。requirements現行九欄與technical-spec現行失敗安全契約優先；下方R／S為歷史。

@@ -1,5 +1,23 @@
 # GitHub 持續連線：整條流程可行性驗證需求
 
+## 現行補充：PR #62 合併後的驗證索引與受限收尾（D01，待獨立審查）
+
+Human 已授權補實驗摘要、建立語意 tag、刪原 local／remote feature branch、移除原 worktree；無需重問開始。PR #62 已於 2026-10-21T06:56:54Z MERGED；以下 C／R／S 契約及 verdict 保留歷史，本補充僅限文件與 Git lifecycle，不重開產品 topic。
+
+| 欄位 | 本輪契約 |
+|---|---|
+| In-Scope | E001–E007及PR62新驗證App的來源可追溯索引／摘要；獨立審查；新docs branch提交／push／follow-up Draft PR；tag原合併commit；正常移除原feature refs／worktree |
+| Out-Of-Scope | source／App／實驗／真人／Apple／Keychain變更、第三輪E007、正式產品採用、其他PR／worktree、merge follow-up PR、GitHub release、force／prune |
+| ReadOnly | 全部code/tests、既有E001–E007內容／證據、App及R06、圖面／native收據、production／locks、其他worktrees（含E009）、dev worktree及原合併歷史 |
+| Written | `experiments/README.md`、`experiments/VALIDATION-SUMMARY.md`（皆確認原不存在，屬新增）；owned private收尾收據 |
+| Deleted | 無trackedfile；只在既定安全條件通過後刪原feature local／remote ref及正常移除原worktree，保留已push的新docs branch local／remote |
+| Modify | 只有本topic四artifacts的D補充及實際角色記錄；六檔精確manifest見plan |
+| Goal | 摘要區分真服務／真儲存／合成測試／受控觸發／unknown，保留可查證版本；原merge固定有tag，docs已遠端保存，舊feature與worktree安全收尾 |
+| Non-Goal | 宣稱各實驗皆成功、把controlled當自然到期、把舊Rivet版本當新App或正式產品、改歷史收據／既有圖、移除App／真DPK／Apple資產或新docs refs |
+| TestCase | D-T01來源／links／privacy、D-T02六檔diff與正常hooks、D-T03 PR／tag／refs／worktree客觀讀回；不新跑Swift／live／圖QA |
+
+---
+
 ## 現行補充：RF-C01 匯出與清理失敗安全（待獨立規劃審查）
 
 Human 已授權 PR comment review → 必要回修 → topic commit → push → 回覆及 resolve 已處理 thread，不重問是否開始，不 merge。獨立 Reviewer 的 `needs-rework` 指向 [評論 4333613564](https://github.com/a129924/rivet/pull/62#discussion_r4333613564)（thread `PRRT_kwDOUFu0Cc6upRad`）：E007 `export_clean` 在 final.index 完整保存前已刪私有來源，後續 hash／stat／index write 失敗失去證據，半成品公開目錄阻擋重試。
