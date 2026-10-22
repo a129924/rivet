@@ -1,0 +1,203 @@
+{
+  "BGUIBuildStatus": "未執行",
+  "additionalCacheReceiptSHA256": {
+    "cache-recovery.machine.json": "b817492a883c4d32b4cdd9c5106695b80777575accbbb49986a41b6be8cbc6b6",
+    "cache-transition.machine.json": "32a8fc78a9a645bb1fcf828820bccfffc59847e64b2f5fb46115dc0eb77b9c75"
+  },
+  "approvedMethodReadmeSHA256": "f90878100b843c4303f5190ee3b7c23423fccd1b1bd0f741dfba2d095d87b06b",
+  "backupNonMeasurementHumanObservation": {
+    "confirmedWholeStagePromptCount": null,
+    "notPhase2Observation": true,
+    "observationLimited": true,
+    "reportedNoDialogs": true
+  },
+  "cacheRecovery": {
+    "evidenceSource": "manual-record-review",
+    "flagSemantics": {
+      "backupRetained": "false：原 cache 完整核對後，私有副本隨既定 export 清理。",
+      "humanRecoveryConfirmed": "false：沒有新增復原確認，也沒有需要執行的外部恢復。",
+      "newDownloadedProfileRetained": "false：未 refetch，沒有新 profile 可保留。",
+      "originalBytesRestored": "false：沒有執行寫回，原 bytes 一直存在且未改。",
+      "recoveryBeforeExport": "true：required=0 與原檔完整之前置人工核對先於 export，並非有執行 restore。"
+    },
+    "originalBytesIdentityMetadataAndXattrsUnchangedBeforeExport": true,
+    "outcome": "notRequired",
+    "preExportSafetyCheckEndedUTC": "2026-10-20T07:19:33.197546+00:00",
+    "receiptPath": "cache-recovery.machine.json",
+    "requiredCount": 0,
+    "restoreOperationsPerformed": 0,
+    "sha256": "b817492a883c4d32b4cdd9c5106695b80777575accbbb49986a41b6be8cbc6b6"
+  },
+  "cacheTransition": {
+    "BProductObtained": false,
+    "actualMoveCount": 0,
+    "evidenceSource": "manual-record-review",
+    "fullyVerifiedBackupCount": 0,
+    "newProfileBytesObtained": false,
+    "rawBackupCount": 1,
+    "receiptPath": "cache-transition.machine.json",
+    "refetchAttemptCount": 0,
+    "restoreCheckEvidence": {
+      "backupCheckFailure": "restoreXattrsMismatch",
+      "backupXattrCount": 1,
+      "cacheFileRemovalCount": 0,
+      "copyExtraAttributeIsSystemProvenance": true,
+      "externalRestoreOperationsPerformed": 0,
+      "fullyVerifiedBackupCount": 0,
+      "notAFormattingMiscomparison": true,
+      "originalBytesNeverChanged": true,
+      "originalIdentityUnchanged": true,
+      "originalRestorableMetadataUnchanged": true,
+      "originalXattrCount": 0,
+      "privatePlanSHA256": "99a76e229cfaf1418bf6e6b8e9e171dd8d543176f86c6b136027b545c006013d",
+      "privateProductJournalSHA256": "111856ab9c6cd8736e1fcacafbb8625c94077e53888e7c63141ff4bf678c4286",
+      "rawBackupCount": 1,
+      "rawHexCompared": true,
+      "refetchBuildAttemptCount": 0,
+      "restoreCheckXattrCount": 1,
+      "systemNonCopyabilityProven": false
+    },
+    "sha256": "32a8fc78a9a645bb1fcf828820bccfffc59847e64b2f5fb46115dc0eb77b9c75",
+    "stopReason": "restoreCheckAttributeSetMismatchBeforeAnyRemoval",
+    "timestampScope": "transition timestamps 引用 private journal 最早與最後 durable events；不宣稱包含先前唯讀環境分類的起點。"
+  },
+  "credentialCleanup": {
+    "absent": true,
+    "completed": true,
+    "humanPublicSHA256": "aa8942c0da28cff0e149d007041219ee644ba44d4ed2e8d0c7070d299127eeea",
+    "humanWholeStagePromptCount": 0,
+    "machineSHA256": "26125b6a8f902420f9aa49497559226f32139bc3eb8c5c7fb10c169b4122afef",
+    "privateHumanSHA256": "60e4c5c3d3631d7e616d4c72343cd06d9e11395a47a82d70af26be7ef4771e4f",
+    "readAttempted": true
+  },
+  "dpkAdoptionApproved": false,
+  "experiment": "E007",
+  "experimentStateFlags": {
+    "失敗": false,
+    "成功": false,
+    "未執行": false,
+    "無法判定": true
+  },
+  "experimentStatus": "無法判定",
+  "finalIndexSHA256": "874b50d21938d94606bd386edafe4c93cddbc3472af852598c4fad5af6f85548",
+  "independentChecks": {
+    "approvedMethodReadmeHashMatches": true,
+    "backupWholeStagePromptCountNotInvented": true,
+    "cacheNotChangedOrRestoredBeforeExport": true,
+    "cacheReceiptsExactApprovedSchema": true,
+    "cacheReceiptsExplicitlyManual": true,
+    "finalIndexNotRewrittenForAdditionalLeaves": true,
+    "fiveExportFrozenSourceHashesMatch": true,
+    "indexFileNamesByteCountsAndSHA256Match": true,
+    "initialAndCleanupHumanBoundToExactMachineBytes": true,
+    "noRawProfileIdentifiersPathsAttributeValuesOrPayloadsInPublicReceipts": true,
+    "oldRunImmutable": true,
+    "original35And45MinuteDeltasMatch": true,
+    "phase2AndBAndRefetchAbsent": true,
+    "sevenReviewedSourceAndTestHashesMatch": true
+  },
+  "indexedReceiptSHA256": {
+    "cleanup.human.json": "aa8942c0da28cff0e149d007041219ee644ba44d4ed2e8d0c7070d299127eeea",
+    "cleanup.machine.json": "26125b6a8f902420f9aa49497559226f32139bc3eb8c5c7fb10c169b4122afef",
+    "phase-1.human.json": "55164b78e9a0df1c0d62b47940fc807b3e2ac2ccc89b7658f45c2f0b312ae464",
+    "phase-1.machine.json": "af8830c32241409bf9a125f02be1de8fccc764598bfca789eac182b603db826c",
+    "preflight.machine.json": "a65c857e564678ac9a8a7a98227aab4e61a8e6fbe9a336ed14a67f2fa4489096",
+    "window.json": "c6bd6786abce95affb4105ec983bc6154e507016913e24937d39d29f6de829d1"
+  },
+  "initialStage": {
+    "GUIProductSource": {
+      "GUIABuildCount": 1,
+      "GUIBBuildCount": 0,
+      "actualGUIBuildSourceVerified": true,
+      "insideOwnedDerivedData": true,
+      "noCLIBuild": true,
+      "projectSpecificDerivedDataVerified": true
+    },
+    "allSixFieldsMatch": true,
+    "certificateSHA256": "5c267546d016f41f0901e535847a0ab44f81382f7aaadffbbb56a09941139440",
+    "humanPublicSHA256": "55164b78e9a0df1c0d62b47940fc807b3e2ac2ccc89b7658f45c2f0b312ae464",
+    "humanWholeStagePromptCount": 0,
+    "machinePromptCount": null,
+    "machineSHA256": "af8830c32241409bf9a125f02be1de8fccc764598bfca789eac182b603db826c",
+    "matchesOriginalExistingCertificate": true,
+    "meaning": "僅原 A App 隔離假六欄保存與讀回",
+    "privateHumanSHA256": "e2adb3d8755d94c1286620f38a13175ba404462365292ee4b8b60a5f5c0dbf00",
+    "status": "成功"
+  },
+  "limitations": [
+    "本輪 restore-check 是真屬性集合差異：原 profile 無 xattr，私有 backup/check 多系統 provenance；不能由此宣稱普遍不可複製或不可恢復。",
+    "原 cache 從未移出，沒有官方 refetch 或 B GUI Build；不能說已試 refetch 仍無不同 profile。",
+    "Backup 非測量段 Human 僅回報未見視窗，全段確證提示數保留 null；沒有建立 phase 2 machine 或 Human sidecar。",
+    "Raw backup 存在 1 份並驗 bytes/hash，但完整 restore-check 未通過，所以 allBackupsVerifiedBeforeRemoval=false、restoreCheckPassed=false。",
+    "Cache 收據的 machine 名稱是 manifest 慣例；來源為人工逐步紀錄審閱，不是 runner 自動 cache guard。",
+    "本輪 private raw journal/proofs/backup/check 已在原 cache 完整核對後依契約移除；公開保留必要 hashes、計數與布林。",
+    "Runner 原 taskComplete=false 保留；verificationClosureComplete 僅指證據與安全收尾，不是主假設或整個 topic 成功。",
+    "這已是唯一額外 run；不足或未知回 Human，沒有自動重跑或產品 adapter 採用。"
+  ],
+  "namespace": "39443a2b-5d73-4a9b-a285-4d416cf70120",
+  "previousRunImmutableHashes": {
+    "final.index.json": "7e93e99c0035e5417aff7051689b2fc4973a60614532225ceb5bad03b3956b76",
+    "reviewer-verdict.json": "b4457017a0509a897094220240b3d268c7e6b258d9530e1933c99aef8b7973e7",
+    "tester-validation.json": "224614d9ddc0d0eaccdd27a844d04e3189bdc83dcafbf788a32067cb85e89455"
+  },
+  "privateFileCleanup": {
+    "appleAssetsPreserved": true,
+    "closureSource": "本輪實際 Human 專案閉合聲明後未重開 Xcode，Root 輔助 inventory 再次確認 Xcode 未執行。",
+    "completedBeforeOriginalDeadline": true,
+    "elapsedSecondsAtExport": 1307.210637,
+    "exportEndedUTC": "2026-10-20T07:20:14.453347+00:00",
+    "originalCachePreservedWithoutRestore": true,
+    "privateRootRemoved": true
+  },
+  "privateRunnerOutcomeSHA256": "fcfdf700bc93a1df0e9da6fede3d6d90e2e426fe49cee2fd7d437d8aeb4886ca",
+  "publicRunRelativePath": "experiments/E007/evidence/run-20261020T065827Z-39443a2b-5d73-4a9b-a285-4d416cf70120",
+  "recordedUTC": "2026-10-20T07:22:14.888233+00:00",
+  "refetchStatus": "未執行",
+  "renewalHypothesisSucceeded": false,
+  "renewalReadStatus": "未執行",
+  "requiredFixes": [],
+  "role": "Tester",
+  "runnerOutcome": {
+    "cleanupComplete": true,
+    "completedBeforeDeadline": true,
+    "endedUTC": "2026-10-20T07:20:14.133838+00:00",
+    "namespace": "39443a2b-5d73-4a9b-a285-4d416cf70120",
+    "observationMode": "human-only",
+    "result": "無法判定",
+    "startedUTC": "2026-10-20T06:58:27.242710+00:00",
+    "synthetic": false,
+    "taskComplete": false
+  },
+  "runnerTaskComplete": false,
+  "schemaVersion": 1,
+  "scope": "唯一額外 run 的有限真實事實、既有 runner 收據、手動 cache 投影與安全收尾驗證",
+  "sourceSHA256": {
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/project.pbxproj": "8cb08f416dc753c49b9bc3ea447ce5c75fa3ffb97388d198895b7a50ad0e6b7b",
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/xcshareddata/xcschemes/ProfileRenewalProbe.xcscheme": "93b4e8876aafc7dfdeb35e24c837cb5ab6266dc3133c34f08fab8e610c97b3d5",
+    "experiments/E007/Resources/Info.plist": "9d7ad64ccf83deee5e1b6a09802362214640b19e6f1ba25313aa02a14b33f8c4",
+    "experiments/E007/Resources/ProfileRenewalProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "experiments/E007/Sources/ProfileRenewalProbe.swift": "1c55ea950ddd9841cf1ba372ef7da190e6bb86127f798dfd8983d71edfe73958",
+    "experiments/E007/Tests/test_protocol.py": "7798a5c8463ebec7e0b8574247f81679cab07e56b52e4a311cc8bf985036e65f",
+    "experiments/E007/scripts/run_profile_renewal.py": "62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484"
+  },
+  "step": "S04c",
+  "topic": "github-persistent-connection",
+  "verdict": "approved",
+  "verdictMeaning": "只接受本輪證據與安全收尾；restore-check 前提不足，renewal 未執行而無法判定，不放行採用。",
+  "verificationClosureComplete": true,
+  "window": {
+    "cutoffUTC": "2026-10-20T07:33:27.242710+00:00",
+    "deadlineUTC": "2026-10-20T07:43:27.242710+00:00",
+    "privateWindowSHA256": "d66fc7cfcfe2eb87e73aa4cb50e8e032ec71d12d6b4c1dad96f860f6ce509a05",
+    "resetOrExtensionPerformed": false,
+    "singleOriginalWindowPreserved": true,
+    "startUTC": "2026-10-20T06:58:27.242710+00:00"
+  },
+  "workflow": {
+    "adapterAdoptionAllowed": false,
+    "liveMayRestartAutomatically": false,
+    "nextRole": "Reviewer",
+    "nextStep": "S04d",
+    "stepLedgerModified": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "docs/architecture/diagrams/github-persistent-connection/verification-host-v2/connection-lifecycle.json",
+  "output": "docs/architecture/diagrams/github-persistent-connection/verification-host-v2/connection-lifecycle.html",
+  "specification": {
+    "sha256": "b0d231066fa456a88d717d85976a07baa53e712be1c917763bdf5aec3faef0e4",
+    "bytes": 3333
+  },
+  "artifact": {
+    "sha256": "9363d40a2d3e6618c10160e95b5e81dc844b7c7cd38e126ac0e43f35a1eb7136",
+    "bytes": 701122
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}
