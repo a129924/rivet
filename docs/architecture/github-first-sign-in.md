@@ -14,6 +14,8 @@ Relay 僅綁 127.0.0.1 動態 port，限制 headers／connections／讀取時間
 
 ## 本機建置與驗證
 
+> **upstream 歷史操作，非現行 M02 流程：** 下列 Xcode／build／open 指令與 Human 自行輸入配置的文字保留為來源版本操作。現行合併候選由開發端管理者依 [E009 launcher 流程](../../experiments/E009/README.md)準備設定；登入驗證者不填憑證，正常 composition 隱藏設定欄位。直接 open 下列舊產物不能取代現行設定供給與 binary 指紋檢核。
+
 在 Xcode 開啟 `apps/GitHubSignInVerification/GitHubSignInVerification.xcodeproj`，選 `GitHubSignInVerification` scheme、My Mac。App／test target 分別為 `GitHubSignInVerification`／`GitHubSignInVerificationTests`。使用 macOS 15+／Swift 6、ad hoc 簽章；不需 Team／profile／Keychain entitlement。
 
 ```sh
@@ -23,7 +25,7 @@ open .build/github-first-sign-in/VerificationHostDerivedData/Build/Products/Debu
 
 Hosted TestAction 使用 `GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1`；entry 在建立 live dependencies 前改用 disabled dependencies，測試自行注入 fake，不啟動真 OAuth。一般啟動不還原、不自動開瀏覽器，按登入才開始。
 
-若 Human 選擇真登入，自行輸入自有 OAuth App 的配置。callback 設為 `http://127.0.0.1/oauth/callback`，runtime 帶動態 port；外部 App 更動由擁有者確認。不讀 gh credential 或先前機密，不自行改 OAuth App。
+**歷史操作，非現行流程：** 若 Human 選擇真登入，自行輸入自有 OAuth App 的配置。callback 設為 `http://127.0.0.1/oauth/callback`，runtime 帶動態 port；外部 App 更動由擁有者確認。不讀 gh credential 或先前機密，不自行改 OAuth App。
 
 ## 版本來源與限制
 
@@ -70,3 +72,23 @@ Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fi
 ## X：唯一 wrong 收尾（2026-10-22）
 
 來源`4dbf3df`，工具凍結未改。native正常明確copy／Human手貼核對passed；本次唯一wrong為HTTP400 invalid_grant／無token／遠端拒絕，兩獨立AI的單欄語義共識為`verifier_mismatch_asserted`（`provider_description_ai_review`）。fresh／single及prepared一致、valid_different／challenge不同只支持這一次拒絕且provider歸因verifier不符，不是普遍enforcement／wire證明。自動v3仍indeterminate／provenfalse、description unknown／match none，所有歷史保留；原文不保存。新預算1/1 used，本輪結束、不得再執行case／OAuth／研究。正常APIpassed、missing舊unknown及refresh/401pending不變；native正常路徑不推論timeout／cancel／OS清除，67既有測試未重跑。[安全來源與三層限制](../../plan/github-first-sign-in/evidence/pkce-semantic-review.md)。文件待最終獨立review／原PR61交付後Human review，無新增Human操作。
+
+## PR #63：手動單輪入口與開發端設定增補（2026-10-22）
+
+上文保留 `github-first-sign-in` 各版來源、圖面及獨立 PKCE 工具的歷史／預算；本節另記 `github-account-login-feasibility`／PR #63 已受驗的 M01／M02 增補，不重新執行上文工具或推翻其有限結論。合併時六份衝突 Swift 的 upstream 內容逐檔等於原 `9f603f81d77040a2e06ad178062e8cfecc4de468` 基線，故保留在其上的手動入口與設定注入實作／測試；shared runtime 與公開契約未另改設計。
+
+### App-local 手動入口與配置
+
+保留預設瀏覽器自動入口，另有同一次 session 的手動路徑：relay／session 建立後只在記憶體提供本次授權網址供 Human 複製，在獨立 browser session 完成登入與同意。等待同一 callback／state／verifier，最多 300 秒；每次啟動只允許一輪手動 attempt，完成、取消或失敗後不開第二輪或重試。只有 GET `/user` HTTP 200、正整數 id、trim 後非空 login 才確認成功，callback／token／prepare 單獨不足。
+
+M02 composition 只讀開發端 `RIVET_VERIFY_GITHUB_CLIENT_ID`／`RIVET_VERIFY_GITHUB_CLIENT_SECRET`，配對完整才建 live dependencies；登入驗證者不填憑證，正常 composition 隱藏設定欄位。缺設定或 unit-test mode 使用 disabled dependencies，scheme 的 `GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1` 保證 hosted mock tests 不進 live OAuth。
+
+[一次性 launcher](../../experiments/E009/LaunchVerification.swift)只由開發端管理者在未錄製 TTY 隱藏輸入，經 launch environment 供給；不放入秘密 argv／檔案／log、不讀既有 process 設定。它核對 bundle／binary SHA、拒絕既有同 bundle App、核對新程序身分，不自動終止 App。現行本機 build 與指紋見[E009 操作紀錄](../../experiments/E009/README.md)；重建不符必須先核對並重凍結，不關掉安全檢核。
+
+### 來源與證據限制
+
+M04 原樣搬入的 20 固定檔／6 M02 snapshot、原 build 指紋與交付紀錄保留在[本 topic 契約](../../plan/github-account-login-feasibility/github-account-login-feasibility.plan.md)。[A07／C01／E009 證據分層](../github-account-login-feasibility.md)不變：M03 僅 Human 層級受限成功，沒有 agent 全程 UI／network trace；本次 merge、mock 或重建不是新真人重驗，不覆寫 M03 `990917ac…` 或 M04 的歷史 build 指紋。
+
+上文 frozen canvas／sequence 與其驗收仍綁定原版本；本節 manual／environment 接線以現行 source／tests 與本節為準，未重畫或重驗原圖。正式 Rivet 產品入口、正式 OAuth credential 持久化 adapter、production secret custody 與其他 BC 整合仍未交付。PKCE 新舊結果各守來源與預算，不由本增補升級為普遍 enforcement；本輪不授權真人操作或解除 Human review。
+
+本輪同步 dev 的候選產物已依 build-for-testing → mock test-without-building → 最後 normal build 核對，launcher 現行 SHA-256 為 `66aa6f9af216198df2e982aa2e9295fc16f9124e05a848aadac9676ae57dba2f`；[E009 現行收據](../../experiments/E009/README.md)記錄本機版本與待獨立審查狀態。M03／M04 舊指紋只作歷史，本輪沒有真人重驗。

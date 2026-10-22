@@ -3,15 +3,28 @@ import Foundation
 import GitHubIntegration
 import Observation
 
+struct GitHubAuthorizationPresenter: Sendable {
+  let present: @Sendable (URL) async throws -> Void
+}
+
 struct GitHubConnectionDependencies: Sendable {
-  var authorize: @Sendable (GitHubOAuthAppConfiguration) async throws -> GitHubOAuthCredentialBundle
+  var authorize:
+    @Sendable (GitHubOAuthAppConfiguration, GitHubAuthorizationPresenter) async throws ->
+      GitHubOAuthCredentialBundle
   var makeFetcher: @Sendable (GitHubOAuthAppConfiguration) throws -> any OAuthTokenFetcher
   var prepare: @Sendable (OAuthTokenProvider) async throws -> GitHubClientScope
   var probe: @Sendable (GitHubClientScope) async throws -> GitHubAccountIdentity
 
+  var openBrowser: @MainActor @Sendable (URL) -> Bool = { NSWorkspace.shared.open($0) }
+  var copyAuthorizationURL: @MainActor @Sendable (URL) -> Bool = { url in
+    NSPasteboard.general.clearContents()
+    NSPasteboard.general.setData(Data(), forType: .init("org.nspasteboard.ConcealedType"))
+    return NSPasteboard.general.setString(url.absoluteString, forType: .string)
+  }
+
   static var live: Self {
     Self(
-      authorize: { configuration in
+      authorize: { configuration, presenter in
         let relay = GitHubLoopbackCallbackRelay()
         defer { relay.cancel() }
         let redirect = try await relay.start()
@@ -19,8 +32,7 @@ struct GitHubConnectionDependencies: Sendable {
           configuration: configuration, redirectURI: redirect)
         return try await withThrowingTaskGroup(of: GitHubOAuthCredentialBundle.self) { group in
           group.addTask {
-            let opened = await MainActor.run { NSWorkspace.shared.open(session.authorizationURL) }
-            guard opened else { throw GitHubConnectionFailure.browser }
+            try await presenter.present(session.authorizationURL)
             while true {
               try Task.checkCancellation()
               let callback = try await relay.next()
@@ -45,7 +57,7 @@ struct GitHubConnectionDependencies: Sendable {
 
   static var disabled: Self {
     Self(
-      authorize: { _ in throw GitHubConnectionFailure.unavailable },
+      authorize: { _, _ in throw GitHubConnectionFailure.unavailable },
       makeFetcher: { _ in throw GitHubConnectionFailure.unavailable },
       prepare: { _ in throw GitHubConnectionFailure.unavailable },
       probe: { _ in throw GitHubConnectionFailure.unavailable })
@@ -62,31 +74,78 @@ final class GitHubConnectionCoordinator {
   private(set) var identity: GitHubAccountIdentity?
   private(set) var isBusy = false
   private let dependencies: GitHubConnectionDependencies
+  private let preparedConfiguration: GitHubOAuthAppConfiguration?
+  private let allowsManualConfiguration: Bool
   private var provider: OAuthTokenProvider?
   private var scope: GitHubClientScope?
   private var operation: Task<Void, Never>?
+  private var pendingAuthorizationURL: URL?
+  private var manualAttemptStarted = false
 
-  init(dependencies: GitHubConnectionDependencies) { self.dependencies = dependencies }
+  init(
+    dependencies: GitHubConnectionDependencies,
+    configuration: GitHubOAuthAppConfiguration? = nil, allowsManualConfiguration: Bool = true
+  ) {
+    self.dependencies = dependencies
+    self.preparedConfiguration = configuration
+    self.allowsManualConfiguration = allowsManualConfiguration
+    if !allowsManualConfiguration {
+      status =
+        configuration == nil
+        ? "開發端設定尚未準備；尚未啟動授權。"
+        : "開發端設定已準備；尚未啟動授權。"
+    }
+  }
 
   var presentation: GitHubConnectionPresentation {
     GitHubConnectionPresentation(
-      status: status, isBusy: isBusy, canRetry: provider != nil, canQuery: scope != nil,
+      status: status, isBusy: isBusy, canRetry: provider != nil && !manualAttemptStarted,
+      canQuery: scope != nil && !manualAttemptStarted,
+      canStart: !manualAttemptStarted
+        && (preparedConfiguration != nil || allowsManualConfiguration),
+      canCopyAuthorizationURL: pendingAuthorizationURL != nil,
+      hasPreparedConfiguration: preparedConfiguration != nil,
+      showsConfigurationFields: allowsManualConfiguration && preparedConfiguration == nil,
       accountDescription: identity.map { "\($0.login) · ID \($0.id)" })
   }
 
-  func signIn() {
-    guard !isBusy else { return }
+  func signIn() { startSignIn(manually: false) }
+
+  func startManualSignIn() { startSignIn(manually: true) }
+
+  func copyAuthorizationURL() {
+    guard isBusy, let url = pendingAuthorizationURL else { return }
+    if !dependencies.copyAuthorizationURL(url) {
+      status = "複製授權網址失敗；本輪停止。"
+      operation?.cancel()
+      pendingAuthorizationURL = nil
+    }
+  }
+
+  private func startSignIn(manually: Bool) {
+    guard !isBusy, !manualAttemptStarted else { return }
     let configuration: GitHubOAuthAppConfiguration
-    do { configuration = try .init(clientID: clientID, clientSecret: clientSecret) } catch {
-      status = "請輸入有效的 Client ID 與 Client Secret。"
+    if let preparedConfiguration {
+      configuration = preparedConfiguration
+    } else if allowsManualConfiguration {
+      do { configuration = try .init(clientID: clientID, clientSecret: clientSecret) } catch {
+        status = "請輸入有效的 Client ID 與 Client Secret。"
+        return
+      }
+    } else {
+      status = "開發端設定尚未準備；尚未啟動授權。"
       return
     }
+    if manually { manualAttemptStarted = true }
     provider = nil
     scope = nil
     identity = nil
     begin {
-      self.status = "瀏覽器授權與交換中…"
-      let credential = try await self.dependencies.authorize(configuration)
+      self.status = manually ? "正在準備手動授權…" : "瀏覽器授權與交換中…"
+      let presenter = GitHubAuthorizationPresenter { url in
+        try await self.presentAuthorization(url, manually: manually)
+      }
+      let credential = try await self.dependencies.authorize(configuration, presenter)
       try Task.checkCancellation()
       let store = InMemoryOAuthCredentialStore()
       await store.save(credential)
@@ -98,13 +157,13 @@ final class GitHubConnectionCoordinator {
   }
 
   func retry() {
-    guard !isBusy, provider != nil else { return }
+    guard !isBusy, !manualAttemptStarted, provider != nil else { return }
     identity = nil
     begin { try await self.prepareAndRead() }
   }
 
   func query() {
-    guard !isBusy, scope != nil else { return }
+    guard !isBusy, !manualAttemptStarted, scope != nil else { return }
     identity = nil
     begin { try await self.prepareAndRead() }
   }
@@ -112,7 +171,18 @@ final class GitHubConnectionCoordinator {
   func cancel() {
     guard isBusy else { return }
     status = "正在取消，等待工作結束…"
+    pendingAuthorizationURL = nil
     operation?.cancel()
+  }
+
+  private func presentAuthorization(_ url: URL, manually: Bool) throws {
+    try Task.checkCancellation()
+    if manually {
+      pendingAuthorizationURL = url
+      status = "等待手動開啟本次授權網址；300 秒內完成，逾時停止。"
+    } else if !dependencies.openBrowser(url) {
+      throw GitHubConnectionFailure.browser
+    }
   }
 
   func waitUntilSettled() async { await operation?.value }
@@ -121,6 +191,7 @@ final class GitHubConnectionCoordinator {
     isBusy = true
     operation = Task {
       defer {
+        self.pendingAuthorizationURL = nil
         self.isBusy = false
         self.operation = nil
       }
