@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "正式 OAuth 能力與獨立驗證 App 流程",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1050,
+      560
+    ]
+  },
+  "participants": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "獨立驗證 App",
+      "sublabel": "非 Rivet 產品 UI"
+    },
+    {
+      "id": "browser",
+      "type": "external",
+      "label": "預設瀏覽器",
+      "sublabel": "使用者授權"
+    },
+    {
+      "id": "oauth",
+      "type": "security",
+      "label": "授權 Session",
+      "sublabel": "正式 OAuth 能力"
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub OAuth",
+      "sublabel": "授權與交換"
+    },
+    {
+      "id": "scope",
+      "type": "backend",
+      "label": "Provider／Scope",
+      "sublabel": "沿用既有執行期"
+    },
+    {
+      "id": "api",
+      "type": "external",
+      "label": "GitHub API",
+      "sublabel": "唯讀 /user"
+    }
+  ],
+  "messages": [
+    {
+      "id": "login-1",
+      "from": "app",
+      "to": "browser",
+      "y": 160,
+      "label": "開啟授權 URL",
+      "variant": "default"
+    },
+    {
+      "id": "login-2",
+      "from": "browser",
+      "to": "github",
+      "y": 188,
+      "label": "使用者核准授權",
+      "variant": "default"
+    },
+    {
+      "id": "login-3",
+      "from": "browser",
+      "to": "app",
+      "y": 216,
+      "label": "loopback callback",
+      "variant": "return"
+    },
+    {
+      "id": "login-4",
+      "from": "app",
+      "to": "oauth",
+      "y": 244,
+      "label": "驗證並單次 claim",
+      "variant": "security"
+    },
+    {
+      "id": "login-5",
+      "from": "oauth",
+      "to": "github",
+      "y": 272,
+      "label": "code＋verifier 交換",
+      "variant": "security"
+    },
+    {
+      "id": "login-6",
+      "from": "github",
+      "to": "oauth",
+      "y": 300,
+      "label": "完整六欄回應",
+      "variant": "return"
+    },
+    {
+      "id": "login-7",
+      "from": "oauth",
+      "to": "app",
+      "y": 328,
+      "label": "驗證後交付 bundle",
+      "variant": "return"
+    },
+    {
+      "id": "login-8",
+      "from": "app",
+      "to": "scope",
+      "y": 356,
+      "label": "記憶體保存並 prepare",
+      "variant": "default"
+    },
+    {
+      "id": "login-9",
+      "from": "scope",
+      "to": "api",
+      "y": 384,
+      "label": "GET /user",
+      "variant": "emphasis"
+    },
+    {
+      "id": "login-10",
+      "from": "api",
+      "to": "scope",
+      "y": 412,
+      "label": "HTTP 200＋有效身分",
+      "variant": "return"
+    },
+    {
+      "id": "login-11",
+      "from": "scope",
+      "to": "app",
+      "y": 440,
+      "label": "呈現驗證身分結果",
+      "variant": "return"
+    },
+    {
+      "id": "login-12",
+      "from": "app",
+      "to": "scope",
+      "y": 468,
+      "label": "同 instance 再次查詢",
+      "variant": "emphasis"
+    }
+  ]
+}

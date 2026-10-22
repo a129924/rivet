@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "v01",
+      "description": "A newer authorization superseded the grant used by this request. Because the older grant is no longer valid, this request was denied.",
+      "reference_zh": "較新的授權已取代此請求使用的授權許可。由於舊授權許可已不再有效，此請求遭到拒絕。",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "v02",
+      "description": "Only if the saved challenge and the submitted proof are inconsistent should an exchange be refused. This message states that condition, but does not say whether it was met here.",
+      "reference_zh": "只有在已儲存的挑戰值與提交的證明不一致時，才應拒絕交換。這則訊息陳述的是該條件，並未說明這次是否符合該條件。",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "v03",
+      "description": "The server compared the submitted verifier with the saved challenge and found that they do not match. This mismatch is the reason no token was issued for this exchange; the code has not expired.",
+      "reference_zh": "伺服器將提交的驗證值與已儲存的挑戰值比對，發現兩者不相符。這項不相符就是這次交換未核發權杖的原因；授權碼並未過期。",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "v04",
+      "description": "The application has been disabled by its administrator. The server refused this exchange because this client is disabled, irrespective of the verifier supplied.",
+      "reference_zh": "管理員已停用此應用程式。伺服器因為這個用戶端已被停用而拒絕此次交換，與所提供的驗證值無關。",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "v05",
+      "description": "The code was rejected solely because it expired. The code was still valid, and expiry played no part in this rejection.",
+      "reference_zh": "授權碼遭到拒絕，唯一原因是它已過期。授權碼仍然有效，過期與這次拒絕完全無關。",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "v06",
+      "description": "The token request reached the correct client and redirect destination. It was denied specifically because the verifier sent now does not correspond to the challenge recorded at authorization.",
+      "reference_zh": "權杖請求已到達正確的用戶端與重新導向目的地。這次遭到拒絕的明確原因，是目前送出的驗證值與授權時記錄的挑戰值不相符。",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "v07",
+      "description": "An internal record for this refusal could not be retrieved. There is no diagnostic explanation in this response.",
+      "reference_zh": "無法取得這次拒絕的內部紀錄。這份回應未提供診斷說明。",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "v08",
+      "description": "Client authentication failed: the application identifier and its supplied secret are not a registered pair. That failure is the actual reason for refusing this token request.",
+      "reference_zh": "用戶端認證失敗：應用程式識別碼與提供的機密值並非已註冊的配對。該認證失敗就是拒絕這次權杖請求的實際原因。",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "v09",
+      "description": "The server found that the authorization code in this request was issued for a different authorization transaction. That code association error caused the exchange to fail.",
+      "reference_zh": "伺服器發現，此請求中的授權碼是核發給另一筆授權程序的。這個授權碼關聯錯誤導致交換失敗。",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "v10",
+      "description": "The documentation gives 'the code is stale' as an illustration of a rejected exchange. That illustration is not a diagnosis of the request being reviewed.",
+      "reference_zh": "文件以「授權碼已失效」作為交換遭拒絕的示例。該示例不是對目前檢視中請求的診斷。",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "v11",
+      "description": "The server did not determine that the submitted verifier was wrong. It also did not determine that the code had expired. This message gives no actual refusal reason.",
+      "reference_zh": "伺服器並未判定提交的驗證值有誤，也未判定授權碼已過期。這則訊息沒有提供實際拒絕原因。",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "v12",
+      "description": "The callback address registered for this application ends at a different path from the address in this exchange. The server rejected the request for that configuration mismatch.",
+      "reference_zh": "此應用程式註冊的回呼位址，其結尾路徑與這次交換中的位址不同。伺服器因為這項設定不相符而拒絕請求。",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "v13",
+      "description": "This is a report about the current request, not a general rule: its proof key does not satisfy its earlier challenge, and the server refused the exchange for that reason.",
+      "reference_zh": "這是對目前請求的報告，而不是一般規則：此請求的證明金鑰未符合先前的挑戰要求，伺服器因此拒絕交換。",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "v14",
+      "description": "The request might have an expired code, an incorrect verifier, or a client setup problem. The service has not selected a cause among these possibilities.",
+      "reference_zh": "此請求可能有授權碼過期、驗證值錯誤或用戶端設定問題。服務尚未從這些可能性中確定原因。",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "v15",
+      "description": "The authorization code's validity period ended before this token request arrived. This timing, rather than the verifier comparison, caused the rejection.",
+      "reference_zh": "在這次權杖請求抵達前，授權碼的有效期限就已結束。造成拒絕的是這項時間因素，而不是驗證值的比對。",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "v16",
+      "description": "The application was refused access because the verifier supplied for this request was",
+      "reference_zh": "應用程式遭到拒絕存取，因為此請求所提供的驗證值是",
+      "expected_category": "indeterminate"
+    }
+  ]
+}

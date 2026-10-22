@@ -207,3 +207,15 @@ swift -swift-version 6 experiments/E009/LaunchVerification.swift --app-bundle .b
 #### M04 獨立檢查結論與交付範圍
 
 Tester 的最終 hosted mock 為 17 definitions／18 executions、0 failures，binary 重新凍結 RF01 已解除。獨立 Reviewer 在 architecture overview 的現況句修正後明示 approved、required fixes=[]；只審本 38 paths，不代表產品採用或新真人成功。M04 準備按既有授權提交／推送原分支、交同 PR #63；PR metadata 待主方更新與讀回，尚不宣稱已更新 PR。M03／C01／PKCE 與 production 限制保留，Human review 不自動通過。
+
+## 2026-10-22：同步 dev 後的本機候選 build
+
+本次只解同 PR #63 與 `origin/dev@14d0832f042720889993d769b4cbfb720078e6b1` 的十檔衝突。六 Swift 檔的 upstream 逐檔等於原 9f 基線，故保留已受驗 M01／M02 手動與配置增補；upstream 文件／獨立工具／PKCE 結果及額度原樣繼承，未執行它們。root Sources／Tests／Package 相對合併前 #63 無差異，沒有新 root 行為需重跑全 suite，也沒有新增測試定義。
+
+沿用 M04 project／scheme／macOS destination 與 `.build/github-account-login-feasibility/VerificationHostDerivedData`，依序 `build-for-testing`、`test-without-building`、最後 normal `build` 全 exit 0；host 的 17 definitions／5 suites pass，其中一個參數化測試執行兩案，共 18 executions、0 failures；xcresult summary 為 17 definitions passed／0 failed。這只是既有 mock 契約／合併相容性核驗，不是 TDD 新行為或真人重驗。
+
+最後 normal build binary SHA-256 為 `66aa6f9af216198df2e982aa2e9295fc16f9124e05a848aadac9676ae57dba2f`，launcher 已重凍結至此本機候選產物。M04 的 `781e1413…`／先前 `96ee9b…` 及 M03 `990917ac…` 均保留為各版歷史，不再視為本次現行 launcher 指紋，不用新 build 改寫真人結果。此值不保證其他 compiler／path 或重建相同；後續如再重建，必須重新核對，不可保留失配 launcher 或關閉檢核。
+
+本次沒有真人 App launch、憑證輸入、OAuth 或 PKCE 操作。launcher 的隱藏 TTY、無秘密 argv／檔案／log、拒絕既有 App 與新程序身分檢核保持原樣；手動 URL 仍為同一 session、最多 300 秒、單輪後停止。合併候選尚未 commit，獨立 Tester／Reviewer 尚待核對；先前 approved 僅屬各歷史範圍。
+
+本輪 launcher 已以 Swift 6／complete strict concurrency／warnings-as-errors 編譯及 synthetic self-test exit 0，明示無 live launch／credential input；host／launcher strict format、SwiftLint（13 files、0 violations）均 exit 0。此為 Implementer 檢查，獨立 Tester／Reviewer 尚待；未 commit／push，未重跑 PKCE／root 全 suite。

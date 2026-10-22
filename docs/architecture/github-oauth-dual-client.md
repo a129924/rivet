@@ -175,3 +175,13 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 **分段 UX 真人補測（2026-10-15）。** 後續經 Human 明確授權免除桌面工具連線前提，改由本人逐段觀察，唯一 [Human-only 結果](../../experiments/E005/evidence/ux-human-only-result-20261015T080306Z.json) 已將設定、正常存取與清理提示分離：首次保存／存取 0 次、相同 binary 的 fresh-process 讀取 0 次、不同 hash／相同 DR 的重建版讀取 1 次憑證提示。Human 明確回報該次只能輸入密碼並選「允許」；setup 與撤 trust 各一次指紋設定授權另記。每段皆在前段完整觀察及新 ready 後執行，machine／Human SHA 綁定與控制原樣 snapshots 均保存於 [本輪證據](../../experiments/E005/evidence/ux-human-only-20261015T080306Z/)。
 
 六欄資料全數還原、身份／簽章前提成立，OAuth／exact-cert trust／own search-list membership／專用 Keychain與秘密已精確清理，原清單順序及 default 恢復。獨立 Tester／Reviewer 核對後，按寫入前「首次最多一次，fresh-process與同身分重建均零」判準，**此候選 UX 失敗、資料機制成功，受限驗證任務完成**；本輪不再是提示階段未知。前輪 unknown 收據保留，不把本次「允許」混成前輪「永遠允許」，不推論其他選項或未測下一次重建。這是本次 macOS／legacy／隔離自簽＋限定 user Code Signing trust／暫時 user search-list 條件的結果，不證明所有免費 Keychain 路徑不可行或需要付費；DPK、其他 macOS、長期 retained identity 及真 denial 仍未驗證。正式 adapter／採用繼續延後，既有 provider ownership 不變。
+
+## 正式 OAuth 能力與獨立驗證 App
+
+`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
+
+2026-10-21，Human 在來源版本 `e941d88` 的獨立驗證 App 完成真實授權；agent 觀察實際 API 成功與同程序再次查詢成功。舊版 `e63eeb2` 證據另保留；現行 canvas v2 的人工互動已通過。2026-10-21 反向 PKCE missing／wrong 各執行一次，均 HTTP400 拒絕但原因 unknown，兩者結論皆無法判定；完整遠端 refresh／401 本輪不執行，持久化亦未因此驗證。詳見 [首次 OAuth 契約](github-first-sign-in.md)。
+
+### Q 輪：獨立反向 PKCE 診斷 version 2
+
+本輪僅改善獨立驗證 CLI 的有限脫敏分類，不改正式 OAuth、credential/provider/scope或refresh/401契約。事前固定完整模板與case/衝突規則，區分GitHub拒絕及已證明PKCE拒絕；僅提及verifier、一般invalid_grant或unknown都不是通過證據。P兩次HTTP400 unknown/indeterminate保留，不追補原回應。Q新missing/wrong各一次、總2/2已用完：兩案HTTP400 invalid_grant/code_problem、無token，description unknown且mentions_verifier=true，均無法判定；hint不能證明PKCE原因，不擴表或重試。受控25tests通過不代表遠端通過。[新版來源與證據](../../plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md)。正常登入/再次查詢及canvas既有Human結果沿用；正式Rivet產品登入UI、完整遠端refresh/401仍未交付或pending。

@@ -4,7 +4,7 @@ import Darwin
 import Foundation
 
 // Public executable fingerprint only. Never place App credentials in this file.
-let expectedBinarySHA256 = "781e1413dfae1f14ef46369c65c82435c76f7aebcee1154e452bcd671aae7153"
+let expectedBinarySHA256 = "66aa6f9af216198df2e982aa2e9295fc16f9124e05a848aadac9676ae57dba2f"
 
 struct VerificationProcessIdentity {
   let bundleID: String?
