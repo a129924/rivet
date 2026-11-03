@@ -1,5 +1,19 @@
 # GitHub 持續連線：獨立驗證 App 技術契約
 
+> **現行路由（2026-11-03）：以文末 R64 評論回修補充為準。** 原 D／C／R／S 契約、當時「現行」字樣及 D04／D05 收據保留為各日期的歷史，不構成本輪核准；R64 不重開其執行或 Git 清理授權。
+
+## 現行補充：合併後文件與 Git lifecycle 契約（D01，待獨立審查）
+
+- 鎖定 merge M=`aa16de91b560027325419b7bc904d831851c9fcb`，parents為`16606b89b8e3e6b61523c23aa0be9653c1ea7b44`及原feature `1c8e2c85fe417daf4ad20dfdaa5e2604edf07631`；prep已核原feature是ancestor且tree相同、origin/dev=M。原dev工作樹仍舊commit且乾淨，不更新它。
+- 原路徑目前改掛 `docs/github-connection-validation-summary`，起點M、無upstream；原feature `feat/github-persistent-connection` local／remote暫保留。新增兩docs由原README／證據逐項引用；facts範圍見plan，未驗明列，不用其他open PR能力補成功。
+- 新docs commit正常push此docs branch並開follow-up **Draft PR，base dev**；不向已合併PR62追加commit、不直接寫dev、不merge新PR。tag候選`v0.1.55-github-persistent-connection-verification`為annotated、精確指M，**不是後續docs commit**；目前無collision，建立／push前再查namespace，正常push，非GitHubrelease。
+- 清理原remote feature前即時核OID仍為上述1c8，再正常delete；若已不存在只記客觀狀態，若不同即停，不刪新進展。local原feature須非attached且M已保存其歷史，用`-d`，不`-D`。新docs branch local／remote一律保留。
+- worktree移除前核docs branch已push且0ahead、tracked乾淨、untracked0、非locked／非detached、路徑仍為原目標；從目標外正常`git worktree remove`，不force／prune。docs follow-up PR可仍open：本步只移除已遠端保存的工作目錄，不能誤套「新docs PR必須先merge」或刪其refs。prep查明owned ignored `.build`／兩pycache無source／私有證據，不新增泛用刪除權限。
+- tag競爭、原remote OID變、dirty／untracked／未push／locks／未知資產即停受影響步驟並回報，不覆寫、不擴清理。保留已安裝驗證App（不Quit）、真DPK、profiles／certificate及所有私有驗收資產。
+- 最後tag annotated與peeled=M、refs／PR／worktree registration／原path不存在、原branch absence、devclean等結果寫目標外owned private handoff並final／必要PRbody；不可預填，不能為刪除後回寫step再建worktree或改dev。source／架構不改，無新Swift/live/native圖重驗；mandatoryhooks照常。
+
+---
+
 ## 現行補充：RF-C01 export-clean 契約（待獨立 Plan-Reviewer）
 
 本補充僅解鎖 plan C-M01–03，其他歷史證據不改。原兩輪使用 `62dece35` 的工具，不是新runner；下方App契約繼續有效。九欄見requirements現行補充，精確檔案與cases見plan。
@@ -108,3 +122,22 @@ E00732檔逐bytes保留、兩輪unknown及profile更新未驗證限制沿用。�
 新host真人六段在實際操作前全pending：簽章準備、首次真授權保存API、samebinaryfresh、真CleanBuildfresh、受控expiry真refreshsave、輪替後無forcefresh。每段先通知Human留意系統提示，收到後才寫count；不重用舊0次、不預填。有效profile／同identity與固定位置、首次≤1／fresh0／rebuild0保留。首次段、重啟、重建、refresh、輪替後fresh均需新host新provenance；controlled不等naturalexpiry。無法配合時停Human段，其他非相依工作先完成。
 
 README／design-principles／architectureREADME／dual-clientdoc修成「驗證工具與可行性結果／限制」，既有productionlifecycle保持，不宣稱正式產品登入完成。archify／architecture-canvas依skills真QA；pr-lens使用真base/head與覆蓋邊界，graphify禁自動refresh並沿可用graph或sourcefallback，不能為此去建索引／裝hooks／改工具設定／公開發布。
+
+---
+
+## R64 現行技術與證據契約（2026-11-03）
+
+本輪九欄以 [R64 requirements](requirements.md) 為準；只修文件，不改正式 API、架構、實驗判準或 runtime。`218b43cc7df251664114029571e3d16327ed571d` 是 #64 索引整合基線；`613a505025774b3841ab73b4ed3b8774be38274a` 是該輪已合併 dev 來源 pin，均不是真人執行 build。
+
+| 已合併來源 | 固定保存點與可支持範圍 |
+|---|---|
+| #62／E001–E007／持續連線 App | `aa16de91b560027325419b7bc904d831851c9fcb`；[真人證據](https://github.com/a129924/rivet/blob/aa16de91b560027325419b7bc904d831851c9fcb/plan/github-persistent-connection/evidence/verification-host-live.md)。真 GitHub、真 DPK、fake-only 測試、受控 expiry 分列；profile／identity／certificate 前提屬此 DPK 路徑，非 #63 ad hoc host。 |
+| #61／首次 OAuth 與 PKCE 歷史 | `14d0832f042720889993d769b4cbfb720078e6b1`；[安全證據](https://github.com/a129924/rivet/blob/14d0832f042720889993d769b4cbfb720078e6b1/plan/github-first-sign-in/evidence/pkce-semantic-review.md)。A07 執行 `e941d88`、X 工具 `4dbf3df` 各自保留；X 是單次 wrong provider claim，P／Q 各 2/2、共享 R→T 1/1、X 1/1 與原 indeterminate 不回改，不外推 missing 或普遍 enforcement。 |
+| #63／E009 | `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`；[E009 分層紀錄](https://github.com/a129924/rivet/blob/fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4/experiments/E009/README.md)。M03 的五步／三前置與同輪 300 秒由 Human 確認；agent 只核目前程序／binary／source，不具全程 UI／network trace。有效帳號是 source contract 推論；C01 撤回 L01、A07 與原 pending 保留。M04／後續 merge mock/build 不算新 live。 |
+| #65／E008 | `0276ff3385495ed7fb0444e02b3b6da0757dd17a`；[實驗原紀錄](https://github.com/a129924/rivet/blob/0276ff3385495ed7fb0444e02b3b6da0757dd17a/experiments/E008/README.md)。執行來源 `d067c2c6adad7b1bcb19639c3f0ca58fc437e251`；Human 提供安全 JSON，provider 要求 enum 一致、因果判讀分歧，主要假設與 CLI proof 保持 indeterminate／false，1/1 用盡，不用後輪回填舊 missing。 |
+
+### E006 的精確修正依據
+
+[partial Human receipt](../../experiments/E006/evidence/run-20261019T021023Z-b832a57f/selected-second-build.partial.human.json)只記 `reportedOnlyConfigurationChanged=true` 與 Rebuilt build 成功，整輪觀察當時仍未齊；它不能單獨證零提示或 Clean 操作。[E006 README](../../experiments/E006/README.md) §5 記 Debug／Rebuilt，first executable SHA `b2d0ec7706b2682c70249867eba42fc587428d2ee139c6d711ab6f1d4a784840` 與 rebuilt `b9320e1eac2b6d3f08faa538d781101ad6e15f876d288f18226f3f3a437182d8` 不同；§6–7 的後續整輪 Human sidecars／獨立驗證才支持受限 0／0／0。
+
+因此摘要 E006 列與 plan D facts 改為「切換至 Rebuilt configuration 真正重建」；不改結果、收據、雜湊或 #62 真 Clean／Build 段。索引中的來源版本、觀察層級與未驗證範圍持續分開；產品入口、production custody、自然到期、profile renewal 或普遍 PKCE 不能因本輪文件審查而獲准。
