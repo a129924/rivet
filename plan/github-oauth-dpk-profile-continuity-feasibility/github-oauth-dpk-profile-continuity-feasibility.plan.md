@@ -1,8 +1,10 @@
 # Profile-only 自然到期執行契約
 
-本計畫承接 [requirements](../../analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md) 的九欄與來源，操作契約見 [technical-spec](../../analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md)，進度見 [step](github-oauth-dpk-profile-continuity-feasibility.step.md)。既有準備已完成獨立審查，目前 S06-BOOTSTRAP 四檔窄幅回修待獨立審查，主假設未執行。
+> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01四檔已獨立Plan-Reviewer approved、required_fixes=[]；M02作者遷移交付，待M03/M04獨立驗證審查，尚未整合/登記/發布。S06仍human-check、主假設未執行。
 
-## 階段與檔案影響
+本計畫承接 [requirements](../../analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md) 的九欄與來源，操作契約見 [technical-spec](../../analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md)，進度見 [step](github-oauth-dpk-profile-continuity-feasibility.step.md)。現行為PR67 E010遷移契約待M01獨立審查，主假設未執行；下列舊E008實驗/GUI流程均歷史，不得作當前執行入口。M01後唯一路徑為E010受限遷移/準備，精確scope與M-TestCase見PR67段落。
+
+## 歷史計畫：階段與檔案影響（非現行遷移執行指示）
 
 1. S01 Plan-Creator只落地四檔；S02獨立Plan-Reviewer實際審查，對話草案被接受不取代approval。
 2. S02 approved後S03 Implementer可準備E008候選最小App/harness/puretests/unsignedcompile；建立前跨registeredworktrees再次查號，碰撞回修四檔重審。不得匯入/修改未合併E007，不修改E006/其18sourceSHA/index/rawreceipts、其他topic/root/sharedpackage/config/hooks/docs。只本feature可寫。
@@ -13,7 +15,7 @@
 
 八段README依skill模板建立；圖/外部工具不能成為取得live權限的替代，若後續需要額外圖工具交付另限範圍，現在不建立或發布圖。
 
-## TestCase與事前判準
+## 歷史計畫：TestCase與事前判準（非現行遷移執行指示）
 
 | ID | 準備可驗證／未來真人案例 | 必要證據與預期 |
 |---|---|---|
@@ -27,7 +29,7 @@
 | T08 | pureguards/resume/time | 注入clock只測試：manifest/receiptSHA不符、invalidHumanreceipt、symlink/越界/duplicate、window/globaldeadline、已用三窗、stage跳躍/重seed/retentiongrant缺漏均停；failurefinallycleanup，recoveryunavailable出殘留而非success。 |
 | T09 | collision／redaction | 編號碰撞不覆寫不自選新號；收據無token/TeamID/certsubject/device/絕對私有路徑；pure/unsigned與真live證據隔離；新JSON固定UTF-8/terminalLF/鍵排序後exclusive-write再hash，formatter檢查不改已完成bytes、不回修舊收據。 |
 
-## 成功、失敗、無法判定與任務完成
+## 歷史計畫：成功、失敗、無法判定與任務完成（非現行遷移執行指示）
 
 資料恢復成功須實際跨P0自然到期、P1確實換新有效、固定certificate/fullgroup控制、原A六欄未改寫恢復、首次≤1/後續normal0、精確清理。真實有效P1前提完整且資料不符或正常存取提示超標→失敗。profile重用、未跨expiry、certificate混變、帳號/quota/host/recovery不足、缺Human觀察→無法判定。未嘗試live→未執行，不以build/mockgreen取代。
 
@@ -35,11 +37,11 @@ availability另記：舊host過期不能launch僅證中斷，不證item遺失；
 
 任務完成與假設成敗獨立：證據、缺口及限制可完整記錄unknown，但有假item／私有素材cleanup未完成時不得宣稱整體任務完整完成。cleanup要不要Appleasset權限另詢Human，不改trust/ACL/partition/default/search-list、不保證強制停止後自動清理。
 
-## 保留缺口
+## 歷史計畫：保留缺口（非現行遷移執行指示）
 
 成功仍不核准adapter：實際產品mainhost/entitlement維護、A→B完整update/freshread、malformed/denied/interactionUnavailable/missingEntitlement與notfound區分、certificate renewal/rotation、長期恢復仍需分開。E006 save只是SecItemAdd不可直接當正式store.save；group改變不可默默回nil/刪item。不新增AuthBC、不改GitHubIntegration/providerownership、不導入fallback/migration/跨程序refresh。
 
-## S06-BOOTSTRAP 窄幅回修契約（2026-10-21）
+## 歷史計畫：S06-BOOTSTRAP 窄幅回修契約（2026-10-21）（非現行遷移執行指示）
 
 Human 已同意窄幅回修後回 S06。此次 Plan-Creator 僅修改本四檔；不動 E008 source/README/evidence，不 arm/設定資產/測量。改正原 global 先需 actual dates 與 selected verifier 先需 global 的循環，細節以 technical-spec 兩階段建立為準。時間、profile-only/samecert/fullgroup、原A不重寫、所有RF01–RF06 controls 不變。
 
@@ -55,7 +57,7 @@ Human 已同意窄幅回修後回 S06。此次 Plan-Creator 僅修改本四檔�
 
 順序：Plan-Reviewer→Implementer→Tester→獨立Reviewer→回S06 Human。只有這輪四檔、受限prepfix與純驗證／審查獲准；真anchor/clockarm、資產/CMS/Security/簽章、App/live/跨週retention及Gitpublication仍無授權，Human須再確認具體scope與freshready。任何新requiredfix依原角色回修，不用歷史approval預填本revision通過。
 
-## S06-D 操作 checkpoint 文件補強（2026-10-22）
+## 歷史計畫：S06-D 操作 checkpoint 文件補強（2026-10-22）（非現行遷移執行指示）
 
 本revision僅改四planning artifacts＋既有E008 README操作清單/未來證據欄位，不新增第五正式artifact，不改source/config/CLI schema/測試/immutable receipts/index。不得新建privateRoot/grant/namespace/clock、UI/Xcode/Build/CMS/Security/App/DPK或Git。舊控制輪closed；本次「繼續下一步」不是新輪或asset/ready授權。
 
@@ -69,3 +71,36 @@ Human 已同意窄幅回修後回 S06。此次 Plan-Creator 僅修改本四檔�
 - 報告仍空或host不完整→zero-item受控stop/精確FS cleanup，保留HumanBuild聲明且outsideunknown；不作配置bug或DPK失敗結論。
 
 交獨立Plan-Reviewer，沒有新source故不發起build/test。審查通過後也仍回S06 Human確認新輪scope/S/資產與逐段ready；不自動執行上述清單或開新run。
+
+## PR67遷移：當前受限執行契約
+
+M01已由獨立Plan-Reviewer正式approved、required_fixes=[]；M02作者已交付遷移與必要離線準備，待M03/M04。22原檔/193清冊及171immutable bytes保持。以下執行順序不變；尚未stage/commit/merge/push，不預填未來結果。
+
+1. **M00保全**：原commit422d0c7的22檔及193清冊已保存；不得修改既有23保全產物。清冊SHA見requirements。
+2. **M01實際契約審查**：獨立Plan-Reviewer審四檔與本次Human細則，approved才交Implementer。原對話/準備approval不替代此gate。
+3. **M02遷移**：先重查registeredworktrees（含untracked Markdown保留）、遠端完整trees/openPR及新base/head；E010被別owner占即停Human，不E011。精確active17/README/171move與offline mapping按spec，新active manifest/必要新證據，不改immutable內容。
+4. **M03 Tester→M04獨立Reviewer**：只驗當時已交付的M-T01–04、M-T05當時可核之保存/連結/上游保護基線與M-T06首次占號。只puretests/必要兩版unsignedcompile；未整合/commit/push/readback的項目明列尚未執行，不要求提前通過。正常hooks在各commit按stageddiff範圍執行，不新真人/GUI/App/Security。
+5. **M05第一commit Human訊息停點**：實際stage受限migration diff、核PKCE保護/19xaccounting，提出具體message，Human確認後append migration commit；不沿原2806702/266a1b7/422d0c7訊息、不rebase/amend/force。
+6. **M06占號→受控整合/登記（Implementer）**：整合/登記時再重查上述占號與base。執行`git merge --no-commit --no-ff origin/dev`，不自動commit/FF跨Human；預期外其他topic衝突即停，不ours/theirs。整合後由Implementer更新`experiments/README.md`及`experiments/VALIDATION-SUMMARY.md`，僅增E010保留E001–009，不從dev獨立拷檔製造add/add；原migration使head相對共祖不再新增DPK rootE008，正常三方保留dev PKCE。
+7. **M07獨立核對（Reviewer）**：只審M06已由Implementer修改的`experiments/README.md`及`experiments/VALIDATION-SUMMARY.md`、最新PKCE bytes與整合diff，不代寫/修檔。補核M-T05整合後保護/登記與M-T06第二次占號、M05已發生commit/訊息確認/正常hooks；有必要驗證只限受影響範圍。
+8. **M08第二commit Human訊息停點**：核實際整合後stageddiff、擬具體message，Human確認後正常hooks/commit；仍不借舊message或讓merge自動提交。
+9. **M09發佈/工具交付（Implementer）**：push前第三次核本機/保留聲明/remote/openPR占號；衝突停。補記M08實際Human訊息確認/正常hooks/commit，按適用授權push/更新PR67，readback真base/head/paths、仍Draft且非CONFLICTING才稱解除，本機clean不足。若重生PRLens，pin0.11本機外部以真新base/head validate/render，舊凍結圖不改；Graphify無圖sourcefallback不autoextract。補交M-T06第三次占號/第二commit與M-T07實際發布/工具證據，不預填成功；工具不替代Reviewer或DPK證據。
+10. **M10 Human review**：取得M09實際發布/readback/工具交付證據後，停Human決策；不merge至dev、不adapter。
+
+E010只有完成整合/登記及必要發佈核對才可按實際狀態稱登記，不以mkdir宣布全球唯一。每次base更新先核新增PKCE檔保護，非無限跟進上游；超scope停Human。
+
+### M-TestCase
+
+分期驗收：M03/M04不驗未來事件；M05/M08各commit後、M06整合/登記後及M09push/readback後按實際新增證據補核相應項目。未發生記尚未執行，不能用M04 approval預填整合或發布通過。
+
+| ID | 必要驗收 |
+|---|---|
+| M-T01 | 原193逐檔accounting；17active/README/4docs的原bytes在22快照、158+13同bytesmove；23保全不覆寫。 |
+| M-T02 | 兩輪47/60檔與4+10indexes含self-exclude、人機SHA不變；舊source manifest對原snapshot，新manifest對newactive，無SHA循環。 |
+| M-T03 | JSON vs MD/HTML按原context/version分解析，歧義/缺失/SHA不符failclosed；5unavailable明列，22files/22sourcecombos統計不混，不false-origin。 |
+| M-T04 | 新E010正向/舊E008 root-kind-service-grant-ID拒絕purecases，拒絕過程零backend/Security/launch；Python/Swiftmarker/Debug-Rebuilt相符，必要兩版unsignedcompile。 |
+| M-T05 | 最新base PKCE E008 bytes/文件保持，活動新links正確、歷史經map或unknown；不compatshim/legacyresume/重建privateRoot。 |
+| M-T06 | 分期：M03/M04只核首次占號；M07補核第二次占號、整合/registry與M05已發生commit；M09補第三次占號/M08 commit。兩commit各真stageddiff/message Humanconfirm與hooks，未發生不預填；碰撞停、merge不自commit。 |
+| M-T07 | 僅M09發布後核GitHub真base/head/paths仍Draft且非CONFLICTING；PRLens新外部map僅真head/Graphifyfallback，交M10Human；M03/M04尚未執行，不拿歷史approval冒充。 |
+
+移動正確/離線證據保存與準備green只驗遷移，不構成profile自然到期/UX成功。五source缺口為已接受保留的既存unknown，不要求為遷移捏造恢復；其他新缺口依證據明列，必要停止。此契約不放行真測量或E008 PKCE內容修改。

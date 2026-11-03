@@ -1,9 +1,11 @@
 # DPK profile 自然到期與資料恢復需求
 
+> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01四檔已獨立Plan-Reviewer approved、required_fixes=[]；M02作者遷移交付，待M03/M04獨立驗證審查，尚未整合/登記/發布。S06仍human-check、主假設未執行。
+
 - Topic：`github-oauth-dpk-profile-continuity-feasibility`
 - Branch：`chore/github-oauth-dpk-profile-continuity-feasibility`，僅本 topic feature worktree。
-- 狀態：2026-10-22 S06 操作 checkpoint 文件補強待獨立 Plan-Reviewer；bootstrap／上輪 controlled-stop 受限 approval 保留，主假設未執行。
-- 新實驗候選 E008：E007 已由旁支占用；Implementer 建立前須跨已登記 worktrees 再查占用。碰撞回 Plan-Creator 同步四檔並重審，不覆寫、不自行換號。
+- 狀態：M01正式approved，M02作者交付待獨立驗證；主假設未執行，S06 human-check。
+- 現行活動目標E010：活動檔案已遷移，尚未整合/登記/發布；三時點重查占號，碰撞停Human。原DPK E008以下僅歷史，dev PKCE E008不可操作。
 
 ## 決策問題與主要假設
 
@@ -19,7 +21,7 @@
 
 旁支 `feat/github-persistent-connection` 的未合併 E007 是有限背景，不是本 topic baseline／採用 gate／實作依賴。Caller Explorer 2026-10-20 已確認其即時 profile 更新嘗試在45分鐘內因 profile/binary SHA 均未變而 `profileDidNotChange` 停止；renewal read 未執行、結果無法判定、S04e human-check；owned 資料已清理。它未涵蓋自然到期，不能稱續期成功或失敗。本 topic 不匯入／修改旁支 source、raw receipts、資產或授權，亦不需要 E007 可在主 repo 重讀才能執行。
 
-## 九欄契約
+## 歷史九欄契約（原DPK E008準備範圍，非現行授權）
 
 | 欄位 | 本 topic 契約 |
 |---|---|
@@ -33,7 +35,7 @@
 | Deleted | 本 phase 無；未來另授權後僅新 UUID item、proven owned App/私有暫存。保留歷史證據，不刪 Apple 資產。 |
 | TestCase | plan T01–T09；準備 mock/unsigned 不當真實 profile／SecItem／UX 證據。 |
 
-## 授權分層與判準
+## 歷史授權分層與判準（現行遷移九欄/commit授權見PR67段落）
 
 Human 已接受受限提案並授權新 feature／四檔，獨立 approval 後準備 minimal harness。現在沒有跨週留存、Apple account/asset、簽章、live launch、Security/Keychain 操作、實際計時 arm 或 commit/push/PR 權限，不沿用 E006/PR59/E007 授權。
 
@@ -70,3 +72,25 @@ Planner 指出首次設定的循環前提：原 global 要先有實際 P0／cert
 唯一補強是未來已獲授權原W1內的操作鏈：新begin→setup-ready→打開同私有project先選Team/合格既有cert但不Build/Run→exact-window GUI設定核對→另build-ready→Human一次⌘B不Run→保持同窗先取matching Report與actualproduct來源→host完整才進原setup-only／complete-global／完整setupHuman／另seed-ready。無法核對就停止，不另掃全域DD或資產、不自動重Build。今日Written/Modify僅本四檔及既有E008 README，Deleted無；不新增runtime收據或更動source/config。
 
 Apple操作說明只作核對依據，不保證本機精確UI文字／位置：Explorer於2026-10-22查閱 [Monitor builds](https://help.apple.com/xcode/mac/current/en.lproj/devb7cf06445.html)、[Build settings](https://help.apple.com/xcode/mac/current/en.lproj/itcaec37c2a6.html)，文件版本current。本補強仍待獨立review，GUI核對即使成立也不等actualCMS/proof或DPK成立。
+
+## PR67遷移：需求與九欄（當前）
+
+PR #67 head/originCommit=`422d0c7dd07bf9a746a142d6a07a5cad60c947ed`、共祖`16606b89b8e3e6b61523c23aa0be9653c1ea7b44`；調查時dev為`758aca9bb518f2a21f20f47609335fac49043370`。E008已由dev PKCE使用，E009由login使用。E010在調查的registered worktrees／保留聲明／遠端trees／openPR範圍未占用，不等全球唯一或完成登記。固定遷移E010，不自改E011。topic/branch不變。
+
+| 欄位 | 本次遷移契約 |
+|---|---|
+| Goal | 保護dev PKCE E008，將本DPK活動身分遷E010並保全歷史、解除PR編號路徑衝突。 |
+| Non-Goal | 新真人/GUI/DPK/profile測量、資料或Apple資產遷移、正式adapter採用。 |
+| In-Scope | 原193檔accounting、22原檔快照、171immutable移動、active17限縮改名、離線映射、新準備驗證、受控dev整合/登記/PR67更新。 |
+| Out-Of-Scope | global replace、動態ID框架、舊E008resume/cleanup/Keychain查詢、compatibility shim/symlink、其他topic回修、rebase/amend/force、merge至dev。 |
+| ReadOnly | 最新批准base的PKCE E008、E006/E007/其他topic/production；舊receipt/HTML/index內容與既有23保全產物。 |
+| Written | 已完成22byte快照＋original-files清冊；後續renumbering-map、新E010active-source manifest、必要離線驗證/純測試/unsigned準備證據。 |
+| Modify | 精確active17 allowlist、新E010 README、同slug四檔；dev整合後僅兩registry新增E010，不動上游E001–E009。 |
+| Deleted | 保全及映射確認後，舊DPK Git路徑由move移除；不刪PKCE、immutable內容、Apple資產或已清理私有root。 |
+| TestCase | plan M-T01–M-T07；歷史approval只對舊source版本，新E010須新驗證。 |
+
+Human已接受E010活動身分、immutable映射/22快照/五source缺口、追加遷移commit及受控feature整合dev/登記。每筆commit仍須實際stageddiff→具體message→Human確認；原三筆message不是本次新commit授權。真測量/資產/adapter/merge至dev未授權。兩輪closed/rootgone、零DPKitem、S07/完整S08pending不變。
+
+原193=17active＋1README＋158evidence＋13GUI/Archify＋4docs。22保存檔=17active＋README＋4docs；另「27種歷史sourcePath/SHA組合中22種有bytes」是不同統計。五缺失預設保留unknown：initialProbeCore、initialtest_continuity、舊continuity、舊proof、RF01test_continuity，標content-unavailable-in-published-snapshot，不虛構內容或Git版本。receipt/index可驗≠全部舊source可重建。
+
+以上為四檔編寫階段的權限快照；M01現已approved，M02作者已按核准範圍遷移與新離線準備，23保全保持，獨立驗證/審查尚待。先前保全清冊SHA=`ac06351613c2aa198b2139e71cc72c8106b177f051c4732a107fa7dafc4855ef`；遷移與整合結果待後續角色實際交付，不預填完成。

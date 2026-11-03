@@ -1,0 +1,313 @@
+{
+  "approvedBaseAtFirstOccupancy": "758aca9bb518f2a21f20f47609335fac49043370",
+  "authorCorrectionHistory": {
+    "MRF01": {
+      "allPreviousBytesPreservedOutsideRepository": true,
+      "beforePreservationManifestSHA256": "e3a786b45befbb92918e0d14767751b49ca99259eb178e02e9a6a11433516500",
+      "changedActivePaths": [
+        "Tests/test_continuity.py"
+      ],
+      "previousMapSHA256": "676094ca214d5a835ad913917ea46ccf1148ea4e2aa9081b2b296449e1b1e750",
+      "previousPreparationReceiptSHA256": "613b1da2fd49b371ae5b2857ed1286718dd2260e7eb0801f2cb9df846c34aeef",
+      "previousSourceManifestFileSHA256": "fada87be9f219e2db8f56bd3266679bfe9646ae57750dbcd2d0d61247c195088",
+      "semantics": "Three aggregate manifest fingerprints are non-file digests; excluded before all file lookup and missing-file accounting."
+    },
+    "failedAuthorMapsBytePreservedOutsideRepository": true,
+    "firstMapSHA256": "e1ceeb25b938f631d43562414acf4c687cb2a950f3cd22188b7564edf6f32133",
+    "noOriginal23Or171ChangedByCorrection": true,
+    "secondMapSHA256": "b19fc3fc17216f4c10a46f0ce701767761878577efb87a42639d7ebab224a6ea"
+  },
+  "authorRevision": "M-RF01",
+  "authorStatus": "M-RF01-author-fixed-awaiting-original-Tester-focused-retest",
+  "boundaries": {
+    "AppLaunched": false,
+    "AppleAssetsInspected": false,
+    "CommitStageMergePushPerformed": false,
+    "FormalAdapterAdoption": false,
+    "LiveClockArmed": false,
+    "OldE008ItemQueriedOrMigrated": false,
+    "PrivatePersistentRootCreated": false,
+    "RegistryModified": false,
+    "SecurityCalls": 0
+  },
+  "currentLiveStatus": "human-check",
+  "currentLiveStep": "S06",
+  "fullFeasibilityTaskComplete": false,
+  "independentRevisionApprovalClaimed": false,
+  "kind": "E010-renumbering-author-preparation",
+  "liveHypothesisStatus": "未執行",
+  "mapping": {
+    "SHA256": "f5f5668fb2e5b7cefdecf2d13088c7b2cc3b252d5f1bad452f1adb0a1e9d7cca",
+    "archivedFiles": 22,
+    "failClosedResolverFixtures": {
+      "ambiguousCandidateFailsClosed": true,
+      "exactContextAndSHAPass": true,
+      "missingPathFailsClosed": true,
+      "noPKCEE008Fallback": true,
+      "wrongSHAFailsClosed": true
+    },
+    "nonFileDigestCount": 3,
+    "nonFileDigestFileLookupAttempted": false,
+    "originalAccountingCount": 193,
+    "path": "experiments/E010/history/renumbering-map.json",
+    "privateOrExternalUnpublishedBytesNotReconstructed": true,
+    "referenceCount": 1952,
+    "referenceKinds": {
+      "html-link": 7,
+      "json-receipt": 1873,
+      "markdown-link": 72
+    },
+    "referenceStatuses": {
+      "content-unavailable-in-published-snapshot": 16,
+      "resolved": 1726,
+      "sha-mismatch": 25,
+      "unresolved": 185
+    },
+    "resolvedSourceCombinations": 22,
+    "sourceCombinations": 27,
+    "unavailableSourceCombinations": 5,
+    "unresolvedClassifications": {
+      "SHA-only-no-unique-content-in-recorded-context": 55,
+      "deleted-private-original-control-digests": 20,
+      "external-document-links": 12,
+      "five-historical-source-versions": 16,
+      "historical-document-version-SHA-mismatch": 25,
+      "other-exact-context-not-published": 56,
+      "planned-private-control-paths-not-public-file-claims": 18,
+      "removed-external-preparation-helpers": 5,
+      "source-path-without-recorded-version": 15,
+      "synthetic-external-fixture-artifacts": 4
+    }
+  },
+  "newFilesBeyondOriginal193": [
+    "experiments/E010/evidence/renumbering-active-source-manifest.json",
+    "experiments/E010/evidence/renumbering-preparation-check.json",
+    "experiments/E010/evidence/renumbering-pure-tests.txt",
+    "experiments/E010/evidence/renumbering-unsigned-preparation.json",
+    "experiments/E010/history/pr67-422d0c7/original-files.json",
+    "experiments/E010/history/pr67-422d0c7/tree/analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md",
+    "experiments/E010/history/pr67-422d0c7/tree/analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/DPKContinuityProbe.xcodeproj/project.pbxproj",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/README.md",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Resources/DPKContinuityProbe.entitlements",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Resources/Info.plist",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Sources/DPKContinuityProbe/AppMain.swift",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Sources/DPKContinuityProbe/LiveGate.swift",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Sources/DPKContinuityProbe/LiveStore.swift",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Sources/DPKContinuityProbe/ProbeCore.swift",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Tests/CoreTests.swift",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Tests/ReceiptProducer.swift",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Tests/WindowChainProbe.swift",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Tests/test_bootstrap.py",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Tests/test_continuity.py",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/Tests/test_review_fixes.py",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/scripts/continuity.py",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/scripts/prepare.py",
+    "experiments/E010/history/pr67-422d0c7/tree/experiments/E008/scripts/proof.py",
+    "experiments/E010/history/pr67-422d0c7/tree/plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md",
+    "experiments/E010/history/pr67-422d0c7/tree/plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md",
+    "experiments/E010/history/renumbering-map.json"
+  ],
+  "newSource": {
+    "manifestFileSHA256": "a2692eb1ac32fd90febee7b69b3dd0a65bc082c1be6e41f4af4573638c9b7a70",
+    "manifestPath": "experiments/E010/evidence/renumbering-active-source-manifest.json",
+    "sourceCount": 17,
+    "sourceManifestSHA256": "aaede12e49ec8ff4987b0955cf991c9f1af62b9444943e66e1241980d7aa8fec"
+  },
+  "next": "Same M03 Tester focused M-RF01/map/manifest retest and saved M-T05/M-T06 reads, then M04 Reviewer; no new live or Git action.",
+  "originCommit": "422d0c7dd07bf9a746a142d6a07a5cad60c947ed",
+  "preparedUTC": "2026-11-03T08:15:46.293708+00:00",
+  "preservation": {
+    "E006AllBytesUnchanged": true,
+    "E006FileCount": 126,
+    "PKCEApprovedBaseSHA256": {
+      "experiments/E008/README.md": "ed9048ff10225dc054698a6283d75444432ec3cada213898496db7584d0fb774",
+      "experiments/E008/safe-result.json": "bddf18e2d5e4d9c72baf7d8a0f52e8140d2faf116f0bbf14342342968b8639c6"
+    },
+    "all171OriginalSHAUnchanged": true,
+    "archivedOriginalFiles": 22,
+    "devReadonlyObserved": {
+      "head": "758aca9bb518f2a21f20f47609335fac49043370",
+      "status": ""
+    },
+    "humanMachineFieldsPreservedByExact171Bytes": true,
+    "immutableMovedFileCount": 171,
+    "indexFileReferencesVerified": 352,
+    "mappedHumanMachineReferenceStatuses": {
+      "resolved": 37,
+      "unresolved": 2
+    },
+    "original14Indexes": [
+      {
+        "SHA256": "72fbace15d8d7eadc2e3d9920d6a56ca6100e6b0246c0b0cbea62cd6528c0322",
+        "destinationPath": "experiments/E010/evidence/run-20261021T035701Z-8e279f70/final-addendum.index.json",
+        "fileReferencesVerified": 46,
+        "originalGitPath": "experiments/E008/evidence/run-20261021T035701Z-8e279f70/final-addendum.index.json"
+      },
+      {
+        "SHA256": "038612eb7d7c26692926352e0832bbf79e93d0b6be04df8528df3f7e4272432b",
+        "destinationPath": "experiments/E010/evidence/run-20261021T035701Z-8e279f70/operator-pre-cleanup.index.json",
+        "fileReferencesVerified": 32,
+        "originalGitPath": "experiments/E008/evidence/run-20261021T035701Z-8e279f70/operator-pre-cleanup.index.json"
+      },
+      {
+        "SHA256": "de9046d619e99835f6224251d00e636fbbaa0bd13ed36cc935d5d116c20903d7",
+        "destinationPath": "experiments/E010/evidence/run-20261021T035701Z-8e279f70/setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/index.json",
+        "fileReferencesVerified": 9,
+        "originalGitPath": "experiments/E008/evidence/run-20261021T035701Z-8e279f70/setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/index.json"
+      },
+      {
+        "SHA256": "648dcc3c1c21a848751c7306a3dff9d5c5c6c4c3d37db341a2527179f1b96eb7",
+        "destinationPath": "experiments/E010/evidence/run-20261021T035701Z-8e279f70/setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/pre-cleanup.index.json",
+        "fileReferencesVerified": 7,
+        "originalGitPath": "experiments/E008/evidence/run-20261021T035701Z-8e279f70/setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/pre-cleanup.index.json"
+      },
+      {
+        "SHA256": "f367952a5899b36f49bb2bd7acf0715dfd63b5d2731dc0bce6e04da886b275a7",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/begin.index.json",
+        "fileReferencesVerified": 11,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/begin.index.json"
+      },
+      {
+        "SHA256": "da8e19a19a0603bfbb8092f5429b64b0f12ca194918dc9dce4583c0ed4a281b0",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/build-report-provenance.index.json",
+        "fileReferencesVerified": 3,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/build-report-provenance.index.json"
+      },
+      {
+        "SHA256": "5f3aa6927a80e68ebe2082b29c1e61fb2f9272a9943b2cffb2267bf9b7668a49",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/controlled-stop.index.json",
+        "fileReferencesVerified": 57,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/controlled-stop.index.json"
+      },
+      {
+        "SHA256": "ff8d40070b415b786d47c815d5d9d4d442dcc2a12dfb9d3d212f9373c92455c8",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/derived-data-setting.index.json",
+        "fileReferencesVerified": 27,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/derived-data-setting.index.json"
+      },
+      {
+        "SHA256": "aec4b697d54f7a877c9ba1011357e778004817e61e161a93e61814201c5ee1be",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/final-addendum.index.json",
+        "fileReferencesVerified": 59,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/final-addendum.index.json"
+      },
+      {
+        "SHA256": "b8735570bb50d657875d7dd92d0b2a791951582371ec71bf21dc2742a54813d3",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/operator-pre-cleanup.index.json",
+        "fileReferencesVerified": 45,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/operator-pre-cleanup.index.json"
+      },
+      {
+        "SHA256": "88c726b4cb72208cea923a6e3d0acc15a7436ca977d42af4035bcb3131b3d6aa",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/setup-context-verification.index.json",
+        "fileReferencesVerified": 22,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/setup-context-verification.index.json"
+      },
+      {
+        "SHA256": "d1d515967cec01f486d25459242c4943ec115d8d6f4491ded2aaac3d04a5e6f3",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/setup-prebuild.index.json",
+        "fileReferencesVerified": 18,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/setup-prebuild.index.json"
+      },
+      {
+        "SHA256": "743a4d8f209b6f29d18aec1b5a9c4f7984a3fcb8fe69eb7aa2a45448032035a6",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/setup-stop-cb2a0b13-3fe7-4b8f-99cd-721fd65f49c1/index.json",
+        "fileReferencesVerified": 9,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/setup-stop-cb2a0b13-3fe7-4b8f-99cd-721fd65f49c1/index.json"
+      },
+      {
+        "SHA256": "0a0962a26f77418acb6db7903368c1869eda780f49e1b873b475efef11207564",
+        "destinationPath": "experiments/E010/evidence/run-20261022T054623Z-dfc25e14/setup-stop-cb2a0b13-3fe7-4b8f-99cd-721fd65f49c1/pre-cleanup.index.json",
+        "fileReferencesVerified": 7,
+        "originalGitPath": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/setup-stop-cb2a0b13-3fe7-4b8f-99cd-721fd65f49c1/pre-cleanup.index.json"
+      }
+    ],
+    "original23AllUnchanged": true,
+    "originalFileCount": 193,
+    "originalFilesManifestSHA256": "ac06351613c2aa198b2139e71cc72c8106b177f051c4732a107fa7dafc4855ef",
+    "originalRunCounts": {
+      "run-20261021T035701Z-8e279f70": 47,
+      "run-20261022T054623Z-dfc25e14": 60
+    }
+  },
+  "schemaVersion": 1,
+  "synthetic": true,
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "verification": {
+    "M03IndependentBeforeFix": {
+      "PythonMethodsPassed": 56,
+      "SwiftCoreScenariosPassed": 7,
+      "receiptSHA256": "a467c6df9dfd9ef9d25f5d8a31f0f69c0ccf501a622269b4152ee45fa3816352",
+      "required_fixes": [
+        "M-RF01"
+      ],
+      "reuseReason": "No runtime/Swift/build-input changes in M-RF01; only one test file and offline mapping/statistics changed.",
+      "skipped": 0,
+      "unsignedBothPassed": true,
+      "verdict": "needs-rework"
+    },
+    "M_Rf01Focused": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E010/Tests -p test_continuity.py -k RenumberingMapTests -v",
+      "errors": 0,
+      "failures": 0,
+      "fileLookupByAggregate": false,
+      "full57NotRunForMappingOnlyFix": true,
+      "methods": 3,
+      "newAggregateNegativeObservedRed": true,
+      "skipped": 0
+    },
+    "SwiftCoreMemoryScenariosPassed": 7,
+    "SwiftPythonCanonicalRoundTripPassed": true,
+    "SwiftWindowChainActualPureHelperPassed": true,
+    "coreIdentity54Methods": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 54,
+      "skipped": 0
+    },
+    "finalSourceRequiresIndependentTester": true,
+    "full56Attempt": {
+      "errors": 0,
+      "failed": 1,
+      "failure": "artifact uniqueness key omitted original Git location for repeated identical blob contexts",
+      "passed": 55,
+      "skipped": 0
+    },
+    "full56NotRerunAfterTestOnlyContextFix": true,
+    "normalHooksNotYetRunForMigration": true,
+    "postFixFocusedArtifactRetest": {
+      "declaredRunAndProtectedPriorContextAssertions": true,
+      "errors": 0,
+      "failed": 0,
+      "passed": 1,
+      "skipped": 0,
+      "tests": 1
+    },
+    "publicTestLogPath": "experiments/E010/evidence/renumbering-pure-tests.txt",
+    "publicTestLogSHA256": "7172b5cf11b6e9c16ea9e1454706feeeda15f73d93b87b07077db378a068c6c6",
+    "unsignedConfigurations": {
+      "Debug": {
+        "debugDylibAbsent": true,
+        "exitCode": 0,
+        "mainSHA256": "cc529bac3fc2e316131fece84cb248980070c9af16307e3a7d579a651d4edb2b",
+        "performed": true,
+        "signingAllowed": false,
+        "signingRequired": false
+      },
+      "Rebuilt": {
+        "debugDylibAbsent": true,
+        "exitCode": 0,
+        "mainSHA256": "99b30de60f348f153fea70d2bf2a5c551d0b90cd63a3f05fa2b0e4e0588311ae",
+        "performed": true,
+        "signingAllowed": false,
+        "signingRequired": false
+      }
+    },
+    "unsignedInputsStillMatch8": true,
+    "unsignedNotRepeatedAfterTestOnlyFix": true,
+    "unsignedReceiptPath": "experiments/E010/evidence/renumbering-unsigned-preparation.json",
+    "unsignedReceiptSHA256": "981295bfbece9cfa29e3d765f789867b6710276523be48dd6fddfdd328caeedf"
+  }
+}

@@ -1,8 +1,10 @@
 # DPK profile-only 自然到期受限規格
 
-本規格只準備可測的最小實驗，不是正式 adapter。需求／來源／九欄見 [requirements](requirements.md)。目前主假設未執行，live／跨週留存必須另過 Human 邊界。
+> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01四檔已獨立Plan-Reviewer approved、required_fixes=[]；M02作者遷移交付，待M03/M04獨立驗證審查，尚未整合/登記/發布。S06仍human-check、主假設未執行。
 
-## 固定 host、資料與控制
+現行範圍為PR67遷移規格；需求／當前九欄見 [requirements](requirements.md)。M01審查後只遷移/離線準備，不開始live。遷移後活動程式入口只在`experiments/E010/scripts/`；`continuity.py`/`proof.py`仍不因遷移獲真人權限，`prepare.py`只允許後續批准的unsigned準備驗證。下列舊runtime規格保留設計/歷史脈絡，不是E008路徑執行許可，歷史內容經map追溯。
+
+## 歷史規格：固定 host、資料與控制（不得按舊E008執行）
 
 新 E008 候選 `DPKContinuityProbe.xcodeproj` 單一 AppKit Application target、`Sources/DPKContinuityProbe/`。main executable 在同非 root GUI/console user 執行 SecItem；透過 LaunchServices 正常啟動，每 process 一個 operation 後保存結果並退出。無 helper/daemon/產品 UI，視窗僅顯示階段，無跳關／手動寫 token 按鈕。
 
@@ -14,7 +16,7 @@
 
 每版記實際 executable/App hash、DR、profile/certificate SHA與有效期。binary hash改變不能代替profile變更；profile-only正常restore不強求main hash不同。true rebuild階段另要求編譯marker證據及main hash不同，並維持P1/certificate/group；DR記錄與解釋，不拿E006的相同profile/DR gate阻擋已授權profile cycle。
 
-## 準備與 live 的隔離
+## 歷史規格：準備與 live 的隔離（不得按舊E008執行）
 
 新增 `scripts/prepare.py`、`continuity.py`、`proof.py`，只實驗需要的函式／手動多窗口 CLI，不建泛用orchestration framework。pure core／store interface與LiveStore隔離。unsigned build固定 `CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO`，無Team值、無帳號資產存取，不launch產物。pure tests用假clock/mock launcher/asset verifier/store，synthetic=true。不得呼叫codesign身份清單、Xcode account、personalprofile/privatecert、Security/Keychain；準備亦不建立真persistent run、arm時鐘或seed。E008 README結果保持未執行。
 
@@ -22,7 +24,7 @@
 
 expired-host診斷是新harness明確唯讀operation；僅在已授權、P0確實自然過期、同namespace/group/user與原hosthash符合時可嘗試launch/read。不拿改系統clock、偽造日期或關掉guard取代；不得在此模式add/update或轉新group。launch rejected、App guard rejected、實際SecItem結果分開；沒有SecItem call即status=null/callAttempted=false，不能報missing或data loss。
 
-## 手動resume、時間與證據
+## 歷史規格：手動resume、時間與證據（不得按舊E008執行）
 
 未來runroot須Human明確選定的非Git、非易消失tmp之私有持久位置，owner-only（0700）且無symlink越界。run manifest/selection/fullprivateproof保留最低必要資訊，不export私鑰，不持久化真token。公開證據只hash/日期/必要bool/有限錯誤分類，無TeamID、certsubject、deviceID、使用者絕對路徑；私人proof在精確清理後移除。新machine/Human/index JSON在第一次落盤前固定UTF-8序列化、terminal LF及鍵排序規則，exclusive-write原bytes後才算SHA；後續不formatter覆寫已完成bytes。pure test驗證序列化可重現且formatter檢查不改bytes，不另建發布pipeline，不回修E006/E007歷史收據。
 
@@ -45,7 +47,7 @@ crash/resume/duplicate finalize 不得新時計、重寫既有 bytes 或因部�
 
 每次resume核manifest hash、namespace、凍結項、系統實際UTC、已使用window序號與既有exclusive收據；不重seed、不重計10日。用`read-stage`類手動resume，不自動排程。每段機器receipt含起訖、window/phase、實際hash/profile/cert驗證、callAttempted/OSStatus、六欄bool、launch/guard/classification/cleanup，machine提示null保留。sidecar綁receiptSHA、wholeStageObserved、phaseIdentified、promptCount及actions/purposes。gate引用上一matchingSHA、觀察及freshHumanReady；receipt exclusive、不覆寫。無完整觀察、SHA不符、assets/source/control變更即停測，不依exitcode/耗時推提示。
 
-## 狀態與操作
+## 歷史規格：狀態與操作（不得按舊E008執行）
 
 操作固定：begin-anchor/W1（bookkeeping，需另授權與ready）→setup-only inspection（零App executor／launch／SecItem）→complete-global/actual-proof→獨立seed-ready→preflight（無SecItem）→seed-read-A→fresh-read-A→retained/wait→expired-host-diagnostic→Human P1 setup→P1 fresh-read-original-A→retained待W3→true-rebuilt-read-original-A→delete-read-absent。setup／expired診斷／正常read／cleanup的Human觀察各自分段，不合併prompt。
 
@@ -53,7 +55,7 @@ crash/resume/duplicate finalize 不得新時計、重寫既有 bytes 或因部�
 
 到期前優先原有效host exactdelete/read-absent；到期後使用另獲授權、同完整group有效recoveryhost。取得方式是Human以Xcode重新佈建/簽章同App/cert/group，在seed前須Human接受此程序及失敗處置。quota/帳號/簽章無法取得時不revoke別人資產、不換cert、不付費。清理不能保證總能成功：無有效host即記owned假item可能殘留、任務cleanup未完成，保留最低復原材料，向Human交接，不先把恢復工具刪光。global10日是停止新測量與要求人工cleanup，不保證無程序時自動執行。完成精確delete/read-absent後刪provenowned App/私有proof/runroot，保留去識別證據；Apple開發資產由Human保留管理。
 
-## S06 exact-window 操作 checkpoint（2026-10-22，無source/schema變更）
+## 歷史規格：S06 exact-window 操作 checkpoint（2026-10-22，無source/schema變更）（不得按舊E008執行）
 
 以下是operator手動核對與安全補充證據，僅適用未來Human另明確批准的新輪，不執行新CLI、不擴現有harness parser或LiveGate。保持原scope/grants/ready/anchor/W1與RF01–RF06/bootstrap guards。所有設定、確認、取Report與等待均計入原W1；第25分鐘停止新操作，最後5分鐘只清理；global10日／三窗／同leaf/fullgroup／不rewrite A不變。
 
@@ -70,3 +72,33 @@ operator可依實際觀察另存canonical/exclusive machine與Human sidecar，ch
 machine按實際適用內容留namespace/anchorSHA/windowSHA/sourceMapSHA/previousOperatorReceiptSHA、起訖與checklist：`actualReadUI`、`matchingPrivateProjectWindow`、`frontmostMatched`、`schemeMatches`、`appTargetMatches`、`configurationMatches`、`MacDestinationMatches`、`namespaceBundleMatches`、`TeamSelected`、`automaticSigningObserved`、`InfoEntitlementsMatch`、`ownedOutputSettingsMatch`、`GUIReportObserved`、`reportMatchesThisBuild`、`reportFiltersUnmasked`、`actualProductProvenanceEstablished`及其可公開hash。每項來源標GUI實讀／Human回報／CLIparsed／未驗；未驗值null，不把CLIparsed升成UIobserved。GUIReport target/config/result如含私人值只存匹配bool/hash，不輸出原始文字。promptCount留null，Human sidecar才依全程觀察記count/actions/purposes並綁SHA；build-ready以獨立operator sidecar明確記Human當下答覆及配置收據SHA，不偽造既有CLI gate。
 
 不存raw AX、私有project/product path、TeamID、certificate subject、deviceUUID、私鑰或token。必要private location僅本輪已授權私有控制資料使用，公開僅bool/hash。若單一exactwindow／現有入口無法完成某核對或證據綁定，具體記缺哪項並停止，不自行改source/schema、建立泛用UI框架、擴掃其他windows/全域DD/資產。bootstrap failure沿原先durable export-before-delete／zero-item精確FS cleanup；未App/SecItem時不能稱DPK delete/read-absent完成。
+
+## PR67遷移：保存、活動身分與離線map規格
+
+### 唯一路徑布局
+
+1. `experiments/E010/history/pr67-422d0c7/tree/<originalGitPath>`保存originCommit真實22檔bytes；既有`history/pr67-422d0c7/original-files.json`列原193檔與originblob/SHA，不覆寫此23保全產物。
+2. 原`experiments/E008/evidence/**`158檔與凍結GUI/Archify13檔，僅以E010取代最外E008目錄，餘relativepath/bytes/SHA完全一致。不要複製另一套171，不改JSON內ID/path/sourceSHA/時間/人機/indexrefs，不重renderHTML。
+3. 新E010 README為活動入口，指向新source與map；舊README在22快照中。四docs同slug原位。舊Markdown/HTML中的相對連結保留原bytes，只能由map追歷史context，不保證瀏覽器直接link有效。
+
+### Active17精確allowlist
+
+按實際source核定細項，不把所有字串命中當改碼清單：`scripts/continuity.py` rootprefix/parser、global/anchor kinds、service；`Sources/DPKContinuityProbe/LiveGate.swift` root/service/kind以及marker；project.pbxproj的`E010_BUNDLE_IDENTIFIER`/`E010_BUILD_MARKER`/`E010_REBUILT`；Info的`E010BuildMarker`；prepare/proof的override/temp/marker；AppMain標籤；test_continuity/test_bootstrap等正負fixtures。其他active檔仍逐檔核對是否必要，無必要不變。
+
+正向literal固定E010：`rivet-E010-<UUID>`、`E010-global`／`E010-anchor`與實際對應kinds、`local.rivet.experiments.E010.<UUID>`、`E010BuildMarker`／`E010_REBUILT`。新舊root/kind/service/grant/ID不混用；E008可作負向拒絕fixture，不能要求所有active E008字面值為零。沒有舊item要搬；禁止舊resume/cleanup/讀E008item。GenericApp/project名、`local.rivet.dpkcontinuity.<UUID>`、六欄A、同cert/fullgroup/profile-only/noRewrite及原guards保持；不建立可配置ID框架。
+
+### renumbering-map.json
+
+允許新增於`experiments/E010/history/renumbering-map.json`，只離線對映，不是第5正式planningartifact。固定UTF-8/canonical/LF、exclusive新檔、寫後hash；不要自含自己的hash造成循環。schema最少：
+
+- top：schemaVersion、originCommit、originalFilesManifestSHA256、pathMoves、archivedFiles、references、unavailableSources、limitations。
+- 真實blob位置：originCommit/originGitPath/originBlobOID/originSHA256、destinationPath/destinationSHA256、disposition=byte-preserved-move|original-snapshot|active-edited。originblob指向真實commit內容，不拿receipt.recordedPath冒充Gitpath。
+- JSON reference：kind=json-receipt、referringOriginBlobOID/referringOriginGitPath/referringOriginSHA256、jsonPointer、recordedPath、expectedSHA256、recordedVersion（無明示版本用expectedSHA限定）、resolvedContentPath/status/reason。lookup key是該原blob＋pointer＋recordedPath＋expectedSHA/version，不是prefix replacement。
+- Markdown/HTML link：kind=markdown-link|html-link、referring原blob/path/SHA、linkLocator（可重現line/occurrence或element/attribute定位）、recordedLink、resolutionContext（原base directory/fragment）、resolvedContentPath/status/reason；與JSON分開解析，不編jsonPointer。
+- status=resolved|content-unavailable-in-published-snapshot|ambiguous|sha-mismatch|unresolved；非resolved只unknown/error，禁止兜回PKCE E008、新active近似source、import舊harness或執行HTML/code驗證。
+
+舊sourceSHA只能解析22快照或原prior15/prior2中內容相同SHA的版本；它們若不在originCommit相應active位置，不造該active位置的originblob。五缺失source僅保存ref/expectedSHA/reason，originCommit/originBlobOID留null，不造證。22archivefiles與22resolvedsource組合分列。原manifest ad74…/舊approved對原revision；newactive另算manifest及準備證據，不轉掛approval。
+
+### PKCE保護與時間授權
+
+調查時dev PKCE `experiments/E008/README.md` SHA=`ed9048ff10225dc054698a6283d75444432ec3cada213898496db7584d0fb774`，safe-result SHA=`bddf18e2d5e4d9c72baf7d8a0f52e8140d2faf116f0bbf14342342968b8639c6`。實施以最新批准base重讀實際檔與hash；base有新變更先核差異，不用過時hash覆蓋。不在PKCE目錄放DPKstub/軟鏈，不ours/theirs、不寫dev worktree。此次沒有runtime/grant/clock/Appleassets操作。

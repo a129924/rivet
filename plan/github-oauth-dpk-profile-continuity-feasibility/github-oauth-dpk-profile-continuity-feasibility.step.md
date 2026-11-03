@@ -1,16 +1,18 @@
 # Profile continuity 帳本
 
+> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01四檔已獨立Plan-Reviewer approved、required_fixes=[]；M02作者遷移交付，待M03/M04獨立驗證審查，尚未整合/登記/發布。S06仍human-check、主假設未執行。
+
 - Topic：`github-oauth-dpk-profile-continuity-feasibility`
 - Branch：`chore/github-oauth-dpk-profile-continuity-feasibility`
-- Phase：10/22 本輪 controlled-stop／zero-item FS／兩份 factual 文件之獨立 Tester／Reviewer 已 approved；停 S06 Human
+- Phase：PR67 E008→E010 M03 approved，M04待獨立審實際staged diff／正常hooks，M05具體訊息待Human確認；可行性live仍停S06 Human
 - Current step：S06
 - Current status：human-check
-- Upstream verdict：10/22 新獨立 Tester verificationResult=pass、verdict=approved、required_fixes=[]，只涵蓋 controlled-stop／zero-item FS／紀錄；本次 Reviewer approved、required_fixes=[]，僅本輪 controlled-stop／zero-item FS 與兩份 factual 文件。S06-D02 Plan-Reviewer 五文檔操作準備與前輪 C／bootstrap approvals、needs-rework 歷史保留，不是主假設／採用核准
+- Upstream verdict：本次M01獨立Plan-Reviewer複審approved、required_fixes=[]；原分期驗收/registry寫審角色needs-rework歷史保留。M03獨立Tester focused正式approved、required_fixes=[]、resolved M-RF01（收據SHA20ed1c8145c223cb26bd99aba65aa13243d3e870ef57bff8b497a66ac5594ad3）；原needs-rework歷史保留，M04尚未核准。10/22 新獨立 Tester verificationResult=pass、verdict=approved、required_fixes=[]，只涵蓋 controlled-stop／zero-item FS／紀錄；本次 Reviewer approved、required_fixes=[]，僅本輪 controlled-stop／zero-item FS 與兩份 factual 文件。S06-D02 Plan-Reviewer 五文檔操作準備與前輪 C／bootstrap approvals、needs-rework 歷史保留，不是主假設／採用核准（以上既有角色結果僅原revision歷史，不是E010 approval）
 - 主假設：未執行
-- Experiment：E008；建立前已重查 registered worktrees，未占用；不修改 E007。
-- 最後更新：2026-10-22，Implementer（僅記已發生的 Reviewer approved 並新增 exclusive closure；不改原收據）。
+- Experiment：DPK活動E010（作者已遷移，尚未整合/登記/發布）；原DPK E008為封存歷史，dev PKCE E008必保護。
+- 最後更新：Implementer記M01實際approval及M02離線遷移作者交付；無新真人輪起點，未改原收據。
 
-## Steps
+## 原可行性Steps（S06狀態不變，遷移另依M序列）
 
 | ID | Status | Owner role | 完成條件 | 驗證證據 |
 |---|---|---|---|---|
@@ -111,3 +113,35 @@ Reviewer：`/root/dpk_plan_reviewer`；verdict=`approved`；required_fixes=[]；
 - `plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md`：`e445ea9e0e0230e7074fd43d5965453d784319856657faba6da994ae9aac63d8`。
 - `plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md`：`9bb6d9ae5dc262744bba8f41b6336e25e5562b0489eebb95051bcdb7d28deb18`。
 - `experiments/E008/README.md`：`ac8102609f1d80596969d6eaf3e54e515119b1fbb42871cca25cee02fdc97545`。
+
+## PR67遷移帳本（當前附屬工作；不取代S06）
+
+Human已接受E010活動身分、22快照/171immutable映射/5source缺口保留、append migration與受控dev整合/登記；Planner前置approved，不代表本次四檔或E010實作approved。當前Current仍S06human-check、S07/完整S08pending、主假設未執行；沒有新DPKitem/live/grant/clock/資產。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 |
+|---|---|---|---|---|
+| M00 | completed | Implementer | originCommit422d0c7的22原檔保全＋193清冊 | 23新保全檔，original-files.json SHA ac06351613c2aa198b2139e71cc72c8106b177f051c4732a107fa7dafc4855ef；171未搬，原193尚未在M02改動。 |
+| M01-A | completed | Plan-Creator | 本次Human遷移細則落實四檔 | author已完成，非approval；不改23保全/source/evidence。 |
+| M01 | completed | Plan-Reviewer | 實際四檔獨立複審 | 獨立複審正式approved、required_fixes=[]；原分期/角色needs-rework歷史保留，由上游明示路由M02。 |
+| M02 | completed | Implementer | 占號/來源再查、17active/README與171move/map/newmanifest | 作者完成：首次5遠端完整trees/5registered worktrees/open PR占號無他owner；193accounting/22快照/171immutable移動、固定E010身份拒舊E008、typed map/新manifest/必要pure及兩版unsigned。新證據見E010 renumbering-preparation-check.json；五source缺口及舊文件SHA不符保持unknown，M03/M04待獨立。 |
+| M03 | completed | Tester | 只核已交付M-T01–04、M-T05可當下部分與M-T06首次占號，必要pure/unsigned | 原needs-rework [M-RF01]/a467c6…保留；同Tester focused正式approved、required_fixes=[]、resolved M-RF01，收據SHA20ed1c8145c223cb26bd99aba65aa13243d3e870ef57bff8b497a66ac5594ad3。56pure/Swift7/兩unsigned及193/171/22/23/14indexes/352refs均已核；M-T05批准base PKCE、M-T06首次保存占號記錄補核通過，非新全球占號/登記聲明。 |
+| M02-RF01 | completed | Implementer | 三聚合digest明列non-file且零filelookup | 作者回修：新增focused schema負例、新map/manifest/prep統計一致，1952 file refs＋3 non-file digests；原23/171不改，無runtime/Swift/build變動，M03 focused已approved，原回修產物保持。 |
+| M04 | pending | Reviewer | 獨立審M03已發生的遷移證據 | 未產生本revisionapproval；不核准未來整合/commit/push結果，後續分期補驗。 |
+| M05 | pending | Implementer | 真stageddiff/message→Humanconfirm→append migrationcommit | 舊三message不沿用，正常hooks。 |
+| M06 | pending | Implementer | 占號再查、merge --no-commit --no-ff origin/dev，整合後修改experiments/README.md與experiments/VALIDATION-SUMMARY.md只增E010 | 未整合/未改registry；E001–009保留，其他topic衝突停Human，不自commit/FF/force。 |
+| M07 | pending | Reviewer | 只審Implementer完成的experiments/README.md、experiments/VALIDATION-SUMMARY.md及PKCE/整合diff | 不代寫檔；補核第二次占號/M05已發生commit/Human訊息/hooks，未發生不預填。 |
+| M08 | pending | Implementer | 第二真stageddiff/message→Humanconfirm→hooks/commit | 不預填messageapproval。 |
+| M09 | pending | Implementer | push前第三次占號、補M08 commit證據，發佈/PR67readback與本機工具交付 | M-T06後段/M-T07只於實際發生後核；仍Draft且非CONFLICTING才稱解除，未push，不改舊圖/不extractgraph。 |
+| M10 | pending | Human | 依M09實際發布/readback/工具交付作review與後續決策 | 不merge至dev、不正式adapter採用；不是工具製作步驟。 |
+
+### Migration Blockers／Human Check
+
+- M01已正式approved；M02作者交付，M03已focused approved、required_fixes=[]；M-RF01 needs-rework與作者修正歷史保持，M04待獨立審查實際staged diff。新E010 source另有manifest/準備證據，不能借原ad74…/approval。
+- 五歷史source內容既存缺失保留content-unavailable-in-published-snapshot；receipt/index完整不等全部source可重建。
+- E010開始前、整合/登記時、push前三次重查，其他owner占用停Human、不E011；登記前不稱保留。
+- M05與M08各需實際stageddiff和具體message Humanconfirm，舊commit訊息不構成授權；普通dev→feature整合只允許--no-commit --no-ff，不merge至dev。
+- 所有S06-B/C/D/E與舊收據approval是歷史受限結果；舊S09「Git未授權」為當時快照，本次只新增上述受控遷移/PR67授權，不授權新真人/GUI/資產/adapter。
+
+### Migration Handoff
+
+交獨立Tester：M01 approved、required_fixes=[]，M03已approved、required_fixes=[]，M-RF01 resolved；本次只同步README/step角色事實後準備實際stage/normalhooks交M04獨立Reviewer。M05須依真stageddiff提出具體message待Human確認，不commit。map/source manifest/prep是受驗M-RF01快照，內active-edited文件SHA不代表本次角色狀態同步後bytes；不改原map。後段整合/registry/第二第三占號/兩次commit訊息/發布均未執行，不預填M04/M05以後。S06 human-check/主假設未執行不變；尚未stage/commit/merge/登記/push，不執行真人/GUI/App/資產/Keychain。
