@@ -1,0 +1,137 @@
+{
+  "diagram_type": "workflow",
+  "edges": [
+    {
+      "from": "scope",
+      "role": "main",
+      "to": "copy"
+    },
+    {
+      "from": "copy",
+      "role": "main",
+      "to": "ready"
+    },
+    {
+      "from": "ready",
+      "role": "main",
+      "to": "context"
+    },
+    {
+      "from": "context",
+      "role": "main",
+      "to": "result"
+    },
+    {
+      "from": "result",
+      "role": "main",
+      "to": "cleanup"
+    },
+    {
+      "from": "context",
+      "role": "error",
+      "to": "stop",
+      "variant": "security"
+    },
+    {
+      "from": "stop",
+      "role": "return",
+      "to": "cleanup",
+      "variant": "dashed"
+    }
+  ],
+  "lanes": [
+    {
+      "id": "main",
+      "label": "計畫與收尾（未執行）"
+    },
+    {
+      "id": "inspection",
+      "label": "GUI 查閱與停點（未執行）"
+    }
+  ],
+  "mainPath": [
+    "scope",
+    "copy",
+    "ready",
+    "context",
+    "result",
+    "cleanup"
+  ],
+  "meta": {
+    "quality_profile": "showcase",
+    "title": "GUI 配置查閱流程（計畫／未執行）"
+  },
+  "nodes": [
+    {
+      "col": 0,
+      "id": "scope",
+      "label": "新授權",
+      "lane": "main",
+      "sublabel": "準備 ready",
+      "tag": "計畫",
+      "type": "external",
+      "width": 72
+    },
+    {
+      "col": 1,
+      "id": "copy",
+      "label": "停簽副本",
+      "lane": "main",
+      "sublabel": "私有輸出",
+      "tag": "未執行",
+      "type": "security",
+      "width": 72
+    },
+    {
+      "col": 2,
+      "id": "ready",
+      "label": "GUI ready",
+      "lane": "inspection",
+      "sublabel": "另取 fresh ready",
+      "tag": "未執行",
+      "type": "external",
+      "width": 72
+    },
+    {
+      "col": 3,
+      "id": "context",
+      "label": "只讀核對",
+      "lane": "inspection",
+      "sublabel": "T／W／E",
+      "tag": "未執行",
+      "type": "frontend",
+      "width": 72
+    },
+    {
+      "col": 4,
+      "id": "result",
+      "label": "分項結果",
+      "lane": "main",
+      "sublabel": "T01–T03",
+      "tag": "未執行",
+      "type": "messagebus",
+      "width": 72
+    },
+    {
+      "col": 5,
+      "id": "cleanup",
+      "label": "報告清理",
+      "lane": "main",
+      "sublabel": "末三分鐘",
+      "tag": "未執行",
+      "type": "security",
+      "width": 72
+    },
+    {
+      "col": 5,
+      "id": "stop",
+      "label": "不足即停",
+      "lane": "inspection",
+      "sublabel": "報告無法判定",
+      "tag": "計畫",
+      "type": "security",
+      "width": 72
+    }
+  ],
+  "schema_version": 1
+}
