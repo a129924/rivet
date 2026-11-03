@@ -33,10 +33,18 @@ M03 的四項判準於 Human 回報層級受限成功：看到登入、完成登
 
 M04 已交付同 repository 的驗證 host、必要 runtime／tests 與一次性開發端 launcher；之後兩次同步 dev 的合併只處理相容性與相關 mock／build 核驗，沒有新的真人 OAuth。這些工具與結果不代表正式產品入口、production secret custody、持久化或普遍 PKCE enforcement 已完成。
 
-#63 的收尾已完成：annotated tag `v0.1.57-github-account-login-feasibility` 指向 `fccaf2b6`，原 topic local／remote branch 與 managed worktree 已正常移除，未 force。這兩份索引仍由 Draft PR #64 交付；本次修訂未合併至 dev，不吸收並行 topic 成果。
+#63 的收尾已完成：annotated tag `v0.1.57-github-account-login-feasibility` 指向 `fccaf2b6`，原 topic local／remote branch 與 managed worktree 已正常移除，未 force。當時由 Draft PR #64 交付、尚未合併的文字保留為提交前快照；#64 現已合併，實際收尾見下節。未吸收並行 topic 成果。
 
 ## E008 交付事實
 
 [PR #65](https://github.com/a129924/rivet/pull/65) 已於 2026-10-22 合併並關閉，目標為 `dev`，merge commit 為 `0276ff3385495ed7fb0444e02b3b6da0757dd17a`。執行來源仍是 `d067c2c6adad7b1bcb19639c3f0ca58fc437e251`，結果提交為 `0644fdda1fb6bd9bb4fe5e4b064d3e97d65b59ad`；合併不改寫原結果。
 
 E008 驗證紀錄任務已完成，但主要假設仍無法判定；單次預算已耗盡，不追加判讀者、OAuth 或研究。正式 OAuth 與歷史證據保持原契約，原始描述未寫入 repo 或檔案。詳細有限資料見 [安全 JSON](E008/safe-result.json) 及[封存語義結果](../plan/github-pkce-missing-verifier-feasibility/evidence/live-semantic-observation.json)。
+
+## PR #64 合併與收尾（2026-11-03）
+
+[PR #64](https://github.com/a129924/rivet/pull/64) 已合併並關閉，GitHub `mergedAt` 為 2026-11-03T06:04:24Z；merge commit `71d395cc9ca3cfe645b13a93ee0e83f22c255edd`，最後 feature head `572e366e03471324cd745a4e4a103d19374e5009`。兩索引已隨該 PR 納入 dev；合併不改寫各實驗原結果。
+
+R64 的來源範圍契約與 E006 措辭兩項回修已交付；獨立 Tester 22／22、Reviewer approved，兩個評論 thread 已由主方讀回 resolved、未解決數0。E006 僅支持「切換至 Rebuilt configuration 真正重建」，不稱 Clean；PR #62 的獨立 App 真正 Clean／Build 證據保留。原 D／R64 的 pending 文字是當時快照，不代表本次交付仍待執行。
+
+Annotated tag `v0.1.59-github-connection-validation-summary` 已推送並核對 peeled commit 為上述 merge，未指向後續維護 commit，亦非產品 release。原 `docs/github-connection-validation-summary` local／remote branch 與本輪 feature worktree 已正常移除，無 force／prune；其他 feature worktree、App、Keychain／Apple 資產未動。完整分層與限制見[驗證總覽](VALIDATION-SUMMARY.md)。

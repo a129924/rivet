@@ -102,7 +102,7 @@ M04 的 hosted mock 為 17 definitions／18 executions、0 failures，root 275 t
 
 ### #63 已完成的 Git 收尾
 
-Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peeled commit 與 `fccaf2b6` 一致；原 topic local／remote branch 與 managed worktree 已正常移除，沒有 force 或 GitHub Release。這是 #63 收尾事實，不代表本兩份索引的 Draft PR #64 已合併。
+Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peeled commit 與 `fccaf2b6` 一致；原 topic local／remote branch 與 managed worktree 已正常移除，沒有 force 或 GitHub Release。這是 #63 當時的收尾事實；當時 #64 尚未合併的交付快照不回寫，#64 後續結果另見文末。
 
 ## E008：三層結果
 
@@ -126,10 +126,20 @@ Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peel
 - profile 更新後讀回（Human 已接受限制）及已過期 profile 的恢復。
 - certificate rotation、跨使用者／跨機器及公開分發。
 
-本摘要只涵上述已合併 PR #62／#61／#63／#65 的各自來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引由既有 Draft PR #64 交付，本次修訂尚未合併至 dev，不預填其完成狀態。
+本摘要只涵上述已合併 PR #62／#61／#63／#65 的各自來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引已由 PR #64 合併至 dev；其先前 Draft／pending 記錄保留為原時點快照，後續實際收尾另見文末。
 
 ## 決策邊界
 
 各實驗的成功只適用其來源版本、前提與觀察層級；測試／build 通過、文件審查通過、驗證任務完成或 PR 合併均不能代替主要假設的證據。E002 反向／舊 missing 未知、E005 候選 UX 失敗、E007 renewal 未驗證與 E008 無法判定分別保留；既有 X wrong 的單次支持性證據不代替 missing。
 
 正式登入 UI 依自身工作線推進。後續正式 adapter、安全決策、憑證 lifecycle 或產品採用仍依各自既有流程，不由本總覽自動核准。
+
+## PR #64：文件驗審完成與實際清理（2026-11-03）
+
+[PR #64](https://github.com/a129924/rivet/pull/64) 已於 GitHub `mergedAt=2026-11-03T06:04:24Z` 合併並關閉。固定 merge 為 `71d395cc9ca3cfe645b13a93ee0e83f22c255edd`，最後 feature head 為 `572e366e03471324cd745a4e4a103d19374e5009`；它是文件交付版本，不是新的真人執行 build。
+
+[R64 保存契約與交接](https://github.com/a129924/rivet/blob/71d395cc9ca3cfe645b13a93ee0e83f22c255edd/plan/github-persistent-connection/github-persistent-connection.step.md)記錄本輪 Tester R64-T01–T05 **22／22 通過**與 Reviewer **approved／required fixes=[]**。兩項修正分別補齊 #61／#62／#63／#65 的現行來源契約，以及 E006 的 Rebuilt configuration 重建措辭；[範圍 thread](https://github.com/a129924/rivet/pull/64#discussion_r4451328613)與 [E006 thread](https://github.com/a129924/rivet/pull/64#discussion_r4451328654)已由主方 API 讀回 resolved，未解決數0。這不沿用原 D04／D05 作新核准，也不新增實驗或產品採用結果。
+
+E006 原 partial Human receipt 只記切換 Rebuilt configuration；Debug／Rebuilt 的不同 binary hash 與後續完整 Human 觀察支持既有受限 0／0／0，沒有 Clean 操作證據。E006 原判定／收據不改；#62 獨立持續連線 App 的真正 Clean／Build 段保持原證據。M03 的 Human／agent／source 界線、C01／A07、各輪 PKCE 預算及 indeterminate、DPK 前提與產品限制均保留。
+
+本次已核對 annotated tag `v0.1.59-github-connection-validation-summary` 的本機／遠端 object 與 peeled commit 一致，精確指向 `71d395cc…`；不是後續文件維護 commit 或 GitHub Release。原 topic local／remote branch 與本輪 managed feature worktree 已正常移除；無 force／prune，其他 feature worktree 與所有 App／Keychain／Apple 資產未操作。PR #64 原文件交付與 Git 清理完成不代替實驗主要假設的證據，舊 D／R64 pending／交付前狀態只按當時版本閱讀。
