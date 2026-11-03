@@ -1,0 +1,130 @@
+{
+  "addedSource": [
+    "Tests/test_review_fixes.py"
+  ],
+  "all15PriorEvidenceUnchanged": true,
+  "authorFixComplete": true,
+  "boundaries": {
+    "AppLaunch": false,
+    "SecurityCalls": 0,
+    "clockArmed": false,
+    "crossWeekItemRetained": false,
+    "liveExecuted": false,
+    "persistentLiveRootCreated": false,
+    "personalAssetsInspected": false,
+    "realIOKitBindingRead": false,
+    "signedBuild": false,
+    "stageCommitPushPR": false
+  },
+  "changedExistingSource": [
+    "Tests/test_continuity.py",
+    "scripts/continuity.py",
+    "scripts/proof.py"
+  ],
+  "fixes": {
+    "RF02": "ready strictly after matching complete Human report; both timestamps not in future; stage/SHA matching and accepted gate recorded immutable",
+    "RF03": "explicit cleanup-only attempt requires new same-namespace/global grant, selected-asset authorization and fresh ready; original clock/window/seed/receipts unchanged; actual fixed driver exercised with mock verifier/App executor; no host/unconfirmed exit remain recoveryRequired; post-cleanup Human required before private finalization",
+    "RF04": "archive safe window/gate/retained/grant/recovery controls, original private byte hashes and index relationships before private deletion; no private statements/identities; collision keeps private root",
+    "RF05": "immutable private Mac/user binding checked on setup/resume before external commands; independent ProvisioningUDID membership and same baseline device; public binding SHA only; real IOKit path not executed",
+    "RF06": "non-capable ManualStages, selected-material-only SetupVerifier, App-capable LiveBackend constructed after matching scope/source/ready/applicable proof; pure negatives prove zero App backend/command/launch"
+  },
+  "green": {
+    "actualSwiftPythonRoundTripCases": 4,
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E008/Tests -p 'test_*.py' -v",
+    "exitCode": 0,
+    "focusedMethods": 10,
+    "outputSHA256": "684897721cf4f494430312b55f51c41ae589e3c84bed9e9420f5c3a1a16a84c3",
+    "skipped": 0,
+    "testMethods": 40
+  },
+  "independentReverificationApproved": false,
+  "kind": "E008-preparation-review-fixes",
+  "limitations": [
+    "future selected-material integration and real Mac binding unexecuted",
+    "no natural expiry/new P1/original A live read/Human UX or actual Keychain cleanup evidence",
+    "cleanup-only does not waive existing App/grant guards or guarantee obtaining a valid host",
+    "S06 Human assets/retention/recovery/ready remains ungranted"
+  ],
+  "liveHypothesisStatus": "未執行",
+  "liveValidationTaskComplete": false,
+  "protectedHistory": {
+    "E006FileCount": 126,
+    "E007Modified": false,
+    "allE006SHAUnchanged": true,
+    "devClean": true,
+    "devHEAD": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44",
+    "trackedFilesOutsideTopicChanged": false
+  },
+  "protectedPriorEvidenceSHA256": {
+    "baseline-freeze.json": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+    "preparation-check-rf01.json": "c96b35fe4c850dd198006a9d159e0595722065e1c1ef83050c852407d7f23c91",
+    "preparation-check.json": "40a8dc824270cddc9ad5117db2ad5947768835f9694240f900a11bca3ecc2b57",
+    "python-preparation-tests.txt": "3fe9031a509eb12f55126a9c523f4d3de44e120aa098d64ce9a04f23341993b9",
+    "python-rf01-tests.txt": "b8aa0cd387c510ba0e381e78494ef2217f1c09f21aa5446d0a82bcd6c9493662",
+    "tester-initial-python-receipt.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-initial-serialization-probe.swift": "b8f6db816185053fd076ef3cdcedb6f4cab20b7362041b96ceeb808fed4c1be4",
+    "tester-initial-swift-receipt.txt": "481aa0b64c908896a78e2f4e25665745be9a2ef5a6bb4a299fe08b3b159ec960",
+    "tester-initial-unsigned-build.json": "6eba1f2d8467669cd521f8da5a2d7676bfbaf5ea319f8b4c14860b94d8a85c93",
+    "tester-preparation-check.json": "32ad6afe5f58443e6af7757220fe7c2099fb6e68d1d913953580124677c3aa7b",
+    "tester-preparation-rf01.json": "1fb3f768476e81603aa071081d4bd82348f8fbb56eb569c07fab5737b7ee8438",
+    "tester-rf01-original-regression.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-rf01-unsigned-build.json": "da40cd6ad2ecfa80ec5214292a97af4deedca0137e3928d7ed69c991673a28dd",
+    "unsigned-preparation.json": "fd3987d630cab90e2cc6a15e68bddeb99099121628dcd2421be9a76ab8945ef8",
+    "unsigned-rf01.json": "d1c61e2ea2e519e5b7d3d818b670af4d9f44c20b7e02364ba70dd9aab7da54ad"
+  },
+  "recordedUTC": "2026-10-20T07:15:48.475954+00:00",
+  "red": {
+    "assertionFailures": 2,
+    "externalLogSHA256": "8a517bfb2491cb9054c87e8213f5eb66e37d5b0e7a8ca0a3b38ae3daaabb10cf",
+    "finiteFindings": [
+      "readyBeforeHumanAccepted",
+      "otherDeviceAccepted",
+      "missingRecoveryEntry",
+      "missingPrivateHostBinding",
+      "missingPublicControls",
+      "missingDeferredDriver"
+    ],
+    "missingFunctionOrControlErrors": 7,
+    "testMethods": 37
+  },
+  "required_fixes": [
+    "RF02",
+    "RF03",
+    "RF04",
+    "RF05",
+    "RF06"
+  ],
+  "reviewerSource": "delegated formal handoff; no new repository review receipt provided",
+  "scope": "RF02–RF06 bounded author fix only; independent focused retest/review pending",
+  "sourceManifestSHA256": "65540ba6a190b00a691da9f630754e3c9e9b355b57e540caed64322aba0157e2",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/test_continuity.py": "bf1a8650d5f9a1aacd5707d0b782c8b72ff6b2f1bfa6870d5fbf07744fc9d785",
+    "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "scripts/continuity.py": "0ce3d3ecb1c58e91977a87b4185279ef96086da7949d4b109c2055fa5622809a",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "44f23873d8c01710638deb34cc3bb04d9cee12d95a6f5192dad80adaf12627eb"
+  },
+  "synthetic": true,
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "upstreamRF01TesterReceiptSHA256": "1fb3f768476e81603aa071081d4bd82348f8fbb56eb569c07fab5737b7ee8438",
+  "upstreamRF01TesterVerdict": "approved",
+  "upstreamReviewerVerdict": "needs-rework",
+  "verificationReuse": {
+    "SwiftCoreScenarios": 7,
+    "SwiftCoreSourceUnchanged": true,
+    "all8BuildInputsUnchanged": true,
+    "reason": "only Python protocol and pure tests changed; prior independent RF01 unsigned evidence remains applicable",
+    "unsignedBuildReceiptSHA256": "d1c61e2ea2e519e5b7d3d818b670af4d9f44c20b7e02364ba70dd9aab7da54ad",
+    "unsignedRebuiltThisRevision": false
+  }
+}

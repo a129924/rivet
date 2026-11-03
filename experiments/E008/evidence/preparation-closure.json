@@ -1,0 +1,94 @@
+{
+  "all15SourceSHAUnchanged": true,
+  "all18PriorEvidenceUnchanged": true,
+  "boundaries": {
+    "AppLaunch": false,
+    "AppleAssetsInspectedOrChanged": false,
+    "SecurityCalls": 0,
+    "clockArmed": false,
+    "commitPushPR": false,
+    "crossWeekItemRetained": false,
+    "liveExecuted": false,
+    "persistentLiveRootCreated": false,
+    "realIOKitBindingRead": false
+  },
+  "currentStatus": "human-check",
+  "currentStep": "S06",
+  "delegatedVerdicts": {
+    "Reviewer": "approved",
+    "ReviewerRequiredFixes": [],
+    "ReviewerResolved": [
+      "RF02",
+      "RF03",
+      "RF04",
+      "RF05",
+      "RF06"
+    ],
+    "ReviewerSource": "parent formal independent Reviewer handoff; preparation only",
+    "Tester": "approved",
+    "TesterReceiptSHA256": "2545d48122579c4f41cb4dba0af7798c93c5a8308080770715b10f6e76a94d93",
+    "TesterRequiredFixes": []
+  },
+  "documentationSHA256": {
+    "experiments/E008/README.md": "430618e7e10214dd4293c26dd8e501beb88653a3b3c55849185c885f538178e2",
+    "topic.step.md": "7374294aee24039cafd15bd185a3d4b527409003383cba2950ec9d08e44eb844"
+  },
+  "grantLimitation": "cleanup-only grant does not extend original assets/retention/recovery grants; Swift requires each original grant valid at actual operation; cleanup after expiry is not guaranteed",
+  "kind": "E008-preparation-factual-closure",
+  "liveHypothesisStatus": "未執行",
+  "liveValidationTaskComplete": false,
+  "newBuildExecuted": false,
+  "newTestsExecuted": false,
+  "next": "same independent Reviewer read-only factual closure check; then remain S06 Human assets/retention/recovery/fresh-ready boundary",
+  "preparationOnly": true,
+  "protectedHistory": {
+    "E007Modified": false,
+    "all126E006SHAUnchanged": true,
+    "devClean": true,
+    "devHEAD": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44"
+  },
+  "protectedPriorEvidenceSHA256": {
+    "baseline-freeze.json": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+    "preparation-check-review-fixes.json": "8078be1bbcec4d8366b9bae833c35e491b46b21ea74bf2db14c1f813d284870c",
+    "preparation-check-rf01.json": "c96b35fe4c850dd198006a9d159e0595722065e1c1ef83050c852407d7f23c91",
+    "preparation-check.json": "40a8dc824270cddc9ad5117db2ad5947768835f9694240f900a11bca3ecc2b57",
+    "python-preparation-tests.txt": "3fe9031a509eb12f55126a9c523f4d3de44e120aa098d64ce9a04f23341993b9",
+    "python-review-fixes-tests.txt": "684897721cf4f494430312b55f51c41ae589e3c84bed9e9420f5c3a1a16a84c3",
+    "python-rf01-tests.txt": "b8aa0cd387c510ba0e381e78494ef2217f1c09f21aa5446d0a82bcd6c9493662",
+    "tester-initial-python-receipt.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-initial-serialization-probe.swift": "b8f6db816185053fd076ef3cdcedb6f4cab20b7362041b96ceeb808fed4c1be4",
+    "tester-initial-swift-receipt.txt": "481aa0b64c908896a78e2f4e25665745be9a2ef5a6bb4a299fe08b3b159ec960",
+    "tester-initial-unsigned-build.json": "6eba1f2d8467669cd521f8da5a2d7676bfbaf5ea319f8b4c14860b94d8a85c93",
+    "tester-preparation-check.json": "32ad6afe5f58443e6af7757220fe7c2099fb6e68d1d913953580124677c3aa7b",
+    "tester-preparation-review-fixes.json": "2545d48122579c4f41cb4dba0af7798c93c5a8308080770715b10f6e76a94d93",
+    "tester-preparation-rf01.json": "1fb3f768476e81603aa071081d4bd82348f8fbb56eb569c07fab5737b7ee8438",
+    "tester-rf01-original-regression.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-rf01-unsigned-build.json": "da40cd6ad2ecfa80ec5214292a97af4deedca0137e3928d7ed69c991673a28dd",
+    "unsigned-preparation.json": "fd3987d630cab90e2cc6a15e68bddeb99099121628dcd2421be9a76ab8945ef8",
+    "unsigned-rf01.json": "d1c61e2ea2e519e5b7d3d818b670af4d9f44c20b7e02364ba70dd9aab7da54ad"
+  },
+  "recordedUTC": "2026-10-20T07:22:48.947751+00:00",
+  "role": "Implementer factual recorder; not independent approver",
+  "scratchCleanup": {
+    "all5KnownHelpersAbsent": true,
+    "endedUTC": "2026-10-20T07:22:48.884828+00:00",
+    "globalTemporaryCleanupClaimed": false,
+    "helperSHA256BeforeRemoval": {
+      "e008-add-review-tests.py": "33c3f193fa5b15813212fca8886b16619fc53329faa128dda9f681cb35e72b45",
+      "e008-complete-review-tests.py": "a9706a6d5b13937f64c1c1a901e9cf604375fded7a8b5205431803a244810649",
+      "e008-fix-archive.py": "76c5d1d445a959f9c9cfa3bfec35bdcd2deb7e0f24b0f02ea0ef1cdb0902f1b6",
+      "e008-fix-capabilities.py": "cb7024304eb12a5273a6873b750008969b2c004a5fa9ac3e6771110708c411d7",
+      "e008-fix-controls.py": "9621cb918e7861d7a6f5020f03c16a13789e234f239b85ac42f08d4750036a55"
+    },
+    "ownershipBasis": "exact tool-created entries; both unsigned preparation receipts match immutable repo bytes; all descendants owned by current user; no symlinks/specials; no process references or lsof handles",
+    "regularBytesRemoved": 837249483,
+    "regularFilesRemoved": 11088,
+    "rootAbsent": true,
+    "startedUTC": "2026-10-20T07:22:48.148535+00:00",
+    "target": "rivet-E008-preparation-20261020 (external temporary preparation root)",
+    "unrelatedScratchOrAppleAssetsRemoved": false
+  },
+  "sourceManifestSHA256": "65540ba6a190b00a691da9f630754e3c9e9b355b57e540caed64322aba0157e2",
+  "synthetic": true,
+  "topic": "github-oauth-dpk-profile-continuity-feasibility"
+}

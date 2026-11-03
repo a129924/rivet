@@ -1,0 +1,15 @@
+{
+  "HumanExactReply": "已ready，開始setup，先不Build／Run",
+  "HumanExactReplyUTC": null,
+  "anchorSHA256": "c65b9020e09417f7853fc22d99a285a07b393a64991564fbb4bbfcd78aa1b211",
+  "isBuildReady": false,
+  "isSeedReady": false,
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "previousHumanSHA256": "e8f2fc72bba2095cce3a8648b6c189ec0795e284435fd0506964a62894a1b76c",
+  "previousReceiptSHA256": "3832376d6d9f5401485c5da020bde27ffa4dc67282fbd1cb08334a84f00632d2",
+  "privateReadySHA256": "3f3cdd23517398e1dcefcb2087ee5935d88ceb156c57f6805dd4d39c26d0148b",
+  "recordedUTC": "2026-10-22T05:48:20.101388+00:00",
+  "source": "request_user_input_async call_b39aed140f414f1490dddaf4d7996191 item1",
+  "timestampMeaning": "Actual operator ready-record creation after the preceding Human report was saved; exact Human click time unavailable.",
+  "windowSHA256": "aaaf0d890ca7df402d5cdbce3c9c523854deb3c571a22765d406bd77e68ede6d"
+}

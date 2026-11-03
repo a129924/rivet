@@ -1,0 +1,12 @@
+{
+  "HumanScopeConsentSHA256": "c8dbebda6701ffa5fe8d2a1027fb106bdb6d0015f6d9e3a0fb505c0c0d8f3e55",
+  "approved": true,
+  "kind": "human-grant",
+  "latestStartUTC": "2026-10-21T04:10:00+00:00",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "privateGrantSHA256": "f7ea10d98f99ca898581022667a2627cc4b47c0994328d5f353d3e6299a480f3",
+  "scope": "assets",
+  "statementPresent": true,
+  "synthetic": false,
+  "validUntilUTC": "2026-10-31T04:10:00+00:00"
+}

@@ -1,0 +1,22 @@
+{
+  "HumanExactReplyUTC": null,
+  "actions": [],
+  "actualBuildEndedUTC": null,
+  "actualBuildStartedUTC": null,
+  "anchorSHA256": "c65b9020e09417f7853fc22d99a285a07b393a64991564fbb4bbfcd78aa1b211",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "rawHumanStatement": "Build成功，全程觀察，0次提示，未Run",
+  "readySHA256": "103476dd9fa29bd2bcd142b2a744ca32a483fabe7edff204204fb3eba54e3565",
+  "recordedUTC": "2026-10-22T06:07:06.457557+00:00",
+  "reportedBuildSucceeded": true,
+  "reportedNotRun": true,
+  "source": "request_user_input_async call_ab32d1737dae4dd38063eb61ff5ee02c item0",
+  "stage": "Human-once-Debug-Build",
+  "synthetic": false,
+  "timestampMeaning": "Operator receipt time only; ready creation time is not treated as actual Build start.",
+  "wholeStageObserved": true,
+  "windowSHA256": "aaaf0d890ca7df402d5cdbce3c9c523854deb3c571a22765d406bd77e68ede6d"
+}

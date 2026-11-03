@@ -1,0 +1,15 @@
+{
+  "files": {
+    "anchor.binding.json": "489e0765133acb0b5a4809dc8b54e3294bbde31edc234f9be66bd6288d52f868",
+    "anchor.json": "b70eee5881ce4c5492d3622daa3c04b6aeb976c04d99328c2a5548913db9a606",
+    "owned-material-provenance.private.json": "97a77580328eccc35b2d1ef5981a1d9c457a0339d8c833f51819e27802a57414",
+    "selected-debug-location.private.json": "d4d6ae213174b1141562084817fdaca693a583405f4d8a782c9f630d2e0c707d",
+    "setup-project.private.json": "e600309b8416c65540853a010e13afadad03c70e7ec741ed81f7330fb63281a9",
+    "windows/1.binding.json": "dd27f2d49b2d5da3122e685d9134542a84951ce1a22971b6315986b859adc1c0",
+    "windows/1.json": "48261af04f320c52ed6306ac0152c2a9c0b4d5940c572c9dbaa14097e97a20a2"
+  },
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "onlyOwnedRunRootDeletionAuthorized": true,
+  "privateProjectClosureConfirmed": true,
+  "rawPrivatePathsIdentifiersAndBuildSettingsExported": false
+}

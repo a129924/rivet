@@ -1,0 +1,17 @@
+{
+  "HumanExactReplyUTC": null,
+  "actions": [],
+  "machineReceiptSHA256": "a975e69bf71418d3a73633e7826c0d37d532b9c66ce368d6f4ca167ada7e31be",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "rawHumanStatement": "全程觀察，0次提示",
+  "recordedUTC": "2026-10-22T06:01:29.596173+00:00",
+  "reportedObservationRangeTaipei": "2026-10-22 13:52:37–13:57:37",
+  "source": "request_user_input_async call_7691144d6a6848678eafa55f81c6bc06 item0",
+  "stage": "setup-context-verification-before-build",
+  "synthetic": false,
+  "timestampMeaning": "Operator receipt creation after trusted Human report; exact Human click time unavailable.",
+  "wholeStageObserved": true
+}

@@ -1,0 +1,10 @@
+{
+  "approved": true,
+  "kind": "human-grant",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "privateGrantSHA256": "c3004b5b1b647f3f8c99ecdfa647a77b42c52699b84da9e143e44708e3d9214d",
+  "scope": "assets",
+  "statementPresent": true,
+  "synthetic": false,
+  "validUntilUTC": "2026-11-01T06:15:00+00:00"
+}

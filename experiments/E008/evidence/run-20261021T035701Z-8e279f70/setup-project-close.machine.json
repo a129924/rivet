@@ -1,0 +1,15 @@
+{
+  "HumanAskedForCloseAssistance": true,
+  "closedTimeMeaning": "recorded after visible exact-window removal; not an exact click timestamp",
+  "exactPrivateProjectWindowURLMatched": true,
+  "globalQuitOrKill": false,
+  "historicalBuildOrPromptInferenceFromUI": false,
+  "kind": "targeted-native-UI-project-close",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "onlyExactTargetWindowCloseClicked": true,
+  "otherProjectsOrBuildsInteractedWith": false,
+  "rawAXArchived": false,
+  "recordedUTC": "2026-10-21T04:04:28.506478+00:00",
+  "stopButtonDisabledBeforeClose": true,
+  "targetWorkspaceRemovedAfterClose": true
+}

@@ -1,0 +1,17 @@
+{
+  "cleanupComplete": true,
+  "evidencePublicationComplete": true,
+  "files": {
+    "anchor.binding.public.json": "99a4ecd07c5e9619e39da90e5abfea07c2c313192bcca50cd6d9feb067bbcdc9",
+    "anchor.public.json": "bb5abe09ad4bd8aaca2741060cfd625a71bcc78f2309d3ff23901621cca24d65",
+    "bootstrap/begin.human.json": "e8f2fc72bba2095cce3a8648b6c189ec0795e284435fd0506964a62894a1b76c",
+    "bootstrap/begin.machine.public.json": "861ae542d39b44ea8f657644c7092fdbfc383dcc110e99d73ee0fb589ab1b735",
+    "bootstrap/begin.ready.public.json": "c47f53f685a0a9e8edd41d65efb45cf4c8d90dc1e768ef70849dce7962cb2927",
+    "bootstrap/setup.ready.public.json": "38890e4b17914fa372c073bca4785f4dd98f4371eecd88bc8895599ea6b8f726",
+    "cleanup.machine.json": "9ed41879b550fc55dcc44cd423b5278a783e0c885eb1b34f165d8a25408f6334",
+    "pre-cleanup.index.json": "0a0962a26f77418acb6db7903368c1869eda780f49e1b873b475efef11207564",
+    "windows/1.public.json": "150814ac545f567d1de9ddf4c0dd58c2aa4beed94761a892e7a934eafda02903"
+  },
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "synthetic": false
+}

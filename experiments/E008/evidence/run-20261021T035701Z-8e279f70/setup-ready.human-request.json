@@ -1,0 +1,16 @@
+{
+  "anchorSHA256": "b70eee5881ce4c5492d3622daa3c04b6aeb976c04d99328c2a5548913db9a606",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "previousHumanSHA256": "436d054338e1abbe1f68241e1c43a592cc0e46b59d34ea17edc19dcc92a602f7",
+  "previousReceiptSHA256": "e8973db4dc656ce21fe1ba2456400bec66cc4eb5c6af6c2689f575965bb2dd68",
+  "rawHumanStatement": "已準備好，開始setup",
+  "receivedUTC": "2026-10-21T03:58:17+00:00",
+  "recordedUTC": "2026-10-21T04:00:50.674081+00:00",
+  "recordedUTCMeaning": "Operator recorded current UTC after preserving the preceding received Human observation; not a claimed Human click time.",
+  "replyOrder": "Human first reported begin observation, then explicitly readied setup",
+  "setupReadySHA256": "3ec59bfb6b3d636a581a20879c60c36142f695ad452455f6b133ed526a444a7d",
+  "source": "request_user_input_async call_bf1364a04ab04ed394db4fce93318c9f item1",
+  "stage": "setup-only",
+  "synthetic": false,
+  "windowSHA256": "48261af04f320c52ed6306ac0152c2a9c0b4d5940c572c9dbaa14097e97a20a2"
+}

@@ -1,0 +1,19 @@
+{
+  "HumanExactReplyUTC": null,
+  "anchorSHA256": "c65b9020e09417f7853fc22d99a285a07b393a64991564fbb4bbfcd78aa1b211",
+  "humanReady": true,
+  "humanReadyStatement": "已ready，允許僅設定並核對本專案DerivedData",
+  "isBuildReady": false,
+  "isSeedReady": false,
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "ownedTargetRelativeToRoot": "derived-data",
+  "previousHumanSHA256": "1521a22b8c7b966379f22f0f898e0fffe570fc8180c9da8f727af2f91394a620",
+  "previousReceiptSHA256": "a975e69bf71418d3a73633e7826c0d37d532b9c66ce368d6f4ca167ada7e31be",
+  "recordedUTC": "2026-10-22T06:01:29.602945+00:00",
+  "scope": "Only exact current private project per-project DerivedData Custom into the original owned root; verify GUI, no global preferences or Build/Run/assets/App/DPK.",
+  "source": "request_user_input_async call_7db24bc8d134488cb647a85306636ecb item0",
+  "sourceManifestSHA256": "ad74bf47a34e583c3c823c65c018ae20276934a4a94571eee68bcb93cba0eb41",
+  "stage": "per-project-derived-data-setting",
+  "synthetic": false,
+  "windowSHA256": "aaaf0d890ca7df402d5cdbce3c9c523854deb3c571a22765d406bd77e68ede6d"
+}

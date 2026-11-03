@@ -1,0 +1,21 @@
+{
+  "beginReadySHA256": "71870c8cd23a318eea27a6610592700d166af7ba405fee819d01421698864a31",
+  "grantSHA256": {
+    "assets": "f7ea10d98f99ca898581022667a2627cc4b47c0994328d5f353d3e6299a480f3",
+    "recovery": "7e36601c25935f889e44f20913a4b426ce0b861a19930e50d8559ad43b2d7be0",
+    "retention": "8c0832760e3a2308a15005e8e1c4e4eff3aadb921ccf2d12d7fb44eeaecbb92c"
+  },
+  "grantValidUntilUTC": "2026-10-31T04:10:00+00:00",
+  "isPromptObservation": false,
+  "kind": "begin-anchor-Human-ready",
+  "latestStartTaipei": "2026-10-21T12:10:00+08:00",
+  "latestStartUTC": "2026-10-21T04:10:00+00:00",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "provenance": "request_user_input_async call_6f59e5c590504b51adbe6efb94d11eb2 item0",
+  "rawHumanStatement": "同意此 S，已準備好，開始 begin-anchor",
+  "readyReceivedUTC": "2026-10-21T03:55:22+00:00",
+  "readyTimestampMeaning": "Parent dispatcher observed receipt of direct Human reply; not a claimed exact click or prompt observation time.",
+  "sourceConsentSHA256": "c8dbebda6701ffa5fe8d2a1027fb106bdb6d0015f6d9e3a0fb505c0c0d8f3e55",
+  "sourceManifestSHA256": "ad74bf47a34e583c3c823c65c018ae20276934a4a94571eee68bcb93cba0eb41",
+  "synthetic": false
+}

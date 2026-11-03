@@ -1,0 +1,13 @@
+{
+  "anchorSHA256": "b70eee5881ce4c5492d3622daa3c04b6aeb976c04d99328c2a5548913db9a606",
+  "humanReady": true,
+  "humanReadyStatementPresent": true,
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "previousHumanSHA256": "db41622364019a2f76670e03693a54a676f38926d5925624f94b0e4b4e94f9a4",
+  "previousReceiptSHA256": "6ec2e1d57bf277e1407ba4bfd98df4cdd2b636ef9de9ef43888da317ec7c336c",
+  "privateReadySHA256": "877ecb7030a40f3d665c4c98b735eb9f20a7f3415694bf15d9ce0a05d94d4078",
+  "recordedUTC": "2026-10-21T04:17:07.578617+00:00",
+  "stage": "controlled-zero-item-cleanup",
+  "synthetic": false,
+  "windowSHA256": "48261af04f320c52ed6306ac0152c2a9c0b4d5940c572c9dbaa14097e97a20a2"
+}

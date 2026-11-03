@@ -1,0 +1,14 @@
+{
+  "HumanScopeConsentSHA256": "c8dbebda6701ffa5fe8d2a1027fb106bdb6d0015f6d9e3a0fb505c0c0d8f3e55",
+  "approved": true,
+  "kind": "human-grant",
+  "latestStartUTC": "2026-10-21T04:10:00+00:00",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "privateGrantSHA256": "7e36601c25935f889e44f20913a4b426ce0b861a19930e50d8559ad43b2d7be0",
+  "recoveryProcedurePresent": true,
+  "residualItemAccepted": true,
+  "scope": "recovery",
+  "statementPresent": true,
+  "synthetic": false,
+  "validUntilUTC": "2026-10-31T04:10:00+00:00"
+}

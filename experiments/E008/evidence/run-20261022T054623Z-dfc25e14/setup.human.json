@@ -1,0 +1,18 @@
+{
+  "HumanExactReplyUTC": null,
+  "actions": [],
+  "isFinalSetupProofHumanOrSeedReady": false,
+  "machineReceiptSHA256": "e1b48255fe6b43227187c5ef3ea651a2152c527c2295616933857d7db7d443ea",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "rawHumanStatement": "全程觀察，0次提示",
+  "recordedUTC": "2026-10-22T05:52:37.699560+00:00",
+  "reportedObservationRangeTaipei": "2026-10-22 13:47:17–13:51:15",
+  "source": "request_user_input_async call_e652ebb0495e4d288b34b3919e5a6cec item0",
+  "stage": "setup-before-build",
+  "synthetic": false,
+  "timestampMeaning": "Operator receipt creation after trusted Human report, not exact Human click time. Applies only to the reported setup interval; subsequent Team-selection prompts are not inferred.",
+  "wholeStageObserved": true
+}

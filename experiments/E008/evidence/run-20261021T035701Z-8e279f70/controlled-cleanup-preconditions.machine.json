@@ -1,0 +1,18 @@
+{
+  "allOwnedTreeEntriesNoSymlinkAndSameOwner": true,
+  "anchorSHA256": "b70eee5881ce4c5492d3622daa3c04b6aeb976c04d99328c2a5548913db9a606",
+  "cleanupReadySHA256": "877ecb7030a40f3d665c4c98b735eb9f20a7f3415694bf15d9ce0a05d94d4078",
+  "exactPrivateProjectPreviouslyUICloseVerified": true,
+  "exactRootOwner0700NoSymlink": true,
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "noGlobalOrOtherProjectProcessScan": true,
+  "recordedUTC": "2026-10-21T04:17:07.953649+00:00",
+  "sameUserExactRootNoOpenFilesObserved": true,
+  "sameUserExactRootOpenFileQueryExitCode": 1,
+  "sameUserExactRootOpenFileQueryStderrEmpty": true,
+  "sameUserExactRootOpenFileRecordCount": 0,
+  "source17Match": true,
+  "synthetic": false,
+  "windowSHA256": "48261af04f320c52ed6306ac0152c2a9c0b4d5940c572c9dbaa14097e97a20a2",
+  "zeroItemNoGlobalNoProofNoAppControl": true
+}

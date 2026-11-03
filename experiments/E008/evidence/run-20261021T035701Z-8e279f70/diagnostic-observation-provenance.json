@@ -1,0 +1,9 @@
+{
+  "humanSHA256": "db41622364019a2f76670e03693a54a676f38926d5925624f94b0e4b4e94f9a4",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "rawHumanStatement": "全程觀察，0次提示",
+  "receivedUTC": "2026-10-21T04:14:36+00:00",
+  "reportedObservationRangeTaipei": "2026-10-21 12:12:43–12:13:40",
+  "source": "request_user_input_async call_70ea78bf7a0543f1b52299488091f0fe item0",
+  "timestampMeaning": "Parent receipt timestamp, not an exact Human click time."
+}
