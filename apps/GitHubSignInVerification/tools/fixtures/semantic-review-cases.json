@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "u01",
+      "description": "If the code verifier differs from the stored challenge, the token endpoint will reject the exchange. This statement describes the rule and does not identify the reason for this rejection.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "u02",
+      "description": "This request was rejected because its redirect address does not match the callback address registered for the client application.",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "u03",
+      "description": "We rejected this token request because the submitted code verifier does not match the code challenge stored for this authorization.",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "u04",
+      "description": "The supplied verifier matched the stored challenge. A verifier mismatch was not the cause of this rejection. No other cause is stated.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "u05",
+      "description": "The authorization code has expired. Its expiration is the reason this code exchange was rejected.",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "u06",
+      "description": "For example, a server could reject a request because the verifier does not match its challenge. That example is not a statement about why this request was rejected.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "u07",
+      "description": "The client secret supplied with this exchange is incorrect for the registered application, so client authentication failed and the request was rejected.",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "u08",
+      "description": "For this exchange, the supplied verifier was compared with the challenge attached to the authorization. The comparison failed, and that mismatch caused the token request to be denied.",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "u09",
+      "description": "This exchange was rejected either because the authorization code expired or because the verifier did not match its challenge. The response does not determine which of these caused the rejection.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "u10",
+      "description": "This authorization code was already redeemed. Reuse of that code caused the present exchange to be denied.",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "u11",
+      "description": "The submitted verifier matched the stored challenge and no mismatch occurred. The submitted verifier did not match that same challenge, and this mismatch caused the rejection.",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "u12",
+      "description": "This application is not configured to use the requested authorization flow. That client configuration restriction caused the token request to be rejected.",
+      "expected_category": "client_redirect_configuration_asserted"
+    },
+    {
+      "id": "u13",
+      "description": "This exchange was rejected because the submitted code verifier",
+      "expected_category": "indeterminate"
+    },
+    {
+      "id": "u14",
+      "description": "The proof supplied in this request does not reproduce the challenge saved when authorization was granted. This failed verifier check is why the server refused to exchange the code.",
+      "expected_category": "verifier_mismatch_asserted"
+    },
+    {
+      "id": "u15",
+      "description": "The authorization grant was revoked before this exchange. The server rejected the request because the grant is no longer valid.",
+      "expected_category": "grant_or_code_asserted"
+    },
+    {
+      "id": "u16",
+      "description": "The code exchange could not be completed. No reason for the rejection is available in this message.",
+      "expected_category": "indeterminate"
+    }
+  ]
+}

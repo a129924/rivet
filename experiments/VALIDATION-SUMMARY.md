@@ -1,6 +1,20 @@
 # GitHub 連線驗證結果摘要
 
-來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本文彙整已有證據，不新增實驗、真人測量或正式產品採用決策。[導覽](README.md)列出各來源入口。
+來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本文彙整已有證據，不新增實驗、真人測量或正式產品採用決策。[導覽](README.md)列出各來源入口。
+
+## 快速總覽（保留上游各輪限制）
+
+| 實驗 | 觀察與來源 | 未由此證明的事項 |
+| --- | --- | --- |
+| [E001](E001/README.md) | 2026-10-07 真實 OAuth callback、非空 code、state 相符、exit 0。 | token exchange、refresh、儲存或正式產品登入。 |
+| [E002](E002/README.md) | 真實正向 token、六欄 bundle、GET /user 成功；反向歸因不足。總體無法判定。 | PKCE enforcement；不將後續 X 或 E008 補成此輪成功。 |
+| [E003](E003/README.md) | 2026-10-08 T01–T04 遠端測量成功，舊 refresh token 重用回 bad_refresh_token。 | 自然到期、provider 自動刷新、401 recovery、持久化或所有遠端配置。 |
+| [E004](E004/README.md) | 2026-10-14 T01–T06、真 SQLite／跨程序／rollback 成功；fake refresh 與受控失敗。 | 加密、真遠端 rotation、sandbox、斷電 durability 或正式 adapter 採用。 |
+| [E005](E005/README.md) | 最後 human-only 輪六欄保存與同身分重建讀回成功；Human 提示數首次／fresh／重建為 0／0／1，候選 UX 失敗。 | 所有免費 Keychain 路徑失敗、DPK 不可用或必須付費。早期 unknown 與 machine receipt 原值保留。 |
+| [E006](E006/README.md) | 2026-10-19 假 bundle，首次／fresh／真重建讀回完整且 Human 均零提示，受限成功。 | profile 更新／過期恢復、certificate rotation、真 OAuth、公開分發。2026-10-16 controlled-stop／逾時歷史保留。 |
+| [E007](E007/README.md) | 兩輪 renewal 前提未成立，renewal read 均未執行，結果無法判定；Human 已接受該未知限制。 | 不同 profile 的讀回成功；新版 export-clean 的受控檢查不代替原真人輪或新增真人驗收。 |
+| [E008](E008/README.md) | 2026-10-22 單次安全 JSON 與兩名獨立先封存 enum；依固定判準無法判定。 | 普遍 PKCE enforcement、OAuth 漏洞、完整 wire 或正式安全決策變更。 |
+| [E009](E009/README.md) | M03：Human 確認獨立未登入 session、未授權帳號、同輪登入／同意／300 秒內有效帳號；來源契約支持。 | agent 直接見證歷史 UI／network、2FA、完整零配置 UX、產品 readiness 或 PKCE。後續 build 不回填真人來源。 |
 
 ## E001–E007：已知結果與不能推論之處
 
@@ -39,7 +53,7 @@ E007 [第一輪](E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98c
 
 [PR #61](https://github.com/a129924/rivet/pull/61) 已於 2026-10-22T03:17:27Z 合併；本節以合併點 `14d0832f042720889993d769b4cbfb720078e6b1` 的[長期說明](https://github.com/a129924/rivet/blob/14d0832f042720889993d769b4cbfb720078e6b1/docs/architecture/github-first-sign-in.md)及[安全證據](https://github.com/a129924/rivet/blob/14d0832f042720889993d769b4cbfb720078e6b1/plan/github-first-sign-in/evidence/pkce-semantic-review.md)為索引。真實執行的工具來源仍為 `4dbf3df`，不把文件合併 commit 冒充測量版本。
 
-正式 `GitHubIntegration` 保留初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential／provider／scope／clients。獨立 `GitHubSignInVerification` 收納配置及驗證 UI、loopback relay、coordinator、程序內完整 store、probe 與 hosted tests；使用真 OAuth／API，正式 Rivet 產品登入 UI 尚未交付。來源 `e941d88` 的正常登入、真 API 與同程序再次查詢成功，與 PR #62 的 DPK／跨重啟／refresh 驗收分開。
+正式 `GitHubIntegration` 保留初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential／provider／scope／clients。獨立 `GitHubSignInVerification` 收納配置及驗證 UI、loopback relay、coordinator、程序內完整 store、probe 與 hosted tests；使用真 OAuth／API，該來源當時正式 Rivet 產品登入 UI 尚未交付；目前產品入口依其自身工作線判讀。來源 `e941d88` 的正常登入、真 API 與同程序再次查詢成功，與 PR #62 的 DPK／跨重啟／refresh 驗收分開。
 
 | X 收尾層級 | 實際結果與界線 |
 |---|---|
@@ -54,7 +68,7 @@ E007 [第一輪](E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98c
 
 ## PR #63／E009：首次登入、授權與有效帳號
 
-[PR #63](https://github.com/a129924/rivet/pull/63) 於 **2026-10-22T03:51:18Z** 合併，固定來源為 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`，最後 feature head 為 `fe9af0dbbbbf2cf72befd45fec23488e5ebf55c2`。[E009 原始分層紀錄](https://github.com/a129924/rivet/blob/fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4/experiments/E009/README.md)及[長期結論與 C01 更正](https://github.com/a129924/rivet/blob/fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4/docs/github-account-login-feasibility.md)採固定 permalink；此舊文件分支沒有 E009，故不使用指向缺檔的相對連結。合併 commit 是保存來源，不冒充真人或本機 build 的執行版本。
+[PR #63](https://github.com/a129924/rivet/pull/63) 於 **2026-10-22T03:51:18Z** 合併，固定來源為 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`，最後 feature head 為 `fe9af0dbbbbf2cf72befd45fec23488e5ebf55c2`。[E009 原始分層紀錄](https://github.com/a129924/rivet/blob/fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4/experiments/E009/README.md)及[長期結論與 C01 更正](https://github.com/a129924/rivet/blob/fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4/docs/github-account-login-feasibility.md)採固定 permalink，保留原索引來源版本；本次合併後 E009 亦可由本機相對路徑查閱。合併 commit 是保存來源，不冒充真人或本機 build 的執行版本。
 
 ### M03：Human 回報與事前判準
 
@@ -90,6 +104,16 @@ M04 的 hosted mock 為 17 definitions／18 executions、0 failures，root 275 t
 
 Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peeled commit 與 `fccaf2b6` 一致；原 topic local／remote branch 與 managed worktree 已正常移除，沒有 force 或 GitHub Release。這是 #63 收尾事實，不代表本兩份索引的 Draft PR #64 已合併。
 
+## E008：三層結果
+
+1. **交換觀察**：Human 手動提供的 [CLI 安全 JSON](E008/safe-result.json) 回報 HTTP400、invalid_grant、remote_rejected=true、token_present=false；新嘗試、單次 exchange、本機一致性與 verifier 欄位省略均有有限欄位紀錄。本機 prepared inputs 不等於完整遠端 wire 證明。
+2. **Provider 聲明**：[封存結果](../plan/github-pkce-missing-verifier-feasibility/evidence/live-semantic-observation.json) 中，A／B 的 provider_claim 同為 verifier_required；A 的 pkce_causality=not_asserted，B=asserted。原始描述不保存，不重建原句或追加第三人重判。
+3. **主要假設**：因當次因果判讀分歧，依執行前固定判準維持**無法判定**。CLI 的 outcome=indeterminate、pkce_rejection_proven=false 原樣保留；HTTP、錯誤碼、關鍵字及要求 enum 不能單獨取代因果共識。
+
+執行來源 `d067c2c6adad7b1bcb19639c3f0ca58fc437e251`；工具凍結未改。[獨立 Tester](../plan/github-pkce-missing-verifier-feasibility/evidence/live-verification.md) 與 Reviewer 接受的是有限證據的如實整合，required fixes=0；不是 missing-verifier 假設成功。任務完成、1/1 額度用盡，不補次；未使用 token 呼叫 API，也未執行 revoke。
+
+[PR #65](https://github.com/a129924/rivet/pull/65) 已於 2026-10-22 合併並關閉，merge commit 為 `0276ff3385495ed7fb0444e02b3b6da0757dd17a`。PR 合併只更新交付狀態，不解除因果缺口；E008 README 與 step 中的 Draft／待 review 文字保留為當時交付快照。
+
 ## 版本與仍未驗證的範圍
 
 2026-10-20 舊 Rivet 名義 host 的[原端到端紀錄](../plan/github-persistent-connection/evidence/product-e2e.md)及圖、0次提示保留為 `ca00bc0` 歷史，正式產品歸屬與完成宣稱已撤回，不能冒充新 App 驗收。舊 source `7e81b77` 僅供追溯；新舊真人 build 都依當時工作樹 source SHA、私有 project 與原生 build log 識別，不偽稱由後來才產生的 commit 建置。
@@ -102,4 +126,10 @@ Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peel
 - profile 更新後讀回（Human 已接受限制）及已過期 profile 的恢復。
 - certificate rotation、跨使用者／跨機器及公開分發。
 
-本摘要只涵上述已合併 PR #62／#61／#63 的各自來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引由既有 Draft PR #64 交付，本次修訂尚未合併至 dev，不預填其完成狀態。
+本摘要只涵上述已合併 PR #62／#61／#63／#65 的各自來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引由既有 Draft PR #64 交付，本次修訂尚未合併至 dev，不預填其完成狀態。
+
+## 決策邊界
+
+各實驗的成功只適用其來源版本、前提與觀察層級；測試／build 通過、文件審查通過、驗證任務完成或 PR 合併均不能代替主要假設的證據。E002 反向／舊 missing 未知、E005 候選 UX 失敗、E007 renewal 未驗證與 E008 無法判定分別保留；既有 X wrong 的單次支持性證據不代替 missing。
+
+正式登入 UI 依自身工作線推進。後續正式 adapter、安全決策、憑證 lifecycle 或產品採用仍依各自既有流程，不由本總覽自動核准。
