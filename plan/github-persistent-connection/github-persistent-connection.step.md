@@ -1,5 +1,7 @@
 # GitHub 持續連線：驗證產物歸屬回修帳本
 
+> **現行路由（2026-11-03）：以文末 R64 評論回修補充為準。** 原 D／C／R／S 契約、當時「現行」字樣及 D04／D05 收據保留為各日期的歷史，不構成本輪核准；R64 不重開其執行或 Git 清理授權。
+
 ## 現行路由：合併後驗證摘要與收尾（D）
 
 - 2026-10-21 Reviewer：D05完成；phase=postmerge documentation publication；current_step=D06；status=pending；upstream_verdict=approved（D05，requiredFixes=[]）。
@@ -664,3 +666,38 @@ bd00c3e4b266b1703448b91aff220731241a5335 docs(github-connection): 記錄持續�
 - 當次statusCheckRollup=[]，沒有GitHubCIchecks可判斷，不冒稱green。PRbody明列productionbasezero／App缺席buildtest、78／202／12、七段Human0、新舊sourceversion／initialgrantdigest未觀察、controlled非natural、profilerenewalunknownHumanaccepted、E007保留及真map有限覆蓋。
 - 本段與manifest／v2tool-evidence為最後doc-only收據，message `docs(github-connection): 記錄回修 Draft PR 與交付收據`；同樣正常hooks後push。它不在PRLens sourcehead覆蓋內，不循環重做map，也不改任何source／native圖／live收據。其最終commit／remotehead由交接實際提供。
 - 完整交付停R11Humanreview；不merge／tag／release／assign第三方或comment別人。最後hook後精確移除本rolefeature node_modules symlink，保留ownedcopy／map／Chrome／所有原App／新驗證App／真DPK／Apple資產與私有驗收證據，不作其他cleanup。
+
+---
+
+## R64 現行路由：PR #64 文件評論回修（2026-11-03）
+
+- phase=comment-fix verification；current_step=R64-T；status=pending；assigned_role=Tester。
+- 基線 `218b43cc7df251664114029571e3d16327ed571d`、原分支 `docs/github-connection-validation-summary`／PR #64。Human 已授權 bounded 修正及受審後 topic commit／push；本輪沒有 commit、reply／resolve、metadata、cleanup 或新實驗。
+- R64 的精確五檔、九欄、固定 #61／#62／#63／#65 來源與 R64-T01–T05 見前三 artifacts 的文末補充。D／C／原 R／S 全保留歷史，D04／D05 approval 不涵蓋本輪。
+
+| ID | Status | Owner | 完成條件 | Evidence | Blocker | Verdict |
+|---|---|---|---|---|---|---|
+| R64-I | completed | Implementer | 兩評論的五檔文件回修與自驗交接 | 本輪九欄／固定來源／E006 partial、README 與 binary hash；外部 bounded diff／scope／links／privacy 收據隨交接提供 | 無實作 blocker；獨立驗證仍待 | implementation complete；不自產 approval |
+| R64-T | pending | Tester | 獨立 R64-T01–T05，核精確 diff／來源與限制 | 尚未執行本輪獨立驗證 | 待 Tester | null |
+| R64-R | pending | Reviewer | 獨立核兩評論修正與契約／來源界線 | 尚未執行本輪修後審查 | 待 R64-T | null |
+| R64-G | pending | Implementer | R64-R approved 後 staged 語意／六 hooks／topic commit／normal push | 尚無本輪 commit／push | 待 R64-T／R64-R | null |
+| R64-C | pending | Implementer | 推送後只回覆／resolve 兩個已處理 thread並讀回 | 尚未 reply／resolve | 待 R64-G 與實際遠端結果 | null |
+
+本輪評論為 4451328613（thread `PRRT_kwDOUFu0Cc6y_pj4`）及 4451328654（thread `PRRT_kwDOUFu0Cc6y_pkQ`）。來源整合保留 Human／agent／推論／pending 層級；E006 改稱 Rebuilt configuration 真正重建，0／0／0 與 immutable 原件不改。不得用過去 merge／hooks／D04／D05 或這份作者記錄取代本輪獨立驗審；最後停 Human review，不 merge。
+
+
+### R64 最新交接：獨立驗證與審查結果（2026-11-03）
+
+前一 R64 表與 `current_step=R64-T` 是送驗時快照，保留原文。本節為其後最新狀態。證據由主方轉錄本輪實際 agent 訊息，不冒充另有 Tester／Reviewer 原始檔案：
+
+- Tester（agent `explorer`）：R64-T01–T05 驗證通過，22／22，required fixes=[]；範圍為五檔、來源／E006 原件、D 歷史限定、links／privacy 及 ID／路由核對。這是文件驗證，未新增 build／OAuth 或真人觀察。
+- Reviewer（agent `plan_reviewer`）：R64-R **approved**，required fixes=[]；核准本輪五檔文件修正，不是原 D04／D05 的沿用，也不核准產品／實驗假設。
+
+| ID | Current status | Owner | Evidence／condition | Blocker／verdict |
+|---|---|---|---|---|
+| R64-T | completed | Tester | 2026-11-03 實際 agent 訊息；T01–T05、22／22 | passed；required fixes=[] |
+| R64-R | completed | Reviewer | 2026-11-03 實際 agent 訊息；五檔 bounded review | approved；required fixes=[] |
+| R64-G | pending | Implementer | 獨立驗審已完成，待本次 staged 語意檢查、六 hooks、單一 commit／normal push | 尚未執行 Git 交付，不預填 SHA／成功 |
+| R64-C | pending | 主方 | 推送後以真 commit 回覆／resolve 兩個已處理 thread，讀回遠端狀態 | 本筆尚未 reply／resolve，由主方處理 |
+
+現行 phase=comment-fix publication；current_step=R64-G；upstream_verdict=approved（本輪 R64-R）；required fixes=[]。Human 已明示 commit／push／resolve；不重問開始，不 merge、不改 metadata。本次 commit／push 與後續回覆實際結果由外部 delivery receipt／主方交接承接；不為自指 SHA 或 thread 結果再追加文件 commit。

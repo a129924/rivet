@@ -1,5 +1,7 @@
 # GitHub 持續連線：驗證產物歸屬回修計畫
 
+> **現行路由（2026-11-03）：以文末 R64 評論回修補充為準。** 原 D／C／R／S 契約、當時「現行」字樣及 D04／D05 收據保留為各日期的歷史，不構成本輪核准；R64 不重開其執行或 Git 清理授權。
+
 ## 現行補充：合併後摘要與收尾（D，待獨立 Plan-Reviewer）
 
 Human已授權此受限延續；requirements D九欄與spec D Git契約優先，下方C九檔授權不擴張到本次。精確六檔：Modify `analysis/github-persistent-connection/requirements.md`、`analysis/github-persistent-connection/technical-spec.md`、`plan/github-persistent-connection/github-persistent-connection.plan.md`、`plan/github-persistent-connection/github-persistent-connection.step.md`；Written `experiments/README.md`、`experiments/VALIDATION-SUMMARY.md`。兩新檔此前local dev／feature及remote API均不存在，不稱改既有。無其他repo寫入／tracked刪除。
@@ -9,7 +11,7 @@ Human已授權此受限延續；requirements D九欄與spec D Git契約優先，
 D-T01：兩索引依實際來源寫繁中與相對links，覆蓋E001–E007 README、新App README、新五份verification-host evidence及必要舊版歷史來源；每項分已驗／未驗與服務／儲存／合成來源，不輸出rawtoken／secret／code／callbackquery／Appleidentity／本機絕對路徑。最小facts如下，作者仍須逐項核source：
 
 - E001真callback code/state，不exchange；E002正向exchange六欄＋GET/user成功，但負向PKCE／總體unknown、兩次quota耗完；E003單次真refresh／rotation／同user API與舊refresh `bad_refresh_token`成功，不證保存／產品自動刷新。
-- E004真SQLite配fake tokens／refresh，驗跨process／atomic／singleflight／errorcases，不證加密／正式採用；E005legacy資料成功，最新提示0/0/1使重建UXfail，保留早期unknown，不外推DPK；E006 fakebundle＋真DPK在同有效profile／原免費Team/cert下fresh／真CleanBuild提示0/0/0，非真OAuth／refresh／renewal，保留10/16 setup逾時unknown歷史。
+- E004真SQLite配fake tokens／refresh，驗跨process／atomic／singleflight／errorcases，不證加密／正式採用；E005legacy資料成功，最新提示0/0/1使重建UXfail，保留早期unknown，不外推DPK；E006 fakebundle＋真DPK在同有效profile／原免費Team/cert下fresh／切換至 Rebuilt configuration 真正重建提示0/0/0，非真OAuth／refresh／renewal，保留10/16 setup逾時unknown歷史。
 - E007兩輪unknown且renewal read未執行：第一B同profilebytes；第二xattr備份預檢停止，cachemove/refetch/B皆0；Human接受限制不改pass，不第三輪。RF-C01 `bf0db99`的36Python＋4freshCLI只證合成durableexport/checkpoint/cleanup修正，非新live／掉電／renewal實驗。
 - PR62新GitHubConnectionVerification於2026-10-21完成真OAuth/DPK/fresh/真CleanBuild/provider受控到期→真refresh accepted1/save1/輪替fresh/同account GETuser，六流程七項Human分段皆0。controlled非natural；grant後digest未觀測、fresh才首次觀測；aggregatepairChanged非逐tokenhash。舊2026-10-20 Rivet名義host結果另標歷史版本。hosted78/root202（22suites）/consumer12（3suites），App缺席production build/test成功，Sources/Tests/Package/locks回16606基線，不等正式產品能力。
 - 自然到期、profile更新讀回、expiredprofile恢復、certrotation、跨機／跨user與公開分發未驗。PR60/61/63截至prep仍OPEN，其他worktree E009dirty不碰；不發明E008或稱這些PR已合併。
@@ -200,3 +202,29 @@ PR Lens產物／screenshots／private runtimereceipts／Xcode私有副本／Deri
 舊S01–S12及2026-10-20實測仍是原版本歷史。新host若未真人驗收，只能交付「工具已build/test，搬移後live未驗證」，不得宣稱完整新host通過；目前R06全部pending。必須等適用真人結果與獨立review，或Human對明列未驗項作具體決策；既有接受profile更新unknown不擴張成其他豁免。
 
 PR #62改名／body以「GitHub持續連線獨立驗證工具與可行性結果」為主，列新增App／production撤回／新測試／真人新舊來源／E007unknown及限制。沿原branch和PR，不重開／merge。所有本輪變更清單落W05；只可保留topic前正式能力，不留驗證productionAPI／共用UI／控制／收據工具。
+
+---
+
+## R64 現行執行契約：只修 PR #64 兩項評論（2026-11-03）
+
+本節承接 [R64 九欄](../../analysis/github-persistent-connection/requirements.md)與[固定來源／E006 依據](../../analysis/github-persistent-connection/technical-spec.md)。D 原六檔 Written／Modify、舊 PR／Git cleanup 路由與 D04／D05 verdict 是 2026-10-21 歷史，不再作本輪範圍或核准。這是同 topic 的 bounded 文件回修，未新增 topic／架構或真人工作。
+
+### 精確 Modify manifest（五份既有檔案）
+
+1. `analysis/github-persistent-connection/requirements.md`：現行九欄、兩評論與歷史界線。
+2. `analysis/github-persistent-connection/technical-spec.md`：#61／#62／#63／#65 固定來源與 E006 依據。
+3. `plan/github-persistent-connection/github-persistent-connection.plan.md`：本契約、交接及 D facts 的 E006 措辭。
+4. `plan/github-persistent-connection/github-persistent-connection.step.md`：本輪實際狀態及待驗／審／交付，不改 D 原收據。
+5. `experiments/VALIDATION-SUMMARY.md`：只修 E006 的 Clean／Build 措辭。
+
+Written／Deleted 無；`experiments/README.md`、E006 原 receipts／README、全部 source／tests／圖、其他 worktree 只讀。未授權新量測、App／OAuth／Apple／Keychain、Git cleanup、tag、新 branch／PR 或 metadata 更新。
+
+| TestCase | 檢核與界線 |
+|---|---|
+| R64-T01 | 實際 diff 精確五檔、無新／刪檔，README／code／原 receipts 不變。 |
+| R64-T02 | R64 現行契約與 D 歷史分開；#61／#62／#63／#65 已合併來源各自 pin；D04／D05 不冒稱核准本輪。 |
+| R64-T03 | E006 partial 只證 Rebuilt configuration；README Debug／Rebuilt、不同 binary hash 與後續完整 Human 0／0／0 各自支持原範圍。摘要及 D facts 無 E006 Clean 宣稱，#62 真 Clean 段不變。 |
+| R64-T04 | 相對／pinned links、UTF-8／EOF／whitespace、限定秘密與本機絕對路徑檢查；不是全面秘密掃描。 |
+| R64-T05 | M03 Human／agent／source、C01／A07、PKCE 各輪額度與 indeterminate、DPK 前提及產品 pending 無混用；不新跑 build／OAuth。 |
+
+執行順序 R64-I（Implementer）→ R64-T（獨立 Tester）→ R64-R（獨立 Reviewer）→ R64-G（正常 topic commit／push）→ R64-C（回覆／resolve 已處理 thread）。本輪先停在 R64-T；後續兩角色結果不得預填。R64-G 沿既有 Human 授權、先審 staged 語意／message，再跑六 mandatory hooks，正常 push 原 #64 branch；不 force／new PR／merge。只有回覆實際修復且確認 server resolve 成功才記 R64-C completed；不發原 PR metadata。重大 scope／固定決策衝突即停，不擴檔案。

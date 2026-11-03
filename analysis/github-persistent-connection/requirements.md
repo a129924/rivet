@@ -1,5 +1,7 @@
 # GitHub 持續連線：整條流程可行性驗證需求
 
+> **現行路由（2026-11-03）：以文末 R64 評論回修補充為準。** 原 D／C／R／S 契約、當時「現行」字樣及 D04／D05 收據保留為各日期的歷史，不構成本輪核准；R64 不重開其執行或 Git 清理授權。
+
 ## 現行補充：PR #62 合併後的驗證索引與受限收尾（D01，待獨立審查）
 
 Human 已授權補實驗摘要、建立語意 tag、刪原 local／remote feature branch、移除原 worktree；無需重問開始。PR #62 已於 2026-10-21T06:56:54Z MERGED；以下 C／R／S 契約及 verdict 保留歷史，本補充僅限文件與 Git lifecycle，不重開產品 topic。
@@ -93,3 +95,23 @@ Human 已明確接受「profile 更新後讀回尚未驗證」的限制；此限
 沿用同 feature worktree、branch `feat/github-persistent-connection`、Draft PR #62、base `dev`。不在 dev 實作，不改 PR #61。Human 已授權本輪先修四 artifacts／必要獨立審查，再實作、測試、逐段必要真人驗證、topic commit → push → 更新原 Draft PR → human review；每次依 staged diff 檢查語意／message，不再詢問是否開始或重問已授權 commit，不 merge。
 
 沿原免費 Personal Team 及既有 Apple Development certificate；需要新 certificate／付費／安全設定／cache變動、正式契約無法撤回或重大 scope gap，先停並提出具體必要性與範圍。未到 Human 操作段先完成可獨立工作，不預填真人結果。
+
+---
+
+## R64 現行需求：PR #64 兩項文件評論回修（2026-11-03）
+
+Human 已授權 bounded review fix。對應 [範圍評論 4451328613](https://github.com/a129924/rivet/pull/64#discussion_r4451328613)及 [E006 措辭評論 4451328654](https://github.com/a129924/rivet/pull/64#discussion_r4451328654)。保留 2026-10-21 D 契約與 D04／D05 審查原文；它們只覆蓋當時 E001–E007／#62，不能核准後續 #61、#63／E009、#65／E008 索引。本輪以 `218b43cc7df251664114029571e3d16327ed571d` 為修改基線，兩索引均為既有檔案，沒有新增 repository leaf。
+
+| 欄位 | 本輪 R64 契約 |
+|---|---|
+| Goal | 同步現行整合來源、驗證交接與實際檔案範圍，修正 E006 的 Clean／Build 過度宣稱。 |
+| Non-Goal | 新測量、重判舊實驗、產品採用、Git lifecycle 清理或宣稱所有登入／PKCE 已驗證。 |
+| In-Scope | 兩項評論所需文件；已合併 #61、#62、#63／E009、#65／E008 各自固定來源、Human／agent／source 證據與 pending 界線；獨立驗證與審查交接。 |
+| Out-Of-Scope | code／原 receipts／圖、OAuth／Apple／Keychain 操作、新 branch／PR／tag、cleanup、merge PR 或修改 PR metadata。 |
+| ReadOnly | 原 source、實驗 README／receipts、固定 merge snapshots、`experiments/README.md`、全部 code／tests／locks／圖及其他 worktree。 |
+| Written | 無新 repository 檔案；只可保存本機外部、無秘密的 bounded 檢查收據。 |
+| Modify | 本 topic 四 artifacts 與 `experiments/VALIDATION-SUMMARY.md`，精確五檔見 [R64 計畫](../../plan/github-persistent-connection/github-persistent-connection.plan.md)。 |
+| Deleted | 無。 |
+| TestCase | R64-T01–T05：五檔 scope、現行／D 歷史區分、E006 exact source、links／privacy／whitespace、來源與 pending 不混用。 |
+
+驗收只要求 E006 描述為「切換至 Rebuilt configuration 真正重建」，保留 0／0／0、原判定及 immutable receipts；PR #62 獨立 App 另有真正 Clean／Build 證據，不能一併刪改。沒有 Swift 或真人驗證工作。Implementer 完成後交獨立 Tester，再交 Reviewer；兩者結果實記後才依既有 Human 授權 commit／push，最後回覆並 resolve 已處理的兩個 thread，停 Human review。未執行的步驟不得預填 approved／pass。
