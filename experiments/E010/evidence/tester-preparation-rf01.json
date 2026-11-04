@@ -1,0 +1,157 @@
+{
+  "E006All126FilesUnchanged": true,
+  "E006BaselineFreezeSHA256": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+  "E007ModifiedOrImported": false,
+  "actualSwiftToPythonCases": [
+    "no-call/null",
+    "six-field success",
+    "empty cleanup",
+    "Unicode scalar order and escaping"
+  ],
+  "actualUnsignedMainSHA256": {
+    "Debug": "34978156c7660f14af7e7cc977217a6ac93273bbbf19020aa37ffe6630317f6d",
+    "Rebuilt": "3d02a38e43aeef971e42df98808ad53f2a0bf7528c33215127e09bfa3b84f49a"
+  },
+  "adoptionApproved": false,
+  "all14ReviewedSourceFilesUnchangedDuringRetest": true,
+  "allUnsignedBuildInputsMatchCurrentSource": true,
+  "bothDebugDylibAbsent": true,
+  "boundaries": {
+    "AppLaunch": false,
+    "AppleAssetsInspected": false,
+    "GitCommandsPerformed": false,
+    "SecurityCalls": 0,
+    "crossWeekItemRetained": false,
+    "persistentLiveRun": false,
+    "realClockArmed": false,
+    "signedBuild": false
+  },
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E008/Tests -p 'test_*.py' -v",
+      "exitCode": 0,
+      "skipped": 0,
+      "testMethods": 30
+    },
+    {
+      "command": "swiftc -module-cache-path <scratch>/module-cache experiments/E008/Sources/DPKContinuityProbe/ProbeCore.swift experiments/E008/Tests/CoreTests.swift -o <scratch>/core-tests",
+      "exitCode": 0
+    },
+    {
+      "command": "<scratch>/core-tests",
+      "exitCode": 0,
+      "scenarios": 7
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 experiments/E008/scripts/prepare.py --out <scratch>/unsigned-builds --unsigned-build",
+      "exitCode": 0
+    },
+    {
+      "command": "swiftc -module-cache-path <scratch>/module-cache experiments/E008/Sources/DPKContinuityProbe/ProbeCore.swift experiments/E008/evidence/tester-initial-serialization-probe.swift -o <scratch>/original-regression-probe",
+      "exitCode": 0
+    },
+    {
+      "actualSHAEqualsInitialExpected": true,
+      "command": "<scratch>/original-regression-probe -> actual continuity.read and duplicate exclusive",
+      "duplicateExclusiveRejected": true,
+      "originalBytesUnchanged": true,
+      "producerExitCode": 0,
+      "readerAccepted": true
+    }
+  ],
+  "crossLanguageBytesSHAMatch": true,
+  "devCleanCurrentRetest": "not-rechecked: Git commands excluded by dispatch; Dispatcher will confirm read-only",
+  "differentUnsignedMainHashes": true,
+  "handoff": "Independent Reviewer S05; Human S06 assets/retention/recovery and stage-ready boundary remains closed.",
+  "implementationOrFormalArtifactsModifiedByTester": false,
+  "independentScratchCleanup": {
+    "endedUTC": "2026-10-20T07:01:17.044164+00:00",
+    "ownedScratchAbsent": true,
+    "startedUTC": "2026-10-20T07:01:16.626757+00:00"
+  },
+  "initialDevCleanVerified": true,
+  "initialDevHEAD": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44",
+  "initialTesterReceiptSHA256": "32ad6afe5f58443e6af7757220fe7c2099fb6e68d1d913953580124677c3aa7b",
+  "limitations": [
+    "Approval is preparation only; real selected-material CLI/CMS integration, natural expiry, different valid P1, original item recovery and Human UX remain unexecuted.",
+    "Unsigned builds do not establish certificate, DR, profile, entitlement eligibility or live rebuild success.",
+    "Current dev worktree cleanliness is delegated to Dispatcher; no Git command run in this bounded retest."
+  ],
+  "liveHypothesisStatus": "未執行",
+  "liveValidationTaskComplete": false,
+  "newEvidenceSHA256": {
+    "tester-rf01-original-regression.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-rf01-unsigned-build.json": "da40cd6ad2ecfa80ec5214292a97af4deedca0137e3928d7ed69c991673a28dd"
+  },
+  "oldEvidenceAll9Unchanged": true,
+  "oldEvidenceSHA256": {
+    "baseline-freeze.json": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+    "preparation-check.json": "40a8dc824270cddc9ad5117db2ad5947768835f9694240f900a11bca3ecc2b57",
+    "python-preparation-tests.txt": "3fe9031a509eb12f55126a9c523f4d3de44e120aa098d64ce9a04f23341993b9",
+    "tester-initial-python-receipt.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-initial-serialization-probe.swift": "b8f6db816185053fd076ef3cdcedb6f4cab20b7362041b96ceeb808fed4c1be4",
+    "tester-initial-swift-receipt.txt": "481aa0b64c908896a78e2f4e25665745be9a2ef5a6bb4a299fe08b3b159ec960",
+    "tester-initial-unsigned-build.json": "6eba1f2d8467669cd521f8da5a2d7676bfbaf5ea319f8b4c14860b94d8a85c93",
+    "tester-preparation-check.json": "32ad6afe5f58443e6af7757220fe7c2099fb6e68d1d913953580124677c3aa7b",
+    "unsigned-preparation.json": "fd3987d630cab90e2cc6a15e68bddeb99099121628dcd2421be9a76ab8945ef8"
+  },
+  "originalMinimalFixtureNowAcceptedSHA256": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+  "recordedUTC": "2026-10-20T07:01:17.044164+00:00",
+  "requiredFixes": [],
+  "resolvedRequiredFixes": [
+    "RF01"
+  ],
+  "role": "independentTester",
+  "schemaVersion": 1,
+  "scope": "S04 bounded RF01 preparation re-verification only",
+  "sourceDeltaFromInitial": {
+    "added": [
+      "Tests/ReceiptProducer.swift"
+    ],
+    "changed": [
+      "Sources/DPKContinuityProbe/ProbeCore.swift",
+      "Tests/test_continuity.py"
+    ],
+    "other11InitialFilesUnchanged": true,
+    "pythonCanonicalReaderAndExclusiveWriterUnchanged": true
+  },
+  "sourceManifestSHA256": "357c43a3248225eb2d8bef8d28382e2bc2e70348435552628cd436f917a93bb4",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/test_continuity.py": "6c0b7952cfef6415e21f3d8b02b9deef71fd50fc52793749eee86516e28b359f",
+    "scripts/continuity.py": "ffcfa177b4a8b2365ba8f8cf21ffbe5e5994d131bf1af242f214451d6f1680ee",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "2502865056c6f2238b5f52a2654f6a7efdbeea32287e05a8fd197c6adee783b9"
+  },
+  "synthetic": true,
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "unsignedConfigurations": {
+    "Debug": {
+      "debugDylibAbsent": true,
+      "exitCode": 0,
+      "mainSHA256": "34978156c7660f14af7e7cc977217a6ac93273bbbf19020aa37ffe6630317f6d",
+      "performed": true,
+      "signingAllowed": false,
+      "signingRequired": false
+    },
+    "Rebuilt": {
+      "debugDylibAbsent": true,
+      "exitCode": 0,
+      "mainSHA256": "3d02a38e43aeef971e42df98808ad53f2a0bf7528c33215127e09bfa3b84f49a",
+      "performed": true,
+      "signingAllowed": false,
+      "signingRequired": false
+    }
+  },
+  "upstreamRF01AuthorReceiptSHA256": "c96b35fe4c850dd198006a9d159e0595722065e1c1ef83050c852407d7f23c91",
+  "verdict": "approved"
+}

@@ -15,6 +15,7 @@
 | [E007](E007/README.md) | 兩輪 renewal 前提未成立，renewal read 均未執行，結果無法判定；Human 已接受該未知限制。 | 不同 profile 的讀回成功；新版 export-clean 的受控檢查不代替原真人輪或新增真人驗收。 |
 | [E008](E008/README.md) | 2026-10-22 單次安全 JSON 與兩名獨立先封存 enum；依固定判準無法判定。 | 普遍 PKCE enforcement、OAuth 漏洞、完整 wire 或正式安全決策變更。 |
 | [E009](E009/README.md) | M03：Human 確認獨立未登入 session、未授權帳號、同輪登入／同意／300 秒內有效帳號；來源契約支持。 | agent 直接見證歷史 UI／network、2FA、完整零配置 UX、產品 readiness 或 PKCE。後續 build 不回填真人來源。 |
+| [E010](E010/README.md) | PR #67 原 DPK E008 的準備／兩輪 controlled-stop 紀錄改號保全；M03/M04 遷移驗審通過，主假設未執行。 | 自然到期／P1 原 A 恢復、DPK／UX、GUI T01–03；原零 item filesystem cleanup 不當 Keychain 刪除驗證。 |
 
 ## E001–E007：已知結果與不能推論之處
 
@@ -143,3 +144,11 @@ Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peel
 E006 原 partial Human receipt 只記切換 Rebuilt configuration；Debug／Rebuilt 的不同 binary hash 與後續完整 Human 觀察支持既有受限 0／0／0，沒有 Clean 操作證據。E006 原判定／收據不改；#62 獨立持續連線 App 的真正 Clean／Build 段保持原證據。M03 的 Human／agent／source 界線、C01／A07、各輪 PKCE 預算及 indeterminate、DPK 前提與產品限制均保留。
 
 本次已核對 annotated tag `v0.1.59-github-connection-validation-summary` 的本機／遠端 object 與 peeled commit 一致，精確指向 `71d395cc…`；不是後續文件維護 commit 或 GitHub Release。原 topic local／remote branch 與本輪 managed feature worktree 已正常移除；無 force／prune，其他 feature worktree 與所有 App／Keychain／Apple 資產未操作。PR #64 原文件交付與 Git 清理完成不代替實驗主要假設的證據，舊 D／R64 pending／交付前狀態只按當時版本閱讀。
+
+## E010：profile 自然週期尚未執行（PR #67 登記）
+
+此節只登記尚未合併 PR #67 的獨立 DPK profile-continuity topic，不改上游已合併來源範圍或 E001–E009 結果。[E010 README](E010/README.md)保留原 10/21／10/22 Human Build success 與有界 host／matching Report 缺口並存；未取得 selected App／actual proof／完整 global，沒有 App/SecItem/seed 或跨週 item。原 grants/run 均 closed，私有 root 已精確清理；10/22 僅 cleanup 越 cutoff 3.954765 秒但在 deadline 前，舊收據不改。
+
+遷移保存 22 原檔快照與 171 同 bytes 移動資料，原 193 檔逐筆 accounting；[typed map](E010/history/renumbering-map.json)的 1952 file refs 與 3 non-file aggregate digests 分開，五個歷史 source 版本無法取得，不能稱所有舊 source 可重建。M03 Tester／M04 Reviewer approved 只核受限遷移與離線準備，不是 profile cycle/DPK/UX 成功。
+
+本地已正常首筆 commit `819b26d20272cfcc9e664c4dccba867bcd34c92d`，受控整合 `758aca9bb518f2a21f20f47609335fac49043370` 與兩 registry 登記仍待 M07 獨立核對及 M08/M09；尚未第二 commit 或 push，不宣稱 GitHub 衝突已解除。S06 human-check、自然週期／完整 S07/S08 pending；未核准 Keychain adapter 正式採用或 merge 至 dev。

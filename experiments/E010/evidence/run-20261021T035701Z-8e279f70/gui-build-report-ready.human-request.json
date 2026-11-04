@@ -1,0 +1,21 @@
+{
+  "anchorSHA256": "b70eee5881ce4c5492d3622daa3c04b6aeb976c04d99328c2a5548913db9a606",
+  "grantSHA256": {
+    "assets": "f7ea10d98f99ca898581022667a2627cc4b47c0994328d5f353d3e6299a480f3",
+    "recovery": "7e36601c25935f889e44f20913a4b426ce0b861a19930e50d8559ad43b2d7be0",
+    "retention": "8c0832760e3a2308a15005e8e1c4e4eff3aadb921ccf2d12d7fb44eeaecbb92c"
+  },
+  "humanReady": true,
+  "humanReadyStatement": "允許上述唯讀定位核對，已準備好全程觀察",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "previousHumanSHA256": "614e30c37edf03f7c4afd3308799af7a24ff3edbad00e8755ee9ff2aea452ac4",
+  "previousReceiptSHA256": "898319a23627c9abfef0bf2aa0b69029e53f89171618d84a63427960a5968d99",
+  "privateReadySHA256": "8263f489a3128d5914e2555e3dc2d05a12e1c1827f1e01d690d127716585aec0",
+  "readyReceivedUTC": "2026-10-21T04:11:30+00:00",
+  "recordedUTC": "2026-10-21T04:12:43.910478+00:00",
+  "scope": "reopen exact private project; inspect existing GUI report/explicit product only; no rebuild/resign/Team changes/App launch/SecItem",
+  "source": "request_user_input_async call_f6472e2ca078429191fe9f19cc3f62e6 item0",
+  "stage": "diagnostic-gui-build-report",
+  "synthetic": false,
+  "windowSHA256": "48261af04f320c52ed6306ac0152c2a9c0b4d5940c572c9dbaa14097e97a20a2"
+}

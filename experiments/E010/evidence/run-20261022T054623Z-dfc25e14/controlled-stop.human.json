@@ -1,0 +1,19 @@
+{
+  "DPKCredentialAccessObservation": false,
+  "HumanExactReplyUTC": null,
+  "actions": [],
+  "isRuntimeGate": false,
+  "machineReceiptSHA256": "8c98c54c4dd2e73d178347f2e47ab5304c4693661dd0b5c2c977ce283b952c00",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "rawHumanStatement": "全程觀察，0次提示",
+  "recordedUTC": null,
+  "reportedObservationRangeTaipei": "2026-10-22 14:10:12–14:11:27",
+  "source": "request_user_input_async call_49eec7cadb744ad999ec198f68207d1d item0",
+  "stage": "controlled-zero-item-cleanup",
+  "synthetic": false,
+  "timestampMeaning": "Exact Human reply/receipt time not supplied; no new clock read or timestamp inferred. Post-cleanup public addendum only, not a runtime ready gate.",
+  "wholeStageObserved": true
+}

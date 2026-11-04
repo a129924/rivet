@@ -1,0 +1,344 @@
+{
+  "E006All126SHAUnchanged": true,
+  "HumanEvidence": {
+    "allFourStagesWholeObserved": true,
+    "cleanupHumanRecordedUTC": null,
+    "cleanupHumanSHA256": "4a2f6314fbb8810d5c2298bc0c8a8ec1b4045900797dae55b36b9fb917e376c9",
+    "credentialAccessUXExecuted": false,
+    "originalMachinePendingPreserved": true,
+    "promptCounts": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "stageEvidence": [
+      {
+        "HumanPhaseIdentified": true,
+        "HumanPromptCount": 0,
+        "HumanReceiptSHA256": "436d054338e1abbe1f68241e1c43a592cc0e46b59d34ea17edc19dcc92a602f7",
+        "HumanWholeObserved": true,
+        "actions": [],
+        "endedTaipei": "2026-10-21T11:57:01.761284+08:00",
+        "endedUTC": "2026-10-21T03:57:01.761284+00:00",
+        "machineReceiptSHA256": "e8973db4dc656ce21fe1ba2456400bec66cc4eb5c6af6c2689f575965bb2dd68",
+        "purposes": [],
+        "stage": "begin-anchor",
+        "startedTaipei": "2026-10-21T11:57:01.649396+08:00",
+        "startedUTC": "2026-10-21T03:57:01.649396+00:00"
+      },
+      {
+        "HumanPhaseIdentified": true,
+        "HumanPromptCount": 0,
+        "HumanReceiptSHA256": "614e30c37edf03f7c4afd3308799af7a24ff3edbad00e8755ee9ff2aea452ac4",
+        "HumanWholeObserved": true,
+        "actions": [],
+        "endedTaipei": "2026-10-21T12:06:53.232006+08:00",
+        "endedUTC": "2026-10-21T04:06:53.232006+00:00",
+        "machineReceiptSHA256": "898319a23627c9abfef0bf2aa0b69029e53f89171618d84a63427960a5968d99",
+        "purposes": [],
+        "stage": "setup",
+        "startedTaipei": "2026-10-21T12:00:50.667617+08:00",
+        "startedUTC": "2026-10-21T04:00:50.667617+00:00"
+      },
+      {
+        "HumanPhaseIdentified": true,
+        "HumanPromptCount": 0,
+        "HumanReceiptSHA256": "db41622364019a2f76670e03693a54a676f38926d5925624f94b0e4b4e94f9a4",
+        "HumanWholeObserved": true,
+        "actions": [],
+        "endedTaipei": "2026-10-21T12:13:40.589428+08:00",
+        "endedUTC": "2026-10-21T04:13:40.589428+00:00",
+        "machineReceiptSHA256": "6ec2e1d57bf277e1407ba4bfd98df4cdd2b636ef9de9ef43888da317ec7c336c",
+        "purposes": [],
+        "stage": "diagnostic-gui-build-report",
+        "startedTaipei": "2026-10-21T12:12:43.911373+08:00",
+        "startedUTC": "2026-10-21T04:12:43.911373+00:00"
+      },
+      {
+        "HumanPhaseIdentified": true,
+        "HumanPromptCount": 0,
+        "HumanReceiptSHA256": "4a2f6314fbb8810d5c2298bc0c8a8ec1b4045900797dae55b36b9fb917e376c9",
+        "HumanWholeObserved": true,
+        "actions": [],
+        "endedTaipei": "2026-10-21T12:17:08.080796+08:00",
+        "endedUTC": "2026-10-21T04:17:08.080796+00:00",
+        "machineReceiptSHA256": "ed15fe4e119ce07de7f415eba3f9d75d4920f3428d7dc3a2f0d7708f71d231bb",
+        "purposes": [],
+        "stage": "controlled-zero-item-cleanup",
+        "startedTaipei": "2026-10-21T12:17:07.962676+08:00",
+        "startedUTC": "2026-10-21T04:17:07.962676+00:00"
+      }
+    ]
+  },
+  "all47HistoricalFilesAndScopeConsentUnchanged": true,
+  "boundaries": {
+    "GitStageCommitPushPR": false,
+    "formalAdapterAdoption": false,
+    "newAssetsAppSecurityAPIOrMeasurement": false,
+    "newClockOrNamespace": false,
+    "newValidationTestsOrBuilds": false,
+    "privateRootAccessOrRecreation": false,
+    "runReceiptsOrIndicesRewritten": false,
+    "sourceOrTestsModified": false
+  },
+  "caseStatuses": {
+    "T01": {
+      "currentLivePrerequisite": "無法判定／前提不足",
+      "purePreauthGuards": "沿用已批准 preparation，未重跑，不視為 live 前提通過"
+    },
+    "T02": {
+      "baseline": "未執行",
+      "credentialPromptUX": "未執行"
+    },
+    "T03": {
+      "naturalExpiry": "未執行"
+    },
+    "T04": {
+      "newP1SameCertificateGroup": "未執行"
+    },
+    "T05": {
+      "P1ReadOriginalNoRewrite": "未執行"
+    },
+    "T06": {
+      "trueRebuildRead": "未執行"
+    },
+    "T07": {
+      "DPKDeleteReadAbsent": "未執行",
+      "zeroItemPrivateFilesystemCleanup": "成功；此前未建立 Keychain item"
+    },
+    "T08": {
+      "currentOriginalWindowAndControlledStop": "成功",
+      "pureGuards": "沿用已批准 preparation，未重跑"
+    },
+    "T09": {
+      "collisionGuards": "沿用 preparation；本次沒有覆寫或新碰撞實驗",
+      "currentEvidenceSHAExclusiveCanonicalLFAndRedaction": "成功"
+    }
+  },
+  "chronology": {
+    "cleanupActualEndTaipei": "2026-10-21T12:17:08.080796+08:00",
+    "cleanupActualEndUTC": "2026-10-21T04:17:08.080796+00:00",
+    "clockResetOrNewNamespace": false,
+    "completedBeforeOriginalCutoff": true,
+    "completedBeforeOriginalDeadline": true,
+    "cutoffUTC": "2026-10-21T04:22:01.736290+00:00",
+    "deadlineUTC": "2026-10-21T04:27:01.736290+00:00",
+    "originalT0UTC": "2026-10-21T03:57:01.736290+00:00"
+  },
+  "classification": {
+    "DPKCredentialUX": "未執行；四段零提示均未進入憑證存取",
+    "DPKMechanism": "未執行",
+    "OSStatus": null,
+    "cleanupTaskComplete": true,
+    "controlledStopRecordComplete": true,
+    "failureModeLiveValidation": "未執行",
+    "formalAdapterAdoptionApproved": false,
+    "liveFeasibilityValidationTaskComplete": false,
+    "primaryHypothesis": "未執行"
+  },
+  "currentStatus": "human-check",
+  "currentStep": "S06",
+  "devClean": true,
+  "devHEAD": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44",
+  "documentationSHA256": {
+    "experiments/E008/README.md": "c23acc82bf040e06d86295452f20c883e166c9dfb2f7a3bfc572a517c719e536",
+    "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md": "4746994e37da320540bc08efe2569203bf49598629bee747dad1a148557b376e"
+  },
+  "futureRun": "requires Human decision and new applicable ready/grants; cannot borrow this closed run",
+  "kind": "E008-controlled-stop-document-factual-closure",
+  "liveFeasibilityValidationTaskComplete": false,
+  "materialConclusion": {
+    "HumanDeclarationPreserved": "Debug Build成功，確認免費PersonalTeam／既有憑證／未Run",
+    "actualGUIProductProvenanceEstablished": false,
+    "actualGUIReportCount": 0,
+    "boundedPrivateScopeAppDirectoryCount": 1,
+    "boundedPrivateScopeCompleteMatchingHostCount": 0,
+    "candidateMissing": [
+      "Info.plist",
+      "embedded provisioning profile",
+      "main executable"
+    ],
+    "declarationReceiptSHA256": "fe74a35d3214daa0cfd17dfad4970283503de66b1fc6607a57bc56b2bcfd5e6d",
+    "notInferred": [
+      "Human 未 Build",
+      "整機沒有 App",
+      "DPK 不可用"
+    ],
+    "outsideAuthorizedPrivateScopeGUIProduct": "unknown; not searched",
+    "prerequisiteStatus": "無法判定；沒有取得完整、可驗且來源確定的 selected host"
+  },
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "notExecuted": [
+    "setup-only CLI",
+    "selected CMS/codesign inspection",
+    "actual proof",
+    "complete global",
+    "App executor/launch",
+    "SecItem",
+    "seed/read",
+    "cross-week item retention",
+    "T02–T06",
+    "T07 DPK delete/read-absent"
+  ],
+  "otherThreePlanningContractSHA256": {
+    "analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md": "2cacdd209ca1469a1358172226c3211612bc1e6c9cace8c1d3502084e2022fc1",
+    "analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md": "fc5f62842fc9966ab916f296a4da5354c1afed8645d33dbcf247db27be992bd4",
+    "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md": "c300bbd583c376d6d5abf72cd73bba0d429461c6a85386002905b8167a054eca"
+  },
+  "primaryHypothesis": "未執行",
+  "priorEvidenceSHA256": {
+    "S06-scope-consent.json": "c8dbebda6701ffa5fe8d2a1027fb106bdb6d0015f6d9e3a0fb505c0c0d8f3e55",
+    "baseline-freeze.json": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+    "bootstrap-export-order-prior-source/Tests/test_bootstrap.py": "3b51a3fd4a3a6c5f5b4d48d829a9351291171b555fcc5e4d319ac9f4aba08782",
+    "bootstrap-export-order-prior-source/scripts/proof.py": "11b2a6ef68aebaf851afe1491a04e20b004be5948274c6739872d4a413da5d34",
+    "bootstrap-export-order-repro.txt": "23703ff6af1d5a8c79e66ed0d06f22fae2652253080ac47af31ad93cc9432a40",
+    "bootstrap-export-order-tests.txt": "d92c66deef39868bd32a8d7d5ef84479218fd3c0ab9125baf6757de87d1ccd37",
+    "bootstrap-preparation-closure.json": "991036f5a2fdbc17323913a9215b515e3140108adc35a1b4d0bb40fdeff8421f",
+    "bootstrap-prior-source/DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "bootstrap-prior-source/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "bootstrap-prior-source/Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "bootstrap-prior-source/Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "bootstrap-prior-source/Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "bootstrap-prior-source/Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+    "bootstrap-prior-source/Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "bootstrap-prior-source/Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "bootstrap-prior-source/Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "bootstrap-prior-source/Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "bootstrap-prior-source/Tests/test_continuity.py": "bf1a8650d5f9a1aacd5707d0b782c8b72ff6b2f1bfa6870d5fbf07744fc9d785",
+    "bootstrap-prior-source/Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "bootstrap-prior-source/scripts/continuity.py": "0ce3d3ecb1c58e91977a87b4185279ef96086da7949d4b109c2055fa5622809a",
+    "bootstrap-prior-source/scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "bootstrap-prior-source/scripts/proof.py": "44f23873d8c01710638deb34cc3bb04d9cee12d95a6f5192dad80adaf12627eb",
+    "bootstrap-pure-tests.txt": "9443b38dbd37ed4c29abcd13c40d08e93bef3dfab1c95d22f57680b5f36d0092",
+    "bootstrap-unsigned.json": "1c4ff07ed08ddf2d3a97799a087ee00312d35053945fc6639d403b14a8d6b633",
+    "preparation-check-bootstrap-export-order.json": "dc9143dd02633186d5fc485a802241e76f8764eb4963617ce24e7e1b9a1ab0e6",
+    "preparation-check-bootstrap.json": "182823ddafe21c3e5c19634fb902e68505ee27a80b75c18674d20b198ee4ec46",
+    "preparation-check-review-fixes.json": "8078be1bbcec4d8366b9bae833c35e491b46b21ea74bf2db14c1f813d284870c",
+    "preparation-check-rf01.json": "c96b35fe4c850dd198006a9d159e0595722065e1c1ef83050c852407d7f23c91",
+    "preparation-check.json": "40a8dc824270cddc9ad5117db2ad5947768835f9694240f900a11bca3ecc2b57",
+    "preparation-closure.json": "47d79dadc1051a7ae8a943270333b4391106e3b3110f241949933114a335fc8e",
+    "python-preparation-tests.txt": "3fe9031a509eb12f55126a9c523f4d3de44e120aa098d64ce9a04f23341993b9",
+    "python-review-fixes-tests.txt": "684897721cf4f494430312b55f51c41ae589e3c84bed9e9420f5c3a1a16a84c3",
+    "python-rf01-tests.txt": "b8aa0cd387c510ba0e381e78494ef2217f1c09f21aa5446d0a82bcd6c9493662",
+    "tester-bootstrap-export-order-repro.py": "dc7456e7a3945eed4f5038a61301c04e769a4d25227d83d867d941234061fe77",
+    "tester-bootstrap-unsigned.json": "341a252666b9771c2dca9b8795d4e7ad753930752c51bb76124f919bf053b11b",
+    "tester-initial-python-receipt.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-initial-serialization-probe.swift": "b8f6db816185053fd076ef3cdcedb6f4cab20b7362041b96ceeb808fed4c1be4",
+    "tester-initial-swift-receipt.txt": "481aa0b64c908896a78e2f4e25665745be9a2ef5a6bb4a299fe08b3b159ec960",
+    "tester-initial-unsigned-build.json": "6eba1f2d8467669cd521f8da5a2d7676bfbaf5ea319f8b4c14860b94d8a85c93",
+    "tester-preparation-bootstrap-export-order.json": "769e1080532a02782ba597722c5be946a3e5e04e7deedc22022c2112c23f25d8",
+    "tester-preparation-bootstrap.json": "163ea336bee5ed06c734afc832b7ba26053539f65131cf6b1830e401a3991d58",
+    "tester-preparation-check.json": "32ad6afe5f58443e6af7757220fe7c2099fb6e68d1d913953580124677c3aa7b",
+    "tester-preparation-review-fixes.json": "2545d48122579c4f41cb4dba0af7798c93c5a8308080770715b10f6e76a94d93",
+    "tester-preparation-rf01.json": "1fb3f768476e81603aa071081d4bd82348f8fbb56eb569c07fab5737b7ee8438",
+    "tester-rf01-original-regression.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-rf01-unsigned-build.json": "da40cd6ad2ecfa80ec5214292a97af4deedca0137e3928d7ed69c991673a28dd",
+    "unsigned-preparation.json": "fd3987d630cab90e2cc6a15e68bddeb99099121628dcd2421be9a76ab8945ef8",
+    "unsigned-rf01.json": "d1c61e2ea2e519e5b7d3d818b670af4d9f44c20b7e02364ba70dd9aab7da54ad"
+  },
+  "privateCleanup": {
+    "AppleAssetsRetained": true,
+    "DPKDeleteReadAbsentValidated": false,
+    "complete": true,
+    "otherProjectsGlobalDDRecentWithinCleanupClaim": false,
+    "ownedPrivateResidualFromPreservedEvidence": false,
+    "privateRootAbsentFromPreservedEvidence": true,
+    "privateRootReaccessedForThisClosure": false,
+    "zeroItemFilesystemOnly": true
+  },
+  "publicRunDirectory": "run-20261021T035701Z-8e279f70",
+  "recordedUTC": "2026-10-21T04:27:31.307178+00:00",
+  "recordedUTCMeaning": "documentation metadata only; not experiment clock or Human cleanup report timestamp",
+  "roleVerdicts": {
+    "Reviewer": {
+      "provenance": "formal independent Reviewer verdict supplied by upstream dispatcher",
+      "publicIndexAudit": {
+        "allMatched": true,
+        "publicIndexCount": 4,
+        "referenceCountIncludingDuplicates": 94
+      },
+      "required_fixes": [],
+      "scope": "controlled-stop record and zero-item private filesystem cleanup only",
+      "verdict": "approved"
+    },
+    "Tester": {
+      "receiptSHA256": "6375770c88f5c0951077c27559178e9a2e67bb33954d0837308ab8b03e90b174",
+      "required_fixes": [],
+      "verdict": "approved"
+    }
+  },
+  "run47FilesUnchanged": true,
+  "runClosed": true,
+  "runEvidenceSHA256": {
+    "anchor.binding.json": "489e0765133acb0b5a4809dc8b54e3294bbde31edc234f9be66bd6288d52f868",
+    "anchor.public.json": "5cb3314594ce5247fbd46cf19357d2cd3c1f44d166c458c94d5cf11582110cee",
+    "begin-control.machine.json": "307a6fc89dfed62e5fa866fca182fd0d117a4d057135a1fa95571f08061bfe39",
+    "begin-observation-provenance.json": "7d508ad1e0a25af48bb6c8248df22f962e04d808b4a3fb2453e8ced5134cbc08",
+    "begin-ready.human-request.json": "0933d266a5d5a2719155c19b2e5086ec792fb7ecd5d88d4b79ec66df3f981f1c",
+    "begin.human.json": "436d054338e1abbe1f68241e1c43a592cc0e46b59d34ea17edc19dcc92a602f7",
+    "begin.machine.json": "e8973db4dc656ce21fe1ba2456400bec66cc4eb5c6af6c2689f575965bb2dd68",
+    "controlled-cleanup-preconditions.machine.json": "fc38785818c82facc3cecd8dfebdecc9a416f91545605ae9dcb20f0acda1ba0f",
+    "controlled-cleanup-ready.human-request.json": "b610b5da236e7f52bac2371c6356bd2ad32eeb7037217cbce4f8475cf758c9cf",
+    "controlled-stop.human.json": "4a2f6314fbb8810d5c2298bc0c8a8ec1b4045900797dae55b36b9fb917e376c9",
+    "controlled-stop.machine.json": "ed15fe4e119ce07de7f415eba3f9d75d4920f3428d7dc3a2f0d7708f71d231bb",
+    "diagnostic-observation-provenance.json": "81c493d63d2a065cfe2649e2700e801eb9d4ada06630a1ff8ca799dc0769ad0f",
+    "final-addendum.index.json": "72fbace15d8d7eadc2e3d9920d6a56ca6100e6b0246c0b0cbea62cd6528c0322",
+    "gui-build-report-diagnostic.human.json": "db41622364019a2f76670e03693a54a676f38926d5925624f94b0e4b4e94f9a4",
+    "gui-build-report-diagnostic.machine.json": "6ec2e1d57bf277e1407ba4bfd98df4cdd2b636ef9de9ef43888da317ec7c336c",
+    "gui-build-report-open.machine.json": "6aade604319b81fc2e7881bf490335d2b1e9e80576b230d84e86764468f66214",
+    "gui-build-report-ready.human-request.json": "07e59bc960486cf98319754c6bc73107819ac0994c71d58165b30e077a299706",
+    "operator-pre-cleanup.index.json": "038612eb7d7c26692926352e0832bbf79e93d0b6be04df8528df3f7e4272432b",
+    "pre-cleanup-controls/S06-scope-consent.json": "c8dbebda6701ffa5fe8d2a1027fb106bdb6d0015f6d9e3a0fb505c0c0d8f3e55",
+    "pre-cleanup-controls/bootstrap/begin.ready.public.json": "302cf33ae444729289e41cba00ddb194480fa0ef44a35a47d403787bb1273bd3",
+    "pre-cleanup-controls/bootstrap/setup.ready.public.json": "2b4d788c9ff4ac67f8098a30d18e5ce54e7b42a34c63b9bcf46ec2a53bef7221",
+    "pre-cleanup-controls/diagnostics/controlled-cleanup.ready.public.json": "c068aff8026382269c18da32a65e58b9d3785df1767a79d340e0839a3733ec80",
+    "pre-cleanup-controls/diagnostics/gui-build-report.ready.public.json": "577be7a8907aaf8b40c70425fe72acb7d00fd9caa41ab14c69c778971a1741b5",
+    "pre-cleanup-controls/grants/assets.public.json": "0e1bf7cc4be7ac3f498e9a331ab647b68a7316148115f258ef10302eeedc158d",
+    "pre-cleanup-controls/grants/recovery.public.json": "c66318e6caa6314e2b2959f93e1c0949fbb7ed77a8908667c1995c671323214f",
+    "pre-cleanup-controls/grants/retention.public.json": "e650e79a8c3459ff9b15372c450352dbbbc357dfbc635e8196302e741564cc7a",
+    "pre-cleanup-controls/private-control-digests.json": "f555da3f9d2fe1e2cb9f7fa92559b40db30296afc36cc61fb9c4e530b251a0ab",
+    "setup-build.partial.human.json": "fe74a35d3214daa0cfd17dfad4970283503de66b1fc6607a57bc56b2bcfd5e6d",
+    "setup-material-incomplete.machine.json": "a59abff4589153bd7e786174e5dc7f693b211e0430ad2f8d445f6e99592c1cdc",
+    "setup-owned-material-provenance.human.json": "614e30c37edf03f7c4afd3308799af7a24ff3edbad00e8755ee9ff2aea452ac4",
+    "setup-owned-material-provenance.machine.json": "898319a23627c9abfef0bf2aa0b69029e53f89171618d84a63427960a5968d99",
+    "setup-project-close.machine.json": "321c3c8c8c240dea96a5029411ee723a06dc6e049276e027664037791454f23d",
+    "setup-project-open.machine.json": "e6f3a8900e362e339c0ea15f427e4e6a4d3857734de564dc806a5c6feac62475",
+    "setup-ready.human-request.json": "11fca4afa6507dcaa2f4b9fa989ba22ea055528678c2809c89f8f73bae898b0e",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/anchor.binding.public.json": "5f38ace5c7de3bd055224b155062b389a0ae03b186fec07d61de6841bd543e5a",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/anchor.public.json": "15f2392b346cf060828461702b6fc04c7ae091d44991a25ac4d909dc6869c79c",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/bootstrap/begin.human.json": "436d054338e1abbe1f68241e1c43a592cc0e46b59d34ea17edc19dcc92a602f7",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/bootstrap/begin.machine.public.json": "2be6be183a92e1b02c35e11b8630ec47d9c4cd33364702c37580eafd70231253",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/bootstrap/begin.ready.public.json": "7ae52c543eeee8ab72a012c3da2dcbff973f44edaac0bc48cba7b0b2fb6a8877",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/bootstrap/setup.ready.public.json": "565464899156c51708c259b3e24fce4b9c13877ffd8fc00513d037f9f523a2df",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/cleanup.machine.json": "ff16d85f4058ca8d314239c4583c49c830f6106985d482fb131c28519c695158",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/index.json": "de9046d619e99835f6224251d00e636fbbaa0bd13ed36cc935d5d116c20903d7",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/pre-cleanup.index.json": "648dcc3c1c21a848751c7306a3dff9d5c5c6c4c3d37db341a2527179f1b96eb7",
+    "setup-stop-891516d8-b6c4-4690-8591-b5a4d2d6ab52/windows/1.public.json": "4a417d330846302d3d6d98d9452ce1b419b64c624a9e7267a26f5bae5c77187c",
+    "tester-controlled-stop-verification.json": "6375770c88f5c0951077c27559178e9a2e67bb33954d0837308ab8b03e90b174",
+    "windows/1.binding.json": "dd27f2d49b2d5da3122e685d9134542a84951ce1a22971b6315986b859adc1c0",
+    "windows/1.json": "48261af04f320c52ed6306ac0152c2a9c0b4d5940c572c9dbaa14097e97a20a2"
+  },
+  "sourceManifestSHA256": "ad74bf47a34e583c3c823c65c018ae20276934a4a94571eee68bcb93cba0eb41",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "07195be7a7f6b3dd5135b3f177bd669e7f254b38bec6a41919f2ac3d5859f957",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/WindowChainProbe.swift": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+    "Tests/test_bootstrap.py": "a915cfa2c1a9f503b857447c66ae48a7981de66c52f2f9ac024104923f319ebd",
+    "Tests/test_continuity.py": "bf1a8650d5f9a1aacd5707d0b782c8b72ff6b2f1bfa6870d5fbf07744fc9d785",
+    "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "scripts/continuity.py": "0132a93a1b3e3866fc437aa7c864f720230884cfdc2e60087817fe7f3453bfbe",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "71b8fd81451a0d0eaaa6a50f29d0092df65b891c3cece391ef8efb49467502d5"
+  },
+  "stopReason": "complete verifiable host with established provenance unavailable; prerequisite insufficient",
+  "thisDocumentFinalClosureCheck": "pending independent Reviewer read-only check; no approval prefilled"
+}

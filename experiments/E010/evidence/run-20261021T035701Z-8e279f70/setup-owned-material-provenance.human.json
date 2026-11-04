@@ -1,0 +1,16 @@
+{
+  "actions": [],
+  "machineReceiptSHA256": "898319a23627c9abfef0bf2aa0b69029e53f89171618d84a63427960a5968d99",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "rawHumanStatement": "全程觀察，0次提示",
+  "recordedUTC": "2026-10-21T04:11:30+00:00",
+  "reportedObservationRangeTaipei": "2026-10-21 12:00:50–12:06:53",
+  "source": "request_user_input_async call_f6472e2ca078429191fe9f19cc3f62e6 item1",
+  "stage": "setup-owned-material-provenance",
+  "synthetic": false,
+  "timestampMeaning": "Parent observed receiving Human report; not an exact Human click time.",
+  "wholeStageObserved": true
+}

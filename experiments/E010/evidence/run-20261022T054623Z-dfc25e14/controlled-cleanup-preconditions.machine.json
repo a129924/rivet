@@ -1,0 +1,18 @@
+{
+  "AppleAssetsWillNotBeOperated": true,
+  "HumanCleanupReadySHA256": "f6dbb288115e07ed484ecd8c754f3c946d35941255eb2548d642af864decbd4e",
+  "SecItemCalls": 0,
+  "actualProofGlobalOrAppAttemptExists": false,
+  "allRootEntriesCurrentOwnerRegularFilesDirectoriesNoSymlink": true,
+  "closureReceiptSHA256": "9ab93e9e8e6d75b018ec13c6ce13284d60afe62c8c54246d14291f20541d725b",
+  "exactPrivateProjectClosed": true,
+  "keychainItemCreated": false,
+  "kind": "zero-item-exact-filesystem-cleanup-preconditions",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "onlyExactRootDeletionAuthorized": true,
+  "ownedRootLsofExitCode": 1,
+  "ownedRootLsofNoRecordsAndNoStderr": true,
+  "recordedUTC": "2026-10-22T06:11:27.090450+00:00",
+  "rootCurrentOwner0700NoSymlink": true,
+  "synthetic": false
+}

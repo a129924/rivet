@@ -1,0 +1,18 @@
+{
+  "HumanExactReplyUTC": null,
+  "actualCertificateValidityVerified": false,
+  "actualProfileVerified": false,
+  "isBuildReady": false,
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "previousSetupHumanSHA256": "be0e962de9aca2b3aac3c01332c378487e833a9a1a12fc52a10aec5968aa2f45",
+  "qualifiedExistingCertificateExplicitlyConfirmed": null,
+  "rawHumanStatement": "已選免費Team，未Build／Run，視窗保持開著",
+  "recordedUTC": "2026-10-22T05:52:37.705118+00:00",
+  "reportedFreePersonalTeamSelected": true,
+  "reportedNoBuildRun": true,
+  "reportedWindowKeptOpen": true,
+  "selectionPromptCount": null,
+  "source": "request_user_input_async call_e652ebb0495e4d288b34b3919e5a6cec item1",
+  "stage": "Human-Team-selection-declaration-before-build",
+  "synthetic": false
+}

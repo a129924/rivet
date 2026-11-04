@@ -1,0 +1,236 @@
+{
+  "DPKCredentialUX": "未執行",
+  "DPKMechanism": "未執行",
+  "HumanEvidence": {
+    "DPKCredentialAccessObserved": false,
+    "cleanupHumanRecordedUTC": null,
+    "cleanupHumanSHA256": "f69a08578a95beed4827b473d6fabd683c422d1735730a291816dda96456030b",
+    "controlledStopMachineSHA256": "8c98c54c4dd2e73d178347f2e47ab5304c4693661dd0b5c2c977ce283b952c00",
+    "exactHumanReplyTimesRemainUnknownNull": true,
+    "machineBoundWholeObservations": 6,
+    "originalMachineHumanPendingRecords": {
+      "begin-control.machine.json": "HumanWholeStageObservation",
+      "build-report-provenance.machine.json": "HumanThisStageObservation",
+      "controlled-stop.machine.json": "HumanCleanupObservation",
+      "derived-data-setting.machine.json": "HumanThisStageObservation",
+      "setup-context-verification.machine.json": "HumanObservation",
+      "setup-gui-context.partial.machine.json": "HumanSetupPromptObservation",
+      "setup-project-continuation.machine.json": "HumanObservation"
+    },
+    "originalMachinePromptCountsRemainNull": true,
+    "separateHumanBuildDeclaration": 1,
+    "wholeStageZeroPromptObservations": 7,
+    "zeroPromptAppliesOnlyToObservedBookkeepingSetupBuildAndCleanup": true
+  },
+  "S07Complete": false,
+  "actualSelectedAppProfileProofCMSGlobalAppSecItemSeedOrRetentionExecuted": false,
+  "caseStatuses": {
+    "T01": "前提不足／無法判定",
+    "T02ThroughT06": "未執行",
+    "T07DPK": "未執行",
+    "zeroItemPrivateFilesystemCleanup": "完成"
+  },
+  "currentStatus": "human-check",
+  "currentStep": "S06",
+  "documentationDate": "2026-10-22",
+  "finalDocumentSHA256": {
+    "experiments/E008/README.md": "1a4b8c9ad7f0de5d641f290c087c045e01b2c464add1d3a5ba7eb9a9302e1f4d",
+    "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md": "07aad9ebd9cfe2ccdf051d036c72a77576137d891d2246b196111457b32383a7"
+  },
+  "findings": {
+    "GUI2RowsAndXMLSingleEntryFactsBothRetained": true,
+    "HumanOneBuildSuccessZeroPromptNoRunDeclarationPreserved": true,
+    "T01": "前提不足／無法判定",
+    "T02ThroughT06": "未執行",
+    "T07DPK": "未執行",
+    "actualSelectedAppBinaryCMSProofCompleteGlobalSeedOrDPK": false,
+    "defaultDerivedDataBlockerThenSeparatelyReadyPerProjectCustomVerified": true,
+    "extraGUIRowCause": "unknown; no inferred second actual target",
+    "formalAdapterAdoptionApproved": false,
+    "liveFeasibilityValidationTaskComplete": false,
+    "matchingCurrentReportTargetConfigurationProductNotEstablished": true,
+    "onlyEarlierSigningUpdateVisible": true,
+    "operatorMkdirFailureAndBoundedContinuationPreserved": true,
+    "primaryHypothesis": "未執行"
+  },
+  "formalAdapterAdoptionApproved": false,
+  "frozenRunSnapshotFromIndependentTester": {
+    "E006AllFrozenBytesMatch": true,
+    "E006FrozenFileCount": 126,
+    "allReferenceHashesMatch": true,
+    "canonicalJSONCount": 60,
+    "finalAddendumSHA256": "aec4b697d54f7a877c9ba1011357e778004817e61e161a93e61814201c5ee1be",
+    "indexCount": 10,
+    "indexedReferencesIncludingDuplicates": 258,
+    "indexes": [
+      {
+        "SHA256": "f367952a5899b36f49bb2bd7acf0715dfd63b5d2731dc0bce6e04da886b275a7",
+        "path": "begin.index.json",
+        "references": 11
+      },
+      {
+        "SHA256": "da8e19a19a0603bfbb8092f5429b64b0f12ca194918dc9dce4583c0ed4a281b0",
+        "path": "build-report-provenance.index.json",
+        "references": 3
+      },
+      {
+        "SHA256": "5f3aa6927a80e68ebe2082b29c1e61fb2f9272a9943b2cffb2267bf9b7668a49",
+        "path": "controlled-stop.index.json",
+        "references": 57
+      },
+      {
+        "SHA256": "ff8d40070b415b786d47c815d5d9d4d442dcc2a12dfb9d3d212f9373c92455c8",
+        "path": "derived-data-setting.index.json",
+        "references": 27
+      },
+      {
+        "SHA256": "aec4b697d54f7a877c9ba1011357e778004817e61e161a93e61814201c5ee1be",
+        "path": "final-addendum.index.json",
+        "references": 59
+      },
+      {
+        "SHA256": "b8735570bb50d657875d7dd92d0b2a791951582371ec71bf21dc2742a54813d3",
+        "path": "operator-pre-cleanup.index.json",
+        "references": 45
+      },
+      {
+        "SHA256": "88c726b4cb72208cea923a6e3d0acc15a7436ca977d42af4035bcb3131b3d6aa",
+        "path": "setup-context-verification.index.json",
+        "references": 22
+      },
+      {
+        "SHA256": "d1d515967cec01f486d25459242c4943ec115d8d6f4491ded2aaac3d04a5e6f3",
+        "path": "setup-prebuild.index.json",
+        "references": 18
+      },
+      {
+        "SHA256": "743a4d8f209b6f29d18aec1b5a9c4f7984a3fcb8fe69eb7aa2a45448032035a6",
+        "path": "setup-stop-cb2a0b13-3fe7-4b8f-99cd-721fd65f49c1/index.json",
+        "references": 9
+      },
+      {
+        "SHA256": "0a0962a26f77418acb6db7903368c1869eda780f49e1b873b475efef11207564",
+        "path": "setup-stop-cb2a0b13-3fe7-4b8f-99cd-721fd65f49c1/pre-cleanup.index.json",
+        "references": 7
+      }
+    ],
+    "latestFilesMapCount": 59,
+    "priorEvidenceCountBeforeThisNewTesterReceipt": 96,
+    "priorEvidenceManifestBasis": "E008 evidence relative paths; entire previous 96-file map recomputed",
+    "priorEvidenceManifestSHA256": "9740194ede6f0e58f00e5e47508b0f8e7992c1253c4c4755fe2bd15522566fe2",
+    "protectedPreparationHistoricalBytesMatch": true,
+    "protectedPreparationHistoricalFileCount": 40,
+    "publicFileCount": 60,
+    "selfFileHashExcluded": true,
+    "source17CurrentBytesMatch": true,
+    "source17ManifestSHA256": "ad74bf47a34e583c3c823c65c018ae20276934a4a94571eee68bcb93cba0eb41"
+  },
+  "fullS08Complete": false,
+  "futureRun": "closed run/grants cannot be reused; requires Human decision and new applicable authorization/ready; no automatic clock/root/namespace",
+  "independentReviewer": {
+    "additionalReadOnlyChecks": "final-addendum 59 refs and source17; no rerun of 258 refs/tests",
+    "provenance": "formal independent Reviewer verdict supplied by upstream dispatcher",
+    "required_fixes": [],
+    "reviewedPreclosureDocumentSHA256": {
+      "experiments/E008/README.md": "2d04eb4c46b62c9e8754202983b093e680cebeed94a66a5963b29a47eefdca42",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md": "b760a27be2c85dffe1d4cbff4bfbe0504341c167cab1d89c8fc5591a5f4083d5"
+    },
+    "reviewer": "/root/dpk_reviewer",
+    "scope": "this controlled-stop / zero-item private filesystem cleanup and the two factual documents only",
+    "verdict": "approved"
+  },
+  "independentTester": {
+    "independence": {
+      "authoredLiveRunReceipts": false,
+      "executedThisLiveRun": false,
+      "modifiedSourceOrOriginalReceiptsOrDocs": false,
+      "newUIXcodeBuildTestSuiteAssetsAppSecurityDPKGrantRootClockOrWindow": false
+    },
+    "receiptSHA256": "e16d7aea11eeaeda140195259f41a9cb00f502070917c7eff17a66f6661bdeaa",
+    "required_fixes": [],
+    "scope": "僅本輪 controlled-stop、zero-item 私有檔案清理與公開控制／Human 證據一致；不是完整 S07/S08 或 DPK feasibility／adoption 核准。",
+    "verdict": "approved",
+    "verificationResult": "pass"
+  },
+  "isRuntimeGate": false,
+  "keyEvidenceSHA256": {
+    "experiments/E008/evidence/controlled-stop-20261022-dfc25e14-tester-verification.json": "e16d7aea11eeaeda140195259f41a9cb00f502070917c7eff17a66f6661bdeaa",
+    "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/controlled-stop.human.json": "f69a08578a95beed4827b473d6fabd683c422d1735730a291816dda96456030b",
+    "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/controlled-stop.machine.json": "8c98c54c4dd2e73d178347f2e47ab5304c4693661dd0b5c2c977ce283b952c00",
+    "experiments/E008/evidence/run-20261022T054623Z-dfc25e14/final-addendum.index.json": "aec4b697d54f7a877c9ba1011357e778004817e61e161a93e61814201c5ee1be"
+  },
+  "kind": "E008-20261022-controlled-stop-factual-closure",
+  "liveFeasibilityValidationTaskComplete": false,
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "newTestsBuildUIAssetsPrivateRootSecurityGitOperations": false,
+  "originalMachinePendingAndHumanNullPreserved": true,
+  "otherSourceTestsRunReceiptsIndexesAndHistoryModified": false,
+  "otherThreeContractSHA256": {
+    "analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md": "c83ea7bafdcd95ec80022410fcc212cf96df85008d0d8cd6f055dc84b046984d",
+    "analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md": "7d1d7f0a8c1547dfac4d139d8f05142505476dad8f0129e9aec7b21b87d075c4",
+    "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md": "e445ea9e0e0230e7074fd43d5965453d784319856657faba6da994ae9aac63d8"
+  },
+  "primaryHypothesis": "未執行",
+  "privateCleanup": {
+    "AppleDeveloperAssetsRetained": true,
+    "CLICleanupMachineSHA256": "9ed41879b550fc55dcc44cd423b5278a783e0c885eb1b34f165d8a25408f6334",
+    "CLIFinalIndexSHA256": "743a4d8f209b6f29d18aec1b5a9c4f7984a3fcb8fe69eb7aa2a45448032035a6",
+    "CLIPreCleanupIndexSHA256": "0a0962a26f77418acb6db7903368c1869eda780f49e1b873b475efef11207564",
+    "DPKDeleteReadAbsentValidated": false,
+    "archivePublicationComplete": true,
+    "exactOwnedPrivateRootLstatAbsent": true,
+    "exactRootCheckMethod": "lstat of the specified exact point only; FileNotFoundError. No parent listing, root re-creation or traversal.",
+    "keychainItemCreated": false,
+    "operatorFinalIndexSHA256": "5f3aa6927a80e68ebe2082b29c1e61fb2f9272a9943b2cffb2267bf9b7668a49",
+    "operatorPreCleanupIndexSHA256": "b8735570bb50d657875d7dd92d0b2a791951582371ec71bf21dc2742a54813d3",
+    "otherRootsProjectsGlobalDerivedDataRecentPreferencesOrExternalProducts": "未盤點；範圍外是否有產物／殘留維持 unknown。",
+    "physicalPrivateFilesystemCleanupComplete": true,
+    "preDeletionArchiveReferencesAndFixedCleanupOrderingVerified": true,
+    "privateRootLogical": "~/Library/Application Support/RivetExperiments/rivet-E008-dfc25e14-425c-4761-8d77-6556e852d5e5"
+  },
+  "recordedUTC": null,
+  "runRelative": "experiments/E008/evidence/run-20261022T054623Z-dfc25e14",
+  "schemaVersion": 1,
+  "source17ManifestSHA256": "ad74bf47a34e583c3c823c65c018ae20276934a4a94571eee68bcb93cba0eb41",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "07195be7a7f6b3dd5135b3f177bd669e7f254b38bec6a41919f2ac3d5859f957",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/WindowChainProbe.swift": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+    "Tests/test_bootstrap.py": "a915cfa2c1a9f503b857447c66ae48a7981de66c52f2f9ac024104923f319ebd",
+    "Tests/test_continuity.py": "bf1a8650d5f9a1aacd5707d0b782c8b72ff6b2f1bfa6870d5fbf07744fc9d785",
+    "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "scripts/continuity.py": "0132a93a1b3e3866fc437aa7c864f720230884cfdc2e60087817fe7f3453bfbe",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "71b8fd81451a0d0eaaa6a50f29d0092df65b891c3cece391ef8efb49467502d5"
+  },
+  "timeline": {
+    "cleanupBeforeDeadlineSeconds": 296.045235,
+    "cleanupCLIStartedUTC": "2026-10-22T06:11:27.097886+00:00",
+    "cleanupEndedUTC": "2026-10-22T06:11:27.478625+00:00",
+    "cleanupOperatorStartedUTC": "2026-10-22T06:10:12.023672+00:00",
+    "cleanupPastCutoffSeconds": 3.954765,
+    "cutoffUTC": "2026-10-22T06:11:23.523860+00:00",
+    "deadlineUTC": "2026-10-22T06:16:23.523860+00:00",
+    "grantExpiryDoesNotExtendNormalRetention": true,
+    "grantValidUntilTaipei": "2026-11-01T14:15:00+08:00",
+    "latestStartTaipei": "2026-10-22T14:15:00+08:00",
+    "noResetOrNewWindow": true,
+    "normalGlobalHorizonUTC": "2026-11-01T05:46:23.523860+00:00",
+    "onlyCleanupCrossedMeasurementCutoff": true,
+    "t0UTC": "2026-10-22T05:46:23.523860+00:00"
+  },
+  "timestampMeaning": "offline factual closure; date from task environment; no exact closure/review/Human timestamp inferred; live ended at preserved cleanup end",
+  "writeScope": [
+    "experiments/E008/README.md",
+    "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md",
+    "experiments/E008/evidence/controlled-stop-20261022-dfc25e14-closure.json"
+  ]
+}

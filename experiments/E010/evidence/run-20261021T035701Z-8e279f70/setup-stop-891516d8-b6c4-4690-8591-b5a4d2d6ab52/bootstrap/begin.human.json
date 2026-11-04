@@ -1,0 +1,12 @@
+{
+  "actions": [],
+  "machineReceiptSHA256": "e8973db4dc656ce21fe1ba2456400bec66cc4eb5c6af6c2689f575965bb2dd68",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "recordedUTC": "2026-10-21T03:58:17+00:00",
+  "stage": "begin-anchor",
+  "synthetic": false,
+  "wholeStageObserved": true
+}

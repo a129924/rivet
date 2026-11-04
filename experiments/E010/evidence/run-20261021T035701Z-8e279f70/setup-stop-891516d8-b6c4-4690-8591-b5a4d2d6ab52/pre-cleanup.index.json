@@ -1,0 +1,16 @@
+{
+  "cleanupComplete": false,
+  "files": {
+    "anchor.binding.public.json": "5f38ace5c7de3bd055224b155062b389a0ae03b186fec07d61de6841bd543e5a",
+    "anchor.public.json": "15f2392b346cf060828461702b6fc04c7ae091d44991a25ac4d909dc6869c79c",
+    "bootstrap/begin.human.json": "436d054338e1abbe1f68241e1c43a592cc0e46b59d34ea17edc19dcc92a602f7",
+    "bootstrap/begin.machine.public.json": "2be6be183a92e1b02c35e11b8630ec47d9c4cd33364702c37580eafd70231253",
+    "bootstrap/begin.ready.public.json": "7ae52c543eeee8ab72a012c3da2dcbff973f44edaac0bc48cba7b0b2fb6a8877",
+    "bootstrap/setup.ready.public.json": "565464899156c51708c259b3e24fce4b9c13877ffd8fc00513d037f9f523a2df",
+    "windows/1.public.json": "4a417d330846302d3d6d98d9452ce1b419b64c624a9e7267a26f5bae5c77187c"
+  },
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "phase": "before-private-delete",
+  "privateRootRetained": true,
+  "synthetic": false
+}

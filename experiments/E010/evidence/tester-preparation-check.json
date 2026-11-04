@@ -1,0 +1,149 @@
+{
+  "E006All126FilesUnchanged": true,
+  "E006BaselineFreezeSHA256": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+  "E007DependencyOrModification": false,
+  "all13ReviewedSourceFilesUnchanged": true,
+  "boundaries": {
+    "AppLaunch": false,
+    "AppleAssetsInspected": false,
+    "SecItemCalls": 0,
+    "commitPushPR": false,
+    "crossWeekItemRetained": false,
+    "liveBackendCommands": false,
+    "persistentRunCreated": false,
+    "realClockArmed": false,
+    "signedBuild": false
+  },
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E008/Tests -p 'test_*.py' -v",
+      "exitCode": 0,
+      "skipped": 0,
+      "testMethods": 29
+    },
+    {
+      "command": "swiftc experiments/E008/Sources/DPKContinuityProbe/ProbeCore.swift experiments/E008/Tests/CoreTests.swift -o <scratch>/core-tests",
+      "exitCode": 1,
+      "finiteFailure": "sandboxModuleCacheWriteDenied"
+    },
+    {
+      "command": "swiftc -module-cache-path <scratch>/swift-module-cache experiments/E008/Sources/DPKContinuityProbe/ProbeCore.swift experiments/E008/Tests/CoreTests.swift -o <scratch>/core-tests",
+      "exitCode": 0
+    },
+    {
+      "command": "<scratch>/core-tests",
+      "exitCode": 0,
+      "scenarios": 7
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 experiments/E008/scripts/prepare.py --out <scratch>/unsigned-builds --unsigned-build",
+      "exitCode": 0
+    },
+    {
+      "command": "swiftc -module-cache-path <scratch>/swift-module-cache experiments/E008/Sources/DPKContinuityProbe/ProbeCore.swift <scratch>/serialization-probe.swift -o <scratch>/serialization-probe",
+      "exitCode": 0
+    },
+    {
+      "command": "<scratch>/serialization-probe -> actual continuity.read(root, receipt.json)",
+      "readerResult": "nonCanonicalJSON",
+      "swiftExitCode": 0
+    }
+  ],
+  "devClean": true,
+  "devHEAD": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44",
+  "evidenceSHA256": {
+    "tester-initial-python-receipt.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-initial-serialization-probe.swift": "b8f6db816185053fd076ef3cdcedb6f4cab20b7362041b96ceeb808fed4c1be4",
+    "tester-initial-swift-receipt.txt": "481aa0b64c908896a78e2f4e25665745be9a2ef5a6bb4a299fe08b3b159ec960",
+    "tester-initial-unsigned-build.json": "6eba1f2d8467669cd521f8da5a2d7676bfbaf5ea319f8b4c14860b94d8a85c93"
+  },
+  "handoff": "Implementer bounded RF01 fix, then independent Tester re-verification and Reviewer.",
+  "independentScratchCleanup": {
+    "endedUTC": "2026-10-20T06:55:18.210944+00:00",
+    "ownedScratchAbsent": true,
+    "privateMaterialsRetained": false,
+    "startedUTC": "2026-10-20T06:55:17.786819+00:00"
+  },
+  "limitations": [
+    "Mock and unsigned results do not establish natural expiry, new valid profile issuance, original A recovery or Human UX.",
+    "No live failure, Apple account/profile/certificate operation or App was executed.",
+    "Initial receipt incompatibility blocks live readiness; independent Reviewer approval not claimed."
+  ],
+  "liveHypothesisStatus": "未執行",
+  "liveValidationTaskComplete": false,
+  "recordedUTC": "2026-10-20T06:55:18.210944+00:00",
+  "requiredFixes": [
+    {
+      "actualPythonReadResult": "nonCanonicalJSON",
+      "actualSwiftBytes": "tester-initial-swift-receipt.txt",
+      "actualSwiftSHA256": "481aa0b64c908896a78e2f4e25665745be9a2ef5a6bb4a299fe08b3b159ec960",
+      "expectedPythonBytes": "tester-initial-python-receipt.txt",
+      "expectedPythonSHA256": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+      "fixture": "tester-initial-serialization-probe.swift",
+      "id": "RF01",
+      "locations": [
+        "Sources/DPKContinuityProbe/ProbeCore.swift:76",
+        "scripts/continuity.py:90",
+        "scripts/proof.py:280"
+      ],
+      "observed": "Foundation JSONSerialization output uses different key ordering/colon spacing/empty-object formatting from Python json.dumps. Both have terminal LF, but bytes differ and continuity.read rejects nonCanonicalJSON. Every normal Swift App receipt passes through this reader before being accepted.",
+      "priority": "P1",
+      "requiredChange": "Choose and implement one fixed cross-language canonical byte contract without rewriting completed receipts or weakening SHA/exclusive protections. Add a pure cross-language round-trip regression using actual Swift receipt producer and actual Python reader, including no-call/null, six-field success and empty cleanup fields. Re-run focused pure tests and unsigned build if Swift changes.",
+      "summary": "Swift-produced receipts are rejected by actual Python canonical reader"
+    }
+  ],
+  "reusedExistingTestsScope": [
+    "synthetic three-window coordinator branch and original t0/deadlines",
+    "P1 different profile/same certificate/group controls",
+    "expired no-call OSStatus null",
+    "single seed/no rewrite/pure store cleanup",
+    "grant/ready/SHA/namespace/stage guards",
+    "owned process/recovery and filesystem-only synthetic cleanup",
+    "canonical LF/exclusive/formatter individual-language tests"
+  ],
+  "role": "independentTester",
+  "schemaVersion": 1,
+  "scope": "S04 verification of S03 preparation only",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "b2487c91a834a0317b0ce506cd784441e79797ca38fc56d40378aaa459a12900",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/test_continuity.py": "0f2a83550aaaeb6a95089296835d8428d521dac40a671792199ccd0a4530006e",
+    "scripts/continuity.py": "ffcfa177b4a8b2365ba8f8cf21ffbe5e5994d131bf1af242f214451d6f1680ee",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "2502865056c6f2238b5f52a2654f6a7efdbeea32287e05a8fd197c6adee783b9"
+  },
+  "synthetic": true,
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "trackedFilesOutsideTopicChanged": false,
+  "unsignedBuildInputsMatch": true,
+  "unsignedConfigurations": {
+    "Debug": {
+      "debugDylibAbsent": true,
+      "exitCode": 0,
+      "mainSHA256": "4cf78bafdaf70fa4fa84d6f9e4d3fbeddc0441f7f7a9d65ab9fc4a0ab5390cdf",
+      "performed": true,
+      "signingAllowed": false,
+      "signingRequired": false
+    },
+    "Rebuilt": {
+      "debugDylibAbsent": true,
+      "exitCode": 0,
+      "mainSHA256": "14047a2b20fc4b2a9adc6f3c99b40c62194e562b35adc076f2644644d9fb89e5",
+      "performed": true,
+      "signingAllowed": false,
+      "signingRequired": false
+    }
+  },
+  "unsignedMainHashesDifferent": true,
+  "upstreamPreparationReceiptSHA256": "40a8dc824270cddc9ad5117db2ad5947768835f9694240f900a11bca3ecc2b57",
+  "upstreamSourceManifestSHA256": "1a501f6f0c2735e9bdf4f505357229f6c68ffb1696319fdbfad281c22db71a79",
+  "upstreamUnsignedReceiptSHA256": "fd3987d630cab90e2cc6a15e68bddeb99099121628dcd2421be9a76ab8945ef8",
+  "verdict": "needs-rework"
+}

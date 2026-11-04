@@ -1,0 +1,16 @@
+{
+  "HumanExactReplyUTC": null,
+  "HumanSameExistingTeamCertificateClaim": true,
+  "actualCertificateDatesOrValidityVerified": false,
+  "actualProfileVerified": false,
+  "automaticCertificateCreationOrRotationAuthorized": false,
+  "kind": "Human-existing-certificate-supplement",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "priorTeamDeclarationSHA256": "548f3a6b30831c4751d5f0a4e60ccafc81d9bbb6939acca0f7d2650b74e3635a",
+  "priorUnknownFieldsOverwritten": false,
+  "rawHumanStatement": "都是同一個 也沒有出現提示 之前怎麼做 現在也怎麼做",
+  "recordedUTC": "2026-10-22T06:01:29.602628+00:00",
+  "selectionPromptCount": 0,
+  "source": "request_user_input_async call_7691144d6a6848678eafa55f81c6bc06 item1",
+  "synthetic": false
+}

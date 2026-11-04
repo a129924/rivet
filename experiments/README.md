@@ -15,6 +15,7 @@
 | [E007](E007/README.md) | 同身分 profile 更新後 DPK 讀回 | 兩輪無法判定；renewal read 均未執行。Human 接受此未知限制，不升格為驗證成功。 |
 | [E008](E008/README.md) | missing-verifier 拒絕的 PKCE 歸因 | 無法判定：HTTP400 拒絕、無 token；provider 要求 enum 一致，當次因果判讀分歧，1/1 用盡。 |
 | [E009](E009/README.md) | 手動獨立 browser 的首次登入／同意／帳號結果 | M03 在 Human 回報與來源契約層級受限成功；M04 建置與 mock 檢查不構成另一次真人成功。 |
+| [E010](E010/README.md) | DPK profile 自然到期後原假憑證恢復 | 由 PR #67 原 DPK E008 遷號；兩輪因 host／product provenance 不足受控停止，主假設與 GUI T01–03 未執行，S06 human-check。 |
 | [GitHubConnectionVerification](../apps/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 
 結果的證據層級、主要缺口與決策限制另見 [驗證總覽](VALIDATION-SUMMARY.md)。本索引不授權執行任何 README 中的重現命令、新 OAuth、重試或秘密清理。
@@ -48,3 +49,11 @@ E008 驗證紀錄任務已完成，但主要假設仍無法判定；單次預算
 R64 的來源範圍契約與 E006 措辭兩項回修已交付；獨立 Tester 22／22、Reviewer approved，兩個評論 thread 已由主方讀回 resolved、未解決數0。E006 僅支持「切換至 Rebuilt configuration 真正重建」，不稱 Clean；PR #62 的獨立 App 真正 Clean／Build 證據保留。原 D／R64 的 pending 文字是當時快照，不代表本次交付仍待執行。
 
 Annotated tag `v0.1.59-github-connection-validation-summary` 已推送並核對 peeled commit 為上述 merge，未指向後續維護 commit，亦非產品 release。原 `docs/github-connection-validation-summary` local／remote branch 與本輪 feature worktree 已正常移除，無 force／prune；其他 feature worktree、App、Keychain／Apple 資產未動。完整分層與限制見[驗證總覽](VALIDATION-SUMMARY.md)。
+
+## E010：DPK profile 延續性登記（PR #67 尚未合併）
+
+本節是本 topic 在 feature 中的 E010 登記，不把尚未合併的 [PR #67](https://github.com/a129924/rivet/pull/67) 當作已合併結果。首筆遷移 commit `819b26d20272cfcc9e664c4dccba867bcd34c92d` 已保存新活動身分、22 原檔快照、158 evidence／13 frozen GUI 與 typed map；原 DPK E008 只作歷史，現行 E008 PKCE 子樹保持原樣。
+
+[E010 活動入口](E010/README.md)與[引用對照](E010/history/renumbering-map.json)分開歷史 receipt 與活動 source。兩輪 closed run 零 item 的私有檔案清理已記錄，不是 DPK delete/read-absent；自然 profile 到期／P1 原 A 恢復、DPK UX 與 GUI T01–03 均未執行，S06 human-check、完整 S07/S08 pending。五個歷史 source 版本缺失保持 unknown。
+
+本地 dev→feature 受控整合／兩 registry 新增 E010 尚待 M07 獨立核對、M08 第二筆訊息確認／commit、M09 push／PR readback；目前不宣稱遠端衝突解除、正式採用或新真人結果。E001–E009、E005 UX 失敗、E006 受限成功及各輪 unknown／逾時歷史保持。

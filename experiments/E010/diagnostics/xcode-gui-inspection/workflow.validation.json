@@ -1,0 +1,103 @@
+{
+  "checks": [
+    {
+      "details": [
+        "found 1 <svg> block(s)"
+      ],
+      "name": "single_svg",
+      "ok": true
+    },
+    {
+      "details": [],
+      "name": "finite_svg",
+      "ok": true
+    },
+    {
+      "details": [],
+      "name": "orthogonal_arrows",
+      "ok": true
+    },
+    {
+      "details": [],
+      "name": "label_route_clearance",
+      "ok": true
+    },
+    {
+      "details": [],
+      "name": "relationship_crossings",
+      "ok": true
+    },
+    {
+      "details": [],
+      "name": "relationship_corridors",
+      "ok": true
+    },
+    {
+      "details": [],
+      "name": "container_border_runs",
+      "ok": true
+    },
+    {
+      "details": [],
+      "name": "route_rhythm",
+      "ok": true
+    },
+    {
+      "details": [],
+      "name": "legend_clearance",
+      "ok": true
+    }
+  ],
+  "command": "validate",
+  "composition": {
+    "issues": [],
+    "metrics": {
+      "ambiguousCorridors": 0,
+      "containerBorderRuns": 0,
+      "desktopReadabilityIssues": 0,
+      "labelRouteClearanceIssues": 0,
+      "maxBends": 1,
+      "maxStretch": 1,
+      "microSegmentCount": 0,
+      "minInteriorSegmentPx": null,
+      "minLabelRouteClearance": null,
+      "minProjectedNodeTextPx": null,
+      "minSegmentPx": 34,
+      "properCrossings": 0,
+      "routesOverSuggestedBends": 0,
+      "routesOverSuggestedStretch": 0,
+      "shortEndpointSegmentCount": 0,
+      "shortInteriorSegmentCount": 0,
+      "shortSegmentCount": 0
+    },
+    "profile": "showcase",
+    "schemaVersion": 1,
+    "status": "pass",
+    "suggestedLimits": {
+      "bendsPerRelationship": 2,
+      "microSegmentPx": 8,
+      "segmentPx": 16,
+      "stretch": 1.35
+    },
+    "summary": {
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "input": "experiments/E008/diagnostics/xcode-gui-inspection/workflow.v2.json",
+  "localToolPin": {
+    "CLIsha256": "a73a0beac5eb023821ba4136daea1a9aa4125dde437941050762950c12e037d6",
+    "nodeVersion": "v26.10.0",
+    "packageSHA256": "48c15b6102adea1882421544d3a3f0dad3aa8e355a3f535c48de13da5e6b6121",
+    "packageVersion": "2.16.0-dev.0"
+  },
+  "ok": true,
+  "pathRepresentation": "repository-relative; raw CLI receipt preserved in external preparation scratch",
+  "schemaVersion": 1,
+  "sourceReceiptSHA256": "4dc226f376ed2aafd837f4f2d64db1a75c64d3237b73a5dd30fca2f3fce49bf6",
+  "specification": {
+    "bytes": 2574,
+    "sha256": "6e3223ea5b9c328c09dcdcedf8b36d29a273c23afe402229ab5b34342058a74d"
+  },
+  "type": "workflow"
+}

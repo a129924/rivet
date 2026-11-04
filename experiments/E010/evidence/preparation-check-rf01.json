@@ -1,0 +1,134 @@
+{
+  "addedSource": [
+    "Tests/ReceiptProducer.swift"
+  ],
+  "all9PriorEvidenceUnchanged": true,
+  "authorFixComplete": true,
+  "boundaries": {
+    "AppLaunch": false,
+    "AppleAssetsInspected": false,
+    "SecurityCalls": 0,
+    "clockArmed": false,
+    "crossWeekItemRetained": false,
+    "persistentLiveRootCreated": false,
+    "signedBuild": false,
+    "stageCommitPushPR": false
+  },
+  "canonicalReceiptContract": {
+    "colonSeparator": ": ",
+    "emptyCollectionsInline": true,
+    "ensureASCII": false,
+    "indentSpaces": 2,
+    "noCompletedReceiptRewrite": true,
+    "numbers": "integer PID/OSStatus; reject floating receipt values",
+    "productionExclusiveWriterUnchanged": true,
+    "pythonReaderUnchanged": true,
+    "terminalLF": true,
+    "unicodeScalarKeyOrder": true
+  },
+  "changedExistingSource": [
+    "Sources/DPKContinuityProbe/ProbeCore.swift",
+    "Tests/test_continuity.py"
+  ],
+  "green": {
+    "actualRoundTripCases": 4,
+    "actualWrittenBytesSHAAndDuplicateRejectionVerified": true,
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E008/Tests -p 'test_*.py' -v",
+    "exitCode": 0,
+    "outputSHA256": "b8aa0cd387c510ba0e381e78494ef2217f1c09f21aa5446d0a82bcd6c9493662",
+    "skipped": 0,
+    "testMethods": 30
+  },
+  "independentReverificationApproved": false,
+  "kind": "E008-preparation-RF01-revision",
+  "liveHypothesisStatus": "未執行",
+  "liveValidationTaskComplete": false,
+  "next": "same independent Tester RF01 re-verification, then Reviewer; Human assets/retention/recovery/ready boundary remains",
+  "protectedHistory": {
+    "E006FileCount": 126,
+    "E007Modified": false,
+    "allE006SHAUnchanged": true,
+    "devClean": true,
+    "devHEADUnchanged": true,
+    "trackedFilesOutsideTopicChanged": false
+  },
+  "protectedPriorEvidenceSHA256": {
+    "baseline-freeze.json": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+    "preparation-check.json": "40a8dc824270cddc9ad5117db2ad5947768835f9694240f900a11bca3ecc2b57",
+    "python-preparation-tests.txt": "3fe9031a509eb12f55126a9c523f4d3de44e120aa098d64ce9a04f23341993b9",
+    "tester-initial-python-receipt.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-initial-serialization-probe.swift": "b8f6db816185053fd076ef3cdcedb6f4cab20b7362041b96ceeb808fed4c1be4",
+    "tester-initial-swift-receipt.txt": "481aa0b64c908896a78e2f4e25665745be9a2ef5a6bb4a299fe08b3b159ec960",
+    "tester-initial-unsigned-build.json": "6eba1f2d8467669cd521f8da5a2d7676bfbaf5ea319f8b4c14860b94d8a85c93",
+    "tester-preparation-check.json": "32ad6afe5f58443e6af7757220fe7c2099fb6e68d1d913953580124677c3aa7b",
+    "unsigned-preparation.json": "fd3987d630cab90e2cc6a15e68bddeb99099121628dcd2421be9a76ab8945ef8"
+  },
+  "recordedUTC": "2026-10-20T06:58:59.213072+00:00",
+  "red": {
+    "actualSwiftProducerActualPythonReader": true,
+    "cases": [
+      "no-call/null",
+      "six fields",
+      "empty cleanup",
+      "Unicode order and escaping"
+    ],
+    "externalLogSHA256": "cc451c72c2da438facaf710cb6ab751af85bdc5986c5f37c052ffcabffa5e5fe",
+    "failedSubcases": 4,
+    "finiteFailure": "nonCanonicalJSON",
+    "testMethods": 30
+  },
+  "requiredFixes": [
+    "RF01"
+  ],
+  "scope": "RF01 canonical receipt bridge only; author fixed, independent retest pending",
+  "sourceManifestSHA256": "357c43a3248225eb2d8bef8d28382e2bc2e70348435552628cd436f917a93bb4",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/test_continuity.py": "6c0b7952cfef6415e21f3d8b02b9deef71fd50fc52793749eee86516e28b359f",
+    "scripts/continuity.py": "ffcfa177b4a8b2365ba8f8cf21ffbe5e5994d131bf1af242f214451d6f1680ee",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "2502865056c6f2238b5f52a2654f6a7efdbeea32287e05a8fd197c6adee783b9"
+  },
+  "swiftCore": {
+    "compileCommand": "swiftc -module-cache-path <scratch>/module-cache experiments/E008/Sources/DPKContinuityProbe/ProbeCore.swift experiments/E008/Tests/CoreTests.swift -o <scratch>/core-tests",
+    "compileExitCode": 0,
+    "runExitCode": 0,
+    "scenarios": 7
+  },
+  "synthetic": true,
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "unsignedBuild": {
+    "buildInputsStillMatch": true,
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 experiments/E008/scripts/prepare.py --out <fresh-scratch>/unsigned-builds --unsigned-build",
+    "configurations": {
+      "Debug": {
+        "debugDylibAbsent": true,
+        "exitCode": 0,
+        "mainSHA256": "38554d3acb1039ce748c8200f5499c90433571a3fdbe4edec724b51a7295e947",
+        "performed": true,
+        "signingAllowed": false,
+        "signingRequired": false
+      },
+      "Rebuilt": {
+        "debugDylibAbsent": true,
+        "exitCode": 0,
+        "mainSHA256": "d72d3be95668f24dc390e52607662f7ffffd54da7aff995f110cb24ca1324c0b",
+        "performed": true,
+        "signingAllowed": false,
+        "signingRequired": false
+      }
+    },
+    "liveRebuildEvidence": false,
+    "receiptSHA256": "d1c61e2ea2e519e5b7d3d818b670af4d9f44c20b7e02364ba70dd9aab7da54ad"
+  },
+  "upstreamTesterVerdict": "needs-rework"
+}
