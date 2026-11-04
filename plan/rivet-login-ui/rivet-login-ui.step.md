@@ -11,10 +11,10 @@
 
 ## Current Phase
 
-- Phase：RV-03 approved，TE-05 partial verification完成；準備source topic commit／正常公開push，之後HC-03逐項補驗，HC-01 pending。
-- Current Step：RV-03 completed／approved；IM-06 commit／push準備中，PL-03 pending（待真source commit）。Human聲音／新版大字與rapid回歸未closed。
+- Phase：Human review／HC-03逐項補驗；RV-03 approved、TE-05 partial、IM-06公開交付及PL-03本地map completed，HC-01 pending。
+- Current Step：HC-03 pending；等待Human三真入口聲音／新版大字及rapid回歸逐項回報，三缺口未closed。
 - Upstream verdict：PR-03 approved；TE-05 partial completed；Dispatcher正式交接獨立RV-03 approved／required source fix None，准受限source交付。Human HC-02 needs-rework與HC-01／HC-03 pending仍有效，code approval不等於成果採用。
-- 已發布source head（歷史）：`6fc18b3c040997155d84ca85abba48abc1a61d6c`；focus修正與4nativePNG／交付紀錄共7檔，全部hooks passed，正常push／ls-remote SHA一致。早期功能commit `98f0573`保留；本輪metadata不預填自身SHA。
+- 已發布source head：`9f8955c40696cee6d77739da6d22d659287cfbc0`；13檔、全部hooks passed、正常push／ls-remote一致，凍結source／binary SHA不變。PL-03限此source，不包含後續metadata。
 - HC-02保留七類Human通過：鍵盤、Welcome VoiceOver、PAT VoiceOver／Show-Hide、帳號／完成／重跑失敗宣告、失敗取消、高對比、Reduce Motion。三缺口為PAT verifying自動宣告、等待兩入口自動宣告、大字測法未確認；spinner旋轉只列觀察。HC-02受測binary SHA與TE-04相同；該Human交接當輪未重跑舊自動檢查。新版IM-05自驗結果見下方及verification，rootstrict仍非零。
 
 ## Artifact Register
@@ -53,8 +53,8 @@
 | IM-05 | completed | Implementer | PR-03 approved後依PC-03完成掛載後phase協調、bodyPointSize增量與局部字級控制、Preview／docs及必要行為測試。 | 受限working diff完成；TDD red→green、focused15／root289／debug／release／format／7檔scoped0自驗，rootstrict39非0；新binary／source SHA見verification IM-05。未啟UI，非朗讀／大字native通過，交TE-05。 |
 | TE-05 | completed | Tester | 獨立親跑新版自動檢查、三真入口AX／focus與必要回歸，13／17／21 pt最小視窗實看；交Human聽取／逐項確認。 | partial verification：本Tester親跑focused15／root289／debugrelease／format／scoped136files0／diffcheck0；rootstrict39非0且finding檔bytes未變。主對話Tester CUA真三入口／PAT／三字級五畫面與scroll可達，本Tester獨立實看18 rawJPEG。VOoff，Human聲音／大字與rapid仍pending，三缺口未closed；詳verification TE-05。 |
 | RV-03 | completed | Reviewer | 獨立審查PC-03 bounded source、Tester證據／剩餘限制；真commit後本地map另列PL-03。 | Dispatcher正式交接approved、required source fix None；TE-05 partial與Human三缺口／rapid限制保留，code approval不代HC-01採用。 |
-| IM-06 | pending | Implementer | RV-03 approved後精確13檔staged語意／message核對、完整hooks commit及正常public push。 | 現準備中，message採fix(presentation): 修正登入宣告與大字驗收；不預填成功SHA，不force／merge／release，dev worktree不動。 |
-| PL-03 | pending | Reviewer | 以本輪真source commit與實際PR base建立外置本地PR Lens。 | 尚未產生；真commit／push後交獨立Reviewer，舊map不冒充本輪source，不能把map當correctness approval。 |
+| IM-06 | completed | Implementer | RV-03 approved後精確13檔staged語意／message核對、完整hooks commit及正常public push。 | 真source9f8955c40696cee6d77739da6d22d659287cfbc0，全部hooks passed，正常push／ls-remote同SHA；source／binary凍結不變，dev未動。 |
+| PL-03 | completed | Reviewer | 以本輪真source commit與實際PR base建立外置本地PR Lens。 | 獨立Reviewer完成base613a505→source9f8955c、merge-base14d0832；pinned0.11.0 validate／render0，12nodes／15edges／6steps／34file refs，XML核對未raster實看。完整hash見verification；不含後續metadata，不取代correctness review。 |
 | HC-03 | pending | Human | 逐項聽新版PAT submit／Welcome→waiting／Retry→waiting，實看13／17／21 pt與必要focus回歸。 | 尚未取得新版Human結果；沿每項等待回報要求，三缺口未補驗完成前不宣稱全面通過。 |
 | HC-01 | pending | Human | Draft PR 與完整證據交 Human review，決定採用／調整／放棄。 | 最新Human明示七類通過但三缺口未補驗，尚未全面通過；執行／公開授權不等於成果採用。 |
 | HC-PUB | completed | Human | 回覆自動approval review要求的具體公開發布確認。 | Human本輪明確同意將`feat/rivet-login-ui`程式／測試／原始素材／文件圖面公開推送至`a129924/rivet`，並以`dev`建立Draft PR；這不是UI成果採用。 |
@@ -73,7 +73,7 @@ HC-00 是方案接受及直接執行授權。Staged diff 邊界與 message 檢�
 
 ## Last Updated
 
-2026-11-04（Asia/Taipei）；TE-05 partial completed，獨立RV-03 approved／required source fix None；準備13檔topic commit／正常公開push，PL-03待真commit後獨立產生。18 rawJPEG與四canonical PNG來源限制保留；HC-01／HC-03 pending，三入口聲音／Human新版大字／rapid仍未closed。此記錄不預填commit／push成功，source與binary凍結不改。
+2026-11-04（Asia/Taipei）；IM-06 source9f8955c完整hooks／正常push完成，PL-03真source本地map完成，Draft66 targetdev不變。TE-05 partial／RV-03 approved，HC-01／HC-03與三缺口pending；18 rawJPEG／四canonical PNG來源限制保留。本輪僅兩檔metadata，不預填自身SHA。
 
 ## PC-02：必要測試契約修正與已知驗證限制
 
@@ -295,3 +295,8 @@ TE-05為completed／partial verification，執行項目無新required source fix
 ## RV-03後交付準備（2026-11-04）
 
 Dispatcher正式交接獨立RV-03 approved／required source fix None；TE-05 partial證據與HC-02舊七類pass完整保留，三缺口及HC-01／HC-03不closed。只收尾verification／step目前摘要，不改凍結source、tests、docs或圖像bytes；依Human既有直接topic commit與具體public payload授權，核精確13檔單topic diff與message後保留完整hooks，正常push feature，不動dev、不force／rebase／merge／release。此處未預填新SHA／成功；PL-03仍pending，交真source commit後的獨立Reviewer，PR操作留Dispatcher。
+
+
+## IM-06／PL-03交付後Human停點（2026-11-04）
+
+Source9f8955c已完整hooks commit／正常公開push、ls-remote同SHA，獨立PL-03已完成並明確bounded此code head；真base／merge-base／hash／外置路徑與實看限制見verification。Draft66 targetdev仍待Human review，三真入口聲音／真正大字Human／rapid未closed；HC-02七類舊pass留源，HC-01／HC-03 pending。此輪僅兩metadata，不改source／圖像，不重跑Swift／native／產圖，不merge／release或回填自身SHA。

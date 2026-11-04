@@ -6,7 +6,7 @@
 
 Dispatcher正式交接獨立RV-03 `approved`、required source fix `None`。TE-05已完成partial verification：新版自動檢查、三真入口可觀察互動、13／17／21 pt五畫面及捲動可達性；主對話Tester操作CUA，本Tester獨立實看18份外置raw JPEG，精確來源與padding限制見TE-05。這些不是VoiceOver真朗讀、Human新版大字或rapid departure通過，HC-02三缺口不closed，HC-01／HC-03仍pending；原binary七類Human通過保留其來源。
 
-Source／binary維持IM-05與TE-05凍結SHA；四canonical PNG仍為舊source，原素材與Archify不改。依既有效topic commit及明確public payload授權準備本輪正常commit／push，僅feature branch、完整hooks、不force／merge／release；此處不預填成功SHA。新source commit後交獨立Reviewer產PL-03，本地map尚未產生，舊PL-02不代表本輪source。
+IM-06已完成source commit `9f8955c40696cee6d77739da6d22d659287cfbc0`（`fix(presentation): 修正登入宣告與大字驗收`），精確13檔、全部hooks passed；正常public push與ls-remote同SHA。7個Swift檔及debug binary保持凍結值，四canonical PNG／18份新raw JPEG來源與限制不變。PL-03已獨立完成，Draft PR #66維持target dev；目前只待HC-03逐項Human補驗與HC-01採用，三缺口不closed。
 
 ## IM-05 自驗完成／待獨立補驗（歷史）
 
@@ -439,3 +439,14 @@ Repository原四PNG完全未改、bytes與HEAD相同，仍只證舊binary `1009d
 - LU-06三真入口已走過、waiting Cancel／Escape可操作、heading角色／內容可讀；**VOoff不證自動聲音、VoiceOver target或每phase只宣告一次**。三真入口朗讀、rapid departure與必要Human回歸仍pending；HC-02七類舊pass保留，HC-01／HC-03及三缺口不closed。
 - 執行過的bounded項目未觀察到新required source fix；交獨立RV-03審核source／取消去重／證據限制，不自行給Reviewer approval。最後由主對話Tester還原System／Welcome13pt、simulate failure off、origin Browser、Controls關閉且可⌘0開啟；VO／全域設定沿Human交接off。
 - 本Tester只更新verification／step；未改source／tests／planning contract／原四PNG、未stage／commit／push／改PR。IM-05 source與Human公開發布授權均保留，這不是Human成果採用。
+
+
+## PL-03／新版交付收尾（2026-11-04）
+
+獨立Reviewer以base `613a505025774b3841ab73b4ed3b8774be38274a` → source `9f8955c40696cee6d77739da6d22d659287cfbc0`製作本地map；三點merge-base `14d0832f042720889993d769b4cbfb720078e6b1`，40files、+19023／-88。Pinned CLI0.11.0 validate／render exit0，無overlay時使用`--no-config`；1view／4lanes／12nodes／15edges／6steps，34 exact-head file refs與XML12 labels已核，未raster實看。
+
+- Graph SHA-256：`9364bde15bd80ca2189a7e7002a838cbbd424c5caa47190b6aa31ce07a2cf751`；contentHash=`3fe2699ff22f185d813955fdbd427ced`。
+- SVG：22001bytes、1738×700；contentHash=`bec587614a6f68b020ee67b3b797b2bf`。
+- 外置 `$TOPIC_SCRATCH/pr-lens/9f8955c/`：`graph.json`、`SOURCE.md`、`rendered/manifest.json`、`rendered/login-change-light-bec587614a6f68b020ee67b3b797b2bf.svg`。無repo改寫／upload／publish；map僅涵蓋source9f8955c，不含本輪後續metadata、不冒稱最終head。
+
+[Draft PR #66](https://github.com/a129924/rivet/pull/66)仍交Human review，不merge／release。HC-01／HC-03 pending：三真入口VoiceOver聲音、真正大字Human實看及rapid回歸尚待逐項回報；HC-02舊binary1009d446七類pass、三缺口與所有取證限制保持。這次只補兩份metadata，source／四PNG／凍結圖未變，不回填自身新commit SHA。
