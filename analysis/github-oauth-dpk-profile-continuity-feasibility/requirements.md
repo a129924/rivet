@@ -1,11 +1,11 @@
 # DPK profile 自然到期與資料恢復需求
 
-> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01四檔已獨立Plan-Reviewer approved、required_fixes=[]；M02作者遷移交付，待M03/M04獨立驗證審查，尚未整合/登記/發布。S06仍human-check、主假設未執行。
+> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01/M03/M04已各依受限範圍approved、required_fixes=[]；M05首筆遷移commit819b26d已正常完成。M06已在feature受控整合dev並準備E010登記，待M07核對/M08訊息與第二commit/M09發布；不是合併至dev。S06仍human-check、主假設未執行。
 
 - Topic：`github-oauth-dpk-profile-continuity-feasibility`
 - Branch：`chore/github-oauth-dpk-profile-continuity-feasibility`，僅本 topic feature worktree。
-- 狀態：M01正式approved，M02作者交付待獨立驗證；主假設未執行，S06 human-check。
-- 現行活動目標E010：活動檔案已遷移，尚未整合/登記/發布；三時點重查占號，碰撞停Human。原DPK E008以下僅歷史，dev PKCE E008不可操作。
+- 狀態：M01/M03/M04受限approved，M05已commit，M06待M07/M08；主假設未執行，S06 human-check。
+- 現行活動目標E010：已遷移並在feature受控整合/登記草稿，尚待M07/M08及遠端發布；三時點重查占號，碰撞停Human。原DPK E008以下僅歷史，dev PKCE E008不可操作。
 
 ## 決策問題與主要假設
 
@@ -93,4 +93,4 @@ Human已接受E010活動身分、immutable映射/22快照/五source缺口、追�
 
 原193=17active＋1README＋158evidence＋13GUI/Archify＋4docs。22保存檔=17active＋README＋4docs；另「27種歷史sourcePath/SHA組合中22種有bytes」是不同統計。五缺失預設保留unknown：initialProbeCore、initialtest_continuity、舊continuity、舊proof、RF01test_continuity，標content-unavailable-in-published-snapshot，不虛構內容或Git版本。receipt/index可驗≠全部舊source可重建。
 
-以上為四檔編寫階段的權限快照；M01現已approved，M02作者已按核准範圍遷移與新離線準備，23保全保持，獨立驗證/審查尚待。先前保全清冊SHA=`ac06351613c2aa198b2139e71cc72c8106b177f051c4732a107fa7dafc4855ef`；遷移與整合結果待後續角色實際交付，不預填完成。
+以上為四檔編寫階段的權限快照；M01現已approved，M02作者已按核准範圍遷移與新離線準備，23保全保持，M03/M04已受限approved，後續整合/登記仍待M07。先前保全清冊SHA=`ac06351613c2aa198b2139e71cc72c8106b177f051c4732a107fa7dafc4855ef`；遷移與整合結果待後續角色實際交付，不預填完成。

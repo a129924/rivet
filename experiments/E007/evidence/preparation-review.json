@@ -1,0 +1,100 @@
+{
+  "experiment": "E007",
+  "limitations": [
+    "只讀 source/docs/test evidence 判讀，無自跑測試、真 DPK/profile/Human 提示證據。",
+    "準備 needs-rework 不代表 renewal 假設失敗；本收據不放行 live 或產品 adapter 採用。",
+    "修正後不可回填本收據或原 Tester 收據；若 revision receipt 新 leaf 未列 manifest，先依既定 planning 路由明列後再寫。"
+  ],
+  "liveState": {
+    "availabilityIsReady": false,
+    "dpkAdoptionApproved": false,
+    "freshHumanReadyProvided": false,
+    "reviewerAppLaunches": 0,
+    "reviewerProvisioningOperations": 0,
+    "reviewerSecurityOperations": 0,
+    "reviewerSigningOperations": 0,
+    "status": "未執行",
+    "t0Started": false
+  },
+  "recordedUTC": "2026-10-19T08:23:23.838093+00:00",
+  "requiredFixes": [
+    {
+      "finding": "Human statement/actions/purposes 為任意文字，observation 驗證沒有 public redaction；export_clean 將原 human JSON bytes 複製至 repository，可保存原始路徑、身分或秘密，違反已鎖定 evidence 範圍。",
+      "id": "RF-R01",
+      "line": 447,
+      "path": "experiments/E007/scripts/run_profile_renewal.py",
+      "relatedSources": [
+        "experiments/E007/scripts/run_profile_renewal.py:141",
+        "experiments/E007/scripts/run_profile_renewal.py:350",
+        "experiments/E007/scripts/run_profile_renewal.py:443"
+      ],
+      "requiredChange": "保留必要的 private 原文，公開 Human 收據改為有限安全欄位及必要 hashes；如保留 action/purpose，採受限分類而非任意原文；維持 exact machine SHA 關聯。新增以敏感自由文字輸入的 export pure negative case，確認 public evidence 無原文。",
+      "severity": "high"
+    },
+    {
+      "finding": "finalize 將所有 completed=false 或六欄不完整收據等同讀回不符。Permit 已通過後若 process receipt 寫入失敗，ProbeMain 可在未呼叫 SecItem 前寫 completed=false/error=guardRejected；若 Human 與 cleanup 完整，仍被分類為 renewal 失敗。這種 guard/證據不足應為無法判定。",
+      "id": "RF-R02",
+      "line": 399,
+      "path": "experiments/E007/scripts/run_profile_renewal.py",
+      "relatedSources": [
+        "experiments/E007/scripts/run_profile_renewal.py:154",
+        "experiments/E007/scripts/run_profile_renewal.py:382",
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:327",
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:343"
+      ],
+      "requiredChange": "先核對可信 read machine 收據及是否實際執行到可判讀的讀回結果；guard、技術或無效收據維持無法判定，只有前提完整且有效讀回的拒絕/內容不符或真提示超標才失敗。補 finalize-level pure negative cases，包含 guardRejected，保留既有 Human SHA mismatch 測試。",
+      "severity": "medium"
+    }
+  ],
+  "resolvedFindings": [
+    {
+      "id": "RF-T01",
+      "line": 54,
+      "originalTesterReceiptPreserved": true,
+      "path": "experiments/E007/README.md",
+      "resolution": "明列本輪 owned root 內 Setup、App copies、DerivedData 精確移除；root 外 Human-owned source App、未證實 owned DerivedData 與 Apple assets 保留。",
+      "updatedSHA256": "4492ff861c3e92e54f178355c7efe3502bc2c29d13eb335761689ebe916abb18"
+    }
+  ],
+  "role": "Reviewer",
+  "schemaVersion": 1,
+  "scope": "獨立八檔準備層級 code review 與 workflow 核對；未執行測試或 live 操作",
+  "sourceSHA256": {
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/project.pbxproj": "8cb08f416dc753c49b9bc3ea447ce5c75fa3ffb97388d198895b7a50ad0e6b7b",
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/xcshareddata/xcschemes/ProfileRenewalProbe.xcscheme": "93b4e8876aafc7dfdeb35e24c837cb5ab6266dc3133c34f08fab8e610c97b3d5",
+    "experiments/E007/README.md": "4492ff861c3e92e54f178355c7efe3502bc2c29d13eb335761689ebe916abb18",
+    "experiments/E007/Resources/Info.plist": "9d7ad64ccf83deee5e1b6a09802362214640b19e6f1ba25313aa02a14b33f8c4",
+    "experiments/E007/Resources/ProfileRenewalProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "experiments/E007/Sources/ProfileRenewalProbe.swift": "99cb2e1ea85e60e9387323d3d47ee0b573d5fba848fe5ec347745432ab8eb965",
+    "experiments/E007/Tests/test_protocol.py": "d8042eb152c35be29ddcc568e279929d752bbb39756ee647a99eefc029c7fe0b",
+    "experiments/E007/scripts/run_profile_renewal.py": "4563e2fa5d268da9ec92f1565e2fac0dbbc425c1083dea09c1e67d11a8e94b5f"
+  },
+  "step": "S04b",
+  "testerEvidence": {
+    "READMEOnlyFollowupApproved": "由 Tester 明示之限定回查交接；Reviewer 另核對現有八檔 SHA",
+    "immutableVerdict": "needs-rework",
+    "path": "experiments/E007/evidence/preparation-tests.json",
+    "remainingSevenSourceHashesMatchOriginalTesterReceipt": true,
+    "reportedChecks": "21/21 pure tests，swift format strict、SwiftLint strict/no-cache、獨立 unsigned Xcode build exit 0",
+    "reviewerReranChecks": false,
+    "sha256": "14a228214834db283aec28b5d8a3e7ceba094cc3e07a07e5325acafa115fc2a5"
+  },
+  "topic": "github-persistent-connection",
+  "verdict": "needs-rework",
+  "verifiedPreparationControls": [
+    "原 t0 setup 前 exclusive 固定，35 分鐘 cutoff、45 分鐘 deadline；cleanup 可逾時但不冒稱準時。",
+    "同 App ID/private group/certificate/DR 與不同有效 profile bytes；selected App 檢查只讀重用 E006 helpers。",
+    "固定 current App 位置、A profile add/read、B profile 唯讀；DPK namespace 精確 UUID/service/account/group。",
+    "Human whole-stage/exact machine SHA 驗證；invalid candidate 驗證後才採用，舊 SHA mismatch success bug 已修。",
+    "default begin 無 live opt-in 不建立 root；沒有自動 provisioning、certificate inventory 或 Security 預設存取。",
+    "可能寫入後 export 要求 exact cleanup read-absent；公開 build/mock 不升格為 DPK 成功。"
+  ],
+  "workflow": {
+    "ledgerCurrentStepObserved": "S04a/pending",
+    "ledgerModified": false,
+    "liveMayStart": false,
+    "nextObjective": "只修 RF-R01/RF-R02，交獨立 Tester 後再由獨立 Reviewer 回查；維持 immutable receipts 與既有 manifest。",
+    "nextRole": "Implementer",
+    "planningApprovalIsPreparationOnly": true
+  }
+}

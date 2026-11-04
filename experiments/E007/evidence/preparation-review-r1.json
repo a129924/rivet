@@ -1,0 +1,102 @@
+{
+  "experiment": "E007",
+  "limitations": [
+    "approved 僅接受準備回修，不代表 DPK、profile renewal、零提示、清理或產品成功。",
+    "真 A/B profile、Human 提示、live cleanup／timebox 均待實際證據；unsigned build 與 pure tests 不代替真系統結果。",
+    "本次只新增 r1 Reviewer 收據；未修改 source、原 immutable receipts 或 step ledger。"
+  ],
+  "liveState": {
+    "availabilityIsReady": false,
+    "dpkAdoptionApproved": false,
+    "freshHumanReadyProvided": false,
+    "reviewerAppLaunches": 0,
+    "reviewerProvisioningOperations": 0,
+    "reviewerSecurityOperations": 0,
+    "reviewerSigningOperations": 0,
+    "reviewerTestsRun": 0,
+    "status": "未執行",
+    "t0Started": false
+  },
+  "previousImmutableReceipts": {
+    "experiments/E007/evidence/preparation-review.json": {
+      "preserved": true,
+      "sha256": "04a53e1c0310ef5e3b9d1a7c46571de117e048e8b5c913aa02bb32c5852991eb"
+    },
+    "experiments/E007/evidence/preparation-tests.json": {
+      "preserved": true,
+      "sha256": "14a228214834db283aec28b5d8a3e7ceba094cc3e07a07e5325acafa115fc2a5"
+    }
+  },
+  "recordedUTC": "2026-10-19T08:30:57.230129+00:00",
+  "requiredFixes": [],
+  "resolvedFindings": [
+    {
+      "basis": "README:54 仍明列 owned root 內清理與 root 外 Human-owned App／Apple assets 保留。",
+      "id": "RF-T01",
+      "status": "resolved"
+    },
+    {
+      "basis": "public_observation 明列可公開欄位，排除 statement；actions／purposes 只接受有限值，其他轉 other。export 對 Human JSON 使用該 projection，維持 exact machine SHA，並另記 privateObservationSHA256。私有原文不複製至 repository。",
+      "id": "RF-R01",
+      "sourceReferences": [
+        "experiments/E007/scripts/run_profile_renewal.py:181",
+        "experiments/E007/scripts/run_profile_renewal.py:502",
+        "experiments/E007/Tests/test_protocol.py:222",
+        "experiments/E007/Tests/test_protocol.py:236"
+      ],
+      "status": "resolved",
+      "testEvidence": "Tester r1 的 projection 與 export-level 敏感自由文字負向案例通過；Reviewer 只讀核對實際測試與出口接線。"
+    },
+    {
+      "basis": "ProbeCore reference instance 的 marker 初始 false、load port 呼叫前才 true。Main 在 perform 前保留同一 selectedOperation，結束時讀該 instance marker；未建立 operation 的 guard failure 為 false。read_outcome 先核 machine namespace／phase／profile／binary／window／時間／read marker，guard、technical 與 malformed 證據回 None，使 finalize 判無法判定；只有有效 read 的有限拒絕／missing／invalidData／comparison 可判失敗。",
+      "id": "RF-R02",
+      "sourceReferences": [
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:221",
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:238",
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:350",
+        "experiments/E007/Sources/ProfileRenewalProbe.swift:361",
+        "experiments/E007/scripts/run_profile_renewal.py:195",
+        "experiments/E007/scripts/run_profile_renewal.py:212",
+        "experiments/E007/scripts/run_profile_renewal.py:428",
+        "experiments/E007/scripts/run_profile_renewal.py:440"
+      ],
+      "status": "resolved",
+      "testEvidence": "Tester r1 的 Swift marker、finalize-level guard／technical／invalid identity／shape、真 read failure、success 與 Human SHA mismatch cases 通過；Reviewer 未執行 GUI 或 Security。"
+    }
+  ],
+  "revision": "r1",
+  "role": "Reviewer",
+  "schemaVersion": 1,
+  "scope": "只回查 RF-R01／RF-R02 bounded fixes、Main marker 接線與八檔 source snapshot；不重做廣泛 review",
+  "sourceSHA256": {
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/project.pbxproj": "8cb08f416dc753c49b9bc3ea447ce5c75fa3ffb97388d198895b7a50ad0e6b7b",
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/xcshareddata/xcschemes/ProfileRenewalProbe.xcscheme": "93b4e8876aafc7dfdeb35e24c837cb5ab6266dc3133c34f08fab8e610c97b3d5",
+    "experiments/E007/README.md": "6b43e3a1126b2ff4795a5a1799350eea35c889b61acc2bd94ee7edae054e8676",
+    "experiments/E007/Resources/Info.plist": "9d7ad64ccf83deee5e1b6a09802362214640b19e6f1ba25313aa02a14b33f8c4",
+    "experiments/E007/Resources/ProfileRenewalProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "experiments/E007/Sources/ProfileRenewalProbe.swift": "1c55ea950ddd9841cf1ba372ef7da190e6bb86127f798dfd8983d71edfe73958",
+    "experiments/E007/Tests/test_protocol.py": "7798a5c8463ebec7e0b8574247f81679cab07e56b52e4a311cc8bf985036e65f",
+    "experiments/E007/scripts/run_profile_renewal.py": "62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484"
+  },
+  "step": "S04b",
+  "testerEvidence": {
+    "allEightSourceHashesMatch": true,
+    "path": "experiments/E007/evidence/preparation-tests-r1.json",
+    "reportedChecks": "28/28 pure tests（21 Python／7 Swift）、swift format strict、SwiftLint strict/no-cache、全新 unsigned Xcode build 均 exit 0",
+    "reviewerReranChecks": false,
+    "sha256": "74e49d9b193e5e4369cb01c494f415b61b261b14ae01a7516e515c0a95e2d9c6",
+    "verdict": "approved"
+  },
+  "topic": "github-persistent-connection",
+  "verdict": "approved",
+  "workflow": {
+    "adoptionGateUnchanged": "S04d 獨立真 run 判讀後，仍待 S04e Human 採用確認；不能開始正式 adapter。",
+    "ledgerModified": false,
+    "livePreparationGateApproved": true,
+    "liveStartRequiresFreshHumanReady": true,
+    "nextObjective": "取得當次 Human fresh ready、免費來源聲明與逐段完整觀察後，依既定 S04c 進行唯一原 35/45 分鐘 live run；不得將 availability 代填 ready。",
+    "nextRole": "Tester",
+    "preparationOnly": true,
+    "revisionManifest": "plan/github-persistent-connection/github-persistent-connection.plan.md:52 已明列兩個 exact r1 leaves；Plan-Reviewer approved 由交接提供。"
+  }
+}

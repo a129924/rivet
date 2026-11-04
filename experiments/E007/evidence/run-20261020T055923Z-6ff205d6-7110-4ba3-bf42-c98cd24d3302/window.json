@@ -1,0 +1,12 @@
+{
+  "cutoffUTC": "2026-10-20T06:34:23.200801+00:00",
+  "deadlineUTC": "2026-10-20T06:44:23.200801+00:00",
+  "freePersonalTeamDeclared": true,
+  "humanSetupReadyDeclared": true,
+  "kind": "setup-window",
+  "namespace": "6ff205d6-7110-4ba3-bf42-c98cd24d3302",
+  "observationMode": "human-only",
+  "privateWindowSHA256": "fb937488365888e0391238c0841c7962754553c8bb572977fe99616735379146",
+  "startUTC": "2026-10-20T05:59:23.200801+00:00",
+  "synthetic": false
+}

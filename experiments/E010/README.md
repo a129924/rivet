@@ -4,7 +4,7 @@
 
 本 topic 的活動身分已由 DPK E008 遷為 E010；dev 的 E008 屬另一個 PKCE topic，不可查詢、resume 或清理。本輪只做 PR #67 離線遷移，沒有新真人／GUI／DPK 測量。主假設仍是同 Mac/user、免費 Personal Team、同 leaf certificate／完整 group 下，P0 自然到期後以不同有效 P1 讀回原假 A；狀態 **未執行**。
 
-原契約見 [requirements](../../analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md)、[technical-spec](../../analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md)、[plan](../../plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md) 與 [step](../../plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md)。遷移 M01 已獨立 approved；M02 是作者交付；M03獨立Tester已approved、required_fixes=[]、resolved M-RF01；56方法／Swift7／兩版unsigned與回修focused結果均保留。M04待獨立審實際staged diff，M05具體commit訊息待Human確認；尚未commit/整合/發布。
+原契約見 [requirements](../../analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md)、[technical-spec](../../analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md)、[plan](../../plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md) 與 [step](../../plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md)。遷移 M01 已獨立 approved；M02 是作者交付；M03獨立Tester已approved、required_fixes=[]、resolved M-RF01；56方法／Swift7／兩版unsigned與回修focused結果均保留。M04獨立Reviewer已approved、required_fixes=[]；M05已依Human確認訊息正常commit819b26d。M06受控整合/本地登記草稿待M07核對、M08第二訊息確認與commit，尚未push/發布。
 
 ## 為什麼
 
@@ -16,7 +16,7 @@ PR #67 的原 DPK E008 與新 dev PKCE E008 路徑碰撞。Human 明確接受活
 
 ## 環境與前置條件
 
-本輪只有離線 pure fixtures／必要 unsigned Debug 與 Rebuilt 編譯權限：Swift 6.3.3、Python 3.14.0。沒有新 grants、namespace、private runroot、clock arm、Apple account/profile/certificate、App launch 或 Security/SecItem 操作。Generic App/project、bundle UUID 前綴、六欄 A、同 certificate/full-group、三窗／十日期限、no-rewrite 與既有 guards 保持。E010 尚未完成整合／registry 登記或 PR 更新。
+本輪只有離線 pure fixtures／必要 unsigned Debug 與 Rebuilt 編譯權限：Swift 6.3.3、Python 3.14.0。沒有新 grants、namespace、private runroot、clock arm、Apple account/profile/certificate、App launch 或 Security/SecItem 操作。Generic App/project、bundle UUID 前綴、六欄 A、同 certificate/full-group、三窗／十日期限、no-rewrite 與既有 guards 保持。E010已在feature以no-commit/no-ff受控整合dev，兩registry新增登記草稿待M07/M08；尚未第二commit或PR更新。
 
 ## 重現步驟
 
@@ -32,13 +32,13 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E010/Tests
 
 - 自然 profile cycle／原 A 恢復／DPK UX：**未執行**；完整 feasibility 任務未完成。
 - 兩輪歷史 controlled-stop：前提不足／無法判定，零 item 的 owned filesystem 清理完成；不是 DPK delete/read-absent。10/22 僅 cleanup 越 cutoff 3.954765 秒，仍在原 deadline 前；沒有 reset 或新測量。
-- 本次 M02：遷移作者實作已交付；新 E010 離線證據見下方收據，M03原M-RF01 needs-rework歷史保留；修正後已由同Tester focused approved、required_fixes=[]，M04尚待獨立審查，不沿用原E008 approval。
+- 本次 M02：遷移作者實作已交付；新 E010 離線證據見下方收據，M03原M-RF01 needs-rework歷史保留；修正後已由同Tester focused approved、required_fixes=[]，M04已受限approved；整合/登記仍待M07/M08，不沿用原E008 approval。
 
 ## 結果與證據
 
 [來源清冊](history/pr67-422d0c7/original-files.json) 以真實 origin commit `422d0c7dd07bf9a746a142d6a07a5cad60c947ed`／Git path／blob OID／SHA 記原 193 檔。[22 原檔 tree](history/pr67-422d0c7/tree/experiments/E008/README.md) 保留原 README、17 active 與四份 planning 文件；22 個檔案與 22 個可取得 source path/SHA 組合是不同統計。
 
-M03 focused收據SHA `20ed1c8145c223cb26bd99aba65aa13243d3e870ef57bff8b497a66ac5594ad3` 明示approved、required_fixes=[]。只核已交付遷移：M-T05為批准base PKCE原blob保護，M-T06為首次占號既存記錄一致，沒有新的全球唯一/登記聲明。map／active manifest／準備收據保留受驗M-RF01快照；map內active-edited文件destinationSHA是當時版本，本文與step僅追加其後角色狀態，不能冒稱相同bytes。M04/後段stage、hooks、commit與整合發佈各依實際後續紀錄，不預填通過。
+M03 focused收據SHA `20ed1c8145c223cb26bd99aba65aa13243d3e870ef57bff8b497a66ac5594ad3` 明示approved、required_fixes=[]。只核已交付遷移：M-T05為批准base PKCE原blob保護，M-T06為首次占號既存記錄一致，沒有新的全球唯一/登記聲明。map／active manifest／準備收據保留受驗M-RF01快照；map內active-edited文件destinationSHA是當時版本，本文與step僅追加其後角色狀態，不能冒稱相同bytes。M04已獨立approved；M05正常commit819b26d、六hooks全Passed。M06 merge無衝突、兩registry新增E010待M07/M08；不預填第二commit/push/PR衝突readback。
 
 M-RF01只將三筆 `priorEvidenceManifestSHA256` 聚合指紋分列為 `non-file-digest`，不做file lookup、不列缺失檔案。檔案引用為1952筆（JSON1873／Markdown72／HTML7）：1726 resolved、185 unresolved、25歷史文件版本SHA mismatch、5個缺失source版本涉及16筆；另外三筆聚合摘要獨立記錄。原三筆均保留實際pointer／原值，沒有修改其receipt。
 
@@ -50,4 +50,4 @@ M-RF01只將三筆 `priorEvidenceManifestSHA256` 聚合指紋分列為 `non-file
 
 ## 結論與限制
 
-本題仍停 S06 human-check；兩輪 closed grants/root 不可重用，沒有原 A item 或跨週 retention。新 live／GUI／資產／recovery 與逐段 ready 必須另由 Human 決策，不能因改號放行。M02 之後先交獨立 Tester／Reviewer，再依實際 staged diff 各取 Human 新 commit message 確認；尚未整合 dev、改兩 registry、commit/push 或更新 PR #67。E005 legacy UX、E006 的受限成功及既有 controlled-stop／逾時歷史不改。正式 Keychain adapter、真 token/OAuth、產品登入、certificate rotation、公開分發與 merge/adoption 均不在本次範圍。
+本題仍停 S06 human-check；兩輪 closed grants/root 不可重用，沒有原 A item 或跨週 retention。新 live／GUI／資產／recovery 與逐段 ready 必須另由 Human 決策，不能因改號放行。M03/M04已獨立受限approved；M05經Human訊息確認正常commit `819b26d20272cfcc9e664c4dccba867bcd34c92d`。其後dev `758aca9bb518f2a21f20f47609335fac49043370` 已用 `--no-commit --no-ff` 整合至feature、兩registry只增E010，仍待M07獨立核對與M08第二筆具體訊息Human確認，merge保持pending；尚未第二commit/push或更新PR #67。E005 legacy UX、E006 的受限成功及既有 controlled-stop／逾時歷史不改。正式 Keychain adapter、真 token/OAuth、產品登入、certificate rotation、公開分發與 merge/adoption 均不在本次範圍。

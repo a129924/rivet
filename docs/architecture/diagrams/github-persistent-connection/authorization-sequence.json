@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "首次授權：保存成功才建立連線",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1250,
+      800
+    ]
+  },
+  "participants": [
+    {
+      "id": "product",
+      "type": "frontend",
+      "label": "產品協調"
+    },
+    {
+      "id": "store",
+      "type": "database",
+      "label": "憑證儲存"
+    },
+    {
+      "id": "relay",
+      "type": "backend",
+      "label": "本機 callback"
+    },
+    {
+      "id": "session",
+      "type": "security",
+      "label": "授權 session"
+    },
+    {
+      "id": "browser",
+      "type": "external",
+      "label": "瀏覽器"
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub.com"
+    },
+    {
+      "id": "provider",
+      "type": "backend",
+      "label": "共用連線"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m1",
+      "from": "product",
+      "to": "store",
+      "y": 180,
+      "label": "先保存設定",
+      "variant": "security"
+    },
+    {
+      "id": "m2",
+      "from": "store",
+      "to": "product",
+      "y": 213,
+      "label": "保存成功",
+      "variant": "return"
+    },
+    {
+      "id": "m3",
+      "from": "product",
+      "to": "relay",
+      "y": 246,
+      "label": "綁定 127.0.0.1 動態 port",
+      "variant": "default"
+    },
+    {
+      "id": "m4",
+      "from": "relay",
+      "to": "product",
+      "y": 279,
+      "label": "ready／redirect URI",
+      "variant": "return"
+    },
+    {
+      "id": "m5",
+      "from": "product",
+      "to": "session",
+      "y": 312,
+      "label": "建立 state／PKCE verifier",
+      "variant": "security"
+    },
+    {
+      "id": "m6",
+      "from": "session",
+      "to": "browser",
+      "y": 345,
+      "label": "開啟 PKCE 授權網址",
+      "variant": "default"
+    },
+    {
+      "id": "m7",
+      "from": "browser",
+      "to": "github",
+      "y": 378,
+      "label": "使用者授權",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m8",
+      "from": "github",
+      "to": "browser",
+      "y": 411,
+      "label": "code＋state",
+      "variant": "return"
+    },
+    {
+      "id": "m9",
+      "from": "browser",
+      "to": "relay",
+      "y": 444,
+      "label": "GET /oauth/callback",
+      "variant": "default"
+    },
+    {
+      "id": "m10",
+      "from": "relay",
+      "to": "session",
+      "y": 477,
+      "label": "檢查 callback／state",
+      "variant": "security"
+    },
+    {
+      "id": "m11",
+      "from": "session",
+      "to": "github",
+      "y": 510,
+      "label": "POST exchange／30 秒",
+      "variant": "security"
+    },
+    {
+      "id": "m12",
+      "from": "github",
+      "to": "session",
+      "y": 543,
+      "label": "完整六欄 bundle",
+      "variant": "return"
+    },
+    {
+      "id": "m13",
+      "from": "session",
+      "to": "product",
+      "y": 576,
+      "label": "只交回 bundle，不保存",
+      "variant": "return"
+    },
+    {
+      "id": "m14",
+      "from": "product",
+      "to": "store",
+      "y": 609,
+      "label": "完整保存 credential",
+      "variant": "security"
+    },
+    {
+      "id": "m15",
+      "from": "store",
+      "to": "product",
+      "y": 642,
+      "label": "確認保存成功",
+      "variant": "return"
+    },
+    {
+      "id": "m16",
+      "from": "product",
+      "to": "provider",
+      "y": 675,
+      "label": "建立唯一 provider／scope，再取得 GET /user",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m17",
+      "from": "provider",
+      "to": "product",
+      "y": 708,
+      "label": "有效帳號結果",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "失敗不建立可用連線",
+      "items": [
+        "取消／拒絕／錯誤 callback 不保存憑證",
+        "先保存設定；授權失敗保留原資料",
+        "所有出口關閉 relay／session"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "責任維持",
+      "items": [
+        "Session 驗證 exact URL、state 與單次 code",
+        "只索取 offline_access；secret 不入授權網址",
+        "Presentation 只接 display-ready input／intent"
+      ]
+    }
+  ]
+}

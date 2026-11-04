@@ -1,0 +1,22 @@
+{
+  "allBackupsVerifiedBeforeRemoval": false,
+  "allCandidatesChecked": true,
+  "allMatchedExclusiveToRun": true,
+  "backupCount": 1,
+  "candidateCount": 4,
+  "endedUTC": "2026-10-20T07:12:07.582284+00:00",
+  "evidenceSource": "manual-record-review",
+  "matchedCount": 1,
+  "newProfileSHA256": null,
+  "oldProfileSHA256": "a7383ab245f190cde416823523d652ea61c6f135cbd89c5f2ce3079b963c9374",
+  "outcome": "stopped",
+  "phase1MachineSHA256": "af8830c32241409bf9a125f02be1de8fccc764598bfca789eac182b603db826c",
+  "privateJournalSHA256": "d8c02e6d871d32dfedf81b01659724b2b7259e91463b866299d1ccce8d26daab",
+  "profileBytesDiffer": null,
+  "refetchBuildAttemptCount": 0,
+  "removedCount": 0,
+  "restoreCheckPassed": false,
+  "schemaVersion": 1,
+  "startedUTC": "2026-10-20T07:12:07.559076+00:00",
+  "windowSHA256": "d66fc7cfcfe2eb87e73aa4cb50e8e032ec71d12d6b4c1dad96f860f6ce509a05"
+}

@@ -1,8 +1,8 @@
 # Profile-only 自然到期執行契約
 
-> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01四檔已獨立Plan-Reviewer approved、required_fixes=[]；M02作者遷移交付，待M03/M04獨立驗證審查，尚未整合/登記/發布。S06仍human-check、主假設未執行。
+> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01/M03/M04已各依受限範圍approved、required_fixes=[]；M05首筆遷移commit819b26d已正常完成。M06已在feature受控整合dev並準備E010登記，待M07核對/M08訊息與第二commit/M09發布；不是合併至dev。S06仍human-check、主假設未執行。
 
-本計畫承接 [requirements](../../analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md) 的九欄與來源，操作契約見 [technical-spec](../../analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md)，進度見 [step](github-oauth-dpk-profile-continuity-feasibility.step.md)。現行為PR67 E010遷移契約待M01獨立審查，主假設未執行；下列舊E008實驗/GUI流程均歷史，不得作當前執行入口。M01後唯一路徑為E010受限遷移/準備，精確scope與M-TestCase見PR67段落。
+本計畫承接 [requirements](../../analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md) 的九欄與來源，操作契約見 [technical-spec](../../analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md)，進度見 [step](github-oauth-dpk-profile-continuity-feasibility.step.md)。現行為PR67 E010遷移契約；M01/M03/M04受限approved、M05已commit、M06待後段驗審，主假設未執行；下列舊E008實驗/GUI流程均歷史，不得作當前執行入口。M01後唯一路徑為E010受限遷移/準備，精確scope與M-TestCase見PR67段落。
 
 ## 歷史計畫：階段與檔案影響（非現行遷移執行指示）
 
@@ -74,7 +74,7 @@ Human 已同意窄幅回修後回 S06。此次 Plan-Creator 僅修改本四檔�
 
 ## PR67遷移：當前受限執行契約
 
-M01已由獨立Plan-Reviewer正式approved、required_fixes=[]；M02作者已交付遷移與必要離線準備，待M03/M04。22原檔/193清冊及171immutable bytes保持。以下執行順序不變；尚未stage/commit/merge/push，不預填未來結果。
+M01/M03/M04已依各階段正式approved、required_fixes=[]；M05經Human確認訊息後正常commit819b26d（parent422d0c7、原六hooks通過）。M06已用--no-commit --no-ff整合origin/dev758aca9且無衝突，feature兩registry新增E010與必要事實同步待M07/M08；尚未第二commit/push。22原檔/193清冊/171immutable保持，以下順序及後段停點不變。
 
 1. **M00保全**：原commit422d0c7的22檔及193清冊已保存；不得修改既有23保全產物。清冊SHA見requirements。
 2. **M01實際契約審查**：獨立Plan-Reviewer審四檔與本次Human細則，approved才交Implementer。原對話/準備approval不替代此gate。

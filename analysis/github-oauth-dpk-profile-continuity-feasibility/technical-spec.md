@@ -1,6 +1,6 @@
 # DPK profile-only 自然到期受限規格
 
-> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01四檔已獨立Plan-Reviewer approved、required_fixes=[]；M02作者遷移交付，待M03/M04獨立驗證審查，尚未整合/登記/發布。S06仍human-check、主假設未執行。
+> **PR #67 遷移契約更新：** Human已明確接受DPK E008→E010的受限遷移。下列「PR67遷移」段落規範當前編號／檔案／Git授權；舊E008內容保留為遷移前研究／執行歷史，不可據其舊路徑或approval操作dev PKCE E008。M01/M03/M04已各依受限範圍approved、required_fixes=[]；M05首筆遷移commit819b26d已正常完成。M06已在feature受控整合dev並準備E010登記，待M07核對/M08訊息與第二commit/M09發布；不是合併至dev。S06仍human-check、主假設未執行。
 
 現行範圍為PR67遷移規格；需求／當前九欄見 [requirements](requirements.md)。M01審查後只遷移/離線準備，不開始live。遷移後活動程式入口只在`experiments/E010/scripts/`；`continuity.py`/`proof.py`仍不因遷移獲真人權限，`prepare.py`只允許後續批准的unsigned準備驗證。下列舊runtime規格保留設計/歷史脈絡，不是E008路徑執行許可，歷史內容經map追溯。
 
