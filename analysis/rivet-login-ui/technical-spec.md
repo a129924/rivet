@@ -7,15 +7,43 @@
 - Branch 命名依本地 `git-branch-naming`：feature 工作＋已知 work item、沒有既定 owner 慣例，因此使用 `feat/rivet-login-ui`，不捏造 owner。
 - Human 前輪鎖定 UI／假資料 Demo、slug／branch／ownership 與原 27 個 Written paths；本輪要求納入 Archify、PR Lens、Graphify。新增九個 Archify paths 是本方案為該要求定義的必要交付規劃，不是 Human 曾逐字列出的清單。Human 最新已接受完整本版方案並授權 feature worktree 實作、依 topic 直接 commit、push、開 Draft PR，再進 Human review；不新增重複確認流程。
 - 直接 commit 的既有授權不省略 staged diff 語意邊界與 commit message 檢查；由 Implementer 依本地 commit convention 執行。Plan-Creator 不 commit／push／開 PR。
-- Planner 的 `approved` 只表示 planning preparation sufficient；獨立對話草稿品質審查已由上游回報 approved，不能替代四文件落盤後的正式 Plan-Reviewer gate。PR-01 既有正式 approved 依 step 保留；本輪 PC-02 delta 的 PR-02 pending。
+- Planner 的 `approved` 只表示 planning preparation sufficient；獨立對話草稿品質審查已由上游回報 approved，不能替代四文件落盤後的正式 Plan-Reviewer gate。PR-01／PR-02既有正式approved依step保留；目前PC-03完成待獨立PR-03，尚未放行本次實作。
+
+## PC-03：宣告協調與可控大字設計（2026-11-04，待PR-03）
+
+### 調查依據與邊界
+
+EX-01 Explorer明示調查充分 `approved`；受查source為feature HEAD `6dc04b81834eb8008ed59aebb142771e40d0116f`（程式source與`6fc18b3`一致）。`RivetLoginView.swift`原51–55行同步moveFocus／announcement、227–230行所有heading共用Bool、292–301行statusFocused只設true而未按phase清回，是掛載／focus／語音競爭的可信候選，不宣稱已證唯一root cause。Model真submit／retry只改phase，Controls.show／Reset另換form identity，故兩條路不能互代驗證。
+
+Apple [AccessibilityFocusState](https://developer.apple.com/documentation/swiftui/accessibilityfocusstate)與[announcementRequested](https://developer.apple.com/documentation/appkit/nsaccessibility-swift.struct/notification/announcementrequested)為採用API；SDK允許把announcement通知發給application element，不能把既有NSApp target直接判成bug。Apple [dynamicTypeSize](https://developer.apple.com/documentation/swiftui/environmentvalues/dynamictypesize)明示macOS使用者不能改該值且不影響文字大小；[NSFont.preferredFont](https://developer.apple.com/documentation/appkit/nsfont/preferredfont%28fortextstyle%3Aoptions%3A%29)不足以保證追蹤Human系統13／15點設定。本次不宣稱接上該系統偏好。
+
+### 狀態宣告與focus
+
+以phase對應的具名accessibility focus identity取代所有heading共用Bool；waiting指向Cancel，verifyingAccount／verifyingToken／connected指向各自status heading；welcome CTA、PAT／token failure輸入框、browser failure Retry落點維持原契約。新目標元件掛載後，使用可取消、以phase entry辨識的task協調：先清過期accessibility focus，再設本phase目標；focus與局部announcement分序，每個phase entry最多一次。每次await後及送出更新前檢查取消與phase仍相符；快速Back／Reset／Cancel後，不可由舊task拉回focus或宣告舊狀態。不得以任意固定sleep、提高通知priority、全域鍵盤攔截或再創獨立狀態模型取代協調。
+
+PAT submit、Welcome→waiting、browser Retry→waiting必須各自親驗；同時回歸既有account／connected／failure宣告、Show／Hide持續編輯與清除、Cancel／Escape。AX只證明元素／focus；三缺口的聲音結果須由Human逐項確認，不能以Controls直切phase、背景送鍵、build或unit test判為朗讀pass。
+
+### 真字級入口與Demo控制
+
+公開init增量鎖為 `RivetLoginView(phase:footer:bodyPointSize:onIntent:)`，新增 `bodyPointSize: CGFloat = 13` 置於最後的onIntent前；既有省略此參數的label呼叫與trailing closure繼續可用，不宣稱binary ABI相容。有限輸入策略：finite值clamp至閉區間13...21；NaN與正負infinity回13。可測的internal正規化／比例邊界如有需要只能放既有 `RivetLoginPresentation.swift`，不新增public type或檔案。
+
+右側實際字體以有效bodyPointSize為基準、比例effectiveSize／13；heading、eyebrow、field、button、說明、error、footer皆依同一比例，不用scaleEffect或Dynamic Type注入偽裝大字。左側品牌／diff屬AX隱藏裝飾，可維持固定字級。必要時調整原View內的垂直配置／原生捲動，仍為40／60、最小content780×500 pt，不截斷或增加水平捲動。
+
+Demo model只保有內部局部字級，Controls提供13／17／21 pt三選一並明載「Demo文字大小；不代表系統文字大小偏好整合」；Host傳到新init入口。改字級不重建form identity、不清PAT或重設顯示模式；Reset demonstration保留目前字級，與外觀控制一致，便於同字級逐態驗收。Preview改用同一入口明確顯示21 pt，移除原 `.dynamicTypeSize(.accessibility3)` 大字示例；不改全域設定或要求TCC。
+
+### 本輪驗證與交付
+
+Tests只對有效字級、非法／邊界值與局部size傳遞／Reset保留做有意義行為檢查；task取消／去重若具可觀察可注入邊界才加測，不為測試鏡像SwiftUI實作。自動檢查重跑focused／root、debug／release、format與scoped strict lint；root strict如實記錄非零及未變baseline，不改原素材／experiments／lint config。原focused10／root284等舊成功不充當新版結果。
+
+Tester在13／17／21 pt、最小780×500 pt content檢查Welcome、PAT、PAT failure、waiting、connected的真字級、垂直捲動、footer與核心操作可達性，必要時再增大視窗；記有效字級／比例、window尺寸、binary SHA與逐項結果。舊四張13 pt native PNG保持原source provenance；若重取只用既有四個exact paths並記新binary／尺寸，新增大字capture僅外置scratch，不擅增repo path。更新 `docs/presentation/login-ui.md` 留下macOS限制、公開入口及操作方法。七態／intent graph不變，不重產凍結Archify；Graphify維持無圖source fallback；新PR Lens由獨立Reviewer於真source commit後依pinned本地契約完成，舊map不冒充新head。
 
 ## Presentation 介面與所有權
 
 - `RivetLoginPhase: Equatable, Sendable`：`.welcome`、`.tokenEntry`、`.waitingForBrowser`、`.verifyingAccount`、`.verifyingToken`、`.failure(RivetLoginFailure)`、`.connected`。
 - `RivetLoginFailure: Equatable, Sendable`：display-ready `message: String` 與 `origin`；origin 固定 `.browser`／`.token`。不公開 remote error、HTTP 或 credential 細節。
 - `RivetLoginIntent`：`.beginGitHubSignIn`、`.showTokenEntry`、`.backToWelcome`、`.cancelSignIn`、`.submitToken(String)`、`.retry`。
-- `RivetLoginView(phase:footer:onIntent:)` 接受 parent-owned phase／footer 與 intent callback；不自行驗證、載入、持久化或導航到 PR。Presentation 不依賴 BC／GitHubIntegration。
-- View 只擁有本地 PAT 文字、showsToken 與 focus。Internal PAT value state 放在 `RivetLoginPresentation.swift`，用來測 eligibility／normalize／clear 行為，不公開 token 驗證 API。Submit trim 外圍 whitespace，guard 非空白，一次回報 intent 並立即清除／隱藏；不記錄值。
+- PC-03增量：`RivetLoginView(phase:footer:bodyPointSize:onIntent:)` 接受parent-owned phase／footer、預設13的 `bodyPointSize: CGFloat` 與最後的intent callback；既有省略字級的呼叫繼續可用。字級finite值clamp13...21、非finite回13；不自行驗證、載入、持久化或導航到PR，Presentation不依賴BC／GitHubIntegration。
+- View 只擁有本地 PAT 文字、showsToken 與 focus。Internal PAT value state 放在 `RivetLoginPresentation.swift`，用來測 eligibility／normalize／clear 行為，不公開 token 驗證 API。Submit trim 外圍 whitespace，guard 非空白，一次回報 intent 並立即清除／隱藏；不記錄值。 PC-03的字級為parent提供的display-ready input，不形成第二份狀態模型；只有Demo保有局部字級選擇。
 
 ## 原生畫面與 artwork
 
@@ -106,7 +134,7 @@ Deliver 的已查證 CLI 會在 output 同層建立動態私有 staging，含 `s
 
 ### In-Scope
 
-non-BC `RivetPresentation` 登入元件、獨立原生 Demo、假狀態模型、七份素材保存與 artwork、native 操作／accessibility、必要測試及文件；Graphify bounded navigation、Archify 七態 lifecycle、PR Lens 實際變更圖，作為同一 UI 交付的理解／驗證證據。
+non-BC `RivetPresentation` 登入元件、獨立原生 Demo、假狀態模型、七份素材保存與 artwork、native 操作／accessibility、必要測試及文件；Graphify bounded navigation、Archify 七態 lifecycle、PR Lens 實際變更圖，作為同一 UI 交付的理解／驗證證據。 PC-03僅追加兩類狀態宣告修補與Demo局部13／17／21 pt真字級驗收；系統文字大小偏好整合仍未交付。
 
 ### Out-Of-Scope
 
@@ -189,8 +217,8 @@ None。
 | LU-02 | 假 GitHub／PAT 成功、失敗、取消、Retry、Reset；另送 stale／重複 intent。 | 七態可達；不重複啟動；取消無 error；connected 停留；沒有外部呼叫。 | `LoginDemoModelTests`＋原生實際操作。 | §2／11／13；AC-NI-030。 |
 | LU-03 | PAT 空白、外圍 whitespace、非固定 prefix、Show／Hide、submit、Back、token failure。 | 空白不能送；只 trim 外圍；不驗 prefix；顯示切換保留文字與編輯 focus；送出／離開清除；failure 仍可重填表單。 | `RivetLoginPresentationTests`＋原生操作；證據不保存輸入值。 | §3／10／13；素材 Spec §4 PAT。 |
 | LU-04 | System／Light／Dark、主窗 active／inactive、Increase Contrast。 | 外觀依系統或展示設定；品牌兩態深色；focus／disabled／error／success 不只靠顏色。 | 原生檢查，記錄實際系統條件。 | §7／10；AC-NI-026／035／036。 |
-| LU-05 | 標準／放大文字、視窗增大、Reduce Motion。 | 無表單／footer 遮擋；核心操作可達；必要時垂直捲動，無水平捲動；非必要動畫不延遲狀態／focus。 | Preview／host 原生檢查，記錄實際文字大小及視窗尺寸。 | §8／10；AC-NI-028。 |
-| LU-06 | Keyboard／VoiceOver 逐態進入及操作。 | focus 符合 spec；label／heading／disabled／局部更新可理解；裝飾不重複朗讀；不攔截全域鍵盤。 | 原生操作／可得 AX evidence；記錄 Keyboard Navigation 設定；缺條件分支 pending／blocked，不冒充 pass。 | §3／7／10；AC-NI-026／030。 |
+| LU-05 | Demo局部13／17／21 pt、780×500 pt最小content與增大視窗；Reduce Motion。 | 右側heading／欄位／按鈕／說明／error／footer真字級依同一比例放大；無遮擋／截斷；footer及核心操作可垂直捲動到達，無水平捲動；非必要動畫不延遲狀態／focus。 | 同一point-size入口的Preview與host原生實看；記錄有效字級／比例、視窗尺寸、binary SHA。不能用Dynamic Type／系統13或15點未生效的操作當大字pass；系統偏好整合未交付。 | §8／10；AC-NI-028；PC-03。 |
+| LU-06 | 真PAT submit、Welcome→waiting、browser Retry→waiting；Keyboard／VoiceOver逐態與快速離開回歸。 | 無需手動進入scroll area即可理解正在驗證／等待；既有focus落點不變，Cancel／Escape可操作；每次phase entry局部宣告一次，過期工作不拉回focus或播報舊狀態；既有label／heading／disabled與裝飾reading order不回歸。 | Tester核新版AX／focus及來源，Human親聽三真入口並逐項回報；Controls直接show phase不替代入口；AX、背景送鍵或build不替代朗讀。缺項保持pending，保留HC-02原binary通過。 | §3／7／10；AC-NI-026／030；PC-03。 |
 | LU-07 | Source／dependency／copy／path review。 | 無真登入、network、Keychain、persistence 或外部 help 副作用；文案明示模擬；既有 BC／兩驗證 App 不變；所有變更限 exact paths。 | 獨立 Reviewer 核對實際 diff、imports、manifest、provenance。 | §1／2／11／13；AC-NI-030。 |
 | LU-08 | bounded 自動驗證、target graph 同步及 native host 啟動。 | focused／root tests、demo debug／release build、format 成功；StaticIsolationTests 僅同步新增 Demo product／三個 targets 的 expected sets，所有 GitHubIntegration 隔離斷言不變。Root strict lint 如實記錄非0，Tester 核對 baseline 舊 findings 無回歸、原素材 SHA 未改及新增 production／tests scoped strict 0；不得為全局0修改 experiments／原素材。GUI 獨立分類，不把啟動成功當原生驗收。 | Tester 獨立跑計畫命令、targeted StaticIsolationTests、baseline／current lint 與 scoped strict 比對、verification matrix；root test 未重跑前不得宣稱修復，root lint 不冒 pass。 | §13；LU-01～07；既有 GitHubIntegration isolation contract。 |
 | LU-09 | Graphify availability／revision 檢查。 | 有可用圖時 bounded query 後 source 核實；無圖／過期／失敗則 targeted reads；沒有建圖、refresh、stamp／config／hooks 等額外 repo 輸出。 | 記錄 pinned invocation 或具體 fallback 原因與 source locations。 | Graphify local skill；Human 工具要求；§13。 |

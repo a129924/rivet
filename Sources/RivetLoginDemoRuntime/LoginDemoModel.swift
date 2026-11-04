@@ -8,6 +8,7 @@ public final class LoginDemoModel {
   public private(set) var phase: RivetLoginPhase = .welcome
   public private(set) var formIdentity = UUID()
   public var shouldFail = false
+  var textSize: LoginDemoTextSize = .standard
 
   public init() {}
 
@@ -61,4 +62,12 @@ public final class LoginDemoModel {
   }
 
   private func resetForm() { formIdentity = UUID() }
+}
+
+enum LoginDemoTextSize: Int, CaseIterable {
+  case standard = 13
+  case large = 17
+  case extraLarge = 21
+
+  var bodyPointSize: CGFloat { CGFloat(rawValue) }
 }

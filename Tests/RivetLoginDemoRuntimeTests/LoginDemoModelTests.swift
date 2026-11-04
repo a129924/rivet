@@ -1,3 +1,4 @@
+import Foundation
 import RivetPresentation
 import Testing
 
@@ -77,4 +78,31 @@ struct LoginDemoModelTests {
     #expect(model.formIdentity != identity)
     #expect(!model.shouldFail)
   }
+
+  @Test(arguments: LoginDemoTextSize.allCases)
+  func textSizeChangesPreserveTheActiveForm(_ size: LoginDemoTextSize) {
+    let model = LoginDemoModel()
+    model.handle(.showTokenEntry)
+    model.shouldFail = true
+    let identity = model.formIdentity
+    model.textSize = size
+    #expect(model.textSize.bodyPointSize == CGFloat(size.rawValue))
+    #expect(model.phase == .tokenEntry)
+    #expect(model.formIdentity == identity)
+    #expect(model.shouldFail)
+  }
+
+  @Test func resetRetainsTheSelectedTextSize() {
+    let model = LoginDemoModel()
+    #expect(model.textSize == .standard)
+    model.textSize = .extraLarge
+    model.handle(.showTokenEntry)
+    let identity = model.formIdentity
+    model.reset()
+    #expect(model.textSize == .extraLarge)
+    #expect(model.textSize.bodyPointSize == 21)
+    #expect(model.formIdentity != identity)
+    #expect(model.phase == .welcome)
+  }
+
 }

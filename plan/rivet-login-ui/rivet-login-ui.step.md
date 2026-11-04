@@ -11,20 +11,20 @@
 
 ## Current Phase
 
-- Phase：Human review；Draft PR #66已建立並attach，HC-01成果採用pending。
-- Current Step：IM-04 commit／正常公開push完成，GH-01 Draft PR #66完成；PL-02 source-head本地map完成。本輪僅補兩檔metadata，等待Human review。
-- Upstream verdict：PR-01／PR-02 approved；TE-01 partial verification；RV-01 approved／P2 closed；RV-02 approved／focus defect closed、required fix None。Bounded驗證不替代完整accessibility或Human採用。
-- Source head：`6fc18b3c040997155d84ca85abba48abc1a61d6c`；focus修正與4nativePNG／交付紀錄共7檔，全部hooks passed，正常push／ls-remote SHA一致。早期功能commit `98f0573`保留；本輪metadata不預填自身SHA。
-- TE-04新binary四份1×真native PNG已取並實看；Show／Hide四次與rapid4保值／focus、Back／Reset／submit departure及canonical Return／Escape兩組passed。TE-03焦點red與舊Escape觀察保留歷史；VoiceOver／完整traversal／大字／高對比與ReduceMotion啟用條件仍pending。Rootlint39分類保留。
+- Phase：RV-03 approved，TE-05 partial verification完成；準備source topic commit／正常公開push，之後HC-03逐項補驗，HC-01 pending。
+- Current Step：RV-03 completed／approved；IM-06 commit／push準備中，PL-03 pending（待真source commit）。Human聲音／新版大字與rapid回歸未closed。
+- Upstream verdict：PR-03 approved；TE-05 partial completed；Dispatcher正式交接獨立RV-03 approved／required source fix None，准受限source交付。Human HC-02 needs-rework與HC-01／HC-03 pending仍有效，code approval不等於成果採用。
+- 已發布source head（歷史）：`6fc18b3c040997155d84ca85abba48abc1a61d6c`；focus修正與4nativePNG／交付紀錄共7檔，全部hooks passed，正常push／ls-remote SHA一致。早期功能commit `98f0573`保留；本輪metadata不預填自身SHA。
+- HC-02保留七類Human通過：鍵盤、Welcome VoiceOver、PAT VoiceOver／Show-Hide、帳號／完成／重跑失敗宣告、失敗取消、高對比、Reduce Motion。三缺口為PAT verifying自動宣告、等待兩入口自動宣告、大字測法未確認；spinner旋轉只列觀察。HC-02受測binary SHA與TE-04相同；該Human交接當輪未重跑舊自動檢查。新版IM-05自驗結果見下方及verification，rootstrict仍非零。
 
 ## Artifact Register
 
 | Path | Status | Responsibility |
 | --- | --- | --- |
-| `analysis/rivet-login-ui/requirements.md` | present，PC-02 revised | 意圖、素材、唯一 bounded 能力、驗收與限制。 |
-| `analysis/rivet-login-ui/technical-spec.md` | present，PC-02 revised | UI／API／state／native／工具執行設計。 |
-| `plan/rivet-login-ui/rivet-login-ui.plan.md` | present，PC-02 revised | 九欄、exact paths、TestCase、執行／review 契約。 |
-| `plan/rivet-login-ui/rivet-login-ui.step.md` | present，PC-02 revised | phase、owner、evidence、blocker、verdict、Human boundary。 |
+| `analysis/rivet-login-ui/requirements.md` | present，PC-03 revised | 意圖、素材、唯一 bounded 能力、驗收與限制。 |
+| `analysis/rivet-login-ui/technical-spec.md` | present，PC-03 revised | UI／API／state／native／工具執行設計。 |
+| `plan/rivet-login-ui/rivet-login-ui.plan.md` | present，PC-03 revised | 九欄、exact paths、TestCase、執行／review 契約。 |
+| `plan/rivet-login-ui/rivet-login-ui.step.md` | present，PC-03 revised | phase、owner、evidence、blocker、verdict、Human boundary。 |
 
 ## Ledger
 
@@ -46,14 +46,24 @@
 | RV-02 | completed | Reviewer | 獨立核source／新證據並判required fix。 | Dispatcher正式交接approved、required fix None、TE-03focus defect closed，不代表Human採用。 |
 | IM-04 | completed | Implementer | staged單topic檢查、完整hooks commit與正常公開push。 | 6fc18b3c040997155d84ca85abba48abc1a61d6c；7files；hooks全passed；remote SHA一致；dev worktree未改。 |
 | PL-02 | completed | Reviewer | 依真PR base／source head建立外置本地change map。 | base613a505→source6fc18b3；merge-base14d0832／40files；CLI0.11.0 validate／render0，1view／4lanes／10nodes／12edges／6steps、23file refs；僅XMLlabels無raster實看。Map不含後續metadata，詳verification。 |
-| HC-01 | pending | Human | Draft PR 與完整證據交 Human review，決定採用／調整／放棄。 | 尚無交付採用決策；HC-00 執行授權不等於成果採用。 |
+| HC-02 | completed | Human | 交接真Human實測結果，回寫來源、七類通過、三缺口與限制。 | 2026-11-04為交接／回寫日，非各項執行時刻；Human partial／needs-rework，詳verification HC-02。完成只指證據回寫，不代表成果採用。 |
+| EX-01 | completed | Explorer | 合併調查PAT verifying／waiting兩入口的焦點與宣告時序，查明macOS字級來源、大字支援目標及可靠測法。 | Explorer明示planning sufficiency approved：同步focus／notification與共用Bool為時序候選，未證唯一root cause；Apple明示macOS Dynamic Type不影響文字大小。建議原LU-05採13／17／21 pt局部真字級，詳technical-spec PC-03；無repo／系統／UI變更。 |
+| PC-03 | completed | Plan-Creator | 四文件最小delta鎖定三缺口修法／真字級入口、LU-05／06與新版證據界線；paths不變。 | 本輪四planning文件完成，保留HC-02與原pass；尚未實作／跑測試，不自審approval，交獨立PR-03。 |
+| PR-03 | completed | Plan-Reviewer | 獨立審查PC-03的API增量、取消／去重、真字級策略、paths及Human補驗條件。 | Dispatcher正式交接獨立verdict approved、required fix None；僅准受限實作，不代表Human三缺口補驗通過。 |
+| IM-05 | completed | Implementer | PR-03 approved後依PC-03完成掛載後phase協調、bodyPointSize增量與局部字級控制、Preview／docs及必要行為測試。 | 受限working diff完成；TDD red→green、focused15／root289／debug／release／format／7檔scoped0自驗，rootstrict39非0；新binary／source SHA見verification IM-05。未啟UI，非朗讀／大字native通過，交TE-05。 |
+| TE-05 | completed | Tester | 獨立親跑新版自動檢查、三真入口AX／focus與必要回歸，13／17／21 pt最小視窗實看；交Human聽取／逐項確認。 | partial verification：本Tester親跑focused15／root289／debugrelease／format／scoped136files0／diffcheck0；rootstrict39非0且finding檔bytes未變。主對話Tester CUA真三入口／PAT／三字級五畫面與scroll可達，本Tester獨立實看18 rawJPEG。VOoff，Human聲音／大字與rapid仍pending，三缺口未closed；詳verification TE-05。 |
+| RV-03 | completed | Reviewer | 獨立審查PC-03 bounded source、Tester證據／剩餘限制；真commit後本地map另列PL-03。 | Dispatcher正式交接approved、required source fix None；TE-05 partial與Human三缺口／rapid限制保留，code approval不代HC-01採用。 |
+| IM-06 | pending | Implementer | RV-03 approved後精確13檔staged語意／message核對、完整hooks commit及正常public push。 | 現準備中，message採fix(presentation): 修正登入宣告與大字驗收；不預填成功SHA，不force／merge／release，dev worktree不動。 |
+| PL-03 | pending | Reviewer | 以本輪真source commit與實際PR base建立外置本地PR Lens。 | 尚未產生；真commit／push後交獨立Reviewer，舊map不冒充本輪source，不能把map當correctness approval。 |
+| HC-03 | pending | Human | 逐項聽新版PAT submit／Welcome→waiting／Retry→waiting，實看13／17／21 pt與必要focus回歸。 | 尚未取得新版Human結果；沿每項等待回報要求，三缺口未補驗完成前不宣稱全面通過。 |
+| HC-01 | pending | Human | Draft PR 與完整證據交 Human review，決定採用／調整／放棄。 | 最新Human明示七類通過但三缺口未補驗，尚未全面通過；執行／公開授權不等於成果採用。 |
 | HC-PUB | completed | Human | 回覆自動approval review要求的具體公開發布確認。 | Human本輪明確同意將`feat/rivet-login-ui`程式／測試／原始素材／文件圖面公開推送至`a129924/rivet`，並以`dev`建立Draft PR；這不是UI成果採用。 |
 
 ## Blockers／證據邊界
 
 - 正式 PR-01／PR-02 approved 由 Dispatcher 交接；root target-set expected-set 的兩行最小修復已完成，Tester focused10／root284親跑passed。Root strict lint仍exit2；baseline37逐條等值、raw素材新增2原樣，scoped0，不冒稱rootlint通過。
-- 前輪CUA阻塞／capture=false保留歷史；TE-03／TE-04已完成新版四真圖及bounded互動／focus／canonical keyboard取證，RV-02approved。完整traversal／VoiceOver／大字／對比與motion啟用條件仍pending。舊兩次push拒絕保留；Human明確公開payload授權後已正常push source6fc18b3，Draft PR66已建立，HC-01仍pending。
-- Graphify 沒圖可 source fallback；PR Lens 必須真 SHA；GUI 環境／Keyboard Navigation／VoiceOver 未驗分支如實 pending／blocked。
+- HC-02三缺口仍open：PAT verifying自動只讀scroll area；waiting從Welcome只讀展示版不能連接GitHub的說明、從Retry只讀footer；13／15點時Codex變大而Demo未變，大字未驗。七類Human通過保留，三缺口補驗前HC-01不全面通過。舊發布拒絕已由明確公開授權解除，與新原生缺口分開。
+- Graphify沒圖的source fallback、PL-02真source map及TE-04舊證據保留來源；HC-02真Human朗讀與工具背景送鍵分開，不將背景無朗讀當缺陷。EX-01只確認可信時序候選及macOS Dynamic Type限制；PC-03採局部13／17／21 pt真字級，不宣稱系統偏好整合；PR-03已approved，IM-05已實作，仍待新版native／Human補驗。
 - Archify Showcase diagnostics 與 perceptual correction 的停止規則分開適用，以 technical-spec／plan 原值為準，不把兩者合成一個兩輪上限。
 - Exact paths 之外的 repo 輸出或 scope／baseline 衝突回 planning；外置 scratch 不加入 repo／staged diff。
 
@@ -63,7 +73,7 @@ HC-00 是方案接受及直接執行授權。Staged diff 邊界與 message 檢�
 
 ## Last Updated
 
-2026-10-22（Asia/Taipei）；RV-02 approved／focus defect closed、TE-04 bounded native passed；source6fc18b3正常公開push、Draft PR66與PL-02 bounded source map完成。進Human review／HC-01pending；完整traversal／VoiceOver／大字／對比與motion啟用條件仍pending。本輪只補兩檔metadata，不預填自身commit SHA。
+2026-11-04（Asia/Taipei）；TE-05 partial completed，獨立RV-03 approved／required source fix None；準備13檔topic commit／正常公開push，PL-03待真commit後獨立產生。18 rawJPEG與四canonical PNG來源限制保留；HC-01／HC-03 pending，三入口聲音／Human新版大字／rapid仍未closed。此記錄不預填commit／push成功，source與binary凍結不改。
 
 ## PC-02：必要測試契約修正與已知驗證限制
 
@@ -85,7 +95,7 @@ HC-00 是方案接受及直接執行授權。Staged diff 邊界與 message 檢�
 
 ### In-Scope
 
-non-BC `RivetPresentation` 登入元件、獨立原生 Demo、假狀態模型、七份素材保存與 artwork、native 操作／accessibility、必要測試及文件；Graphify bounded navigation、Archify 七態 lifecycle、PR Lens 實際變更圖，作為同一 UI 交付的理解／驗證證據。
+non-BC `RivetPresentation` 登入元件、獨立原生 Demo、假狀態模型、七份素材保存與 artwork、native 操作／accessibility、必要測試及文件；Graphify bounded navigation、Archify 七態 lifecycle、PR Lens 實際變更圖，作為同一 UI 交付的理解／驗證證據。 PC-03僅追加兩類狀態宣告修補與Demo局部13／17／21 pt真字級驗收；系統文字大小偏好整合仍未交付。
 
 ### Out-Of-Scope
 
@@ -168,8 +178,8 @@ None。
 | LU-02 | 假 GitHub／PAT 成功、失敗、取消、Retry、Reset；另送 stale／重複 intent。 | 七態可達；不重複啟動；取消無 error；connected 停留；沒有外部呼叫。 | `LoginDemoModelTests`＋原生實際操作。 | §2／11／13；AC-NI-030。 |
 | LU-03 | PAT 空白、外圍 whitespace、非固定 prefix、Show／Hide、submit、Back、token failure。 | 空白不能送；只 trim 外圍；不驗 prefix；顯示切換保留文字與編輯 focus；送出／離開清除；failure 仍可重填表單。 | `RivetLoginPresentationTests`＋原生操作；證據不保存輸入值。 | §3／10／13；素材 Spec §4 PAT。 |
 | LU-04 | System／Light／Dark、主窗 active／inactive、Increase Contrast。 | 外觀依系統或展示設定；品牌兩態深色；focus／disabled／error／success 不只靠顏色。 | 原生檢查，記錄實際系統條件。 | §7／10；AC-NI-026／035／036。 |
-| LU-05 | 標準／放大文字、視窗增大、Reduce Motion。 | 無表單／footer 遮擋；核心操作可達；必要時垂直捲動，無水平捲動；非必要動畫不延遲狀態／focus。 | Preview／host 原生檢查，記錄實際文字大小及視窗尺寸。 | §8／10；AC-NI-028。 |
-| LU-06 | Keyboard／VoiceOver 逐態進入及操作。 | focus 符合 spec；label／heading／disabled／局部更新可理解；裝飾不重複朗讀；不攔截全域鍵盤。 | 原生操作／可得 AX evidence；記錄 Keyboard Navigation 設定；缺條件分支 pending／blocked，不冒充 pass。 | §3／7／10；AC-NI-026／030。 |
+| LU-05 | Demo局部13／17／21 pt、780×500 pt最小content與增大視窗；Reduce Motion。 | 右側heading／欄位／按鈕／說明／error／footer真字級依同一比例放大；無遮擋／截斷；footer及核心操作可垂直捲動到達，無水平捲動；非必要動畫不延遲狀態／focus。 | 同一point-size入口的Preview與host原生實看；記錄有效字級／比例、視窗尺寸、binary SHA。不能用Dynamic Type／系統13或15點未生效的操作當大字pass；系統偏好整合未交付。 | §8／10；AC-NI-028；PC-03。 |
+| LU-06 | 真PAT submit、Welcome→waiting、browser Retry→waiting；Keyboard／VoiceOver逐態與快速離開回歸。 | 無需手動進入scroll area即可理解正在驗證／等待；既有focus落點不變，Cancel／Escape可操作；每次phase entry局部宣告一次，過期工作不拉回focus或播報舊狀態；既有label／heading／disabled與裝飾reading order不回歸。 | Tester核新版AX／focus及來源，Human親聽三真入口並逐項回報；Controls直接show phase不替代入口；AX、背景送鍵或build不替代朗讀。缺項保持pending，保留HC-02原binary通過。 | §3／7／10；AC-NI-026／030；PC-03。 |
 | LU-07 | Source／dependency／copy／path review。 | 無真登入、network、Keychain、persistence 或外部 help 副作用；文案明示模擬；既有 BC／兩驗證 App 不變；所有變更限 exact paths。 | 獨立 Reviewer 核對實際 diff、imports、manifest、provenance。 | §1／2／11／13；AC-NI-030。 |
 | LU-08 | bounded 自動驗證、target graph 同步及 native host 啟動。 | focused／root tests、demo debug／release build、format 成功；StaticIsolationTests 僅同步新增 Demo product／三個 targets 的 expected sets，所有 GitHubIntegration 隔離斷言不變。Root strict lint 如實記錄非0，Tester 核對 baseline 舊 findings 無回歸、原素材 SHA 未改及新增 production／tests scoped strict 0；不得為全局0修改 experiments／原素材。GUI 獨立分類，不把啟動成功當原生驗收。 | Tester 獨立跑計畫命令、targeted StaticIsolationTests、baseline／current lint 與 scoped strict 比對、verification matrix；root test 未重跑前不得宣稱修復，root lint 不冒 pass。 | §13；LU-01～07；既有 GitHubIntegration isolation contract。 |
 | LU-09 | Graphify availability／revision 檢查。 | 有可用圖時 bounded query 後 source 核實；無圖／過期／失敗則 targeted reads；沒有建圖、refresh、stamp／config／hooks 等額外 repo 輸出。 | 記錄 pinned invocation 或具體 fallback 原因與 source locations。 | Graphify local skill；Human 工具要求；§13。 |
@@ -247,3 +257,41 @@ Implementer本輪只準備stage既有View、verification／step與4真PNG共7檔
 IM-04 source commit `6fc18b3c040997155d84ca85abba48abc1a61d6c`已正常公開push且ls-remote同SHA；完整hooks passed。Dispatcher已建立並attach [Draft PR #66](https://github.com/a129924/rivet/pull/66)，draft=true、base dev建立時SHA613a505，source head6fc18b3；未merge／release。PL-02已依真PR base與source head完成本地map，三點merge-base14d0832／40files，pinned validate／render0，23file refs exactsource核對；完整hash／外置位置見verification。Map只含source6fc18b3，不冒稱本輪後續metadata head，僅XMLlabels核對未raster實看。
 
 目前Human review／HC-01pending。RV-02 approved／required fix None、focus defect closed與TE-04 bounded pass保持；公開payload授權不等於成果採用。完整traversal／VoiceOver朗讀、大字、IncreaseContrast／ReduceMotion啟用條件仍pending。本輪只更新verification／step，不改code／tests／四PNG／Archify，不重跑GUI或產圖；最終metadata commit不在自身回填SHA。
+
+
+## HC-02：Human partial／needs-rework 交接（2026-11-04）
+
+以主對話Human完整交接為來源，2026-11-04僅是交接／正式回寫日，不補造每項操作時間。受測binary SHA `1009d4464106663e8ab554082ef7faea9d79adf80474f9a65c7677845731b873`；暫存App包遺失已修復、使用相同執行檔重啟後驗收，交接側無source／Git改動。本輪只回寫verification／step，不改其他三份正式contract、source／tests／素材／PNG／圖面，不commit／push／改PR或操作UI／系統設定。
+
+七類Human通過與適用範圍詳verification HC-02。新needs-rework僅三缺口：PAT verifying自動只讀scroll area；waiting由Welcome只讀展示版無法連接說明、由失敗重試只讀footer；13／15點Codex變大而Demo不變，大字未驗。失敗宣告初次state未確認且工具讀Welcome／後重跑Human正確失敗訊息通過，兩者均保留，不推論偶發bug。CapsLock＋方向鍵／CapsLock＋Shift＋↓為Human操作；背景送鍵沒有朗讀不作產品缺陷證據；原生spinner旋轉只列觀察。
+
+依Human交接已還原文字大小預設，增加對比／減少透明度／Reduce Motion／VoiceOver均關閉；Demo System／Welcome、shouldFail off、failure origin Browser。舊focused10／root284／debug／release／format／scopedlint／hooks只保留原來源，本輪未重跑；rootstrict非零。HC-01維持pending與尚未全面通過；先EX-01調查，再依證據交IM-05／TE-05／RV-03，不預填任何新設計、通過或approval，不重開鎖定決策，無merge／release授權。
+
+## PC-03：EX-01調查後的最小planning delta（2026-11-04）
+
+Explorer已明示planning sufficiency approved；焦點／宣告同步及共用Bool只是source支持的可信候選，尚未native證明唯一root cause。Apple Dynamic Type在macOS不影響文字大小的限制已寫technical-spec；原ScaledMetric與大字Preview不算system integration或大字pass。
+
+本輪只修四正式planning文件，鎖定掛載後phase對應的可取消focus／去重宣告，保持waiting Cancel、verifying／connected status heading等既有落點；並採Demo局部13／17／21 pt真字級。公開init唯一增量bodyPointSize預設13置onIntent前，finite clamp13...21／非finite回13；改字級不清PAT或改form identity，Reset保留字級。右側文字同比放大，左側裝飾固定且AX隱藏，Preview同真入口。這是LU-05可重現測法，macOS系統文字大小偏好整合未交付。
+
+ReadOnly10／Written36／Modify4／Deleted None不變、不新增repo path；實作限plan PC-03所列既有檔案，七原素材／凍結Archify不改，Graphify與本地PR Lens原工具契約保留。先獨立PR-03明示approved，再IM-05→TE-05→獨立RV-03；成果approved後沿既有staged邊界／message、topic commit／正常public push及Draft PR66更新授權，不merge／release。新版三真入口需Human親聽，大字需有效13／17／21 pt實看，HC-03逐項等回報；AX／舊binary pass／Controls直切不能替代。
+
+
+## IM-05：PR-03後bounded source交接（2026-11-04）
+
+Dispatcher正式交接獨立PR-03 approved／required fix None後，已完成phase-specific、可取消的focus／announcement分序與await後stale檢查；bodyPointSize預設13、finite clamp13...21／非finite13，Demo局部13／17／21真font、改size保留form／Reset保留size、Preview及長期docs同步。未改七態／intent／BC／manifest／原素材／四PNG／凍結圖，未新增repo檔。自驗focused15／root289／debug與release／format／scoped0通過，rootstrict39非0；首red與中途lint修正、精確source／binary SHA與logs見verification IM-05。
+
+本輪不操作UI／VoiceOver／系統設定、未改既有wrapper，仍是原binary。交TE-05核新binary、三真入口AX／focus與13／17／21 pt實看，再RV-03；HC-03必須Human逐項等待回報，AX／unit／build不冒聲音pass。HC-02原七類pass與三缺口原文保留，HC-01／HC-03 pending；未stage／commit／push／改PR或跑hooks。
+
+
+## TE-05 handoff（2026-11-04）
+
+本Tester親跑focused15／root289／debugrelease／format／scoped136files0／diffcheck0，rootstrict39=舊experiments37＋原樣prototype2，九個finding files與七原素材均與HEADbytes相等。Source／binary SHA凍結核對通過，舊Demo由主對話Tester CUA正常Quit後才換既有wrapper；沒有替代UI技術。
+
+主對話Tester CUA完成真PATsubmit、Welcome→waiting、Retry→waiting與Cancel／單步Escape、Show／Hide持續編輯／清除；13／17／21×五畫面真字級及垂直scroll可達。本Tester獨立實看18外置rawJPEG（原錯`.png`僅rename`.jpg`、bytes不變，1560×1064含CUA白padding），沒有改原四canonical PNG來源。工具批次rapid送鍵結果無法判定，不當pass或產品bug；VOoff不當聲音／targetfocus成功。
+
+TE-05為completed／partial verification，執行項目無新required source fix觀察，交獨立RV-03判source與證據；HC-02七類舊pass留源，三缺口的Human朗讀／新版大字親驗、rapid回歸與HC-01／HC-03 pending。最終System／Welcome13、failure off、Browser origin，Controls關閉可⌘0開；沒有改全域設定。本Tester只寫verification／step，不改source／tests／contract／PNG，不stage／commit／push／改PR。
+
+
+## RV-03後交付準備（2026-11-04）
+
+Dispatcher正式交接獨立RV-03 approved／required source fix None；TE-05 partial證據與HC-02舊七類pass完整保留，三缺口及HC-01／HC-03不closed。只收尾verification／step目前摘要，不改凍結source、tests、docs或圖像bytes；依Human既有直接topic commit與具體public payload授權，核精確13檔單topic diff與message後保留完整hooks，正常push feature，不動dev、不force／rebase／merge／release。此處未預填新SHA／成功；PL-03仍pending，交真source commit後的獨立Reviewer，PR操作留Dispatcher。

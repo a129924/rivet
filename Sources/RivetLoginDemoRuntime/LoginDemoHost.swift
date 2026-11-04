@@ -29,7 +29,7 @@ public final class LoginDemoHost: NSObject, NSWindowDelegate {
     window = main
 
     let panel = NSWindow(
-      contentRect: NSRect(x: 0, y: 0, width: 310, height: 390),
+      contentRect: NSRect(x: 0, y: 0, width: 310, height: 500),
       styleMask: [.titled, .closable], backing: .buffered, defer: false
     )
     panel.title = "Rivet Demo Controls"
@@ -111,6 +111,7 @@ private struct LoginDemoRoot: View {
     RivetLoginView(
       phase: model.phase,
       footer: "UI demonstration · No GitHub requests or credential storage.",
+      bodyPointSize: model.textSize.bodyPointSize,
       onIntent: model.handle
     )
     .id(model.formIdentity)
@@ -168,6 +169,14 @@ private struct LoginDemoControls: View {
         ForEach(DemoAppearance.allCases, id: \.self) { Text($0.rawValue).tag($0) }
       }
       .pickerStyle(.segmented).onChange(of: appearance) { _, value in onAppearance(value) }
+      Picker("Demo text size", selection: $model.textSize) {
+        ForEach(LoginDemoTextSize.allCases, id: \.self) { size in
+          Text("\(size.rawValue) pt").tag(size)
+        }
+      }
+      .pickerStyle(.segmented)
+      Text("Demo text only; not linked to system text-size preferences.")
+        .font(.caption).foregroundStyle(.secondary)
       Picker(
         "Display state",
         selection: Binding(

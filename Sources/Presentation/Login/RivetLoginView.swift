@@ -4,25 +4,35 @@ import SwiftUI
 public struct RivetLoginView: View {
   public let phase: RivetLoginPhase
   private let footer: String
+  private let typography: RivetLoginTypography
   private let onIntent: (RivetLoginIntent) -> Void
   @Environment(\.colorScheme) private var scheme
   @Environment(\.colorSchemeContrast) private var contrast
-  @ScaledMetric(relativeTo: .body) private var bodySize: CGFloat = 13
   @State private var token = RivetLoginTokenInput()
   @FocusState private var focus: Focus?
-  @AccessibilityFocusState private var statusFocused: Bool
+  @AccessibilityFocusState private var accessibilityFocus: AccessibilityFocus?
+  @State private var focusPhase: RivetLoginPhase?
+
+  private enum AccessibilityFocus: Hashable {
+    case welcomeAction, tokenEntry, tokenFailure, waitingCancel
+    case accountStatus, tokenStatus, browserRetry, connectedStatus
+  }
   private enum Focus: Hashable { case primary, secureToken, visibleToken, cancel, retry }
 
   public init(
-    phase: RivetLoginPhase, footer: String, onIntent: @escaping (RivetLoginIntent) -> Void
+    phase: RivetLoginPhase, footer: String, bodyPointSize: CGFloat = 13,
+    onIntent: @escaping (RivetLoginIntent) -> Void
   ) {
     self.phase = phase
     self.footer = footer
+    self.typography = RivetLoginTypography(bodyPointSize: bodyPointSize)
+    self._focusPhase = State(initialValue: phase)
     self.onIntent = onIntent
   }
 
   private var palette: RivetLoginPalette { RivetLoginPalette(dark: scheme == .dark) }
-  private var scale: CGFloat { bodySize / 13 }
+  private var bodySize: CGFloat { typography.bodyPointSize }
+  private var scale: CGFloat { typography.scale }
   private var tokenFocus: Focus { token.showsToken ? .visibleToken : .secureToken }
 
   public var body: some View {
@@ -48,13 +58,18 @@ public struct RivetLoginView: View {
         .font(.system(size: bodySize))
       }
     }
-    .onAppear { moveFocus() }
-    .onChange(of: phase) { oldPhase, newPhase in
+    .onChange(of: phase, initial: true) { oldPhase, newPhase in
       if oldPhase.isTokenForm && !newPhase.isTokenForm { token.clear() }
-      moveFocus()
-      announceStatus()
+      focusPhase = newPhase
+      accessibilityFocus = nil
+      focus = nil
     }
-    .onDisappear { token.clear() }
+    .task(id: phase) { await coordinatePhaseEntry(phase) }
+    .onDisappear {
+      focusPhase = nil
+      accessibilityFocus = nil
+      token.clear()
+    }
   }
 
   @ViewBuilder private var content: some View {
@@ -64,8 +79,10 @@ public struct RivetLoginView: View {
       switch phase {
       case .welcome: welcome
       case .waitingForBrowser: waiting
-      case .verifyingAccount: progress(title: "Simulating account\nverification…")
-      case .verifyingToken: progress(title: "Simulating token\nverification…")
+      case .verifyingAccount:
+        progress(title: "Simulating account\nverification…", target: .accountStatus)
+      case .verifyingToken:
+        progress(title: "Simulating token\nverification…", target: .tokenStatus)
       case .failure(let failure): browserFailure(failure)
       case .connected: connected
       case .tokenEntry: EmptyView()
@@ -83,6 +100,7 @@ public struct RivetLoginView: View {
       .padding(.top, 14)
       primaryButton("Continue with GitHub", intent: .beginGitHubSignIn, github: true)
         .focused($focus, equals: .primary)
+        .accessibilityFocused($accessibilityFocus, equals: .welcomeAction)
         .padding(.top, 30)
       textButton("Use a personal access token →", intent: .showTokenEntry)
         .frame(maxWidth: .infinity).padding(.top, 16)
@@ -136,8 +154,10 @@ public struct RivetLoginView: View {
       }
       .textFieldStyle(.plain).font(.system(size: 12 * scale, design: .monospaced))
       .accessibilityLabel("Personal access token — example input only")
+      .accessibilityFocused($accessibilityFocus, equals: accessibilityTarget(for: phase))
       .onSubmit(submitToken)
       Button(token.showsToken ? "Hide" : "Show") {
+        accessibilityFocus = nil
         token.showsToken.toggle()
       }
       .buttonStyle(.plain).foregroundStyle(palette.secondary)
@@ -152,10 +172,12 @@ public struct RivetLoginView: View {
           lineWidth: focus == tokenFocus || contrast == .increased ? 2 : 1)
     }
     .task(id: token.showsToken) {
+      let entryPhase = phase
       // Allow the previous text control to resign before focusing its replacement.
       await Task.yield()
-      guard !Task.isCancelled else { return }
+      guard !Task.isCancelled, focusPhase == entryPhase, entryPhase.isTokenForm else { return }
       focus = tokenFocus
+      accessibilityFocus = accessibilityTarget(for: entryPhase)
     }
   }
 
@@ -174,14 +196,15 @@ public struct RivetLoginView: View {
       .background(palette.surface, in: RoundedRectangle(cornerRadius: 9))
       textButton("Cancel sign in", intent: .cancelSignIn)
         .focused($focus, equals: .cancel).frame(maxWidth: .infinity)
+        .accessibilityFocused($accessibilityFocus, equals: .waitingCancel)
         .keyboardShortcut(.cancelAction)
     }
   }
 
-  private func progress(title: String) -> some View {
+  private func progress(title: String, target: AccessibilityFocus) -> some View {
     VStack(alignment: .leading, spacing: 16) {
       statusIcon { ProgressView().controlSize(.regular) }
-      heading(title)
+      heading(title).accessibilityFocused($accessibilityFocus, equals: target)
       description(
         "UI demonstration only. No request is sent and no credential is stored. Complete the simulation in Demo Controls."
       )
@@ -196,6 +219,7 @@ public struct RivetLoginView: View {
       heading("Couldn't connect\nto GitHub.")
       description(failure.message)
       primaryButton("Try again", intent: .retry).focused($focus, equals: .retry)
+        .accessibilityFocused($accessibilityFocus, equals: .browserRetry)
       textButton("Use a personal access token →", intent: .showTokenEntry).frame(
         maxWidth: .infinity)
     }
@@ -207,6 +231,7 @@ public struct RivetLoginView: View {
         Image(systemName: "checkmark.circle").font(.system(size: 24)).foregroundStyle(.green)
       }
       heading("You're connected.\nIn this simulation.")
+        .accessibilityFocused($accessibilityFocus, equals: .connectedStatus)
       description(
         "The UI demonstration is complete. No GitHub account was connected. Use Demo Controls to reset or inspect another state."
       )
@@ -225,7 +250,6 @@ public struct RivetLoginView: View {
   private func heading(_ text: String, size: CGFloat = 26) -> some View {
     Text(text).font(.system(size: size * scale, weight: .bold)).tracking(-0.65)
       .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
-      .accessibilityFocused($statusFocused)
   }
 
   private func eyebrow(_ text: String) -> some View {
@@ -289,23 +313,50 @@ public struct RivetLoginView: View {
     onIntent(.submitToken(value))
   }
 
-  private func moveFocus() {
-    switch phase {
-    case .welcome: focus = .primary
-    case .tokenEntry: focus = tokenFocus
-    case .waitingForBrowser: focus = .cancel
-    case .failure(let failure): focus = failure.origin == .token ? tokenFocus : .retry
-    default:
-      focus = nil
-      statusFocused = true
+  private func keyboardTarget(for entryPhase: RivetLoginPhase) -> Focus? {
+    switch entryPhase {
+    case .welcome: .primary
+    case .tokenEntry: tokenFocus
+    case .waitingForBrowser: .cancel
+    case .failure(let failure): failure.origin == .token ? tokenFocus : .retry
+    default: nil
     }
   }
 
-  private func announceStatus() {
+  private func accessibilityTarget(for entryPhase: RivetLoginPhase) -> AccessibilityFocus {
+    switch entryPhase {
+    case .welcome: .welcomeAction
+    case .tokenEntry: .tokenEntry
+    case .waitingForBrowser: .waitingCancel
+    case .verifyingAccount: .accountStatus
+    case .verifyingToken: .tokenStatus
+    case .connected: .connectedStatus
+    case .failure(let failure): failure.origin == .token ? .tokenFailure : .browserRetry
+    }
+  }
+
+  private func coordinatePhaseEntry(_ entryPhase: RivetLoginPhase) async {
+    guard !Task.isCancelled, focusPhase == entryPhase else { return }
+    accessibilityFocus = nil
+    await Task.yield()
+    guard !Task.isCancelled, focusPhase == entryPhase else { return }
+    focus = keyboardTarget(for: entryPhase)
+
+    await Task.yield()
+    guard !Task.isCancelled, focusPhase == entryPhase else { return }
+    accessibilityFocus = accessibilityTarget(for: entryPhase)
+
+    await Task.yield()
+    guard !Task.isCancelled, focusPhase == entryPhase else { return }
+    announceStatus(for: entryPhase)
+  }
+
+  private func announceStatus(for entryPhase: RivetLoginPhase) {
     let message: String
-    switch phase {
+    switch entryPhase {
     case .waitingForBrowser: message = "Waiting for simulated authorization."
-    case .verifyingAccount, .verifyingToken: message = "Simulated verification in progress."
+    case .verifyingAccount: message = "Simulating account verification."
+    case .verifyingToken: message = "Simulating token verification."
     case .failure(let failure): message = failure.message
     case .connected: message = "Simulation complete. No account was connected."
     default: return

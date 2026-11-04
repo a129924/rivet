@@ -61,3 +61,12 @@ struct RivetLoginTokenInput {
     showsToken = false
   }
 }
+
+struct RivetLoginTypography {
+  let bodyPointSize: CGFloat
+  var scale: CGFloat { bodyPointSize / 13 }
+
+  init(bodyPointSize: CGFloat) {
+    self.bodyPointSize = bodyPointSize.isFinite ? min(21, max(13, bodyPointSize)) : 13
+  }
+}
