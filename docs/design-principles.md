@@ -18,7 +18,7 @@
 - Presentation Session 是 UI 狀態，不是假裝成 Bounded Context。
 - `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
 
-`GitHubOAuthDataProtectionStores` 已實作完整 OAuth credential／configuration 的 DPK adapter；同 facade 的 views 共用 actor，保留 provider lifecycle ownership。公開契約與 fake-only 驗證限制見[憑證儲存](architecture/github-oauth-credential-persistence.md)；真簽章、跨程序讀取與系統提示仍須獨立驗證。
+`GitHubOAuthDataProtectionStores` 已實作完整 OAuth credential／configuration 的 DPK adapter；同 facade 的 views 共用 actor，保留 provider lifecycle ownership。公開契約與證據界線見[憑證儲存](architecture/github-oauth-credential-persistence.md)。完整假 credential 已在指定簽章環境通過跨程序 A／B、整筆替換及同身分真正重建還原，五個 runtime 的 Human 全程觀察均為 0 提示；不推及真 OAuth、產品登入、configuration item、其他環境或斷電 durability，未清理與 Human 接受項仍另列。
 
 ## 工作方法
 

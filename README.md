@@ -23,7 +23,7 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 完整 REST endpoint 能力、各 BC adapters、初次 OAuth 授權與產品登入仍延後。合法 raw REST 與 Apollo partial／errors-only responses 保持；有限 technical errors 與 cancellation 不形成 shared BC failure contract。
 
-`GitHubOAuthDataProtectionStores` 已提供 caller-owned DPK configuration／完整 OAuth credential stores，使用 host 明確指定的 access group，支援 clientID 綁定、完整替換與有限錯誤；既有 provider／clients 契約維持。本 topic 的證據限 fake Security 與受控 provider 測試，真簽章、跨程序 DPK、重建與提示 UX 尚未驗證；它與 E007／整套登入驗證為獨立工作線。詳見[OAuth 憑證儲存](docs/architecture/github-oauth-credential-persistence.md)。
+`GitHubOAuthDataProtectionStores` 已提供 caller-owned DPK configuration／完整 OAuth credential stores，使用 host 明確指定的 access group，支援 clientID 綁定、完整替換與有限錯誤；既有 provider／clients 契約維持。除 fake Security 與受控 provider 測試外，2026-11-05 已在指定簽章環境，以完整假憑證完成正式 adapter 的保存 A、程序結束後 fresh A、整筆替換 B、fresh B 及同身分真正重建後 fresh B；五個 runtime 均有人類全程觀察、0 次提示，經獨立驗證／審查通過。這不代表真 OAuth／產品登入、configuration item 的 live 驗收、所有環境或斷電 durability；本輪未清理，圖的 Human 視覺接受及 topic Human review 仍待確認。它與 E007／整套登入驗證為獨立工作線。詳見[OAuth 憑證儲存](docs/architecture/github-oauth-credential-persistence.md)。
 
 Rivet 目前是可公開的 architecture baseline repository。它保留產品與架構決策、Bounded Context Map，以及 Swift／Node 版本基線；root Swift package 已包含受限的產品實作。
 

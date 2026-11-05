@@ -31,3 +31,12 @@ Consumer 的唯讀基線 Sendable compiler warnings 已揭露；不宣稱 build 
 PR Lens 真 committed diff／local map 與 publication 證據按既有計畫在實際 source commit 後補齊；目前 pending 不誤作 code correctness 缺口。Graphify 無圖的 source fallback 已記錄。Human 圖面接受仍 pending，交 Draft PR review；不包含 merge。
 
 真 DPK、程序終止後 durability、重建、signing／entitlements、系統提示與真 OAuth 未經本 topic 驗證，也不依賴他人的 E007／renewal gate。本 approval 僅涵蓋已授權的 adapter、fake-only 驗證與文件交付，不代替上述 live／Human acceptance。
+
+
+## LG86 Reviewer：文件交付收尾（2026-11-05）
+
+**completed／approved；required fixes=[]。** 獨立審Implementer新增六docs/publication真diff及LG85原checks/RF解除，非以本人原LG81/LG83證據自批。能力文字限定指定環境完整假bundle的真DPK/freshprocess/真同身分重建；五runtime Human0與首sign permission-only範圍不擴，provider rotation/persist-stop另明假backend，不推真refresh/登入/API/configuration/拒絕/斷電。圖歷史snapshot/技術QA與Humanvisual/S08/LC06及五conflict整合未完成均保留；PR僅本地Draft草案，未改公開contract。ValidationREADME新doc hash與舊buildsource9分離、歷史命令不再代表續行授權。
+
+實讀LG85對7文件61相對/headinglinks及有限secret/abs/whitespace結果與一行RF複驗；另純讀重算21 readonly leaves全符、兩個人metadata checkpoint全符、index空及git diff --check通過，未重套件/工具/live。只topic-owned D/P/E/V exact實際變更可交LG87 stage；排除個人metadata/xcuserdata/私有資產，不add-A、不reset未知index。Stage後須git-commit-convention檢真正staged語意/message交LG88 Human，不commit/push/merge/rebase/PRwrite。
+
+語意建議（非staged skill審查或已批准message）：本topic驗證工具、必要證據與長期docs是一個完整交付語意，可單一commit，無需形式拆分；若LG87真staged出現不相干path則停止回報而非自拆/改index。整Topic/S08/visual/cleanup/整合仍未完成。本Reviewer只追加自身review/ledger並對齊現在metadata，未改受審文件/source或stage/資產/live。

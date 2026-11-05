@@ -53,7 +53,7 @@ Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.pre
 
 `GitHubOAuthDataProtectionStores` 是既有 non-BC GitHubIntegration 內的 additive adapter，保存兩個獨立 items：configuration 與完整 OAuth credential envelope。Caller 指定 explicit private access group；同 facade 的 actor 序列化 read-check-write，bound clientID 不符或資料損毀時不覆寫，provider 的 refresh／persist-stop policy 不變。
 
-[儲存契約與 sequence](github-oauth-credential-persistence.md)補述此 adapter；既有雙 client 圖未涵蓋這個新儲存實作。本次只驗 fake Security 與受控 provider，未驗真簽章、跨程序 DPK、重建或提示 UX，不表示產品登入完成。
+[儲存契約與 sequence](github-oauth-credential-persistence.md)補述此 adapter；既有雙 client 圖未涵蓋這個新儲存實作。Fake Security／受控 provider 的契約驗證之外，指定簽章環境已以完整假 credential 完成 A→fresh A→整筆 B→fresh B→同身分真正重建→fresh B，五個 runtime Human 全程觀察均 0 提示，獨立審查通過。這不表示真 OAuth／產品登入、configuration item、其他環境或斷電 durability 已驗；cleanup 與 Human 接受仍未完成。原 sequence 是初始 adapter snapshot，不涵蓋後來的驗證 host／authority 流程，Human 視覺接受仍 pending。
 
 ### AuthorizationHeader 純轉換
 
