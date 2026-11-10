@@ -5,6 +5,23 @@ import Testing
 @Suite("GitHubIntegration public consumer API")
 struct PublicAPITests {
   @Test
+  func configurationRetainsTypedThrowsAndUntrimmedPublicFieldsAcrossTargets() throws {
+    let constructor:
+      (String, String) throws(GitHubOAuthAppConfigurationError) ->
+        GitHubOAuthAppConfiguration = GitHubOAuthAppConfiguration.init(clientID:clientSecret:)
+    let configuration = try constructor(" \t", " \n")
+    #expect(configuration.clientID == " \t")
+    #expect(configuration.clientSecret == " \n")
+    #expect(throws: GitHubOAuthAppConfigurationError.invalidConfiguration) {
+      try constructor("", "fixture-secret")
+    }
+    #expect(throws: GitHubOAuthAppConfigurationError.invalidConfiguration) {
+      try constructor("fixture-id", "")
+    }
+    #expect(!String(reflecting: configuration).contains(configuration.clientSecret))
+  }
+
+  @Test
   func initialOAuthCanBeConstructedAcrossTargetsWithoutConcreteTypes() async throws {
     let configuration = try GitHubOAuthAppConfiguration(
       clientID: "fixture-id", clientSecret: "fixture-secret")
@@ -71,6 +88,27 @@ struct PublicAPITests {
     assertSendable(refreshToken)
     assertSendable(bundle.tokenType)
     assertSendable(bundle)
+  }
+
+  @Test
+  func dataProtectionStoresExposeCallerOwnedPublicContractsWithoutAccessingSecurity() throws {
+    let configuration = try GitHubOAuthAppConfiguration(
+      clientID: "consumer-app", clientSecret: "consumer-secret")
+    let stores = try GitHubOAuthDataProtectionStores(accessGroup: "consumer.explicit.group")
+    let credentials: any OAuthCredentialStore = stores.credentialStore(
+      clientID: configuration.clientID)
+    let configurations: any GitHubOAuthAppConfigurationStore = stores.configurationStore
+    let inspect: @Sendable () async throws -> GitHubOAuthStoredCredential? = {
+      try await stores.inspectCredential()
+    }
+    assertSendable(configuration)
+    assertSendable(stores)
+    assertSendable(credentials)
+    assertSendable(configurations)
+    assertSendable(inspect)
+    assertSendable(GitHubOAuthDataProtectionStoreError.identityMismatch)
+    assertSendable(GitHubOAuthAppConfigurationError.invalidConfiguration)
+    #expect(!String(reflecting: configuration).contains("consumer-secret"))
   }
 
   @Test

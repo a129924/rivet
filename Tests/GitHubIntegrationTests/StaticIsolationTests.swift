@@ -353,8 +353,7 @@ struct StaticIsolationTests {
       .appendingPathComponent("Sources/BoundedContexts/GitHubIntegration")
 
     let expectedPaths: Set = [
-      "Contracts/CredentialTypes.swift",
-      "Contracts/GitHubAccessTokenProvider.swift",
+      "Contracts/CredentialTypes.swift", "Contracts/GitHubAccessTokenProvider.swift",
       "Contracts/GitHubOAuthCredentialBundle.swift",
       "Contracts/GitHubOAuthAppConfiguration.swift",
       "Contracts/GitHubTokenStore.swift",
@@ -383,6 +382,7 @@ struct StaticIsolationTests {
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift",
       "Stores/KeychainTokenStore.swift",
+      "Stores/GitHubOAuthDataProtectionStores.swift",
     ]
 
     let actualPaths = try sourcePaths(in: sourceDirectory)
@@ -424,7 +424,10 @@ struct StaticIsolationTests {
       }
       #expect(imports.isDisjoint(with: forbiddenForFile))
 
-      if path == "Stores/KeychainTokenStore.swift" {
+      let securityFiles: Set = [
+        "Stores/KeychainTokenStore.swift", "Stores/GitHubOAuthDataProtectionStores.swift",
+      ]
+      if securityFiles.contains(path) {
         #expect(imports == ["Foundation", "Security"])
       } else {
         #expect(!imports.contains("Security"))

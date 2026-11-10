@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-oauth-credential-persistence/storage-sequence.json",
+  "output": "docs/architecture/diagrams/github-oauth-credential-persistence/storage-sequence.html",
+  "specification": {
+    "sha256": "c15ec952b7676031c8fafc3d11199a19787e6fb6a555a2928bd76d521f419de1",
+    "bytes": 2651
+  },
+  "artifact": {
+    "sha256": "89fbde70f5bc931e258f1a1640ffb975ca238d97c63cb1c4cec0bc6d207ced95",
+    "bytes": 699135
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

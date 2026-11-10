@@ -8,8 +8,8 @@
 
 ## Non-Goal
 
-- 已交付 internal OAuth App token-response DTO → public immutable credential bundle mapping，以及 public `OAuthCredentialStore`／`OAuthTokenFetcher` ports、`TokenSnapshot` 與 actor-isolated `OAuthTokenProvider` finite failure contract；不定義 Keychain credential storage schema；internal refresh adapter 已定義固定 endpoint 與 form payload。
-- 本文件聚焦既有 credential 的 lifecycle；`github-persistent-connection` 的 authorization code／PKCE／callback 驗證實作只在獨立 `apps/GitHubConnectionVerification`，不在該 topic 擴張正式 GitHubIntegration。`github-account-login-feasibility`／PR #63 則另納入初次 OAuth 配置／factory／一次性 session／code exchange 的既有 shared 實作與獨立驗證 host，見[初次登入契約](github-first-sign-in.md)。正式產品登入、正式 OAuth credential 持久化 adapter 與 production secret custody 仍延後；logout、revoke、多帳號、PAT 與 GitHub Enterprise 仍不在範圍。
+- 已交付 internal OAuth App token-response DTO → public immutable credential bundle mapping，以及 public `OAuthCredentialStore`／`OAuthTokenFetcher` ports、`TokenSnapshot` 與 actor-isolated `OAuthTokenProvider` finite failure contract；DPK credential storage schema 見[儲存契約](github-oauth-credential-persistence.md)；internal refresh adapter 已定義固定 endpoint 與 form payload。
+- 本文件聚焦既有 credential 的 lifecycle；`github-persistent-connection` 的 authorization code／PKCE／callback 驗證實作只在獨立 `apps/GitHubConnectionVerification`，不在該 topic 擴張正式 GitHubIntegration。`github-account-login-feasibility`／PR #63 則另納入初次 OAuth 配置／factory／一次性 session／code exchange 的既有 shared 實作與獨立驗證 host，見[初次登入契約](github-first-sign-in.md)。正式 DPK credential adapter 由本儲存 topic 交付；正式產品登入與 production secret custody 整合仍延後；logout、revoke、多帳號、PAT 與 GitHub Enterprise 仍不在範圍。
 - 不定義 Domain endpoint、DTO、GraphQL schema、rate limit、pagination、一般 retry 或各 Bounded Context 的 failure mapping。
 - 不修改 `RivetHTTPClient`，也不讓其 `Auth`／`AuthFlow` 成為 OAuth runtime driver。
 
@@ -20,7 +20,7 @@
 ```text
 Facade（layer 外的 application composition root）
   ├─ bare RivetHTTPClient / URLSessionTransport
-  ├─ OAuthCredentialStore adapter（deferred）
+  ├─ OAuthCredentialStore adapter（指定環境假憑證 DPK 已驗；範圍見下節「正式 DPK adapter」；provider rotation／persist-stop 另為假 backend 驗證）
   ├─ GitHubOAuthHTTPTokenFetcher（internal bare HTTP refresh，已交付）
   ├─ OAuthTokenProvider(OAuthCredentialStore, OAuthTokenFetcher)
   └─ GitHubClientScope.prepare(provider:)
@@ -32,7 +32,7 @@ Facade（layer 外的 application composition root）
 - Facade 是 layer 外的 application composition root，只負責 composition：建立並保留唯一共享的 `OAuthTokenProvider` instance，以 prepare 完成本地 readiness，再由 Scope 注入 REST 與 GraphQL client；不在每個工作前重新 prepare，也不改變各 BC 的 `Facade → UseCase → Port` 層級方向。
 - `RivetHTTPClient`／`URLSessionTransport` 是 bare、generic、GitHub-unaware foundation；bare `HTTPClient` 只執行 raw HTTP request，不認識 OAuth、Bearer、TokenProvider、401 recovery 或 retry，也不直接建立或驅動 `AuthFlow`。
 - `RivetHTTPClient` 既有 internal `AuthRequester` runtime：它注入 `Requester` 與 caller-provided generic `Auth`，建立並驅動 generic `AuthFlow` 的 `.send(HTTPRequest) → raw HTTPResponse → receive(response)` loop，直到 `.finish`；flow 保有 authentication decision。這條 generic capability 不持有 credential、retry 或 GitHub OAuth lifecycle。
-- 已交付 schema 接受 GitHub OAuth App 的六欄 refreshable、expiring token response，並由 internal DTO 在 caller-supplied `receivedAt` 映射為 public immutable `GitHubOAuthCredentialBundle`。public `OAuthCredentialStore`／`OAuthTokenFetcher` ports 在 adapter boundary 使用完整 bundle；internal bare-HTTP refresh adapter 已交付；OAuth Keychain adapter 未交付。
+- 已交付 schema 接受 GitHub OAuth App 的六欄 refreshable、expiring token response，並由 internal DTO 在 caller-supplied `receivedAt` 映射為 public immutable `GitHubOAuthCredentialBundle`。public `OAuthCredentialStore`／`OAuthTokenFetcher` ports 在 adapter boundary 使用完整 bundle；internal bare-HTTP refresh adapter 已交付；DPK adapter 已交付，完整假 credential 的指定簽章環境跨程序／真正重建／提示驗收已通過，限制見下方正式 adapter 段。
 - `OAuthTokenProvider` 是唯一 lifecycle owner：記憶體 credential、restore、expiry-first refresh、accepted rotation persistence、version 與 single-flight。remote rotation accepted 後的 persistence failure 使 provider 永久 unavailable；它不持有、不接收、不重送 `HTTPRequest` 或 Apollo operation。
 - `TokenSnapshot` 是 public immutable、`Equatable`、`Sendable` client input，只包含 access token 與 version；`hasSameVersion(as:)` 只比較 version。refresh token 與完整 bundle 不會暴露給 client。
 - 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration。另已交付的 async `GitHubAccessTokenProvider` 只表示 token acquisition；新的 OAuth provider 不 conform 或 bridge 它，也不實作 request、transport、401 classification 或 retry。
@@ -50,7 +50,7 @@ Facade（layer 外的 application composition root）
 | 狀況 | Outcome |
 | --- | --- |
 | 無 credential | provider 回傳 `.missingCredential`；Facade re-auth deferred |
-| credential store load failure | provider 回傳 `.restore`；Keychain adapter／client outcome deferred |
+| credential store load failure | provider 回傳 `.restore`；DPK store 的有限錯誤保留為 underlying error |
 | 純 error 的可信 2xx／4xx `bad_refresh_token` | `.authenticationRequired`；provider 不再交付舊 snapshot |
 | 純 error 的可信 2xx／4xx `incorrect_client_credentials`、缺少 app 設定、送出前已知失敗 | `.refresh`；保留 bundle，後續可再次更新 |
 | 5xx、未知／混合／無效回應、送出後無可信回應 | `.refresh(rotationIndeterminate)`；停止 provider 並保留 store |
@@ -82,9 +82,23 @@ GraphQL interceptor 對當次 snapshot 建立 `BearerAuth`，經 public、nonthr
 
 OAuth technical failure 不跨越成 shared BC failure contract；未來由 consuming BC 的 local Infra 映射為該 BC 自己的 failure contract。
 
-初次 OAuth sign-in、authorization code + PKCE、callback、logout／revoke 與 multi-account 必須以獨立 topic 處理。本文件 supersede `github-integration-auth-boundary` 的 PAT-only、REST-only authorizer 方向；該歷史 topic 僅保留 traceability，沒有被改寫或刪除。
+初次 OAuth sign-in、authorization code + PKCE 與 callback 的交付與驗收歸屬初次登入的獨立 topic；logout／revoke 與 multi-account 仍另待規劃。本文件 supersede `github-integration-auth-boundary` 的 PAT-only、REST-only authorizer 方向；該歷史 topic 僅保留 traceability，沒有被改寫或刪除。
+
+## Configuration 與授權入口的整合契約
+
+`GitHubOAuthAppConfiguration` 由儲存 topic 提供 public immutable clientID／clientSecret、完整 configuration store port 與 `throws(GitHubOAuthAppConfigurationError)` initializer。空字串拋 `invalidConfiguration`；其他字串（包括全空白／換行）原樣保存、不 trim；description／debugDescription／reflection 維持脫敏。2026-11-10 整合明確採此契約，取代 dev 原直接 initializer 的 `GitHubOAuthAuthorizationError.clientConfiguration`，所以直接呼叫端的錯誤型別有變更。
+
+`GitHubOAuth.makeTokenFetcher` 與 `makeAuthorizationSession` 維持既有一般 `throws` 簽名，在建立依賴前共同拒絕 blank clientID／secret，使用 `GitHubOAuthAuthorizationError.clientConfiguration`；合法值原樣傳遞，不藉 trim 改寫秘密。儲存資料形狀與授權准入為不同邊界，不放寬授權入口。獨立驗證 App 的環境 `try?` 在 blank-only 設定時可能延後到 factory 才拒絕，本輪不修改該 App，也不保證其啟用 UI 前置狀態完全不變。
+
+## 正式 DPK adapter
+
+`GitHubOAuthDataProtectionStores` 由 caller 指定 explicit private group，提供 configuration store、完整 credential inspect 與 clientID-bound `OAuthCredentialStore`；不改 bundle／provider／clients 的既有 signatures。Strict version-1 envelope、完整單 item 替換與錯誤分類詳見[儲存契約](github-oauth-credential-persistence.md)及[儲存 sequence](diagrams/github-oauth-credential-persistence/storage-sequence.html)。
+
+本 topic 以 fake Security 驗證六欄、身分保護及 provider accepted-rotation persist failure；另於指定簽章環境，以正式 adapter 與完整假 credential 完成保存 A、writer 結束後 fresh A、整筆替換 B、fresh B、同身分真正重建後 fresh B，五個 runtime 的 Human 全程觀察均為 0 提示，已獨立審查通過。詳見[驗證範圍](github-oauth-credential-persistence.md#驗證範圍)。這不證明真遠端 OAuth refresh／登入／API、configuration item、系統拒絕、斷電 durability 或所有環境；cleanup 與 Human 接受仍未完成。E007／整套登入驗證屬獨立工作線；下列實驗章節保留各自當時的候選與採用狀態，不覆寫其歷史，也不取代本 topic 的 live acceptance。
 
 ## 獨立驗證 App 與可行性結果
+
+下列為 2026-10-21 獨立工作線的來源與驗證結果；其 production freeze 只描述該線當時的交付，不表示本次整合後 repository 仍停留該來源。
 
 `github-persistent-connection` 驗證「GitHub登入 → 完整保存 → 重啟還原 → 自動刷新 → 輪替後新程序讀回 → API」是否可行；交付 [`GitHubConnectionVerification`](../../apps/GitHubConnectionVerification/README.md) 工具及受限結果，不是正式Rivet產品登入能力。先前 `apps/Rivet`、正式Sources／共用UI及新增正式API的歸屬宣稱已撤回。production Sources／Tests／Package精確保持topic前 `16606b89`，不與PR #61去重／合流或抽共用層。
 
