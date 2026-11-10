@@ -169,3 +169,14 @@ Human 要求修復五個 conflict，並明確選擇「保留 PR #60 typed throws
 ### RF-LG94-LINT（2026-11-10）：同一整合 commit 的 lint 收尾
 
 Human 已確認本輪 merge message，正常 hooks 阻擋了第一次 commit，未產生 commit／push／PR 更新。唯一失敗為自動合併後 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 的 file_length=801（上限800）及同檔 allowlist test function_body_length=81（上限80）。此檔本已在核准的258檔整合範圍，不新增功能或更改授權決策。只將 expectedPaths 前兩個字串合放一行，非 whitespace bytes 順序完全相同；不變更 allowlist、斷言、產品/API 或 lint 設定。失敗原 receipt／logs 保留，非盲目重試；先 bounded 獨立審查與窄驗證，再刷新 staged 檢查，沿既有 Human 核准的同一 message 提交。
+
+
+## LG95（2026-11-10）：已合併交付的 Git 收尾與實驗索引事實
+
+Human 明確要求 PR merged/closed 後建立 semantic tag、刪除原 local／remote feature branch、移除原 managed worktree，並更新 `experiments/README.md` 與 `experiments/VALIDATION-SUMMARY.md`。另已採用兩個原 untracked Xcode 個人 metadata「保存至 Git 私有 archive 後移出」；此授權不含 DPK item、App 或 Apple assets。只沿原 topic／feature worktree，不在 dev worktree 實作，不新增 topic／branch／worktree 或 E 編號。
+
+Explorer 已核 PR #60 於 `2026-11-10T03:30:48Z` 合併關閉，merge=`c8c989a2e4be99e73c9cdc17e82cc16ada7a489c`，parents=`758aca9b`／`89bd01a2`，tree 與最後 feature `89bd01a2` 相同。這是 Git 交付事實，不是新真人 build／DPK／清理／S08 或產品登入驗收。原成功、unknown、失敗、額度與未完成的 LC06／visual／S08 保持各自來源。
+
+本次先在原 worktree 準備兩份實驗索引的最小事實更新與 staged message；新文件 commit 及普通 FF `HEAD:dev` 的 post-merge 維護例外，須同一次明確 Human 確認，不以 branch 未保護推論授權，不向已合併 PR #60 追加新 commit。已授的 tag／兩 metadata archive 可獨立先執行；文件尚未安全保存至遠端 dev 前，不能刪 branch／worktree。
+
+LG95 移除保護補充：只分類 target ignored 頂層與核已知驗收資產根不在其內；可重建 cache 可正常移除，未知非 cache 或 protected 內容先保護／釐清，不擴 Apple assets 盤點。

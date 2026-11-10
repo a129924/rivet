@@ -1,10 +1,10 @@
 # GitHub OAuth 正式憑證儲存：執行帳本
 
 - Topic：`github-oauth-credential-persistence`
-- Phase：RF-LG94-LINT 已審候選的一行等價修復及作者窄驗證完成；待獨立 Tester／Reviewer，不盲 retry commit。
-- Current step：RF-LG94-LINT bounded verification pending；原 Human 同 message 授權保持，尚未 stage 新修復或提交。
+- Phase：LG99 獨立成果審查 approved；LG100 exact-stage 前置核符，實際 staged diff 結果待工具，停 Human 確認。
+- Current step：LG100 pending（Human）；新 docs commit／普通 FF HEAD:dev 維護例外尚待真 staged 範圍／message 一次確認。
 - Branch：`feat/github-oauth-credential-persistence`；base／PR target：dev。Worktree／base由Dispatcher提供，本角色未執行Git。
-- 最後更新：2026-11-10，Implementer RF-LG94-LINT；fresh compile／29 static tests、單檔 strict 通過，未 commit／push。
+- 最後更新：2026-11-10，Implementer LG100 stage 前置；tag／archive已完成，branch／WT仍在，未新commit／pushdev。
 - 契約：[需求](../../analysis/github-oauth-credential-persistence/requirements.md)、[技術契約](../../analysis/github-oauth-credential-persistence/technical-spec.md)、[計畫](github-oauth-credential-persistence.plan.md)。
 
 ## Steps
@@ -1689,3 +1689,45 @@ Completed／approved；required fixes=[]。獨立核真 source→candidate 只�
 ### RF-LG94-LINT Reviewer 成果結果（2026-11-10）
 
 Completed／approved；required fixes=[]。真 source 等於已審一行 whitespace-only candidate；原 staged blob／八個 resolution／兩 metadata 及首次 hook failure hashes 核符，三個單檔實際 checks／fresh compile 29-test receipts 與獨立 Tester 結果一致。詳 review RF 成果節。可 exact-stage 已審 delta／owner evidence 並刷新 cached 語意核對；同 message／scope 無異時沿原已核 Human 授權正常 commit→push→PR 更新，不重問例行格式。未代 PR merge／整 Topic 接受，本 Reviewer 未改 source/index 或重跑測試。
+
+
+## LG95：merged PR60 的文件／Git 收尾規劃（2026-11-10）
+
+Explorer 當輪已核 PR60 merged/closed、mergedAt `2026-11-10T03:30:48Z`／merge `c8c989a2`／parents `758aca9b`＋`89bd01a2`／tree 同 feature；原執行前 RF／pending rows 不追改。Human 已授 semantic tag、原 local/remote feature branch 刪除、managed worktree 移除及兩 experiments facts 更新，並採兩個人 metadata 先 Git 私有 archive 後移出。新 docs commit／普通 FF HEAD:dev post-merge 例外仍未核，須待真 staged 範圍／message一次確認。
+
+| ID | Status | Owner role | 完成條件／證據 | 停點 |
+|---|---|---|---|---|
+| LG95 | completed | Plan-Creator | 四 artifacts 最小 LG95／九欄／manifest／MG01–05 readback | 僅規劃，交 LG96；不自批 |
+| LG96 | pending | Plan-Reviewer | 獨立核 tag pin／精確 archive／文件來源／dev維護Human與removal gates | 待本人 verdict |
+| LG97 | completed | Implementer | 已核PRmerge／fetch同tree FF、tag與archive讀回、兩索引最小更新及47links／5fixedsource checks；詳implementation LG97 | 僅作者完成，交LG98；無stage／新docscommit／pushdev或branch／WT移除 |
+| LG98 | pending | Tester | MG01–04 事實／links／refs／archive與stage準備有限核對 | 不重 runtime／真人 |
+| LG99 | pending | Reviewer | 獨立成果／scope／安全停止條件審查 | 不代 LG100 核准 |
+| LG100 | pending | Human | 真 staged docs範圍／message＋普通 FF HEAD:dev例外明確確認 | 尚未取得，不代填 |
+| LG101 | pending | Implementer | 新commit安全存remote dev後fresh gates／ignored頂層及known protected roots保護核對，再正常刪branch/移WT及readback | 不 force/prune，保留拒絕處置ref |
+
+當前只有本規劃已寫；tag／archive／FF／文件編輯／移除尚未執行，不能預填成功。DPK原受限通過、未LC06／visual／S08與所有原成功／unknown／失敗／已耗額度保持；Git lifecycle不代憑證清理。
+
+
+### LG96 Plan-Reviewer 結果（2026-11-10）
+
+LG96 completed／approved；required fixes=[]。四 artifacts LG95／MG01–05、固定 annotated tag、exact 私有 metadata archive、兩實驗索引的來源分層、LG100 docs commit／普通 FF HEAD:dev Human 停點，以及文件遠端保存後 fresh removal／ignored保護／正常 -d 拒絕保留 gates 一致，詳 `evidence/planning-review.md` LG96。只回報規劃品質；尚未執行 tag／archive／FF／文件修改或移除，本 Reviewer 未跑 Git／tests 或資產操作。
+
+
+### LG97 作者交接（2026-11-10）
+
+原feature已最窄fetch／同tree FF到c8；annotated v0.1.60 tag object／remotepeeled c8核符。兩個metadata在Git私有0700archive核bytes／mode／owner後僅移出兩source，untracked0，未碰DPK／Appleassets。兩experiments文件readback／可逆原文不變式與47relative／5fixedsource／有限checks通，詳implementation LG97及private receipts。只交LG98，不自批；index空、未新docscommit／pushdev，branch與WT仍在、不能預填移除。
+
+
+### LG98 Tester 有限結果（2026-11-10）
+
+LG98 completed／approved；required fixes=[]。獨立實讀兩 docs／固定來源及47relative／5pinnedpaths、可逆原文與舊E004／E005／E007不變式；本機／遠端tag object及peeled merge一致；archive 0700／兩實檔原bytes-mode-owner／source移出與index排除核符。詳 evidence/tests.md LG98。未重runtime、未stage／commit／push或刪branch／WT，fresh removal gates仍須後續重新執行；交LG99，不代LG100 Human確認。
+
+
+### LG99 Reviewer 結果（2026-11-10）
+
+LG99 completed／approved；required fixes=[]。兩 experiments 實際 diff／受驗 hashes、固定 merge 與 LG81-Cap-R 事實、三層證據／舊 E004 E005 E007 與尚缺項保留、已執 tag／archive 和未執 lifecycle 的區分均核符，詳 `evidence/review.md` LG99。兩 docs＋原 P／必要 owner E 可構成單一 post-merge docs 語意；只交真正 exact-stage／commit-convention 後的 LG100 message＋普通 FF HEAD:dev 維護例外一次 Human 確認。未授 commit／dev push或提前 branch／worktree remove，本 Reviewer 未重 checks／runtime或修改受審內容。
+
+
+### LG100 exact-stage 前置（2026-11-10）
+
+LG99 approved 後已核十個已審 dirty leaves／index 空／HEAD c8、remote dev c8／feature89bd、tag object與peeled c8，以及Git私有0700archive兩copies bytes／mode／owner與source absent。這是stage前置結果；接下來才 exact-stage 十葉與實際 cached語意／stat／tree／hash checks，結果另由tool/private receipt回報，不預填通過或stage後回寫自指。新 docs message與普通 FF HEAD:dev post-merge維護例外一併交Human，不以已mergedPR60／branch未保護代授權；此前不commit／pushdev／新增PR或刪branch／WT。

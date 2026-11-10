@@ -495,3 +495,16 @@ Reviewer 僅追加自身 planning-review 與 LG90 結果；未修改受審規劃
 候選 source SHA-256 `1640e25df6e28dc610757e702513875dfbeb3e3f6b6d74e9ce335d95fdc1484d`；尚未改 repo source 的 SHA-256 `14a5aedc7f7553acd534e0a1e3348310fd300fae6408c1af6310a62f852a4508`。私有候選的 format／lint receipts exit 0，只證候選，不能代替之後真 repo 的單檔 strict checks／StaticIsolationTests。所列驗收恰覆實際 delta、non-whitespace invariant、既有來源／metadata hash 與 staged refresh，無需重跑 74／11 或真人驗收。
 
 此 leaf 原已位於 Human 核准的同一 merge 範圍，訊息與功能語意不變；依原 Human 授權完成 Implementer→獨立 Tester／Reviewer→刷新真正 staged diff 語意核對後，可續正常 commit，不需為這個等價排版再索同一批准。首次 hook failure／logs 與已通結果均保留；不 bypass hook、不改設定、無新真人／DPK／資產／cleanup 權限。若真實 delta 超出此候選或 invariant 不成立，原授權不得擴用。本人只讀文件／候選並追加自身證據／row，未改 source／index、未跑 Git／tests／native lint 或 retry commit。
+
+
+## LG96 Plan-Reviewer：LG95 post-merge 收尾（2026-11-10）
+
+**completed／approved；required fixes=[]。** 依最新四 artifacts LG95／MG01–05、已提供的 Explorer 固定 merge／ref 事實與 Human 明確 tag／branch／worktree remove／兩文件更新及 metadata 處置選擇，獨立核 planning sufficiency。這不是新 Mission／release：annotated `v0.1.60-github-oauth-credential-persistence` 僅指 PR merge `c8c989a2`，不是後續 docs commit／GitHub Release；建立前重核碰撞、push 後核 object／peeled target，不覆寫／force。必要 fetch／原 feature 同 tree FF 須保留未提交 owner amendments，無 dev worktree 實作。
+
+M1／M2 的處置有當前 Human 明確授權；只在 Git 私有區 exclusive 0700 archive 保存 exact regular-file bytes／來源／權限／大小／SHA，copy readback 與移出前來源再核後才移精確兩葉。未知 untracked／父目錄／DPK／Apple 資產不獲清理授權。archive 私有且不 track／push，不藉此假定 worktree 已 clean。
+
+兩 experiments 索引僅補 PR60 已合併與受限正式 adapter 的事實，固定 merge 來源 links；E004 真 SQLite＋合成控制、E005 legacy UX 0／0／1失敗、E007 renewal unknown 與其他線歷史保持。正式 adapter 的 fake Security／受控 provider 與真 DPK 假六欄 A→fresh A→整筆 B→fresh B→真同身分重建→fresh B、五 runtime Human0 分層；不外推真 OAuth／遠端 refresh／API、新 merge binary live、LC06／visual／S08 或產品完成。有限 links／anchors／whitespace／來源及公開資訊檢查足夠，無重跑成功 runtime 的必要。
+
+九欄／精確兩文件＋原 P／owner E manifest 及 MG01–05 一致。新 docs commit 的真正 staged 範圍／message與普通 FF HEAD:dev 維護例外必由 LG100 Human 一次明確確認；tag／archive 可先獨立執行，文件未在真 remote dev 保存前禁止刪 branch／worktree。worktree-manager 的當前 destructive approval 已提供，但移除仍必須 fresh 檢查 managed／unique／clean／無 untracked／unpushed／attached／unlocked／無 mutation／非 current；有限 ignored 分類及 known protected roots 不相交亦明列，不以舊 snapshot 或忽略檔預設可刪。remote feature 缺失不重建；正常 remove 後本地 -d，不 force／prune。command-local upstream 只是一個原生 -d gate 的安全嘗試，不能以參數存在代替實際 tracking／remote-dev reachability 證據；拒絕時保留 ref，不升級 -D 或修改永久設定。
+
+本人只審 planning 與 worktree-manager／reference／checklist 的相應限制，追加自身 evidence／LG96 結果並讀回；未核當前 Git refs、未執行 Git／測試／tag／archive／cleanup 或修改受審文件。本 approval 不代表任何尚未發生的 lifecycle 動作已成功，也不取代後續 Tester／Reviewer／Human。

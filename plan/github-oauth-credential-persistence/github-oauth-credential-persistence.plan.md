@@ -539,3 +539,24 @@ LG89 manifest 唯一新增手動 leaf：`Tests/GitHubIntegrationTests/StaticIsol
 | TestCase | 真 repo delta／invariant、單檔 strict format／SwiftLint、GitHubIntegration StaticIsolationTests、其他來源／metadata hashes、refreshed staged check |
 
 原 Human 核准 message 未變。完成 bounded planning review→Implementer／窄驗證→獨立成果 review→刷新 commit-convention 後可沿原授權執行正常 commit、push、PR 更新；不因單純格式要求重問 Human。若語意／message／授權範圍改變則不得延用。
+
+
+## LG95：post-merge 文件與 Git lifecycle 的受限執行
+
+本輪精確文件 manifest：`experiments/README.md`、`experiments/VALIDATION-SUMMARY.md`；P 為本 topic 原四 artifacts，E 僅既有 `plan/github-oauth-credential-persistence/evidence/{planning-review,implementation,tests,review,publication}.md` 的必要 owner 追加，非每葉必改。無新增 summary／release／VERSION 或其他 repo leaf。metadata M1／M2 的精確來源與 archive 對照僅私有保存。
+
+| 欄位 | 本次限定 |
+|---|---|
+| In-Scope | PR60 merge 事實、固定 annotated tag／push、兩個人 metadata 先 archive 再移出、原 worktree 文件更新與 staged 提案、另獲確認後 docs FF dev／正常 branch 與 worktree 移除 |
+| Out-Of-Scope | 新 topic／branch／worktree／E編號、dev worktree 實作、已合併 PR 新提交、新 runtime／圖／測試框架、App／DPK／Apple assets／秘密清理、force／prune／未核 docs commit 或直接 dev push |
+| ReadOnly | 所有 production／tests／validation／圖／原歷史與 Apple 資產；main dev worktree；兩 metadata 在 archive 核符前只讀 |
+| Written | 上述兩 experiments／P／必要 owner E；Git 私有 archive／receipts、原 feature FF／明確 tag；文件 commit／HEAD:dev 須另次 Human 確認 |
+| Deleted | 只已核 archive 的 M1／M2 source leaves；文件安全在 remote dev 後正常刪 remote／local 原 feature refs 與 managed worktree；不刪其他資料 |
+| Modify | Plan-Creator 只 P；獨立規劃審查後 Implementer 兩 docs／自身 E及已授 Git準備；Tester／Reviewer 只自身 E／row |
+| Goal | 保存 PR60 的正式 adapter／受限 DPK 成果，索引來源正確、個人 metadata 不遺失，安全完成已授 lifecycle |
+| Non-Goal | 以 merge／tag 替代新 live／S08／LC06 或產品驗收；先刪未保存工作；以 protected=false 當 dev push 授權 |
+| TestCase | MG01 merge/pins/tag；MG02 exact archive bytes/permissions/source；MG03兩 docs來源分層/links/patterns；MG04真正 staged範圍/message及Human route；MG05遠端保存後fresh removal gates／ignored頂層分類／known protected roots與target不相交／ref與path readback |
+
+LG95 Plan-Creator → LG96 獨立 Plan-Reviewer → LG97 Implementer：必要 fetch／原 feature FF、已授 tag／archive、兩 docs 最小事實更新與準備 → LG98 Tester 有限文件／refs／archive核驗 → LG99 Reviewer → LG100 Human：新 docs commit 範圍／message與普通 FF `HEAD:dev` 例外一次確認 → LG101 Implementer 正常 commit／dev push核實後正常刪分支及移除worktree；若任一步 gate 失敗保留未處置資產/ref並回報。
+
+MG01–05 操作與停止契約見 spec LG95。tag/archive 是已明確授權的獨立動作，不需等新 docs commit 授權；但 branch/worktree 移除必須在文件安全到 remote dev 後。各 owner 只記已發生事實；不在尚未刪除時寫 removed，不在 stage 後為補 hash 反覆改 tracked 文件。最終 lifecycle 狀態可用 Git 私有 receipt／回報保存，避免移除後再造 commit。

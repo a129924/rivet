@@ -384,3 +384,26 @@ LG93 approved 後，已核原八個手動 resolution 與 1,328 個非手動 auto
 真 repo 單檔 `xcrun swift-format lint --strict Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 與 `swiftlint lint --strict --quiet --no-cache Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 均 exit0。`swift test --skip-update --filter GitHubIntegrationTests.StaticIsolationTests` 未用 skip-build，實際 compile 該新檔／Build complete，29 tests／1 suite 通過（wall174.046s，suite36.359s），非零命中、自然完成，未 timeout／kill。原174秒包含 build／工具等待，不能冒稱 suite 同耗時。原74／11／live不重跑。
 
 八個已審 resolution source／docs hashes、兩個 metadata bytes 與原 staged index 保持；只工作檔一行修復、四 planning 與 owner evidence 可見變更。第一次 normal hooks commit exit1 的原 receipt／raw logs 私有保留，不改為成功；本輪未 stage 或 retry commit／push／PR write。source patch／不變式、compile 與三個 check 收據已工具交 Tester，交獨立 bounded 驗證／成果審查，不自批。
+
+
+## LG97（2026-11-10）：已授 tag／metadata archive 與兩索引準備
+
+上游 LG96 approved／required fixes=[] 後，重新核 PR60 merged/closed，mergedAt=`2026-11-10T03:30:48Z`／merge=`c8c989a2e4be99e73c9cdc17e82cc16ada7a489c`／feature=`89bd01a2`。最窄 fetch dev 取得 merge object，雙親與 tree 核符；原 feature FF 到 c8，同 tree 無產品來源變更，五個 owned planning／review dirty 葉的 snapshots／bytes 保留，不在 main dev worktree 實作。
+
+已核 local/remote tag 無碰撞、tag signing 配置未啟用後，正常建立／只推送 annotated `v0.1.60-github-oauth-credential-persistence`。Object=`1473dd0571283919a6b3229d14fa4349cf77020d`；local／remote object 與 peeled c8 精確相同。Annotation 只描述 PR60 merge／Nov5假六欄受限真DPK成果；不是 GitHub Release，不指後續文件 commit，未 push dev。
+
+依 Human 選擇，兩個精確 Xcode 個人 metadata 先以 regular-file／原 inode／owner／group／mode／size／SHA 再核；Git 私有0700 archive 原樣 copy／readback，兩份與原 bytes／權限／所有權均同，再核 source 後只移出兩葉。私有相對位置為 `.git/archives/github-oauth-credential-persistence/pr60-20261110-c4j4ugsr`；manifest 只私有保存原來源對照，公開以 M1/M2 表示，archive 未 track／push。未移未知或父目錄，untracked 現為0；DPK item／Apple資產／原live roots不動。Ignored頂層有限分類5項皆可重建cache（其中兩項Pythoncache），已知protected roots不落target；移除前仍須fresh重核，不提前通過removal gate。
+
+兩 experiments 文件只新增 PR60（非新E號）、merge／feature固定來源、三層證據及已發生 tag/archive；完整假六欄 A→writerexit→freshA→wholeB→freshB→同身分真clean/build→freshB／五 runtime Human0 依 LG81-Cap-R，不推真OAuth／remote／API。E004合成與秘密保存界線、E005 legacy 0/0/1 UX失敗、E007 renewal unknown 及各來源／預算原文保留。移除新增段／row並反轉明列date／current coverage調整，可逐byte還原兩個原文件；非宣稱現行索引全文未改。
+
+作者有限檢查：兩文件47個relative／heading links、5個unique固定merge source paths經cat-file存在核對；whitespace／markers／有限secret及本機abs patterns零finding。只文件檢查，不runtime／build／sign／App／DPK重測。SHA：
+
+- `experiments/README.md`：`05437b5bccc76fce052ae8786cd13240357afcc2bd5a8e22549595570cec4345`。
+- `experiments/VALIDATION-SUMMARY.md`：`7b41dff479c85587ce6f1dac3f2fc5c3e6bba58f7b46b50b1a167c8e972f1f2c`。
+
+Index仍空；tracked dirty只有已授文件／P／owner E，尚未stage／新docscommit／pushdev。原local/remote feature與worktree仍保留，文件未安全存remote dev前不移除。交LG98獨立Tester及LG99Reviewer，之後真staged／新message與FF HEAD:dev維護例外交LG100 Human一次確認；不因tag/archive已授推論docs發布授權，不代LC06／visual／S08接受。私有命令／snapshot／tag／archive／逆向不變式與checks位置已tool交接，無raw私人來源或tagger識別入此文件。
+
+
+### LG100 staged 提案前置（2026-11-10）
+
+LG99 approved 後，十葉候選均屬兩experiments／四planning／四owner evidence；兩文件受審hash相同、原tag與archive讀回保持，HEAD／remote dev=c8、原remote feature=89bd。此段只記stage前置，真正cached檢查／stat／tree／diffSHA將另在private receipt/tool交接，stage後不補tracked自指。提案必同時取得新docsmessage與普通FF HEAD:dev維護路線Human確認；未確認不commit或pushdev。已授tag/archive不重問，branch／WT須文件遠端安全後freshgate才移除，目前未執行。

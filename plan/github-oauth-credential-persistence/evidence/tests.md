@@ -79,3 +79,14 @@ Completed／approved；required fixes=[]。本 Tester 直接比對真 repo 的�
 獨立重算三個原 check 的 stdout／stderr SHA 與 bytes、核真 argv 及 exit：單檔 strict swift-format／SwiftLint 均 exit0；`swift test --skip-update --filter GitHubIntegrationTests.StaticIsolationTests` exit0，stderr 有 fresh `Compiling GitHubIntegrationTests StaticIsolationTests.swift`，stdout 明記 29 tests／1 suite passed（suite36.359秒，wall174.046秒）。不是零命中或僅舊 binary 收據。本輪為等價排版，未再重跑29／74／11或新增測試；只核上述已有真 compile 收據，沒有將 wall 與 suite 耗時混稱。
 
 另以完整 index mode／blob 對照原 Human-approved preflight tree，全部相同，尚未 stage 此修復；其他八個手動 resolution 葉及兩個個人 metadata SHA 保持且 metadata 不在 index。HEAD／MERGE_HEAD pin 未變。第一次正常 hook 的 exit1／未 bypass receipt 及原 logs 仍在私有位置，未改寫成成功。私有獨立核對 JSON／失敗 logs hashes 已工具交接；本 Tester 只追加自身 evidence／row，不改 source、stage、commit 或遠端。交獨立 RF Reviewer；原 LG92／LG93 與 DPK 證據的適用限制保持。
+
+
+## LG98 Tester：post-merge 文件／Git 準備的有限核驗（2026-11-10）
+
+Completed／approved；required fixes=[]。上游 LG96 approved、LG97 completed 後，獨立實讀兩個 experiments diff 與 merge 固定來源，不重跑 runtime。47 個相對 links 含 heading anchors 皆可解析，5 個 unique `c8c989a2` pinned source paths 在該 Git tree 均存在；whitespace、markers、有限秘密／本機絕對路徑 patterns 無 findings。這是有限文件檢查，不是新單元測試或任意秘密辨識保證。
+
+直接核 pinned LG81-Cap-R 原文：完整假六欄 A→Writer 結束→fresh A→整筆 B→fresh B→真正同身分 clean/build→新程序 B、五 runtime Human 全程0提示及原來源限制均有依據。兩文件將 fake Security／受控 provider、真 DPK 假 bundle 與未驗真遠端 OAuth／refresh／API 分開；不擴首 sign 的 permission-only 觀察、不推論今日 profile 或新 merge binary 已真人驗收。以移除新增 row／section，並精確還原 README 日期及 summary coverage／後續擴展一句的逆變換，兩檔完整原 bytes 皆可還原；E004／E005／E007 舊 rows 逐值不變，0／0／1 UX failure、renewal unknown 與各歷史限制未回填。未預填 branch／worktree 移除、docs commit／dev push、LC06／visual／S08 成功。
+
+獨立核本機 annotated tag object `1473dd0571283919a6b3229d14fa4349cf77020d`，並以真 `git ls-remote` 讀回遠端同 object／peeled `c8c989a2e4be99e73c9cdc17e82cc16ada7a489c`。HEAD 為該 merge，雙親仍含 `89bd01a2`，tree 與 feature 相同；不是後續 docs commit。親讀 Git 私有 archive manifest／兩實檔與 merge 前 metadata checkpoint：archive 0700 且 owned；2 檔的 bytes／SHA／原 mode／owner／group 核符，兩 source leaves 不存在且未進 index。Common Git／archive 與既有 known protected roots 均不在 target worktree；只核既有 ignored 五項分類 receipt，不作新清理盤點，也不代替移除當刻 fresh gate。
+
+實際 index 空、untracked 空；本次八個 dirty 葉精確符合已授兩 docs／四 P／owner evidence，無 production 或 runtime 變更。私有獨立 JSON 與 scope checks 已工具交接，公開不附 archive 來源對照／私人識別資料。兩 docs SHA 分別為 `05437b5bccc76fce052ae8786cd13240357afcc2bd5a8e22549595570cec4345`、`7b41dff479c85587ce6f1dac3f2fc5c3e6bba58f7b46b50b1a167c8e972f1f2c`。本 Tester 只追加自身證據／LG98 row；未 stage、commit、push、刪 branch／worktree 或操作 App／DPK／Apple assets。交 LG99 獨立 Reviewer；LG100 新 docs message 與普通 FF HEAD:dev 的同一次 Human 確認仍待，不以既有 tag／archive 授權取代。

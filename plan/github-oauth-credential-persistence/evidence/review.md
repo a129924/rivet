@@ -69,3 +69,16 @@ LG92 實際 root 74 tests／6 suites、consumer 11 tests／1 suite 均 exit 0；
 已直接讀回三次真命令的 argv／exit／stdout、stderr hashes／bytes，與 records 逐值相符：單檔 strict format／SwiftLint exit 0，fresh compilation 後 StaticIsolationTests 29 tests／1 suite、exit 0。獨立 Tester 已核原 auto blob／candidate／actual 的字串外空白與 token 等價、原 index tree 未變。原首次 hook failure 的三份 receipt／logs SHA 仍與獨立記錄相同；不把該失敗改寫為成功，也未 bypass hook 或停用 lint。Reviewer 未重跑 29／74／11 或任何真人驗收。
 
 這是原核准 258 檔整合範圍內同一檔的等價排版收尾，原 LG93 成果 approval 保留。可 exact-stage 此單行及已審 planning／owner evidence，刷新真正 staged diff／tree／統計及 git-commit-convention，若 scope 與 Human 已確認的原 integration message 仍相符，即沿同一 Human 授權續正常 commit→push→PR 更新，無須為此格式再問同一確認；若出現其他差異仍須停核。此 approval 不代整 Topic 完成或 PR merge。本人僅追加自身 review／row，未修改受審 source、stage、commit、remote、App／DPK 或 assets。
+
+
+## LG99 Reviewer：PR60 post-merge 文件與 Git 準備（2026-11-10）
+
+**completed／approved；required fixes=[]。** 上游 LG96 approved、LG97 completed、LG98 independent Tester approved 後，實讀兩 experiments 的真 diff、固定來源 LG81-Cap-R 與 LG98 直接核驗紀錄。README SHA-256 `05437b5bccc76fce052ae8786cd13240357afcc2bd5a8e22549595570cec4345`、VALIDATION-SUMMARY SHA-256 `7b41dff479c85587ce6f1dac3f2fc5c3e6bba58f7b46b50b1a167c8e972f1f2c` 與受驗版本相同；不重跑有限 checks 或任何 runtime。
+
+新增 PR60 row／獨立短節，僅最小更新日期及摘要涵蓋文字，沒有新 E 編號、其他實驗實作或圖／App／產品程式變更。`2026-11-10T03:30:48Z`／merge `c8c989a2`／最後 feature `89bd01a2` 與固定 merge links 分清交付版本；不冒真人 build。三層證據明確區分 fake Security／受控 provider、真 DPK 完整假六欄 A→Writer 結束→fresh A→整筆 B→fresh B→同身分真正 clean/build→新程序 B，以及本 topic 未驗真遠端 OAuth／refresh／API。LG81-Cap-R 原文支持五 runtime Human 全程0提示；其他 sign／build 仍依原文，未擴 permission-only 回報。原 profile／同機條件只限原輪次，不推論今日資產有效、更新恢復或所有環境。
+
+E004 真 SQLite＋合成控制、E005 legacy 0／0／1 UX failure、E007 renewal unknown 及各舊 rows／成功／失敗／unknown／額度保留。採納 LG98 逆變換還原兩檔原 bytes、47 relative／heading links、5 unique pinned source paths、whitespace／markers／有限秘密及本機路徑 checks；有限掃描不保證任意秘密辨識。LC06 DPK item 清理、visual／S08 與產品驗收未被合併／tag 自動勾選。
+
+已讀 tag／archive 真 receipts 與 LG98 獨立 local／remote readback：annotated `v0.1.60-github-oauth-credential-persistence` object `1473dd0571283919a6b3229d14fa4349cf77020d` peeled 至精確 merge `c8c989a2`，不是文件 commit 或 GitHub Release。2 metadata exact leaves 先在 Git 私有0700 archive copy／readback bytes／SHA／mode／owner／group，才移出 source，未 track／push、未碰 DPK／Apple assets。兩文件只記已完成的這些動作，branch／worktree remove、docs commit／dev push 未預填成功。Ignored／known protected roots 的既有核對只作準備，不能替代移除當刻 fresh gate。
+
+本次兩 docs＋原四 planning／必要 owner evidence 是同一 post-merge 事實回寫語意，可作單一 docs commit；暫擬 `docs(experiments): 補記 PR #60 憑證儲存驗收與合併事實`，最終仍依真正 staged diff 檢查。後續僅 exact-stage 已審聯集，將新 message／範圍與普通 FF HEAD:dev 的維護例外一起交 LG100 Human；未核准不 commit／push dev、不向已 merged PR60 加提交或另建 PR。文件在真 remote dev 安全保存後，才能 fresh 檢查 clean／untracked／unpushed／unique managed／attached／unlocked／非 current／lineage 及 ignored 保護，正常刪 branch／remove worktree／-d；拒絕保留 ref，不能 force／prune。此 approval 不代表尚未執行的 lifecycle 成功或整 Topic／Human acceptance。本人只追加自身 review／LG99 row，未 stage、修改受審文件、執行 Git mutation／測試／tag／archive／cleanup 或真人操作。
