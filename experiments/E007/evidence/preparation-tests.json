@@ -1,0 +1,130 @@
+{
+  "checks": [
+    {
+      "appLaunches": 0,
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E007/Tests -v",
+      "exitCode": 0,
+      "failed": 0,
+      "passed": 21,
+      "pythonControls": 15,
+      "securityOperations": 0,
+      "swiftCoreCases": 6,
+      "swiftHarness": "swiftc -swift-version 6 -D E007_TESTING；temporary MemoryStore harness",
+      "testCount": 21
+    },
+    {
+      "command": "swift format lint --strict experiments/E007/Sources/ProfileRenewalProbe.swift",
+      "exitCode": 0,
+      "fileCount": 1
+    },
+    {
+      "command": "swiftlint lint --no-cache --strict experiments/E007/Sources/ProfileRenewalProbe.swift",
+      "exitCode": 0,
+      "fileCount": 1,
+      "seriousViolations": 0,
+      "violations": 0
+    },
+    {
+      "command": "xcodebuild build -project experiments/E007/ProfileRenewalProbe.xcodeproj -scheme ProfileRenewalProbe -configuration Debug -destination platform=macOS,arch=arm64 -derivedDataPath <independent-temporary-DerivedData> CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -quiet",
+      "exitCode": 0,
+      "independentDerivedData": true,
+      "signingAllowed": false,
+      "warningImpact": "本次 macOS App unsigned build 仍 exit 0；不構成 simulator 或 runtime 驗證",
+      "warnings": [
+        "sandbox/cache access",
+        "FSEvents unavailable",
+        "CoreSimulator service unavailable",
+        "Xcode plist type assertions"
+      ]
+    }
+  ],
+  "experiment": "E007",
+  "guardVerification": [
+    {
+      "basis": "pure tests＋validate_pair source",
+      "guard": "同 profile 不算 renewal；同 App ID/group/certificate/DR",
+      "result": "pass"
+    },
+    {
+      "basis": "Python／Swift pure tests＋source",
+      "guard": "35/45 分鐘固定窗口；cutoff 後拒絕新測量、仍可 cleanup",
+      "result": "pass"
+    },
+    {
+      "basis": "pure finalize negative test",
+      "guard": "Human exact machine SHA；錯 SHA 無法判定",
+      "result": "pass"
+    },
+    {
+      "basis": "MemoryStore harness＋DataProtectionStore source inspection",
+      "guard": "只有隔離固定假 bundle 與本輪 UUID service/account/group namespace",
+      "result": "pass-at-preparation-level"
+    },
+    {
+      "basis": "Swift pure tests＋DataProtectionStore query source inspection",
+      "guard": "renewal read 僅 load；cleanup 精確 delete 後 read-absent",
+      "result": "pass-at-preparation-level"
+    },
+    {
+      "basis": "pure negative test＋CLI source",
+      "guard": "live 明確 opt-in；沒有 live 時 begin 不建立 root",
+      "result": "pass"
+    },
+    {
+      "basis": "W06 eight-file manifest＋targeted source inspection",
+      "guard": "來源、private receipts 與 public manifest 限定；E006 inspection 唯讀重用",
+      "result": "pass-at-preparation-level"
+    },
+    {
+      "basis": "README step 9 對照 export_clean shutil.rmtree(root)",
+      "guard": "cleanup 文件與實際 owned-root 刪除一致",
+      "result": "needs-rework"
+    }
+  ],
+  "limitations": [
+    "所有測試與 unsigned build 只證明準備層能力；沒有真 DPK、profile renewal、拒絕或提示結果。",
+    "實際 A/B profile bytes 差異、相同身分、Human 全段觀察、live 清理與 45 分鐘結果均未驗證。",
+    "準備文件修正後仍須獨立 Reviewer；本收據不放行 live、不代 Human fresh ready 或採用確認。",
+    "未修改 source、測試期望、production、E001–E006 或 step ledger。",
+    "沒有保存原始 build logs、本機絕對路徑、profile/certificate identifiers 或 secrets。"
+  ],
+  "liveState": {
+    "appLaunchPerformed": false,
+    "availabilityIsReady": false,
+    "dpKAdoptionApproved": false,
+    "freshHumanReadyProvided": false,
+    "provisioningPerformed": false,
+    "securityAccessPerformed": false,
+    "signingPerformed": false,
+    "status": "未執行",
+    "t0Started": false
+  },
+  "recordedUTC": "2026-10-19T08:20:13.599470+00:00",
+  "requiredFixes": [
+    {
+      "finding": "步驟 9 無條件宣稱原選定 source App 不刪，但 export_clean 會移除 begin 建立的整個私有 root；選定 App 若位於本輪 Setup/DerivedData 內也會被清理。",
+      "id": "RF-T01",
+      "line": 54,
+      "path": "experiments/E007/README.md",
+      "relatedSource": "experiments/E007/scripts/run_profile_renewal.py:457",
+      "requiredChange": "明列本輪 root 內 proven-owned Setup、App copies 與 DerivedData 隨 root 精確移除；只有 root 外 Human-owned 原選定 App／未證實 owned 的 DerivedData 以及 Apple assets 保留。不得擴大刪除範圍。",
+      "severity": "preparation-documentation"
+    }
+  ],
+  "role": "Tester",
+  "schemaVersion": 1,
+  "scope": "獨立準備驗證；僅 fake-only pure controls、單檔 lint 與 unsigned build",
+  "sourceSHA256": {
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/project.pbxproj": "8cb08f416dc753c49b9bc3ea447ce5c75fa3ffb97388d198895b7a50ad0e6b7b",
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/xcshareddata/xcschemes/ProfileRenewalProbe.xcscheme": "93b4e8876aafc7dfdeb35e24c837cb5ab6266dc3133c34f08fab8e610c97b3d5",
+    "experiments/E007/README.md": "1f6b1970132eb6ea341e9830f4f64b966044f8403e695fdcd83264dbdf1099c6",
+    "experiments/E007/Resources/Info.plist": "9d7ad64ccf83deee5e1b6a09802362214640b19e6f1ba25313aa02a14b33f8c4",
+    "experiments/E007/Resources/ProfileRenewalProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "experiments/E007/Sources/ProfileRenewalProbe.swift": "99cb2e1ea85e60e9387323d3d47ee0b573d5fba848fe5ec347745432ab8eb965",
+    "experiments/E007/Tests/test_protocol.py": "d8042eb152c35be29ddcc568e279929d752bbb39756ee647a99eefc029c7fe0b",
+    "experiments/E007/scripts/run_profile_renewal.py": "4563e2fa5d268da9ec92f1565e2fac0dbbc425c1083dea09c1e67d11a8e94b5f"
+  },
+  "step": "S04a",
+  "topic": "github-persistent-connection",
+  "verdict": "needs-rework"
+}

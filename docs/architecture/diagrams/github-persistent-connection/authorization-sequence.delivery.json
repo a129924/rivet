@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-persistent-connection/authorization-sequence.json",
+  "output": "docs/architecture/diagrams/github-persistent-connection/authorization-sequence.html",
+  "specification": {
+    "sha256": "3992e84bf63911be420a93558157b9611f5826b83bd232552a8034f7440b553c",
+    "bytes": 4241
+  },
+  "artifact": {
+    "sha256": "4b091d99201520e4da7e66a96edaea50f4e3337d53cfa082ff026cc6180c1b9b",
+    "bytes": 708119
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

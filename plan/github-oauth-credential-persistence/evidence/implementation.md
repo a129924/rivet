@@ -331,3 +331,56 @@ Status：completed（作者修訂）。只將dual-client現行composition中的�
 已唯讀核index無staged變更，LG86 completed／approved／required fixes=[]。按LG82 D/P/E/V 26個exact允許leaf準備stage實際變更；兩個個人.swiftpm metadata hash與LG84 checkpoint同，保留原bytes，不納allowlist。只此作者記錄及自身ledger在stage前追加，之後不改已stage內容。本段僅記前置完成，不宣稱尚未發生的git add／staged checks已成功；真正staged path/count/stat/diffSHA與skill語意判定，於操作後由tool/private receipt交root及Human，不寫回staged檔以免自指。
 
 既有工具／證據／docs經LG86確認屬單一topic語意；仍須只讀真正staged diff依git-commit-convention決定message，不自批commit。若index/path混雜或staged需調整，停Human、不自拆／reset。LG88為下一Human停點；未commit/push/merge/rebase/tag/PR write，也不執行tests/build/sign/App/DPK/provision/cleanup。LC06、Human visual/S08與五conflict整合仍尚缺。
+
+
+## LG91（2026-11-10）：dev 非提交整合與 configuration 邊界
+
+上游 LG90 approved／required fixes=[]。依 Human 採用，在原 feature `fbd4434a` 準備 `git merge --no-commit --no-ff 758aca9bb518f2a21f20f47609335fac49043370`；HEAD 未變，MERGE_HEAD 精確為該 dev tip。事前 index 空，五個 dirty planning／review 葉與 incoming paths 無交集，private copies／hashes 保護後完成 merge，恰有五個預期 conflicts。
+
+五葉已解並 exact-stage：configuration 完整保留 feature 原 bytes；四 Markdown 保留兩邊有效內容，將首次授權與正式 DPK 的現況對齊，獨立驗證工作線的 freeze／成功／unknown／失敗留原歸屬。dual-client 新短節明列 typed constructor、兩 factories guard 與 App blank-only 前置狀態限制；未改其他工作線檔案或圖。公開 init 仍 typed／public fields／不 trim；兩個原一般 throwing factory 只增共用 private blank-validation、在建立依賴前拋 AuthorizationError。這是 Human 採用的直接 constructor 錯誤型別變更，不稱 dev 所有直接呼叫端零回歸。
+
+### 實際 TDD／受影響檢查
+
+| 邊界 | 結果 |
+|---|---|
+| RED：新兩 factory blank ID／secret 反例，production guard 尚未加入 | 3 tests／1 suite、8 issues、exit 1；各空白值仍成功建立 fetcher／session，可歸因缺 admission guard，非 compile／環境失敗；原始 fake diagnostics 僅私有保存 |
+| GREEN：同一 suite 加最小 guard | 3 tests／1 suite、exit 0 |
+| 受影響整合：DPK fake store／provider／factories／authorization session／code exchange／static isolation | 74 tests／6 suites、exit 0 |
+| 獨立 public consumer：typed init function reference／未 trim public fields／兩空值 typed error／既有 public surfaces | 11 tests／1 suite、exit 0 |
+| 四個受影響 Swift 檔 strict swift-format／SwiftLint | 均 exit 0 |
+| 四份衝突 Markdown | 102 個相對 links 含 heading anchors、conflict markers／有限 secret 及本機 abs patterns 零 findings；diff --check 與 cached --check 均 exit 0 |
+
+命令（root package 執行；consumer 明列 package path，raw logs 僅私有）：
+- `swift test --skip-update --filter GitHubOAuthFactoryTests` → 1。
+- `swift test --skip-update --filter GitHubOAuthFactoryTests` → 0。
+- `swift test --skip-update --filter GitHubOAuthDataProtectionStoresTests|GitHubOAuthFactoryTests|GitHubOAuthAuthorizationSessionTests|GitHubOAuthCodeExchangerTests|OAuthTokenProviderTests|GitHubIntegrationTests.StaticIsolationTests` → 0。
+- `swift test --package-path Tests/GitHubIntegrationConsumer --skip-update --filter PublicAPITests` → 0。
+- `xcrun swift-format lint --strict Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuth.swift Tests/GitHubIntegrationTests/GitHubOAuthFactoryTests.swift Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift` → 0。
+- `swiftlint lint --strict --quiet --no-cache Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuth.swift Tests/GitHubIntegrationTests/GitHubOAuthFactoryTests.swift Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift` → 0。
+
+### 來源／stage 與限制
+
+Merge 後、手動修復前保存完整 auto-index stages；resolution 後核 1,328 個非手動 auto entries 的 mode/blob 完全相同，零額外 delta；全部 unmerged stages 已清。手動 stage 僅五 conflicts＋factory／FactoryTests／PublicAPITests 八葉；dev 自動帶入的其他檔案保留來源，不是本輪手寫變更。四 planning 與 Reviewer planning evidence 在 merge 中原 bytes 保留；自己的本交接及 step 變更另列。兩個個人 metadata 原 bytes 未變且未 stage。
+
+| 手動 source／test | SHA-256 |
+|---|---|
+| `Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift` | `570bfc17cc8d3c5d4701b47a74043c1294196c52cec95ff8c9831a9761b60e95` |
+| `Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuth.swift` | `6075c4b2127df0a73cd2bd6d9f1342345c19cc417b3e9b0215c82c0ee493ff40` |
+| `Tests/GitHubIntegrationTests/GitHubOAuthFactoryTests.swift` | `ef5f11eb9f381488f99b13c78a9364ccab478a5b7c3f4c8a9a3428fe2229a833` |
+| `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift` | `f168355968e2e2fecfcd56ed1c7fda6ac024e2cbb3d63caf60bfe8e15b796276` |
+
+正式 stores adapter 及 configuration source bytes 與原 feature 完全相同；原 LG81-Cap-R 證據仍只涵蓋其原來源／假 bundle／指定環境，不證明新 merged binary 已真人驗收。未啟 App／DPK、未 xcodebuild／codesign／修改資產或清理，未重其他 topic／完整 live suites。尚未 commit／push／更新 PR，也未代 LG92／LG93 approval；遠端 conflict 要待必要審查及新 Human commit 核准後才可能解除。私有 baseline／auto-index／resolution／doc-checks／每次命令 stdout/stderr 與 JSON 位置已工具交接，無私有路徑寫入本文件。交 LG92 獨立 Tester。
+
+
+### LG91 最終 exact-stage 前置（2026-11-10）
+
+LG93 approved 後，已核原八個手動 resolution 與 1,328 個非手動 auto entries 及個人 metadata 未變，剩餘 unstaged 僅四 planning 與四 owner evidence 的已審內容。依同一雙親整合語意，只將這八個精確 leaves 加入既有 merge index；publication 未修改。本段寫入時實際 stage／stat／diff SHA／commit-convention 檢查尚待後續工具，不預填成功。真正 staged 結果私有保存並交 root／Human，不在 stage 後追加 tracked 文件；未獲新 message 確認前不 commit／push／更新 PR。
+
+
+### RF-LG94-LINT 作者修復交接（2026-11-10）
+
+上游 bounded planning review approved／required fixes=[] 後，只套用已審候選：StaticIsolationTests 的 expectedPaths 前兩字串併同一行。原 source SHA `14a5aedc7f7553acd534e0a1e3348310fd300fae6408c1af6310a62f852a4508` → candidate／repo SHA `1640e25df6e28dc610757e702513875dfbeb3e3f6b6d74e9ce335d95fdc1484d`；non-whitespace bytes 完全相同，801→800，不改 allowlist／保護或 lint 規則。
+
+真 repo 單檔 `xcrun swift-format lint --strict Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 與 `swiftlint lint --strict --quiet --no-cache Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 均 exit0。`swift test --skip-update --filter GitHubIntegrationTests.StaticIsolationTests` 未用 skip-build，實際 compile 該新檔／Build complete，29 tests／1 suite 通過（wall174.046s，suite36.359s），非零命中、自然完成，未 timeout／kill。原174秒包含 build／工具等待，不能冒稱 suite 同耗時。原74／11／live不重跑。
+
+八個已審 resolution source／docs hashes、兩個 metadata bytes 與原 staged index 保持；只工作檔一行修復、四 planning 與 owner evidence 可見變更。第一次 normal hooks commit exit1 的原 receipt／raw logs 私有保留，不改為成功；本輪未 stage 或 retry commit／push／PR write。source patch／不變式、compile 與三個 check 收據已工具交 Tester，交獨立 bounded 驗證／成果審查，不自批。

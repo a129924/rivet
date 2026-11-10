@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-first-sign-in/authorization-sequence-v2.json",
+  "output": "docs/architecture/diagrams/github-first-sign-in/authorization-sequence.html",
+  "specification": {
+    "sha256": "96a7f296c159a2b499715d7e41b667fa1e8e29b1c099343c96203a9ebb6dc744",
+    "bytes": 2975
+  },
+  "artifact": {
+    "sha256": "114363629d7fbf9dd613d0f620d0b68756941124fb44351e09f55b01e1277526",
+    "bytes": 704374
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  },
+  "note": "Normalized repository-relative copy of successful deliver result."
+}

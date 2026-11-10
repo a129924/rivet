@@ -1,0 +1,18 @@
+// !$*UTF8*$!
+{ archiveVersion = 1; classes = {}; objectVersion = 56; objects = {
+AA0000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRenewalProbe.swift; sourceTree = "<group>"; };
+BB0000000000000000000001 = {isa = PBXBuildFile; fileRef = AA0000000000000000000001; };
+CC0000000000000000000001 = {isa = PBXFileReference; explicitFileType = wrapper.application; path = ProfileRenewalProbe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+CC0000000000000000000002 = {isa = PBXGroup; children = (CC0000000000000000000003, CC0000000000000000000004); sourceTree = "<group>"; };
+CC0000000000000000000003 = {isa = PBXGroup; path = Sources; children = (AA0000000000000000000001); sourceTree = "<group>"; };
+CC0000000000000000000004 = {isa = PBXGroup; name = Products; children = (CC0000000000000000000001); sourceTree = "<group>"; };
+DD0000000000000000000001 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (BB0000000000000000000001); runOnlyForDeploymentPostprocessing = 0; };
+DD0000000000000000000002 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+DD0000000000000000000003 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+EE0000000000000000000001 = {isa = PBXNativeTarget; buildConfigurationList = FF0000000000000000000002; buildPhases = (DD0000000000000000000001, DD0000000000000000000002, DD0000000000000000000003); buildRules = (); dependencies = (); name = ProfileRenewalProbe; productName = ProfileRenewalProbe; productReference = CC0000000000000000000001; productType = "com.apple.product-type.application"; };
+EE0000000000000000000002 = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = YES; LastUpgradeCheck = 2600; TargetAttributes = {EE0000000000000000000001 = {CreatedOnToolsVersion = 26.0; ProvisioningStyle = Automatic; SystemCapabilities = {com.apple.Keychain = {enabled = 1; }; }; }; }; }; buildConfigurationList = FF0000000000000000000001; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base); mainGroup = CC0000000000000000000002; productRefGroup = CC0000000000000000000004; projectDirPath = ""; projectRoot = ""; targets = (EE0000000000000000000001); };
+FF0000000000000000000001 = {isa = XCConfigurationList; buildConfigurations = (F10000000000000000000001); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
+FF0000000000000000000002 = {isa = XCConfigurationList; buildConfigurations = (F20000000000000000000001); defaultConfigurationIsVisible = 0; defaultConfigurationName = Debug; };
+F10000000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; SDKROOT = macosx; SWIFT_VERSION = 6.0; MACOSX_DEPLOYMENT_TARGET = 15.0; }; name = Debug; };
+F20000000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; CODE_SIGN_IDENTITY = "Apple Development"; CODE_SIGN_ENTITLEMENTS = Resources/ProfileRenewalProbe.entitlements; INFOPLIST_FILE = Resources/Info.plist; GENERATE_INFOPLIST_FILE = NO; PRODUCT_NAME = ProfileRenewalProbe; PRODUCT_BUNDLE_IDENTIFIER = "$(E007_BUNDLE_IDENTIFIER)"; E007_BUNDLE_IDENTIFIER = local.rivet.renewalprobe.unconfigured; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; SWIFT_STRICT_CONCURRENCY = complete; ENABLE_HARDENED_RUNTIME = YES; ENABLE_DEBUG_DYLIB = NO; ENABLE_APP_SANDBOX = NO; COMBINE_HIDPI_IMAGES = YES; }; name = Debug; };
+}; rootObject = EE0000000000000000000002; }

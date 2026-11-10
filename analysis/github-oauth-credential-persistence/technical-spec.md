@@ -880,3 +880,30 @@ DK01–06 affected驗收：01真Swift parser/FS/NSNumber/兩channel/fence及原r
 **CD04 PR整合尚缺。** Planner audit：dev／origin-dev 758aca9b，五個conflict為README.md、Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift、docs/architecture/README.md、docs/architecture/github-oauth-dual-client.md、docs/design-principles.md。本topic public configuration＋typed finite error／空字串拒絕，dev internal／AuthError／trim拒絕有契約差異。現在只在publication草案列未整合，不merge/rebase/cherry-pick、不混dev code／改public contract／做相容層。日後另授整合時先核config公開surface及consumer與原行為再審；未確定相容性即停，不能拿本輪文件review當整合通過，也不以merge禁令阻止本次文件收尾。
 
 **CD05 有限驗證及提交邊界。** 新docs只查relative links/敘述對證據/whitespace/有限secret及本機abs掃描；不開raw私有資產或重跑suite/build/sign/App/DPK/CMS。原工具交付沿LG77/LG79/LG81及各freeze的獨立證據，不說成今日重測。Git stage另由受派Implementer在成果Reviewer approved後只用plan exact allowlist；先讀index，任何未知staged項不reset，停回報。排除兩個既有個人.swiftpm xcschememanagement leaf及所有xcuserdata/private/build/credential資料，保存其bytes；不使用add -A／add .。Stage後核完整path set及diff --cached --check，將實際staged diff依git-commit-convention提出語意邊界/message供Human。此輪不commit/push/merge/rebase/PR write；圖視覺、S08與cleanup／整合缺項不因stage而核准。
+
+
+## LG89：衝突整合的 configuration 契約
+
+本節取代本輪 integration 尚未決定的 constructor 選擇，不追改歷史結論：
+
+1. `GitHubOAuthAppConfiguration.swift` 保留 feature 版本的 public immutable fields、configuration store protocol、脫敏 diagnostics 及 `init(clientID:clientSecret:) throws(GitHubOAuthAppConfigurationError)`。空字串是 `invalidConfiguration`；任何非空字串（含全空白／換行）原樣保存，不做 trim。dev 直接 constructor 的 AuthorizationError 預期改為這個已採用契約，須以精確測試／長期文件明示。
+2. dev 的 `GitHubOAuth.makeTokenFetcher(configuration:)` 與 `makeAuthorizationSession(configuration:redirectURI:)` 已各有一般 `throws`，因此不改 signature；新增共用 private validation，對 clientID／secret 各用空白與換行判斷是否 blank，失敗拋無 payload 的 `GitHubOAuthAuthorizationError.clientConfiguration`。檢查必在 fetcher／exchanger／session 建立前；合法值不 trim、不改 token lifecycle／request 行為。新增先驗敘述後，fetcher factory 保留明確 return。
+3. 不修改 internal session／code exchanger 或驗證 App；不把 constructor 改動宣稱成所有 dev consumer 完全無差異。特別是 App 環境 `try?` 的 blank-only 起始狀態限制如 requirements LG89；授權入口仍拒絕、不放寬遠端授權。
+4. 四個 Markdown conflicts 合併兩邊仍成立的產品／架構能力與獨立工作線結果，消除現行 DPK／初次授權 deferred 的矛盾。E007／登入歷史保留原歸屬、日期與限制；只整合 dev 既有內容，不編寫該工作線的新實作。原圖 bytes 與 live 證據不改，不執行 signed host。
+
+### CF01–CF05 必要驗收
+
+| ID | 驗收與證據界線 |
+|---|---|
+| CF01 | 準備 `758aca9b` 到原 feature 的非提交 merge；五個已知 conflict 全部消解、無 unmerged index／新 conflict markers。額外真 conflict 先列具體差異，不用 ours／theirs 全檔覆蓋；新 merge commit 保留雙親，無 rebase／force。 |
+| CF02 | 直接 constructor 的兩空值 typed-error、public typed-throws consumer、全空白／換行仍可建構且原值不 trim 均成立；診斷無 credential／secret。兩個 factories 分別拒絕 blank clientID 與 blank secret、error 精確 AuthorizationError，先拒絕而不建 session／fetcher；合法路徑原測試維持。 |
+| CF03 | 以 fake backend 跑受影響 DPK configuration／store/provider、授權 factory／session／code exchange suites、public consumer 與 GitHubIntegration static isolation。先以新 factory 負例展示無 guard 的失敗，再最小修正；未影響真人／完整 CLI／其他 topic suite 不重跑。精確命令、結果及來源差異由 Tester 核實，不能用測試期待改名冒稱無回歸。 |
+| CF04 | 衝突文件的現行能力／連結與 typed-constructor／factory 邊界準確；有限 whitespace／相對 links／秘密及本機絕對路徑檢查。已通 DPK 只限原假 bundle／指定環境／來源，不聲稱新 merge binary 已真人驗收；cleanup／visual／S08 不勾完成。 |
+| CF05 | 原 dev tip 所帶無衝突 changes 與本輪手動修復明確分層，兩個個人 metadata bytes 保留且不 stage。獨立 Reviewer 後核真正 staged tree／parents／scope，再依 git-commit-convention 提新 message；Human 明確確認前不 commit／push／更新 PR。 |
+
+
+### RF-LG94-LINT：唯一排版 delta
+
+唯一新增手動葉為 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`。在 `targetContainsOnlyTheLockedSourceFilesAndNoForbiddenImports()` 的 expectedPaths 陣列，將 `"Contracts/CredentialTypes.swift",` 與次行 `"Contracts/GitHubAccessTokenProvider.swift",` 放同一行，除此無變更。以去 whitespace 後逐 byte 相等為 invariant；檔801→800、函數81→80，不改任何 allowlist member、排序／assertion 或 import policy。私有精確 candidate 的 strict swift-format／SwiftLint 已通，但不冒稱 repo source 已修或獨立驗證。
+
+窄驗收：實際 repo delta 與 candidate 相同／非 whitespace invariant 成立；strict format／SwiftLint 重驗該檔；只跑 GitHubIntegration StaticIsolationTests，不重跑74／11或真人；其他已審來源／兩個人 metadata 不變。planning／成果獨立 bounded review後，刷新實際 staged SHA／tree／統計及 commit 語意檢查；message仍為 Human 已確認的同一 integration fix。正常 hooks 不 bypass、不 disable 規則，不更改 thresholds。若必須改非排版語意則停回審，不能將本節當擴scope授權。

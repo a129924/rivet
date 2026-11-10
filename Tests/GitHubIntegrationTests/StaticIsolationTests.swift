@@ -353,8 +353,7 @@ struct StaticIsolationTests {
       .appendingPathComponent("Sources/BoundedContexts/GitHubIntegration")
 
     let expectedPaths: Set = [
-      "Contracts/CredentialTypes.swift",
-      "Contracts/GitHubAccessTokenProvider.swift",
+      "Contracts/CredentialTypes.swift", "Contracts/GitHubAccessTokenProvider.swift",
       "Contracts/GitHubOAuthCredentialBundle.swift",
       "Contracts/GitHubOAuthAppConfiguration.swift",
       "Contracts/GitHubTokenStore.swift",
@@ -371,6 +370,10 @@ struct StaticIsolationTests {
       "Composition/GitHubClientScope.swift",
       "Composition/GitHubClientPreparationError.swift",
       "OAuth/GitHubOAuthEndpoints.swift",
+      "OAuth/GitHubOAuth.swift",
+      "OAuth/GitHubOAuthAuthorizationSession.swift",
+      "OAuth/GitHubOAuthCodeExchanger.swift",
+      "OAuth/GitHubOAuthAuthorizationError.swift",
       "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift",
       "REST/GitHubHTTPClient.swift",
@@ -411,6 +414,7 @@ struct StaticIsolationTests {
       let httpClientFiles: Set = [
         "Composition/GitHubClientScope.swift",
         "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
+        "OAuth/GitHubOAuthCodeExchanger.swift",
         "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
         "REST/GitHubHTTPClient.swift",
         "REST/GitHubRestClient.swift",

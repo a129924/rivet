@@ -492,3 +492,50 @@ CO04：publication的PR title/body/驗證清單及限制為草案，列五個衝
 CO05：成果Reviewer approved後，Implementer唯讀核index/changed範圍及兩個個人metadata前後bytes相同，用exact leaf allowlist stage，核staged names與diff --check，再依git-commit-convention提出Human確認；任何多餘path/secret/不明差異先停，不reset他人index。不commit/push/merge/PR write。
 
 LG82 PlanCreator（本候選）→LG83獨立PlanReviewer→LG84 Implementer文字回寫/PR草案→LG85 Tester CO01–04有限文件核對→LG86獨立Reviewer→LG87 Implementer exact-stage及實際staged diff／git-commit-convention提案→LG88 Human：確認message／是否後續提交及圖visual/S08或剩餘整合/cleanup安排。LG88前不commit，Human未答保持pending；本輪不執行cleanup或整合。各role只寫本人證據，不互批。若發現真code問題，停本收尾scope交明確bounded評估，不直接改產品。
+
+
+## LG89：PR #60 五個衝突的受限修復
+
+最新 Human 授權與採用決策見 requirements LG89，唯一設計／驗收以 technical-spec LG89／CF01–05 為準。此節只解除既有 closeout 對本次 dev 整合的排除；不授新 commit 或遠端更新，不改其他歷史限制。
+
+### 精確手動修改 manifest
+
+- 衝突五葉：`README.md`；`Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift`；`docs/architecture/README.md`；`docs/architecture/github-oauth-dual-client.md`；`docs/design-principles.md`。
+- 授權入口：`Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuth.swift`（dev 既有檔，只 private blank-validation 接線）。
+- 相容測試：`Tests/GitHubIntegrationTests/GitHubOAuthFactoryTests.swift`（dev 既有檔；直接 constructor 採用結果、兩 factories blank／合法／redaction）；必要時 `Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PublicAPITests.swift`（typed-throws／public fields 跨 target compile 斷言）。既有 store／provider tests 不改，只跑受影響範圍。
+- P：本 topic 原 requirements／technical-spec／plan／step 四葉；E：既有 `plan/github-oauth-credential-persistence/evidence/{planning-review,implementation,tests,review,publication}.md`，各 owner 只追加實際結果，非每葉必改，不建立 summary／新框架。
+
+`git merge --no-commit --no-ff 758aca9bb518f2a21f20f47609335fac49043370` 只可由後續 Implementer 在原 feature worktree 執行；前置確認 HEAD 仍為已核 feature tip、tracked/index 無其他工作，保留個人 metadata checkpoint。dev 正常 merge 帶入的既有無衝突檔案不是本輪手動新增範圍；須在 evidence 將自動合併來源與上述 resolution delta 分開，不為測試修改 E007／驗證 App。若 head/base 已變，先唯讀重新核具體差異，不拿過時 pin 執行。
+
+| 欄位 | 本次受限契約 |
+|---|---|
+| In-Scope | 原 feature 的 dev 非提交 merge、五 conflicts、已採 configuration／兩 factory validation 及必要 tests／docs／證據 |
+| Out-Of-Scope | 新 topic／branch／worktree、dev worktree 實作、E007／完整登入新功能、公開簽名額外破壞、新圖、live／DPK／sign／App 啟動／資產／清理、未核准 commit／push／PR 更新／PR merge |
+| ReadOnly | adapter／provider／ports／validation host 及圖、所有原 live 收據／成功／unknown／失敗、Apple assets、兩個個人 metadata；其他 dev 工作只作正常 merge 來源 |
+| Written | 僅上述手動 leaves、四 P／必要 owner E；普通私有非真人測試 logs 及 Git merge/index metadata；無新 repo leaf |
+| Deleted | 無；不清理測試資料、Apple assets、私有 root 或個人檔案 |
+| Modify | Plan-Creator 只 P；獨立規劃審查後 Implementer 解衝突／private guard／tests；Tester／Reviewer 僅自身 evidence／row |
+| Goal | configuration 取捨符合 Human 選擇，授權入口仍拒 blank，保留兩邊有效內容且有可審 staged merge／message |
+| Non-Goal | 零 constructor 行為差異、驗證 App UI 前置狀態不變、新 merge binary 已 live、整 Topic／cleanup／Human 接受自動完成 |
+| TestCase | CF01–05；先受影響 TDD，再精確 integration suites／consumer／isolation、文件檢查與獨立審查；不重既有 live／未影響 suite |
+
+LG89 Plan-Creator 最小 amendment → LG90 獨立 Plan-Reviewer → LG91 Implementer 非提交 merge／TDD／解衝突 → LG92 Tester 受影響非真人整合核驗 → LG93 Reviewer → LG94 Human：真正 staged diff 的新 merge commit 範圍／message。LG94 前不得 commit，亦不 push／更新 PR；確認只限原 message／25 檔的舊 LG88 授權不延用至本次 merge。各角色保留原歷史，只填自身結果。
+
+
+### RF-LG94-LINT：已核 merge 範圍內的最小 hook 回修
+
+LG89 manifest 唯一新增手動 leaf：`Tests/GitHubIntegrationTests/StaticIsolationTests.swift`；它原已由 dev 正常整合帶入 index。只採 spec 所列一行收斂，不能修改其他來源／測試行為。四 artifacts／owner evidence 仍依原 manifest 只追加真實結果；不改其他歷史，無新 leaf／step／Mission。
+
+| 欄位 | 本 delta |
+|---|---|
+| In-Scope | 上述同檔 whitespace-only 收斂、窄驗證／獨立 review、刷新 staged commit 檢查 |
+| Out-Of-Scope | 規則停用／threshold／hooks bypass、allowlist／API／production 行為修改、其他整合或新功能、App／DPK／簽章／資產／清理 |
+| ReadOnly | 原八個 resolution source／docs、其餘 auto entries、原失敗 receipt／各歷史、兩個個人 metadata |
+| Written | 四 planning／必要 owner evidence；一個既有 test leaf；私有新 amendment receipt，不覆原 commit failure |
+| Deleted | 無 |
+| Modify | 先 planning 候選；獨立審查後 Implementer 只一行 whitespace 收斂並 exact-stage 必要變更 |
+| Goal | 同一 Human 核准的 merge fix 可通正常 hooks，且非 whitespace byte invariant 成立 |
+| Non-Goal | 新語意／新公開契約、重跑完整驗收、把前次 hook failure 覆寫為成功 |
+| TestCase | 真 repo delta／invariant、單檔 strict format／SwiftLint、GitHubIntegration StaticIsolationTests、其他來源／metadata hashes、refreshed staged check |
+
+原 Human 核准 message 未變。完成 bounded planning review→Implementer／窄驗證→獨立成果 review→刷新 commit-convention 後可沿原授權執行正常 commit、push、PR 更新；不因單純格式要求重問 Human。若語意／message／授權範圍改變則不得延用。

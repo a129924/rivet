@@ -468,3 +468,30 @@ CMS signer status／既有 Apple chain trust、原 DER/date、Team/AppID prefix�
 **completed／approved；required fixes=[]。** 已讀README/design、SDD/PlanReviewer與四artifacts LG82/CD01–05/CO01–05；D六文字葉、P四檔、E八既有owner證據、V九葉exact-stage聯集及Readonly/Modify界線明確。無已知產品code必修，本次僅必要能力/驗證/導覽與publication草案、現況帳本及後續exact-stage/staged語意提案，未擴API/圖/工具/新artifact。文件必保LG81本環境假bundle DPKpass及未驗configuration/拒絕/斷電等界線；原README歷史freeze不當目前9/9，圖bytes/QA沿初始snapshot，Humanvisual/S08/LC06與整合缺項不代答、不抹歷史。
 
 五base衝突及configuration公開契約差異只列未整合，不機械取邊/merge/改contract；不影響已核DPK結果。CO01–04有限docs/links/secret/abs/unchanged-bytes核對適度，不重成功suite/live。LG86approved後LG87先讀index、只exactleaf stage、排除個人metadata/xcuserdata/私有資產、核staged diff並依commit skill提message，未知staged不reset；最終停Human，不commit/push/merge/rebase/PR write或cleanup。只可交LG84受限文字收尾。本人只唯讀計畫及自身evidence/row，未改作者內容或執行tests/Git/資產/live。
+
+
+## LG90 Plan-Reviewer：LG89 dev 衝突整合（2026-11-10）
+
+**completed／approved；required fixes=[]。** 只核本輪四 artifacts LG89／CF01–05 及已提供的 Human 選擇，不把原 LG88 確認延用至新 merge commit。Public configuration fields／typed initializer／非空原值不 trim 明確保留；直接 dev constructor 的 error／blank 行為差異及驗證 App 起始狀態限制有揭露，不冒稱零回歸。兩個 factory 已有一般 throws，前置共用 blank guard 仍回 AuthorizationError，無額外 signature source break，不改 App、internal session／exchanger 或 DPK adapter。
+
+精確 manifest 是五 conflict 葉、既有 factory 與必要 factory／consumer 測試、原四 planning 與按 owner 的既有 evidence；dev 正常 merge 來源和手動 resolution delta 分開，保留兩邊有效長期結論及歷史。CF01–05 覆 unmerged／marker、typed constructor／原值保存、兩入口 blank 拒絕與合法路徑、受影響 suites／consumer／isolation、文件／公開資訊與個人 metadata。只做必要非真人核驗，原 DPK 通過仍限其來源／環境，無新 live 推論。
+
+執行前需由 Implementer 核 HEAD／base pin 與原 index、確認本輪 planning／owner evidence 未與 dev 來源重疊；這些已授權未提交 amendments 必須保留。若 merge 因 dirty 內容拒絕，不得 reset／丟檔或改採 autostash 繞過，須先交代具體重疊及最小保護方式；本審查未執行 Git 驗證。使用 --no-commit --no-ff，解決並驗證後 exact-stage／新 message 待 LG94 Human，禁止未確認 commit／push／PR 更新、rebase／force／PR merge。簽章、App／DPK、資產／cleanup 與個人 metadata 停點保持。
+
+本次受審四葉追加前 SHA-256：
+
+- `analysis/github-oauth-credential-persistence/requirements.md`：`9f109bdb817a8815e208ec3e873deb72972ce7b431799becb6c19ca6c9144a48`。
+- `analysis/github-oauth-credential-persistence/technical-spec.md`：`ff01c22517a6785bdf3924c0565d6b1b0f556ab9f0ffc7086cd811cfdeb54a36`。
+- `plan/github-oauth-credential-persistence/github-oauth-credential-persistence.plan.md`：`828d14496200b5f688202da0ff3fcfad959205e5eb49dd1cb9b599e6d0c43e29`。
+- `plan/github-oauth-credential-persistence/github-oauth-credential-persistence.step.md`：`4f198755a6173fea50bcfa205613185c82762e950f9709d8828f9d11fa75562c`。
+
+Reviewer 僅追加自身 planning-review 與 LG90 結果；未修改受審規劃、程式或其他角色 verdict，未測試／merge／stage／執行 Git／真人操作。
+
+
+### RF-LG94-LINT Plan-Reviewer 窄審查（2026-11-10）
+
+**completed／approved；required fixes=[]。** 僅核四 artifacts 最新 RF-LG94-LINT 與真實私有候選；原 LG93 對其他已審來源的 approval 不重開。Reviewer 直接以原 repo source 對 candidate 取得唯一 diff：expectedPaths 陣列的前兩個既有字串由兩行併為一行，字串內容、comma、順序及其他內容完全相同；逐 byte 去 whitespace 比對成立，實際行數 801→800。這是正常 hook 已識別的 file／function 行數限制之等價排版收斂，沒有修改 allowlist、assertion、API、規則／threshold 或依賴，不為通過測試移除安全檢查。
+
+候選 source SHA-256 `1640e25df6e28dc610757e702513875dfbeb3e3f6b6d74e9ce335d95fdc1484d`；尚未改 repo source 的 SHA-256 `14a5aedc7f7553acd534e0a1e3348310fd300fae6408c1af6310a62f852a4508`。私有候選的 format／lint receipts exit 0，只證候選，不能代替之後真 repo 的單檔 strict checks／StaticIsolationTests。所列驗收恰覆實際 delta、non-whitespace invariant、既有來源／metadata hash 與 staged refresh，無需重跑 74／11 或真人驗收。
+
+此 leaf 原已位於 Human 核准的同一 merge 範圍，訊息與功能語意不變；依原 Human 授權完成 Implementer→獨立 Tester／Reviewer→刷新真正 staged diff 語意核對後，可續正常 commit，不需為這個等價排版再索同一批准。首次 hook failure／logs 與已通結果均保留；不 bypass hook、不改設定、無新真人／DPK／資產／cleanup 權限。若真實 delta 超出此候選或 invariant 不成立，原授權不得擴用。本人只讀文件／候選並追加自身證據／row，未改 source／index、未跑 Git／tests／native lint 或 retry commit。

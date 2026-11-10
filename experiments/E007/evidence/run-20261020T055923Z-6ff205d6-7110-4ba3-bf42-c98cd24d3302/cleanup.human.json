@@ -1,0 +1,12 @@
+{
+  "actions": [],
+  "freeTextOmitted": true,
+  "machineReceiptSHA256": "25b179ce18daedcb70f5325ab23ebaba492d8a0d4df9e9e9d2dc8d1f9216c9cd",
+  "namespace": "6ff205d6-7110-4ba3-bf42-c98cd24d3302",
+  "phase": 3,
+  "privateObservationSHA256": "12fd1bd7dc761db1dfdee92b0ca8251f266bbaffbc38359ff8abb51ef91505d2",
+  "promptCount": 0,
+  "purposes": [],
+  "recordedUTC": "2026-10-20T06:11:18.963933+00:00",
+  "wholeStageObserved": true
+}

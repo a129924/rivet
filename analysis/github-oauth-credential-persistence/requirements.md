@@ -155,3 +155,17 @@ RF-LG74-01最小修訂：新Human record/authority必綁同一本機kernel boot-
 來源為User本輪收尾授權及Planner bounded audit approved。LG81-Cap-R已獨立approved、required fixes=[]；LC01–05／07本輪完整A→freshA→整筆B→freshB→真同身分重建→freshB與必要Human結果成立，只限假bundle與指定環境。AC01–08沿S05/S06；AC09原圖技術驗證成立、Human visual仍pending。LC06 cleanup未做且本輪禁止，S08 Human acceptance不代填。舊窗口／成功／unknown／資產及額度均不改，不重跑驗收。
 
 本輪只將長期能力文字、驗證限制與帳本現在式對齊證據，準備publication既有leaf內的PR更新草案及exact-stage／commit-message提案。PR仍Draft；本輪不commit/push/merge/rebase或寫GitHub，前文早期publication授權不作本次執行依據。五個base衝突與public configuration差異尚未整合，不能因此否定DPK結果，也不能據此變更原公開契約。精確manifest／九欄／步驟以plan LG82與spec CD01–05為準；不新增Mission／summary／release／VERSION或新工具驗證。
+
+
+## LG89（2026-11-10）：PR #60 與 dev 的受限衝突整合
+
+Human 要求修復五個 conflict，並明確選擇「保留 PR #60 typed throws，授權入口維持原拒絕語意」。本輪仍是原 topic／feature branch；目標是準備可審查的 dev 整合，不新增登入能力或執行真人驗收。唯讀核對的 feature tip 為 `fbd4434a`，dev tip 為 `758aca9b`，兩個物件已在本機。前輪 commit／push／PR 更新由當時 Human 分段授權並完成；舊 LG87／LG88 紀錄保持，不把那次 message 的確認延用至新 merge commit。
+
+採用本 topic 的 public configuration fields、`throws(GitHubOAuthAppConfigurationError)`、空字串拒絕與不 trim；dev 直接呼叫同一 initializer 的失敗結果明確改採 `invalidConfiguration`，不是零行為變更。兩個既有 throwing OAuth factories 先驗 blank clientID／secret，以 `GitHubOAuthAuthorizationError.clientConfiguration` 拒絕，再建立 fetcher／session；不擴大兩個 factory 的公開簽名。驗證 App 的環境配置 `try?` 在 blank-only 輸入時可能從 constructor 階段禁用延後到 factory 拒絕，故不保證該 App 的 UI 前置狀態完全相同；本輪不修改它。
+
+既有正式 adapter、provider lifecycle 與 LG81-Cap-R 完整假憑證 DPK 通過結果保留原來源／環境範圍。只跑受影響的非真人相容檢查，所有 live／unknown／失敗歷史不重寫。修復並經獨立測試／審查後，先提真正 staged merge diff 與新 message 供 Human 確認；未確認不 commit／push／PR 更新，不 merge PR。cleanup、Human visual／S08 仍另列，不因整合自動完成。
+
+
+### RF-LG94-LINT（2026-11-10）：同一整合 commit 的 lint 收尾
+
+Human 已確認本輪 merge message，正常 hooks 阻擋了第一次 commit，未產生 commit／push／PR 更新。唯一失敗為自動合併後 `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` 的 file_length=801（上限800）及同檔 allowlist test function_body_length=81（上限80）。此檔本已在核准的258檔整合範圍，不新增功能或更改授權決策。只將 expectedPaths 前兩個字串合放一行，非 whitespace bytes 順序完全相同；不變更 allowlist、斷言、產品/API 或 lint 設定。失敗原 receipt／logs 保留，非盲目重試；先 bounded 獨立審查與窄驗證，再刷新 staged 檢查，沿既有 Human 核准的同一 message 提交。

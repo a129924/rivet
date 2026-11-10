@@ -1,10 +1,10 @@
 # GitHub OAuth 正式憑證儲存：執行帳本
 
 - Topic：`github-oauth-credential-persistence`
-- Phase：LG86成果審查approved；LG87 exact-stage前置完成，實際staging/diff待工具回報，之後停LG88 Human。
-- Current step：LG87 stage前置完成（實際結果由tool/private receipt交接）；下一停點LG88 human-check。
+- Phase：RF-LG94-LINT 已審候選的一行等價修復及作者窄驗證完成；待獨立 Tester／Reviewer，不盲 retry commit。
+- Current step：RF-LG94-LINT bounded verification pending；原 Human 同 message 授權保持，尚未 stage 新修復或提交。
 - Branch：`feat/github-oauth-credential-persistence`；base／PR target：dev。Worktree／base由Dispatcher提供，本角色未執行Git。
-- 最後更新：2026-11-05，Implementer LG87 stage前置；未宣稱尚未執行的staged checks或任何commit/push/merge。
+- 最後更新：2026-11-10，Implementer RF-LG94-LINT；fresh compile／29 static tests、單檔 strict 通過，未 commit／push。
 - 契約：[需求](../../analysis/github-oauth-credential-persistence/requirements.md)、[技術契約](../../analysis/github-oauth-credential-persistence/technical-spec.md)、[計畫](github-oauth-credential-persistence.plan.md)。
 
 ## Steps
@@ -1619,3 +1619,73 @@ Status：completed。只更正dual-client現行composition標籤，區分指定�
 #### LG87 作者：exact-stage前置（2026-11-05）
 
 前置完成：index空／26 exact允許leaf／兩個個人metadata checkpoint已核；真正stage/stat/SHA/語意檢查待隨後工具回報，本次frozen記錄不預填成功或事後改stage。後續只git add exact葉與只讀staged檢查，停LG88 Human，不commit或清理；原各role verdict不改。
+
+
+## LG89：dev 衝突整合規劃（2026-11-10）
+
+前輪 Human 已另行確認原 25 檔／message、執行 commit `fbd4434a`，再授 push／PR 更新並核遠端一致；原 LG87／LG88 的執行前 row 與 evidence 不追改。今日 User 要求修復五 conflicts，並採用「保留 PR #60 typed throws，授權入口維持原拒絕語意」。dev pin `758aca9b`／feature pin `fbd4434a`、兩物件已在本機／index 空／tracked clean／僅兩個人 metadata，來源為 Explorer 當輪唯讀核對。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
+|---|---|---|---|---|---|
+| LG89 | completed | Plan-Creator | 四 artifacts 最小 amendment、Human configuration 選擇與精確 manifest／CF01–05／Git 停點 readback | 本四檔 LG89；僅規劃，未 merge／測試／stage | null；交 LG90，不自批 |
+| LG90 | pending | Plan-Reviewer | 獨立核 Human 決策、既有 factory throws、有限整合／測試／歷史及提交停點 | 既有 planning-review 待本人追加 | 待獨立 verdict |
+| LG91 | completed | Implementer | 已完成原 feature 非提交 merge／五 conflicts／factory guard／TDD 及受影響作者檢查 | evidence/implementation.md LG91；74 root／11 consumer／strict／102 links；私有 auto-index delta 核對 | 只作者交接，待 LG92；不 commit／push／PR 更新 |
+| LG92 | pending | Tester | 真正受影響 tests／consumer／isolation／文件及 merge 來源範圍核對 | 既有 tests 待本人追加 | 不重 live／簽章或未影響 suite |
+| LG93 | pending | Reviewer | 獨立核結果／scope／契約差異與 staged 提案 | 既有 review 待本人追加 | 不代 Human commit 核准 |
+| LG94 | pending | Human | 真 staged merge diff、範圍與新 message 明確確認 | 尚未取得，待實際回覆 | human-check；此前不 commit／push／更新 PR |
+
+本輪先前 initializer 型別互斥停點已由 Human 採用上述選擇解除；不把候選當零回歸，App blank-only 前置狀態限制照 requirements 記錄。五 conflicts 尚待實作／驗證，不能先宣稱已解或 PR mergeable。DPK 原 LG81-Cap-R approved 仍限原假 bundle／指定環境與來源，LC06／圖 Human visual／S08 尚缺保持；本輪不 cleanup，不重 sign／App／DPK 或改資產。
+
+
+### LG90 Plan-Reviewer 結果（2026-11-10）
+
+LG90 completed／approved；required fixes=[]。四 artifacts LG89／CF01–05 與 Human configuration 採用、factory 原 throws、精確 manifest／有限受影響驗證及 LG94 提交邊界核符，詳 `evidence/planning-review.md` LG90。執行前仍須保留本輪未提交 amendments 並核非重疊／index／pins；本 Reviewer 未執行 Git、測試或真人操作。只回報本次規劃品質，不代實作／測試或新 commit 核准。
+
+
+### LG91 作者交接（2026-11-10）
+
+Status：completed。原 feature 非提交 merge 的五 conflicts 已解／exact-stage，HEAD 保持 `fbd4434a`、MERGE_HEAD=`758aca9b`；新 factory 反例 RED 8 issues→同 suite GREEN，受影響 74 root／11 consumer／strict／102 links 通過。非手動 auto-index 1,328 entries 不變、兩 metadata bytes 保留，完整自身證據見 implementation LG91。交 LG92，未替 Tester／Reviewer 產 approval；未 commit／push／更新 PR，未 sign／App／DPK 或 cleanup。
+
+
+### LG92 Tester 獨立結果（2026-11-10）
+
+| ID | Status | Owner role | 完成條件／證據 | Verdict／下一步 |
+|---|---|---|---|---|
+| LG92 | completed | Tester | 親跑 root 74 tests／6 suites、public consumer 11／1 均 exit 0；獨立核 102 links／markers／有限 patterns／diff checks、typed contract／guard first、1,328 非手動 auto entries 與兩 metadata；詳 evidence/tests.md LG92 | approved；required fixes=[]，交 LG93；未 commit／push／PR 更新，不代 LG94 Human |
+
+原 LG91 作者結果與各歷史 rows 保留；本輪只 Tester evidence／自身 row，沒有修改被測 code／docs、重跑 live／簽章或操作 DPK／資產／cleanup。新 merge binary 未做真人驗收；既有 DPK pass 的原來源及適用限制不變。
+
+
+### LG93 Reviewer 結果（2026-11-10）
+
+LG93 completed／approved；required fixes=[]。實讀八個手動 resolution／兩親 source 與 LG92 親跑證據；Human 已採 typed constructor／factory blank 邊界、有限 scope、1,328 個非手動 auto-index entries 不變、個人 metadata 排除及歷史／驗證限制均核符，詳 `evidence/review.md` LG93。只允既定 exact-stage 與真正 staged diff 的新 merge message 提案，停 LG94 Human；不代 commit／push／PR 更新或整 Topic 接受。本 Reviewer 未重跑 tests 或操作 App／DPK／資產、未 stage 或執行 Git 寫入。
+
+
+### LG91 最終 stage 前置（2026-11-10；LG94 前）
+
+LG93 completed／approved、required fixes=[] 後，只核對已審來源與真正 index：原八個手動 resolution 葉及 1,328 個非手動 auto entries 相符，新增未暫存內容僅四 planning／planning-review／implementation／tests／review 八葉；publication 未改不硬造差異。兩個個人 metadata 原 bytes 保留且排除。這些是前置結果；接下來才 exact-stage 上述八葉，再只讀 staged diff／check／統計與語意 message，實際結果另由 tool／private receipt 交接，不先填通過或回寫造成自指。停 LG94 Human，尚未取得本次 merge message 確認，不 commit／push／更新 PR，不新增測試或真人操作。
+
+
+### RF-LG94-LINT planning 候選（2026-11-10）
+
+Human 已確認 integration fix message；第一次正常 commit 被唯一 SwiftLint 行數限制阻擋，未 commit／push／PR write。原 staged tree及所有 source/index 當時未改、原失敗 receipt／logs 保留。Plan-Creator 只追加四 artifacts，候選是一個已在258檔 merge 中的 test leaf 將兩個 expectedPaths 字串併行；非 whitespace invariant 與私有 candidate strict checks 已有證據，repo test source 尚未改。交獨立 Reviewer bounded planning 核對，未自批或重試 commit；下一步依本 RF 的窄驗證／成果 review／刷新 staged 檢查，再沿已核准同一 message 授權執行。原 LG92／LG93 成功與所有歷史不改。
+
+
+### RF-LG94-LINT Plan-Reviewer 結果（2026-11-10）
+
+Completed／approved；required fixes=[]。已讀四 artifacts 最新候選及精確 source→candidate diff，唯一是 expectedPaths 兩字串併行，非 whitespace bytes 同；manifest／正常 hook／單檔 strict 與 StaticIsolationTests／來源保護／刷新 staged 邊界足夠，詳 planning-review 的同名 RF。僅此等價格式修正可沿原已確認 message 授權，仍需後續實作及獨立窄驗證／成果審查，不擴成新語意或新真人操作。本角色未改 source／index或執行 Git／測試。
+
+
+### RF-LG94-LINT 作者交接（2026-11-10）
+
+候選只一行 whitespace-only 已套用／readback；non-whitespace bytes 相等，檔800行。單檔 strict format／lint 均 exit0，未 skip-build 的真 compile 後 29 static-isolation tests／1 suite 通過；wall174.046s／suite36.359s、自然完成，私有原 logs／checks 保留。其他已審 source／metadata／index 未變；自身詳細 evidence 見 implementation RF-LG94-LINT。只交 bounded Tester／Reviewer，未 stage／commitretry／push／PR write，原 failed hook 歷史與同 message Human 授權不改。
+
+
+### RF-LG94-LINT Tester 結果（2026-11-10）
+
+Completed／approved；required fixes=[]。獨立核真 source→candidate 只一個字串外 whitespace span、non-whitespace／token bytes 相同、原 auto blob及新 SHA；單檔 strict 與 fresh compile 後29tests／1suite原收據的命令／exit／hash／非零成功均核符。原 index tree、其他八葉、兩 metadata及 failed-hook歷史保持，詳 evidence/tests.md 同名 RF。未重跑已通 tests／新增 source或 stage／commit，交獨立 RF Reviewer，不代其 approval。
+
+
+### RF-LG94-LINT Reviewer 成果結果（2026-11-10）
+
+Completed／approved；required fixes=[]。真 source 等於已審一行 whitespace-only candidate；原 staged blob／八個 resolution／兩 metadata 及首次 hook failure hashes 核符，三個單檔實際 checks／fresh compile 29-test receipts 與獨立 Tester 結果一致。詳 review RF 成果節。可 exact-stage 已審 delta／owner evidence 並刷新 cached 語意核對；同 message／scope 無異時沿原已核 Human 授權正常 commit→push→PR 更新，不重問例行格式。未代 PR merge／整 Topic 接受，本 Reviewer 未改 source/index 或重跑測試。

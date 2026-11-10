@@ -1,0 +1,212 @@
+{
+  "classification": {
+    "closureMeaning": "有限 run 的停止、精確清理、證據匯出與本次獨立判讀完成；不表示 renewal 目標或 topic 完成。",
+    "dpkAdoptionApproved": false,
+    "experimentStateFlags": {
+      "失敗": false,
+      "成功": false,
+      "未執行": false,
+      "無法判定": true
+    },
+    "experimentStatus": "無法判定",
+    "privateRunnerOutcomeSHA256": "7ac717e9a63936a5c79cf4c2cbe529d12c52b4d1357e896630f9b9a59ce4376f",
+    "reason": "A/B profile bytes 相同，缺少真正不同且有效 profile 的必要前提。沒有執行 phase 2，不能推論 renewal 成功或失敗。",
+    "renewalReadStatus": "未執行",
+    "runnerOutcomePreservedByTester": {
+      "cleanupComplete": true,
+      "completedBeforeDeadline": true,
+      "endedUTC": "2026-10-20T06:11:19.023217+00:00",
+      "namespace": "6ff205d6-7110-4ba3-bf42-c98cd24d3302",
+      "observationMode": "human-only",
+      "result": "無法判定",
+      "startedUTC": "2026-10-20T05:59:23.200801+00:00",
+      "synthetic": false,
+      "taskComplete": false
+    },
+    "runnerTaskComplete": false,
+    "verificationClosureComplete": true
+  },
+  "evidenceReferences": {
+    "index": {
+      "path": "experiments/E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98cd24d3302/final.index.json",
+      "preserved": true,
+      "sha256": "7e93e99c0035e5417aff7051689b2fc4973a60614532225ceb5bad03b3956b76"
+    },
+    "indexedReceipts": {
+      "cleanup.human.json": {
+        "bytes": 429,
+        "sha256": "09b767236ea09242cdb0ec87fde4a9f7690035a5c70e7b01493ffec9ee9de8e7",
+        "verified": true
+      },
+      "cleanup.machine.json": {
+        "bytes": 578,
+        "sha256": "25b179ce18daedcb70f5325ab23ebaba492d8a0d4df9e9e9d2dc8d1f9216c9cd",
+        "verified": true
+      },
+      "phase-1.human.json": {
+        "bytes": 429,
+        "sha256": "7f22395ecfcc37113e265c371b73def4e176db4c977c8dd46ef566744f45f6f2",
+        "verified": true
+      },
+      "phase-1.machine.json": {
+        "bytes": 754,
+        "sha256": "02ec2588d7673bfb2656759945978980c5ddacd731e184b1c5b28c1068a3fe0d",
+        "verified": true
+      },
+      "preflight.machine.json": {
+        "bytes": 177,
+        "sha256": "4eb17a3bdce8bc974067379bc7ab21eb9301c941aaeb0d0de3ba85271f834c51",
+        "verified": true
+      },
+      "window.json": {
+        "bytes": 459,
+        "sha256": "53539a9422d03a84eebb7c6ad55ef2845993b2e9b89490bbb9aac4f01503c54f",
+        "verified": true
+      }
+    },
+    "preparationReceipts": {
+      "preparation-review-r1.json": {
+        "preserved": true,
+        "sha256": "f9bae387090bb05323c0c5abbecd5c021219ec84ebd23ed6f087562028dba4ae"
+      },
+      "preparation-review.json": {
+        "preserved": true,
+        "sha256": "04a53e1c0310ef5e3b9d1a7c46571de117e048e8b5c913aa02bb32c5852991eb"
+      },
+      "preparation-tests-r1.json": {
+        "preserved": true,
+        "sha256": "74e49d9b193e5e4369cb01c494f415b61b261b14ae01a7516e515c0a95e2d9c6"
+      },
+      "preparation-tests.json": {
+        "preserved": true,
+        "sha256": "14a228214834db283aec28b5d8a3e7ceba094cc3e07a07e5325acafa115fc2a5"
+      }
+    },
+    "tester": {
+      "path": "experiments/E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98cd24d3302/tester-validation.json",
+      "requiredFixes": [],
+      "sha256": "224614d9ddc0d0eaccdd27a844d04e3189bdc83dcafbf788a32067cb85e89455",
+      "upstreamVerdict": "approved"
+    }
+  },
+  "experiment": "E007",
+  "independentChecks": {
+    "allEightCurrentSourceHashesMatchR1AndTester": true,
+    "allSixIndexedFilesHashAndByteCountMatch": true,
+    "existingCertificateSHA256MatchesE006PublicPreflight": true,
+    "finalIndexNotModified": true,
+    "fiveFrozenExportSourceHashesMatchCurrentReviewedSource": true,
+    "fourPreparationReceiptsUnchanged": true,
+    "machinePromptCountsRemainNull": true,
+    "noPhase2MachineOrHumanReceiptPresent": true,
+    "onlyExpectedRunLeavesBeforeReviewerReceipt": true,
+    "original35MinuteCutoffAnd45MinuteDeadlineVerified": true,
+    "publicHumanProjectionOmitsStatementAndHasNoFreeTextActionsPurposes": true,
+    "publicReceiptsContainNoObservedRawLocalPathsSecretsPayloadsOrIdentifiers": true,
+    "sameOriginalWindowHashAcrossInitialAndCleanup": true,
+    "twoHumanSidecarsBoundToExactMachineBytes": true
+  },
+  "limitations": [
+    "本 Reviewer 只讀公開收據、source 與 delegated Tester 交接；原 Human 私文、指定 App/profile proofs、raw logs 已依契約清理，無法重新直接檢視。",
+    "Human fresh-ready／免費來源／同既有 certificate 及自動簽章修正後才建置的順序，來自原輪 Human／Tester 交接；公開只保留有限聲明與 hashes。",
+    "尚未驗證真正 profile renewal、已過期恢復、certificate rotation、產品 OAuth／DPK adapters 或正式入口。",
+    "E007 主假設無法判定，採用流程須停止交 Human；證據 approved 不改變此邊界。"
+  ],
+  "observedResults": {
+    "bNonMeasurementStage": {
+      "finitePreflightStop": "profileDidNotChange",
+      "humanObservationMeaning": "只涵蓋 B 設定／建置，不能當 phase 2 read 提示結果",
+      "humanWholeStagePromptCount": 0,
+      "identityPremiseProvenance": "引用 Tester 刪除私有 proof 前的 reviewed selected-App inspection；Reviewer 核對公開 hashes 與既有 certificate hash，未重新檢視已清理的原 App/profiles。",
+      "phase2HumanPresent": false,
+      "phase2MachinePresent": false,
+      "phase2ReadPerformed": false,
+      "profileBytesChanged": false,
+      "profileSHA256A": "c7c363547cd64a4120ea23f7e90ecf7270c5f8b1b9dde4eb0d6e2399da9d36ef",
+      "profileSHA256B": "c7c363547cd64a4120ea23f7e90ecf7270c5f8b1b9dde4eb0d6e2399da9d36ef",
+      "sameAppID": true,
+      "sameCertificate": true,
+      "sameDR": true,
+      "sameGroup": true,
+      "sourceGuardReference": "experiments/E007/scripts/run_profile_renewal.py:137",
+      "status": "未形成 renewal 測量"
+    },
+    "cleanup": {
+      "appleAssetsPreserved": true,
+      "basis": "公開 exact delete/read-absent 機器收據與 Human sidecar；reviewed export_clean 在先確認程序退出及 cleanup 後移除本輪 owned root，才記 final.index privateFilesRemoved。無 Apple assets 刪除呼叫。",
+      "cleanupAndPrivateFilesRemovedBeforeOriginalDeadline": true,
+      "credentialDeleteAndReadAbsent": true,
+      "exportEndedUTC": "2026-10-20T06:11:42.206791+00:00",
+      "humanProjectClosedDeclared": true,
+      "humanPublicSHA256": "09b767236ea09242cdb0ec87fde4a9f7690035a5c70e7b01493ffec9ee9de8e7",
+      "humanWholeStagePromptCount": 0,
+      "machineEndedUTC": "2026-10-20T06:09:12.603Z",
+      "machineSHA256": "25b179ce18daedcb70f5325ab23ebaba492d8a0d4df9e9e9d2dc8d1f9216c9cd",
+      "provenOwnedPrivateFilesRemoved": true,
+      "sameInitialProfileAndExecutable": true
+    },
+    "initialStage": {
+      "humanPublicSHA256": "7f22395ecfcc37113e265c371b73def4e176db4c977c8dd46ef566744f45f6f2",
+      "humanScope": "Human setup／簽章建置至首存讀回全段；依 exact-SHA sidecar 與 Tester 交接",
+      "humanWholeStagePromptCount": 0,
+      "machineEndedUTC": "2026-10-20T06:04:11.388Z",
+      "machineSHA256": "02ec2588d7673bfb2656759945978980c5ddacd731e184b1c5b28c1068a3fe0d",
+      "meaning": "僅原 A-profile App 的本輪 UUID 隔離假六欄保存與讀回",
+      "sixFieldsAllMatch": true,
+      "status": "成功"
+    }
+  },
+  "recordedUTC": "2026-10-20T06:14:16.816859+00:00",
+  "requiredFixes": [],
+  "reviewerOperations": {
+    "appLaunches": 0,
+    "gitMutations": 0,
+    "indexModifications": 0,
+    "liveReruns": 0,
+    "onlyNewFile": "reviewer-verdict.json",
+    "provisioningOperations": 0,
+    "securityOperations": 0,
+    "signingOperations": 0,
+    "sourceOrDocumentModifications": 0,
+    "testsRun": 0
+  },
+  "role": "Reviewer",
+  "schemaVersion": 1,
+  "scope": "獨立核對本輪真 run 的公開 receipts、hash、原窗口、source、有限分類、清理及隱私；不重跑 live、不核准採用",
+  "sourceSHA256": {
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/project.pbxproj": "8cb08f416dc753c49b9bc3ea447ce5c75fa3ffb97388d198895b7a50ad0e6b7b",
+    "experiments/E007/ProfileRenewalProbe.xcodeproj/xcshareddata/xcschemes/ProfileRenewalProbe.xcscheme": "93b4e8876aafc7dfdeb35e24c837cb5ab6266dc3133c34f08fab8e610c97b3d5",
+    "experiments/E007/README.md": "6b43e3a1126b2ff4795a5a1799350eea35c889b61acc2bd94ee7edae054e8676",
+    "experiments/E007/Resources/Info.plist": "9d7ad64ccf83deee5e1b6a09802362214640b19e6f1ba25313aa02a14b33f8c4",
+    "experiments/E007/Resources/ProfileRenewalProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "experiments/E007/Sources/ProfileRenewalProbe.swift": "1c55ea950ddd9841cf1ba372ef7da190e6bb86127f798dfd8983d71edfe73958",
+    "experiments/E007/Tests/test_protocol.py": "7798a5c8463ebec7e0b8574247f81679cab07e56b52e4a311cc8bf985036e65f",
+    "experiments/E007/scripts/run_profile_renewal.py": "62ca01370b78578db5ac3e45836b747765d7b201dbbf77438458a6003b90c484"
+  },
+  "step": "S04d",
+  "topic": "github-persistent-connection",
+  "verdict": "approved",
+  "verdictMeaning": "只接受本輪有限事實、證據一致性與安全收尾。E007 主假設無法判定，renewal read 未執行；workflow 仍須 human-check，停止 DPK adapter 採用。",
+  "window": {
+    "cutoffUTC": "2026-10-20T06:34:23.200801+00:00",
+    "deadlineUTC": "2026-10-20T06:44:23.200801+00:00",
+    "elapsedSecondsAtExport": 739.00599,
+    "privateWindowSHA256": "fb937488365888e0391238c0841c7962754553c8bb572977fe99616735379146",
+    "resetOrExtensionPerformed": false,
+    "setupInclusive": true,
+    "singleOriginalWindowPreserved": true,
+    "startUTC": "2026-10-20T05:59:23.200801+00:00"
+  },
+  "workflow": {
+    "adapterAdoptionAllowed": false,
+    "decisionNeeded": "依無法判定的本輪結果回到 Human 儲存決策；不得延長或重設原窗口，不自動重跑，不以本收據當採用批准。",
+    "ledgerKnownStale": true,
+    "ledgerMeaning": "ledger 舊 pending／human-check 文字不代替本輪 Tester／Reviewer 明示 verdict；本次依限定授權不回寫 ledger。",
+    "ledgerModified": false,
+    "liveMayRestartAutomatically": false,
+    "nextRole": "Human",
+    "nextStep": "S04e",
+    "status": "human-check",
+    "stopAutomaticProgress": true
+  }
+}

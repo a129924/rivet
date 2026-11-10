@@ -5,6 +5,39 @@ import Testing
 @Suite("GitHubIntegration public consumer API")
 struct PublicAPITests {
   @Test
+  func configurationRetainsTypedThrowsAndUntrimmedPublicFieldsAcrossTargets() throws {
+    let constructor:
+      (String, String) throws(GitHubOAuthAppConfigurationError) ->
+        GitHubOAuthAppConfiguration = GitHubOAuthAppConfiguration.init(clientID:clientSecret:)
+    let configuration = try constructor(" \t", " \n")
+    #expect(configuration.clientID == " \t")
+    #expect(configuration.clientSecret == " \n")
+    #expect(throws: GitHubOAuthAppConfigurationError.invalidConfiguration) {
+      try constructor("", "fixture-secret")
+    }
+    #expect(throws: GitHubOAuthAppConfigurationError.invalidConfiguration) {
+      try constructor("fixture-id", "")
+    }
+    #expect(!String(reflecting: configuration).contains(configuration.clientSecret))
+  }
+
+  @Test
+  func initialOAuthCanBeConstructedAcrossTargetsWithoutConcreteTypes() async throws {
+    let configuration = try GitHubOAuthAppConfiguration(
+      clientID: "fixture-id", clientSecret: "fixture-secret")
+    let fetcher: any OAuthTokenFetcher = try GitHubOAuth.makeTokenFetcher(
+      configuration: configuration)
+    let session = try GitHubOAuth.makeAuthorizationSession(
+      configuration: configuration,
+      redirectURI: URL(string: "http://127.0.0.1:49152/oauth/callback")!)
+    #expect(session.authorizationURL.host == "github.com")
+    assertSendable(configuration)
+    assertSendable(fetcher)
+    assertSendable(session)
+    await session.cancel()
+  }
+
+  @Test
   func publicTokenAndErrorSurfaceIsAvailableAndSendable() {
     let token = GitHubAccessToken(rawValue: "consumer-token")
     let storeError = TokenStoreError(

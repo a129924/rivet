@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "GitHub PKCE missing-verifier 補證流程",
+    "animation": "none",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "offline",
+      "label": "文件與證據判讀"
+    },
+    {
+      "id": "bounded",
+      "label": "另准操作與停止邊界"
+    }
+  ],
+  "mainPath": [
+    "read-sources",
+    "assess-gain",
+    "human-consent",
+    "single-exchange",
+    "blind-review",
+    "report-result"
+  ],
+  "nodes": [
+    {
+      "id": "read-sources",
+      "lane": "offline",
+      "col": 0,
+      "type": "backend",
+      "label": "文件與原碼",
+      "sublabel": "核對來源與配置限制",
+      "width": 92
+    },
+    {
+      "id": "assess-gain",
+      "lane": "offline",
+      "col": 1,
+      "type": "backend",
+      "label": "判斷資訊增益",
+      "sublabel": "只補 missing 歸因",
+      "width": 92
+    },
+    {
+      "id": "human-consent",
+      "lane": "bounded",
+      "col": 2,
+      "type": "security",
+      "label": "真人授權",
+      "sublabel": "另准真人與原文",
+      "width": 92
+    },
+    {
+      "id": "single-exchange",
+      "lane": "bounded",
+      "col": 3,
+      "type": "backend",
+      "label": "單次交換",
+      "sublabel": "missing；新 code",
+      "width": 92
+    },
+    {
+      "id": "blind-review",
+      "lane": "offline",
+      "col": 4,
+      "type": "security",
+      "label": "獨立判讀",
+      "sublabel": "兩名 reader 先封存",
+      "width": 92
+    },
+    {
+      "id": "report-result",
+      "lane": "offline",
+      "col": 5,
+      "type": "database",
+      "label": "交付結論",
+      "sublabel": "三層證據分開",
+      "width": 92
+    },
+    {
+      "id": "stop-attempt",
+      "lane": "bounded",
+      "col": 5,
+      "type": "security",
+      "label": "停止並記錄",
+      "sublabel": "不補次；不使用 token",
+      "width": 92
+    },
+    {
+      "id": "offline-close",
+      "lane": "bounded",
+      "col": 0,
+      "type": "database",
+      "label": "未執行結案",
+      "sublabel": "無增益／未另准"
+    }
+  ],
+  "edges": [
+    {
+      "from": "read-sources",
+      "to": "assess-gain",
+      "role": "main"
+    },
+    {
+      "from": "assess-gain",
+      "to": "human-consent",
+      "label": "前提成立",
+      "role": "main",
+      "labelDx": 60
+    },
+    {
+      "from": "human-consent",
+      "to": "single-exchange",
+      "label": "另准後",
+      "role": "main"
+    },
+    {
+      "from": "single-exchange",
+      "to": "blind-review",
+      "label": "安全單欄",
+      "role": "main"
+    },
+    {
+      "from": "blind-review",
+      "to": "report-result",
+      "role": "main"
+    },
+    {
+      "from": "assess-gain",
+      "to": "offline-close",
+      "role": "branch"
+    },
+    {
+      "from": "human-consent",
+      "to": "offline-close",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "from": "single-exchange",
+      "to": "stop-attempt",
+      "label": "token／安全拒絕",
+      "role": "error",
+      "variant": "security",
+      "route": "straight",
+      "labelDy": 36
+    },
+    {
+      "from": "blind-review",
+      "to": "stop-attempt",
+      "label": "含糊／分歧",
+      "role": "branch",
+      "variant": "dashed"
+    }
+  ]
+}

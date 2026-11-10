@@ -1,0 +1,15 @@
+{
+  "absent" : true,
+  "completed" : true,
+  "endedUTC" : "2026-10-20T06:09:12.603Z",
+  "executableSHA256" : "56d02fa02916a2e8c0992c2aa7fe079e55c5a826d128865105395d92c22671de",
+  "namespace" : "6ff205d6-7110-4ba3-bf42-c98cd24d3302",
+  "observationMode" : "human-only",
+  "phase" : 3,
+  "profileSHA256" : "c7c363547cd64a4120ea23f7e90ecf7270c5f8b1b9dde4eb0d6e2399da9d36ef",
+  "promptCount" : null,
+  "readAttempted" : true,
+  "startedUTC" : "2026-10-20T06:09:12.599Z",
+  "synthetic" : false,
+  "windowSHA256" : "fb937488365888e0391238c0841c7962754553c8bb572977fe99616735379146"
+}

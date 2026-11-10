@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "workflow",
+  "input": "docs/architecture/diagrams/github-pkce-missing-verifier-feasibility/missing-verifier.workflow.json",
+  "output": "docs/architecture/diagrams/github-pkce-missing-verifier-feasibility/missing-verifier.html",
+  "specification": {
+    "sha256": "149c5316f483cb20b91a7bfbe00db899a9422841eb2e88d20c069b0de5eba83c",
+    "bytes": 3309
+  },
+  "artifact": {
+    "sha256": "242f1b39415282de81361f4e3773255cdf86398840260326ce22e35c5e09ce70",
+    "bytes": 702647
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

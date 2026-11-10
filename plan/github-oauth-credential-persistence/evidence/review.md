@@ -40,3 +40,32 @@ PR Lens 真 committed diff／local map 與 publication 證據按既有計畫在�
 實讀LG85對7文件61相對/headinglinks及有限secret/abs/whitespace結果與一行RF複驗；另純讀重算21 readonly leaves全符、兩個人metadata checkpoint全符、index空及git diff --check通過，未重套件/工具/live。只topic-owned D/P/E/V exact實際變更可交LG87 stage；排除個人metadata/xcuserdata/私有資產，不add-A、不reset未知index。Stage後須git-commit-convention檢真正staged語意/message交LG88 Human，不commit/push/merge/rebase/PRwrite。
 
 語意建議（非staged skill審查或已批准message）：本topic驗證工具、必要證據與長期docs是一個完整交付語意，可單一commit，無需形式拆分；若LG87真staged出現不相干path則停止回報而非自拆/改index。整Topic/S08/visual/cleanup/整合仍未完成。本Reviewer只追加自身review/ledger並對齊現在metadata，未改受審文件/source或stage/資產/live。
+
+
+## LG93 Reviewer：dev 衝突整合的獨立成果審查（2026-11-10）
+
+**completed／approved；required fixes=[]。** 上游 LG90 approved、LG91 completed 與 LG92 independent Tester approved 後，直接讀取實際合併 source／tests／docs、兩親相對的 resolution delta 及私有 receipts；未重跑已通測試。此結果只涵蓋本次受限整合，不代 LG94 Human commit 核准、PR merge 或整 Topic 完成。
+
+### 契約與修復
+
+- Configuration source 及正式 DPK adapter 與 feature `fbd4434a` bytes 相同；public immutable fields、typed `GitHubOAuthAppConfigurationError.invalidConfiguration`、configuration port／脫敏與非空字串不 trim 契約保留。直接 dev initializer 的 error／blank 差異是 Human 明確採用的取捨，文件與測試有揭露，不只換測試 expectation 後宣稱零回歸。
+- `GitHubOAuth` 的兩個 factory 保留原一般 throwing signatures；第一個敘述共同驗 blank ID／secret，於 fetcher／exchanger／session／隨機 state 建立前拋無 payload 的 `.clientConfiguration`。Helper 只檢查、不改合法 configuration 的原值。內部 session／code exchanger、驗證 App 與既有 provider policy 未被本輪手動更動。App blank-only `try?` 起始狀態差異已如實列於長期整合契約，沒有保證所有 dev 呼叫端零差異。
+- Factory 負例實際涵蓋 ID／secret 的空格及 tab／newline，兩入口精確 AuthorizationError；consumer 以真跨 target 編譯檢查 typed initializer function reference、public fields、原值與兩空值錯誤。既有合法 factory／session／exchange 及 fake store/provider 測試維持。已讀作者 RED 3 tests／8 issues → 同 suite GREEN 的 receipts，不重建或改寫 RED。
+- 四個衝突 Markdown 保留兩邊有效 capability／獨立工作線段落，當前首次授權與正式 DPK deferred 文字已對齊；typed constructor／factory 邊界及限制有獨立短節。原失敗／unknown、各線來源及預算、DPK 假完整 bundle／指定環境限制、未 cleanup／visual／S08 均保留；未改圖、App 或 assets，也未把本輪 merged binary 當成新 live 驗收。
+
+### 直接核實與既有驗證
+
+Reviewer 獨立核實 HEAD 仍 `fbd4434a`、MERGE_HEAD 精確 `758aca9b`、unmerged index 為空；八個手動 resolution 葉的 working bytes／staged blobs／LG91 source hashes 完全相符。比較原 auto-index 與目前 index，1,328 個非手動 entries 的 path／mode／blob／stage 全同，零額外 delta；自動引入的 dev 既有內容與本輪手動修復分層清楚。兩個個人 metadata bytes／size 與 merge 前 checkpoint 相同，且完全不在 index。未提交 amendments 只在四 planning 與 owner evidence；本 Reviewer 只另追加自身 review／結果，不 stage。
+
+LG92 實際 root 74 tests／6 suites、consumer 11 tests／1 suite 均 exit 0；Reviewer 讀回其真 stdout／stderr 並逐值核對 SHA，而非只沿用作者口述。採納已完成的 102 relative／heading links、conflict marker／whitespace／有限秘密與本機路徑檢查，以及作者 strict format／lint；沒有新變更或未解除疑慮需要重跑。有限 patterns 不構成任意秘密完全辨識保證。
+
+此 dev 整合應保留單一 merge 語意與雙親，不宜把正常 auto-merge base 檔另拆成實作 commits。可依既定流程 exact-stage 其餘已審 planning／owner evidence 後，只讀真正 staged diff 執行 git-commit-convention，提出新 message 待 LG94 Human。未核准前不 commit／push／更新 PR；不沿用原 25 檔 message 確認。沒有執行測試、App／DPK、簽章／profile／信任或私鑰權限操作、cleanup 或 Git 寫入，遠端 conflict 尚未因此解除。
+
+
+### RF-LG94-LINT Reviewer 成果窄審查（2026-11-10）
+
+**completed／approved；required fixes=[]。** 真 repo source SHA-256 `1640e25df6e28dc610757e702513875dfbeb3e3f6b6d74e9ce335d95fdc1484d` 與已審 candidate 完全同；直接對原 staged blob `14a5aedc7f7553acd534e0a1e3348310fd300fae6408c1af6310a62f852a4508` 檢查，唯一 delta 是 expectedPaths 前兩個既有字串合放一行，非 whitespace bytes 相同，行數 801→800。未改字串、allowlist／assertion、規則／threshold、公開契約或原 LG93 八個手動 resolution；八葉及兩個個人 metadata 的原 hashes 均再核相同。
+
+已直接讀回三次真命令的 argv／exit／stdout、stderr hashes／bytes，與 records 逐值相符：單檔 strict format／SwiftLint exit 0，fresh compilation 後 StaticIsolationTests 29 tests／1 suite、exit 0。獨立 Tester 已核原 auto blob／candidate／actual 的字串外空白與 token 等價、原 index tree 未變。原首次 hook failure 的三份 receipt／logs SHA 仍與獨立記錄相同；不把該失敗改寫為成功，也未 bypass hook 或停用 lint。Reviewer 未重跑 29／74／11 或任何真人驗收。
+
+這是原核准 258 檔整合範圍內同一檔的等價排版收尾，原 LG93 成果 approval 保留。可 exact-stage 此單行及已審 planning／owner evidence，刷新真正 staged diff／tree／統計及 git-commit-convention，若 scope 與 Human 已確認的原 integration message 仍相符，即沿同一 Human 授權續正常 commit→push→PR 更新，無須為此格式再問同一確認；若出現其他差異仍須停核。此 approval 不代整 Topic 完成或 PR merge。本人僅追加自身 review／row，未修改受審 source、stage、commit、remote、App／DPK 或 assets。
