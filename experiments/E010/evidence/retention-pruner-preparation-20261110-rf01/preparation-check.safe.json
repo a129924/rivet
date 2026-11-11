@@ -1,0 +1,55 @@
+{
+  "C0Started": false,
+  "authorFixCompleted": true,
+  "authorVerdict": null,
+  "boundaries": {
+    "AppBuildRun": 0,
+    "CUAEntrypoints": 0,
+    "GitOperations": 0,
+    "SigningOrKeychainDPK": 0,
+    "actualTargetIO": 0,
+    "homePrivateSidecarIO": 0,
+    "nativeChildCalls": 0
+  },
+  "fix": "typed expectedSHA256 must be null or 64hex; fixed coverage refusal before projection; dependency/raw public fields explicitly enumerated and same-origin hashes/context validated",
+  "green": {
+    "command": "python3 -B -m unittest -v test_retention_pruner.PrunerTests.test_malformed_reference_hash_is_finite_refusal_never_public test_retention_pruner.CallerTests",
+    "errors": 0,
+    "exitCode": 0,
+    "failures": 0,
+    "methods": 3,
+    "reportedUnittestDurationSeconds": 0.026,
+    "skipped": 0
+  },
+  "kind": "E010-RP-RF01-v2-author-focused-check",
+  "newNegativeCoverage": [
+    "nonhash-string",
+    "wrong-length",
+    "invalid-hex",
+    "object-bool-number-types",
+    "public-projection-second-check",
+    "no-forward-private-extra-field",
+    "invalid-context-enum",
+    "same-origin-raw-hash-boundary"
+  ],
+  "nextBoundary": "independent RP04 focused retest then RP05; no C0 before actual approval",
+  "offlineHardStopUTC": "2026-11-10T09:10:57Z",
+  "oldApprovalReused": false,
+  "original456ProtectedFilesMatch": true,
+  "originalSource22Unchanged": true,
+  "priorSevenAndTesterAllUnchanged": true,
+  "recordedUTC": "2026-11-10T08:35:46.273611+00:00",
+  "red": {
+    "fileOrTargetIO": 0,
+    "v1MinimalDataOnlyReproducerMalformedHashLeak": true
+  },
+  "sourceAggregateSHA256": "53dfdfd8713a1f13de7af9a6954ca96d1013685d220f00f05057fb0dc7764c06",
+  "sourceManifestSHA256": "27e0cac171298a611d38eb2eb81a329933abaeb4d11d1993f246235b1fd72fd2",
+  "syntheticFixtureCleanup": {
+    "TemporaryDirectoryTearDownCompleted": true,
+    "globalTmpOrHandlesClaimed": false
+  },
+  "totalHardStopUTC": "2026-11-10T09:55:57Z",
+  "upstreamRequiredFix": "RP-RF01",
+  "upstreamVerdict": "needs-rework"
+}

@@ -1,0 +1,108 @@
+{
+  "RF02Evidence": {
+    "declaredAbsentOptionalStreamWithoutPathAccepted": true,
+    "knownReferenceDictBooleanIntegerFixedCoverageRefusal": true,
+    "knownReferenceNullUnresolvedBlocksCache": true,
+    "minimumCompleteFalseForUnresolvedReference": true
+  },
+  "RF03Evidence": {
+    "actualExecutorHandleCallbackMutatesProtectedFileThenReturnsClear": true,
+    "attempted": 0,
+    "classification": "drift",
+    "completed": 0,
+    "freshEntrysetIdentityRetainRecheckedAfterCallback": true,
+    "syntheticCacheStillPresent": true
+  },
+  "RP-RF01RegressionPassed": true,
+  "actionSHA256": "ef32e06608b959e1823afc32e34a950fe7df9702d459ffe4106f5940b0e3504a",
+  "actualSuiteResult": {
+    "allFixturesLstatAbsent": true,
+    "allPassed": true,
+    "endedUTC": "2026-11-10T08:47:24.961773+00:00",
+    "exitCode": 0,
+    "fixtureCount": 18,
+    "forbiddenTargetOrSidecarCalls": 0,
+    "nativeChildAttempts": 0,
+    "processDurationSeconds": 0.24328633258119226,
+    "pythonVersion": "3.14.0",
+    "runnerSHA256": "1076b2b79a4b04215c6fe426fb41978569c8a7fcd80173705c9e92b0ab3a8f6a",
+    "startedUTC": "2026-11-10T08:47:24.718421+00:00",
+    "stderrSHA256": "8e2feaf0a1cfbc3c850942958cca1c116bbe7073a9e37f8f3a1ba68b9d38ac1e",
+    "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "testMethods": 19,
+    "unittestDurationSeconds": 0.102
+  },
+  "authorCheckSHA256": "6318fe21aa3b492212bb5d1daf8d98d4c33c06bc6e196ba102f61e4715d20950",
+  "boundaries": {
+    "C0Started": false,
+    "GitMutations": 0,
+    "compilerAppBuildGUIAssetsKeychainDPK": 0,
+    "homePrivateSidecarIO": 0,
+    "oldSourceOrReceiptWrites": 0,
+    "productionTargetIO": 0,
+    "testNativeChildAttempts": 0
+  },
+  "callerSHA256": "389885059603ad2bad09f0768143c8008fa0194fa2bfcf3d47438fc27848a8a7",
+  "cleanup": {
+    "allFixtureRootsLstatAbsent": true,
+    "authorAuditUntouched": true,
+    "currentAuditPendingReviewerDualACK": {
+      "fileCount": 6,
+      "filesSHA256": {
+        "audit.private.json": "098ae85df4f39fdbb2487c457fb0db8f7c1dc4ee16256df67881017cea4ca550",
+        "old-audits-cleanup.safe.json": "b08fcb7d553c9839c628ad341e88d48fd96d86d2334c414aa110dc25e0591f9a",
+        "result.safe.json": "8cdaaa71fac7b1e671c435d170521d9d777a398338cb78748c17297170f376e5",
+        "sitecustomize.py": "1076b2b79a4b04215c6fe426fb41978569c8a7fcd80173705c9e92b0ab3a8f6a",
+        "stderr.private.log": "8e2feaf0a1cfbc3c850942958cca1c116bbe7073a9e37f8f3a1ba68b9d38ac1e",
+        "stdout.private.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "scratchBasename": "rivet-E010-RP04-RF02-RF03-u_1tvv89"
+    },
+    "priorAudits": {
+      "bothRootLstatAbsent": true,
+      "cleanupReceiptRelative": "tester-prior-diagnostics-cleanup.safe.json",
+      "cleanupReceiptSHA256": "b08fcb7d553c9839c628ad341e88d48fd96d86d2334c414aa110dc25e0591f9a",
+      "deletedAuditRootCount": 2,
+      "deletedFileCount": 10,
+      "nativeLSOFCallsDuringCleanupOnly": 2,
+      "v1v2ReadabilityAndSafetyACKRecorded": true
+    },
+    "testSyntheticFixtureCount": 18
+  },
+  "kind": "E010-RP04-independent-RF02-RF03-v3-focused-check",
+  "limitations": [
+    "No real inventory/delete plan or C0 dispatched.",
+    "All tests use synthetic fixtures; real lsof is used only for two already-ACKed owned synthetic audit cleanups.",
+    "This tool revision does not delete original production raw and may correctly report recoveryRequired/minimumComplete=false after cache pruning.",
+    "Original failure history and earlier preparation approvals remain distinct immutable versions."
+  ],
+  "nextBoundary": "Independent RP05 Reviewer; no C0 until offline gates approved",
+  "originalSource22AggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d",
+  "originalSource22AllMatch": true,
+  "otherPreservedChecks": [
+    "original malformed expectedSHA sentinel safely refused",
+    "explicit safe dependency/rawMap whitelist",
+    "actual synthetic caller diagnose-reviewtuple-execute",
+    "first CLI deadline prevents private read",
+    "per-mutation deadline and honest partial/no retry",
+    "symlink self-only/no external follow",
+    "hardlink/foreign-owner/cross-device refusal",
+    "original raw retained-uncovered prevents minimumComplete"
+  ],
+  "parameterSHA256": "38ac0762cf6bbf51d3ca7c61194845857db41f6ace1f038f2ed7ebc788b459df",
+  "priorV1V2SevenPlusTesterReceiptsAllSHAUnchanged": true,
+  "protectedExistingE010RelativeMapSHA256": "f91803b8f31de3a4f39b4f2356582b038f79d196bd8de9785c87b9a054b3fa45",
+  "protectedExistingFileCount": 456,
+  "recordedUTC": "2026-11-10T08:48:47.160581+00:00",
+  "required_fixes": [],
+  "resolvedRequiredFixIDs": [
+    "RP-RF02",
+    "RP-RF03"
+  ],
+  "scope": "offline preparation only; no C0 or production target/sidecar operations",
+  "sevenFrozenFilesAllSHAMatch": true,
+  "sourceAggregateSHA256": "35574a2966c4f6589655d619e85d42e08d88f705a4f6c87885ce63f899c84c7f",
+  "sourceManifestFileSHA256": "0ec7ee14f09843bbc432d0b4e2b325374a5da9556e46b8ac932ea1e4b71fb9a0",
+  "testCommand": "python3 -B -m unittest -v test_retention_pruner",
+  "verdict": "approved"
+}

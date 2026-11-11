@@ -1,0 +1,29 @@
+{
+  "actionArgumentValues": [
+    "<home>/Library/Application Support/RivetExperiments/rivet-E010-3581e693-8019-4068-a40f-311488fab764",
+    ".cleanup-20261110T053307Z/inventory.private.json",
+    ".cleanup-20261110T053307Z/delete-plan.private.json"
+  ],
+  "actualDeletionPerformed": false,
+  "actualTargetOperationsPerformed": false,
+  "calleeReadsPrivateOnlyAfterItsFirstClockGuard": true,
+  "executionArgv": [
+    "python3",
+    "-B",
+    "experiments/E010/evidence/cleanup-c1-20261110T061727Z/delete-caller-c1.draft.txt",
+    "experiments/E010/evidence/cleanup-c1-20261110T061727Z/execution-parameters.safe.json",
+    "ce247c4eb1379204695adca2c5691e013b67bc04082647c4d30a96fa3ea4d66a"
+  ],
+  "files": {
+    "delete-action-c1.draft.txt": "4a67f00517dab4a39d401152114bb33b5f9c50bd8e7378a1435e62acc08858da",
+    "delete-caller-c1.draft.txt": "1dabebce98fb3c4def8db8ddfdf897421febbc59cd7317a37a96d4f2bde152d7",
+    "delete-plan-c1.safe.json": "ad536a579344a3d8d56ba5b05bcb0e58a7a4a7f4b31ba29163c3153f011c3ae0",
+    "execution-parameters.safe.json": "ce247c4eb1379204695adca2c5691e013b67bc04082647c4d30a96fa3ea4d66a",
+    "inventory-expected-c1.safe.json": "6dd9f85364b245a9fe274e8b0a981d5bc1935e3b31178df441f74dcdadaf5052"
+  },
+  "hardDeadlineUTC": "2026-11-10T06:47:27Z",
+  "kind": "E010-CL1-complete-review-index",
+  "newC1ApprovalRequired": true,
+  "oldV3AndPrivateSnapshotsNotModified": true,
+  "recordedUTC": "2026-11-10T06:26:48.286120+00:00"
+}

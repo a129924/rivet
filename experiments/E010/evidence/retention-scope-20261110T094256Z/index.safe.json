@@ -1,0 +1,13 @@
+{
+  "commandAttempts": 1,
+  "files": {
+    "command-v2.txt": "a86eba1d6034e0d41eab03748c77ffcde51a63afb826019f34a012b0e9da258c",
+    "machine.safe.json": "262aecf6275decea09492afd9f954d6d6cb7bde7a79becf14b73619b27fb06e8",
+    "parameters-v2.safe.json": "2d1652498ffdfd06ce78b8125a3d5a628177bc02c048d1d6d55fdae8cdb9873e"
+  },
+  "kind": "E010-RT04-single-metadata-command-index",
+  "originalDataDeleted": 0,
+  "privateMetadataIncluded": false,
+  "recordedUTC": "2026-11-10T09:55:50.262604+00:00",
+  "reviewPending": true
+}

@@ -1,0 +1,141 @@
+# NOT EXECUTED. One metadata-only OS command, not a pruner or experiment CLI.
+# argv: parameters.safe.json exactParameterSHA256 exactCommandSHA256
+import datetime as d,hashlib,json,os,stat,sys
+from pathlib import Path,PurePosixPath
+M0=d.datetime(2026,11,10,9,42,56,tzinfo=d.timezone.utc)
+TOTAL=d.datetime(2026,11,10,9,57,56,tzinfo=d.timezone.utc)
+TIO=None;HARD=TOTAL;F=os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW
+fds=[];rows=[];phase='safe-parameters';capture_created=False
+
+def now():return d.datetime.now(d.timezone.utc)
+def tick():
+ if now()>=HARD:raise RuntimeError('deadline')
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def canon(value):return (json.dumps(value,ensure_ascii=False,sort_keys=True,indent=2,allow_nan=False)+'\n').encode()
+def ident(s):return {'dev':s.st_dev,'ino':s.st_ino,'uid':s.st_uid,'mode':stat.S_IMODE(s.st_mode),'type':stat.S_IFMT(s.st_mode),'size':s.st_size,'mtimeNS':s.st_mtime_ns,'nlink':s.st_nlink}
+def stable(a,b):return all(a[k]==b[k] for k in ('dev','ino','uid','mode','type'))
+def owned(v,dev=None):
+ if v['uid']!=os.getuid() or (dev is not None and v['dev']!=dev):raise RuntimeError('ownership')
+ if v['type'] not in (stat.S_IFDIR,stat.S_IFREG,stat.S_IFLNK):raise RuntimeError('type')
+def chain(path):
+ tick();fd=os.open('/',F);fds.append(fd);out=[];names=PurePosixPath(path).parts[1:]
+ home=PurePosixPath(os.path.expanduser('~')).parts[1:]
+ for i,name in enumerate(names):
+  tick();before=ident(os.stat(name,dir_fd=fd,follow_symlinks=False))
+  if before['type']!=stat.S_IFDIR or before['uid'] not in (0,os.getuid()):raise RuntimeError('parent')
+  if names[:len(home)]==home and i>=len(home)-1 and before['uid']!=os.getuid():raise RuntimeError('parent')
+  tick();child=os.open(name,F,dir_fd=fd);fds.append(child);tick();after=ident(os.fstat(child))
+  if not stable(before,after):raise RuntimeError('drift')
+  out.append(after);fd=child
+ return fd,out
+
+def safe_repo_read(path):
+ # Only command/params and previously approved PUBLIC feature JSON, never private body.
+ fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
+ try:return os.read(fd,16*1024*1024)
+ finally:os.close(fd)
+
+def walk(fd,prefix,tag,dev,known,extras):
+ tick();start=ident(os.fstat(fd))
+ tick()
+ with os.scandir(fd) as it:
+  names=[]
+  for entry in it:tick();names.append(entry.name)
+ for name in sorted(names):
+  tick();relative=name if not prefix else prefix+'/'+name
+  if name in ('.','..') or '/' in name:raise RuntimeError('path')
+  tick();value=ident(os.stat(name,dir_fd=fd,follow_symlinks=False));owned(value,dev)
+  oid=sha(relative.encode());historical=known.get(oid)
+  if tag=='primary':
+   attributable=historical==sha(canon(value)) or relative.split('/')[0] in extras
+  else:
+   attributable=not prefix and (name in extras or (name.startswith('progress-') and name.endswith('.safe.json') and name[9:-10].isdigit()))
+  if not attributable:raise RuntimeError('unattributable')
+  row={'rootRole':tag,'relative':relative,'identity':value,'historicalMetadataIdentityMatch':historical==sha(canon(value)) if historical else None,
+       'attribution':'historical-metadata-match' if historical==sha(canon(value)) else 'exact-root-and-source-role','linkText':None}
+  rows.append(row)
+  if value['type']==stat.S_IFDIR:
+   tick();child=os.open(name,F,dir_fd=fd);fds.append(child);tick()
+   if ident(os.fstat(child))!=value:raise RuntimeError('drift')
+   walk(child,relative,tag,dev,known,extras)
+   os.close(child);fds.remove(child)
+  elif value['type']==stat.S_IFLNK:
+   # Read only link text metadata; do not open/follow/stat the destination.
+   tick();link=os.readlink(name,dir_fd=fd);row['linkText']=link
+   target=PurePosixPath(link)
+   if target.is_absolute() or '..' in target.parts:raise RuntimeError('outside-link')
+  elif value['nlink']!=1:raise RuntimeError('hardlink')
+ tick()
+ if ident(os.fstat(fd))!=start:raise RuntimeError('drift')
+
+result={'status':'refused','regularBodyReads':0,'existingContentHashesRecomputed':0,'captureCreated':False,'counts':None}
+try:
+ tick()
+ if len(sys.argv)!=4:raise RuntimeError('arguments')
+ here=Path(__file__).absolute().parent
+ if Path(sys.argv[1]).absolute()!=here/'parameters.safe.json':raise RuntimeError('arguments')
+ raw=safe_repo_read(here/'parameters.safe.json')
+ if sha(raw)!=sys.argv[2] or sha(safe_repo_read(__file__))!=sys.argv[3]:raise RuntimeError('binding')
+ params=json.loads(raw)
+ history_raw=safe_repo_read(here.parent/'retention-prune-validation-20261110T085343Z/candidate.safe.json')
+ if sha(history_raw)!=params['historicalCandidateSHA256']:raise RuntimeError('binding')
+ history=json.loads(history_raw);known={r['opaqueID']:r['identitySHA256'] for r in history['nodes']}
+ # First private metadata IO time: fixed ONCE, before parent/home/root inspection.
+ tick();TIO=now();HARD=min(TIO+d.timedelta(minutes=5),TOTAL);tick();phase='metadata'
+ roots=[];parent_chains=[];home=os.path.expanduser('~')
+ for role,leaf in (('primary',params['primaryRootName']),('sidecar',params['sidecarRootName'])):
+  path=os.path.join(home,params['parentHomeRelative'],leaf)
+  tick();fd,parents=chain(path);tick();root_id=ident(os.fstat(fd));owned(root_id)
+  if root_id['mode']!=0o700:raise RuntimeError('root-mode')
+  extras=set(params['sourceRolePrimaryRoots'] if role=='primary' else params['sidecarSourceRoles'])
+  walk(fd,'',role,root_id['dev'],known if role=='primary' else {},extras)
+  roots.append((role,fd,root_id));parent_chains.append(parents)
+ # Bounded second metadata-only identity/entryset check BEFORE the sole new write.
+ original=canon(rows);first_rows=rows;rows=[]
+ for role,fd,root_id in roots:
+  tick()
+  if ident(os.fstat(fd))!=root_id:raise RuntimeError('drift')
+  walk(fd,'',role,root_id['dev'],known if role=='primary' else {},set(params['sourceRolePrimaryRoots'] if role=='primary' else params['sidecarSourceRoles']))
+ if canon(rows)!=original:raise RuntimeError('drift')
+ # Rebind the named root and all parents; open FDs alone do not prove names stayed bound.
+ for (role,fd,root_id),prior_parents in zip(roots,parent_chains):
+  leaf=params['primaryRootName'] if role=='primary' else params['sidecarRootName']
+  tick();again,parents_now=chain(os.path.join(home,params['parentHomeRelative'],leaf))
+  if len(parents_now)!=len(prior_parents) or not all(stable(a,b) for a,b in zip(parents_now,prior_parents)):raise RuntimeError('drift')
+  tick()
+  if ident(os.fstat(again))!=root_id:raise RuntimeError('drift')
+ capture=params['captureName'];sidefd=roots[1][1]
+ if any(r['rootRole']=='sidecar' and r['relative']==capture for r in rows):raise RuntimeError('capture-exists')
+ metadata={'kind':'RT-metadata-only-private-scope','Tio':TIO.isoformat(),'metadataHardStopUTC':HARD.isoformat(),'D':params['retentionDeadlineUTC'],
+           'roots':[{'role':role,'identity':v,'parents':chain_values} for (role,fd,v),chain_values in zip(roots,parent_chains)],
+           'existingEntries':rows,'captureAdditionalEntry':{'relative':capture,'count':1,'necessity':'this-exception-scope-metadata'},
+           'existingRegularBodyRead':False,'existingContentSHARecomputed':False,'historicalContentSHAIsNotCurrentVerification':True}
+ payload=canon(metadata);tick();phase='capture'
+ newfd=os.open(capture,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600,dir_fd=sidefd);fds.append(newfd);capture_created=True
+ offset=0
+ while offset<len(payload):tick();offset+=os.write(newfd,payload[offset:offset+65536])
+ tick();os.fsync(newfd);tick();new_id=ident(os.fstat(newfd));owned(new_id,roots[1][2]['dev'])
+ if new_id['mode']!=0o600 or new_id['type']!=stat.S_IFREG or new_id['nlink']!=1:raise RuntimeError('capture-binding')
+ os.close(newfd);fds.remove(newfd);tick();os.fsync(sidefd)
+ tick();readfd=os.open(capture,os.O_RDONLY|os.O_NOFOLLOW,dir_fd=sidefd);fds.append(readfd);tick()
+ if ident(os.fstat(readfd))!=new_id:raise RuntimeError('capture-binding')
+ chunks=[]
+ while True:
+  tick();chunk=os.read(readfd,65536)
+  if not chunk:break
+  chunks.append(chunk)
+ if b''.join(chunks)!=payload:raise RuntimeError('capture-readback')
+ tick();end=now();counts={role:{'entries':sum(r['rootRole']==role for r in rows),'regular':sum(r['rootRole']==role and r['identity']['type']==stat.S_IFREG for r in rows),'directories':sum(r['rootRole']==role and r['identity']['type']==stat.S_IFDIR for r in rows),'links':sum(r['rootRole']==role and r['identity']['type']==stat.S_IFLNK for r in rows)} for role in ('primary','sidecar')}
+ result={'status':'metadata-scope-recorded','Tio':TIO.isoformat(),'endedUTC':end.isoformat(),'metadataHardStopUTC':HARD.isoformat(),'countsBeforeCapture':counts,
+         'sidecarCaptureAdditionalEntries':1,'totalRetainedEntries':len(rows)+1,'scopeMetadataSHA256':sha(payload),'captureCreated':True,'captureReadbackVerified':True,
+         'ownedRootAndParentBindingStable':True,'attributionNotUIDAlone':True,'regularBodyReads':0,'existingContentHashesRecomputed':0,
+         'minimumComplete':False,'DPKReadAttempted':False,'historicalContentHashesVerifiedCurrent':False,'allEntriesClaimedMinimumNecessary':False}
+except BaseException as error:
+ reason=str(error) if type(error) is RuntimeError and str(error) in ('deadline','ownership','type','parent','drift','path','unattributable','outside-link','hardlink','arguments','binding','root-mode','capture-exists','capture-binding','capture-readback') else 'os-error' if isinstance(error,OSError) else 'unexpected'
+ result.update(status='refused',errorClass=reason,errno=error.errno if isinstance(error,OSError) else None,failedPhase=phase,captureCreated=capture_created,
+               Tio=TIO.isoformat() if TIO else None,metadataHardStopUTC=HARD.isoformat(),minimumComplete=False,recoveryRequired=True)
+finally:
+ for fd in reversed(fds):
+  try:os.close(fd)
+  except OSError:pass
+print(canon(result).decode(),end='')

@@ -1,0 +1,38 @@
+{
+  "C1": "2026-11-10T06:17:27Z",
+  "Cdiag": "2026-11-10T06:37:27Z",
+  "Cend": "2026-11-10T06:47:27Z",
+  "actionArgumentOrder": [
+    "root",
+    "manifest_relative",
+    "private_plan_relative"
+  ],
+  "actionSHA256": "4a67f00517dab4a39d401152114bb33b5f9c50bd8e7378a1435e62acc08858da",
+  "calleeEntry": "execute(root,manifest_relative,private_plan_relative)",
+  "callerArgumentOrder": [
+    "safeParametersPath",
+    "approvedParametersSHA256"
+  ],
+  "callerSHA256": "1dabebce98fb3c4def8db8ddfdf897421febbc59cd7317a37a96d4f2bde152d7",
+  "exactHomeRelativeRoot": "Library/Application Support/RivetExperiments/rivet-E010-3581e693-8019-4068-a40f-311488fab764",
+  "executionResultFilename": "execution-result-c1.safe.json",
+  "expectedCaptureFilesIncluded": 9,
+  "expectedNodeCounts": {
+    "directory": 1107,
+    "regular": 2352,
+    "symlink": 0
+  },
+  "expectedNodes": 3459,
+  "kind": "E010-CL1-complete-execution-parameters",
+  "manifestRelative": ".cleanup-20261110T053307Z/inventory.private.json",
+  "privateManifestSHA256": "1f10be83f06a14c035f702fc8c1e2dee098ecdf70ed153b6a138e429a5041425",
+  "privatePlanIsHistoricalDataOnly": true,
+  "privatePlanRelative": ".cleanup-20261110T053307Z/delete-plan.private.json",
+  "privatePlanSHA256": "930da573986b737cd6fbc2864cca1bcacf34bc8229da911b6913b8c107a3da4f",
+  "recordedUTC": "2026-11-10T06:26:48.286120+00:00",
+  "requiredReviewApprovalFilename": "execution-review-approval-c1.safe.json",
+  "reviewedV3SourceSHA256": "3c79f83f0b166b25e09df4d25303c231c2fec5b8dbdacf7af93680d5de14915b",
+  "source22AggregateSHA256": "caae3528d9fbc44cd2e0eebfc19b1d3bc914b8e303efb432e39f189a8adc7824",
+  "targetNamespace": "3581e693-8019-4068-a40f-311488fab764",
+  "targetOperationsBeforeReview": false
+}

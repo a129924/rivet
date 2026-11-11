@@ -1,0 +1,134 @@
+{
+  "C0": null,
+  "C0Status": "not-started-until-independent-offline-gates-pass",
+  "DPKReadAttempted": false,
+  "R0": "2026-11-10T08:10:57Z",
+  "candidateCacheRoots": [
+    "DerivedData",
+    "intermediates",
+    "build-output"
+  ],
+  "fileProofOnly": true,
+  "futureCallerArgv": [
+    "python3",
+    "-B",
+    "retention_caller.py",
+    "--phase",
+    "diagnose-or-execute",
+    "--params",
+    "execution-parameters.safe.json",
+    "--params-sha",
+    "actual-parameter-SHA256",
+    "--offline-review",
+    "offline-review-approval.safe.json",
+    "--c0",
+    "actual-C0-after-gates",
+    "--execution-review",
+    "execution-review-approval.safe.json-only-for-execute"
+  ],
+  "jobHomeRelative": "Library/Application Support/RivetExperiments/E010-retention-prune-rp-20261110T081057Z",
+  "kind": "E010-RP03-offline-execution-parameters-proposal",
+  "latestC0UTC": "2026-11-10T09:35:00Z",
+  "mandatoryPreserve": [
+    "configured",
+    "frozen-source",
+    "gui/p0/Products",
+    "hosts/p0.app",
+    "reference",
+    "proofs",
+    "global.json",
+    "grants",
+    "windows",
+    "gates",
+    "receipts",
+    "processes",
+    "write-attempts"
+  ],
+  "namespace": "b90f5f16-d3c8-452f-af91-86b88d6dc64e",
+  "newFileMode": "0600-exclusive-no-follow-read-verify",
+  "notYetApprovedOrExecuted": [
+    "C0",
+    "sidecar-creation",
+    "target-IO",
+    "fresh-inventory",
+    "actual-delete-plan",
+    "mutating-batch"
+  ],
+  "offlineApprovalRequired": "RP05-offline approved with exact action/caller/parameter SHA and approvedUTC within offline deadline",
+  "offlineHardStopUTC": "2026-11-10T09:10:57Z",
+  "oldApprovalReused": false,
+  "originalRawDeleteAllowed": false,
+  "originalRawMoved": false,
+  "priorPreparationManifestSHA256": "3d3e6becc5ec0a02f899b5b9a06f1e84272a4a329090461eed55ff0775cb4e22",
+  "privateFiles": [
+    {
+      "name": "window.private.json",
+      "necessity": "fixed-C0-original-D-no-reset"
+    },
+    {
+      "name": "bindings.private.json",
+      "necessity": "reviewed-source-action-caller-parameters-binding"
+    },
+    {
+      "name": "inventory.private.json",
+      "necessity": "exact-type-identity-content-and-parent-chain-proof"
+    },
+    {
+      "name": "map.private.json",
+      "necessity": "typed-dependency-and-per-raw-uncovered-accounting"
+    },
+    {
+      "name": "plan.private.json",
+      "necessity": "reviewed-exact-retain-delete-manifest-bindings"
+    },
+    {
+      "name": "candidate.safe.json",
+      "necessity": "same-SHA-readable-safe-review"
+    },
+    {
+      "name": "dispatch.json",
+      "necessity": "exclusive-single-batch-no-retry-proof"
+    },
+    {
+      "namePattern": "progress-NNNNNN.safe.json",
+      "necessity": "durable-attempted-completed-partial-proof"
+    },
+    {
+      "name": "execution-result.safe.json",
+      "necessity": "last-known-safe-postcondition-result"
+    },
+    {
+      "name": "native-failure.private.json",
+      "necessity": "conditional-unique-diagnostic-specific-ACK-required-not-blanket-retention"
+    }
+  ],
+  "privateReviewSchema": {
+    "exactBoundDigests": [
+      "candidateSHA256",
+      "manifestSHA256",
+      "planSHA256",
+      "retainListSHA256",
+      "deleteListSHA256",
+      "actionSHA256",
+      "callerSHA256",
+      "parameterSHA256",
+      "mapSHA256"
+    ],
+    "phase": "RP-live-execution",
+    "readabilityACK": true,
+    "requiredFixes": [],
+    "safetyACK": true,
+    "verdict": "approved"
+  },
+  "rawPolicy": "each-file-retain-uncovered-unless-exact-source-provenance-and-specific-full-coverage-exists; this-revision-never-deletes-raw",
+  "retentionDeadlineUTC": "2026-11-20T07:22:03.379959Z",
+  "revision": "RP-RF01-v2",
+  "sidecarMode": "0700-new-only-no-chmod-existing",
+  "sidecarStatus": "proposal-not-created-requires-RP05-approval",
+  "sourceAggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d",
+  "sourceManifestFileSHA256": "20986bd64a542370334b270a671aef6ccd5276ce8338b8e2c287d75c42202608",
+  "sourceManifestRelative": "evidence/ng-date-preparation-20261110/source-manifest.json",
+  "targetHomeRelative": "Library/Application Support/RivetExperiments/rivet-E010-b90f5f16-d3c8-452f-af91-86b88d6dc64e",
+  "totalHardStopUTC": "2026-11-10T09:55:57Z",
+  "unknownPolicy": "retain-and-minimumComplete-false; unresolved-dependency-blocks-cache-deletion"
+}

@@ -1,0 +1,22 @@
+{
+  "actualC1EntrySetMatches": null,
+  "actualC1FreshObservationPerformed": false,
+  "actualC1HandlesClear": null,
+  "anyDifferenceStopsNoInventoryRefreshOrRetry": true,
+  "captureCountIncluded": 9,
+  "deletionApproved": false,
+  "expectedHistoricalSnapshotSealedUTC": "2026-11-10T05:50:46.523901Z",
+  "expectedNodeCounts": {
+    "directory": 1107,
+    "regular": 2352,
+    "symlink": 0
+  },
+  "expectedNodes": 3459,
+  "freshBeforeDeleteRequired": true,
+  "kind": "E010-CL1-expected-inventory-candidate",
+  "namespace": "3581e693-8019-4068-a40f-311488fab764",
+  "noTargetReadWriteDuringPreparation": true,
+  "parameterSHA256": "ce247c4eb1379204695adca2c5691e013b67bc04082647c4d30a96fa3ea4d66a",
+  "privateManifestSHA256": "1f10be83f06a14c035f702fc8c1e2dee098ecdf70ed153b6a138e429a5041425",
+  "recordedUTC": "2026-11-10T06:26:48.286120+00:00"
+}
