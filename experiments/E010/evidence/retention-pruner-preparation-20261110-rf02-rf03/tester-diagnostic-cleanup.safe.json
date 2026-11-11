@@ -1,0 +1,19 @@
+{
+  "C0Started": false,
+  "authorAuditsUntouched": true,
+  "candidateReceiptSHA256": "842ae47052d82c14fa946dfb49459618e2371f369c7a02f4f627e5490001c81e",
+  "cleanupNativeLSOFCalls": 1,
+  "deletedFiles": 6,
+  "endedUTC": "2026-11-10T08:52:37.523592+00:00",
+  "freshOwnedAuditHandlesClear": true,
+  "fullHashOwnerIdentityNoSymlinkVerified": true,
+  "kind": "E010-RP04-v3-own-synthetic-diagnostic-cleanup",
+  "permanentReceiptsUnchanged": true,
+  "priorCleanupReceiptSHA256": "b08fcb7d553c9839c628ad341e88d48fd96d86d2334c414aa110dc25e0591f9a",
+  "productionTargetOrSidecarIO": 0,
+  "readabilityACK": true,
+  "rootLstatAbsent": true,
+  "safetyACK": true,
+  "startedUTC": "2026-11-10T08:52:37.216075+00:00",
+  "testNativeChildAttempts": 0
+}

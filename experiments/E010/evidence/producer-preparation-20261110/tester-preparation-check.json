@@ -1,0 +1,173 @@
+{
+  "actualCommand": {
+    "PythonModuleSearchRoot": "experiments/E010/Tests",
+    "command": [
+      "python3",
+      "-B",
+      "-"
+    ],
+    "methodNames": [
+      "test_PF_T01_real_template_changes_only_two_target_overrides",
+      "test_PF_T02_unexpected_target_configuration_value_or_count_rejects",
+      "test_PF_T03_generated_precedence_reaches_hook_and_wrong_bundle_still_rejects",
+      "test_GUI_consent_leaf_before_auto_and_unique_slot",
+      "test_valid_hooks_actual_product_and_human_attestation_form_GUI_proof",
+      "test_missing_duplicate_late_wrong_target_nonce_source_and_old_product_reject",
+      "test_wrong_original_leaf_never_becomes_new_baseline_or_manual_fallback",
+      "test_private_source_raw_safety_no_handles_and_no_live_inspector_in_prep",
+      "test_P1_old_profile_cannot_be_retried_or_reseeded"
+    ],
+    "nativeGuard": "subprocess.run exact allowlist plus subprocess.Popen audit; other native entries denied",
+    "selection": "explicit unittest.TestSuite(GUIBuildTests(name) for name in methodNames); no discovery or imported suites",
+    "temporaryFixtureGuard": "tracked TemporaryDirectory under one owned pure-test scratch; actual owner/mode/no-symlink checks",
+    "workingDirectory": "feature worktree root"
+  },
+  "authorPreparationReceipt": {
+    "SHA256": "cd170a067a9031ac37b96bf43db9d1325da710355c71324833606f7dd76eafa1",
+    "authorApprovalNotReused": true,
+    "path": "experiments/E010/evidence/producer-preparation-20261110/preparation-check.json"
+  },
+  "caseStatuses": {
+    "PF-T01": "成功",
+    "PF-T02": "成功",
+    "PF-T03": "成功",
+    "PF-T04": "成功",
+    "PF-T05": "成功"
+  },
+  "cleanup": {
+    "auditDirectoryBasename": "rivet-E010-PF04-5yzexo24",
+    "auditFileSHA256": {
+      "before.json": "5c999c1f5c6804120ca71f871b00d309a47f1c0e200ec3f879429e43c68bf175",
+      "focused-result.json": "c5b8caa178e9ff39d0c70f5e26195236efa7fb3bb2bf04db4ea744f5b211308f",
+      "focused.log": "aec2000ba95e62d972d60cf0a7976c1ac17f0caa7527fdeba69eb3f276762af3"
+    },
+    "fixtureRootsDirectlyObservedAbsentAfterUnittestCleanup": 9,
+    "fixtureRootsInitiallyOwned0700NonSymlink": true,
+    "fixtureRootsTracked": 9,
+    "nativeProcessesReturnedSynchronously": true,
+    "noGeneralOrGlobalNoHandlesClaim": true,
+    "otherTemporaryOrPrivateRootsTouched": false,
+    "ownedFixtureParentRemoved": true,
+    "safeExternalAuditRetained": true,
+    "separateNativeOpenHandleScanPerformed": false
+  },
+  "handoff": {
+    "PF05ApprovalNotSelfGranted": true,
+    "formalKeychainAdapterNotStarted": true,
+    "nextRole": "independent PF05 Reviewer",
+    "preparationOnlyNotLiveAuthorization": true
+  },
+  "independentResults": {
+    "E006ProtectedCount": 126,
+    "actualPlutilSpawns": 165,
+    "allNativeProcessesReturnedSynchronously": true,
+    "allPreexistingBytesUnchanged": true,
+    "allowedNativeCommand": [
+      "/usr/bin/plutil",
+      "-convert",
+      "json",
+      "-o",
+      "-",
+      "-"
+    ],
+    "allowedSubprocessRunCalls": 165,
+    "beforeFileCount": 496,
+    "completePBXGraphEqualityAfterExactAllowedChanges": true,
+    "deniedNativeAttempts": 0,
+    "endUTC": "2026-11-10T02:42:45.827487+00:00",
+    "errors": 0,
+    "failures": 0,
+    "fixtureRootsInitiallyOwned0700NoSymlink": true,
+    "fixtureRootsObservedAbsentAfterCleanup": 9,
+    "fixtureRootsTracked": 9,
+    "fourContractSHAsMatched": {
+      "analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md": "10e6c54e5fc3c687cba63b0524c1ce116aa11305366e5304b3e2909687318383",
+      "analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md": "f1f096ba7447c9bd078b3d4082b1e69c99fa5c88a233d379ed17cb65d50a3335",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md": "0c9fadae814359492b526c45151b76caf809d189dc0499130e8ffe9caa3758c2",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md": "ac33088637bfdb175f9dddc869366d92b7666fc3bfaad1cd9d88c84de0fcb430"
+    },
+    "kind": "PF04-independent-focused-pure-results",
+    "logSHA256": "aec2000ba95e62d972d60cf0a7976c1ac17f0caa7527fdeba69eb3f276762af3",
+    "methodNames": [
+      "test_PF_T01_real_template_changes_only_two_target_overrides",
+      "test_PF_T02_unexpected_target_configuration_value_or_count_rejects",
+      "test_PF_T03_generated_precedence_reaches_hook_and_wrong_bundle_still_rejects",
+      "test_GUI_consent_leaf_before_auto_and_unique_slot",
+      "test_valid_hooks_actual_product_and_human_attestation_form_GUI_proof",
+      "test_missing_duplicate_late_wrong_target_nonce_source_and_old_product_reject",
+      "test_wrong_original_leaf_never_becomes_new_baseline_or_manual_fallback",
+      "test_private_source_raw_safety_no_handles_and_no_live_inspector_in_prep",
+      "test_P1_old_profile_cannot_be_retried_or_reseeded"
+    ],
+    "methods": 9,
+    "negativeSubcases": 11,
+    "prior22SnapshotExact": true,
+    "protectedAuthorBaselineCount": 466,
+    "result": "approved",
+    "secondsIncludingCompletePBXGraphComparison": 1.623027,
+    "skips": 0,
+    "source22ActualMatched": true,
+    "source22AggregateSHA256": "e7fdeb2a5daabc5953041c51f03539916f7c70a8eb34e704e0b5b1a8079c7757",
+    "startUTC": "2026-11-10T02:42:44.204404+00:00",
+    "unittestSeconds": 1.574
+  },
+  "kind": "E010-PF04-independent-producer-pure-verification",
+  "limits": {
+    "actualGUIOrCUAOrAssetOrCompilerOrBuildOrAppOrDPKExecuted": false,
+    "actualXcodeEffectiveResolutionVerified": false,
+    "closedRootRebuiltOrResumed": false,
+    "devGitStatusNotIndependentlyRepeated": true,
+    "newLiveRootGrantAnchorClockCreated": false,
+    "noGitMutationOrDevWrite": true,
+    "oldGUIPostHookRequiredCauseEstablished": false,
+    "originalPrivatePreparationAccessed": false,
+    "pureOnly": true,
+    "realGUIHookExecutionVerified": false,
+    "realSignedHostP0P1OrDPKVerified": false
+  },
+  "protection": {
+    "E006ProtectedFiles": 126,
+    "authorUniqueRedGreenGuardLogsReadVerifiedAndRetained": true,
+    "current496BeforePathsUnchangedByTester": true,
+    "fourContractSHAsUnchanged": {
+      "analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md": "10e6c54e5fc3c687cba63b0524c1ce116aa11305366e5304b3e2909687318383",
+      "analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md": "f1f096ba7447c9bd078b3d4082b1e69c99fa5c88a233d379ed17cb65d50a3335",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md": "0c9fadae814359492b526c45151b76caf809d189dc0499130e8ffe9caa3758c2",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md": "ac33088637bfdb175f9dddc869366d92b7666fc3bfaad1cd9d88c84de0fcb430"
+    },
+    "oldManifestsReceiptsIndexesMapsAndFrozenGUIUnchanged": true,
+    "original466ProtectedFilesSHAUnchanged": true,
+    "prior22BytesMatchEntryFixManifest": true,
+    "prior22SnapshotMapSHA256": "c3e76ec399d770901b9139009cb0f8acbb22aa790fec419def8a9f475f284ec1"
+  },
+  "recordedUTC": "2026-11-10T02:43:51.629462+00:00",
+  "required_fixes": [],
+  "sourceFacts": {
+    "bothOriginalTargetPlaceholderValuesAndGlobalCountValidated": true,
+    "completePBXGraphMatchesOnlyExactAllowedChanges": true,
+    "effectiveDebugAndRebuiltBundleDerivedFromGeneratedProjectAndXCConfigNotHardcodedUUID": true,
+    "fourBaseConfigReferencesAndProductBundleExpansionPreserved": true,
+    "generatedCopyRemovesExactlyTwoTargetInlineFallbacks": true,
+    "realTemplateParsedBeforePatch": true,
+    "templateSchemeSwiftBytesUnchanged": true,
+    "uniqueApplicationTargetAndDebugRebuiltGraphValidated": true,
+    "wrongBundleAndLeafNonceSourceProfileSlotAndNoReseedGuardsStillReject": true
+  },
+  "sourceManifest": {
+    "SHA256": "938a007e159c855acf737f632c4c72d6101f6ef8a8583c11e05cc11584ce9b21",
+    "aggregateSHA256": "e7fdeb2a5daabc5953041c51f03539916f7c70a8eb34e704e0b5b1a8079c7757",
+    "allFrozenActualBytesMatched": true,
+    "changedFromPrior": [
+      "Tests/test_gui_build.py",
+      "scripts/gui_build.py"
+    ],
+    "changedSourceSHA256": {
+      "Tests/test_gui_build.py": "f160ce8d32dfef0cf282433faffd1aa40090888ce0e422219f9bd304e801b756",
+      "scripts/gui_build.py": "682e3944fb19a61bf2161aa535ac72837c4643daf9b7d8c875823464aca468d3"
+    },
+    "fileCount": 22,
+    "path": "experiments/E010/evidence/producer-preparation-20261110/source-manifest.json"
+  },
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "verdict": "approved"
+}

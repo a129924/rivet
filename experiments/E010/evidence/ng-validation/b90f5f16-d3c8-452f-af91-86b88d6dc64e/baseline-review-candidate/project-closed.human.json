@@ -1,0 +1,16 @@
+{
+  "HumanDidNotPressRun": true,
+  "agentAuthorizedSeedAndFreshLaunchesSeparate": true,
+  "buildStopped": true,
+  "canonicalCloseReceiptSHA256": "87193c71ce789224e0905066270550c8264d2bd4c3df4fb8cff6152b836f8583",
+  "exactHumanReplyUTC": null,
+  "handlesNotInferredFromHuman": true,
+  "kind": "E010-NG07-project-closed-human-attestation",
+  "lastArmSHA256": "51aed618effb64b9adaafbed49f5953ddfaee27c5a5608e6b3e394ba39e5a89f",
+  "latestArmBound": true,
+  "projectClosed": true,
+  "rawHumanAnswer": "已停止／關閉，本人未按Run",
+  "recordedUTC": "2026-11-10T07:44:02.977858+00:00",
+  "source": "trusted-parent-relay-of-direct-Human-answer",
+  "sourceRequest": "requesta904ec17648a420d91349fd812b01f49-question-1"
+}

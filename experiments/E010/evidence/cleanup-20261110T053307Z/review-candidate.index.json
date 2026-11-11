@@ -1,0 +1,12 @@
+{
+  "C0": "2026-11-10T05:33:07Z",
+  "deleteExecutionNotApproved": true,
+  "files": {
+    "delete-plan.safe.json": "e2feb32cd30159387eadcf5616c538299c1ad4f235a96ed3733b5f84b9b7b20e",
+    "diagnostic.safe.json": "888b0a9c81073620e2d555bcd6ab4acf01e66215426eddd2b409ac9aad0dabb8",
+    "inventory-plan-ready.safe.json": "aadd1fe4fc9313993228bf8ffcfee9cc941086cc93772608793598b51ee8ff10",
+    "operator-hardstop.safe.json": "074fba42b83b22ac10140fee1514a93e9d02feef5e41d48e647a74fd724e5ab4"
+  },
+  "kind": "E010-CL03-review-candidate-index",
+  "recordedUTC": "2026-11-10T05:50:46.543299+00:00"
+}

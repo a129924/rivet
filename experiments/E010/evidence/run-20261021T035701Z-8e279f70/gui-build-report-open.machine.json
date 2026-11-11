@@ -1,0 +1,13 @@
+{
+  "UIExactWindowPending": true,
+  "diagnosticReadySHA256": "8263f489a3128d5914e2555e3dc2d05a12e1c1827f1e01d690d127716585aec0",
+  "endedUTC": "2026-10-21T04:12:44.252146+00:00",
+  "humanObservationSHA256": "614e30c37edf03f7c4afd3308799af7a24ff3edbad00e8755ee9ff2aea452ac4",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "noNewBuildOrAppRun": true,
+  "openExitCode": 0,
+  "originalCutoffUTC": "2026-10-21T04:22:01.736290+00:00",
+  "originalDeadlineUTC": "2026-10-21T04:27:01.736290+00:00",
+  "startedUTC": "2026-10-21T04:12:43.911373+00:00",
+  "synthetic": false
+}

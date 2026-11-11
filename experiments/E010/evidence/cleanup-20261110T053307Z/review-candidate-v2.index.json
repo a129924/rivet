@@ -1,0 +1,13 @@
+{
+  "C0": "2026-11-10T05:33:07Z",
+  "files": {
+    "delete-action-v2.draft.txt": "a5bf0214bc50691a087b7219f9b091553993574232cf7ed7374de192d8ef7873",
+    "delete-plan-v2.safe.json": "7d00900c31ab52c0479cf9c2ef915a84f5e16114aff6f4cd5d317d6145bc1763",
+    "diagnostic.safe.json": "888b0a9c81073620e2d555bcd6ab4acf01e66215426eddd2b409ac9aad0dabb8",
+    "inventory-plan-ready-v2.safe.json": "99da33f58b8f0f54ddec350fb2e18f2e2240b1e0aed3dd55b8d719bb5cdd6323",
+    "operator-hardstop.safe.json": "074fba42b83b22ac10140fee1514a93e9d02feef5e41d48e647a74fd724e5ab4"
+  },
+  "kind": "E010-CL03-v2-review-candidate-index",
+  "noDeletionApprovedOrPerformed": true,
+  "recordedUTC": "2026-11-10T05:54:01.754743+00:00"
+}

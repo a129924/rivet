@@ -1,0 +1,20 @@
+{
+  "actualDeleteBatchCount": 0,
+  "bindings": {
+    "actionSHA256": "ef32e06608b959e1823afc32e34a950fe7df9702d459ffe4106f5940b0e3504a",
+    "callerSHA256": "389885059603ad2bad09f0768143c8008fa0194fa2bfcf3d47438fc27848a8a7",
+    "parameterSHA256": "38ac0762cf6bbf51d3ca7c61194845857db41f6ace1f038f2ed7ebc788b459df"
+  },
+  "files": {
+    "candidate.safe.json": "d60492272c1ff03c352213768f7c024ca40dfdcb70b015a508662d721544c920",
+    "diagnosis.safe.json": "1f5c96caf55ee2fd8b50189c8610bc6c3c6aec9a976e2a4b3693c039c66f0788"
+  },
+  "kind": "E010-RP06-fresh-plan-review-index",
+  "privateManifestSHA256": "b39281cf2a186a5da18e3927250a5c7629b88a0fdce7c9208ec079e96d79655a",
+  "privateMapSHA256": "be2caa78b1d7733a050032d0690291f22a2135a4ec8c18ddb6e88f7b9fa07959",
+  "privatePlanSHA256": "f43e4dd240ecac47250dce744852df4868a614c737a133fef315d38050cc7871",
+  "privateRawIncluded": false,
+  "readabilityACKPending": true,
+  "recordedUTC": "2026-11-10T08:55:07.475471+00:00",
+  "safetyACKPending": true
+}

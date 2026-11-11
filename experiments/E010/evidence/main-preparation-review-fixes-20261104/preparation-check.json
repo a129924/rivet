@@ -1,0 +1,133 @@
+{
+  "MAIN04": "pending-independent-focused-retest",
+  "MAIN05": "needs-rework-history-preserved; pending-independent-re-review",
+  "W1": "not-started",
+  "authorFixesCompleted": [
+    "MAIN-RF01",
+    "MAIN-RF02",
+    "MAIN-RF03",
+    "MAIN-RF04"
+  ],
+  "authorVerdict": null,
+  "canonicalFocusedCommand": "python3 -B -m unittest discover -s experiments/E010/Tests -p test_main_review_fixes.py -v",
+  "changes": {
+    "MAIN-RF01": "Finite child environment, no inherited xcconfig/signing/output/dyld overrides; effective values private and hash-bound in configuration/result; executor receives same map. Global HOME/CODEX_HOME untouched.",
+    "MAIN-RF02": "Own new session plus birth/executable-matched descendants only; pre-existing/shared excluded, SIGTERM only rechecked owned identities. Timeout/interruption/invalid product still get immutable result. Unconfirmed exit blocks build/proof/finalization/stop; retain recovery material.",
+    "MAIN-RF03": "Successful product provenance and failed-attempt controls are separate. Nonzero/timeout failures are never hosts; failed P1 plus mocked successful recovery can publish safe controls, ACK, then exact filesystem cleanup.",
+    "MAIN-RF04": "MAIN setup stop has stable safe pre-index and same-hash dual ACK before raw deletion, original W1/D enforced; readonly archived bootstrap chain supports W2, historical per-stage stop unchanged."
+  },
+  "cleanup": {
+    "liveRootCreated": false,
+    "notGlobalTmpCleanup": true,
+    "removedOwnedAuthorHelpers": [
+      {
+        "SHA256": "c753a2d64a4cacaad142ca5503e27645778626655afd97c2f595c19119ecf3c6",
+        "absentAfterDelete": true,
+        "noHandlesObserved": true,
+        "ownerVerified": true,
+        "regularFileNoSymlink": true,
+        "relativeToAuthorScratch": "process-fragment.py"
+      },
+      {
+        "SHA256": "78e636caeb01041870175016dd09d7dfd753b4e00894f8a32bbc16cbdd483bdc",
+        "absentAfterDelete": true,
+        "noHandlesObserved": true,
+        "ownerVerified": true,
+        "regularFileNoSymlink": true,
+        "relativeToAuthorScratch": "edit-prepare.py"
+      },
+      {
+        "SHA256": "f2b609abd55c3d7dba87eaa57aaec8227b94d1a5b973a2ae74d51e8959de8574",
+        "absentAfterDelete": true,
+        "noHandlesObserved": true,
+        "ownerVerified": true,
+        "regularFileNoSymlink": true,
+        "relativeToAuthorScratch": "failure-control-fragment.py"
+      },
+      {
+        "SHA256": "0f2b9c237fc7f4b6e58e666bd4d94c45567ae016c85424ad2dd39431523fc5b1",
+        "absentAfterDelete": true,
+        "noHandlesObserved": true,
+        "ownerVerified": true,
+        "regularFileNoSymlink": true,
+        "relativeToAuthorScratch": "edit-proof.py"
+      }
+    ],
+    "retained": "safe audit logs, baseline hash map, author finalization script; no private signing/profile/raw live evidence"
+  },
+  "hypothesis": "未執行",
+  "kind": "E010-MAIN05-RF01-04-author-fix-preparation",
+  "notExecuted": [
+    "actualProcessSnapshotOrSignal",
+    "actualSignedBuild",
+    "provisioning",
+    "AppleAssets",
+    "CMS",
+    "IOKit",
+    "AppLaunch",
+    "SecurityAPI",
+    "SecItem",
+    "liveRootOrGrantsOrAnchorOrClock",
+    "retention",
+    "naturalExpiry",
+    "P1Restore",
+    "GUI",
+    "formalAdapter",
+    "gitStageCommitPushPR"
+  ],
+  "previousMAIN03ManifestSHA256": "4dadddddbcf7adabaec8d12d0273f506954447f4e84c51a0666d951c31f7a78f",
+  "previousMAIN03PreparationSHA256": "cccf14a5ebb87d7b23e8ed0beb565c0152bb0866a425748682ded4087d2153f9",
+  "previousMAIN04TesterReceiptSHA256": "81f67d4617cb3bed3acc57bfebf3f57f4dd36063451c04e72e83eb1c8f402968",
+  "protection": {
+    "E006NoDiffFromBase": true,
+    "baselineSHA256": "5c75a00fe80cedcda9d58ae1c9afdfc7dfeedc3e088370f7b895b1bb6faa1953",
+    "devClean": true,
+    "devHead": "758aca9bb518f2a21f20f47609335fac49043370",
+    "featureHead": "b930d80072909f52171a23598b923af82c7c91cc",
+    "historical171Snapshots22FrozenGUI13MapAQ2Unchanged": true,
+    "indexEmpty": true,
+    "originalMAIN03AndMAIN04ReceiptsUnchanged": true,
+    "priorE010FilesChecked": 223,
+    "priorE010UnchangedExceptFourAuthorizedFiles": 219
+  },
+  "recordedUTC": "2026-11-04T09:52:56.284886+00:00",
+  "sourceFileCount": 19,
+  "sourceManifestFileSHA256": "6f5fa44301c6856361b1959cfd962cf6a39defc3990b99cd1477ca850ae0220e",
+  "sourceManifestSHA256": "c0306e5e84cafa0a84e1154030d3ff1c1672158a8cc27a56407afc1a639d5405",
+  "upstreamReviewer": {
+    "required_fixes": [
+      "MAIN-RF01",
+      "MAIN-RF02",
+      "MAIN-RF03",
+      "MAIN-RF04"
+    ],
+    "source": "explicit independent MAIN05 handoff; not author approval",
+    "verdict": "needs-rework"
+  },
+  "validation": {
+    "affectedCompatibility": {
+      "durationSeconds": 0.744,
+      "failures": 0,
+      "logSHA256": "f38c6c1d1e6a722b00902077114db041bbc1fa0c75680ef4fc5f2bc853358b00",
+      "methods": 12,
+      "scope": "seven prior MAIN Python methods and five historical bootstrap/stop/archive methods; no dedicated Swift/unsigned rebuild"
+    },
+    "buildInputs": {
+      "allUnchangedFromMAIN03": true,
+      "count": 8,
+      "unsignedOrSwiftAppRebuildPerformed": false
+    },
+    "fixtureNotes": [
+      "Initial discovery also loaded eight imported prior MAIN tests, including one existing pure Swift chain helper; final file uses a module alias to avoid duplicate discovery. No App/Security launched.",
+      "Initial timeout mock removed owned PIDs before signal while expecting SIGTERM; preserving no-signal was safe behavior. Snapshot fixture corrected; not counted as a domain defect."
+    ],
+    "focusedRF": {
+      "durationSeconds": 0.342,
+      "failures": 0,
+      "logSHA256": "15e73e345c325a171e182d21499e929661285e77d2a0789542c652eca8e75a43",
+      "methods": 7
+    },
+    "initialGreenAttemptSHA256": "123dd13a4731d12dc7411a3722a08047eace5afaaaec4e292c57a769d51ad03c",
+    "redSHA256": "79b64b2ac2ceb13174eadd8f763119fd3832706e8098c3bab0390b155e8298aa"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "C0Started": false,
+  "authorVerdict": null,
+  "durationSeconds": 0.07617158303037286,
+  "endedUTC": "2026-11-10T08:29:05.247738+00:00",
+  "errors": 0,
+  "failures": 0,
+  "fixtureCleanup": {
+    "fixtureCountPerFullSuite": 15,
+    "globalHandlesClaimed": false,
+    "globalTempInventoryClaimed": false,
+    "mechanism": "TemporaryDirectory explicit tearDown/finally",
+    "reportedCleanupErrors": 0
+  },
+  "historicalAuthorAttempts": [
+    {
+      "kind": "initial-mutation-helper-relative-cwd-error",
+      "modifiedFiles": 0,
+      "result": "FileNotFound-before-write"
+    },
+    {
+      "errors": 10,
+      "failures": 1,
+      "kind": "initial-synthetic-suite",
+      "methods": 14,
+      "passed": 3,
+      "reason": "default-temporary-path-contains-system-var-symlink; no-follow-refused; fixture-only-changed-to-private-tmp"
+    },
+    {
+      "kind": "caller-test-wrong-cwd",
+      "result": "module-not-found; no test executed"
+    },
+    {
+      "kind": "later-mutation-helper-relative-cwd-error",
+      "modifiedFiles": 0,
+      "result": "FileNotFound-before-write; following suite ran prior bytes; not final evidence"
+    }
+  ],
+  "independentReviewerStillRequired": true,
+  "independentTesterStillRequired": true,
+  "kind": "E010-RP03-author-preparation-check",
+  "limitations": [
+    "original raw command producer lacks persisted stage/tool provenance; each raw retained-uncovered",
+    "no raw delete capability in this revision",
+    "unknown or overminimum retention prevents minimumComplete",
+    "real C0 inventory/actual delete plan/review not executed",
+    "sidecar location is proposal pending RP05",
+    "fileproof does not establish DPK A readability"
+  ],
+  "nextBoundary": "RP04 independent Tester then RP05 independent Reviewer before any C0",
+  "noDevWrites": true,
+  "noOldHarnessOrEvidenceWrites": true,
+  "noRepoGitOperations": true,
+  "original22AllMatch": true,
+  "protectedDigestSHA256": "f91803b8f31de3a4f39b4f2356582b038f79d196bd8de9785c87b9a054b3fa45",
+  "protectedExistingFeatureFilesBeforeAfterMatch": true,
+  "protectedFileCount": 456,
+  "skipped": 0,
+  "sourceAggregateSHA256": "2036c8339ebddffcc1315ba756b0513d0bfa1f04c866816a2d070c29380282ed",
+  "sourceManifestSHA256": "3d3e6becc5ec0a02f899b5b9a06f1e84272a4a329090461eed55ff0775cb4e22",
+  "startedUTC": "2026-11-10T08:29:05.171573+00:00",
+  "testBoundaries": {
+    "AppBuildOrRun": 0,
+    "CUAEntrypoints": 0,
+    "KeychainDPKCalls": 0,
+    "SigningCommands": 0,
+    "actualTargetIO": 0,
+    "allLSOFMocked": true,
+    "compilerCalls": 0,
+    "homePrivateIO": 0,
+    "liveCLIImported": false,
+    "pythonOnly": true,
+    "syntheticFileTreesOnly": true
+  },
+  "testCommand": "python3 -B -m unittest -v test_retention_pruner",
+  "testMethods": 16,
+  "testsSuccessful": true
+}

@@ -1,0 +1,1 @@
+{"actualDriver": "--stop-setup", "cleanupMachineExists": true, "durablePreCleanupIndexExists": true, "externalCommandOrAppLaunch": false, "finalIndexExists": false, "injectedFinalIndexExportFailure": true, "privateRootRetained": false, "synthetic": true}

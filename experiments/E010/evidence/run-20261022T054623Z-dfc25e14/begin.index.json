@@ -1,0 +1,25 @@
+{
+  "beginControlMachineSHA256": "c7f0f7c95f2949b06d3cf2fa46944b7cbd68e9766073c7a28913d8d4ebd07716",
+  "beginMachineSHA256": "3832376d6d9f5401485c5da020bde27ffa4dc67282fbd1cb08334a84f00632d2",
+  "files": {
+    "anchor.binding.json": "066cfe8265a4f653dc5bed306b37af56db07dc4209f35752c4fe67ff4424371d",
+    "anchor.public.json": "609059ed0b7861eade3dd199f8d6bf5af6ff6ae174091f5b1a9033cd7ef5a23f",
+    "begin-control.machine.json": "c7f0f7c95f2949b06d3cf2fa46944b7cbd68e9766073c7a28913d8d4ebd07716",
+    "begin-ready.public.json": "a59f5703435225fe791c92089f4fc22bdb56afece32b64751b8e94d5cee65272",
+    "begin.machine.json": "3832376d6d9f5401485c5da020bde27ffa4dc67282fbd1cb08334a84f00632d2",
+    "grants/assets.public.json": "123e562ca6b84665930466b5745f69af4444e87228f7978f58b8840d75eac59a",
+    "grants/recovery.public.json": "01342b1012353ef436170a38a8fd6b3b964f9ac56bb672023385eab3e0da52d4",
+    "grants/retention.public.json": "26af0df90106f1a10a21064410a01737b02d611719f312c0e237cfe75b5d01fb",
+    "scope-and-begin-consent.human.json": "1fef47165d22737da935e4661c1c85d4ce081a3fceec36dd290168ce70a80a91",
+    "windows/1.binding.json": "ad44c44242d33a2dbea52867ccef77aa384568330117cff01615996526d0e4b5",
+    "windows/1.json": "aaaf0d890ca7df402d5cdbce3c9c523854deb3c571a22765d406bd77e68ede6d"
+  },
+  "humanObservationPending": true,
+  "isSetupOrSeedGate": false,
+  "kind": "begin-only-safe-evidence-index",
+  "liveValidationTaskComplete": false,
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "primaryHypothesisStatus": "未執行",
+  "privateControlRootRetained": true,
+  "synthetic": false
+}

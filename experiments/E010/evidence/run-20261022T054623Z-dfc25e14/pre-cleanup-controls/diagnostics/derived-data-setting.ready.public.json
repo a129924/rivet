@@ -1,0 +1,13 @@
+{
+  "anchorSHA256": "c65b9020e09417f7853fc22d99a285a07b393a64991564fbb4bbfcd78aa1b211",
+  "humanReady": true,
+  "humanReadyStatementPresent": true,
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "previousHumanSHA256": "1521a22b8c7b966379f22f0f898e0fffe570fc8180c9da8f727af2f91394a620",
+  "previousReceiptSHA256": "a975e69bf71418d3a73633e7826c0d37d532b9c66ce368d6f4ca167ada7e31be",
+  "privateReadySHA256": "8563bbef971a8c207781941c30a0355973c3a8a2bfec58abe7b2abf871a4a61f",
+  "recordedUTC": "2026-10-22T06:01:29.602945+00:00",
+  "stage": "per-project-derived-data-setting",
+  "synthetic": false,
+  "windowSHA256": "aaaf0d890ca7df402d5cdbce3c9c523854deb3c571a22765d406bd77e68ede6d"
+}

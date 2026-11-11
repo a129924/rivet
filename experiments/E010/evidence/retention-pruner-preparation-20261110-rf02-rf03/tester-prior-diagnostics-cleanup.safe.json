@@ -1,0 +1,52 @@
+{
+  "C0Started": false,
+  "authorAuditUntouched": true,
+  "cleanupNativeCalls": {
+    "lsof": 2
+  },
+  "endedUTC": "2026-11-10T08:48:12.082025+00:00",
+  "kind": "E010-RP04-own-synthetic-diagnostics-cleanup",
+  "originalSource22AndProtected456Unchanged": true,
+  "permanentReceiptsUnchanged": true,
+  "productionTargetOrSidecarIO": 0,
+  "results": [
+    {
+      "auditVersion": "v1",
+      "candidateReceiptSHA256": "7bb00ec02478c17eab9f7880ce9c685bcfb0d0918ce912e8da6cc293962dfcba",
+      "classification": "completed",
+      "deletedFiles": 5,
+      "deletedFiniteKinds": [
+        "synthetic-runner",
+        "synthetic-fixture-audit",
+        "synthetic-unittest-stdout",
+        "synthetic-unittest-stderr",
+        "safe-test-result"
+      ],
+      "freshHandlesClear": true,
+      "fullHashAndOwnerNoSymlinkVerified": true,
+      "readabilityACK": true,
+      "rootAbsent": true,
+      "safetyACK": true
+    },
+    {
+      "auditVersion": "v2",
+      "candidateReceiptSHA256": "577bcd970bae3c6d33c720732b9e12f2916921ae79321aea5537448e70b908b9",
+      "classification": "completed",
+      "deletedFiles": 5,
+      "deletedFiniteKinds": [
+        "synthetic-runner",
+        "synthetic-fixture-audit",
+        "synthetic-unittest-stdout",
+        "synthetic-unittest-stderr",
+        "safe-test-result"
+      ],
+      "freshHandlesClear": true,
+      "fullHashAndOwnerNoSymlinkVerified": true,
+      "readabilityACK": true,
+      "rootAbsent": true,
+      "safetyACK": true
+    }
+  ],
+  "startedUTC": "2026-11-10T08:48:11.463856+00:00",
+  "testNativeChildAttempts": 0
+}

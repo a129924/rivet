@@ -1,0 +1,69 @@
+{
+  "C0": "2026-11-10T08:53:43.881395+00:00",
+  "actualCleanupApproved": false,
+  "actualDeleteBatchCount": 0,
+  "allTargetIOStopUTC": "2026-11-10T09:23:43.881395+00:00",
+  "attemptedCount": 0,
+  "bindings": {
+    "actionSHA256": "ef32e06608b959e1823afc32e34a950fe7df9702d459ffe4106f5940b0e3504a",
+    "callerSHA256": "389885059603ad2bad09f0768143c8008fa0194fa2bfcf3d47438fc27848a8a7",
+    "parameterSHA256": "38ac0762cf6bbf51d3ca7c61194845857db41f6ace1f038f2ed7ebc788b459df"
+  },
+  "candidateSHA256": "d60492272c1ff03c352213768f7c024ca40dfdcb70b015a508662d721544c920",
+  "closureHardStopUTC": "2026-11-10T09:38:43.881395+00:00",
+  "completedCount": 0,
+  "deleteListSHA256": "70653b0362dba8a66484d57256a9ba8fb6837f7d536d5adc53271d8ae819f243",
+  "dependencyStatusCounts": {
+    "resolved-exact": 2,
+    "retained-path-only": 12
+  },
+  "diagnosticStopUTC": "2026-11-10T09:13:43.881395+00:00",
+  "independentLocalWhitelistAdmission": true,
+  "kind": "E010-RP06-fresh-diagnose-safe-summary",
+  "manifestNodeCount": 4595,
+  "minimumCompleteEligible": false,
+  "nextGate": "RP07 exact plan independent review and sameSHA readability+safety ACK",
+  "nodeTypeCounts": {
+    "directory": 1250,
+    "regular": 3345
+  },
+  "offlineApprovalSHA256": "0cfdffedb4a62c7a0bd6da26fa919c707d639a51fd3d9ac0c89e7902590a8aa3",
+  "phase": "diagnose-only",
+  "privateFileSHA256": {
+    "bindings.private.json": "94ba1afc06a14d35c891c2b64cf7ab70fc2407a450e5911360ee57cb16cee35d",
+    "candidate.safe.json": "d60492272c1ff03c352213768f7c024ca40dfdcb70b015a508662d721544c920",
+    "inventory.private.json": "b39281cf2a186a5da18e3927250a5c7629b88a0fdce7c9208ec079e96d79655a",
+    "map.private.json": "be2caa78b1d7733a050032d0690291f22a2135a4ec8c18ddb6e88f7b9fa07959",
+    "plan.private.json": "f43e4dd240ecac47250dce744852df4868a614c737a133fef315d38050cc7871",
+    "window.private.json": "fa14f8fc049674fd0bfdb65d52b1b59cca1ddc8685ef060aa0021e69af202c6d"
+  },
+  "proposedDeleteCacheRootCounts": {
+    "DerivedData": 4368
+  },
+  "proposedDeleteCount": 4368,
+  "rawIdentityOrPathsPublished": false,
+  "rawRetainUncoveredCount": 50,
+  "recordedUTC": "2026-11-10T08:55:07.473061+00:00",
+  "recoveryRequired": true,
+  "retainListSHA256": "b9ee144240fcdd840b89cea528f9f1bf5ab0444b27395890d9d2ff2aeeb8019a",
+  "retainedNodeCount": 227,
+  "retainedStateFileProof": {
+    "DPKReadAttempted": false,
+    "P0HostAndGUIProductFileHashes": true,
+    "globalAnchorW1ProofChain": true,
+    "originalCERFileHash": true,
+    "originalRootBinding": true,
+    "source22FrozenBytes": true
+  },
+  "retentionDeadlineUTC": "2026-11-20T07:22:03.379959Z",
+  "scopeLimits": [
+    "No original node deleted or mutating batch dispatched.",
+    "Fileproof does not re-read DPK A or establish new App/profile validity.",
+    "Raw provenance unknown; all original raw retained-uncovered, never moved.",
+    "Cache completion alone cannot imply minimumComplete.",
+    "Fresh handles checked by reviewed caller once; future execute must recheck."
+  ],
+  "sourceAggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d",
+  "unknownDependencyCount": 0,
+  "unknownRetentionCount": 32
+}

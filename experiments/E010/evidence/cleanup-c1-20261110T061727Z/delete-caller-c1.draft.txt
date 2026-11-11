@@ -1,0 +1,124 @@
+# REVIEW-ONLY C1 caller. Execute this complete file only after CL1-04 approval.
+# argv: safe-parameters-path approved-parameters-SHA256. No private bytes in argv.
+import base64,datetime,hashlib,json,os,pathlib,stat,subprocess,sys,uuid
+CEND=datetime.datetime(2026,11,10,6,47,27,tzinfo=datetime.timezone.utc)
+C1='2026-11-10T06:17:27Z';CDIAG='2026-11-10T06:37:27Z'
+NS='3581e693-8019-4068-a40f-311488fab764'
+HOME_REL='Library/Application Support/RivetExperiments/rivet-E010-'+NS
+MREL='.cleanup-20261110T053307Z/inventory.private.json'
+PREL='.cleanup-20261110T053307Z/delete-plan.private.json'
+MSHA='1f10be83f06a14c035f702fc8c1e2dee098ecdf70ed153b6a138e429a5041425'
+PSHA='930da573986b737cd6fbc2864cca1bcacf34bc8229da911b6913b8c107a3da4f'
+def now():return datetime.datetime.now(datetime.timezone.utc)
+def tick(margin=0):
+ if (CEND-now()).total_seconds()<=margin:raise RuntimeError('C1-hardstop')
+def digest(raw):return hashlib.sha256(raw).hexdigest()
+def canonical(value):return (json.dumps(value,ensure_ascii=False,sort_keys=True,indent=2,allow_nan=False)+'\n').encode()
+def safe_read(path):
+ fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
+ with os.fdopen(fd,'rb') as stream:return stream.read()
+def safe_write(path,value):
+ raw=canonical(value);fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o644)
+ with os.fdopen(fd,'wb') as stream:stream.write(raw);stream.flush();os.fsync(stream.fileno())
+ if safe_read(path)!=raw:raise RuntimeError('safe-publication-readback')
+ return digest(raw)
+def stream_value(value):
+ if value is None:return {'present':False}
+ if isinstance(value,bytes):return {'present':True,'type':'bytes','base64':base64.b64encode(value).decode(),'SHA256':digest(value),'originalProcessBytes':True}
+ if isinstance(value,str):
+  raw=value.encode('utf-8',errors='surrogatepass')
+  return {'present':True,'type':'text','base64':base64.b64encode(raw).decode(),'SHA256':digest(raw),'encoding':'utf-8-surrogatepass','originalProcessBytes':False}
+ raise RuntimeError('unsupported-native-stream')
+def closed_capture(context,root,manifest_raw,private_payload):
+ # Called ONLY after execute has returned failure; no subsequent delete/retry.
+ # Never writes outside the existing owned C0 capture. No fallback or chmod.
+ outcome={'required':True,'fileCreated':False,'complete':False,'retainedNodeSHA256':None,'rawSHA256':None,'captureErrorType':None}
+ rootfd=capfd=leaf=None
+ try:
+  tick(3)
+  if not isinstance(manifest_raw,bytes) or digest(manifest_raw)!=MSHA:raise RuntimeError('verified-manifest-unavailable')
+  manifest=json.loads(manifest_raw);expected={n['relative']:n['identity'] for n in manifest['nodes']}
+  rootfd,chain=context['open_root'](root);context['check_binding'](root,rootfd,chain,manifest)
+  tick(2);capfd=os.open('.cleanup-20261110T053307Z',context['FLAGS'],dir_fd=rootfd)
+  identity=context['checked_fstat'](capfd)
+  if identity!=expected['.cleanup-20261110T053307Z'] or identity['ownerUID']!=os.getuid() or identity['mode']!=0o700:raise RuntimeError('capture-binding-rejected')
+  filename='C1-native-failure-'+str(uuid.uuid4())+'.private.json'
+  relative='.cleanup-20261110T053307Z/'+filename
+  raw=canonical(private_payload);tick(2)
+  leaf=os.open(filename,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600,dir_fd=capfd)
+  outcome.update(fileCreated=True,retainedNodeSHA256=digest(relative.encode()))
+  identity=context['checked_fstat'](leaf)
+  if identity['ownerUID']!=os.getuid() or identity['device']!=manifest['rootIdentity']['device'] or identity['mode']!=0o600 or identity['type']!=stat.S_IFREG:raise RuntimeError('capture-file-binding-rejected')
+  offset=0
+  while offset<len(raw):
+   tick(2);written=os.write(leaf,raw[offset:offset+65536])
+   if written<=0:raise RuntimeError('capture-short-write')
+   offset+=written
+  tick(2);os.fsync(leaf)
+  outcome.update(complete=True,rawSHA256=digest(raw),byteCount=len(raw))
+ except (Exception,KeyboardInterrupt) as error:outcome['captureErrorType']=type(error).__name__
+ finally:
+  for fd in (leaf,capfd,rootfd):
+   if fd is not None:os.close(fd) # release only, no new target inspection after Cend
+ return outcome
+
+def main():
+ state={'namespace':NS,'startedUTC':now().isoformat(),'executeInvocationCount':0,'completedCount':0,'cleanupComplete':False,'rootRemoved':False,'recoveryRequired':True,'rawExported':False}
+ destination=None
+ try:
+  tick(3) # before ANY target/private loading, including caller preparation
+  if len(sys.argv)!=3:raise RuntimeError('complete-argv-required')
+  parameter_path=pathlib.Path(sys.argv[1]);raw=safe_read(parameter_path)
+  if digest(raw)!=sys.argv[2]:raise RuntimeError('approved-parameter-SHA-mismatch')
+  params=json.loads(raw);base=parameter_path.parent;destination=base/'execution-result-c1.safe.json'
+  if destination.exists():raise RuntimeError('no-retry-result-exists')
+  binding={'targetNamespace':NS,'exactHomeRelativeRoot':HOME_REL,'C1':C1,'Cdiag':CDIAG,'Cend':'2026-11-10T06:47:27Z','manifestRelative':MREL,'privatePlanRelative':PREL,'privateManifestSHA256':MSHA,'privatePlanSHA256':PSHA}
+  if any(params.get(k)!=v for k,v in binding.items()):raise RuntimeError('complete-binding-mismatch')
+  if digest(safe_read(pathlib.Path(__file__)))!=params['callerSHA256']:raise RuntimeError('caller-SHA-mismatch')
+  action=safe_read(base/'delete-action-c1.draft.txt')
+  if digest(action)!=params['actionSHA256']:raise RuntimeError('action-SHA-mismatch')
+  review=json.loads(safe_read(base/'execution-review-approval-c1.safe.json'))
+  if review.get('verdict')!='approved' or review.get('required_fixes')!=[] or review.get('readabilityACK') is not True or review.get('safetyACK') is not True or review.get('parameterSHA256')!=sys.argv[2] or review.get('actionSHA256')!=params['actionSHA256'] or review.get('callerSHA256')!=params['callerSHA256']:raise RuntimeError('C1-review-required')
+  tick(3);root=pathlib.Path.home()/HOME_REL;context={};filename='<reviewed-C1-v3-derivative>'
+  exec(compile(action,filename,'exec'),context) # definitions only; no target operation
+  if context['END']!=CEND or context['NS']!=NS or context['MANIFEST_SHA']!=MSHA or context['PLAN_SHA']!=PSHA:raise RuntimeError('callee-binding-mismatch')
+  native_raw={};held={};phases=set();original_run=subprocess.run
+  def local_native(args,*values,**kwargs):
+   if args!=['/usr/sbin/lsof','-nP','+D',str(root)]:raise RuntimeError('native-outside-reviewed-lsof')
+   try:result=original_run(args,*values,**kwargs)
+   except (OSError,subprocess.SubprocessError) as error:
+    native_raw.update(exceptionType=type(error).__name__,exceptionText=repr(error),stdout=stream_value(getattr(error,'stdout',None)),stderr=stream_value(getattr(error,'stderr',None)));raise
+   if result.returncode!=1 or result.stdout or result.stderr:native_raw.update(returnCode=result.returncode,stdout=stream_value(result.stdout),stderr=stream_value(result.stderr))
+   return result
+  def trace(frame,event,arg):
+   if frame.f_code.co_filename==filename and frame.f_code.co_name=='execute':
+    if event=='line':
+     phase=frame.f_locals.get('phase')
+     if isinstance(phase,str):phases.add(phase)
+    elif event=='exception' and isinstance(arg[1],(OSError,subprocess.SubprocessError)):
+     held['exception']={'exceptionType':type(arg[1]).__name__,'exceptionText':repr(arg[1])}
+    elif event=='return':
+     raw=frame.f_locals.get('raw')
+     if isinstance(raw,bytes) and digest(raw)==MSHA:held['manifestRaw']=raw
+   return trace
+  state['executeInvocationCount']=1;subprocess.run=local_native;sys.settrace(trace)
+  try:result=context['execute'](root,MREL,PREL)
+  finally:sys.settrace(None);subprocess.run=original_run
+  state['result']=result;state.update(completedCount=result['completedCount'],cleanupComplete=result['cleanupComplete'],rootRemoved=result['rootRemoved'],recoveryRequired=not result['cleanupComplete'])
+  state['prechecks']={'privateSHAsAndBindingPassed':'full-entryset' in phases,'initialEntrySetPassed':'handles' in phases,'handlesAndSecondBindingPassed':'full-entryset-after-handles' in phases,'secondEntrySetPassed':'node-identity' in phases}
+  if not result['cleanupComplete'] and (native_raw or held.get('exception')):
+   payload={'kind':'C1-closed-local-failure','namespace':NS,'recordedUTC':now().isoformat(),'native':native_raw,'exception':held.get('exception'),'rawOnlyLocal':True}
+   state['failureCapture']=closed_capture(context,root,held.get('manifestRaw'),payload)
+   state['deleteAfterFailureCaptureProhibited']=True;state['recoveryRequired']=True
+  else:state['failureCapture']={'required':False,'fileCreated':False,'complete':False}
+  state['noPostActionTargetAbsenceQuery']=True
+ except (Exception,KeyboardInterrupt) as error:
+  sys.settrace(None);state.update(callerErrorType=type(error).__name__,recoveryRequired=True,noAutomaticRetry=True)
+ state['endedUTC']=now().isoformat();state['targetOpsHardDeadlineUTC']='2026-11-10T06:47:27Z'
+ state['noGlobalCleanupClaim']=True
+ if destination is None:destination=pathlib.Path(__file__).parent/'execution-refusal-c1.safe.json'
+ try:
+  receipt_sha=safe_write(destination,state)
+  print(json.dumps({'cleanupComplete':state['cleanupComplete'],'rootRemoved':state['rootRemoved'],'completedCount':state['completedCount'],'recoveryRequired':state['recoveryRequired'],'receiptSHA256':receipt_sha,'endedUTC':state['endedUTC']}))
+ except (Exception,KeyboardInterrupt) as error:print(json.dumps({'cleanupComplete':False,'publicationErrorType':type(error).__name__,'recoveryRequired':True,'noAutomaticRetry':True}))
+if __name__=='__main__':main()

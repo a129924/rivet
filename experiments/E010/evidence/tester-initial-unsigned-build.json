@@ -1,0 +1,40 @@
+{
+  "SecurityCalls": 0,
+  "appLaunched": false,
+  "assetsInspected": false,
+  "buildInputsSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "b2487c91a834a0317b0ce506cd784441e79797ca38fc56d40378aaa459a12900"
+  },
+  "clockArmed": false,
+  "configurations": {
+    "Debug": {
+      "debugDylibAbsent": true,
+      "exitCode": 0,
+      "mainSHA256": "4cf78bafdaf70fa4fa84d6f9e4d3fbeddc0441f7f7a9d65ab9fc4a0ab5390cdf",
+      "performed": true,
+      "signingAllowed": false,
+      "signingRequired": false
+    },
+    "Rebuilt": {
+      "debugDylibAbsent": true,
+      "exitCode": 0,
+      "mainSHA256": "14047a2b20fc4b2a9adc6f3c99b40c62194e562b35adc076f2644644d9fb89e5",
+      "performed": true,
+      "signingAllowed": false,
+      "signingRequired": false
+    }
+  },
+  "endedUTC": "2026-10-20T06:53:33.657741+00:00",
+  "kind": "unsigned-preparation",
+  "liveExecuted": false,
+  "namespace": "2b5aba49-b3c0-495f-bce1-26e00503a575",
+  "startedUTC": "2026-10-20T06:53:14.145721+00:00",
+  "synthetic": true
+}

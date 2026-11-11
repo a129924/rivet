@@ -1,0 +1,19 @@
+{
+  "deletionApproved": false,
+  "files": {
+    "delete-action-v3.draft.txt": "3c79f83f0b166b25e09df4d25303c231c2fec5b8dbdacf7af93680d5de14915b",
+    "delete-plan-v3.safe.json": "41703f68a1eee6f7cedcb012d837796bfcdec09ef42389c1313e69067a3ff1bb",
+    "inventory-plan-ready-v3.safe.json": "6780c74c78b5794d4fd28a41025337127d768f1d180d3d15d4261a4214081538"
+  },
+  "hardDeadlineUTC": "2026-11-10T06:03:07Z",
+  "independentReviewPending": true,
+  "kind": "E010-CL04-v3-review-index",
+  "privateManifestSHA256": "1f10be83f06a14c035f702fc8c1e2dee098ecdf70ed153b6a138e429a5041425",
+  "privatePlanSHA256": "930da573986b737cd6fbc2864cca1bcacf34bc8229da911b6913b8c107a3da4f",
+  "recordedUTC": "2026-11-10T05:59:58.060388+00:00",
+  "requiredFixesAddressed": [
+    "FD-relative-nofollow-scan",
+    "caller-private-load-and-all-target-ops-clockguard"
+  ],
+  "targetOperationsPerformed": false
+}

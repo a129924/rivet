@@ -1,0 +1,154 @@
+{
+  "C0": "2026-11-10T08:53:43.881395+00:00",
+  "actualAttemptedOpaqueIDs": [],
+  "actualDeleteAttempts": 0,
+  "actualDeleteBatchDispatched": 0,
+  "actualDeleteCompleted": 0,
+  "actualDeletedOpaqueIDs": [],
+  "allTargetIOHardStopUTC": "2026-11-10T09:23:43.881395+00:00",
+  "blockedReason": "original-delete-plan-includes-diagnostic-bearing-material-without-specific-evidence-coverage-and-approval",
+  "closureHardStopUTC": "2026-11-10T09:38:43.881395+00:00",
+  "diagnosticMetadataEvidence": {
+    "LogsSubtreeNodes": 21,
+    "directories": 10,
+    "logContentRead": false,
+    "moduleCacheAndIndexAreNameMatchesOnly": true,
+    "readabilityACK": true,
+    "regularFiles": 23,
+    "remainingDeleteNodesWithoutRebuildabilityProof": 4335,
+    "safetyACK": true,
+    "suffixSubtreeCounts": {
+      ".dia": 12,
+      ".xcactivitylog": 2
+    },
+    "summarySHA256": "4c20fd4ecbe796b28e29b62e49c5fd7920ed921adc3169c8e4597972f666bbd7",
+    "unionNodeCount": 33,
+    "unionNotSumOfOverlappingClassifiers": true,
+    "uniqueOrIrreplaceableContentDetermined": false
+  },
+  "diagnosticStopUTC": "2026-11-10T09:13:43.881395+00:00",
+  "exactFinalInventoryReadUTC": null,
+  "exactFinalSidecarReadEndedUTC": null,
+  "executionPlanApproved": false,
+  "kind": "E010-RP-controlled-stop-final",
+  "lastInventoryOperationCompletionObservedUTC": "2026-11-10T08:53:46.051922+00:00",
+  "lastSealedMetadataClassificationRecordedUTC": "2026-11-10T09:01:05.569103+00:00",
+  "mainExperimentUnchanged": {
+    "AppleAssetOperations": 0,
+    "DPKQueryOrReadback": 0,
+    "XcodeBuildAppCUAOperations": 0,
+    "fakeAAndP0NotTouchedByFileJob": true,
+    "naturalExpiryP1W2W3": "pending",
+    "noNewWindowOrScheduler": true,
+    "originalDNotExtended": true,
+    "originalW1BaselineAndLimitedUXEvidencePreserved": true
+  },
+  "minimumComplete": false,
+  "nextBoundary": "RP09 independent result review then Human recovery/planning handoff; no further target/sidecar IO under this job",
+  "noFreshTargetOrSidecarCheckForThisFinalReport": true,
+  "originalRawAndUnknown": {
+    "allRootMinimumRetentionProven": false,
+    "noneDeletedOrMoved": true,
+    "originalRawRetainUncoveredCount": 50,
+    "originalUnknownRetentionCount": 32,
+    "originalUnresolvedDependencyCount": 0,
+    "wholeRawIndefiniteRetentionAuthorized": false
+  },
+  "preservation": {
+    "GitMutations": 0,
+    "coreSource22Unmodified": true,
+    "newFeatureSafeEvidenceRetained": true,
+    "oldToolVersionsAndHistoricalReceiptsUnmodified": true,
+    "priorFiveSafeFilesSHAsUnchanged": {
+      "candidate.safe.json": "d60492272c1ff03c352213768f7c024ca40dfdcb70b015a508662d721544c920",
+      "diagnosis.safe.json": "1f5c96caf55ee2fd8b50189c8610bc6c3c6aec9a976e2a4b3693c039c66f0788",
+      "diagnostic-metadata-classifier.py": "388572b39f5aa466add29d6273311a14567dc799fa9d90f67ff08a313723e824",
+      "diagnostic-metadata.safe.json": "4c20fd4ecbe796b28e29b62e49c5fd7920ed921adc3169c8e4597972f666bbd7",
+      "index.safe.json": "8d4bb6a34c78bf45d92a7fafd7c6cbc8da226ef1be8224c426b9126cd3d2f11a"
+    }
+  },
+  "recordedUTC": "2026-11-10T09:06:34.028754+00:00",
+  "recoveryRequired": true,
+  "retentionDeadlineUTC": "2026-11-20T07:22:03.379959Z",
+  "retentionPruneCompleted": false,
+  "reviewDisposition": {
+    "RP05OfflineCodeApproved": true,
+    "RP07ActualPlan": "needs-rework-blocked",
+    "RP07MetadataSupplement": "approved-record-only",
+    "narrowerAllowlistRequiresNewPlanningAuthorizationAndIndependentReview": true,
+    "noInventoryPlanOrApprovalRewritten": true,
+    "noSubsetOverrideInApprovedCaller": true,
+    "originalPlanMustNotExecute": true
+  },
+  "sealedSidecarArtifactsLastKnown": [
+    {
+      "SHA256": "94ba1afc06a14d35c891c2b64cf7ab70fc2407a450e5911360ee57cb16cee35d",
+      "currentExistence": "not-rechecked",
+      "origin": "already-captured-safe-diagnosis-summary",
+      "relativeName": "bindings.private.json",
+      "role": "reviewed-action-caller-parameter-binding"
+    },
+    {
+      "SHA256": "d60492272c1ff03c352213768f7c024ca40dfdcb70b015a508662d721544c920",
+      "currentExistence": "not-rechecked",
+      "origin": "already-captured-safe-diagnosis-summary",
+      "relativeName": "candidate.safe.json",
+      "role": "sealed-readable-safe-review-projection"
+    },
+    {
+      "SHA256": "b39281cf2a186a5da18e3927250a5c7629b88a0fdce7c9208ec079e96d79655a",
+      "currentExistence": "not-rechecked",
+      "origin": "already-captured-safe-diagnosis-summary",
+      "relativeName": "inventory.private.json",
+      "role": "sealed-exact-identity-content-parent-snapshot"
+    },
+    {
+      "SHA256": "be2caa78b1d7733a050032d0690291f22a2135a4ec8c18ddb6e88f7b9fa07959",
+      "currentExistence": "not-rechecked",
+      "origin": "already-captured-safe-diagnosis-summary",
+      "relativeName": "map.private.json",
+      "role": "sealed-dependency-and-original-raw-uncovered-map"
+    },
+    {
+      "SHA256": "f43e4dd240ecac47250dce744852df4868a614c737a133fef315d38050cc7871",
+      "currentExistence": "not-rechecked",
+      "origin": "already-captured-safe-diagnosis-summary",
+      "relativeName": "plan.private.json",
+      "role": "blocked-proposed-retain-delete-lists-and-review-bindings"
+    },
+    {
+      "SHA256": "fa14f8fc049674fd0bfdb65d52b1b59cca1ddc8685ef060aa0021e69af202c6d",
+      "currentExistence": "not-rechecked",
+      "origin": "already-captured-safe-diagnosis-summary",
+      "relativeName": "window.private.json",
+      "role": "original-C0-times-and-D-binding"
+    }
+  ],
+  "sidecarScopeLimits": {
+    "allArtifactsMinimumNecessityProven": false,
+    "capturedArtifactCount": 6,
+    "currentCompleteEntrysetKnown": false,
+    "currentExtraArtifactCount": null,
+    "noPrivateArtifactsDeletedOrMoved": true,
+    "wholeSidecarLongTermRetentionAuthorized": false
+  },
+  "snapshotOnly": {
+    "actualJobDeletionCount": 0,
+    "allOriginalSnapshotNodesNotDeletedByThisJob": true,
+    "boundedByOperatorEndUTC": "2026-11-10T08:53:46.051922+00:00",
+    "boundedByStartUTC": "2026-11-10T08:53:43.881395+00:00",
+    "currentFullTreeState": "not-rechecked",
+    "directories": 1250,
+    "nodeCount": 4595,
+    "originalPlanRetainCount": 227,
+    "proposedDeleteCount": 4368,
+    "proposedDeleteRoots": {
+      "DerivedData": 4368
+    },
+    "regularFiles": 3345,
+    "symlinks": 0
+  },
+  "stopDeclarationRecordedUTC": "2026-11-10T09:06:34.028754+00:00",
+  "targetAndSidecarIOStopped": true,
+  "verdict": "blocked"
+}

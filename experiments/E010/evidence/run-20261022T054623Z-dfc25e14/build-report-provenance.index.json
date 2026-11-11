@@ -1,0 +1,16 @@
+{
+  "cleanupComplete": false,
+  "files": {
+    "DebugBuild.human.json": "0db2cb006b2be5d3c8315e9bd8f7c98a418b87f69c2551710094a5e27421dd0f",
+    "build-report-provenance.machine.json": "af7c5482cc685b1cd023ad9313dc7ec5c62fd8505e3c5873f876dd66664c43d5",
+    "setup-material.ready.human.json": "93fc9e1961495c52bcd75e6108b36264785587b3d0ac43291a6f44f43cb95cd5"
+  },
+  "kind": "Report-provenance-stop-safe-index",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "noAppNoSecItem": true,
+  "previousDDIndexSHA256": "ff8d40070b415b786d47c815d5d9d4d442dcc2a12dfb9d3d212f9373c92455c8",
+  "primaryHypothesisStatus": "未執行",
+  "privateRootRetained": true,
+  "selectedProofCreated": false,
+  "synthetic": false
+}

@@ -1,0 +1,16 @@
+{
+  "cleanupComplete": false,
+  "files": {
+    "cleanup-blocked.machine.json": "c99bcc4a16ce77236cefcac7fa13f3a9c6b229a2cde5873eefbed6538a012335",
+    "date07-build-stop-summary-v2.safe.json": "d7e5544625ac06e32baca09e5f605352281411fa6335bdfb15445efb44e3606a",
+    "date07-final-cleanup-state.machine.json": "e61f9380b2fad55225cf39f06aa2927a05167a5f6e8562ba78e52e99f5da12ae",
+    "publication-ack.safe.json": "247371006c76e417230e4d51c9cf15c7a01d0d7a50c668be0f7a63a8947160f6",
+    "setup-stop-main/pre-cleanup.index.json": "f9097481aff459f2142f57f63643b7933823cb12fb91dcd2b6b8143d40066b1a",
+    "xcode-exit.human.safe.json": "dcf306d29ac03b1e4a724f3933e2cada97fcac32c086d5e823cff7970fd69b89"
+  },
+  "kind": "E010-DATE07-final-cleanup-state-index",
+  "namespace": "3581e693-8019-4068-a40f-311488fab764",
+  "privateRootAbsent": false,
+  "recordedUTC": "2026-11-10T04:05:21.539738+00:00",
+  "recoveryRequired": true
+}

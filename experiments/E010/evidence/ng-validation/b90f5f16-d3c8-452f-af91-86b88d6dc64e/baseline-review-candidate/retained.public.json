@@ -1,0 +1,12 @@
+{
+  "globalSHA256": "e00ccb601c3e367b4128abb82b82c1367f39316bf5de639ba797b11828f393b0",
+  "grantSHA256": "195a42cea32302adc2227a065b0a03668b2d45421e24c27f60c69aca72e15928",
+  "humanReceiptSHA256": null,
+  "machineReceiptSHA256": "89a486a340aca647b113ebdbc502e8b75fb6f5b8ffc99bc30f024ebc08f8afcd",
+  "minimumRawPruningCompleted": false,
+  "normalBaselineRetention": true,
+  "privateReceiptSHA256": "664af950080a9616375dcd94e7d1d5ad996b9bf7e2ec611030a494b198081678",
+  "retainedUTC": "2026-11-10T07:41:38.657428+00:00",
+  "state": "retained-no-background-process",
+  "synthetic": false
+}

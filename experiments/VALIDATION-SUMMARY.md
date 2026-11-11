@@ -17,6 +17,7 @@
 | [E007](E007/README.md) | 兩輪 renewal 前提未成立，renewal read 均未執行，結果無法判定；Human 已接受該未知限制。 | 不同 profile 的讀回成功；新版 export-clean 的受控檢查不代替原真人輪或新增真人驗收。 |
 | [E008](E008/README.md) | 2026-10-22 單次安全 JSON 與兩名獨立先封存 enum；依固定判準無法判定。 | 普遍 PKCE enforcement、OAuth 漏洞、完整 wire 或正式安全決策變更。 |
 | [E009](E009/README.md) | M03：Human 確認獨立未登入 session、未授權帳號、同輪登入／同意／300 秒內有效帳號；來源契約支持。 | agent 直接見證歷史 UI／network、2FA、完整零配置 UX、產品 readiness 或 PKCE。後續 build 不回填真人來源。 |
+| [E010](E010/README.md) | 新 W1 seed／fresh 六欄相符、Human 各全程0提示；原遷移／controlled-stop 歷史保留。 | W2 真自然到期／P1、W3 Rebuilt／完整週期、minimum 完成或新的正式 adapter 採用；RP delete=0，RT 僅 metadata。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 2026-11-11 Human完成指定狀態朗讀、局部大字與focus／rapid案例，明確通過並採用。 | 假資料展示範圍，正式 backend／OAuth 與系統字級偏好整合屬後續能力。Human大字為21pt五畫面及17pt同PAT，15格矩陣沿用工具來源。 |
 
@@ -130,7 +131,7 @@ Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peel
 - profile 更新後讀回（Human 已接受限制）及已過期 profile 的恢復。
 - certificate rotation、跨使用者／跨機器及公開分發。
 
-本摘要涵已合併 PR #62／#61／#63／#65／#60，以及 PR #66 原生登入 UI／Demo 的各自固定來源。其他尚未合併工作依其自身工作線記錄。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引已由 PR #64 合併至 dev；其先前 Draft／pending 記錄保留為原時點快照，後續實際收尾另見文末。
+本摘要涵已合併 PR #62／#61／#63／#65／#60，以及 PR #66 原生登入 UI／Demo 的各自固定來源。另節分列尚未合併 PR #67 的 E010 受限進度，不混入上述已合併來源範圍，也不吸收其他 worktree 的成果。其他尚未合併工作依其自身工作線記錄。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引已由 PR #64 合併至 dev；其先前 Draft／pending 記錄保留為原時點快照，後續實際收尾另見文末。
 
 ## 決策邊界
 
@@ -187,3 +188,15 @@ PAT本次聲音證據為自動驗證狀態有聲，重複次數未單獨確認�
 該來源的既有自動檢查為 focused15 tests／root289 tests、debug／release、format、scoped SwiftLint（136 files、0 findings）與完整hooks通過。Root strict保留37項既有experiments加2項原樣素材，共39項非零紀錄。PR Lens pinned0.11.0的map範圍止於source dcc，validate／render0、38個exact-head refs與XML labels已核；Graphify採缺圖source fallback，Archify沿用凍結七態。[來源與工具交付紀錄](https://github.com/a129924/rivet/blob/9eda244ff15c3928eedad2731d3680c52473d17f/plan/rivet-login-ui/evidence/verification.md)
 
 User本輪授權後，annotated tag `v0.1.61-rivet-login-ui` 已正常建立及推送，local／remote tag object 均為 `2649261883b4c0f89ce47647f5b83ee1a291f309`，peeled commit 均為上述merge2c7679a。原remote branch刪除前親核仍指feature9eda244，隨後正常刪除remote branch、移除原managed worktree並以 `git branch -d` 刪除local `feat/rivet-login-ui`。Remote／local／target tracking ref及worktree目錄／註冊均已核不存在，其餘兩個worktree註冊保留。Tag固定保存PR merge，後續文件維護為獨立版本。
+
+## E010：W1 baseline 受限完成，完整自然週期仍 pending（PR #67）
+
+此節分列尚未合併 PR #67 的獨立 DPK profile-continuity 進度，不把 Ready for review 當作 merged。[E010 README](E010/README.md)保留原 10/21／10/22 Human Build success 與有界 host／matching Report 缺口並存：當時未取得 selected App／actual proof／完整 global，沒有 App/SecItem/seed 或跨週 item。原 grants/run 均 closed，該兩輪零 item 私有 root 已精確清理；10/22 僅 cleanup 越 cutoff 3.954765 秒但在 deadline 前，舊收據不改，不當 Keychain delete/read-absent。
+
+遷移保存22原檔快照與171同 bytes 移動資料，原193檔逐筆 accounting；[typed map](E010/history/renumbering-map.json)的1952 file refs 與3 non-file aggregate digests 分開，五個歷史 source 版本無法取得，不能稱所有舊 source 可重建。M03 Tester／M04 Reviewer approved 只核受限遷移與離線準備。
+
+其後 2026-11-10 的新 W1 已有同 binary 的一次 seed／一次 fresh，六欄相符，Human 各全程觀察0提示；獨立審查僅接受本輪 baseline 機制與限定 UX。此結果不推論完整自然 profile 週期、一般零提示 UX 或新 certificate 數量。來源見[最新22-source manifest](E010/evidence/ng-date-preparation-20261110/source-manifest.json)、[W1 baseline index](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)及[close addendum](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/close-addendum.index.json)；machine／Human 分層，原 canonical prompt unknown 與記錄時點 pending flags 保留。
+
+W2 真自然到期／P1 讀回原 A、W3 Rebuilt、完整 S07/S08 與主假設仍 pending。P0 expiry 為台灣 **2026-11-17 15:28:08**，原 D 為 **2026-11-20 15:22:03.379959**；原 A／namespace／三窗與期限不重設或延長。RP cleanup blocked／delete=0；[RT metadata index](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)及[machine receipt](E010/evidence/retention-scope-20261110T094256Z/machine.safe.json)只記一次 metadata 操作的4602 retained entries，minimumComplete=false，不稱 minimum 或 RP 清理成功。
+
+三筆 `01265ad`／`c0e6414`／`d30f5c4` 共312檔已正常 commit／push，各六個正常 hooks 通過；這不是新的真人結果或 GitHub CI 通過證據。2026-11-11 查核時，PR #67 為 Ready for review、尚未 merged。E010 的受限結果不核准新的正式 adapter 採用，不吸收 PR #60 的正式 adapter 證據，也不改 E001–E009 歷史。

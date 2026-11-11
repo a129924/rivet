@@ -1,0 +1,17 @@
+{
+  "actions": [],
+  "isRuntimeGate": false,
+  "machineReceiptSHA256": "ed15fe4e119ce07de7f415eba3f9d75d4920f3428d7dc3a2f0d7708f71d231bb",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "rawHumanStatement": "全程觀察，0次提示",
+  "recordedUTC": null,
+  "reportedObservationRangeTaipei": "2026-10-21 12:17:07–12:17:08",
+  "source": "request_user_input_async call_77db0301a645498a894a3f6de68baaab item0",
+  "stage": "controlled-zero-item-cleanup",
+  "synthetic": false,
+  "timestampMeaning": "Human reported after the completed cleanup. Exact Human click and dispatcher receipt timestamps were not supplied; none is inferred. This immutable public addendum is not a runtime ready gate.",
+  "wholeStageObserved": true
+}

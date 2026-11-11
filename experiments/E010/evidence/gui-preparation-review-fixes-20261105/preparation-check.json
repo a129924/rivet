@@ -1,0 +1,85 @@
+{
+  "GUI04": "pending-independent-focused-retest",
+  "GUI05": "needs-rework-history-preserved; pending-Reviewer",
+  "GUI06": "not-allowed-before-gates-and-one-Human-sync",
+  "authorVerdict": null,
+  "budget": {
+    "S": "2026-11-05T07:14:10Z",
+    "authorCompletedBeforeDeadline": true,
+    "hardDeadlineUTC": "2026-11-05T09:14:10Z",
+    "noExtension": true
+  },
+  "cleanup": {
+    "notGlobalCleanup": true,
+    "onlySyntheticFixtureTemporaryRootsCleanedByUnittest": true,
+    "persistentLiveRootOrRawMaterialCreated": false,
+    "retainedExternal": "safe red/green logs and snapshot-location metadata only",
+    "runtimeCaptureDoesNotAutomaticallyDeleteRaw": true
+  },
+  "fixes": {
+    "GUI-RF01": "Outermost continuity CLI closes unexpected exceptions; safe parser preserves help and refuses invalid argv without echo. Raw error/stopped bookkeeping require fresh typed root/namespace/source/scope/expiry/owner/inode/noSymlink validation; unsafe root fixed safeRefusal, no alternative storage. Item state stays not-inferred; ambiguous Add marker never becomes no-write. GUI CLI reuses same private error storage validation.",
+    "GUI-RF02": "TimeoutExpired stdout/stderr are written privately before finite rejection. Bytes exact; text explicitly encoded UTF-8-surrogatepass with originalProcessBytesAvailable=false, not reconstructed process bytes. Metadata/partial output retained; no automatic runtime deletion."
+  },
+  "focusedValidation": {
+    "command": "PYTHONPATH=experiments/E010/Tests python3 -B -m unittest test_gui_build.GUIBuildTests.test_GUI_RF01_actual_CLI_unexpected_exception_is_closed_and_saved_privately test_gui_build.GUIBuildTests.test_GUI_RF01_invalid_expired_or_symlink_root_is_safe_refusal_and_help_survives test_gui_build.GUIBuildTests.test_GUI_RF02_timeout_partial_bytes_and_text_are_preserved_without_public_leak -v",
+    "coverage": [
+      "actual CLI dispatch CalledProcessError without traceback/private path/raw sentinel on stdout or stderr",
+      "owned valid scope raw error remains private",
+      "invalid arguments safeRefusal and normal help exit0",
+      "expired/symlink raw destination cannot write/fallback",
+      "ambiguous write is not recorded as no-write",
+      "bytes partial exact and text type/encoding explicit",
+      "runtime capture keeps raw until authorized cleanup"
+    ],
+    "durationSeconds": 0.665,
+    "failures": 0,
+    "finalLogSHA256": "e3668b1d1a6280a99e42d1f6d4019f64cb9abc5ce2b95d44bf8d6ce40934254c",
+    "methods": 3,
+    "otherTestsSwiftUnsignedOrAppBuildRerun": false,
+    "redLogSHA256": "e57833f97f0bb542f2532e82d364d8a45cdee67c5648530488fef6b10f295358"
+  },
+  "hypothesis": "未執行",
+  "kind": "E010-GUI-RF01-02-author-preparation",
+  "notExecuted": [
+    "realToolTimeoutOrSigningCommand",
+    "CUA-any-entrypoint",
+    "XcodeGUI",
+    "BuildRunApp",
+    "xcodebuild",
+    "xcrun",
+    "certificateProfileKeychainIOKitCMS",
+    "DPK",
+    "liveRootGrantsAnchorT0",
+    "GitStageCommitPushPR",
+    "productionChanges"
+  ],
+  "old19SnapshotVerified": true,
+  "preFixSnapshotMapSHA256": "f5a67dbdbfd560f98d9478c5f69c32969a4253bc35f1f870ca3011172d49fb93",
+  "previousGUI03AndGUI04SHA256": {
+    "preparation-check.json": "3a45f2446641e69ce62544c827b2272fd2dce1f7215e8e96b1e1608b778725b0",
+    "source-manifest.json": "eaa94c627788ac8f05a0102b889426c69e44565c5d4a6b139d82846c452fb30f",
+    "tester-preparation-check.json": "da964c28529a7aecf327a879be3cb46b7366e8d01eceacd4e458b72d93932774"
+  },
+  "protection": {
+    "devClean": true,
+    "devHead": "758aca9bb518f2a21f20f47609335fac49043370",
+    "featureHead": "b930d80072909f52171a23598b923af82c7c91cc",
+    "indexEmpty": true,
+    "old19AndPreFix22SnapshotsReadVerified": true,
+    "oldPrivatePreparationTenFilesAccessed": false,
+    "originalGUI03ManifestCheckAndGUI04Unchanged": true,
+    "trackedHistoricalEvidenceSnapshotsGUIAndE006NoDiff": true
+  },
+  "recordedUTC": "2026-11-05T08:38:40.274266+00:00",
+  "sourceFileCount": 22,
+  "sourceManifestFileSHA256": "c2090d9aabc04b23f6a264a85ecf54372216924f547b747fcc51f23665bc5873",
+  "sourceManifestSHA256": "0c9f1cc04f2af18089ea1d69b096bd5793e167e9e2f652a344a038df0f577957",
+  "upstreamGUI05": {
+    "required_fixes": [
+      "GUI-RF01",
+      "GUI-RF02"
+    ],
+    "source": "explicit independent Reviewer handoff",
+    "verdict": "needs-rework"
+  }
+}

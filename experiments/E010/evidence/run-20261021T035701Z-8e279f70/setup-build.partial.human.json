@@ -1,0 +1,15 @@
+{
+  "beginHumanSHA256": "436d054338e1abbe1f68241e1c43a592cc0e46b59d34ea17edc19dcc92a602f7",
+  "existingCertificateSource": "Human declaration; verifier still pending",
+  "freePersonalTeamSource": "Human declaration",
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "noRunSource": "Human declaration",
+  "rawHumanBuildStatement": "Debug Build成功，確認免費PersonalTeam／既有憑證／未Run",
+  "rawHumanCloseStatement": "尚未停止或關閉，需要協助",
+  "receivedUTC": "2026-10-21T04:02:32+00:00",
+  "recordedUTC": "2026-10-21T04:04:28.506478+00:00",
+  "setupPromptCount": null,
+  "source": "request_user_input_async call_ad21e2519b294401b66421b212348aa5 items0/1",
+  "stage": "setup-partial-build",
+  "wholeSetupObserved": "pending"
+}

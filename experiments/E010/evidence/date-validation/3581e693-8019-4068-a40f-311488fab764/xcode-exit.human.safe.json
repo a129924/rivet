@@ -1,0 +1,15 @@
+{
+  "doesNotEstablishOriginalBuildStatus": true,
+  "earlierUnknownAndBuildCanceledIndexingReportsPreserved": true,
+  "forceQuitRequested": false,
+  "humanExactReplyUTC": null,
+  "kind": "human-normal-Xcode-exit-addendum",
+  "latestHumanProjectClosedAndDidNotRun": true,
+  "namespace": "3581e693-8019-4068-a40f-311488fab764",
+  "noOtherProjectsNeedingPreservationHumanReported": true,
+  "normalXcodeExitHumanReported": true,
+  "previousHumanSequenceAddendumSHA256": "27c8c3b73446b6ed7c74ca7f97e82697e83e397fd700cbcfd49edb7aee4ceba6",
+  "privateHumanAddendumSHA256": "35289525fefad2217fcfc22aa7035a2c6dd35825ffea074cd5a96c65dec618a7",
+  "recordedUTC": "2026-11-10T03:59:29.295332+00:00",
+  "synthetic": false
+}

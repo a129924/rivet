@@ -1,0 +1,17 @@
+{
+  "didNotRun": true,
+  "humanExactUTC": null,
+  "kind": "E010-NG07-whitelist-control-projection",
+  "namespaceSHA256": "b41c940f8963f6668434f85ea2c1eb5e15782b2a75e6409d5b25927fecd8aa49",
+  "nonceSHA256": "35525f88ad573f5df525a1c0645a943e3d7c115b50a59adfa2d27cc99d585de4",
+  "phase": "p0",
+  "postSHA256": "da4bc84e6929477c4eca7d850663429973b114224fff669e8dcae3a3cd8ec3c5",
+  "privateReceiptSHA256": "7edec6a12f93145101fc2e89bb742c9ddafebf506d4ca980c2d2a1b0c2981e93",
+  "promptCount": null,
+  "recordedUTC": "2026-11-10T07:30:55.174266+00:00",
+  "sourceAggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d",
+  "sourceArtifactRelative": "gui/p0/human-build.json",
+  "status": "reported-success",
+  "synthetic": false,
+  "wholeStageObserved": null
+}

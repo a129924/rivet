@@ -1,0 +1,75 @@
+# REVIEW-ONLY INLINE DRAFT. CL05 must supply the exact authorized root and verified private inventory.
+# No code is executed by CL03. All failures stop; return the already completed node hashes.
+import os, stat, json, hashlib, subprocess, pathlib, datetime
+def identity(z): return dict(device=z.st_dev,inode=z.st_ino,ownerUID=z.st_uid,mode=stat.S_IMODE(z.st_mode),type=stat.S_IFMT(z.st_mode))
+def scan(root):
+    result={}
+    def visit(directory,relative=''):
+        with os.scandir(directory) as it: entries=list(it)
+        for entry in entries:
+            rel=(relative+'/' if relative else '')+entry.name; z=os.lstat(entry.path)
+            if z.st_dev!=manifest['rootIdentity']['device']: raise RuntimeError('mount-change')
+            result[rel]=identity(z)
+            if stat.S_ISDIR(z.st_mode) and not stat.S_ISLNK(z.st_mode): visit(entry.path,rel)
+    visit(root); return result
+# manifest bytes must first match the exact approved privateManifestSHA256; parent identities too.
+def execute(root,manifest_bytes,expected_manifest_sha,hard_deadline):
+    completed=[]; phase='preflight'; failed_node_sha=None
+    try:
+        global manifest
+        if expected_manifest_sha!='1f10be83f06a14c035f702fc8c1e2dee098ecdf70ed153b6a138e429a5041425': raise RuntimeError('approval-manifest-mismatch')
+        if hard_deadline!=datetime.datetime(2026,11,10,6,3,7,tzinfo=datetime.timezone.utc): raise RuntimeError('deadline-context-change')
+        if hashlib.sha256(manifest_bytes).hexdigest()!=expected_manifest_sha: raise RuntimeError('manifest-change')
+        manifest=json.loads(manifest_bytes); root=pathlib.Path(root)
+        if str(root)!=manifest['root']: raise RuntimeError('root-path-change')
+        expected={n['relative']:n['identity'] for n in manifest['nodes']}
+        for path,wanted in manifest['parents'].items():
+            if identity(os.lstat(path))!=wanted or stat.S_ISLNK(os.lstat(path).st_mode): raise RuntimeError('parent-change')
+        if identity(os.lstat(root))!=manifest['rootIdentity'] or scan(root)!=expected: raise RuntimeError('entryset-change')
+        # No root/capture descriptors are open while lsof runs; all stdout/stderr remain local memory.
+        phase='handles'
+        checked=subprocess.run(['/usr/sbin/lsof','-nP','+D',str(root)],capture_output=True,timeout=10)
+        if checked.returncode!=1 or checked.stdout or checked.stderr: raise RuntimeError('handles-not-clear')
+        if datetime.datetime.now(datetime.timezone.utc)>=hard_deadline: raise RuntimeError('deadline')
+        for path,wanted in manifest['parents'].items():
+            if identity(os.lstat(path))!=wanted: raise RuntimeError('parent-change')
+        if scan(root)!=expected: raise RuntimeError('entryset-change')
+        rootfd=os.open(root,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+        try:
+            if identity(os.fstat(rootfd))!=manifest['rootIdentity']: raise RuntimeError('root-change')
+            for n in sorted(manifest['nodes'],key=lambda n:(n['depth'],n['relative']),reverse=True):
+                phase='node-identity'; failed_node_sha=hashlib.sha256(n['relative'].encode()).hexdigest()
+                if datetime.datetime.now(datetime.timezone.utc)>=hard_deadline: raise RuntimeError('deadline-partial')
+                parts=pathlib.PurePosixPath(n['relative']).parts
+                if '..' in parts or pathlib.PurePosixPath(n['relative']).is_absolute(): raise RuntimeError('unsafe-relative')
+                fd=os.dup(rootfd)
+                try:
+                    rel=''
+                    for part in parts[:-1]:
+                        rel=(rel+'/' if rel else '')+part
+                        child=os.open(part,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=fd)
+                        if identity(os.fstat(child))!=expected[rel]: os.close(child); raise RuntimeError('parent-node-change')
+                        os.close(fd); fd=child
+                    if identity(os.stat(parts[-1],dir_fd=fd,follow_symlinks=False))!=n['identity']: raise RuntimeError('node-change')
+                    if n['kind']=='directory':
+                        phase='rmdir'; os.rmdir(parts[-1],dir_fd=fd)
+                    else:
+                        phase='unlink'; os.unlink(parts[-1],dir_fd=fd) # symlink itself only.
+                    completed.append(hashlib.sha256(n['relative'].encode()).hexdigest())
+                finally: os.close(fd)
+        except Exception:
+            # The enclosing handler returns completed hashes and finite phase; no retry/fallback.
+            raise
+        finally: os.close(rootfd)
+        if identity(os.lstat(root))!=manifest['rootIdentity']: raise RuntimeError('root-change')
+        phase='root-rmdir'; failed_node_sha=hashlib.sha256(b'').hexdigest()
+        parentfd=os.open(root.parent,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+        try:
+            if identity(os.fstat(parentfd))!=manifest['parents'][str(root.parent)]: raise RuntimeError('outer-parent-change')
+            if identity(os.stat(root.name,dir_fd=parentfd,follow_symlinks=False))!=manifest['rootIdentity']: raise RuntimeError('root-change')
+            if datetime.datetime.now(datetime.timezone.utc)>=hard_deadline: raise RuntimeError('deadline-partial')
+            os.rmdir(root.name,dir_fd=parentfd)
+        finally: os.close(parentfd)
+        return dict(cleanupComplete=True,rootRemoved=True,completedNodeSHA256=completed,completedCount=len(completed),failedPhase=None,failedNodeSHA256=None)
+    except (Exception,KeyboardInterrupt) as error:
+        return dict(cleanupComplete=False,rootRemoved=False,completedNodeSHA256=completed,completedCount=len(completed),failedPhase=phase,failedNodeSHA256=failed_node_sha,exceptionType=type(error).__name__,rawExceptionExported=False,noAutomaticRetry=True)

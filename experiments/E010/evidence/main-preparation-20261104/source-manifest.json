@@ -1,0 +1,176 @@
+{
+  "baseCommit": "b930d80072909f52171a23598b923af82c7c91cc",
+  "files": [
+    {
+      "SHA256": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+      "baseBlobOID": "c798cd2b5f4215a7ce957593ed120a10aefe44c7",
+      "baseGitPath": "experiments/E010/DPKContinuityProbe.xcodeproj/project.pbxproj",
+      "baseSHA256": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+      "changedFromBase": false,
+      "path": "DPKContinuityProbe.xcodeproj/project.pbxproj"
+    },
+    {
+      "SHA256": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+      "baseBlobOID": "b783ee62d76a9aa3321dce06330df76366b4441b",
+      "baseGitPath": "experiments/E010/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme",
+      "baseSHA256": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+      "changedFromBase": false,
+      "path": "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme"
+    },
+    {
+      "SHA256": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+      "baseBlobOID": "d3869eedcf180b83a6505e80303252e907276f77",
+      "baseGitPath": "experiments/E010/Resources/DPKContinuityProbe.entitlements",
+      "baseSHA256": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+      "changedFromBase": false,
+      "path": "Resources/DPKContinuityProbe.entitlements"
+    },
+    {
+      "SHA256": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+      "baseBlobOID": "f1fbbbdf3de52ee3c9267211b2a93978cf8219f2",
+      "baseGitPath": "experiments/E010/Resources/Info.plist",
+      "baseSHA256": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+      "changedFromBase": false,
+      "path": "Resources/Info.plist"
+    },
+    {
+      "SHA256": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+      "baseBlobOID": "c0f3fc0f19e559c3c6dd16e701628589712db750",
+      "baseGitPath": "experiments/E010/Sources/DPKContinuityProbe/AppMain.swift",
+      "baseSHA256": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+      "changedFromBase": false,
+      "path": "Sources/DPKContinuityProbe/AppMain.swift"
+    },
+    {
+      "SHA256": "50122e01c949357e8a169585bbea09b3d3e2ff3812dd56eb0c92a75e7088ab7f",
+      "baseBlobOID": "9ce493bd5ae28128c95d56420919eb4c4b010a31",
+      "baseGitPath": "experiments/E010/Sources/DPKContinuityProbe/LiveGate.swift",
+      "baseSHA256": "459c4c29da904f83d114ac3735d2986fb4882f964ee1aff82bd266bc6b8f97fe",
+      "changedFromBase": true,
+      "path": "Sources/DPKContinuityProbe/LiveGate.swift"
+    },
+    {
+      "SHA256": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+      "baseBlobOID": "0d1262d624a1858b31688effb8525322dbb830e5",
+      "baseGitPath": "experiments/E010/Sources/DPKContinuityProbe/LiveStore.swift",
+      "baseSHA256": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+      "changedFromBase": false,
+      "path": "Sources/DPKContinuityProbe/LiveStore.swift"
+    },
+    {
+      "SHA256": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+      "baseBlobOID": "72ebebd95eab617b286570c9c9d354362b8f1acf",
+      "baseGitPath": "experiments/E010/Sources/DPKContinuityProbe/ProbeCore.swift",
+      "baseSHA256": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+      "changedFromBase": false,
+      "path": "Sources/DPKContinuityProbe/ProbeCore.swift"
+    },
+    {
+      "SHA256": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+      "baseBlobOID": "1d683585971194a47e6e18f2e93eac8741e71aa7",
+      "baseGitPath": "experiments/E010/Tests/CoreTests.swift",
+      "baseSHA256": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+      "changedFromBase": false,
+      "path": "Tests/CoreTests.swift"
+    },
+    {
+      "SHA256": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+      "baseBlobOID": "da9db787e9e6b364a8e27ade78b99f40bd03a4f6",
+      "baseGitPath": "experiments/E010/Tests/ReceiptProducer.swift",
+      "baseSHA256": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+      "changedFromBase": false,
+      "path": "Tests/ReceiptProducer.swift"
+    },
+    {
+      "SHA256": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+      "baseBlobOID": "8dac660c6c8789618a23cd7857fb7426f62a2b83",
+      "baseGitPath": "experiments/E010/Tests/WindowChainProbe.swift",
+      "baseSHA256": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+      "changedFromBase": false,
+      "path": "Tests/WindowChainProbe.swift"
+    },
+    {
+      "SHA256": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+      "baseBlobOID": "c5c92bf11b202e54e11874b369068f5712fa4b9e",
+      "baseGitPath": "experiments/E010/Tests/test_bootstrap.py",
+      "baseSHA256": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+      "changedFromBase": false,
+      "path": "Tests/test_bootstrap.py"
+    },
+    {
+      "SHA256": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+      "baseBlobOID": "c5a9ee0442aa172d525359a20051a278111792ed",
+      "baseGitPath": "experiments/E010/Tests/test_continuity.py",
+      "baseSHA256": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+      "changedFromBase": false,
+      "path": "Tests/test_continuity.py"
+    },
+    {
+      "SHA256": "64820537ec04100248b164320f2929dd012f8ab982edc4657ffcf5e4e95fd5da",
+      "baseBlobOID": null,
+      "baseGitPath": "experiments/E010/Tests/test_main_policy.py",
+      "baseSHA256": null,
+      "changedFromBase": true,
+      "path": "Tests/test_main_policy.py"
+    },
+    {
+      "SHA256": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+      "baseBlobOID": "948b596f63636e453b2ad6c241807952f139b45f",
+      "baseGitPath": "experiments/E010/Tests/test_review_fixes.py",
+      "baseSHA256": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+      "changedFromBase": false,
+      "path": "Tests/test_review_fixes.py"
+    },
+    {
+      "SHA256": "317b9eee74bc8cf86e332b9ad7831fbd1370daf7b4daaa4146e006d1e778b2a9",
+      "baseBlobOID": "22967e43803e6b7174e07cd8f6a7368c582d8c93",
+      "baseGitPath": "experiments/E010/scripts/continuity.py",
+      "baseSHA256": "7dd77a2ad3fc3423a113441d6daf97b70e2b7fad52d5cd2cce1f05984b8687e0",
+      "changedFromBase": true,
+      "path": "scripts/continuity.py"
+    },
+    {
+      "SHA256": "a6523bcd698005ff852eccab1a5ab3ff081cfcf1ecb1a13061bef783b303f612",
+      "baseBlobOID": "437ffaf3be6663658c8910cf80083c18d47a5cfb",
+      "baseGitPath": "experiments/E010/scripts/prepare.py",
+      "baseSHA256": "38fec237cf90cd0c116af165893e089708bdcde54bb4356372d3665ba810e14f",
+      "changedFromBase": true,
+      "path": "scripts/prepare.py"
+    },
+    {
+      "SHA256": "558e8ade1ce4b21312cb861ca3fc9ec92a53aac35ea7a810c8584da592ee378c",
+      "baseBlobOID": "567093dc75623ecccec384200d3792b564196df6",
+      "baseGitPath": "experiments/E010/scripts/proof.py",
+      "baseSHA256": "986351343c016fa7b7e4b281a58157c63a180610016775bc6afe9f9b3490ad86",
+      "changedFromBase": true,
+      "path": "scripts/proof.py"
+    }
+  ],
+  "historicalApprovalsNotReused": true,
+  "kind": "E010-MAIN03-source-manifest",
+  "liveExecuted": false,
+  "priorRenumberingManifestSHA256": "a2692eb1ac32fd90febee7b69b3dd0a65bc082c1be6e41f4af4573638c9b7a70",
+  "sourceFileCount": 18,
+  "sourceManifestSHA256": "6c5f0297468e3fe0f9728562b05d28fb936dc20fb9c306a0e3675b5c3e5b3705",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+    "Sources/DPKContinuityProbe/AppMain.swift": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "50122e01c949357e8a169585bbea09b3d3e2ff3812dd56eb0c92a75e7088ab7f",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/WindowChainProbe.swift": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+    "Tests/test_bootstrap.py": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+    "Tests/test_continuity.py": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+    "Tests/test_main_policy.py": "64820537ec04100248b164320f2929dd012f8ab982edc4657ffcf5e4e95fd5da",
+    "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "scripts/continuity.py": "317b9eee74bc8cf86e332b9ad7831fbd1370daf7b4daaa4146e006d1e778b2a9",
+    "scripts/prepare.py": "a6523bcd698005ff852eccab1a5ab3ff081cfcf1ecb1a13061bef783b303f612",
+    "scripts/proof.py": "558e8ade1ce4b21312cb861ca3fc9ec92a53aac35ea7a810c8584da592ee378c"
+  },
+  "synthetic": true
+}

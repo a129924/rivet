@@ -1,0 +1,41 @@
+{
+  "artifact": {
+    "bytes": 700676,
+    "sha256": "b8af738698e8d54e316f3094af4d41adb3a0cd14073fbec15756768c8a19eeb7"
+  },
+  "command": "deliver",
+  "finalVersion": "v2",
+  "input": "experiments/E008/diagnostics/xcode-gui-inspection/workflow.v2.json",
+  "localToolPin": {
+    "CLIsha256": "a73a0beac5eb023821ba4136daea1a9aa4125dde437941050762950c12e037d6",
+    "nodeVersion": "v26.10.0",
+    "packageSHA256": "48c15b6102adea1882421544d3a3f0dad3aa8e355a3f535c48de13da5e6b6121",
+    "packageVersion": "2.16.0-dev.0"
+  },
+  "ok": true,
+  "output": "experiments/E008/diagnostics/xcode-gui-inspection/workflow.v2.html",
+  "pathRepresentation": "repository-relative; raw CLI receipt preserved externally",
+  "priorVisualFailure": {
+    "artifactSHA256": "82c6f9c74462396ac6d354273041d054b9bc55ffbe9826698e90f122c611e835",
+    "exactBytesArchivedExternally": true,
+    "privatePathMapManifestSHA256": "858f9aa33a6b352623b1a0f3ea38fa283640ffb152a488c8f5d206e8903a3514",
+    "specificationSHA256": "d5e9a5b3f23422ee7fc802e307634272633f315d47c69df8d16d7cf82abca369",
+    "status": "vertical containment failed at all four required viewports",
+    "visualReceiptSHA256": "d7400e7c335177590a7bd540c1a4572cec203d510f96d372f564540a7d82360d"
+  },
+  "schemaVersion": 1,
+  "sourceReceiptSHA256": "c91446870f57afc2fa5c21caa147cc85acdbb892723279bfe6f2e39400ad13ba",
+  "specification": {
+    "bytes": 2574,
+    "sha256": "6e3223ea5b9c328c09dcdcedf8b36d29a273c23afe402229ab5b34342058a74d"
+  },
+  "type": "workflow",
+  "validation": {
+    "checkCount": 9,
+    "checksPassed": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

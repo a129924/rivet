@@ -1,0 +1,122 @@
+{
+  "baseCommitContext": "b930d80072909f52171a23598b923af82c7c91cc",
+  "files": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": {
+      "SHA256": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+      "archivedRelativePath": "tree/DPKContinuityProbe.xcodeproj/project.pbxproj",
+      "originGitPath": "experiments/E010/DPKContinuityProbe.xcodeproj/project.pbxproj"
+    },
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe-Rebuilt.xcscheme": {
+      "SHA256": "2422539a9f66d7913229becf89054db57e2f280e4c1a7ee9c552a036920d474a",
+      "archivedRelativePath": "tree/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe-Rebuilt.xcscheme",
+      "originGitPath": "experiments/E010/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe-Rebuilt.xcscheme"
+    },
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": {
+      "SHA256": "023b15adab3e1ddcc56ea0034407c344b98bb93f347d70378251720140d72649",
+      "archivedRelativePath": "tree/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme",
+      "originGitPath": "experiments/E010/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme"
+    },
+    "Resources/DPKContinuityProbe.entitlements": {
+      "SHA256": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+      "archivedRelativePath": "tree/Resources/DPKContinuityProbe.entitlements",
+      "originGitPath": "experiments/E010/Resources/DPKContinuityProbe.entitlements"
+    },
+    "Resources/Info.plist": {
+      "SHA256": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+      "archivedRelativePath": "tree/Resources/Info.plist",
+      "originGitPath": "experiments/E010/Resources/Info.plist"
+    },
+    "Sources/DPKContinuityProbe/AppMain.swift": {
+      "SHA256": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+      "archivedRelativePath": "tree/Sources/DPKContinuityProbe/AppMain.swift",
+      "originGitPath": "experiments/E010/Sources/DPKContinuityProbe/AppMain.swift"
+    },
+    "Sources/DPKContinuityProbe/LiveGate.swift": {
+      "SHA256": "a74cb0e08657a662f7d6d5c2e65402cc921756b376577fe66f1fbe96419f8a5e",
+      "archivedRelativePath": "tree/Sources/DPKContinuityProbe/LiveGate.swift",
+      "originGitPath": "experiments/E010/Sources/DPKContinuityProbe/LiveGate.swift"
+    },
+    "Sources/DPKContinuityProbe/LiveStore.swift": {
+      "SHA256": "a4f13222a02a3e00498277db2fc2610ceca32c2ea5aac59d1ff7ae4199e89381",
+      "archivedRelativePath": "tree/Sources/DPKContinuityProbe/LiveStore.swift",
+      "originGitPath": "experiments/E010/Sources/DPKContinuityProbe/LiveStore.swift"
+    },
+    "Sources/DPKContinuityProbe/ProbeCore.swift": {
+      "SHA256": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+      "archivedRelativePath": "tree/Sources/DPKContinuityProbe/ProbeCore.swift",
+      "originGitPath": "experiments/E010/Sources/DPKContinuityProbe/ProbeCore.swift"
+    },
+    "Tests/CoreTests.swift": {
+      "SHA256": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+      "archivedRelativePath": "tree/Tests/CoreTests.swift",
+      "originGitPath": "experiments/E010/Tests/CoreTests.swift"
+    },
+    "Tests/ReceiptProducer.swift": {
+      "SHA256": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+      "archivedRelativePath": "tree/Tests/ReceiptProducer.swift",
+      "originGitPath": "experiments/E010/Tests/ReceiptProducer.swift"
+    },
+    "Tests/WindowChainProbe.swift": {
+      "SHA256": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+      "archivedRelativePath": "tree/Tests/WindowChainProbe.swift",
+      "originGitPath": "experiments/E010/Tests/WindowChainProbe.swift"
+    },
+    "Tests/test_bootstrap.py": {
+      "SHA256": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+      "archivedRelativePath": "tree/Tests/test_bootstrap.py",
+      "originGitPath": "experiments/E010/Tests/test_bootstrap.py"
+    },
+    "Tests/test_continuity.py": {
+      "SHA256": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+      "archivedRelativePath": "tree/Tests/test_continuity.py",
+      "originGitPath": "experiments/E010/Tests/test_continuity.py"
+    },
+    "Tests/test_gui_build.py": {
+      "SHA256": "f160ce8d32dfef0cf282433faffd1aa40090888ce0e422219f9bd304e801b756",
+      "archivedRelativePath": "tree/Tests/test_gui_build.py",
+      "originGitPath": "experiments/E010/Tests/test_gui_build.py"
+    },
+    "Tests/test_main_policy.py": {
+      "SHA256": "4be3c1e7710b9e5f6160c2d65a3c637706270578e0ee6051ed84728d2e74107e",
+      "archivedRelativePath": "tree/Tests/test_main_policy.py",
+      "originGitPath": "experiments/E010/Tests/test_main_policy.py"
+    },
+    "Tests/test_main_review_fixes.py": {
+      "SHA256": "de0450316cbe369b8b46f03cd137611ec4b642435f9be2c41d7ab6973de4f3ce",
+      "archivedRelativePath": "tree/Tests/test_main_review_fixes.py",
+      "originGitPath": "experiments/E010/Tests/test_main_review_fixes.py"
+    },
+    "Tests/test_review_fixes.py": {
+      "SHA256": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+      "archivedRelativePath": "tree/Tests/test_review_fixes.py",
+      "originGitPath": "experiments/E010/Tests/test_review_fixes.py"
+    },
+    "scripts/continuity.py": {
+      "SHA256": "8d5d02c4acdf58ea31017e7647307e38a393b78e9ba2d8d2dd5e89c87e0edc09",
+      "archivedRelativePath": "tree/scripts/continuity.py",
+      "originGitPath": "experiments/E010/scripts/continuity.py"
+    },
+    "scripts/gui_build.py": {
+      "SHA256": "682e3944fb19a61bf2161aa535ac72837c4643daf9b7d8c875823464aca468d3",
+      "archivedRelativePath": "tree/scripts/gui_build.py",
+      "originGitPath": "experiments/E010/scripts/gui_build.py"
+    },
+    "scripts/prepare.py": {
+      "SHA256": "e245ff882671b84b2d5e9f6d7b83cf145ea90cf7703bd90598dd6420773bfd21",
+      "archivedRelativePath": "tree/scripts/prepare.py",
+      "originGitPath": "experiments/E010/scripts/prepare.py"
+    },
+    "scripts/proof.py": {
+      "SHA256": "c50e24e1eeebbba83169ae55a696cd20f4d34bdf206cea6b4f827c743357fecc",
+      "archivedRelativePath": "tree/scripts/proof.py",
+      "originGitPath": "experiments/E010/scripts/proof.py"
+    }
+  },
+  "kind": "E010-DATE03-pre-fix-workingtree-source-snapshot",
+  "recordedUTC": "2026-11-10T03:09:20.585927+00:00",
+  "sourceAggregateSHA256": "e7fdeb2a5daabc5953041c51f03539916f7c70a8eb34e704e0b5b1a8079c7757",
+  "sourceFileCount": 22,
+  "sourceManifestFileSHA256": "938a007e159c855acf737f632c4c72d6101f6ef8a8583c11e05cc11584ce9b21",
+  "sourceManifestRelativePath": "experiments/E010/evidence/producer-preparation-20261110/source-manifest.json",
+  "sourceOrigin": "workingtree freeze; not all HEAD blobs"
+}

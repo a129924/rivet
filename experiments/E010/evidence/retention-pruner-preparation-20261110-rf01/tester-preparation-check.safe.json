@@ -1,0 +1,101 @@
+{
+  "RF01SpecificEvidence": {
+    "dependencyPrivateExtraNotForwarded": true,
+    "dependencyStatusEnumRejectedIfInvalid": true,
+    "explicitDependencyAndRawMapWhitelistsReviewed": true,
+    "invalidHashKindsRejected": [
+      "non-hash-string",
+      "short-string",
+      "non-hex-string",
+      "dictionary",
+      "boolean",
+      "integer"
+    ],
+    "originalSyntheticSentinelParserPathNowRefuses": true,
+    "publicBoundaryIndependentlyRejectsMalformedHash": true,
+    "rawMapHashTypeValidated": true,
+    "validFormatUnresolvedReferenceRemainsUnresolved": true
+  },
+  "actionSHA256": "2006d0c309416f38804705e4ebe5042c35a7661f6c43699d42c91b080114f8de",
+  "actualSuiteResult": {
+    "allFixturesLstatAbsent": true,
+    "allPassed": true,
+    "endedUTC": "2026-11-10T08:36:53.180990+00:00",
+    "exitCode": 0,
+    "fixtureCount": 16,
+    "forbiddenTargetOrSidecarCalls": 0,
+    "nativeChildAttempts": 0,
+    "processDurationSeconds": 0.23828445794060826,
+    "pythonVersion": "3.14.0",
+    "runnerSHA256": "1076b2b79a4b04215c6fe426fb41978569c8a7fcd80173705c9e92b0ab3a8f6a",
+    "startedUTC": "2026-11-10T08:36:52.942644+00:00",
+    "stderrSHA256": "9506df280aaa9593eb6babd967d1e6d458e9a0ca104326a65ec73dc8dd425740",
+    "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "testMethods": 17,
+    "unittestDurationSeconds": 0.08
+  },
+  "authorCheckSHA256": "c8c06e0c0f287df59942b87d25fb6698973b0f3217323b240d2a9eebf98cc1cb",
+  "authorVerdictNotUsed": true,
+  "boundaries": {
+    "C0Started": false,
+    "GitMutations": 0,
+    "actualTargetIO": 0,
+    "compilerAppBuildGUIAssetsKeychainDPK": 0,
+    "homePrivateSidecarIO": 0,
+    "nativeChildAttempts": 0,
+    "sourceOrOldReceiptWrites": 0
+  },
+  "callerSHA256": "389885059603ad2bad09f0768143c8008fa0194fa2bfcf3d47438fc27848a8a7",
+  "cleanup": {
+    "allFixtureRootsLstatAbsent": true,
+    "newAuditPendingReviewerSameSHADualACK": {
+      "filesSHA256": {
+        "audit.private.json": "f33a6e6a178862cc925fb7b1f8ca675b995948c89a76fdccbb6fc3f172f6f463",
+        "result.safe.json": "ed48f5546528b36e1cb57fac5c71fee278df1ac54bbe089b91d00add9230e8d5",
+        "sitecustomize.py": "1076b2b79a4b04215c6fe426fb41978569c8a7fcd80173705c9e92b0ab3a8f6a",
+        "stderr.private.log": "9506df280aaa9593eb6babd967d1e6d458e9a0ca104326a65ec73dc8dd425740",
+        "stdout.private.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "scratchBasename": "rivet-E010-RP04-RF01-5h4sz1ou"
+    },
+    "originalAuditNotModifiedOrDeleted": true,
+    "syntheticFixtures": 16
+  },
+  "kind": "E010-RP04-independent-RF01-v2-focused-check",
+  "limitations": [
+    "Only preparation and synthetic behavior verified; no target inventory or actual deletion.",
+    "This revision never deletes original raw; each remains retain-uncovered.",
+    "Cache-only completion with unknown/raw retained is not minimumComplete.",
+    "Original 16-pass plus independent sentinel failure history remains immutable."
+  ],
+  "newSevenFileSHAsAllMatch": true,
+  "nextBoundary": "Independent RP05 Reviewer; C0 still prohibited until offline gate approval",
+  "originalFailureReceiptSHA256": "7bb00ec02478c17eab9f7880ce9c685bcfb0d0918ce912e8da6cc293962dfcba",
+  "originalSource22AggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d",
+  "originalSource22AllMatch": true,
+  "originalV1SevenAndFailureReceiptUnchanged": true,
+  "otherMaintainedCases": [
+    "actual synthetic caller diagnose-reviewtuple-execute",
+    "CLI earliest deadline before any private read",
+    "exact closure and original product protection",
+    "symlink self unlink without following external target",
+    "hardlink foreign-owner cross-device refusal",
+    "identity-content drift refusal",
+    "per-step deadline honest partial and single dispatch",
+    "native timeout partial bytes closed capture",
+    "raw retained-uncovered; minimum false despite cache allowlist completion"
+  ],
+  "parameterSHA256": "9de166e028f7146f577de8434a2c5b1d1aa228813be47f41ba61fbdcb6fc78fe",
+  "protectedExistingE010RelativeMapSHA256": "f91803b8f31de3a4f39b4f2356582b038f79d196bd8de9785c87b9a054b3fa45",
+  "protectedExistingFileCount": 456,
+  "recordedUTC": "2026-11-10T08:37:37.956587+00:00",
+  "required_fixes": [],
+  "resolvedRequiredFixIDs": [
+    "RP-RF01"
+  ],
+  "scope": "offline preparation only; no C0 or live cleanup approval",
+  "sourceAggregateSHA256": "53dfdfd8713a1f13de7af9a6954ca96d1013685d220f00f05057fb0dc7764c06",
+  "sourceManifestFileSHA256": "27e0cac171298a611d38eb2eb81a329933abaeb4d11d1993f246235b1fd72fd2",
+  "testCommand": "python3 -B -m unittest -v test_retention_pruner",
+  "verdict": "approved"
+}

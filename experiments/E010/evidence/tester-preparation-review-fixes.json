@@ -1,0 +1,207 @@
+{
+  "E006All126FilesUnchanged": true,
+  "E007DependencyOrModification": false,
+  "adoptionApproved": false,
+  "all15PriorEvidenceUnchanged": true,
+  "all15ReviewedSourceFilesUnchangedDuringVerification": true,
+  "baselineFreezeSHA256": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+  "boundaries": {
+    "AppLaunch": false,
+    "AppleAssetsInspected": false,
+    "GitMutation": false,
+    "SecurityCalls": 0,
+    "crossWeekDummyRetained": false,
+    "liveSelectedMaterialCommands": false,
+    "persistentLiveRunCreated": false,
+    "realClockArmed": false,
+    "realIOKitBindingRead": false,
+    "signedBuild": false
+  },
+  "checks": {
+    "RF02": {
+      "actualTests": [
+        "test_ready_must_follow_human_report_and_human_cannot_be_future",
+        "test_stale_ready_sha_and_partial_observation_rejected"
+      ],
+      "sourceVerified": [
+        "ready strictly later than matching previous complete Human timestamp",
+        "future Human and future ready rejected",
+        "wrong stage/SHA rejected; accepted gate stored exclusive"
+      ],
+      "status": "passed in pure/mock scope"
+    },
+    "RF03": {
+      "actualTests": [
+        "test_cleanup_only_after_failed_w2_preserves_clock_and_never_reseeds",
+        "test_cleanup_only_no_host_or_unconfirmed_process_keeps_recovery",
+        "test_recovery_unconfirmed_owned_process_never_inspects_or_launches"
+      ],
+      "sourceVerified": [
+        "new matching cleanup-only grant and fresh ready required",
+        "actual ManualStages.recover and SetupVerifier.inspect_recovery path; external selected verifier and App executor mocked",
+        "same-certificate/full-group/device/host binding proof before executor",
+        "only delete-read-absent; original namespace/global/window/seed/expired receipts unchanged",
+        "no new measurement window or reseed; post-cleanup matching Human required before finalization",
+        "missing host or unconfirmed process leaves recoveryRequired and retains private recovery"
+      ],
+      "status": "passed in pure/mock scope"
+    },
+    "RF04": {
+      "actualTests": [
+        "test_public_archive_retains_window_ready_human_and_retention_chain",
+        "test_actual_archive_collision_keeps_private_root",
+        "test_filesystem_finalizer_copies_safe_evidence_before_deleting_synthetic_root"
+      ],
+      "sourceVerified": [
+        "actual filesystem finalizer exports safe window/gate/retained/grant/recovery relations and original private hashes before removal",
+        "public-only three-window deadlines/ready/Human order/retention checked against index",
+        "private statements and raw Mac identity absent from archive",
+        "collision refuses completion and preserves private root"
+      ],
+      "status": "passed in pure/mock scope"
+    },
+    "RF05": {
+      "actualTests": [
+        "test_mac_user_binding_missing_or_changed_is_zero_command",
+        "test_profile_same_certificate_on_other_device_is_rejected"
+      ],
+      "sourceVerified": [
+        "immutable private Mac/user binding checked on setup/resume before external command/App launch",
+        "profile membership plus same baseline ProvisioningUDID binding",
+        "public exports only host binding SHA; actual IOKit live branch not executed"
+      ],
+      "status": "passed in pure/mock scope"
+    },
+    "RF06": {
+      "actualTests": [
+        "test_absent_ready_or_proof_never_constructs_app_backend",
+        "test_valid_ready_and_control_proof_precede_app_executor_construction",
+        "test_recovery_unconfirmed_owned_process_never_inspects_or_launches"
+      ],
+      "sourceVerified": [
+        "ManualStages construction has no asset inspection or App launch ability",
+        "SetupVerifier exposes selected-material verification without App launch method",
+        "actual ManualStages.stage negatives test missing grant/ready/proof and wrong namespace/source/host binding before factory/command/Popen",
+        "valid current ready and applicable proof precede App-capable executor construction"
+      ],
+      "status": "passed in pure/mock scope"
+    }
+  },
+  "commands": [
+    {
+      "actualSwiftPythonRoundTripCases": 4,
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E008/Tests -p 'test_*.py' -v",
+      "exitCode": 0,
+      "focusedReviewFixMethods": 10,
+      "skipped": 0,
+      "testMethods": 40
+    },
+    {
+      "command": "Read-only source SHA / prior evidence / E006 baseline / RF01 build-input hash comparison",
+      "exitCode": 0
+    },
+    {
+      "HEAD": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44",
+      "clean": true,
+      "command": "git status --short and git rev-parse HEAD (dev read-only)",
+      "exitCode": 0
+    },
+    {
+      "command": "git status --short and git diff --name-only (feature read-only)",
+      "exitCode": 0,
+      "trackedDiffEmpty": true,
+      "untrackedOnly": [
+        "analysis/github-oauth-dpk-profile-continuity-feasibility/",
+        "experiments/E008/",
+        "plan/github-oauth-dpk-profile-continuity-feasibility/"
+      ]
+    }
+  ],
+  "devCleanReadOnlyConfirmed": true,
+  "devHEAD": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44",
+  "handoff": "Independent Reviewer RF02–RF06 re-review; stop before Human assets/live/retention/recovery authorizations.",
+  "implementationOrFormalArtifactsModifiedByTester": false,
+  "limitations": [
+    "Pure/mock tests establish only the exercised preparation controls; real Mac binding, selected-material CMS/platform integration, natural P0 expiry, different valid P1, original item restoration and Human prompts remain unexecuted.",
+    "RF03 mock recovery success does not guarantee obtaining a valid real cleanup host or real Keychain deletion.",
+    "Prior unsigned compile/Swift core evidence is reused by exact source hashes, not presented as profile/certificate/DR/live evidence.",
+    "No S05 Reviewer or S06 Human boundary approval is claimed."
+  ],
+  "liveHypothesisStatus": "未執行",
+  "liveValidationTaskComplete": false,
+  "protectedPriorEvidenceSHA256": {
+    "baseline-freeze.json": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+    "preparation-check-rf01.json": "c96b35fe4c850dd198006a9d159e0595722065e1c1ef83050c852407d7f23c91",
+    "preparation-check.json": "40a8dc824270cddc9ad5117db2ad5947768835f9694240f900a11bca3ecc2b57",
+    "python-preparation-tests.txt": "3fe9031a509eb12f55126a9c523f4d3de44e120aa098d64ce9a04f23341993b9",
+    "python-rf01-tests.txt": "b8aa0cd387c510ba0e381e78494ef2217f1c09f21aa5446d0a82bcd6c9493662",
+    "tester-initial-python-receipt.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-initial-serialization-probe.swift": "b8f6db816185053fd076ef3cdcedb6f4cab20b7362041b96ceeb808fed4c1be4",
+    "tester-initial-swift-receipt.txt": "481aa0b64c908896a78e2f4e25665745be9a2ef5a6bb4a299fe08b3b159ec960",
+    "tester-initial-unsigned-build.json": "6eba1f2d8467669cd521f8da5a2d7676bfbaf5ea319f8b4c14860b94d8a85c93",
+    "tester-preparation-check.json": "32ad6afe5f58443e6af7757220fe7c2099fb6e68d1d913953580124677c3aa7b",
+    "tester-preparation-rf01.json": "1fb3f768476e81603aa071081d4bd82348f8fbb56eb569c07fab5737b7ee8438",
+    "tester-rf01-original-regression.txt": "1dff0d876c8e7d8b523dbae9f860821a720feb82191e705fd3684dac4171612b",
+    "tester-rf01-unsigned-build.json": "da40cd6ad2ecfa80ec5214292a97af4deedca0137e3928d7ed69c991673a28dd",
+    "unsigned-preparation.json": "fd3987d630cab90e2cc6a15e68bddeb99099121628dcd2421be9a76ab8945ef8",
+    "unsigned-rf01.json": "d1c61e2ea2e519e5b7d3d818b670af4d9f44c20b7e02364ba70dd9aab7da54ad"
+  },
+  "recordedUTC": "2026-10-20T07:18:14.516585+00:00",
+  "required_fixes": [],
+  "resolvedRequiredFixes": [
+    "RF02",
+    "RF03",
+    "RF04",
+    "RF05",
+    "RF06"
+  ],
+  "role": "independentTester",
+  "schemaVersion": 1,
+  "scope": "S04 independent RF02–RF06 bounded preparation re-verification",
+  "sourceManifestSHA256": "65540ba6a190b00a691da9f630754e3c9e9b355b57e540caed64322aba0157e2",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/test_continuity.py": "bf1a8650d5f9a1aacd5707d0b782c8b72ff6b2f1bfa6870d5fbf07744fc9d785",
+    "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "scripts/continuity.py": "0ce3d3ecb1c58e91977a87b4185279ef96086da7949d4b109c2055fa5622809a",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "44f23873d8c01710638deb34cc3bb04d9cee12d95a6f5192dad80adaf12627eb"
+  },
+  "synthetic": true,
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "upstreamAuthorReceiptSHA256": "8078be1bbcec4d8366b9bae833c35e491b46b21ea74bf2db14c1f813d284870c",
+  "upstreamIndependentRF01TesterReceiptSHA256": "1fb3f768476e81603aa071081d4bd82348f8fbb56eb569c07fab5737b7ee8438",
+  "verdict": "approved",
+  "verificationReuse": {
+    "SwiftCoreAndCoreTestsUnchanged": true,
+    "SwiftCoreScenariosReused": 7,
+    "actualUnsignedMainSHA256Reused": {
+      "Debug": "34978156c7660f14af7e7cc977217a6ac93273bbbf19020aa37ffe6630317f6d",
+      "Rebuilt": "3d02a38e43aeef971e42df98808ad53f2a0bf7528c33215127e09bfa3b84f49a"
+    },
+    "all8BuildInputsMatch": true,
+    "buildInputsSHA256": {
+      "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+      "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+      "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+      "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+      "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+      "Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+      "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+      "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0"
+    },
+    "notLiveRebuildEvidence": true,
+    "reason": "Only Python protocol/driver and pure tests changed; all eight Swift/App/project/resource build inputs unchanged from independent RF01.",
+    "unsignedRebuiltThisRevision": false,
+    "unsignedReceiptSHA256": "da40cd6ad2ecfa80ec5214292a97af4deedca0137e3928d7ed69c991673a28dd"
+  }
+}

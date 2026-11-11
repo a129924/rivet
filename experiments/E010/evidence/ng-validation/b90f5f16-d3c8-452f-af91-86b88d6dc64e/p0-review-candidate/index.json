@@ -1,0 +1,17 @@
+{
+  "candidateSHA256": "c8f1ab0579946c27f6b638bf88abeb5ace8ee593c67cdcb18de51928e2415822",
+  "files": {
+    "controls/arm.public.json": "e6d14fd73d605845902d743c2e711a1c1f13ce876630c9d98e7076739205645b",
+    "controls/finalized.public.json": "b122d2878933fa16872d10d2659e69388910408aaf19a768da21e416d6566cdc",
+    "controls/human-build.public.json": "3fdd11d3446663dd2bf4f2667965cf666d31854cfcdcc82a2360731ca0f7b976",
+    "controls/original-leaf.public.json": "682666a522638a355b68b943822375d64c715ce1a8c8bd4dd220dc1b4bd5b17e",
+    "controls/post.public.json": "058a5f3aff74cf197256fb988348e85db6d39a6de661cad6c0a1dc1480d3942b",
+    "controls/pre.public.json": "2dcd5c4fcd82242dbf6f6db80939e7160069f00b8cdc1f34d916a8159b2a4d38",
+    "p0.safe.json": "c8f1ab0579946c27f6b638bf88abeb5ace8ee593c67cdcb18de51928e2415822"
+  },
+  "kind": "E010-NG07-P0-review-index",
+  "noAppOrDPKAuthorizedByThisIndex": true,
+  "rawIncluded": false,
+  "rawRetainedPrivately": true,
+  "recordedUTC": "2026-11-10T07:33:15.638802+00:00"
+}

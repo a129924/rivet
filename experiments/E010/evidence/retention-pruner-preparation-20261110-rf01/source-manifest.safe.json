@@ -1,0 +1,33 @@
+{
+  "C0Started": false,
+  "aggregateSHA256": "53dfdfd8713a1f13de7af9a6954ca96d1013685d220f00f05057fb0dc7764c06",
+  "authorVerdict": null,
+  "kind": "E010-RP-RF01-v2-offline-source-manifest",
+  "oldApprovalReused": false,
+  "originalSource22AggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d",
+  "originalSource22AllMatch": true,
+  "priorFrozenSevenFileSHA256": {
+    "OPERATOR.md": "60a37ba0b0833fe9053f4a8a5325de37d53f2adbf994b384e07193a9f9ffe0c0",
+    "execution-parameters.safe.json": "1e13f0361369a8b7dc6f2cfc01aadf708a6a85cda3f038d0a71dbf5bd44a9e9e",
+    "preparation-check.safe.json": "3ee3c3238d492a2a90ec9004dedfd9a63081135ddf7224df2f76e7528f57274e",
+    "retention_caller.py": "389885059603ad2bad09f0768143c8008fa0194fa2bfcf3d47438fc27848a8a7",
+    "retention_pruner.py": "a73932b07e3aac79e5e51294f69ab889c570984e4e3e799e8a8154a176ff1708",
+    "source-manifest.safe.json": "3d3e6becc5ec0a02f899b5b9a06f1e84272a4a329090461eed55ff0775cb4e22",
+    "test_retention_pruner.py": "941184f2ceca87a46812089a9565264b88976250deb5009205e4a3339add6f48"
+  },
+  "priorIndependentTesterReceiptSHA256": "7bb00ec02478c17eab9f7880ce9c685bcfb0d0918ce912e8da6cc293962dfcba",
+  "priorSevenAndTesterAllUnchanged": true,
+  "privateSidecarCreated": false,
+  "protectedExistingFeatureFileCount": 456,
+  "protectedExistingFeatureSHA256": "f91803b8f31de3a4f39b4f2356582b038f79d196bd8de9785c87b9a054b3fa45",
+  "recordedUTC": "2026-11-10T08:35:46.273611+00:00",
+  "sourceFileCount": 5,
+  "sourceFiles": {
+    "OPERATOR.md": "c12732e1da90a20d52ccd365dc7be4f2204e44cfbab200ea694e48435cb851d5",
+    "execution-parameters.safe.json": "9de166e028f7146f577de8434a2c5b1d1aa228813be47f41ba61fbdcb6fc78fe",
+    "retention_caller.py": "389885059603ad2bad09f0768143c8008fa0194fa2bfcf3d47438fc27848a8a7",
+    "retention_pruner.py": "2006d0c309416f38804705e4ebe5042c35a7661f6c43699d42c91b080114f8de",
+    "test_retention_pruner.py": "14ce328ee5e9a943e9d350e33dffea36f9f0c8f78bbe85b7b8df9a1f06a1fcd0"
+  },
+  "targetIOExecuted": false
+}

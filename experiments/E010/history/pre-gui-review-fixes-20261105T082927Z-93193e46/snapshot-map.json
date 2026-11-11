@@ -1,0 +1,121 @@
+{
+  "GUI04TesterSHA256": "da964c28529a7aecf327a879be3cb46b7366e8d01eceacd4e458b72d93932774",
+  "copiedUTC": "2026-11-05T08:29:27.939568+00:00",
+  "count": 22,
+  "files": [
+    {
+      "SHA256": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/DPKContinuityProbe.xcodeproj/project.pbxproj",
+      "sourcePath": "experiments/E010/DPKContinuityProbe.xcodeproj/project.pbxproj"
+    },
+    {
+      "SHA256": "2422539a9f66d7913229becf89054db57e2f280e4c1a7ee9c552a036920d474a",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe-Rebuilt.xcscheme",
+      "sourcePath": "experiments/E010/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe-Rebuilt.xcscheme"
+    },
+    {
+      "SHA256": "023b15adab3e1ddcc56ea0034407c344b98bb93f347d70378251720140d72649",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme",
+      "sourcePath": "experiments/E010/DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme"
+    },
+    {
+      "SHA256": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Resources/DPKContinuityProbe.entitlements",
+      "sourcePath": "experiments/E010/Resources/DPKContinuityProbe.entitlements"
+    },
+    {
+      "SHA256": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Resources/Info.plist",
+      "sourcePath": "experiments/E010/Resources/Info.plist"
+    },
+    {
+      "SHA256": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Sources/DPKContinuityProbe/AppMain.swift",
+      "sourcePath": "experiments/E010/Sources/DPKContinuityProbe/AppMain.swift"
+    },
+    {
+      "SHA256": "a74cb0e08657a662f7d6d5c2e65402cc921756b376577fe66f1fbe96419f8a5e",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Sources/DPKContinuityProbe/LiveGate.swift",
+      "sourcePath": "experiments/E010/Sources/DPKContinuityProbe/LiveGate.swift"
+    },
+    {
+      "SHA256": "a4f13222a02a3e00498277db2fc2610ceca32c2ea5aac59d1ff7ae4199e89381",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Sources/DPKContinuityProbe/LiveStore.swift",
+      "sourcePath": "experiments/E010/Sources/DPKContinuityProbe/LiveStore.swift"
+    },
+    {
+      "SHA256": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Sources/DPKContinuityProbe/ProbeCore.swift",
+      "sourcePath": "experiments/E010/Sources/DPKContinuityProbe/ProbeCore.swift"
+    },
+    {
+      "SHA256": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/CoreTests.swift",
+      "sourcePath": "experiments/E010/Tests/CoreTests.swift"
+    },
+    {
+      "SHA256": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/ReceiptProducer.swift",
+      "sourcePath": "experiments/E010/Tests/ReceiptProducer.swift"
+    },
+    {
+      "SHA256": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/WindowChainProbe.swift",
+      "sourcePath": "experiments/E010/Tests/WindowChainProbe.swift"
+    },
+    {
+      "SHA256": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/test_bootstrap.py",
+      "sourcePath": "experiments/E010/Tests/test_bootstrap.py"
+    },
+    {
+      "SHA256": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/test_continuity.py",
+      "sourcePath": "experiments/E010/Tests/test_continuity.py"
+    },
+    {
+      "SHA256": "005244c48224f2b7c8e4d854e58db9d341389822d6d755b86bea111ec5f983ee",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/test_gui_build.py",
+      "sourcePath": "experiments/E010/Tests/test_gui_build.py"
+    },
+    {
+      "SHA256": "4be3c1e7710b9e5f6160c2d65a3c637706270578e0ee6051ed84728d2e74107e",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/test_main_policy.py",
+      "sourcePath": "experiments/E010/Tests/test_main_policy.py"
+    },
+    {
+      "SHA256": "de0450316cbe369b8b46f03cd137611ec4b642435f9be2c41d7ab6973de4f3ce",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/test_main_review_fixes.py",
+      "sourcePath": "experiments/E010/Tests/test_main_review_fixes.py"
+    },
+    {
+      "SHA256": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/Tests/test_review_fixes.py",
+      "sourcePath": "experiments/E010/Tests/test_review_fixes.py"
+    },
+    {
+      "SHA256": "2445e582a93eb9c3962ce1dcd90ef0a212c8ed5614242cba74992b35b5778eeb",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/scripts/continuity.py",
+      "sourcePath": "experiments/E010/scripts/continuity.py"
+    },
+    {
+      "SHA256": "e8a2aea307c93de65f7b7511580ade2e1d44fc543691a6aae296b82ff431693f",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/scripts/gui_build.py",
+      "sourcePath": "experiments/E010/scripts/gui_build.py"
+    },
+    {
+      "SHA256": "e245ff882671b84b2d5e9f6d7b83cf145ea90cf7703bd90598dd6420773bfd21",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/scripts/prepare.py",
+      "sourcePath": "experiments/E010/scripts/prepare.py"
+    },
+    {
+      "SHA256": "c50e24e1eeebbba83169ae55a696cd20f4d34bdf206cea6b4f827c743357fecc",
+      "snapshotPath": "experiments/E010/history/pre-gui-review-fixes-20261105T082927Z-93193e46/tree/scripts/proof.py",
+      "sourcePath": "experiments/E010/scripts/proof.py"
+    }
+  ],
+  "kind": "E010-pre-GUI-review-fixes-workingtree-snapshot",
+  "originKind": "workingtree-frozen-by-SHA",
+  "sourceAggregateSHA256": "b18cbf157b26ccccc17fa4cb23da40befba2ed765c24bb0c0f8503fd9eaea5b1",
+  "sourceManifestFileSHA256": "eaa94c627788ac8f05a0102b889426c69e44565c5d4a6b139d82846c452fb30f"
+}

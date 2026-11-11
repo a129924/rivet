@@ -1,0 +1,166 @@
+# REVIEW ONLY; no invocation or target operation occurs while preparing this text.
+# CL05 caller supplies only the already sealed relative filenames, NEVER preloaded bytes.
+import os, stat, json, hashlib, subprocess, pathlib, datetime
+END=datetime.datetime(2026,11,10,6,3,7,tzinfo=datetime.timezone.utc)
+MANIFEST_SHA='1f10be83f06a14c035f702fc8c1e2dee098ecdf70ed153b6a138e429a5041425'
+PLAN_SHA='930da573986b737cd6fbc2864cca1bcacf34bc8229da911b6913b8c107a3da4f'
+NS='3581e693-8019-4068-a40f-311488fab764'
+FLAGS=os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW
+
+def check_time(margin=0):
+    remaining=(END-datetime.datetime.now(datetime.timezone.utc)).total_seconds()
+    if remaining<=margin: raise RuntimeError('original-hardstop')
+    return remaining
+
+def identity(z):
+    return dict(device=z.st_dev,inode=z.st_ino,ownerUID=z.st_uid,mode=stat.S_IMODE(z.st_mode),type=stat.S_IFMT(z.st_mode))
+
+def parts(relative):
+    value=pathlib.PurePosixPath(relative)
+    if not relative or value.is_absolute() or '..' in value.parts or value.as_posix()!=relative: raise RuntimeError('unsafe-relative')
+    return value.parts
+
+def checked_fstat(fd):
+    check_time(); return identity(os.fstat(fd))
+
+def open_root(root):
+    check_time()
+    # Lexical exact path only; never resolve() or traverse a link.
+    wanted=pathlib.Path.home()/'Library/Application Support/RivetExperiments'/('rivet-E010-'+NS)
+    if not root.is_absolute() or str(root)!=str(wanted): raise RuntimeError('root-path-change')
+    check_time();fd=os.open('/',FLAGS); chain={}
+    try:
+        chain['/']=checked_fstat(fd);current=pathlib.PurePosixPath('/')
+        for part in root.parts[1:]:
+            check_time();child=os.open(part,FLAGS,dir_fd=fd)
+            try: value=checked_fstat(child)
+            except BaseException: os.close(child);raise
+            os.close(fd);fd=child;current=current/part;chain[str(current)]=value
+        return fd,chain
+    except BaseException: os.close(fd);raise
+
+def load_relative(rootfd,relative):
+    # Only before the first full scan; all descriptors close before lsof.
+    components=parts(relative);check_time();fd=os.dup(rootfd)
+    try:
+        for part in components[:-1]:
+            check_time();child=os.open(part,FLAGS,dir_fd=fd)
+            try:
+                value=checked_fstat(child)
+                if value['ownerUID']!=os.getuid():raise RuntimeError('private-parent-owner')
+            except BaseException:os.close(child);raise
+            os.close(fd);fd=child
+        check_time();leaf=os.open(components[-1],os.O_RDONLY|os.O_NOFOLLOW,dir_fd=fd)
+        try:
+            info=checked_fstat(leaf)
+            if info['ownerUID']!=os.getuid() or info['type']!=stat.S_IFREG:raise RuntimeError('private-file-owner-type')
+            chunks=[]
+            while True:
+                check_time();chunk=os.read(leaf,65536)
+                if not chunk:break
+                chunks.append(chunk)
+            return b''.join(chunks)
+        finally:os.close(leaf)
+    finally:os.close(fd)
+
+def check_binding(root,rootfd,chain,manifest):
+    check_time()
+    if str(root)!=manifest['root'] or checked_fstat(rootfd)!=manifest['rootIdentity']:raise RuntimeError('root-change')
+    if manifest['rootIdentity']['ownerUID']!=os.getuid():raise RuntimeError('root-owner')
+    for path,wanted in manifest['parents'].items():
+        check_time()
+        if chain.get(path)!=wanted or wanted['type']!=stat.S_IFDIR:raise RuntimeError('parent-change')
+
+def scan(rootfd,expected,rootidentity):
+    result={}
+    def visit(fd,relative=''):
+        check_time()
+        with os.scandir(fd) as it:
+            for entry in it:
+                check_time();rel=(relative+'/' if relative else '')+entry.name
+                check_time();z=os.stat(entry.name,dir_fd=fd,follow_symlinks=False);value=identity(z)
+                if value!=expected.get(rel) or z.st_dev!=rootidentity['device'] or z.st_uid!=rootidentity['ownerUID']:raise RuntimeError('node-change')
+                result[rel]=value
+                if stat.S_ISDIR(z.st_mode):
+                    check_time();child=os.open(entry.name,FLAGS,dir_fd=fd)
+                    try:
+                        if checked_fstat(child)!=value:raise RuntimeError('directory-swap')
+                        visit(child,rel)
+                    finally:os.close(child)
+    visit(rootfd);return result
+
+def execute(root,manifest_relative,private_plan_relative):
+    completed=[];phase='caller-before-private-load';failed_node_sha=None
+    try:
+        check_time(2);root=pathlib.Path(root)
+        fd,chain=open_root(root)
+        try:
+            phase='private-load';check_time(2)
+            raw=load_relative(fd,manifest_relative);check_time(2)
+            if hashlib.sha256(raw).hexdigest()!=MANIFEST_SHA:raise RuntimeError('manifest-change')
+            planraw=load_relative(fd,private_plan_relative);check_time(2)
+            if hashlib.sha256(planraw).hexdigest()!=PLAN_SHA:raise RuntimeError('private-plan-change')
+            manifest=json.loads(raw);check_binding(root,fd,chain,manifest)
+            expected={n['relative']:n['identity'] for n in manifest['nodes']}
+            if len(expected)!=len(manifest['nodes']) or len(expected)!=3459:raise RuntimeError('node-count-change')
+            phase='full-entryset';check_time(2)
+            if scan(fd,expected,manifest['rootIdentity'])!=expected:raise RuntimeError('entryset-change')
+        finally:os.close(fd)
+        # No target/capture descriptor remains open during this exact-root lsof.
+        phase='handles';remaining=check_time(2);timeout=min(10.0,remaining-2.0)
+        if timeout<=0:raise RuntimeError('insufficient-handle-budget')
+        checked=subprocess.run(['/usr/sbin/lsof','-nP','+D',str(root)],capture_output=True,timeout=timeout)
+        check_time(2)
+        if checked.returncode!=1 or checked.stdout or checked.stderr:raise RuntimeError('handles-not-clear')
+        fd,chain=open_root(root)
+        try:
+            check_binding(root,fd,chain,manifest);phase='full-entryset-after-handles';check_time(2)
+            if scan(fd,expected,manifest['rootIdentity'])!=expected:raise RuntimeError('entryset-change')
+            for node in sorted(manifest['nodes'],key=lambda n:(n['depth'],n['relative']),reverse=True):
+                phase='node-identity';failed_node_sha=hashlib.sha256(node['relative'].encode()).hexdigest();check_time(2)
+                components=parts(node['relative']);check_time();parent=os.dup(fd)
+                try:
+                    rel=''
+                    for part in components[:-1]:
+                        rel=(rel+'/' if rel else '')+part;check_time();child=os.open(part,FLAGS,dir_fd=parent)
+                        try:
+                            if checked_fstat(child)!=expected[rel]:raise RuntimeError('parent-node-change')
+                        except BaseException:os.close(child);raise
+                        os.close(parent);parent=child
+                    check_time();actual=identity(os.stat(components[-1],dir_fd=parent,follow_symlinks=False))
+                    if actual!=node['identity']:raise RuntimeError('node-change')
+                    check_time(2)
+                    if node['kind']=='directory':phase='rmdir';os.rmdir(components[-1],dir_fd=parent)
+                    elif node['kind'] in ('regular','symlink'):phase='unlink';os.unlink(components[-1],dir_fd=parent)
+                    else:raise RuntimeError('node-type-rejected')
+                    completed.append(hashlib.sha256(node['relative'].encode()).hexdigest())
+                finally:os.close(parent)
+        finally:os.close(fd)
+        phase='root-rmdir';failed_node_sha=hashlib.sha256(b'').hexdigest();check_time(2)
+        # Rewalk every outer parent by FD. No path-based open(root.parent).
+        fd,chain=open_root(root)
+        try:check_binding(root,fd,chain,manifest)
+        finally:os.close(fd)
+        parent=pathlib.Path(root.parent);check_time();parentfd=os.open('/',FLAGS)
+        try:
+            current=pathlib.PurePosixPath('/')
+            if checked_fstat(parentfd)!=chain['/']:raise RuntimeError('outer-parent-change')
+            for part in parent.parts[1:]:
+                check_time();child=os.open(part,FLAGS,dir_fd=parentfd)
+                try:
+                    current=current/part
+                    if checked_fstat(child)!=chain[str(current)]:raise RuntimeError('outer-parent-change')
+                except BaseException:os.close(child);raise
+                os.close(parentfd);parentfd=child
+            check_time()
+            if identity(os.stat(root.name,dir_fd=parentfd,follow_symlinks=False))!=manifest['rootIdentity']:raise RuntimeError('root-change')
+            check_time(2);os.rmdir(root.name,dir_fd=parentfd)
+        finally:os.close(parentfd)
+        # rmdir syscall success is the result; do not query root absence after Cend.
+        return dict(cleanupComplete=True,rootRemoved=True,completedNodeSHA256=completed,completedCount=len(completed),failedPhase=None,failedNodeSHA256=None)
+    except (Exception,KeyboardInterrupt) as error:
+        return dict(cleanupComplete=False,rootRemoved=False,completedNodeSHA256=completed,completedCount=len(completed),failedPhase=phase,failedNodeSHA256=failed_node_sha,exceptionType=type(error).__name__,rawExceptionExported=False,noAutomaticRetry=True)
+
+# CL05 invocation, only AFTER independent v3 approval:
+# result = execute(exact_authorized_root, sealed_manifest_relative, sealed_plan_relative)
+# This caller does not read private bytes before execute's first hardstop check.

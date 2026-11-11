@@ -1,0 +1,104 @@
+{
+  "actualSuiteResult": {
+    "allFixturesLstatAbsent": true,
+    "allPassed": true,
+    "endedUTC": "2026-11-10T08:31:42.074697+00:00",
+    "exitCode": 0,
+    "fixtureCount": 15,
+    "forbiddenTargetOrSidecarCalls": 0,
+    "nativeChildAttempts": 0,
+    "processDurationSeconds": 0.23620520811527967,
+    "pythonVersion": "3.14.0",
+    "runnerSHA256": "1076b2b79a4b04215c6fe426fb41978569c8a7fcd80173705c9e92b0ab3a8f6a",
+    "startedUTC": "2026-11-10T08:31:41.838427+00:00",
+    "stderrSHA256": "bf675b54de7d4672769d65660e9357346cafa9b06d46542672024855a827ad17",
+    "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "testMethods": 16,
+    "unittestDurationSeconds": 0.079
+  },
+  "additionalFocusedSafetyEdge": {
+    "cases": 1,
+    "fixtureLstatAbsent": true,
+    "nativeCalls": 0,
+    "observedCandidateWhitelistViolation": true,
+    "targetOrSidecarIO": 0
+  },
+  "allOriginalSource22Match": true,
+  "allSevenAuthorFileSHAMatch": true,
+  "boundaries": {
+    "AppOrDPK": 0,
+    "C0Started": false,
+    "GUIOrCUAEntrypoints": 0,
+    "GitMutations": 0,
+    "actualTargetIO": false,
+    "compilerOrAppBuild": 0,
+    "homePrivateSidecarIO": false,
+    "nativeChildCommands": 0,
+    "realRawIdentityExaminedOrPublished": false,
+    "sourceOrOldReceiptWrites": 0
+  },
+  "diagnosticsRetainedPendingReviewerACK": {
+    "containsOnlyThisTesterSyntheticAudit": true,
+    "deletionNotPerformed": true,
+    "filesSHA256": {
+      "audit.private.json": "976264abf65ff481c96c16159720f04145fae1cbf800eefdc36e5f2da2820fe0",
+      "result.safe.json": "e15a129a91d7590e9835b3385d1a92dd4049358566bf8093c3471edf0907a679",
+      "sitecustomize.py": "1076b2b79a4b04215c6fe426fb41978569c8a7fcd80173705c9e92b0ab3a8f6a",
+      "stderr.private.log": "bf675b54de7d4672769d65660e9357346cafa9b06d46542672024855a827ad17",
+      "stdout.private.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scratchBasename": "rivet-E010-RP04-xcf4tntb"
+  },
+  "kind": "E010-RP04-independent-offline-preparation-check",
+  "nextBoundary": "Implementer bounded RP-RF01 fix then focused independent retest; no C0 permitted",
+  "originalSource22AggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d",
+  "originalSourceManifestFileSHA256": "20986bd64a542370334b270a671aef6ccd5276ce8338b8e2c287d75c42202608",
+  "ownedFixtureCleanup": {
+    "additionalEdgeFixtureLstatAbsent": true,
+    "allLstatAbsent": true,
+    "globalTempInventoryClaimed": false,
+    "originalSuiteFixtures": 15
+  },
+  "protectedExistingAllMatch": true,
+  "protectedExistingCount": 456,
+  "protectedExistingE010RelativeMapSHA256": "f91803b8f31de3a4f39b4f2356582b038f79d196bd8de9785c87b9a054b3fa45",
+  "recordedUTC": "2026-11-10T08:33:28.100583+00:00",
+  "required_fixes": [
+    {
+      "field": "dependencies[*].expectedSHA256",
+      "file": "retention_pruner.py",
+      "functions": [
+        "closure.add_ref",
+        "safe_candidate"
+      ],
+      "id": "RP-RF01",
+      "minimalReproducer": {
+        "observed": {
+          "dependencyStatus": "unresolved",
+          "nonHashSentinelPresentInSafeCandidate": true
+        },
+        "operation": "make_plan then canonical(safe_candidate(plan,manifest))",
+        "records": {
+          "proofs/asset.json": {
+            "proofRelative": "missing.json",
+            "proofSHA256": "SYNTHETIC_PRIVATE_HASH_SENTINEL"
+          }
+        }
+      },
+      "problem": "Malformed reference hash is copied verbatim into model-safe candidate even when dependency resolution is unresolved.",
+      "requiredBehavior": "Validate typed reference expected SHA as a 64-hex string before candidate publication; fail closed with a finite safe classification for malformed values. Add the synthetic negative regression. Do not pass arbitrary private values into the safe candidate."
+    }
+  ],
+  "sourceAggregateSHA256": "2036c8339ebddffcc1315ba756b0513d0bfa1f04c866816a2d070c29380282ed",
+  "testCommand": "python3 -B -m unittest -v test_retention_pruner",
+  "testEnvironment": "owned synthetic runner sitecustomize; actual target/sidecar IO and native subprocess audit refusal guards",
+  "testScopeNotes": [
+    "Original 16 methods passed; the extra independent malformed-hash edge reveals an uncovered safety contract failure.",
+    "Raw command provenance remains unknown by design; original raw is retained-uncovered and is not deletable by this revision.",
+    "Actual caller diagnose/execute functions were exercised only with synthetic target/job paths; live CLI dispatch was not performed.",
+    "Pure success does not prove actual cleanup, minimum retention, DPK continuity, or UX."
+  ],
+  "testedFrozenActionSHA256": "a73932b07e3aac79e5e51294f69ab889c570984e4e3e799e8a8154a176ff1708",
+  "testedFrozenCallerSHA256": "389885059603ad2bad09f0768143c8008fa0194fa2bfcf3d47438fc27848a8a7",
+  "verdict": "needs-rework"
+}

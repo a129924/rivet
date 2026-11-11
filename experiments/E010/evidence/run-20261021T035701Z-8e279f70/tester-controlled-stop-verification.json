@@ -1,0 +1,219 @@
+{
+  "AppleAssetsRetainedAndNotInventoriedOrRevokedByAgent": true,
+  "CLIPreCleanupIndexSHA256": "648dcc3c1c21a848751c7306a3dff9d5c5c6c4c3d37db341a2527179f1b96eb7",
+  "actualVerificationCommands": [
+    {
+      "command": "python3 inline read-only source/history/index/Human/ready/timestamp verification; then exclusive public addenda",
+      "result": "all assertions passed; no live modules imported; no clock read"
+    },
+    {
+      "command": "git diff --name-only (feature)",
+      "exitCode": 0,
+      "result": "empty"
+    },
+    {
+      "command": "git status --short (dev)",
+      "exitCode": 0,
+      "result": "empty"
+    },
+    {
+      "command": "git rev-parse HEAD (dev)",
+      "exitCode": 0,
+      "result": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44"
+    }
+  ],
+  "boundaries": {
+    "AppExecutorConstructed": false,
+    "AppLaunch": false,
+    "DPKDeleteReadAbsentValidated": false,
+    "DPKItemCreated": false,
+    "SecItemCalls": 0,
+    "commitPushPR": false,
+    "completeGlobalExecuted": false,
+    "newClockHostAssetOrPrivateRootOperationsDuringThisVerification": false,
+    "newTestsOrBuildsDuringThisVerification": false,
+    "selectedCMSCodesignOrSetupOnlyExecuted": false,
+    "sourceOrPlanningArtifactsModified": false
+  },
+  "caseStatuses": {
+    "T01": {
+      "currentLivePrerequisite": "無法判定／前提不足",
+      "purePreauthGuards": "沿用已批准 preparation，未重跑，不視為 live 前提通過"
+    },
+    "T02": {
+      "baseline": "未執行",
+      "credentialPromptUX": "未執行"
+    },
+    "T03": {
+      "naturalExpiry": "未執行"
+    },
+    "T04": {
+      "newP1SameCertificateGroup": "未執行"
+    },
+    "T05": {
+      "P1ReadOriginalNoRewrite": "未執行"
+    },
+    "T06": {
+      "trueRebuildRead": "未執行"
+    },
+    "T07": {
+      "DPKDeleteReadAbsent": "未執行",
+      "zeroItemPrivateFilesystemCleanup": "成功；此前未建立 Keychain item"
+    },
+    "T08": {
+      "currentOriginalWindowAndControlledStop": "成功",
+      "pureGuards": "沿用已批准 preparation，未重跑"
+    },
+    "T09": {
+      "collisionGuards": "沿用 preparation；本次沒有覆寫或新碰撞實驗",
+      "currentEvidenceSHAExclusiveCanonicalLFAndRedaction": "成功"
+    }
+  },
+  "checks": {
+    "E006AllUnchanged": true,
+    "E006FileCount": 126,
+    "canonicalNewJSON": "UTF-8; sorted keys; two-space indent; terminal LF; actual byte SHA-256; O_EXCL/O_NOFOLLOW/fsync/readverify",
+    "devHEAD": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44",
+    "devReadonlyClean": true,
+    "featureTrackedDiffEmpty": true,
+    "indexFileReferencesVerified": 48,
+    "originalRunFileCount": 44,
+    "originalRunFilesAllUnchanged": true,
+    "protectedPriorEvidenceAllUnchanged": true,
+    "protectedPriorEvidenceCount": 47,
+    "source17AllUnchanged": true,
+    "sourceCount": 17,
+    "sourceManifestSHA256": "ad74bf47a34e583c3c823c65c018ae20276934a4a94571eee68bcb93cba0eb41"
+  },
+  "classification": {
+    "DPKCredentialUX": "未執行；四段零提示均未進入憑證存取",
+    "DPKMechanism": "未執行",
+    "OSStatus": null,
+    "cleanupTaskComplete": true,
+    "controlledStopRecordComplete": true,
+    "failureModeLiveValidation": "未執行",
+    "formalAdapterAdoptionApproved": false,
+    "liveFeasibilityValidationTaskComplete": false,
+    "primaryHypothesis": "未執行"
+  },
+  "cleanupActualEndTaipei": "2026-10-21T12:17:08.080796+08:00",
+  "cleanupActualEndUTC": "2026-10-21T04:17:08.080796+00:00",
+  "cleanupComplete": true,
+  "completedBeforeOriginalCutoff": true,
+  "completedBeforeOriginalDeadline": true,
+  "controlChronology": {
+    "anchorAndW1Unchanged": true,
+    "clockResetOrNewNamespace": false,
+    "previousMachineHumanAndFreshReadySHAChainsValid": true,
+    "readyRecordedAfterPreviousHumanAndBeforeAuthorizedAction": true,
+    "retentionActuallyStarted": false,
+    "retentionExtendedByGrant": false
+  },
+  "controlledStopHumanSHA256": "4a2f6314fbb8810d5c2298bc0c8a8ec1b4045900797dae55b36b9fb917e376c9",
+  "controlledStopMachineSHA256": "ed15fe4e119ce07de7f415eba3f9d75d4920f3428d7dc3a2f0d7708f71d231bb",
+  "cutoffUTC": "2026-10-21T04:22:01.736290+00:00",
+  "deadlineUTC": "2026-10-21T04:27:01.736290+00:00",
+  "kind": "independent-Tester-controlled-stop-final-verification",
+  "limitations": [
+    "Human prompt reports are authoritative observations, not inferred from exit status or elapsed time.",
+    "Final cleanup Human exact click/receipt time unavailable; no timestamp was invented.",
+    "Filesystem absence and no residual are verified preserved cleanup facts; private root was not re-accessed during final handoff.",
+    "Human Build declaration is retained as provenance, not substituted for an actual signed host/profile proof.",
+    "No baseline or retained item exists, so expiry/profile continuity and credential UX have no evidence in this run.",
+    "Review approval of this safe closure does not complete the original feasibility validation task."
+  ],
+  "materialConclusion": {
+    "HumanDeclarationPreserved": "Debug Build成功，確認免費PersonalTeam／既有憑證／未Run",
+    "actualGUIProductProvenanceEstablished": false,
+    "actualGUIReportCount": 0,
+    "boundedPrivateScopeAppDirectoryCount": 1,
+    "boundedPrivateScopeCompleteMatchingHostCount": 0,
+    "candidateMissing": [
+      "Info.plist",
+      "embedded provisioning profile",
+      "main executable"
+    ],
+    "declarationReceiptSHA256": "fe74a35d3214daa0cfd17dfad4970283503de66b1fc6607a57bc56b2bcfd5e6d",
+    "notInferred": [
+      "Human 未 Build",
+      "整機沒有 App",
+      "DPK 不可用"
+    ],
+    "outsideAuthorizedPrivateScopeGUIProduct": "unknown; not searched",
+    "prerequisiteStatus": "無法判定；沒有取得完整、可驗且來源確定的 selected host"
+  },
+  "namespace": "8e279f70-3c62-43ee-91b5-8e9f316f1245",
+  "next": "獨立 Reviewer 複核；前提不足維持 human-check，無新測量或 Git publication 授權。",
+  "normalRetentionExpiryUTC": "2026-10-31T03:57:01.736290+00:00",
+  "operatorPreCleanupIndexSHA256": "038612eb7d7c26692926352e0832bbf79e93d0b6be04df8528df3f7e4272432b",
+  "originalCLIIndexSHA256": "de9046d619e99835f6224251d00e636fbbaa0bd13ed36cc935d5d116c20903d7",
+  "originalMachinePendingFieldsPreserved": true,
+  "originalT0UTC": "2026-10-21T03:57:01.736290+00:00",
+  "otherProjectGlobalDerivedDataOrRecentSettingsModified": false,
+  "ownedPrivateResidualFromPreservedMachineReceipt": false,
+  "privateRootAbsentFromPreservedMachineReceipt": true,
+  "privateRootReaccessedDuringThisVerification": false,
+  "required_fixes": [],
+  "stageEvidence": [
+    {
+      "HumanPhaseIdentified": true,
+      "HumanPromptCount": 0,
+      "HumanReceiptSHA256": "436d054338e1abbe1f68241e1c43a592cc0e46b59d34ea17edc19dcc92a602f7",
+      "HumanWholeObserved": true,
+      "actions": [],
+      "endedTaipei": "2026-10-21T11:57:01.761284+08:00",
+      "endedUTC": "2026-10-21T03:57:01.761284+00:00",
+      "machineReceiptSHA256": "e8973db4dc656ce21fe1ba2456400bec66cc4eb5c6af6c2689f575965bb2dd68",
+      "purposes": [],
+      "stage": "begin-anchor",
+      "startedTaipei": "2026-10-21T11:57:01.649396+08:00",
+      "startedUTC": "2026-10-21T03:57:01.649396+00:00"
+    },
+    {
+      "HumanPhaseIdentified": true,
+      "HumanPromptCount": 0,
+      "HumanReceiptSHA256": "614e30c37edf03f7c4afd3308799af7a24ff3edbad00e8755ee9ff2aea452ac4",
+      "HumanWholeObserved": true,
+      "actions": [],
+      "endedTaipei": "2026-10-21T12:06:53.232006+08:00",
+      "endedUTC": "2026-10-21T04:06:53.232006+00:00",
+      "machineReceiptSHA256": "898319a23627c9abfef0bf2aa0b69029e53f89171618d84a63427960a5968d99",
+      "purposes": [],
+      "stage": "setup",
+      "startedTaipei": "2026-10-21T12:00:50.667617+08:00",
+      "startedUTC": "2026-10-21T04:00:50.667617+00:00"
+    },
+    {
+      "HumanPhaseIdentified": true,
+      "HumanPromptCount": 0,
+      "HumanReceiptSHA256": "db41622364019a2f76670e03693a54a676f38926d5925624f94b0e4b4e94f9a4",
+      "HumanWholeObserved": true,
+      "actions": [],
+      "endedTaipei": "2026-10-21T12:13:40.589428+08:00",
+      "endedUTC": "2026-10-21T04:13:40.589428+00:00",
+      "machineReceiptSHA256": "6ec2e1d57bf277e1407ba4bfd98df4cdd2b636ef9de9ef43888da317ec7c336c",
+      "purposes": [],
+      "stage": "diagnostic-gui-build-report",
+      "startedTaipei": "2026-10-21T12:12:43.911373+08:00",
+      "startedUTC": "2026-10-21T04:12:43.911373+00:00"
+    },
+    {
+      "HumanPhaseIdentified": true,
+      "HumanPromptCount": 0,
+      "HumanReceiptSHA256": "4a2f6314fbb8810d5c2298bc0c8a8ec1b4045900797dae55b36b9fb917e376c9",
+      "HumanWholeObserved": true,
+      "actions": [],
+      "endedTaipei": "2026-10-21T12:17:08.080796+08:00",
+      "endedUTC": "2026-10-21T04:17:08.080796+00:00",
+      "machineReceiptSHA256": "ed15fe4e119ce07de7f415eba3f9d75d4920f3428d7dc3a2f0d7708f71d231bb",
+      "purposes": [],
+      "stage": "controlled-zero-item-cleanup",
+      "startedTaipei": "2026-10-21T12:17:07.962676+08:00",
+      "startedUTC": "2026-10-21T04:17:07.962676+00:00"
+    }
+  ],
+  "synthetic": false,
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "verdict": "approved",
+  "verdictScope": "本輪受限受控停止、公開證據一致性及零項目檔案清理；不批准 S06 主假設或 adapter 採用。"
+}

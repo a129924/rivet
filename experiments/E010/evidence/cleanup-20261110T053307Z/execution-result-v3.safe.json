@@ -1,0 +1,44 @@
+{
+  "actionSHA256": "3c79f83f0b166b25e09df4d25303c231c2fec5b8dbdacf7af93680d5de14915b",
+  "actualPostcondition": {
+    "independentRootAbsenceQueryPerformed": false,
+    "noRootReadAfterActionReturn": true,
+    "rootRmdirSyscallSucceeded": false
+  },
+  "approvalACKSHA256": "b0203d5218a1f51163c209fe1c22623cd4b48f714f1e0bcf0d460c5c02707bb7",
+  "callerDidNotPreloadPrivateBytes": true,
+  "endedUTC": "2026-11-10T06:03:35.276842+00:00",
+  "executeInvocationCount": 1,
+  "hardDeadlineUTC": "2026-11-10T06:03:07Z",
+  "kind": "E010-CL05-v3-execution-result",
+  "namespace": "3581e693-8019-4068-a40f-311488fab764",
+  "noRetryOrAdditionalDiagnosis": true,
+  "noSourceHarnessAssetDPKOrGitMutation": true,
+  "precheckEvidenceBasis": "finite phase transitions observed from unchanged approved execute; false means not proven passed",
+  "prechecks": {
+    "approvedPermanentSHATupleVerified": true,
+    "freshHandlesAndPostHandlesBindingPassed": false,
+    "initialCompleteEntrySetPassed": false,
+    "postHandlesCompleteEntrySetPassed": false,
+    "privateSnapshotSHAsAndRootParentBindingPassed": false
+  },
+  "privateManifestSHA256": "1f10be83f06a14c035f702fc8c1e2dee098ecdf70ed153b6a138e429a5041425",
+  "privatePlanSHA256": "930da573986b737cd6fbc2864cca1bcacf34bc8229da911b6913b8c107a3da4f",
+  "rawExported": false,
+  "recoveryRequired": true,
+  "residualNodeCountFromApprovedManifestNotFreshScan": 3459,
+  "result": {
+    "cleanupComplete": false,
+    "completedCount": 0,
+    "completedNodeSHA256": [],
+    "exceptionType": "RuntimeError",
+    "failedNodeSHA256": null,
+    "failedPhase": "caller-before-private-load",
+    "noAutomaticRetry": true,
+    "rawExceptionExported": false,
+    "rootRemoved": false
+  },
+  "safeInventorySHA256": "6780c74c78b5794d4fd28a41025337127d768f1d180d3d15d4261a4214081538",
+  "safePlanSHA256": "41703f68a1eee6f7cedcb012d837796bfcdec09ef42389c1313e69067a3ff1bb",
+  "startedUTC": "2026-11-10T06:03:35.265949+00:00"
+}

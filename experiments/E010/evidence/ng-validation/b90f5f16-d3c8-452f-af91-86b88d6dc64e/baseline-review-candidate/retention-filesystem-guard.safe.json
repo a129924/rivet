@@ -1,0 +1,14 @@
+{
+  "canonicalCloseReceiptSHA256": "87193c71ce789224e0905066270550c8264d2bd4c3df4fb8cff6152b836f8583",
+  "classification": "clear",
+  "closedAfterLatestArm": true,
+  "endedUTC": "2026-11-10T07:44:03.414650+00:00",
+  "kind": "E010-NG07-retention-filesystem-guard-check",
+  "minimumRawPruningCompleted": false,
+  "noDeletionAttempted": true,
+  "ownedHandlesClear": true,
+  "plannedItemRetention": true,
+  "rawRetainedPrivately": true,
+  "startedUTC": "2026-11-10T07:44:02.844351+00:00",
+  "wholeRootFinalizationNotInvoked": true
+}

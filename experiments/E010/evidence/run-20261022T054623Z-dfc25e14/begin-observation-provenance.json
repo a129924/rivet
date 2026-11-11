@@ -1,0 +1,10 @@
+{
+  "HumanExactReply": "全程觀察，0次提示",
+  "HumanExactReplyUTC": null,
+  "HumanReceiptSHA256": "e8f2fc72bba2095cce3a8648b6c189ec0795e284435fd0506964a62894a1b76c",
+  "machineReceiptSHA256": "3832376d6d9f5401485c5da020bde27ffa4dc67282fbd1cb08334a84f00632d2",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "recordedUTC": "2026-10-22T05:48:20.100382+00:00",
+  "source": "request_user_input_async call_b39aed140f414f1490dddaf4d7996191 item0",
+  "timestampMeaning": "recordedUTC is the actual operator sidecar creation time after trusted Human report; not an inferred Human click time."
+}

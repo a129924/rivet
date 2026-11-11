@@ -1,0 +1,88 @@
+{
+  "actualRetainedCacheAndRawCounts": null,
+  "authorVerdict": null,
+  "blockers": [
+    "no completed fresh exact-subtree inventory and approved immutable identity fingerprint",
+    "no completed fresh namespace/root-parent ownership/device/inode/nofollow binding in this author phase",
+    "07:44 handles clear is historical, no action-time fresh handles proof",
+    "no per-file raw-to-ACKed-safe-projection completeness proof",
+    "no independently reviewed retention-only deletion action; C1 whole-root deletion action is incompatible with baseline retention",
+    "insufficient pre-stop time for safe inventory, precise new proposal and independent review without rushing guards"
+  ],
+  "candidateSubtreeExistenceOrCountsVerified": false,
+  "candidateUnknownSubtreesRetainedNotProvenMinimum": [
+    "raw",
+    "DerivedData",
+    "intermediates",
+    "build-output"
+  ],
+  "deleteAllowlist": [],
+  "doesNotAuthorizeWholeRawLongTermRetention": true,
+  "independentReviewVerdict": null,
+  "kind": "E010-NG-W1-retention-prune-preparation-blocked",
+  "measurementStopUTC": "2026-11-10T07:47:03Z",
+  "minimizationComplete": false,
+  "mustRetain": [
+    "configured",
+    "frozen-source",
+    "hosts/p0.app",
+    "gui/p0/Products",
+    "reference",
+    "proofs",
+    "global.json",
+    "grants",
+    "windows",
+    "gates",
+    "receipts",
+    "process",
+    "write-attempts",
+    "allOtherControlsAndSingleFakeA"
+  ],
+  "namespace": "b90f5f16-d3c8-452f-af91-86b88d6dc64e",
+  "nextBoundary": "independent safe-only review and explicit residual/minimization handoff; no new target operation beyond original W1 deadline",
+  "noAppSigningGUIAssetsKeychainDPKServiceOrProcessOperation": true,
+  "noC1WholeRootActionReuse": true,
+  "noClaimAllRemainingRootIsMinimum": true,
+  "noNewTargetDiagnosisAfterMeasurementStop": true,
+  "normalAAndMinimumHostRetentionPreserved": true,
+  "normalBaselineRetentionDeadlineUTC": "2026-11-20T07:22:03.379959Z",
+  "permanentIndexReferencesFromApprovedHandoff": {
+    "baselineIndexSHA256": "83d02f29bd40270a016fff833fd067627afb1b3cec7006c8920e73187f233c7b",
+    "closeIndexSHA256": "021b35028d680c2b941c3a08fb855e3f7ef884ed379662a49d574187397dae4d",
+    "notProofOfPerRawFileProjectionCoverage": true,
+    "readabilityAndSafetyACKsReportedByUpstream": true,
+    "seedIndexSHA256": "06e2aa90847e32b4cf1014641e31b7194dfc1760df44ccc8709fa88a22d50036"
+  },
+  "rawPrivateProjectOrIdentifiersRead": false,
+  "recordedUTC": "2026-11-10T07:48:06.246353+00:00",
+  "recoveryRequired": true,
+  "recoveryScope": "cache/raw minimization uncompleted; normal fakeA/P0 minimum retention remains authorized, no DPK data failure inferred",
+  "runnableDeleteActionPrepared": false,
+  "runnerSHA256": null,
+  "sourceMapping": {
+    "actualAuthoritativeProductRelative": "gui/p0/Products/DPKContinuityProbe.app",
+    "armField": "productRelative",
+    "configuredOBJROOT": "intermediates",
+    "configuredPerProjectDD": "DerivedData",
+    "configuredSYMROOT": "build-output",
+    "frozenHostRelative": "hosts/p0.app",
+    "literalGuiDashProductsPathNotUsedBySource": true,
+    "potentialCachesOnly": [
+      "DerivedData",
+      "intermediates",
+      "build-output"
+    ],
+    "rawProducerRelative": "raw",
+    "sourceRelativePath": "experiments/E010/scripts/gui_build.py",
+    "sourceSHA256": "682e3944fb19a61bf2161aa535ac72837c4643daf9b7d8c875823464aca468d3"
+  },
+  "sourceTestsHarnessDocsOrGitModified": false,
+  "targetHardDeadlineUTC": "2026-11-10T07:52:03.379959Z",
+  "targetReadWriteOrDeletePerformed": false,
+  "upstreamMainlineFactsNotReexecuted": {
+    "P0ProfileExpiryUTC": "2026-11-17T07:28:08Z",
+    "freshSixFieldsEqual": true,
+    "seedSixFieldsEqual": true,
+    "wholeHumanPromptCountEach": 0
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "beginReadySHA256": "024cf68cdd8a164c049bebfb6e040ce83050b76769d9d8b8005eaeb861aaaecb",
+  "fixtureSHA256": "d2abc98357621282df1f1fae71b4854f3b40dca72a9f87d5c775e3c453c54fdf",
+  "globalDeadlineUTC": "2026-11-01T05:46:23.523860+00:00",
+  "grantSHA256": {
+    "assets": "c3004b5b1b647f3f8c99ecdfa647a77b42c52699b84da9e143e44708e3d9214d",
+    "recovery": "89690974cdfedb1e8a8078d22607572e3fb2a1e5101ee78598ccbdd0fdec9624",
+    "retention": "e5725fbfa19124f6d7606b4f2d7e2ef3e40acfce199ea388bcdbddc21791854b"
+  },
+  "hostBindingSHA256": "248de80c32f8c63862d7f86c4d9573a86dd50405b4b4da8c65f7603bb661f8b4",
+  "maxWindows": 3,
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "privateReceiptSHA256": "c65b9020e09417f7853fc22d99a285a07b393a64991564fbb4bbfcd78aa1b211",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "07195be7a7f6b3dd5135b3f177bd669e7f254b38bec6a41919f2ac3d5859f957",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/WindowChainProbe.swift": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+    "Tests/test_bootstrap.py": "a915cfa2c1a9f503b857447c66ae48a7981de66c52f2f9ac024104923f319ebd",
+    "Tests/test_continuity.py": "bf1a8650d5f9a1aacd5707d0b782c8b72ff6b2f1bfa6870d5fbf07744fc9d785",
+    "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "scripts/continuity.py": "0132a93a1b3e3866fc437aa7c864f720230884cfdc2e60087817fe7f3453bfbe",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "71b8fd81451a0d0eaaa6a50f29d0092df65b891c3cece391ef8efb49467502d5"
+  },
+  "startUTC": "2026-10-22T05:46:23.523860+00:00",
+  "synthetic": false
+}

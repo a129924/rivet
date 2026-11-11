@@ -1,0 +1,78 @@
+{
+  "MAIN04": "pending-single-focused-Tester",
+  "MAIN05": "pending-unique-fix-Reviewer",
+  "W1": "not-started",
+  "authorVerdict": null,
+  "changedSourceFiles": [
+    "experiments/E010/scripts/prepare.py",
+    "experiments/E010/Tests/test_main_review_fixes.py"
+  ],
+  "cleanup": {
+    "compiledOrUnsignedOutputsCreated": false,
+    "fixtureTemporaryDirectoriesCleanedByUnittest": true,
+    "livePrivateRootCreated": false,
+    "notGlobalCleanup": true,
+    "retainedExternal": "safe baseline SHA map and red/green logs only; no raw signing/profile/live materials"
+  },
+  "fix": "Exit 0 at/after original cutoff is classified late and admitted only as failed control; no selection/product hashes/host proof, no deadline extension.",
+  "hypothesis": "未執行",
+  "kind": "E010-MAIN-RF03-LATE-author-fix",
+  "notExecuted": [
+    "actualProcessOrBuild",
+    "App",
+    "assets",
+    "query",
+    "Security",
+    "DPK",
+    "newLiveClockGrantsRoot",
+    "SwiftUnsignedBuild",
+    "gitStageCommitPushPR"
+  ],
+  "previousFixPreparationSHA256": "6287a74277ae431b4052295dbd897ad15da4873ccf6d8dbd6072aa76ae5680c9",
+  "protection": {
+    "allPriorSourceManifestsReceiptsAndTesterEvidenceUnchanged": true,
+    "baselineFiles": 227,
+    "baselineSHA256": "fe2010a350e085a9a2fe8c62dc198428af64a4c60a41ded8e3ef0a8673d2e647",
+    "devClean": true,
+    "devHead": "758aca9bb518f2a21f20f47609335fac49043370",
+    "featureHead": "b930d80072909f52171a23598b923af82c7c91cc",
+    "historical171Snapshots22GUI13MapAQ2Unchanged": true,
+    "indexEmpty": true,
+    "unchangedExceptTwoAuthorizedSourceFiles": 225
+  },
+  "recordedUTC": "2026-11-04T10:01:28.528730+00:00",
+  "sourceManifestFileSHA256": "e989bbebc05e98820f996a3e35e900bb8823df40fe86aa4379685cdff72d5e1f",
+  "sourceManifestSHA256": "24467204e7728e8d281f3de0db951051c8428d694629329443b6594fc8966a5a",
+  "upstreamReviewer": {
+    "required_fixes": [
+      "MAIN-RF03-LATE"
+    ],
+    "resolved": [
+      "MAIN-RF01",
+      "MAIN-RF02",
+      "MAIN-RF04",
+      "MAIN-RF03 ordinary nonzero exit"
+    ],
+    "source": "explicit independent MAIN05 focused-review handoff",
+    "verdict": "needs-rework"
+  },
+  "validation": {
+    "command": "PYTHONPATH=experiments/E010/Tests python3 -B -m unittest test_main_review_fixes.MainReviewFixTests.test_RF03_LATE_exit_zero_at_cutoff_is_control_only_and_recovery_can_finish -v",
+    "coverage": [
+      "exit zero at exact original cutoff",
+      "classification late",
+      "no selection and no product hashes",
+      "safe failed-control export with hostProofAvailable false",
+      "successful mocked recovery within original cleanup budget",
+      "unchanged original window bytes",
+      "same candidate SHA dual ACK then exact fixture cleanup"
+    ],
+    "durationSeconds": 0.175,
+    "failures": 0,
+    "focusedMethods": 1,
+    "greenLogSHA256": "985333c8ce1b9a22b98fe8fe8c20c2c902bb6d97ddb77744bc93d7d58602e652",
+    "otherTestsOrSwiftUnsignedRebuild": false,
+    "redLogSHA256": "11e7176074c06688580fb6ff87aa0cb98d001bd385e6a14e19acd3086d177a8f",
+    "unitFixtureOnly": true
+  }
+}

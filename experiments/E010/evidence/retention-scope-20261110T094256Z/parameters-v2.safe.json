@@ -1,0 +1,33 @@
+{
+  "M0": "2026-11-10T09:42:56Z",
+  "Tio": null,
+  "captureMode": "0600-O_EXCL-no-fallback-no-delete-on-failure",
+  "captureName": "retention-exception-scope-20261110.metadata.private.json",
+  "executeNow": false,
+  "existingContentSHARecomputeAllowed": false,
+  "existingRegularBodyReadAllowed": false,
+  "handlesAllowed": false,
+  "historicalCandidateSHA256": "d60492272c1ff03c352213768f7c024ca40dfdcb70b015a508662d721544c920",
+  "historicalSHAOnly": true,
+  "kind": "E010-RT03-v2-unexecuted-metadata-command-parameters",
+  "metadataMaximumSeconds": 300,
+  "newCaptureOnlyOwnReadbackAllowed": true,
+  "parentHomeRelative": "Library/Application Support/RivetExperiments",
+  "primaryAttribution": "exact-historical-opaqueID-and-metadata-identity-only; mismatch unknown-stop-before-recursion",
+  "primaryRootName": "rivet-E010-b90f5f16-d3c8-452f-af91-86b88d6dc64e",
+  "retentionDeadlineUTC": "2026-11-20T07:22:03.379959Z",
+  "reviewRequiredBeforeExecution": true,
+  "scope": "two-exact-roots-metadata-only-current-entry-attribution-not-cache-necessity",
+  "sidecarAttribution": "only-six-previously-sealed-fixed-regular-file-roles; name-and-OSmetadata-role-binding-not-current-body-SHA-verification",
+  "sidecarRootName": "E010-retention-prune-rp-20261110T081057Z",
+  "sidecarSourceRoles": [
+    "bindings.private.json",
+    "candidate.safe.json",
+    "inventory.private.json",
+    "map.private.json",
+    "plan.private.json",
+    "window.private.json"
+  ],
+  "sourceRolePrimaryRoots": [],
+  "totalHardStopUTC": "2026-11-10T09:57:56Z"
+}

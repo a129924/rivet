@@ -1,0 +1,17 @@
+{
+  "HumanExactReplyUTC": null,
+  "actions": [],
+  "machineReceiptSHA256": "af7c5482cc685b1cd023ad9313dc7ec5c62fd8505e3c5873f876dd66664c43d5",
+  "namespace": "dfc25e14-425c-4761-8d77-6556e852d5e5",
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "rawHumanStatement": "全程觀察，0次提示",
+  "recordedUTC": "2026-10-22T06:10:12.023672+00:00",
+  "reportedObservationRangeTaipei": "2026-10-22 14:06:45–14:08:25",
+  "source": "request_user_input_async call_2c1bf9ee149c469bbf7986d819bbe3fd item0",
+  "stage": "same-build-Report-and-selected-App-setup-only",
+  "synthetic": false,
+  "timestampMeaning": "Operator record creation, not exact Human click time.",
+  "wholeStageObserved": true
+}

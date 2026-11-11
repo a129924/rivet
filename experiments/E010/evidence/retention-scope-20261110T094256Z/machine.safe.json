@@ -1,0 +1,51 @@
+{
+  "DNotExtended": true,
+  "MainW2PendingOriginalNaturalExpiry": true,
+  "actualPrunerOrOldCallerInvoked": false,
+  "commandAttempts": 1,
+  "commandResult": {
+    "DPKReadAttempted": false,
+    "Tio": "2026-11-10T09:55:49.988154+00:00",
+    "allEntriesClaimedMinimumNecessary": false,
+    "attributionNotUIDAlone": true,
+    "captureCreated": true,
+    "captureReadbackVerified": true,
+    "countsBeforeCapture": {
+      "primary": {
+        "directories": 1250,
+        "entries": 4595,
+        "links": 0,
+        "regular": 3345
+      },
+      "sidecar": {
+        "directories": 0,
+        "entries": 6,
+        "links": 0,
+        "regular": 6
+      }
+    },
+    "endedUTC": "2026-11-10T09:55:50.252745+00:00",
+    "existingContentHashesRecomputed": 0,
+    "historicalContentHashesVerifiedCurrent": false,
+    "metadataHardStopUTC": "2026-11-10T09:57:56+00:00",
+    "minimumComplete": false,
+    "ownedRootAndParentBindingStable": true,
+    "regularBodyReads": 0,
+    "scopeMetadataSHA256": "9d9e01df7e28599cfd2d52884bb622b6c96c070fb971c20a73b0f9fdfeea4541",
+    "sidecarCaptureAdditionalEntries": 1,
+    "status": "metadata-scope-recorded",
+    "totalRetainedEntries": 4602
+  },
+  "commandSHA256": "a86eba1d6034e0d41eab03748c77ffcde51a63afb826019f34a012b0e9da258c",
+  "currentAReadbackAttempted": false,
+  "exitCode": 0,
+  "kind": "E010-RT04-single-reviewed-metadata-command",
+  "localWhitelistAdmissionPassed": true,
+  "newCaptureOnlyReadbackPerCommand": true,
+  "originalDataDeleted": 0,
+  "parameterSHA256": "2d1652498ffdfd06ce78b8125a3d5a628177bc02c048d1d6d55fdae8cdb9873e",
+  "privateRootContentRead": false,
+  "recordedUTC": "2026-11-10T09:55:50.262230+00:00",
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutSHA256": "fee2dc9e69c6cb9845bf666e90b5e6537e48b3894e76eaec84ad971961bc3675"
+}

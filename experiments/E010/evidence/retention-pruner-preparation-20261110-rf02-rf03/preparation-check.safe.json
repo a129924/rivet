@@ -1,0 +1,55 @@
+{
+  "C0Started": false,
+  "authorFixCompleted": true,
+  "authorVerdict": null,
+  "boundaries": {
+    "AppBuildRun": 0,
+    "CUAEntrypoints": 0,
+    "GitOperations": 0,
+    "SigningOrKeychainDPK": 0,
+    "actualTargetIO": 0,
+    "homePrivateSidecarIO": 0,
+    "nativeChildCalls": 0
+  },
+  "fixes": {
+    "RP-RF02": "known FILE_REFS/PATH_FIELDS wrong dict/bool/int types coverage-refused; null unresolved blocks cache except explicitly absent optional stream",
+    "RP-RF03": "complete root/parent-entryset/identity/retain fingerprint rescan after blocking handles and before first mutation; callback drift attempted/completed zero"
+  },
+  "green": {
+    "command": "python3 -B -m unittest -v test_retention_pruner.PrunerTests.test_known_reference_types_refuse_or_unresolved_never_skip_dependency test_retention_pruner.PrunerTests.test_handles_callback_drift_rechecked_before_first_mutation test_retention_pruner.PrunerTests.test_malformed_reference_hash_is_finite_refusal_never_public test_retention_pruner.CallerTests",
+    "errors": 0,
+    "exitCode": 0,
+    "failures": 0,
+    "methods": 5,
+    "reportedUnittestDurationSeconds": 0.042,
+    "skipped": 0
+  },
+  "kind": "E010-RP-RF02-RF03-v3-author-focused-check",
+  "nextBoundary": "independent RP04 focused retest then RP05; no C0 before actual approval",
+  "offlineHardStopUTC": "2026-11-10T09:10:57Z",
+  "oldApprovalReused": false,
+  "original456ProtectedFilesMatch": true,
+  "originalSource22Unchanged": true,
+  "recordedUTC": "2026-11-10T08:45:10.550362+00:00",
+  "red": {
+    "actualTargetIO": 0,
+    "v2DictBoolIntRecognizedReferenceSkipped": true,
+    "v2EachCaseCacheAllowlistCount": 2,
+    "v2EachCaseDependencyCount": 0,
+    "v2FakeCacheStillExists": false,
+    "v2HandlesCallbackDriftCompletedFakeNodes": 2
+  },
+  "sourceAggregateSHA256": "35574a2966c4f6589655d619e85d42e08d88f705a4f6c87885ce63f899c84c7f",
+  "sourceManifestSHA256": "0ec7ee14f09843bbc432d0b4e2b325374a5da9556e46b8ac932ea1e4b71fb9a0",
+  "syntheticFixtureCleanup": {
+    "TemporaryDirectoryTearDownCompleted": true,
+    "globalTmpOrHandlesClaimed": false
+  },
+  "totalHardStopUTC": "2026-11-10T09:55:57Z",
+  "upstreamRequiredFixes": [
+    "RP-RF02",
+    "RP-RF03"
+  ],
+  "upstreamVerdict": "needs-rework",
+  "v1v2AllFrozenFilesAndTesterReceiptsPreserved": true
+}

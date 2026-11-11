@@ -1,0 +1,24 @@
+{
+  "HumanReplyReceivedUTC": null,
+  "actions": [],
+  "canonicalMachineUnknownNotOverwritten": true,
+  "exactHumanReplyUTC": null,
+  "kind": "E010-NG07-stage-human-observation",
+  "machineSHA256": "89a486a340aca647b113ebdbc502e8b75fb6f5b8ffc99bc30f024ebc08f8afcd",
+  "namespaceSHA256": "b41c940f8963f6668434f85ea2c1eb5e15782b2a75e6409d5b25927fecd8aa49",
+  "observedSpanTaipei": {
+    "date": "2026-11-10",
+    "end": "15:41:38",
+    "precision": "whole-second-observation-question-bounds",
+    "start": "15:41:37"
+  },
+  "phaseIdentified": true,
+  "promptCount": 0,
+  "purposes": [],
+  "rawHumanAnswer": "全程觀察，0次提示",
+  "recordedUTC": "2026-11-10T07:42:48.875769+00:00",
+  "source": "trusted-parent-relay-of-direct-Human-answer",
+  "sourceRequest": "requesta904ec17648a420d91349fd812b01f49",
+  "stage": "fresh",
+  "wholeStageObserved": true
+}

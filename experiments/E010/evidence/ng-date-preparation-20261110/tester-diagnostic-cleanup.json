@@ -1,0 +1,58 @@
+{
+  "ACKCandidateRelativePath": "experiments/E010/evidence/ng-date-preparation-20261110/tester-preparation-check.json",
+  "ACKCandidateSHA256": "03be37ff6e6026b256f5ef21546b575d17b1c3b38e31c7c9a626d8002b06184b",
+  "ACKSource": "explicit independent NG05 Reviewer handoff",
+  "authorAuditOldSourceAndOtherDirectoriesUntouched": true,
+  "cleanupEndedUTC": "2026-11-10T07:16:08.486196+00:00",
+  "cleanupStartedUTC": "2026-11-10T07:16:08.148144+00:00",
+  "creationTimeInodeNotPreviouslyRecorded": true,
+  "deletedFileCount": 12,
+  "deletedFileSHA256": {
+    "before.json": "be74b448b0d387bb499d2d6cadb8874ede61fbf1525827b65069a8df2c61318f",
+    "compile-1.argv.private.json": "b8a38aee65daf0830cb34f8f734f68d000efca846460ae61f27c0cc7bca9c0b0",
+    "compile-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-1.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-2.argv.private.json": "a647c51d6907dac2d8f6dab7eb57d27231061f9f9431ec5a6a8eec3d72143d25",
+    "compile-2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-2.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-3.argv.private.json": "170d9dfce84638c3d4dd6d07d42045bf021e7fb17d89a47b30e9d26ca34a3c89",
+    "compile-3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-3.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "focused-result.json": "0d599fe047b358d5f7e358136790866d02ec3475a06a22d7f7e17a7383e5a92f",
+    "focused.log": "9176f7de1882c5b2119360aedb9b1e419eb0a505881a048207f8076ef0de0acb"
+  },
+  "deletedKinds": [
+    "three compiler stdout/stderr pairs",
+    "three private compiler argv records",
+    "one raw unittest log",
+    "one before-byte map",
+    "one safe focused result"
+  ],
+  "exactFileManifestAllSHAReverifiedBeforeDelete": true,
+  "expiryDeletionExceptionInvoked": false,
+  "freshOwnedHandlesCheck": {
+    "command": [
+      "lsof",
+      "-nP",
+      "+D",
+      "<owned-NG04-audit>"
+    ],
+    "exit": 1,
+    "stderrEmpty": true,
+    "stdoutEmpty": true
+  },
+  "freshRootOwner0700AndFilesOwner0600RegularNoSymlinkVerified": true,
+  "kind": "E010-NG04-owned-diagnostic-cleanup",
+  "noGlobalHandlesOrCacheCleanupClaim": true,
+  "noTestCompileSourceDocsGitLiveCUAOrAssetOperation": true,
+  "normalSameSHAACKCleanup": true,
+  "originalDiagnosticsNoLongerAvailableForReparse": true,
+  "ownedAuditDirectoryBasename": "rivet-E010-NG04-i2bmwufo",
+  "ownedResidualCount": 0,
+  "ownedRootFreshLstatAbsent": true,
+  "permanentManifestAuthorReceiptTesterReceiptUnchanged": true,
+  "readabilityACK": true,
+  "recordedUTC": "2026-11-10T07:16:08.486196+00:00",
+  "rootDeviceInodeOwnerStableAcrossCleanupChecks": true,
+  "safetyACK": true
+}

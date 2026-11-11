@@ -1,0 +1,121 @@
+{
+  "baseline": "16606b89b8e3e6b61523c23aa0be9653c1ea7b44",
+  "boundaries": {
+    "SecurityCalls": 0,
+    "appLaunched": false,
+    "clockArmed": false,
+    "commitPushPRPerformed": false,
+    "crossWeekDummyRetained": false,
+    "liveExecuted": false,
+    "persistentLiveRootCreated": false,
+    "personalAssetsInspected": false,
+    "signedBuildPerformed": false
+  },
+  "branch": "chore/github-oauth-dpk-profile-continuity-feasibility",
+  "environment": {
+    "Python": "3.14.0",
+    "Swift": "6.3.3",
+    "Xcode": "26.6",
+    "XcodeBuild": "17F113",
+    "architecture": "arm64",
+    "macOS": "26.5.2",
+    "macOSBuild": "25F84"
+  },
+  "kind": "E008-preparation-check",
+  "liveHypothesisStatus": "未執行",
+  "liveValidationTaskComplete": false,
+  "preparedUTC": "2026-10-20T06:51:35.038502+00:00",
+  "protectedHistory": {
+    "E006FileCount": 126,
+    "E006SourceCount": 18,
+    "allE006SHAUnchanged": true,
+    "baselineFreezeSHA256": "2405be21f26f567b33f6c546b539f058d4bc58dc6d0f7b56b580befd6b62f1e3",
+    "devClean": true,
+    "devHEADUnchanged": true,
+    "oct16IndexSHA256": "6abec4907a3823230e2ae4de2335c115baea44858fed7a2acbfe2c72633ce40d",
+    "oct19IndexSHA256": "8e054090b7ac05c0a31e4a5775319a48337dfb2bbbbe1737c33d2bfe3e1d1141",
+    "trackedFilesOutsideTopicChanged": false
+  },
+  "python": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s experiments/E008/Tests -p 'test_*.py' -v",
+    "exitCode": 0,
+    "outputSHA256": "3fe9031a509eb12f55126a9c523f4d3de44e120aa098d64ce9a04f23341993b9",
+    "skipped": 0,
+    "testMethods": 29
+  },
+  "remainingEvidence": [
+    "independent preparation Tester and Reviewer",
+    "fresh Human assets/retention/recovery grants and each stage ready",
+    "selected-material real CLI/CMS integration",
+    "actual natural P0 expiry and genuinely new valid P1 with same certificate/group",
+    "original A live six-field restoration and Human prompts",
+    "actual same-P1 rebuilt read, exact Keychain and private cleanup"
+  ],
+  "scope": "author preparation only; independent Tester and Reviewer pending",
+  "serialization": {
+    "actualCachedEOFFixer": "pre-commit-hooks v6.0.0",
+    "canonicalFixtureUnchangedByFormatter": true,
+    "encoding": "UTF-8",
+    "exclusiveFirstWrite": true,
+    "hashAfterCanonicalWrite": true,
+    "legacyEOFExceptionUsed": false,
+    "sortKeys": true,
+    "terminalLF": true
+  },
+  "sourceManifestSHA256": "1a501f6f0c2735e9bdf4f505357229f6c68ffb1696319fdbfad281c22db71a79",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "4555cb1dd7fd39fcfe87e8ad2bb81dc0a955452e1a56abd62e6a1b33895bddbe",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "833702284f0ebd2f57b45c022358db91a35734d52e9d570317cfd0b74fe68578",
+    "Sources/DPKContinuityProbe/AppMain.swift": "6156edf5434bc224ff23549f850f48cf528aebb79c8339a30bf8ca5b6e209ac0",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "af03c4cb788ab2392da9e79505dc5a4e4c5194c61124f11f102614691370baa7",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "b2487c91a834a0317b0ce506cd784441e79797ca38fc56d40378aaa459a12900",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/test_continuity.py": "0f2a83550aaaeb6a95089296835d8428d521dac40a671792199ccd0a4530006e",
+    "scripts/continuity.py": "ffcfa177b4a8b2365ba8f8cf21ffbe5e5994d131bf1af242f214451d6f1680ee",
+    "scripts/prepare.py": "9f6a5627e79badf0ca128f6b42b1673b7c579a89571e076eaa7d4ac192071ba6",
+    "scripts/proof.py": "2502865056c6f2238b5f52a2654f6a7efdbeea32287e05a8fd197c6adee783b9"
+  },
+  "swiftCore": {
+    "compileCommand": "swiftc experiments/E008/Sources/DPKContinuityProbe/ProbeCore.swift experiments/E008/Tests/CoreTests.swift -o <scratch>/core-tests",
+    "compileExitCode": 0,
+    "importsSecurity": false,
+    "result": "six fields, no rewrite, duplicate add, exact cleanup, invalid/technical errors, redaction, canonical LF",
+    "runCommand": "<scratch>/core-tests",
+    "runExitCode": 0,
+    "scenarios": 7
+  },
+  "synthetic": true,
+  "tddObservations": {
+    "canonicalMissingLF": "observed failing assertion, then fixed",
+    "sixFieldComparison": "observed comparison failure, then implemented",
+    "testFixtureTypos": "compile try typo and unexpected public_out argument corrected; not behavior red evidence"
+  },
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "unsignedBuild": {
+    "buildInputsStillMatch": true,
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 experiments/E008/scripts/prepare.py --out <fresh-scratch>/unsigned-builds --unsigned-build",
+    "configurations": {
+      "Debug": {
+        "debugDylibAbsent": true,
+        "exitCode": 0,
+        "mainSHA256": "1b4da1bbe7e17906484890c1d1166b48970769b502fa633e6abe339edf63c947",
+        "performed": true,
+        "signingAllowed": false,
+        "signingRequired": false
+      },
+      "Rebuilt": {
+        "debugDylibAbsent": true,
+        "exitCode": 0,
+        "mainSHA256": "c24e444224916fabeb476e20e7bba379b548e153c39e362e1dd2a2c39657ee77",
+        "performed": true,
+        "signingAllowed": false,
+        "signingRequired": false
+      }
+    },
+    "liveRebuildEvidence": false,
+    "receiptSHA256": "fd3987d630cab90e2cc6a15e68bddeb99099121628dcd2421be9a76ab8945ef8"
+  }
+}
