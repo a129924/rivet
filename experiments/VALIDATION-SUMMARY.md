@@ -15,7 +15,8 @@
 | [E007](E007/README.md) | 兩輪 renewal 前提未成立，renewal read 均未執行，結果無法判定；Human 已接受該未知限制。 | 不同 profile 的讀回成功；新版 export-clean 的受控檢查不代替原真人輪或新增真人驗收。 |
 | [E008](E008/README.md) | 2026-10-22 單次安全 JSON 與兩名獨立先封存 enum；依固定判準無法判定。 | 普遍 PKCE enforcement、OAuth 漏洞、完整 wire 或正式安全決策變更。 |
 | [E009](E009/README.md) | M03：Human 確認獨立未登入 session、未授權帳號、同輪登入／同意／300 秒內有效帳號；來源契約支持。 | agent 直接見證歷史 UI／network、2FA、完整零配置 UX、產品 readiness 或 PKCE。後續 build 不回填真人來源。 |
-| [E010](E010/README.md) | PR #67 原 DPK E008 的準備／兩輪 controlled-stop 紀錄改號保全；M03/M04 遷移驗審通過，主假設未執行。 | 自然到期／P1 原 A 恢復、DPK／UX、GUI T01–03；原零 item filesystem cleanup 不當 Keychain 刪除驗證。 |
+| [E010](E010/README.md) | 新 W1 seed／fresh 六欄相符、Human 各全程0提示；原遷移／controlled-stop 歷史保留。 | W2 真自然到期／P1、W3 Rebuilt／完整週期、minimum 完成或新的正式 adapter 採用；RP delete=0，RT 僅 metadata。 |
+| [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
 
 ## E001–E007：已知結果與不能推論之處
 
@@ -127,13 +128,13 @@ Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peel
 - profile 更新後讀回（Human 已接受限制）及已過期 profile 的恢復。
 - certificate rotation、跨使用者／跨機器及公開分發。
 
-本摘要只涵上述已合併 PR #62／#61／#63／#65 的各自來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引已由 PR #64 合併至 dev；其先前 Draft／pending 記錄保留為原時點快照，後續實際收尾另見文末。
+本摘要涵上述已合併 PR #62／#61／#63／#65 及下節 PR #60 的各自固定來源，另節分列尚未合併 PR #67 的 E010 受限進度；不混入已合併來源範圍，也不吸收其他 worktree 的成果。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引已由 PR #64 合併至 dev；其先前 Draft／pending 記錄保留為原時點快照，後續實際收尾另見文末。
 
 ## 決策邊界
 
 各實驗的成功只適用其來源版本、前提與觀察層級；測試／build 通過、文件審查通過、驗證任務完成或 PR 合併均不能代替主要假設的證據。E002 反向／舊 missing 未知、E005 候選 UX 失敗、E007 renewal 未驗證與 E008 無法判定分別保留；既有 X wrong 的單次支持性證據不代替 missing。
 
-正式登入 UI 依自身工作線推進。後續正式 adapter、安全決策、憑證 lifecycle 或產品採用仍依各自既有流程，不由本總覽自動核准。
+正式登入 UI 依自身工作線推進。正式 adapter 的後續擴展、安全決策、憑證 lifecycle 或產品採用仍依各自既有流程，不由本總覽自動核准。
 
 ## PR #64：文件驗審完成與實際清理（2026-11-03）
 
@@ -145,10 +146,31 @@ E006 原 partial Human receipt 只記切換 Rebuilt configuration；Debug／Rebu
 
 本次已核對 annotated tag `v0.1.59-github-connection-validation-summary` 的本機／遠端 object 與 peeled commit 一致，精確指向 `71d395cc…`；不是後續文件維護 commit 或 GitHub Release。原 topic local／remote branch 與本輪 managed feature worktree 已正常移除；無 force／prune，其他 feature worktree 與所有 App／Keychain／Apple 資產未操作。PR #64 原文件交付與 Git 清理完成不代替實驗主要假設的證據，舊 D／R64 pending／交付前狀態只按當時版本閱讀。
 
-## E010：profile 自然週期尚未執行（PR #67 登記）
 
-此節只登記尚未合併 PR #67 的獨立 DPK profile-continuity topic，不改上游已合併來源範圍或 E001–E009 結果。[E010 README](E010/README.md)保留原 10/21／10/22 Human Build success 與有界 host／matching Report 缺口並存；未取得 selected App／actual proof／完整 global，沒有 App/SecItem/seed 或跨週 item。原 grants/run 均 closed，私有 root 已精確清理；10/22 僅 cleanup 越 cutoff 3.954765 秒但在 deadline 前，舊收據不改。
+## PR #60：正式 OAuth 憑證儲存的三層證據（2026-11-10）
 
-遷移保存 22 原檔快照與 171 同 bytes 移動資料，原 193 檔逐筆 accounting；[typed map](E010/history/renumbering-map.json)的 1952 file refs 與 3 non-file aggregate digests 分開，五個歷史 source 版本無法取得，不能稱所有舊 source 可重建。M03 Tester／M04 Reviewer approved 只核受限遷移與離線準備，不是 profile cycle/DPK/UX 成功。
+[PR #60](https://github.com/a129924/rivet/pull/60) 已於 `2026-11-10T03:30:48Z` 合併並關閉；固定 merge 為 `c8c989a2e4be99e73c9cdc17e82cc16ada7a489c`，最後 feature head 為 `89bd01a27375137fb76ae1933efe6d4b7a36d23d`。兩親／相同 tree 只證明交付版本已保存，不等於新真人 build。本文以該 merge 的[長期儲存契約](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/docs/architecture/github-oauth-credential-persistence.md)、[LG81-Cap-R 獨立審查](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/plan/github-oauth-credential-persistence/evidence/live-preparation-review.md)、[逐段 machine／Human 結果](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/plan/github-oauth-credential-persistence/evidence/live-validation.md)、[非真人測試](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/plan/github-oauth-credential-persistence/evidence/tests.md)與[成果 review](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/plan/github-oauth-credential-persistence/evidence/review.md)為索引；不重跑仍適用的成功驗收。
 
-本地已正常首筆 commit `819b26d20272cfcc9e664c4dccba867bcd34c92d`，受控整合 `758aca9bb518f2a21f20f47609335fac49043370` 與兩 registry 登記仍待 M07 獨立核對及 M08/M09；尚未第二 commit 或 push，不宣稱 GitHub 衝突已解除。S06 human-check、自然週期／完整 S07/S08 pending；未核准 Keychain adapter 正式採用或 merge 至 dev。
+| 證據層級 | 已支持的結果與限制 |
+|---|---|
+| Fake Security／受控 provider | 正式 adapter 的完整 codec、query／有限錯誤、clientID 保護、整筆替換與 accepted rotation 後本地保存失敗停止契約；受控 fetcher／clock 不是真遠端 rotation。 |
+| 真 DPK／完整假憑證 | 2026-11-05 透過正式 public adapter 完成 A 保存→Writer 結束→fresh Reader A→整筆替換 B→fresh Reader B→同身分真正 clean/build→新程序讀 B。完整六欄、attempt／程序／binary／operation／ACK／final 歸屬及原同身分條件有證據，LG81-Cap-R approved、無必修。五個 runtime Human 全程觀看、0提示；其他 build／sign 觀察依原文，不擴首 sign 的 permission-only 回報。 |
+| 真遠端 OAuth／refresh／API | 本 topic 未驗證；不拿 E003 或 PR #62 的遠端結果回填，也不將假 token 的完整保存當作真 OAuth 連線成功。 |
+
+Live 適用原驗收時指定 Mac／GUI 使用者、原 certificate／Team／AppID／group、有效且相同 profile 與位置；不因此證明本日 profile 狀態、profile 更新／過期恢復、certificate rotation、多程序協調、公開發行或所有環境。Configuration item live、系統拒絕、crash／斷電 durability 與新 merge binary 真人驗收亦未由此證明。原失敗／unknown、receipt／quota 保留；LC06 DPK item 清理、圖 Human visual／S08 接受及整體產品完成不因 PR 合併而自動通過。
+
+E004 仍是真 SQLite 搭配假 refresh／clock，不證秘密保存；E005 legacy Keychain 最新 Human 0／0／1 維持 UX 失敗；E007 的兩輪 renewal read 未執行仍為 unknown。這些原 rows／來源不改，PR60 另列正式 adapter 的指定環境結果，不新增實驗編號。
+
+Annotated tag `v0.1.60-github-oauth-credential-persistence` 已正常建立／推送並讀回 object／peeled merge 一致，精確指向 `c8c989a2e4be99e73c9cdc17e82cc16ada7a489c`，不是 GitHub Release 或後續文件 commit。兩個原 untracked Xcode 個人 metadata 已在 Git 私有0700 archive 保留原 bytes／mode／owner 與私有來源對照，讀回核符後只移出兩 source leaves；archive 不進 Git、不 push，DPK item／Apple assets 未清理。這只是文件準備時的 Git 收尾事實，branch／managed worktree 刪除仍以文件先安全存入 remote dev 及當段 fresh gates 為前提；未執行項不預填成功。
+
+## E010：W1 baseline 受限完成，完整自然週期仍 pending（PR #67）
+
+此節分列尚未合併 PR #67 的獨立 DPK profile-continuity 進度，不把 Ready for review 當作 merged。[E010 README](E010/README.md)保留原 10/21／10/22 Human Build success 與有界 host／matching Report 缺口並存：當時未取得 selected App／actual proof／完整 global，沒有 App/SecItem/seed 或跨週 item。原 grants/run 均 closed，該兩輪零 item 私有 root 已精確清理；10/22 僅 cleanup 越 cutoff 3.954765 秒但在 deadline 前，舊收據不改，不當 Keychain delete/read-absent。
+
+遷移保存22原檔快照與171同 bytes 移動資料，原193檔逐筆 accounting；[typed map](E010/history/renumbering-map.json)的1952 file refs 與3 non-file aggregate digests 分開，五個歷史 source 版本無法取得，不能稱所有舊 source 可重建。M03 Tester／M04 Reviewer approved 只核受限遷移與離線準備。
+
+其後 2026-11-10 的新 W1 已有同 binary 的一次 seed／一次 fresh，六欄相符，Human 各全程觀察0提示；獨立審查僅接受本輪 baseline 機制與限定 UX。此結果不推論完整自然 profile 週期、一般零提示 UX 或新 certificate 數量。來源見[最新22-source manifest](E010/evidence/ng-date-preparation-20261110/source-manifest.json)、[W1 baseline index](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)及[close addendum](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/close-addendum.index.json)；machine／Human 分層，原 canonical prompt unknown 與記錄時點 pending flags 保留。
+
+W2 真自然到期／P1 讀回原 A、W3 Rebuilt、完整 S07/S08 與主假設仍 pending。P0 expiry 為台灣 **2026-11-17 15:28:08**，原 D 為 **2026-11-20 15:22:03.379959**；原 A／namespace／三窗與期限不重設或延長。RP cleanup blocked／delete=0；[RT metadata index](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)及[machine receipt](E010/evidence/retention-scope-20261110T094256Z/machine.safe.json)只記一次 metadata 操作的4602 retained entries，minimumComplete=false，不稱 minimum 或 RP 清理成功。
+
+三筆 `01265ad`／`c0e6414`／`d30f5c4` 共312檔已正常 commit／push，各六個正常 hooks 通過；這不是新的真人結果或 GitHub CI 通過證據。2026-11-11 查核時，PR #67 為 Ready for review、尚未 merged。E010 的受限結果不核准新的正式 adapter 採用，不吸收 PR #60 的正式 adapter 證據，也不改 E001–E009 歷史。

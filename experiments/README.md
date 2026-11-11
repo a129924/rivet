@@ -1,6 +1,6 @@
 # 實驗索引
 
-更新日期：2026-11-03。此索引依已合併的實驗 README 與有限證據整理；各輪前提、歷史結果與授權仍以原紀錄為準。實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+更新日期：2026-11-11。此索引依已合併的實驗 README 與有限證據整理，另分列尚未合併 PR #67 的 E010 進度；各輪前提、歷史結果與授權仍以原紀錄為準。實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
 
 ## 既有實驗
 
@@ -15,8 +15,9 @@
 | [E007](E007/README.md) | 同身分 profile 更新後 DPK 讀回 | 兩輪無法判定；renewal read 均未執行。Human 接受此未知限制，不升格為驗證成功。 |
 | [E008](E008/README.md) | missing-verifier 拒絕的 PKCE 歸因 | 無法判定：HTTP400 拒絕、無 token；provider 要求 enum 一致，當次因果判讀分歧，1/1 用盡。 |
 | [E009](E009/README.md) | 手動獨立 browser 的首次登入／同意／帳號結果 | M03 在 Human 回報與來源契約層級受限成功；M04 建置與 mock 檢查不構成另一次真人成功。 |
-| [E010](E010/README.md) | DPK profile 自然到期後原假憑證恢復 | 由 PR #67 原 DPK E008 遷號；兩輪因 host／product provenance 不足受控停止，主假設與 GUI T01–03 未執行，S06 human-check。 |
+| [E010](E010/README.md) | DPK profile 自然到期後原假憑證恢復 | W1 seed／fresh 六欄相符、Human 各全程0提示，僅受限 baseline 成功；W2 真到期／P1、W3 Rebuilt 與完整週期待驗，RP cleanup blocked。 |
 | [GitHubConnectionVerification](../apps/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
+| [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
 
 結果的證據層級、主要缺口與決策限制另見 [驗證總覽](VALIDATION-SUMMARY.md)。本索引不授權執行任何 README 中的重現命令、新 OAuth、重試或秘密清理。
 
@@ -50,10 +51,23 @@ R64 的來源範圍契約與 E006 措辭兩項回修已交付；獨立 Tester 22
 
 Annotated tag `v0.1.59-github-connection-validation-summary` 已推送並核對 peeled commit 為上述 merge，未指向後續維護 commit，亦非產品 release。原 `docs/github-connection-validation-summary` local／remote branch 與本輪 feature worktree 已正常移除，無 force／prune；其他 feature worktree、App、Keychain／Apple 資產未動。完整分層與限制見[驗證總覽](VALIDATION-SUMMARY.md)。
 
-## E010：DPK profile 延續性登記（PR #67 尚未合併）
 
-本節是本 topic 在 feature 中的 E010 登記，不把尚未合併的 [PR #67](https://github.com/a129924/rivet/pull/67) 當作已合併結果。首筆遷移 commit `819b26d20272cfcc9e664c4dccba867bcd34c92d` 已保存新活動身分、22 原檔快照、158 evidence／13 frozen GUI 與 typed map；原 DPK E008 只作歷史，現行 E008 PKCE 子樹保持原樣。
+## PR #60：正式 OAuth 憑證儲存（2026-11-10）
 
-[E010 活動入口](E010/README.md)與[引用對照](E010/history/renumbering-map.json)分開歷史 receipt 與活動 source。兩輪 closed run 零 item 的私有檔案清理已記錄，不是 DPK delete/read-absent；自然 profile 到期／P1 原 A 恢復、DPK UX 與 GUI T01–03 均未執行，S06 human-check、完整 S07/S08 pending。五個歷史 source 版本缺失保持 unknown。
+[PR #60](https://github.com/a129924/rivet/pull/60) 已合併關閉，GitHub `mergedAt=2026-11-10T03:30:48Z`，merge commit 為 `c8c989a2e4be99e73c9cdc17e82cc16ada7a489c`，最後 feature head 為 `89bd01a27375137fb76ae1933efe6d4b7a36d23d`。兩親 merge 的 tree 與最後 feature 相同；固定引用[正式儲存契約](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/docs/architecture/github-oauth-credential-persistence.md)、[LG81-Cap-R 獨立審查](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/plan/github-oauth-credential-persistence/evidence/live-preparation-review.md)及[逐段 live／Human 紀錄](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/plan/github-oauth-credential-persistence/evidence/live-validation.md)。合併點是保存版本，不冒充真人 build 或新量測。這是正式 adapter topic，不新增 E 編號，也不吸收 E007／完整登入工作。
 
-本地 dev→feature 受控整合／兩 registry 新增 E010 尚待 M07 獨立核對、M08 第二筆訊息確認／commit、M09 push／PR readback；目前不宣稱遠端衝突解除、正式採用或新真人結果。E001–E009、E005 UX 失敗、E006 受限成功及各輪 unknown／逾時歷史保持。
+`GitHubOAuthDataProtectionStores` 是 caller-owned 正式 DPK adapter。Fake Security／受控 provider 只驗 codec、錯誤分類、完整替換與 rotation 保存失敗停止；真 DPK 的完整假六欄驗收則於 2026-11-05 完成：A 保存→Writer 結束→fresh Reader A→整筆替換 B→fresh Reader B→同身分真正 clean/build→新程序還原 B，五個 runtime Human 均全程觀察0提示，經獨立審查通過。[非真人整合測試](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/plan/github-oauth-credential-persistence/evidence/tests.md)與[成果審查](https://github.com/a129924/rivet/blob/c8c989a2e4be99e73c9cdc17e82cc16ada7a489c/plan/github-oauth-credential-persistence/evidence/review.md)另列，不能當真遠端 refresh／OAuth／API。建置／簽章提示依各段原文，不將首 sign 的 permission-only 觀察擴成所有提示0次。
+
+本輪真 DPK 只驗 credential item、完整假 bundle 及原指定同機／簽章／有效 profile 條件；不推論 configuration item live、profile 更新／過期恢復、certificate rotation、系統拒絕、斷電 durability、所有環境或產品採用。LC06 的 DPK item 清理、圖 Human visual 與 S08 接受未因此完成。E004 的 SQLite／合成控制界線、E005 的 legacy 0／0／1 UX 失敗、E007 renewal unknown 及所有舊成功／失敗／unknown／額度原樣保留。
+
+已核 annotated tag `v0.1.60-github-oauth-credential-persistence` 的 local／remote object 與 peeled merge `c8c989a2e4be99e73c9cdc17e82cc16ada7a489c` 一致；標籤不指後續文件維護 commit，亦非 GitHub Release。兩個原 Xcode 個人 metadata 已於 Git 私有 archive 原樣保存並讀回 bytes／SHA／權限後移出原位置，未 track／push，未清 DPK 或 Apple assets。此段記錄文件準備時已完成的部分；原 feature branch／worktree 移除仍須待文件安全存入遠端及 fresh gates，本文不預填尚未發生的刪除。
+
+## E010：W1 baseline 受限完成，完整自然週期待驗（PR #67 尚未合併）
+
+本節分列尚未合併的 [PR #67](https://github.com/a129924/rivet/pull/67)，不混入上游已合併結果。首筆遷移 commit `819b26d20272cfcc9e664c4dccba867bcd34c92d` 保存 E010 活動身分、22 原檔快照、158 evidence／13 frozen GUI 與 typed map；原 DPK E008 只作歷史，現行 E008 PKCE 子樹保持原樣。[活動入口](E010/README.md)與[引用對照](E010/history/renumbering-map.json)分開歷史 receipt 與活動 source；五個歷史 source 版本缺失仍為 unknown。
+
+原 10/21／10/22 兩輪 closed run 因 host／product provenance 不足停止，當時沒有 App/SecItem/seed 或跨週 item；零 item 私有檔案清理不是 DPK delete/read-absent。其後 2026-11-10 的新 W1 已完成一次 seed 與一次 fresh，六欄相符，Human 各全程觀察0提示，僅支持本輪 baseline 機制與限定 UX。來源見[最新22-source manifest](E010/evidence/ng-date-preparation-20261110/source-manifest.json)、[W1 baseline](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)及[close addendum](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/close-addendum.index.json)；原 canonical prompt unknown 與記錄時點 pending flags 不覆寫。
+
+W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pending。P0 expiry 為台灣 **2026-11-17 15:28:08**，原 D 為 **2026-11-20 15:22:03.379959**，不延長、不重設 A／namespace。RP cleanup 仍 blocked／delete=0；[RT index](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)記錄4602 retained metadata entries，不是 minimum 完成，也不解除 RP blocker。
+
+三筆 `01265ad`／`c0e6414`／`d30f5c4` 共312檔已正常發布。2026-11-11 查核時，PR #67 為 Ready for review、尚未 merged。E001–E009、E005 UX 失敗、E006 受限成功及各輪 unknown／逾時歷史保持；E010 不藉此核准新的正式 adapter 採用、產品登入或公開分發。

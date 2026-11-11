@@ -1,18 +1,16 @@
-import Foundation
+public enum GitHubOAuthAppConfigurationError: Error, Sendable {
+  case invalidConfiguration
+}
 
-public struct GitHubOAuthAppConfiguration: Sendable, CustomReflectable {
-  internal let clientID: String
-  internal let clientSecret: String
+public struct GitHubOAuthAppConfiguration: Sendable {
+  public let clientID: String
+  public let clientSecret: String
 
-  public init(clientID: String, clientSecret: String) throws {
-    guard !clientID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-      !clientSecret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    else { throw GitHubOAuthAuthorizationError.clientConfiguration }
+  public init(clientID: String, clientSecret: String) throws(GitHubOAuthAppConfigurationError) {
+    guard !clientID.isEmpty, !clientSecret.isEmpty else { throw .invalidConfiguration }
     self.clientID = clientID
     self.clientSecret = clientSecret
   }
-
-  public var customMirror: Mirror { Mirror(self, children: [:]) }
 }
 
 extension GitHubOAuthAppConfiguration: CustomStringConvertible {
@@ -21,4 +19,13 @@ extension GitHubOAuthAppConfiguration: CustomStringConvertible {
 
 extension GitHubOAuthAppConfiguration: CustomDebugStringConvertible {
   public var debugDescription: String { description }
+}
+
+extension GitHubOAuthAppConfiguration: CustomReflectable {
+  public var customMirror: Mirror { Mirror(self, children: [] as [Mirror.Child]) }
+}
+
+public protocol GitHubOAuthAppConfigurationStore: Sendable {
+  func load() async throws(any Error & Sendable) -> GitHubOAuthAppConfiguration?
+  func save(_ configuration: GitHubOAuthAppConfiguration) async throws(any Error & Sendable)
 }

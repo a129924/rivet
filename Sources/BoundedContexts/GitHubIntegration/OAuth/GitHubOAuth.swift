@@ -4,7 +4,8 @@ public enum GitHubOAuth {
   public static func makeTokenFetcher(
     configuration: GitHubOAuthAppConfiguration
   ) throws -> any OAuthTokenFetcher {
-    try GitHubOAuthHTTPTokenFetcher(
+    try validateConfiguration(configuration)
+    return try GitHubOAuthHTTPTokenFetcher(
       configuration: .init(
         clientID: configuration.clientID, clientSecret: configuration.clientSecret))
   }
@@ -12,6 +13,7 @@ public enum GitHubOAuth {
   public static func makeAuthorizationSession(
     configuration: GitHubOAuthAppConfiguration, redirectURI: URL
   ) throws -> GitHubOAuthAuthorizationSession {
+    try validateConfiguration(configuration)
     let exchanger = try GitHubOAuthCodeExchanger()
     return try GitHubOAuthAuthorizationSession(
       configuration: configuration, redirectURI: redirectURI,
@@ -20,6 +22,14 @@ public enum GitHubOAuth {
         try await exchanger.exchange(
           configuration: configuration, code: code, redirectURI: redirectURI, verifier: verifier)
       })
+  }
+
+  private static func validateConfiguration(
+    _ configuration: GitHubOAuthAppConfiguration
+  ) throws(GitHubOAuthAuthorizationError) {
+    guard !configuration.clientID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+      !configuration.clientSecret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    else { throw .clientConfiguration }
   }
 
   private static func randomValue() -> String {
