@@ -2,11 +2,11 @@
 
 2026-10-22；branch `feat/rivet-login-ui`；base `14d0832f042720889993d769b4cbfb720078e6b1`。所有寫入僅在已授權 feature worktree。IM-01初始尚未commit／push／PR；目前code commit與發布停點以下節為準。本文保留Implementer歷史及獨立Tester／Reviewer交接，不混同各角色verdict。
 
-## RV-06 approved／待topic交付與Human兩入口（目前狀態）
+## source公開交付／PL-04 completed，待Human兩入口（目前狀態）
 
 Dispatcher正式交接獨立RV-03 `approved`、required source fix `None`。TE-05已完成partial verification：新版自動檢查、三真入口可觀察互動、13／17／21 pt五畫面及捲動可達性；主對話Tester操作CUA，本Tester獨立實看18份外置raw JPEG，精確來源與padding限制見TE-05。這些不是VoiceOver真朗讀、Human新版大字或rapid departure通過，HC-02三缺口不closed，HC-01／HC-03仍pending；原binary七類Human通過保留其來源。
 
-IM-06已完成source commit `9f8955c40696cee6d77739da6d22d659287cfbc0`（`fix(presentation): 修正登入宣告與大字驗收`），精確13檔、全部hooks passed；正常public push與ls-remote同SHA。IM-09的View現為waiting語義修補working diff，其餘六個Swift檔保持已發布bytes，新debug／release實測SHA見IM-09；四canonical PNG／18份新raw JPEG來源與限制不變。PL-03已獨立完成，Draft PR #66維持target dev；HC-03 PAT兩次未通過；Human另明確回「有，其他項目會朗讀」，不是全系統無聲。PR-04／RV-04限定approved後HC-04唯一診斷case已完成，Human回「讀出驗證中」；34筆實際trace顯示同case post路徑完成、無early return。預算1／1已用，診斷logging不當功能修法；PR-05正式approved後IM-08已外置封存並移除自身探針，正常版經TE-07獨立preflight partial完成，RV-05已正式approved／required None，僅放行HC-05一次Human前景Return；本次Human在明確正常版步驟後回「讀出驗證中」，CUA確認verifyingToken，HC-05 completed-observed有聲、1／1已用。HC-01／HC-03與三缺口不closed，詳文末HC-05。
+IM-06已完成source commit `9f8955c40696cee6d77739da6d22d659287cfbc0`（`fix(presentation): 修正登入宣告與大字驗收`），精確13檔、全部hooks passed；正常public push與ls-remote同SHA。IM-10已將waiting修補公開交付為source `dcc48b29686ab324fc19399ef607f462a507cce5`，新debug／release實測SHA見IM-09；四canonical PNG／18份新raw JPEG來源與限制不變。PL-03已獨立完成，Draft PR #66維持target dev；HC-03 PAT兩次未通過；Human另明確回「有，其他項目會朗讀」，不是全系統無聲。PR-04／RV-04限定approved後HC-04唯一診斷case已完成，Human回「讀出驗證中」；34筆實際trace顯示同case post路徑完成、無early return。預算1／1已用，診斷logging不當功能修法；PR-05正式approved後IM-08已外置封存並移除自身探針，正常版經TE-07獨立preflight partial完成，RV-05已正式approved／required None，僅放行HC-05一次Human前景Return；本次Human在明確正常版步驟後回「讀出驗證中」，CUA確認verifyingToken，HC-05 completed-observed有聲、1／1已用。HC-01／HC-03與三缺口不closed，詳文末HC-05。
 
 ## IM-05 自驗完成／待獨立補驗（歷史）
 
@@ -590,3 +590,14 @@ View SHA `cf1f007065af1449c5ca945dafd00fe81fbba1187479e0d501f72d651e51f1a8`、de
 Dispatcher正式交接獨立RV-06 `approved`／required fix None，核View兩行反還原精確為89cb原bytes、其餘六Swift相等，並批准TE-08 source／自動與bounded native證據。TE-08 completed／partial，兩waiting入口Human聲音／雙讀、大字Human／rapid及HC-01／HC-03仍pending。
 
 IM-10依既有topic及公開payload授權進行七檔staged語意／message檢查、完整hooks與正常public push，提交／推送結果待執行後另記。凍結View cf1f／debug50a／release25a來源沿IM-09／TE-08，舊Human紀錄與PL-03 source9f範圍留存。
+
+
+## IM-10／PL-04交付與Human停點（2026-11-11）
+
+Source `dcc48b29686ab324fc19399ef607f462a507cce5` 已以 `fix(presentation): 補上等待授權的旁白狀態` 提交，精確七檔、完整六項hooks全Passed，正常public push成功且ls-remote同SHA，feature clean。View cf1f／debug50a／release25a凍結值親核相同，dev758aca9 clean。RV-06 approved／required fix None、TE-08 completed／partial及全部舊Human來源留存。
+
+- 獨立PL-04 completed，真base `613a505025774b3841ab73b4ed3b8774be38274a` → source `dcc48b29686ab324fc19399ef607f462a507cce5`，merge-base `14d0832f042720889993d769b4cbfb720078e6b1`。Pinned0.11.0 validate／render皆exit0，1view／12nodes／15edges／6steps、38 exact-head file refs與全部XML labels核對完成，raster實看仍未執行。
+- Graph SHA `20622cde03fe11597c9f4c785f499172ff7879be9372c8f554549c5558361fcb`，graph contentHash `d78e69b1e9b0532a83e835650f56e27d`，rendered manifest SHA `363d9537336da5e3af14b0d9e482773cffc688b4f45c996e28bc2576989ec79d`。外置 `$TOPIC_SCRATCH/pr-lens/dcc48b2/` 保存graph.json、SOURCE.md、file-ref／render receipts及rendered/manifest.json，SVG `rendered/login-change-light-7c3c3d92c3b869db1e108249ba6b2eab.svg` 為1728×700。Map來源範圍止於dcc48b2，後續metadata另列版本。
+- Graphify0.9.73在refresh opt-out下核availability，缺圖後採bounded source fallback。七態Archify沿用凍結圖面。
+
+最新版Welcome→waiting的Human親聽問題已提出，尚無回覆。兩入口／雙讀、Human大字／rapid與HC-01／HC-03仍pending，HC-05正常PAT有聲1／1、舊兩次無聲、probe及模糊同句各留源。交付文件與Draft PR說明由本次metadata收尾同步，Human review尚未全面通過。

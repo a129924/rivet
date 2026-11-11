@@ -11,10 +11,10 @@
 
 ## Current Phase
 
-- Phase：RV-06 approved／required fix None，TE-08 completed／partial。進IM-10 topic交付，Human兩入口及HC-01／HC-03仍pending。
-- Current Step：IM-10 pending，依既有公開授權核七檔staged語意／message、完整hooks後topic commit及正常push。HC-05 observed有聲1／1與全部來源留存。
+- Phase：Human review。IM-10 source已公開交付、PL-04 completed，RV-06 approved／TE-08 completed／partial，Human兩入口及HC-01／HC-03仍pending。
+- Current Step：HC-03 pending，最新版Welcome→waiting親聽問題已提出且尚無回覆。待兩入口／雙讀、Human大字／rapid逐項回報，HC-05 observed有聲1／1及全部來源留存。
 - Upstream verdict：RV-06正式approved／required fix None由Dispatcher交接，准topic交付。PR-06正式approved／required fix None。Human Welcome→waiting needs-rework留源，待新版補驗。前輪Reviewer結果處置approved／required None准既有HC-03，不代本次通過。RV-05 approved／required None，僅放行正常版HC-05一次；PR-03 approved；TE-05 partial completed；Dispatcher正式交接獨立RV-03 approved／required source fix None，准受限source交付。最新HC-03 PAT兩次未通過，Human needs-rework與HC-01／HC-03 pending仍有效，舊code approval不等於朗讀通過或採用。
-- 已發布source head：`9f8955c40696cee6d77739da6d22d659287cfbc0`；13檔、全部hooks passed、正常push／ls-remote一致。IM-09現有View working diff，其餘六Swift同HEAD，新binary SHA見verification IM-09。PL-03限此source，不包含後續metadata。
+- 已發布source head：`dcc48b29686ab324fc19399ef607f462a507cce5`，七檔、完整hooks passed、正常push／ls-remote一致，source／binary凍結值見verification IM-09／TE-08。PL-04限此source，後續metadata另列版本。
 - HC-02保留七類Human通過：鍵盤、Welcome VoiceOver、PAT VoiceOver／Show-Hide、帳號／完成／重跑失敗宣告、失敗取消、高對比、Reduce Motion。三缺口為PAT verifying自動宣告、等待兩入口自動宣告、大字測法未確認；spinner旋轉只列觀察。HC-02受測binary SHA與TE-04相同；該Human交接當輪未重跑舊自動檢查。新版IM-05自驗結果見下方及verification，rootstrict仍非零。
 
 ## Artifact Register
@@ -74,7 +74,8 @@
 | IM-09 | completed | Implementer | PR-06 approved後僅View的waiting label／post修補、既有長期文件與證據，同LU-08檢查。 | View +1／-1、既有長期說明同步，focused15／root289／debugrelease／format／scoped136files0／diffcheck自驗通過。來源及新binary SHA見verification IM-09，交TE-08。 |
 | TE-08 | completed | Tester | 獨立自動檢查及正常新版native role／label／focus／Cancel／Escape來源，準備逐項Human兩入口。 | partial：親跑focused15／root289／debugrelease／format／scoped136files0／diffcheck0；source cf1f／wrapper50a核對。主CUA真Welcome／Retry入口的link／完整label／focus、Cancel／Escape與空PAT／Back通過；AX不代Human聲音／雙讀，大字Human／rapid仍pending，詳verification TE-08。 |
 | RV-06 | completed | Reviewer | 獨立審waiting bounded修補與TE-08證據／限制，再依既有授權交付。 | Dispatcher正式交接approved／required fix None。兩行反還原原89cb、其餘六Swift相等，TE-08 checks／native／來源核准，准既有topic交付。 |
-| IM-10 | pending | Implementer | RV-06 approved後七檔staged語意／message檢查、完整hooks topic commit及正常public push，核真SHA。 | 待執行。Human兩waiting入口／大字／rapid及HC-01／HC-03 pending。 |
+| IM-10 | completed | Implementer | RV-06 approved後七檔staged語意／message檢查、完整hooks topic commit及正常public push，核真SHA。 | 真source dcc48b29686ab324fc19399ef607f462a507cce5，六項hooks全Passed，正常public push／ls-remote一致，feature及dev clean，cf1f／50a／25a凍結來源相同。 |
+| PL-04 | completed | Reviewer | 以真PR base與source dcc完成外置map、pinned validate／render與來源核對。 | 獨立Reviewer完成base613a505→source dcc48b2、merge-base14d0832，pinned0.11.0 validate／render0，12nodes／15edges／6steps／38refs及全部XML labels核對，raster實看未執行。完整hash見verification，map範圍止於dcc。 |
 | HC-03 | pending | Human | 逐項聽新版PAT submit／Welcome→waiting／Retry→waiting，實看13／17／21 pt與必要focus回歸。 | Welcome→waiting只讀Cancel、狀態failed留源。PC-06 Cancel focus label已實作，TE-08 partial完成，待兩入口Human補驗。兩真waiting入口／Human大字／必要focus及rapid未補驗；HC-05正常PAT有聲1／1及舊failed留源，不當穩定修復。 |
 | HC-01 | pending | Human | Draft PR 與完整證據交 Human review，決定採用／調整／放棄。 | 最新Human明示七類通過但三缺口未補驗，尚未全面通過；執行／公開授權不等於成果採用。 |
 | HC-PUB | completed | Human | 回覆自動approval review要求的具體公開發布確認。 | Human本輪明確同意將`feat/rivet-login-ui`程式／測試／原始素材／文件圖面公開推送至`a129924/rivet`，並以`dev`建立Draft PR；這不是UI成果採用。 |
@@ -93,7 +94,7 @@ HC-00 是方案接受及直接執行授權。Staged diff 邊界與 message 檢�
 
 ## Last Updated
 
-2026-11-11（Asia/Taipei）。RV-06正式approved／required fix None，TE-08 completed／partial，IM-10 topic commit／public push待執行。兩waiting入口Human聲音／雙讀、大字Human／rapid及HC-01／HC-03 pending，全部舊來源留存。
+2026-11-11（Asia/Taipei）。IM-10 source dcc48b2完整hooks／正常public push完成，PL-04真source map completed，RV-06 approved／TE-08 partial。最新版Welcome親聽問題已提出、尚無回覆，兩入口／雙讀、Human大字／rapid及HC-01／HC-03 pending，全部舊來源留存。
 
 ## PC-02：必要測試契約修正與已知驗證限制
 
