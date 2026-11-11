@@ -1,8 +1,8 @@
 # 實驗索引
 
-更新日期：2026-11-11。此索引依已合併的實驗 README 與有限證據整理，另分列尚未合併 PR #67 的 E010 進度；各輪前提、歷史結果與授權仍以原紀錄為準。實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+更新日期：2026-11-11。此索引依已合併的實驗與交付文件及其有限證據整理，另分列尚未合併 PR #67 的 E010 進度；各輪前提、歷史結果與授權仍以原紀錄為準。實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
 
-## 既有實驗
+## 既有實驗與已合併交付
 
 | 編號 | 驗證問題 | 目前可支持的結果 |
 | --- | --- | --- |
@@ -18,10 +18,11 @@
 | [E010](E010/README.md) | DPK profile 自然到期後原假憑證恢復 | W1 seed／fresh 六欄相符、Human 各全程0提示，僅受限 baseline 成功；W2 真到期／P1、W3 Rebuilt 與完整週期待驗，RP cleanup blocked。 |
 | [GitHubConnectionVerification](../apps/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
+| [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 原生 Presentation 元件、假資料 Demo 與 Human 驗收 | 2026-11-11 指定聲音、大字與焦點案例通過，Human明確採用。正式 backend／OAuth 串接屬後續能力。 |
 
 結果的證據層級、主要缺口與決策限制另見 [驗證總覽](VALIDATION-SUMMARY.md)。本索引不授權執行任何 README 中的重現命令、新 OAuth、重試或秘密清理。
 
-這份導覽以 [PR #62](https://github.com/a129924/rivet/pull/62) 合併點 `aa16de91` 為 E001–E007 與持續連線 App 的來源快照，另補已合併 [PR #61](https://github.com/a129924/rivet/pull/61) 的固定來源 `14d0832f`，以及已合併 [PR #63](https://github.com/a129924/rivet/pull/63) 的固定來源 `fccaf2b6`；新增索引不代表重新實測或正式產品 UI 已交付。本次整合另保留 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實；不以後輪結果回填先前輪次。
+這份導覽以 [PR #62](https://github.com/a129924/rivet/pull/62) 合併點 `aa16de91` 為 E001–E007 與持續連線 App 的來源快照，另補已合併 [PR #61](https://github.com/a129924/rivet/pull/61) 的固定來源 `14d0832f`，以及已合併 [PR #63](https://github.com/a129924/rivet/pull/63) 的固定來源 `fccaf2b6`；各來源當時的產品 UI 範圍依原版本閱讀。前輪整合另保留 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實；不以後輪結果回填先前輪次。本輪保留 PR #60 正式憑證儲存的合併紀錄，另列 PR #66 原生登入 UI／假資料 Demo 的合併與 Human 採用事實。
 
 ## PR #61：正式初次 OAuth 與獨立登入驗證
 
@@ -61,6 +62,15 @@ Annotated tag `v0.1.59-github-connection-validation-summary` 已推送並核對 
 本輪真 DPK 只驗 credential item、完整假 bundle 及原指定同機／簽章／有效 profile 條件；不推論 configuration item live、profile 更新／過期恢復、certificate rotation、系統拒絕、斷電 durability、所有環境或產品採用。LC06 的 DPK item 清理、圖 Human visual 與 S08 接受未因此完成。E004 的 SQLite／合成控制界線、E005 的 legacy 0／0／1 UX 失敗、E007 renewal unknown 及所有舊成功／失敗／unknown／額度原樣保留。
 
 已核 annotated tag `v0.1.60-github-oauth-credential-persistence` 的 local／remote object 與 peeled merge `c8c989a2e4be99e73c9cdc17e82cc16ada7a489c` 一致；標籤不指後續文件維護 commit，亦非 GitHub Release。兩個原 Xcode 個人 metadata 已於 Git 私有 archive 原樣保存並讀回 bytes／SHA／權限後移出原位置，未 track／push，未清 DPK 或 Apple assets。此段記錄文件準備時已完成的部分；原 feature branch／worktree 移除仍須待文件安全存入遠端及 fresh gates，本文不預填尚未發生的刪除。
+
+
+## PR #66：原生登入 UI／Demo 與 Human 採用（2026-11-11）
+
+[PR #66](https://github.com/a129924/rivet/pull/66) 已合併並關閉，GitHub `mergedAt=2026-11-11T06:55:06Z`，merge commit 為 `2c7679a8399f634dc6429fcd8bfd6018a5a0693f`，最後 feature head 為 `9eda244ff15c3928eedad2731d3680c52473d17f`。本節記錄 non-BC `RivetPresentation` 的原生元件與七態假資料 `RivetLoginDemo` 交付。實際受測程式來源為 `dcc48b29686ab324fc19399ef607f462a507cce5`，backend／OAuth 串接維持後續能力。[元件與 Demo 操作](https://github.com/a129924/rivet/blob/2c7679a8399f634dc6429fcd8bfd6018a5a0693f/docs/presentation/login-ui.md)
+
+2026-11-11 Human 明確回覆「通過，採用目前這版」。本輪包含 PAT 驗證中自動狀態、Welcome／真 Retry 兩個 waiting 入口的清楚狀態與無明顯重複、Cancel／Escape 返回及主按鈕朗讀，還有 Demo 局部 21pt 五畫面、17pt 同 PAT 表單保值／focus 與 13pt rapid 回歸。舊無聲／診斷、後續 AX 時序、15格工具矩陣與原1009d高對比／Reduce Motion等證據保留各自來源。[Human 採用及實際驗收範圍](https://github.com/a129924/rivet/blob/2c7679a8399f634dc6429fcd8bfd6018a5a0693f/plan/rivet-login-ui/evidence/verification.md)
+
+Annotated tag `v0.1.61-rivet-login-ui` 已正常建立、推送並核對 local／remote object 與 peeled commit，精確保存上述 PR merge。原 `feat/rivet-login-ui` remote branch 已在確認仍為9eda244後正常刪除，原 managed worktree 及 local branch 隨後正常移除，目錄、註冊與該分支 tracking ref 皆已核不存在。其餘兩個 worktree 註冊保留。Tag 的保存範圍止於 merge2c7679a，後續 experiments 文件維護使用獨立版本。
 
 ## E010：W1 baseline 受限完成，完整自然週期待驗（PR #67 尚未合併）
 

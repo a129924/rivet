@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Rivet 登入 UI：七態假流程",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      660
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "瀏覽器展示路徑"
+    },
+    {
+      "id": "pat",
+      "label": "PAT 展示路徑"
+    },
+    {
+      "id": "recovery",
+      "label": "失敗與重試"
+    }
+  ],
+  "states": [
+    {
+      "id": "welcome",
+      "type": "start",
+      "label": "歡迎",
+      "sublabel": "welcome",
+      "lane": "main",
+      "col": 0
+    },
+    {
+      "id": "waiting",
+      "type": "waiting",
+      "label": "等待模擬返回",
+      "sublabel": "waitingForBrowser",
+      "lane": "main",
+      "col": 1
+    },
+    {
+      "id": "account",
+      "type": "active",
+      "label": "模擬驗證帳號",
+      "sublabel": "verifyingAccount",
+      "lane": "main",
+      "col": 2
+    },
+    {
+      "id": "connected",
+      "type": "success",
+      "label": "模擬完成",
+      "sublabel": "connected · 停留展示",
+      "lane": "main",
+      "col": 4
+    },
+    {
+      "id": "token",
+      "type": "active",
+      "label": "輸入範例 PAT",
+      "sublabel": "tokenEntry",
+      "lane": "pat",
+      "col": 0
+    },
+    {
+      "id": "checking",
+      "type": "active",
+      "label": "模擬驗證 Token",
+      "sublabel": "verifyingToken",
+      "lane": "pat",
+      "col": 2
+    },
+    {
+      "id": "failed",
+      "type": "failure",
+      "label": "模擬失敗",
+      "sublabel": "failure · 可重試",
+      "lane": "recovery",
+      "col": 1,
+      "yOffset": 160
+    }
+  ],
+  "transitions": [
+    {
+      "id": "choose-pat",
+      "from": "welcome",
+      "to": "token",
+      "label": "選擇 PAT",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [
+        [
+          94,
+          230
+        ],
+        [
+          402,
+          230
+        ]
+      ]
+    },
+    {
+      "id": "submit",
+      "from": "token",
+      "to": "checking",
+      "label": "送出非空白範例",
+      "route": "straight"
+    },
+    {
+      "id": "token-success",
+      "from": "checking",
+      "to": "connected",
+      "label": "模擬成功"
+    },
+    {
+      "id": "account-failure",
+      "from": "account",
+      "to": "failed",
+      "label": "模擬失敗",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "via": [
+        [
+          402,
+          52
+        ],
+        [
+          940,
+          52
+        ],
+        [
+          940,
+          570
+        ],
+        [
+          556,
+          570
+        ]
+      ]
+    },
+    {
+      "id": "token-failure",
+      "from": "checking",
+      "to": "failed",
+      "label": "模擬失敗"
+    },
+    {
+      "id": "browser-retry",
+      "from": "failed",
+      "to": "waiting",
+      "label": "browser：Retry",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [
+        [
+          556,
+          550
+        ],
+        [
+          18,
+          550
+        ],
+        [
+          18,
+          90
+        ],
+        [
+          248,
+          90
+        ]
+      ]
+    },
+    {
+      "id": "token-retry",
+      "from": "failed",
+      "to": "checking",
+      "label": "token：重填後送出",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "via": [
+        [
+          780,
+          467
+        ],
+        [
+          780,
+          390
+        ],
+        [
+          710,
+          390
+        ]
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "只展示 UI",
+      "items": [
+        "不啟動瀏覽器、網路或 Keychain。",
+        "返回與完成由獨立控制窗觸發，不用計時器。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "返回與清除",
+      "items": [
+        "Cancel／Back 回歡迎；Reset 可從任態返回。",
+        "送出、離開表單與 Reset 清除並隱藏輸入。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "固定展示狀態",
+      "items": [
+        "Connected 停留，不開啟 PR。",
+        "控制窗可直接選七態及失敗來源。"
+      ]
+    }
+  ]
+}

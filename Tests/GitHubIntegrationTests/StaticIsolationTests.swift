@@ -13,6 +13,7 @@ struct StaticIsolationTests {
       Set(products.keys) == [
         "GitHubIntegration", "RivetPRInbox", "RivetPRReader", "RivetPRReaderWebViewBridge",
         "RivetPRReaderHarnessRuntime", "RivetPRReaderHarness", "RivetPresentation",
+        "RivetLoginDemo",
       ])
     #expect(
       Set(targets.keys) == [
@@ -20,6 +21,7 @@ struct StaticIsolationTests {
         "RivetPRReader", "RivetPRReaderTests", "RivetPRReaderWebViewBridge", "RivetPresentation",
         "RivetPRReaderWebViewBridgeTests", "RivetPRReaderHarnessRuntime",
         "RivetPRReaderHarnessRuntimeTests", "RivetPRReaderHarness", "RivetPresentationTests",
+        "RivetLoginDemo", "RivetLoginDemoRuntime", "RivetLoginDemoRuntimeTests",
       ])
     let bridgeName = "RivetPRReaderWebViewBridge"
     #expect(targetNames(in: try #require(products[bridgeName])) == [bridgeName])
@@ -116,9 +118,7 @@ struct StaticIsolationTests {
     let source = "import\u{000C}Security"
     let forbiddenImports: Set = ["Security"]
 
-    #expect(
-      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
-    )
+    #expect(try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports))
   }
 
   @Test
