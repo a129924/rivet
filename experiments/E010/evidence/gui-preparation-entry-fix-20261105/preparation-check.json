@@ -1,0 +1,79 @@
+{
+  "GUI04": "pending-single-focused-Tester",
+  "GUI05": "pending-unique-fix-Reviewer",
+  "GUI06": "not-allowed-before-gates-and-Human-sync",
+  "authorVerdict": null,
+  "cleanup": {
+    "childPythonExited": true,
+    "notGlobalCleanup": true,
+    "persistentLiveRootGrantsOrT0Created": false,
+    "retainedExternal": "safe snapshot-location/red/green audit only; no live raw materials",
+    "syntheticLauncherAndFixtureRootCleanedByUnittest": true
+  },
+  "deadlineUTC": "2026-11-05T09:14:10Z",
+  "fix": "Direct __main__ installs itself as canonical continuity module before helper imports, so Bootstrap/Run identity is shared. Imported entry behavior unchanged.",
+  "hypothesis": "未執行",
+  "kind": "E010-GUI-RF03-actual-entry-author-fix",
+  "noDeadlineExtension": true,
+  "notExecuted": [
+    "CUA",
+    "realAssetsSigningKeychainIOKitCMS",
+    "realCaptureCommand",
+    "App",
+    "GUI",
+    "Build",
+    "xcodebuild",
+    "xcrun",
+    "DPK",
+    "Git"
+  ],
+  "preFixSnapshot": {
+    "SHA256": "3c869dcbe96f457d58ec68622d02727a690ec79ce8d25eaef0586b7588e87905",
+    "path": "experiments/E010/history/pre-gui-entry-fix-20261105T084912Z-c7012146"
+  },
+  "protection": {
+    "GUI03GUI04AndRF01RF02ReceiptsUnchanged": true,
+    "devClean": true,
+    "devHead": "758aca9bb518f2a21f20f47609335fac49043370",
+    "featureHead": "b930d80072909f52171a23598b923af82c7c91cc",
+    "indexEmpty": true,
+    "old19And22SnapshotMapsUnchanged": true,
+    "oldPrivatePreparationTenFilesAccessed": false
+  },
+  "recordedUTC": "2026-11-05T08:52:26.866189+00:00",
+  "sourceFileCount": 22,
+  "sourceManifestFileSHA256": "20ace0aa34395e92d3ebb2e539bc91b3910021962fc8a75e292d2eadea15e037",
+  "sourceManifestSHA256": "14b6705399b72fcbc9d740101a1f641b66bf1d606a297178ad40efcf751256f0",
+  "upstreamGUI05": {
+    "required_fixes": [
+      "GUI-RF03"
+    ],
+    "resolved": [
+      "GUI-RF01",
+      "GUI-RF02"
+    ],
+    "source": "explicit independent focused Reviewer handoff",
+    "verdict": "needs-rework"
+  },
+  "validation": {
+    "actualEntry": "real Python child running runpy __main__, not imported cli_entrypoint only",
+    "actualXcodeOrSignedAppProofValidated": false,
+    "adjacentRFRegressionMethods": 2,
+    "command": "PYTHONPATH=experiments/E010/Tests python3 -B -m unittest test_gui_build.GUIBuildTests.test_GUI_RF03_actual_main_entry_reaches_accepted_asset_and_GUI_window test_gui_build.GUIBuildTests.test_GUI_RF01_actual_CLI_unexpected_exception_is_closed_and_saved_privately test_gui_build.GUIBuildTests.test_GUI_RF02_timeout_partial_bytes_and_text_are_preserved_without_public_leak -v",
+    "coverage": [
+      "entry-created Bootstrap goes through proof.accepted_asset and GUI window",
+      "synthetic actual-proof and frozen host written by real setup-only path",
+      "all non-plutil commands rejected; real identity forbidden",
+      "no seed receipt or App/DPK operation",
+      "RF01 safe exception and RF02 partial-byte/text boundaries preserved"
+    ],
+    "durationSeconds": 1.37,
+    "failures": 0,
+    "fixtureNote": "First alias test run traced the new top __main__ guard before class definitions; fixture corrected to the final entry guard. This was not another domain defect.",
+    "greenLogSHA256": "7db8342ca0ecdc30313681534ebb9aaeaa413013c529c667154bb0deaccdf241",
+    "newFocusedMethods": 1,
+    "otherTestsSwiftUnsignedOrAppBuildRerun": false,
+    "redLogSHA256": "5e64d3a25c960afbd9ff15b9b18c0bf62635a2c3311fbacc763ac4fdd2417c9a",
+    "totalMethods": 3
+  }
+}

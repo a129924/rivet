@@ -1,0 +1,251 @@
+{
+  "MAIN03": "author-completed-preparation",
+  "MAIN04": "pending-independent-Tester",
+  "MAIN05": "pending-independent-Reviewer",
+  "authorVerdict": null,
+  "baseCommit": "b930d80072909f52171a23598b923af82c7c91cc",
+  "canonicalCommands": [
+    "python3 -B -m unittest discover -s experiments/E010/Tests -p test_*.py -v",
+    "python3 -B -m unittest discover -s experiments/E010/Tests -p test_main_policy.py -v",
+    "swiftc ProbeCore.swift CoreTests.swift -o <owned-tmp>/core-tests; run pure core-tests",
+    "python3 -B experiments/E010/scripts/prepare.py --out <fresh-owned-tmp>/unsigned --unsigned-build"
+  ],
+  "changedRuntimeFiles": [
+    "experiments/E010/Sources/DPKContinuityProbe/LiveGate.swift",
+    "experiments/E010/scripts/continuity.py",
+    "experiments/E010/scripts/prepare.py",
+    "experiments/E010/scripts/proof.py"
+  ],
+  "cleanup": {
+    "endedUTC": "2026-11-04T09:23:10.927750+00:00",
+    "notWholeMachineCleanup": true,
+    "removed": [
+      {
+        "absentAfterDelete": true,
+        "entryCount": 7691,
+        "kind": "directory",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "unsigned"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 57,
+        "kind": "directory",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "module-cache"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 54,
+        "kind": "directory",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "core-module-cache"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "window-chain-probe"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "core-tests"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "test_main_policy.py"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "continuity-main-fragment.py"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "edit-main-continuity.py"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "prepare-signed-fragment.py"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "main-stage-fragment.py"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "swift-main-fragment.swift"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "test-main-extra.py"
+      },
+      {
+        "absentAfterDelete": true,
+        "entryCount": 1,
+        "kind": "regular-file",
+        "noHandlesObserved": true,
+        "noSymlink": true,
+        "ownerVerified": true,
+        "relativeToAuthorScratch": "test-main-ack.py"
+      }
+    ],
+    "retainedExternalAudit": "safe author logs, baseline SHA map and finalization script only; not live/private profile/raw signing evidence",
+    "startedUTC": "2026-11-04T09:23:07.769842+00:00"
+  },
+  "hypothesis": "未執行",
+  "kind": "E010-MAIN03-author-preparation",
+  "newPureTest": "experiments/E010/Tests/test_main_policy.py",
+  "notExecuted": [
+    "actualSignedBuild",
+    "provisioning",
+    "AppleAccountOrAssets",
+    "CMS",
+    "IOKit",
+    "AppLaunch",
+    "SecurityAPI",
+    "SecItem",
+    "liveRootOrGrantsOrAnchorOrClock",
+    "retention",
+    "naturalExpiry",
+    "P1Restore",
+    "GUI",
+    "formalAdapter",
+    "gitStageCommitPushPR"
+  ],
+  "protection": {
+    "E006Files": 126,
+    "E006MatchesBase": true,
+    "devClean": true,
+    "devHead": "758aca9bb518f2a21f20f47609335fac49043370",
+    "historical171And22And13AndMapAndAQ2Unchanged": true,
+    "priorBaselineSHA256": "801d0a818e124db27ed142bd639f502070d8a98cad88ed180de09435f3c44f4f",
+    "priorE010FilesChecked": 219,
+    "unchangedPriorE010ExceptFourAuthorizedRuntimeFiles": 215
+  },
+  "recordedUTC": "2026-11-04T09:23:11.755993+00:00",
+  "redGreen": {
+    "archiveFault": "readonly historical-window archive incorrectly used current operation deadline; fixed without extending live deadlines",
+    "archiveFaultLogSHA256": "3f09cffe5b382eb88137763169180a0df0d7d886ec6769cfe8a0e67eeb63997b",
+    "finalFocusedPass": true,
+    "initialRed": "approved package cannot begin without historical per-stage begin.ready; no private live root",
+    "initialRedLogSHA256": "10d349a1b4fcd6cfdbb206c4bd6b49b91cf66ec57e76db654540ef4fbd4152cb"
+  },
+  "sourceFileCount": 18,
+  "sourceManifestFileSHA256": "4dadddddbcf7adabaec8d12d0273f506954447f4e84c51a0666d951c31f7a78f",
+  "sourceManifestSHA256": "6c5f0297468e3fe0f9728562b05d28fb936dc20fb9c306a0e3675b5c3e5b3705",
+  "upstreamPlanningReview": {
+    "planningInputSHA256": {
+      "analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md": "f9bd85775116f83b4035c5ef3f3ecd57d5462ab6e43b15b26222ff3e7fa6d12c",
+      "analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md": "9d3acc8cfaccd1310c65d5faa7546b7c6bee7ab34f28f2d688851e77d02e8125",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md": "e2276f5c4d6a7d108d646dc7678a5a64b95c2dd5318952c9167491023a18166f",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md": "753c2d32158a6998344aae43815c81bd2bd5d936cc90a477fdce9753ad6c7b8e"
+    },
+    "required_fixes": [],
+    "source": "explicit independent MAIN02 handoff",
+    "verdict": "approved"
+  },
+  "validation": {
+    "SwiftMemoryCore": {
+      "exitCode": 0,
+      "logSHA256": "09ef652232f9ff9b85c18ed24d23490aa261806054ddc75a74435e6081bb62a7",
+      "scenarios": 7
+    },
+    "finalAffectedPythonSuite": {
+      "durationSeconds": 3.383,
+      "failures": 0,
+      "logSHA256": "219943dc1ddcc7cfc7cf399769ed5d7996d1d5529ae4a9b77070af3a644b078f",
+      "methods": 8,
+      "scope": "final main-package source, including late truthful observation after retention"
+    },
+    "fullPythonSuite": {
+      "durationSeconds": 8.613,
+      "failures": 0,
+      "logSHA256": "85e2b7a84aef81a2c77497f9b49b550e460865c2755031b45cac6aa4aa0b6d23",
+      "methods": 65,
+      "scope": "all E010 pure methods; before final late-observation retention-only adjustment"
+    },
+    "unsignedBuild": {
+      "AppLaunched": false,
+      "buildInputsSHA256": {
+        "DPKContinuityProbe.xcodeproj/project.pbxproj": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+        "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+        "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+        "Resources/Info.plist": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+        "Sources/DPKContinuityProbe/AppMain.swift": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+        "Sources/DPKContinuityProbe/LiveGate.swift": "50122e01c949357e8a169585bbea09b3d3e2ff3812dd56eb0c92a75e7088ab7f",
+        "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+        "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0"
+      },
+      "configurations": {
+        "Debug": {
+          "debugDylibAbsent": true,
+          "exitCode": 0,
+          "mainSHA256": "abba3669edfe64bcac0023b58b04c2036bd8d6f31560dd6d149a20a825fd23de",
+          "performed": true,
+          "signingAllowed": false,
+          "signingRequired": false
+        },
+        "Rebuilt": {
+          "debugDylibAbsent": true,
+          "exitCode": 0,
+          "mainSHA256": "bbbe19c1e1cb157ad1832544c1f05888f87f5a9beb71647dd9cc046925f7d288",
+          "performed": true,
+          "signingAllowed": false,
+          "signingRequired": false
+        }
+      },
+      "mainHashesDiffer": true,
+      "originalPreparationSHA256": "7edd588e53ec4cab2d2220fa6ffbf1689f839ffccd555fc3b45b9029942f2c95",
+      "signedHostVerified": false
+    }
+  }
+}

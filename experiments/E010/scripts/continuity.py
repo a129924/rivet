@@ -9,6 +9,11 @@ from pathlib import Path
 import stat
 import time
 import uuid
+import sys
+
+# Direct-script and imported helpers must share these exact context classes.
+if __name__ == '__main__':
+    sys.modules['continuity'] = sys.modules[__name__]
 
 UTC = dt.timezone.utc
 FIELDS = ('accessToken', 'refreshToken', 'accessTokenExpiresAt', 'refreshTokenExpiresAt', 'tokenType', 'grantedScopes')
@@ -151,6 +156,9 @@ def authorize(root, manifest, now, synthetic):
         grant, sha = read(root, 'grants/' + kind + '.json')
         checked_grant(grant, kind, manifest['namespace'], root, deadline, synthetic)
         if manifest['grantSHA256'].get(kind) != sha: raise Rejected('grantChanged')
+    if is_main(manifest):
+        _,sha=main_consent(root,manifest['namespace'],manifest['sourceSHA256'],synthetic,now,start)
+        if sha!=manifest.get('mainConsentSHA256'): raise Rejected('mainPackageChanged')
     return True
 
 
@@ -189,18 +197,119 @@ def matching_write(root,relative,value):
     return exclusive(root,relative,value)
 
 
+# Current Human-approved MAIN package only. Historical per-stage mode is unchanged.
+MAIN_STATEMENT = '確認批准整包，包含跨週留存、本人認證／跨日喚起，以及第7項故障殘留交接例外。'
+MAIN_S = '2026-11-04T08:56:05Z'
+MAIN_LATEST = '2026-11-05T08:56:05Z'
+MAIN_VALID = '2026-11-15T08:56:05Z'
+
+
+def is_main(manifest):
+    mode=manifest.get('authorizationMode')
+    if mode not in (None,'main-package','gui-package'): raise Rejected('authorizationModeRejected')
+    return mode in ('main-package','gui-package')
+
+
+def main_consent(root, namespace, source, synthetic, now, start=None):
+    consent,sha=read(root,'main-consent.json');mode=consent.get('authorizationMode');gui=mode=='gui-package'
+    approved='2026-11-10T06:52:05Z' if gui else MAIN_S
+    latest='2026-11-10T09:35:00Z' if gui else MAIN_LATEST
+    valid='2026-11-21T06:52:05Z' if gui else MAIN_VALID
+    kind='E010-gui-package-consent' if gui else 'E010-main-package-consent'
+    statement=consent.get('statement')
+    if (consent.get('kind')!=kind or mode not in ('main-package','gui-package') or consent.get('namespace')!=namespace or
+        consent.get('synthetic') is not synthetic or consent.get('approved') is not True or not isinstance(statement,str) or not statement.strip() or
+        (not gui and statement!=MAIN_STATEMENT) or consent.get('approvedUTC')!=approved or consent.get('latestStartUTC')!=latest or
+        consent.get('grantsValidUntilUTC')!=valid or consent.get('retentionRoot')!=str(Path(root)) or consent.get('sourceSHA256')!=source or
+        consent.get('actions')!=list(ORDER) or consent.get('maxMainSignedBuilds')!=3 or consent.get('maxCleanupSignedBuilds')!=1 or
+        now<stamp(approved) or now>=stamp(valid)):raise Rejected('mainPackageConsentRejected')
+    if gui and (consent.get('originalLeafBeforeAutoRequired') is not True or consent.get('automaticCertificateSideEffectsAccepted') is not True or consent.get('CUAProhibited') is not True or consent.get('buildEvidenceType')!='gui-hooks-v1'):raise Rejected('GUIApprovedPolicyRequired')
+    first=now if start is None else start
+    if not stamp(approved)<=first<=stamp(latest) or now>=first+dt.timedelta(days=10):raise Rejected('mainPackageTimeRejected')
+    for kind in ('assets','retention','recovery'):
+        grant,_=read(root,'grants/'+kind+'.json');checked_grant(grant,kind,namespace,root,first+dt.timedelta(days=10),synthetic)
+        if grant.get('authorizationMode')!=mode or grant.get('mainConsentSHA256')!=sha or grant.get('sourceSHA256')!=source or grant.get('validUntilUTC')!=valid:raise Rejected('mainPackageGrantRejected')
+    return consent,sha
+
+
+def check_main(context):
+    manifest=context.manifest
+    if not is_main(manifest): raise Rejected('mainPackageRequired')
+    _,sha=main_consent(context.root,manifest['namespace'],manifest['sourceSHA256'],context.synthetic,context.clock(),stamp(manifest['startUTC']))
+    if sha!=manifest.get('mainConsentSHA256'): raise Rejected('mainPackageChanged')
+    return sha
+
+
+def package_gate(context, stage, previous, relative, number=1):
+    consent_sha=check_main(context)
+    if isinstance(context,Bootstrap): window,window_sha=context.validate()
+    else: window,window_sha=context.window(number,cleanup=stage in ('cleanup','cleanup-only'))
+    path=safe(context.root,relative)
+    gate={'kind':'package-action','authorizationMode':context.manifest['authorizationMode'],'namespace':context.manifest['namespace'],
+          'synthetic':context.synthetic,'stage':stage,'mainConsentSHA256':consent_sha,
+          'sourceSHA256':context.manifest['sourceSHA256'],'windowSHA256':window_sha,
+          'previousReceiptSHA256':previous,'recordedUTC':context.clock().isoformat()}
+    if context.manifest.get('kind')=='E010-global':gate['globalSHA256']=context.global_hash
+    else:gate['anchorSHA256']=context.anchor_hash
+    if path.exists():
+        existing,_=read(context.root,relative);gate['recordedUTC']=existing.get('recordedUTC')
+        if gate!=existing: raise Rejected('packageActionChanged')
+    else:exclusive(context.root,relative,gate)
+    validate_package_gate(context,stage,gate,previous,number)
+    return gate,file_hash(path)
+
+
+def validate_package_gate(context,stage,gate,previous,number,archived=False):
+    consent_sha=check_main(context)
+    window,window_sha=(context.validate() if isinstance(context,Bootstrap) else context.window(number,cleanup=True,archived=archived))
+    if (gate.get('kind')!='package-action' or gate.get('authorizationMode')!=context.manifest['authorizationMode'] or
+        gate.get('namespace')!=context.manifest['namespace'] or gate.get('synthetic') is not context.synthetic or
+        gate.get('stage')!=stage or gate.get('mainConsentSHA256')!=consent_sha or gate.get('sourceSHA256')!=context.manifest['sourceSHA256'] or
+        gate.get('windowSHA256')!=window_sha or gate.get('previousReceiptSHA256')!=previous or
+        any(key in gate for key in ('humanReady','humanReadyStatement','wholeStageObserved','promptCount')) or
+        not stamp(window['startUTC'])<=stamp(gate.get('recordedUTC'))<=context.clock()): raise Rejected('packageActionRejected')
+    key='globalSHA256' if context.manifest['kind']=='E010-global' else 'anchorSHA256'
+    if gate.get(key)!=(context.global_hash if key=='globalSHA256' else context.anchor_hash): raise Rejected('packageActionRejected')
+
+
+def observation_status(run,stage):
+    path=safe(run.root,'human/'+stage+'.json')
+    unknown={'observation':'not-observed','promptCount':None,'UX':'unknown','humanReceiptSHA256':None}
+    if not path.exists():return unknown
+    event,sha=read(run.root,'receipts/'+stage+'.machine.json');human,human_sha=read(run.root,'human/'+stage+'.json')
+    try:validate_human(human,event,sha,run.synthetic,run.clock(),enforce_ux=False)
+    except Rejected:return unknown
+    limit=1 if stage=='seed' else 0
+    return {'observation':'whole-stage-human','promptCount':human['promptCount'],'UX':'failed' if human['promptCount']>limit and stage in ('seed','fresh','p1-read','rebuilt-read') else 'observed','humanReceiptSHA256':human_sha}
+
+
 def begin_anchor(root,namespace,source_sha,public_out,synthetic=False,clock=utc):
     root=private_root(root,namespace,synthetic);now=clock();deadline=now+dt.timedelta(days=10)
     if not public_out or Path(public_out).resolve().is_relative_to(root.resolve()): raise Rejected('publicEvidenceOutsidePrivateRootRequired')
     grants={}
     for kind in ('assets','retention','recovery'):
         grant,sha=read(root,'grants/'+kind+'.json');checked_grant(grant,kind,namespace,root,deadline,synthetic);grants[kind]=sha
-    ready,ready_sha=read(root,'bootstrap/begin.ready.json')
-    if (ready.get('namespace')!=namespace or ready.get('synthetic') is not synthetic or ready.get('stage')!='begin-anchor' or ready.get('humanReady') is not True or not isinstance(ready.get('humanReadyStatement'),str) or not ready['humanReadyStatement'].strip() or ready.get('sourceSHA256')!=source_sha or ready.get('grantSHA256')!=grants or ready.get('retentionRoot')!=str(root) or not now-dt.timedelta(minutes=5)<=stamp(ready.get('recordedUTC'))<=now): raise Rejected('beginReadyRequired')
+    package=safe(root,'main-consent.json').exists()
+    if package:
+        consent,ready_sha=main_consent(root,namespace,source_sha,synthetic,now)
+    else:
+        ready,ready_sha=read(root,'bootstrap/begin.ready.json')
+        if (ready.get('namespace')!=namespace or ready.get('synthetic') is not synthetic or ready.get('stage')!='begin-anchor' or ready.get('humanReady') is not True or not isinstance(ready.get('humanReadyStatement'),str) or not ready['humanReadyStatement'].strip() or ready.get('sourceSHA256')!=source_sha or ready.get('grantSHA256')!=grants or ready.get('retentionRoot')!=str(root) or not now-dt.timedelta(minutes=5)<=stamp(ready.get('recordedUTC'))<=now): raise Rejected('beginReadyRequired')
+    sync_sha=None
+    if package and consent['authorizationMode']=='gui-package':
+        sync,sync_sha=read(root,'gui-begin-sync.json')
+        if (sync.get('kind')!='human-begin-sync' or sync.get('namespace')!=namespace or sync.get('synthetic') is not synthetic or sync.get('sourceSHA256')!=source_sha or sync.get('grantSHA256')!=grants or sync.get('retentionRoot')!=str(root) or sync.get('humanCanBeginNow') is not True or not isinstance(sync.get('statement'),str) or not sync['statement'].strip() or not stamp(consent['approvedUTC'])<=stamp(sync.get('recordedUTC'))<=now):raise Rejected('GUIBeginSyncRequired')
     identity=local_identity(synthetic)
     anchor={'kind':'E010-anchor','namespace':namespace,'synthetic':synthetic,'backend':'dpk','startUTC':now.isoformat(),'globalDeadlineUTC':deadline.isoformat(),'maxWindows':3,'hostBinding':identity,'hostBindingSHA256':digest(canonical(identity)),'sourceSHA256':source_sha,'grantSHA256':grants,'beginReadySHA256':ready_sha,'bundleIdentifier':'local.rivet.dpkcontinuity.'+namespace.replace('-',''),'service':'local.rivet.experiments.E010.'+namespace,'account':'oauth-bundle','fixture':FAKE_A,'fixtureSHA256':digest(canonical(FAKE_A)),'publicEvidenceDirectory':str(Path(public_out).resolve())}
+    if package:
+        anchor.pop('beginReadySHA256');anchor.update(authorizationMode=consent['authorizationMode'],mainConsentSHA256=ready_sha)
+        if consent['authorizationMode']=='gui-package':
+            binding=root.stat();root_binding={'device':binding.st_dev,'inode':binding.st_ino,'ownerUID':binding.st_uid,'mode':binding.st_mode & 0o777}
+            anchor.update(buildEvidenceType='gui-hooks-v1',guiBeginSyncSHA256=sync_sha,rootBinding=root_binding,rootBindingSHA256=digest(canonical(root_binding)))
     sha=exclusive(root,'anchor.json',anchor);exclusive(root,'anchor.binding.json',{'anchorSHA256':sha})
     window={'namespace':namespace,'synthetic':synthetic,'number':1,'anchorSHA256':sha,'startUTC':now.isoformat(),'cutoffUTC':(now+dt.timedelta(minutes=25)).isoformat(),'deadlineUTC':(now+dt.timedelta(minutes=30)).isoformat(),'beginReadySHA256':ready_sha}
+    if package:
+        window.pop('beginReadySHA256');window.update(authorizationMode=consent['authorizationMode'],mainConsentSHA256=ready_sha)
     window_sha=exclusive(root,'windows/1.json',window);exclusive(root,'windows/1.binding.json',{'windowSHA256':window_sha})
     exclusive(root,'bootstrap/begin.machine.json',{'namespace':namespace,'synthetic':synthetic,'stage':'begin-anchor','anchorSHA256':sha,'windowSHA256':window_sha,'startedUTC':now.isoformat(),'endedUTC':clock().isoformat(),'callAttempted':False,'OSStatus':None,'promptCount':None})
     return anchor
@@ -208,8 +317,9 @@ def begin_anchor(root,namespace,source_sha,public_out,synthetic=False,clock=utc)
 
 class Bootstrap:
     """Only first-setting bookkeeping/selected inspection; never an App executor context."""
-    def __init__(self,root,synthetic=False,clock=utc):
+    def __init__(self,root,synthetic=False,clock=utc,archived=False):
         self.root,self.synthetic,self.clock=Path(root),synthetic,clock
+        self.archive_only=archived
         self.manifest,self.anchor_hash=read(self.root,'anchor.json');self.namespace=self.manifest['namespace']
         binding,_=read(self.root,'anchor.binding.json')
         if binding!={'anchorSHA256':self.anchor_hash} or self.manifest.get('kind')!='E010-anchor' or 'p0ExpiryUTC' in self.manifest or 'certificateNotAfterUTC' in self.manifest: raise Rejected('anchorChanged')
@@ -218,14 +328,22 @@ class Bootstrap:
         authorize(self.root,self.manifest,self.clock(),self.synthetic)
         from proof import source_hashes
         if source_hashes()!=self.manifest['sourceSHA256']: raise Rejected('sourceChanged')
-        begin,_=read(self.root,'bootstrap/begin.ready.json')
-        if file_hash(safe(self.root,'bootstrap/begin.ready.json'))!=self.manifest['beginReadySHA256']: raise Rejected('beginReadyChanged')
+        if is_main(self.manifest):check_main(self)
+        else:
+            begin,_=read(self.root,'bootstrap/begin.ready.json')
+            if file_hash(safe(self.root,'bootstrap/begin.ready.json'))!=self.manifest['beginReadySHA256']: raise Rejected('beginReadyChanged')
         window,sha=read(self.root,'windows/1.json');binding,_=read(self.root,'windows/1.binding.json')
         start=stamp(self.manifest['startUTC'])
         if (binding!={'windowSHA256':sha} or window.get('anchorSHA256')!=self.anchor_hash or 'globalSHA256' in window or window.get('namespace')!=self.namespace or window.get('synthetic') is not self.synthetic or window.get('number')!=1 or stamp(window['startUTC'])!=start or stamp(window['cutoffUTC'])!=start+dt.timedelta(minutes=25) or stamp(window['deadlineUTC'])!=start+dt.timedelta(minutes=30)): raise Rejected('bootstrapWindowChanged')
+        if is_main(self.manifest) and not self.archive_only and cleanup and (self.clock()>=stamp(window['deadlineUTC']) or self.clock()>=stamp(self.manifest['globalDeadlineUTC'])):raise Rejected('mainCleanupDeadline')
+        if self.archive_only and not cleanup:raise Rejected('archiveOnlyContext')
         if not cleanup and (self.clock()>=stamp(window['cutoffUTC']) or safe(self.root,'abort.json').exists()): raise Rejected('measurementDeadline')
         return window,sha
     def setup_ready(self):
+        if is_main(self.manifest):
+            window,_=self.validate();machine,machine_sha=read(self.root,'bootstrap/begin.machine.json')
+            if stamp(machine['endedUTC'])>self.clock(): raise Rejected('packageActionTimeRejected')
+            return package_gate(self,'setup-only',machine_sha,'bootstrap/setup.ready.json')[1]
         window,window_sha=self.validate();gate,sha=read(self.root,'bootstrap/setup.ready.json')
         machine,machine_sha=read(self.root,'bootstrap/begin.machine.json');human,human_sha=read(self.root,'bootstrap/begin.human.json')
         validate_human(human,machine,machine_sha,self.synthetic,self.clock())
@@ -238,6 +356,11 @@ def bootstrap_asset(context,asset,at=None):
     view=dict(context.manifest,p0ExpiryUTC=asset['profileExpiryUTC'],certificateNotAfterUTC=asset['certificateNotAfterUTC'])
     if stamp(view['p0ExpiryUTC'])>stamp(view['globalDeadlineUTC'])-dt.timedelta(minutes=30): raise Rejected('p0ExpiryOutsideBudget')
     validate_asset(asset,view,context.clock() if at is None else at,phase='p0')
+    if context.manifest.get('authorizationMode')=='gui-package':
+        from gui_build import reference
+        leaf,leaf_sha=reference(context)
+        if asset.get('certificateSHA256')!=leaf['certificateSHA256'] or asset.get('evidenceType')!='gui-hooks-v1':raise Rejected('originalLeafMismatch')
+        view.update(originalLeafReferenceSHA256=leaf_sha,originalCertificateSHA256=leaf['certificateSHA256'],buildEvidenceType='gui-hooks-v1')
     return view
 
 
@@ -264,7 +387,7 @@ def complete_global(context):
 
 
 def bootstrap_complete(root,manifest,global_sha,synthetic,clock):
-    context=Bootstrap(root,synthetic,clock);window,window_sha=context.validate(cleanup=True)
+    context=Bootstrap(root,synthetic,clock,archived=True);window,window_sha=context.validate(cleanup=True)
     asset,proof_sha=read(root,'bootstrap/actual-proof.json');pb,pb_sha=read(root,'bootstrap/proof.binding.json')
     marker,marker_sha=read(root,'bootstrap/complete.json')
     completed=stamp(marker['completedUTC'])
@@ -277,13 +400,17 @@ def bootstrap_complete(root,manifest,global_sha,synthetic,clock):
 
 
 def seed_ready(run):
+    if is_main(run.manifest):
+        machine,machine_sha=read(run.root,'bootstrap/setup.machine.json')
+        if machine.get('completed') is not True or stamp(machine['endedUTC'])>run.clock():raise Rejected('partialBootstrap')
+        return package_gate(run,'seed-ready',machine_sha,'bootstrap/seed.ready.json')
     gate,sha=read(run.root,'bootstrap/seed.ready.json');machine,machine_sha=read(run.root,'bootstrap/setup.machine.json');human,human_sha=read(run.root,'bootstrap/setup.human.json')
     validate_human(human,machine,machine_sha,run.synthetic,run.clock())
     if (gate.get('namespace')!=run.namespace or gate.get('synthetic') is not run.synthetic or gate.get('stage')!='seed-ready' or gate.get('globalSHA256')!=run.global_hash or gate.get('anchorSHA256')!=run.manifest['anchorSHA256'] or gate.get('windowSHA256')!=run.manifest['window1SHA256'] or gate.get('previousReceiptSHA256')!=machine_sha or gate.get('previousHumanSHA256')!=human_sha or gate.get('humanReady') is not True or not isinstance(gate.get('humanReadyStatement'),str) or not gate['humanReadyStatement'].strip() or not stamp(human['recordedUTC'])<stamp(gate.get('recordedUTC'))<=run.clock()): raise Rejected('independentSeedReadyRequired')
     return gate,sha
 
 
-def validate_human(value, machine, machine_sha, synthetic, now=None):
+def validate_human(value, machine, machine_sha, synthetic, now=None, enforce_ux=True):
     allowed = {'namespace', 'synthetic', 'stage', 'machineReceiptSHA256', 'wholeStageObserved', 'phaseIdentified', 'promptCount', 'actions', 'purposes', 'recordedUTC'}
     if set(value) - allowed: raise Rejected('humanPublicSchemaRejected')
     count = value.get('promptCount')
@@ -298,7 +425,7 @@ def validate_human(value, machine, machine_sha, synthetic, now=None):
     observed=stamp(value.get('recordedUTC'))
     if observed < stamp(machine['endedUTC']) or observed > (now if now is not None else utc()): raise Rejected('humanObservationTimeRejected')
     limit = 1 if machine['stage'] == 'seed' else 0
-    if machine['stage'] in ('seed', 'fresh', 'p1-read', 'rebuilt-read') and count > limit:
+    if enforce_ux and machine['stage'] in ('seed', 'fresh', 'p1-read', 'rebuilt-read') and count > limit:
         raise Rejected('uxCriterionExceeded')
 
 
@@ -330,7 +457,7 @@ class Run:
     def arm_window(self, number, ready):
         authorize(self.root, self.manifest, self.clock(), self.synthetic)
         now = self.clock(); start = stamp(self.manifest['startUTC']) if number == 1 else now
-        if type(number) is not int or number not in STAGES or not isinstance(ready, str) or not ready.strip(): raise Rejected('windowOrReadyRejected')
+        if type(number) is not int or number not in STAGES or (not is_main(self.manifest) and (not isinstance(ready,str) or not ready.strip())):raise Rejected('windowOrReadyRejected')
         if now >= stamp(self.manifest['globalDeadlineUTC']) or now >= start + dt.timedelta(minutes=25): raise Rejected('measurementDeadline')
         if number==1 and self.manifest.get('anchorSHA256'):
             value,_=self.window(1);seed_ready(self)
@@ -340,18 +467,26 @@ class Run:
             retained, _ = read(self.root, 'retained-' + str(number - 1) + '.json')
             stage = 'fresh' if number == 2 else 'p1-read'
             event, sha = read(self.root, 'receipts/' + stage + '.machine.json')
-            human, _ = read(self.root, 'human/' + stage + '.json'); validate_human(human, event, sha, self.synthetic, self.clock())
-            if (retained.get('machineReceiptSHA256') != sha or retained.get('globalSHA256') != self.global_hash or retained.get('grantSHA256') != self.manifest['grantSHA256']['retention'] or retained.get('humanReceiptSHA256') != file_hash(safe(self.root, 'human/'+stage+'.json'))): raise Rejected('retentionChanged')
+            if is_main(self.manifest):
+                # Retention freezes only the observation available then. A later
+                # truthful sidecar may inform UX without invalidating retained A.
+                human_sha=retained.get('humanReceiptSHA256')
+                if human_sha is not None and observation_status(self,stage)['humanReceiptSHA256']!=human_sha:raise Rejected('retentionChanged')
+            else:
+                human, _ = read(self.root, 'human/' + stage + '.json'); validate_human(human, event, sha, self.synthetic, self.clock());human_sha=file_hash(safe(self.root,'human/'+stage+'.json'))
+            if (retained.get('machineReceiptSHA256') != sha or retained.get('globalSHA256') != self.global_hash or retained.get('grantSHA256') != self.manifest['grantSHA256']['retention'] or retained.get('humanReceiptSHA256') != human_sha): raise Rejected('retentionChanged')
         if number == 2 and now < stamp(self.manifest['p0ExpiryUTC']): raise Rejected('naturalExpiryNotReached')
         value = {'namespace': self.namespace, 'number': number, 'synthetic': self.synthetic,
                  'globalSHA256': self.global_hash, 'startUTC': start.isoformat(),
                  'cutoffUTC': (start + dt.timedelta(minutes=25)).isoformat(),
                  'deadlineUTC': (start + dt.timedelta(minutes=30)).isoformat(), 'humanReadyStatement': ready}
+        if is_main(self.manifest):
+            value.pop('humanReadyStatement');value.update(authorizationMode=self.manifest['authorizationMode'],mainConsentSHA256=check_main(self))
         window_hash = exclusive(self.root, 'windows/' + str(number) + '.json', value)
         exclusive(self.root, 'windows/' + str(number) + '.binding.json', {'windowSHA256': window_hash})
         return value
 
-    def window(self, number, cleanup=False):
+    def window(self, number, cleanup=False, archived=False):
         value, sha = read(self.root, 'windows/' + str(number) + '.json')
         binding, _ = read(self.root, 'windows/' + str(number) + '.binding.json')
         start = stamp(value['startUTC']); now = self.clock()
@@ -360,14 +495,20 @@ class Run:
                 start > now or stamp(value['cutoffUTC']) - start != dt.timedelta(minutes=25) or
                 stamp(value['deadlineUTC']) - start != dt.timedelta(minutes=30)):
             raise Rejected('windowChanged')
+        if is_main(self.manifest) and not archived and (now>=stamp(value['deadlineUTC']) or now>=stamp(self.manifest['globalDeadlineUTC'])):raise Rejected('mainCleanupDeadline')
         if not cleanup and (now >= stamp(value['cutoffUTC']) or now >= stamp(self.manifest['globalDeadlineUTC']) or safe(self.root, 'abort.json').exists()):
             raise Rejected('measurementDeadline')
         return value, sha
 
     def check_ready(self, stage, gate, previous, archived=False):
         number = next(n for n, stages in STAGES.items() if stage in stages)
-        window, _ = self.window(number, cleanup=archived)
+        window, _ = self.window(number, cleanup=archived or (is_main(self.manifest) and stage=='cleanup'),archived=archived)
         now=self.clock(); ready=stamp(gate.get('recordedUTC'))
+        if is_main(self.manifest):
+            expected=previous[1] if previous else self.global_hash
+            validate_package_gate(self,stage,gate,expected,number,archived=archived)
+            if previous and ready<stamp(previous[0]['endedUTC']):raise Rejected('packageActionTimeRejected')
+            return
         if (gate.get('namespace') != self.namespace or gate.get('stage') != stage or
                 gate.get('synthetic') is not self.synthetic or not isinstance(gate.get('humanReadyStatement'), str) or not gate['humanReadyStatement'].strip() or
                 gate.get('humanReady') is not True or ready > now or ready < stamp(window['startUTC'])):
@@ -399,6 +540,7 @@ class Run:
         value.update(namespace=self.namespace, stage=stage, window=number, synthetic=self.synthetic,
                      globalSHA256=self.global_hash, previousSHA256=self.events[-1][1] if self.events else self.global_hash,
                      proofSHA256=proof_sha, readySHA256=file_hash(safe(self.root,'gates/'+stage+'.json')), windowSHA256=window_sha, promptCount=None)
+        if is_main(self.manifest):value.update(authorizationMode=self.manifest['authorizationMode'],mainConsentSHA256=self.manifest['mainConsentSHA256'],observation='not-observed',UX='unknown')
         sha = exclusive(self.root, 'receipts/' + stage + '.machine.json', value)
         self.reload(); return value, sha
 
@@ -408,14 +550,15 @@ class Run:
         if not self.events or self.events[-1][0]['stage'] != expected: raise Rejected('baselineIncomplete')
         self.window(number)
         authorize(self.root, self.manifest, self.clock(), self.synthetic)
-        # Every stage in this window must have complete observation, not just its last one.
+        # Historical mode requires complete observation. MAIN separates data from optional UX evidence.
         for stage in STAGES[number]:
             event, sha = read(self.root, 'receipts/' + stage + '.machine.json')
-            human, _ = read(self.root, 'human/' + stage + '.json'); validate_human(human, event, sha, self.synthetic, self.clock())
+            if not is_main(self.manifest):
+                human, _ = read(self.root, 'human/' + stage + '.json');validate_human(human,event,sha,self.synthetic,self.clock())
             if event.get('completed') is not True: raise Rejected('baselineIncomplete')
         return exclusive(self.root, 'retained-' + str(number) + '.json',
                          {'namespace': self.namespace, 'globalSHA256': self.global_hash,
-                          'machineReceiptSHA256': self.events[-1][1], 'humanReceiptSHA256': file_hash(safe(self.root, 'human/'+expected+'.json')), 'grantSHA256': self.manifest['grantSHA256']['retention'],
+                          'machineReceiptSHA256': self.events[-1][1], 'humanReceiptSHA256': observation_status(self,expected)['humanReceiptSHA256'] if is_main(self.manifest) else file_hash(safe(self.root,'human/'+expected+'.json')), 'grantSHA256': self.manifest['grantSHA256']['retention'],
                           'state': 'retained-no-background-process', 'synthetic': self.synthetic, 'retainedUTC':self.clock().isoformat()})
 
 
@@ -487,12 +630,26 @@ def run_window(run, number, backend, wait_gate):
                 except (Exception, KeyboardInterrupt): pass  # Keep exact recovery material; never claim complete.
 
 
+def owned_write_possible(root,namespace,synthetic):
+    if safe(root,'receipts/seed.machine.json').exists():return True
+    markers=list(safe(root,'write-attempts').glob('*.json'))
+    for path in markers:
+        value,_=read(root,str(path.relative_to(root)))
+        if value.get('namespace')!=namespace or value.get('synthetic') is not synthetic or value.get('operation')!='seed-read-a' or value.get('state') not in ('launch-may-add','add-starting'):raise Rejected('writeAttemptOwnershipUnconfirmed')
+    return bool(markers)
+
+
 def require_recovery(run,attempt):
     try: valid=str(uuid.UUID(attempt))==attempt
     except (ValueError,TypeError): valid=False
     if not valid: raise Rejected('recoveryAttemptRejected')
     authorize(run.root,run.manifest,run.clock(),run.synthetic)
-    if not safe(run.root,'receipts/seed.machine.json').exists(): raise Rejected('ownedItemNotProven')
+    if not owned_write_possible(run.root,run.namespace,run.synthetic):raise Rejected('ownedItemNotProven')
+    if is_main(run.manifest):
+        number=max(n for n in (1,2,3) if safe(run.root,'windows/'+str(n)+'.json').exists());run.window(number,cleanup=True)
+        previous=run.events[-1][1] if run.events else run.global_hash
+        _,ready_sha=package_gate(run,'cleanup-only',previous,'recovery-attempts/'+attempt+'/ready.json',number)
+        return run.manifest['grantSHA256']['recovery'],ready_sha
     grant,sha=read(run.root,'recovery-attempts/'+attempt+'/grant.json')
     ready,ready_sha=read(run.root,'recovery-attempts/'+attempt+'/ready.json');now=run.clock()
     if (grant.get('kind')!='human-grant' or grant.get('scope')!='cleanup-only' or grant.get('namespace')!=run.namespace or grant.get('synthetic') is not run.synthetic or grant.get('approved') is not True or grant.get('assetInspectionApproved') is not True or grant.get('globalSHA256')!=run.global_hash or not isinstance(grant.get('statement'),str) or not grant['statement'].strip() or not stamp(grant.get('recordedUTC'))<=now<stamp(grant.get('validUntilUTC'))): raise Rejected('cleanupGrantRequired')
@@ -519,19 +676,102 @@ def run_cleanup_only(run,attempt,backend):
     event,sha=read(run.root,relative)
     clean=event.get('absent') is True and event.get('completed') is True
     human_path=safe(run.root,'recovery-attempts/'+attempt+'/human.json')
+    if clean and is_main(run.manifest):
+        complete=backend.finalize(run) is True
+        return {'cleanupComplete':complete,'recoveryRequired':not complete,'keychainItemAbsentConfirmed':True,'awaitingSafeEvidenceACK':not complete}
     if not clean or not human_path.exists(): return {'cleanupComplete':False,'recoveryRequired':True,'keychainItemAbsentConfirmed':clean}
     human,_=read(run.root,str(human_path.relative_to(run.root)));validate_human(human,event,sha,run.synthetic,run.clock())
     complete=backend.finalize(run) is True
     return {'cleanupComplete':complete,'recoveryRequired':not complete,'keychainItemAbsentConfirmed':True}
 
 
+def run_main_stage(run,number,stage,backend):
+    """One fixed ordered stage; agent may provision between calls, never resets a window."""
+    check_main(run)
+    if stage not in STAGES.get(number,()):raise Rejected('stageOrderRejected')
+    if not safe(run.root,'windows/'+str(number)+'.json').exists():run.arm_window(number,None)
+    elif number==1 and not safe(run.root,'windows/1.baseline-entry.json').exists():run.arm_window(1,None)
+    run.window(number,cleanup=stage=='cleanup')
+    previous=run.events[-1][1] if run.events else run.global_hash
+    gate,_=package_gate(run,stage,previous,'gates/'+stage+'.json',number);run.require_ready(stage,gate)
+    may_have_item=stage=='seed' or any(value['stage']=='seed' for value,_ in run.events)
+    try:
+        result,proof_sha=backend.stage(stage,run)
+        if stage=='expired' and not result.get('callAttempted') and result.get('OSStatus') is not None:raise Rejected('falseSecItemClaim')
+        run.record(stage,number,result,proof_sha)
+        if stage!='expired' and result.get('completed') is not True:raise Rejected('operationIncomplete')
+        if stage in ('seed','fresh','p1-read','rebuilt-read') and result.get('fields')!={k:True for k in FIELDS}:raise Rejected('sixFieldComparisonFailed')
+        if stage in ('fresh','p1-read'):run.retain(number)
+        if stage=='cleanup':
+            if result.get('absent') is not True:raise Rejected('cleanupUnconfirmed')
+            complete=backend.finalize(run) is True
+            return {'stageCompleted':True,'keychainItemAbsentConfirmed':True,'cleanupComplete':complete,'awaitingSafeEvidenceACK':not complete,'UX':observation_status(run,stage)['UX'] if run.root.exists() else 'unknown'}
+        return {'stageCompleted':True,'retained':stage in ('fresh','p1-read'),'UX':observation_status(run,stage)['UX'],'promptCount':observation_status(run,stage)['promptCount']}
+    except (Exception,KeyboardInterrupt):
+        if not safe(run.root,'abort.json').exists():exclusive(run.root,'abort.json',{'namespace':run.namespace,'synthetic':run.synthetic,'stage':stage,'endedUTC':run.clock().isoformat()})
+        clean=not may_have_item
+        if may_have_item:
+            try:clean=backend.cleanup(run) is True
+            except (Exception,KeyboardInterrupt):clean=False
+        exclusive(run.root,'failures/'+str(uuid.uuid4())+'.json',{'namespace':run.namespace,'synthetic':run.synthetic,'endedUTC':run.clock().isoformat(),'keychainItemAbsentConfirmed':clean,'cleanupComplete':False,'recoveryRequired':True,'possibleOwnedItemRetained':not clean,'privateMaterialRetained':True})
+        raise
+
+
+_cli_context = None
+
+
+class SafeArgumentParser(argparse.ArgumentParser):
+    def error(self,message):raise Rejected('invalidArguments')
+
+
+def validated_error_context(context):
+    """Revalidate, never trust argv or stale context, before any private error write."""
+    if context is None or type(context).__module__!=__name__ or type(context).__name__ not in ('Bootstrap','Run'):raise Rejected('privateErrorStorageRefused')
+    private_root(context.root,context.manifest['namespace'],context.synthetic)
+    current=type(context)(context.root,synthetic=context.synthetic,clock=context.clock)
+    if current.manifest!=context.manifest:raise Rejected('privateErrorStorageRefused')
+    if current.manifest['kind']=='E010-anchor':current.validate(cleanup=True)
+    else:
+        numbers=[n for n in (1,2,3) if safe(current.root,'windows/'+str(n)+'.json').exists()]
+        if not numbers:raise Rejected('privateErrorStorageRefused')
+        current.window(max(numbers),cleanup=True)
+    if current.manifest.get('authorizationMode')=='gui-package':__import__('gui_build').gui(current)
+    raw=safe(current.root,'raw')
+    if raw.exists() and (not raw.is_dir() or raw.stat().st_uid!=os.getuid() or stat.S_IMODE(raw.stat().st_mode)!=0o700):raise Rejected('privateErrorStorageRefused')
+    return current
+
+
+def persist_cli_exception(context,error):
+    try:
+        current=validated_error_context(context)
+        value={'kind':'private-cli-exception','exceptionType':type(error).__name__,'representation':repr(error),'recordedUTC':current.clock().isoformat()}
+        # Preparing repr may take time: enforce the original scope again before writing.
+        validated_error_context(current)
+        exclusive(current.root,'raw/cli-exception-'+str(uuid.uuid4())+'.json',value)
+        return True
+    except (Exception,KeyboardInterrupt):return False
+
+
+def cli_entrypoint():
+    try:return main()
+    except (Exception,KeyboardInterrupt) as error:
+        saved=persist_cli_exception(_cli_context,error)
+        classification='safeRefusal' if not saved else 'cancelled' if isinstance(error,KeyboardInterrupt) else 'guardRejected' if isinstance(error,Rejected) else 'technicalFailure'
+        print(json.dumps({'classification':classification,'cleanupComplete':False,'recoveryRequired':True,'itemState':'not-inferred','rawExceptionSaved':saved,'rawExported':False},sort_keys=True))
+        return 2
+
+
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    global _cli_context
+    _cli_context=None
+    parser = SafeArgumentParser(description=__doc__)
     parser.add_argument('--live', action='store_true')
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--window', type=int, choices=(1, 2, 3))
     parser.add_argument('--cleanup-only', metavar='ATTEMPT_UUID')
     parser.add_argument('--ready-statement')
+    parser.add_argument('--stage',choices=ORDER)
+    parser.add_argument('--finalize-only',action='store_true')
     parser.add_argument('--begin', action='store_true')
     parser.add_argument('--begin-anchor',action='store_true')
     parser.add_argument('--setup-only',action='store_true')
@@ -552,6 +792,7 @@ def main():
         if args.begin_anchor: begin_anchor(args.root,namespace,source_hashes(),args.public_out,clock=utc)
         else:
             context=Bootstrap(args.root,clock=utc)
+            _cli_context=context
             try:
                 if args.stop_setup:
                     stopped=stop_bootstrap(context)
@@ -560,18 +801,33 @@ def main():
                 elif args.setup_only: inspect_bootstrap(context)
                 else: complete_global(context)
             except (Exception,KeyboardInterrupt):
-                if context.root.exists():
-                    exclusive(context.root,'bootstrap/stopped-'+str(uuid.uuid4())+'.machine.json',{'namespace':context.namespace,'synthetic':context.synthetic,'stage':'bootstrap-stopped','noSecItemWriteAttempted':True,'cleanupComplete':False,'recoveryRequired':True,'privateSetupMaterialRetained':True,'appleAssetsRetained':True,'endedUTC':utc().isoformat()})
+                try:
+                    current=validated_error_context(context)
+                    possible=True
+                    try:possible=owned_write_possible(current.root,current.namespace,current.synthetic)
+                    except (Rejected,OSError,ValueError):pass
+                    exclusive(current.root,'bootstrap/stopped-'+str(uuid.uuid4())+'.machine.json',{'namespace':current.namespace,'synthetic':current.synthetic,'stage':'bootstrap-stopped','noSecItemWriteAttempted':not possible,'cleanupComplete':False,'recoveryRequired':True,'privateSetupMaterialRetained':True,'appleAssetsRetained':True,'endedUTC':current.clock().isoformat()})
+                except (Exception,KeyboardInterrupt):pass
                 raise
         print('Bootstrap stage stopped; no App launched or Keychain item written.');return 0
     run = Run(args.root)
+    _cli_context=run
     from proof import ManualStages
     if args.cleanup_only:
         if args.begin or args.window is not None: raise Rejected('cleanupOnlyCannotResumeMeasurement')
         result=run_cleanup_only(run,args.cleanup_only,ManualStages(run))
         print('Cleanup-only stopped; consult immutable recovery receipts. No measurements resumed.')
         return 0 if result['cleanupComplete'] else 2
+    if args.finalize_only:
+        if not is_main(run.manifest) or args.window is not None or args.stage is not None:raise Rejected('mainFinalizationOnlyRequired')
+        complete=ManualStages(run).finalize(run) is True
+        print('Private cleanup complete.' if complete else 'Safe candidate saved; independent model ACK required before private deletion.');return 0 if complete else 2
     if args.window is None: raise Rejected('windowRequired')
+    if is_main(run.manifest):
+        if args.stage is None or args.ready_statement is not None:raise Rejected('fixedMainStageRequired')
+        result=run_main_stage(run,args.window,args.stage,ManualStages(run))
+        print('Main stage stopped; consult machine receipts. Observation unknown unless separately recorded.');return 0 if result['stageCompleted'] else 2
+    if args.stage is not None:raise Rejected('mainPackageRequired')
     run.arm_window(args.window, args.ready_statement)
     backend = ManualStages(run)
     def wait_gate(stage):
@@ -584,7 +840,4 @@ def main():
 
 
 if __name__ == '__main__':
-    try: raise SystemExit(main())
-    except (Rejected, KeyError, ValueError, OSError, KeyboardInterrupt):
-        print('E010 stopped; cleanupComplete=false, recoveryRequired=true if an earlier item/private run exists. Keep recovery material; no automatic resume or prompt inference.')
-        raise SystemExit(2)
+    raise SystemExit(cli_entrypoint())

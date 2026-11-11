@@ -1,0 +1,462 @@
+{
+  "SDK": {
+    "SDKROOTExplicitForEveryCompile": true,
+    "SDKSettingsJSONSHA256": "f8d005f09381389167f9e0aeaa169bc9e7dff162ef22ca2fd8e98df7ff1acafe",
+    "SDKSettingsPlistSHA256": "e5c7c40b8c5dc1a9f99f8b9fa51870f8fe180421225b8201d0c4c826aad11bdc",
+    "canonicalName": "macosx26.5",
+    "compilerErrorsThisRun": 0,
+    "compilerSHA256": "2ed38571e92c0283091838c1649e27650ad9c99950288e883c7b2dc6c4ce89fb",
+    "oldSDKErrorHistoryUnchanged": true,
+    "preflightMetadataCorrection": "initial assertion compared historical SDKSettings.plist digest to JSON; corrected metadata filename, no source or test ran at that failure"
+  },
+  "WindowChainProbeUnchangedAndExistingSyntheticConsentModeUsed": true,
+  "authorVerdict": null,
+  "caseScope": {
+    "NG-T01": "author pure成功; old22 exact snapshot/new22 and unchanged guards",
+    "NG-T02": "author pure成功; matching SDK/direct consent/window chain/legacy",
+    "NG-T03-T08": "live未執行; no inference of data/availability/UX/cleanup success"
+  },
+  "changedSourcePaths": [
+    "Sources/DPKContinuityProbe/LiveGate.swift",
+    "Tests/test_gui_build.py",
+    "scripts/continuity.py"
+  ],
+  "cleanup": {
+    "allNativeProcessesReturnedSynchronously": true,
+    "allOwned0700NoSymlinkAndLstatAbsent": true,
+    "authorRunnerOwnedRegularNoSymlinkRemoved": true,
+    "authorRunnerSHA256": "edf88ab87ae52548356623aa494e0a2c0c7944648b2943daf580dc78fd8ab5d6",
+    "compiledHelpersModuleCachesAndWorkParentsAbsent": true,
+    "noGlobalTmpOrCompilerCacheCleanupClaim": true,
+    "noLsofOrGlobalNoHandlesClaim": true,
+    "oldPrivateRootsPrepAndOtherTmpUntouched": true,
+    "safeExternalAuditRetained": true,
+    "trackedFixtureRoots": 13
+  },
+  "dates": {
+    "S": "2026-11-10T06:52:05Z",
+    "V": "2026-11-21T06:52:05Z",
+    "latestT0": "2026-11-10T09:35:00Z"
+  },
+  "directConsentAcceptedCases": 4,
+  "directConsentCaseCount": 22,
+  "directConsentCases": [
+    {
+      "case": "new-at-S",
+      "expected": true,
+      "python": true,
+      "swift": true
+    },
+    {
+      "case": "new-at-latest",
+      "expected": true,
+      "python": true,
+      "swift": true
+    },
+    {
+      "case": "before-S",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "after-latest",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "before-D",
+      "expected": true,
+      "python": true,
+      "swift": true
+    },
+    {
+      "case": "at-D",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "at-V",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "old-S",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-latest",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-V",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "old-all-dates",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-source",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-namespace",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "unapproved",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-leaf-scope",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-CUA-scope",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-slot-limit",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-consent-hash",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-grant-bind",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "wrong-grant-V",
+      "expected": false,
+      "python": false,
+      "swift": false
+    },
+    {
+      "case": "legacy-main-valid",
+      "expected": true,
+      "python": true,
+      "swift": true
+    },
+    {
+      "case": "legacy-main-rejects-GUI-S",
+      "expected": false,
+      "python": false,
+      "swift": false
+    }
+  ],
+  "directConsentRejectedCases": 18,
+  "greenUniqueMethods": 12,
+  "independentReviewerVerdict": null,
+  "independentTesterVerdict": null,
+  "kind": "E010-NG03-pure-date-preparation",
+  "latestW1TargetStopIfStartedAtLatestUTC": "2026-11-10T10:05:00Z",
+  "logSHA256": {
+    "errors.log": "6fd5017155224a06498d53aa21d6a4aedc432b2c3fd34896274d6c83cb3ae2ef",
+    "green.log": "1ea9808fce02466e687f67d873f648f90f340f86248c5fc3d0d73938bdf616c9",
+    "guards.log": "2d868f688e2c84c6e8abe500c4cb3428d3e8f450d7a64b325c379ca2a464fe27",
+    "red.log": "3f37628d3c8a1046739c79c844066f643856e2a56b3af65aa150b5ad991cde85"
+  },
+  "nativeBoundary": {
+    "AppMainLiveStoreSecurityInputs": false,
+    "actualDeniedAttempts": 0,
+    "allOtherNativeDenied": true,
+    "compilerInputs": [
+      "Sources/DPKContinuityProbe/ProbeCore.swift",
+      "Sources/DPKContinuityProbe/LiveGate.swift",
+      "Tests/WindowChainProbe.swift"
+    ],
+    "directEntry": "--synthetic-consent -> validateMainConsent; injected now; synthetic=true required",
+    "greenCalls": {
+      "compiler": 3,
+      "helper": 31,
+      "plutil": 166
+    },
+    "includingRedCalls": {
+      "compiler": 4,
+      "helper": 53,
+      "plutil": 166
+    },
+    "otherAllowedNative": [
+      "/usr/bin/plutil -convert json -o - -",
+      "owned pure-consent/window helper"
+    ]
+  },
+  "preFix22Snapshot": {
+    "SHA256": "788e774548b0180316c029f9187650dcf2a7a5e173f4f6a04c57121f0e57eb85",
+    "path": "experiments/E010/history/pre-ng-date-20261110T070503Z"
+  },
+  "preparationHardDeadlineUTC": "2026-11-10T08:52:05Z",
+  "preparationOnly": true,
+  "prohibitedActionsExecuted": {
+    "AppBuild": false,
+    "AppLaunch": false,
+    "AppleAssets": false,
+    "GUIOrCUA": false,
+    "GitMutation": false,
+    "SecurityKeychainDPK": false,
+    "liveControlsClockOrGrants": false,
+    "oldDeletedRootQuery": false,
+    "xcodebuildXcrun": false
+  },
+  "protection": {
+    "E006Unchanged": true,
+    "READMERequirementsSpecPlanUnchanged": true,
+    "devCleanObserved": true,
+    "devHEADObserved": "758aca9bb518f2a21f20f47609335fac49043370",
+    "devNotWritten": true,
+    "featureHEAD": "b930d80072909f52171a23598b923af82c7c91cc",
+    "featureIndexEmpty": true,
+    "onlyChangedPreexisting": [
+      "experiments/E010/Sources/DPKContinuityProbe/LiveGate.swift",
+      "experiments/E010/Tests/test_gui_build.py",
+      "experiments/E010/scripts/continuity.py",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md"
+    ],
+    "preexistingCount": 581,
+    "producerTemplateSchemesSwiftProbeAndAllOldEvidenceMapsSnapshotsUnchanged": true,
+    "stepSHA256AfterAuthorFacts": "07a52b98fc30db90e1b7c319de7de31b2e3356d101ee24e50e6748f4aa13da7f",
+    "unchangedPreexistingCount": 577
+  },
+  "recordedUTC": "2026-11-10T07:08:39.374949+00:00",
+  "redDomainFailures": {
+    "acceptedCasesRejectedByPriorDates": 3,
+    "errors": 0,
+    "methods": 1
+  },
+  "reproduction": {
+    "command": "PYTHONPATH=experiments/E010/Tests python3 -B <NEW-owned-scratch>/run-focused.py <green|guards|errors>",
+    "requiredLocationJSON": "In new scratch, supply verified installed SDKROOT/compilerPath/SDKCanonicalName/compilerSHA256 to location.json; use matching pinned compiler and macosx26.5 SDKSettings.plist SHA above, no source override",
+    "runnerPython": "import datetime,hashlib,json,os,pathlib,subprocess,sys,tempfile,time,unittest\nfrom unittest import mock\nimport test_gui_build as gui_fixture\nimport test_main_policy as main_fixture\nscratch=pathlib.Path(__file__).resolve().parent\nphase=sys.argv[1]\nnames={\n 'red':[(gui_fixture.GUIBuildTests,'test_DATE01_direct_GUI_and_legacy_consent_Python_Swift_match')],\n 'green':[(gui_fixture.GUIBuildTests,'test_DATE01_direct_GUI_and_legacy_consent_Python_Swift_match')],\n 'errors':[(gui_fixture.GUIBuildTests,'test_GUI_RF01_actual_CLI_unexpected_exception_is_closed_and_saved_privately'),(gui_fixture.GUIBuildTests,'test_GUI_RF01_invalid_expired_or_symlink_root_is_safe_refusal_and_help_survives'),(gui_fixture.GUIBuildTests,'test_GUI_RF02_timeout_partial_bytes_and_text_are_preserved_without_public_leak')],\n 'guards':[(gui_fixture.GUIBuildTests,'test_actual_pure_Swift_GUI_chain_matches_Python_and_wrong_reference_rejects'),(main_fixture.MainPolicyTests,'test_python_producer_to_actual_swift_main_chain_rejects_tamper_without_human_files'),(gui_fixture.GUIBuildTests,'test_PF_T03_generated_precedence_reaches_hook_and_wrong_bundle_still_rejects'),(gui_fixture.GUIBuildTests,'test_missing_duplicate_late_wrong_target_nonce_source_and_old_product_reject'),(gui_fixture.GUIBuildTests,'test_wrong_original_leaf_never_becomes_new_baseline_or_manual_fallback'),(gui_fixture.GUIBuildTests,'test_P1_old_profile_cannot_be_retried_or_reseeded'),(gui_fixture.GUIBuildTests,'test_ambiguous_seed_launch_without_receipt_requires_owned_cleanup'),(gui_fixture.GUIBuildTests,'test_missing_hook_failure_is_only_control_and_safe_output_cannot_include_raw')],\n}[phase]\nwork=scratch/('work-'+phase);work.mkdir(mode=0o700);assert not work.is_symlink() and work.stat().st_uid==os.getuid()\nsource=pathlib.Path(gui_fixture.__file__).resolve().parents[1]\ninputs=[str(source/rel) for rel in ['Sources/DPKContinuityProbe/ProbeCore.swift','Sources/DPKContinuityProbe/LiveGate.swift','Tests/WindowChainProbe.swift']]\nassert all('import Security' not in pathlib.Path(name).read_text() for name in inputs)\nreal_run=subprocess.run;real_temp=tempfile.TemporaryDirectory\nrecords=[];calls=[];denied=[];binaries=set();compiler_records=[]\ndef owned(path):return pathlib.Path(path).resolve().is_relative_to(work.resolve())\ndef tracked_temp(*args,**kwargs):\n kwargs['dir']=str(work);obj=real_temp(*args,**kwargs);root=pathlib.Path(obj.name);stat=root.lstat();assert stat.st_uid==os.getuid() and stat.st_mode&0o777==0o700 and not root.is_symlink()\n record={'owner0700NonSymlink':True,'absentAfterCleanup':False};records.append(record);cleanup=obj.cleanup\n def exact_cleanup():\n  if root.exists():\n   before=root.lstat();assert before.st_uid==os.getuid() and before.st_ino==stat.st_ino and before.st_dev==stat.st_dev and not root.is_symlink()\n   assert not any(q.is_symlink() for q in root.rglob('*'))\n  cleanup()\n  try:root.lstat()\n  except FileNotFoundError:record['absentAfterCleanup']=True\n  else:raise AssertionError('owned fixture remains')\n obj.cleanup=exact_cleanup;return obj\ndef native(args,*a,**kwargs):\n if args==['/usr/bin/plutil','-convert','json','-o','-','-']:kind='plutil'\n elif len(args)==8 and args[0]=='swiftc' and args[1]=='-module-cache-path' and args[3:6]==inputs and args[6]=='-o' and owned(args[2]) and owned(args[7]):kind='pure-swiftc';binaries.add(args[7])\n elif len(args)==4 and args[0] in binaries and owned(args[1]):kind='pure-consent-or-window-helper'\n else:denied.append(True);raise AssertionError('native command outside exact pure allowlist')\n calls.append(kind)\n if kind=='pure-swiftc':\n  metadata=json.loads((scratch/'location.json').read_bytes());effective={**os.environ,**kwargs.pop('env',{})};effective['SDKROOT']=metadata['SDKROOT'];actual=[metadata['compilerPath'],*args[1:]]\n  record={'SDKROOTExplicitlyPinned':True,'SDKCanonicalName':metadata['SDKCanonicalName'],'compilerSHA256':metadata['compilerSHA256'],'argvSHA256':hashlib.sha256(json.dumps(actual,sort_keys=True).encode()).hexdigest(),'effectiveEnvironmentSHA256':hashlib.sha256(json.dumps(effective,sort_keys=True).encode()).hexdigest()};compiler_records.append(record)\n  result=real_run(actual,*a,env=effective,**kwargs);record['exit']=result.returncode;return result\n return real_run(args,*a,**kwargs)\nstarted=datetime.datetime.now(datetime.timezone.utc).isoformat();clock=time.monotonic()\nwith mock.patch.object(tempfile,'TemporaryDirectory',side_effect=tracked_temp),mock.patch.object(subprocess,'run',side_effect=native):\n result=unittest.TextTestRunner(verbosity=2).run(unittest.TestSuite(cls(name) for cls,name in names))\nassert all(r['absentAfterCleanup'] for r in records)\nassert not list(work.iterdir());work.rmdir()\nvalue={'phase':phase,'startedUTC':started,'endedUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'methods':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'skips':len(result.skipped),'seconds':time.monotonic()-clock,'actualNativeCalls':{kind:calls.count(kind) for kind in sorted(set(calls))},'deniedAttempts':len(denied),'fixtureRoots':records,'workParentAbsent':not work.exists(),'allNativeCallsReturnedSynchronously':True,'noGlobalHandlesClaim':True,'selectedMethods':[cls.__name__+'.'+name for cls,name in names],'compilerRecords':compiler_records}\nwith (scratch/(phase+'-result.json')).open('x') as f:f.write(json.dumps(value,indent=2)+'\\n')\nprint(json.dumps(value,indent=2));raise SystemExit(not result.wasSuccessful())\n",
+    "runnerSHA256": "edf88ab87ae52548356623aa494e0a2c0c7944648b2943daf580dc78fd8ab5d6",
+    "selection": "explicit TestSuite method lists; no discovery/imported suites"
+  },
+  "runtimeDelta": "only 3 GUI fixed dates in each of Python main_consent and Swift validateMainConsent; legacy and exact guards unchanged",
+  "sourceAggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d",
+  "sourceManifestFileSHA256": "20986bd64a542370334b270a671aef6ccd5276ce8338b8e2c287d75c42202608",
+  "sourceManifestRelativePath": "experiments/E010/evidence/ng-date-preparation-20261110/source-manifest.json",
+  "testResults": {
+    "errors": {
+      "actualNativeCalls": {
+        "plutil": 25
+      },
+      "allNativeCallsReturnedSynchronously": true,
+      "compilerRecords": [],
+      "deniedAttempts": 0,
+      "endedUTC": "2026-11-10T07:06:29.397506+00:00",
+      "errors": 0,
+      "failures": 0,
+      "fixtureRoots": [
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        }
+      ],
+      "methods": 3,
+      "noGlobalHandlesClaim": true,
+      "phase": "errors",
+      "seconds": 0.43637750018388033,
+      "selectedMethods": [
+        "GUIBuildTests.test_GUI_RF01_actual_CLI_unexpected_exception_is_closed_and_saved_privately",
+        "GUIBuildTests.test_GUI_RF01_invalid_expired_or_symlink_root_is_safe_refusal_and_help_survives",
+        "GUIBuildTests.test_GUI_RF02_timeout_partial_bytes_and_text_are_preserved_without_public_leak"
+      ],
+      "skips": 0,
+      "startedUTC": "2026-11-10T07:06:28.960997+00:00",
+      "workParentAbsent": true
+    },
+    "green": {
+      "actualNativeCalls": {
+        "pure-consent-or-window-helper": 22,
+        "pure-swiftc": 1
+      },
+      "allNativeCallsReturnedSynchronously": true,
+      "compilerRecords": [
+        {
+          "SDKCanonicalName": "macosx26.5",
+          "SDKROOTExplicitlyPinned": true,
+          "argvSHA256": "c340ee43ea8a2b051e1ce67f89a8aaf26d6840c0b163218805d6f0c8435e31f6",
+          "compilerSHA256": "2ed38571e92c0283091838c1649e27650ad9c99950288e883c7b2dc6c4ce89fb",
+          "effectiveEnvironmentSHA256": "ba4a3d86fa7f3b33ddb51541c8cbdf8155b71f366d756fb54171ada16dcfbd32",
+          "exit": 0
+        }
+      ],
+      "deniedAttempts": 0,
+      "endedUTC": "2026-11-10T07:06:22.077760+00:00",
+      "errors": 0,
+      "failures": 0,
+      "fixtureRoots": [
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        }
+      ],
+      "methods": 1,
+      "noGlobalHandlesClaim": true,
+      "phase": "green",
+      "seconds": 2.878986499737948,
+      "selectedMethods": [
+        "GUIBuildTests.test_DATE01_direct_GUI_and_legacy_consent_Python_Swift_match"
+      ],
+      "skips": 0,
+      "startedUTC": "2026-11-10T07:06:19.198642+00:00",
+      "workParentAbsent": true
+    },
+    "guards": {
+      "actualNativeCalls": {
+        "plutil": 141,
+        "pure-consent-or-window-helper": 9,
+        "pure-swiftc": 2
+      },
+      "allNativeCallsReturnedSynchronously": true,
+      "compilerRecords": [
+        {
+          "SDKCanonicalName": "macosx26.5",
+          "SDKROOTExplicitlyPinned": true,
+          "argvSHA256": "15c1dcafc351535c4afa286bcc5e01af4a8240d97ad76e95a7a7bfa0852572e1",
+          "compilerSHA256": "2ed38571e92c0283091838c1649e27650ad9c99950288e883c7b2dc6c4ce89fb",
+          "effectiveEnvironmentSHA256": "ba4a3d86fa7f3b33ddb51541c8cbdf8155b71f366d756fb54171ada16dcfbd32",
+          "exit": 0
+        },
+        {
+          "SDKCanonicalName": "macosx26.5",
+          "SDKROOTExplicitlyPinned": true,
+          "argvSHA256": "a0e060a45c206cc10f9f438a206a2746448ad33bba5a1d9c96e5b175d255f784",
+          "compilerSHA256": "2ed38571e92c0283091838c1649e27650ad9c99950288e883c7b2dc6c4ce89fb",
+          "effectiveEnvironmentSHA256": "ba4a3d86fa7f3b33ddb51541c8cbdf8155b71f366d756fb54171ada16dcfbd32",
+          "exit": 0
+        }
+      ],
+      "deniedAttempts": 0,
+      "endedUTC": "2026-11-10T07:06:28.860479+00:00",
+      "errors": 0,
+      "failures": 0,
+      "fixtureRoots": [
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        },
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        }
+      ],
+      "methods": 8,
+      "noGlobalHandlesClaim": true,
+      "phase": "guards",
+      "seconds": 6.683832874987274,
+      "selectedMethods": [
+        "GUIBuildTests.test_actual_pure_Swift_GUI_chain_matches_Python_and_wrong_reference_rejects",
+        "MainPolicyTests.test_python_producer_to_actual_swift_main_chain_rejects_tamper_without_human_files",
+        "GUIBuildTests.test_PF_T03_generated_precedence_reaches_hook_and_wrong_bundle_still_rejects",
+        "GUIBuildTests.test_missing_duplicate_late_wrong_target_nonce_source_and_old_product_reject",
+        "GUIBuildTests.test_wrong_original_leaf_never_becomes_new_baseline_or_manual_fallback",
+        "GUIBuildTests.test_P1_old_profile_cannot_be_retried_or_reseeded",
+        "GUIBuildTests.test_ambiguous_seed_launch_without_receipt_requires_owned_cleanup",
+        "GUIBuildTests.test_missing_hook_failure_is_only_control_and_safe_output_cannot_include_raw"
+      ],
+      "skips": 0,
+      "startedUTC": "2026-11-10T07:06:22.176473+00:00",
+      "workParentAbsent": true
+    },
+    "red": {
+      "actualNativeCalls": {
+        "pure-consent-or-window-helper": 22,
+        "pure-swiftc": 1
+      },
+      "allNativeCallsReturnedSynchronously": true,
+      "compilerRecords": [
+        {
+          "SDKCanonicalName": "macosx26.5",
+          "SDKROOTExplicitlyPinned": true,
+          "argvSHA256": "87dc83f7a00fc88d8bc9dce5e0f68650878479ed6a38900136dc144058d64618",
+          "compilerSHA256": "2ed38571e92c0283091838c1649e27650ad9c99950288e883c7b2dc6c4ce89fb",
+          "effectiveEnvironmentSHA256": "8a0eab640ec505e7a813250a8a15cf68ce42173c56aa2fa8c6677c4127dc172f",
+          "exit": 0
+        }
+      ],
+      "deniedAttempts": 0,
+      "endedUTC": "2026-11-10T07:05:54.270160+00:00",
+      "errors": 0,
+      "failures": 3,
+      "fixtureRoots": [
+        {
+          "absentAfterCleanup": true,
+          "owner0700NonSymlink": true
+        }
+      ],
+      "methods": 1,
+      "noGlobalHandlesClaim": true,
+      "phase": "red",
+      "seconds": 3.6776459999382496,
+      "selectedMethods": [
+        "GUIBuildTests.test_DATE01_direct_GUI_and_legacy_consent_Python_Swift_match"
+      ],
+      "skips": 0,
+      "startedUTC": "2026-11-10T07:05:50.592382+00:00",
+      "workParentAbsent": true
+    }
+  },
+  "todayHUTC": "2026-11-10T10:20:00Z"
+}

@@ -64,8 +64,131 @@ enum LiveGate {
       global["bundleIdentifier"] as? String == "local.rivet.dpkcontinuity." + namespace.replacingOccurrences(of: "-", with: ""),
       global["account"] as? String == "oauth-bundle" else { throw ProbeError.guardRejected }
   }
+  static func validateMainConsent(_ root: URL, global: [String: Any], now: Date) throws {
+    let (consent, raw) = try object(root, "main-consent.json")
+    let start = try date(global["startUTC"])
+    let mode = global["authorizationMode"] as? String ?? "rejected"
+    let gui = mode == "gui-package"
+    let approved = gui ? "2026-11-10T06:52:05Z" : "2026-11-04T08:56:05Z"
+    let latest = gui ? "2026-11-10T09:35:00Z" : "2026-11-05T08:56:05Z"
+    let valid = gui ? "2026-11-21T06:52:05Z" : "2026-11-15T08:56:05Z"
+    guard ["main-package", "gui-package"].contains(mode),
+      global["mainConsentSHA256"] as? String == hash(raw),
+      consent["kind"] as? String == (gui ? "E010-gui-package-consent" : "E010-main-package-consent"), consent["authorizationMode"] as? String == mode,
+      consent["namespace"] as? String == global["namespace"] as? String,
+      consent["synthetic"] as? Bool == global["synthetic"] as? Bool, consent["approved"] as? Bool == true,
+      (gui ? !(consent["statement"] as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty : consent["statement"] as? String == "確認批准整包，包含跨週留存、本人認證／跨日喚起，以及第7項故障殘留交接例外。"),
+      consent["approvedUTC"] as? String == approved, consent["latestStartUTC"] as? String == latest,
+      consent["grantsValidUntilUTC"] as? String == valid, consent["retentionRoot"] as? String == root.path,
+      consent["maxMainSignedBuilds"] as? Int == 3, consent["maxCleanupSignedBuilds"] as? Int == 1,
+      consent["actions"] as? [String] == ["preflight", "seed", "fresh", "expired", "p1-setup", "p1-read", "rebuild-setup", "rebuilt-read", "cleanup"],
+      NSDictionary(dictionary: consent["sourceSHA256"] as? [String: String] ?? [:]).isEqual(to: global["sourceSHA256"] as? [String: String] ?? [:]),
+      start >= (try date(consent["approvedUTC"])), start <= (try date(consent["latestStartUTC"])), start <= now,
+      now < (try date(consent["grantsValidUntilUTC"])), now < (try date(global["globalDeadlineUTC"])) else { throw ProbeError.guardRejected }
+    if gui {
+      let (reference, referenceRaw) = try object(root, "reference/original-leaf.json")
+      let (arm, _) = try object(root, "gui/p0/arm.json")
+      let (sync, syncRaw) = try object(root, "gui-begin-sync.json")
+      let rootAttributes = try FileManager.default.attributesOfItem(atPath: root.path)
+      guard let rootBinding = global["rootBinding"] as? [String: Any],
+        (rootBinding["inode"] as? NSNumber)?.uint64Value == (rootAttributes[.systemFileNumber] as? NSNumber)?.uint64Value,
+        (rootBinding["device"] as? NSNumber)?.uint64Value == (rootAttributes[.systemNumber] as? NSNumber)?.uint64Value,
+        (rootBinding["ownerUID"] as? NSNumber)?.uint32Value == getuid(), rootBinding["mode"] as? Int == 0o700 else { throw ProbeError.guardRejected }
+      guard global["guiBeginSyncSHA256"] as? String == hash(syncRaw), sync["humanCanBeginNow"] as? Bool == true,
+        sync["namespace"] as? String == global["namespace"] as? String, try date(sync["recordedUTC"]) <= start,
+        consent["originalLeafBeforeAutoRequired"] as? Bool == true, consent["automaticCertificateSideEffectsAccepted"] as? Bool == true,
+        consent["CUAProhibited"] as? Bool == true, consent["buildEvidenceType"] as? String == "gui-hooks-v1",
+        global["buildEvidenceType"] as? String == "gui-hooks-v1", global["originalLeafReferenceSHA256"] as? String == hash(referenceRaw),
+        global["originalCertificateSHA256"] as? String == reference["certificateSHA256"] as? String,
+        hash(try Data(contentsOf: safe(root,"reference/original.cer"))) == reference["certificateSHA256"] as? String,
+        reference["namespace"] as? String == global["namespace"] as? String, reference["anchorSHA256"] as? String == global["anchorSHA256"] as? String,
+        reference["codeSignTrustVerified"] as? Bool == true, arm["originalLeafReferenceSHA256"] as? String == hash(referenceRaw),
+        try date(reference["frozenUTC"]) >= start, try date(reference["frozenUTC"]) <= date(arm["armedUTC"]),
+        try date(reference["certificateNotAfterUTC"]) >= date(global["globalDeadlineUTC"]).addingTimeInterval(2100) else { throw ProbeError.guardRejected }
+    }
+    guard let grantHashes = global["grantSHA256"] as? [String: String] else { throw ProbeError.guardRejected }
+    for kind in ["assets", "retention", "recovery"] {
+      let (grant, bytes) = try object(root, "grants/\(kind).json")
+      guard grantHashes[kind] == hash(bytes), grant["kind"] as? String == "human-grant", grant["scope"] as? String == kind,
+        grant["namespace"] as? String == global["namespace"] as? String, grant["synthetic"] as? Bool == global["synthetic"] as? Bool,
+        grant["approved"] as? Bool == true, grant["authorizationMode"] as? String == mode,
+        grant["mainConsentSHA256"] as? String == hash(raw), grant["retentionRoot"] as? String == root.path,
+        grant["validUntilUTC"] as? String == valid,
+        !(grant["statement"] as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+        NSDictionary(dictionary: grant["sourceSHA256"] as? [String: String] ?? [:]).isEqual(to: global["sourceSHA256"] as? [String: String] ?? [:]) else { throw ProbeError.guardRejected }
+      if kind == "recovery" { guard grant["residualItemAccepted"] as? Bool == true, !(grant["procedure"] as? String ?? "").isEmpty else { throw ProbeError.guardRejected } }
+    }
+  }
+  static func validatePackageAction(_ gate: [String: Any], global: [String: Any], stage: String, previous: String, window: [String: Any], windowHash: String, now: Date) throws {
+    guard gate["kind"] as? String == "package-action", gate["authorizationMode"] as? String == global["authorizationMode"] as? String,
+      gate["namespace"] as? String == global["namespace"] as? String, gate["synthetic"] as? Bool == global["synthetic"] as? Bool,
+      gate["stage"] as? String == stage, gate["mainConsentSHA256"] as? String == global["mainConsentSHA256"] as? String,
+      gate["previousReceiptSHA256"] as? String == previous, gate["windowSHA256"] as? String == windowHash,
+      gate["humanReady"] == nil, gate["humanReadyStatement"] == nil, gate["wholeStageObserved"] == nil, gate["promptCount"] == nil,
+      NSDictionary(dictionary: gate["sourceSHA256"] as? [String: String] ?? [:]).isEqual(to: global["sourceSHA256"] as? [String: String] ?? [:]),
+      try date(gate["recordedUTC"]) >= date(window["startUTC"]), try date(gate["recordedUTC"]) <= now else { throw ProbeError.guardRejected }
+  }
+  static func validateMainWindowChain(_ root: URL, global: [String: Any], globalHash: String, number: Int, now: Date) throws {
+    try validateMainConsent(root, global: global, now: now)
+    let (anchor, anchorRaw) = try object(root, "anchor.json"); let anchorHash = hash(anchorRaw)
+    let (anchorBinding, _) = try object(root, "anchor.binding.json")
+    let (window, windowRaw) = try object(root, "windows/1.json"); let windowHash = hash(windowRaw)
+    let (windowBinding, _) = try object(root, "windows/1.binding.json")
+    guard anchor["kind"] as? String == "E010-anchor", anchor["p0ExpiryUTC"] == nil, anchor["certificateNotAfterUTC"] == nil,
+      anchorBinding["anchorSHA256"] as? String == anchorHash, global["anchorSHA256"] as? String == anchorHash,
+      global["window1SHA256"] as? String == windowHash, window["anchorSHA256"] as? String == anchorHash,
+      window["globalSHA256"] == nil, windowBinding["windowSHA256"] as? String == windowHash,
+      window["number"] as? Int == 1, window["namespace"] as? String == global["namespace"] as? String else { throw ProbeError.guardRejected }
+    for key in ["namespace", "synthetic", "backend", "startUTC", "globalDeadlineUTC", "maxWindows", "hostBinding", "hostBindingSHA256", "sourceSHA256", "grantSHA256", "authorizationMode", "mainConsentSHA256", "bundleIdentifier", "service", "account", "fixture", "fixtureSHA256", "publicEvidenceDirectory"] {
+      guard let left = anchor[key], let right = global[key], NSDictionary(dictionary: [key:left]).isEqual(to: [key:right]) else { throw ProbeError.guardRejected }
+    }
+    let start = try date(global["startUTC"])
+    guard try date(window["startUTC"]) == start, abs(try date(window["cutoffUTC"]).timeIntervalSince(start)-1500)<0.01,
+      abs(try date(window["deadlineUTC"]).timeIntervalSince(start)-1800)<0.01,
+      abs(try date(global["globalDeadlineUTC"]).timeIntervalSince(start)-864000)<0.01 else { throw ProbeError.guardRejected }
+    let (begin, beginRaw) = try object(root, "bootstrap/begin.machine.json")
+    let (setup, setupRaw) = try object(root, "bootstrap/setup.ready.json")
+    try validatePackageAction(setup, global: global, stage: "setup-only", previous: hash(beginRaw), window: window, windowHash: windowHash, now: now)
+    guard setup["anchorSHA256"] as? String == anchorHash, try date(setup["recordedUTC"]) >= date(begin["endedUTC"]) else { throw ProbeError.guardRejected }
+    let (proof, proofRaw) = try object(root, "bootstrap/actual-proof.json"); let (_, p0Raw) = try object(root, "proofs/p0.json")
+    let (proofBinding, proofBindingRaw) = try object(root, "bootstrap/proof.binding.json")
+    let (complete, completeRaw) = try object(root, "bootstrap/complete.json")
+    let (machine, machineRaw) = try object(root, "bootstrap/setup.machine.json")
+    let (seed, _) = try object(root, "bootstrap/seed.ready.json")
+    try validatePackageAction(seed, global: global, stage: "seed-ready", previous: hash(machineRaw), window: window, windowHash: windowHash, now: now)
+    guard proof["profileSignatureVerified"] as? Bool == true, proof["certificateInProfile"] as? Bool == true, proof["appleDevelopmentChainVerified"] as? Bool == true,
+      proof["hostBindingSHA256"] as? String == global["hostBindingSHA256"] as? String,
+      NSDictionary(dictionary: proof["sourceSHA256"] as? [String:String] ?? [:]).isEqual(to: global["sourceSHA256"] as? [String:String] ?? [:]),
+      hash(proofRaw) == hash(p0Raw), global["actualSetupProofSHA256"] as? String == hash(proofRaw),
+      global["setupProofBindingSHA256"] as? String == hash(proofBindingRaw), proofBinding["actualProofSHA256"] as? String == hash(proofRaw),
+      proofBinding["anchorSHA256"] as? String == anchorHash, proofBinding["windowSHA256"] as? String == windowHash,
+      proofBinding["setupReadySHA256"] as? String == hash(setupRaw), complete["globalSHA256"] as? String == globalHash,
+      complete["anchorSHA256"] as? String == anchorHash, complete["windowSHA256"] as? String == windowHash,
+      complete["actualProofSHA256"] as? String == hash(proofRaw), machine["completionSHA256"] as? String == hash(completeRaw),
+      machine["globalSHA256"] as? String == globalHash, machine["completed"] as? Bool == true, machine["callAttempted"] as? Bool == false,
+      seed["globalSHA256"] as? String == globalHash, try date(seed["recordedUTC"]) >= date(machine["endedUTC"]),
+      try date(machine["endedUTC"]) < date(window["cutoffUTC"]),
+      global["p0ExpiryUTC"] as? String == proof["profileExpiryUTC"] as? String,
+      global["certificateNotAfterUTC"] as? String == proof["certificateNotAfterUTC"] as? String,
+      try date(proof["profileExpiryUTC"]) <= date(global["globalDeadlineUTC"]).addingTimeInterval(-1800),
+      try date(proof["certificateNotAfterUTC"]) >= date(global["globalDeadlineUTC"]).addingTimeInterval(2100) else { throw ProbeError.guardRejected }
+    if number != 1 {
+      let (later, laterRaw) = try object(root, "windows/\(number).json"); let (binding, _) = try object(root, "windows/\(number).binding.json")
+      guard (2...3).contains(number), later["number"] as? Int == number, later["globalSHA256"] as? String == globalHash,
+        binding["windowSHA256"] as? String == hash(laterRaw), later["mainConsentSHA256"] as? String == global["mainConsentSHA256"] as? String else { throw ProbeError.guardRejected }
+      let prior = number == 2 ? "fresh" : "p1-read"
+      let (event, eventRaw) = try object(root, "receipts/\(prior).machine.json"); let (retained, _) = try object(root, "retained-\(number-1).json")
+      guard retained["globalSHA256"] as? String == globalHash, retained["machineReceiptSHA256"] as? String == hash(eventRaw),
+        event["completed"] as? Bool == true, retained["state"] as? String == "retained-no-background-process" else { throw ProbeError.guardRejected }
+      if number == 2 { guard now >= (try date(global["p0ExpiryUTC"])) else { throw ProbeError.guardRejected } }
+    }
+  }
   static func validateWindowChain(_ root: URL, global: [String: Any], globalHash: String, number: Int, now: Date) throws {
     try validateExperimentIdentity(root, global: global)
+    if ["main-package", "gui-package"].contains(global["authorizationMode"] as? String ?? "rejected") {
+      try validateMainWindowChain(root, global: global, globalHash: globalHash, number: number, now: now); return
+    }
+    guard global["authorizationMode"] == nil else { throw ProbeError.guardRejected }
     let (window, windowRaw) = try object(root, "windows/\(number).json")
     let (windowBinding, _) = try object(root, "windows/\(number).binding.json")
     let windowHash = hash(windowRaw)
@@ -185,6 +308,8 @@ enum LiveGate {
       windowStart <= now, abs(try date(window["cutoffUTC"]).timeIntervalSince(windowStart) - 1500) < 0.01,
       abs(try date(window["deadlineUTC"]).timeIntervalSince(windowStart) - 1800) < 0.01 else { throw ProbeError.guardRejected }
     try validateWindowChain(root, global: global, globalHash: globalHash, number: number, now: now)
+    let mainPackage = ["main-package", "gui-package"].contains(global["authorizationMode"] as? String ?? "rejected")
+    if mainPackage { guard now < (try date(window["deadlineUTC"])), now < deadline else { throw ProbeError.guardRejected } }
     let cleanup = ticket["cleanup"] as? Bool == true
     if cleanup {
       guard operation == .cleanup else { throw ProbeError.guardRejected }
@@ -194,10 +319,18 @@ enum LiveGate {
       guard now < deadline, now < cutoff, !FileManager.default.fileExists(atPath: abort.path),
         let readyHash = ticket["readySHA256"] as? String else { throw ProbeError.guardRejected }
       let (ready, readyBytes) = try object(root, "gates/\(stage).json")
-      guard hash(readyBytes) == readyHash, ready["namespace"] as? String == context.namespace,
-        ready["stage"] as? String == stage, ready["synthetic"] as? Bool == false, ready["humanReady"] as? Bool == true,
-        let statement = ready["humanReadyStatement"] as? String, !statement.isEmpty,
-        try date(ready["recordedUTC"]) <= now else { throw ProbeError.guardRejected }
+      guard hash(readyBytes) == readyHash else { throw ProbeError.guardRejected }
+      if mainPackage {
+        let order = ["preflight", "seed", "fresh", "expired", "p1-setup", "p1-read", "rebuild-setup", "rebuilt-read", "cleanup"]
+        guard let index = order.firstIndex(of: stage), index > 0 else { throw ProbeError.guardRejected }
+        let (previous, previousRaw) = try object(root, "receipts/\(order[index-1]).machine.json")
+        try validatePackageAction(ready, global: global, stage: stage, previous: hash(previousRaw), window: window, windowHash: hash(windowBytes), now: now)
+        guard ready["globalSHA256"] as? String == globalHash, try date(ready["recordedUTC"]) >= date(previous["endedUTC"]) else { throw ProbeError.guardRejected }
+      } else {
+        guard ready["namespace"] as? String == context.namespace, ready["stage"] as? String == stage, ready["synthetic"] as? Bool == false,
+          ready["humanReady"] as? Bool == true, let statement = ready["humanReadyStatement"] as? String, !statement.isEmpty,
+          try date(ready["recordedUTC"]) <= now else { throw ProbeError.guardRejected }
+      }
       guard (stage == "seed" && operation == .seed) || (["fresh", "expired", "p1-read", "rebuilt-read"].contains(stage) && operation == .read) else { throw ProbeError.guardRejected }
     }
     let (proof, proofBytes) = try object(root, proofRelative); let proofHash = hash(proofBytes)
@@ -214,6 +347,10 @@ enum LiveGate {
       try date(proof["certificateNotBeforeUTC"]) <= now, try date(proof["certificateNotAfterUTC"]) > now,
       try date(proof["certificateNotAfterUTC"]) >= deadline.addingTimeInterval(2100)
     else { throw ProbeError.guardRejected }
+    if global["authorizationMode"] as? String == "gui-package" {
+      guard proof["evidenceType"] as? String == "gui-hooks-v1", proof["certificateSHA256"] as? String == global["originalCertificateSHA256"] as? String,
+        proof["originalLeafReferenceSHA256"] as? String == global["originalLeafReferenceSHA256"] as? String else { throw ProbeError.guardRejected }
+    }
     let expiry = try date(proof["profileExpiryUTC"])
     if stage == "expired" {
       let originalExpiry = try date(global["p0ExpiryUTC"])

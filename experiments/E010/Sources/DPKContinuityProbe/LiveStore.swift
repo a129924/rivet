@@ -14,6 +14,8 @@ final class LiveStore: ExperimentStore {
   }
   func add(_ data: Data) throws {
     guard permit.action == .seed else { throw ProbeError.guardRejected }
+    try LiveGate.write(permit.root, "write-attempts/\(permit.ticketID).app.json", ["namespace": permit.namespace,
+      "synthetic": false, "operation": "seed-read-a", "state": "add-starting", "ticket": permit.ticketID])
     var request = query; request[kSecValueData] = data
     request[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
     calls += 1; let status = SecItemAdd(request as CFDictionary, nil); lastStatus = status

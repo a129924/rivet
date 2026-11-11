@@ -1,0 +1,104 @@
+{
+  "actualSourceReview": {
+    "RF01AndRF02AdjacentTestsPassed": true,
+    "acceptedAssetAndGUIWindowActualCallsRequiredNotOnlyIsinstance": true,
+    "actualProofSyntheticAndNoSeedReceipt": true,
+    "canonicalAliasInstalledOnlyWhenNameIsMain": true,
+    "directChildRunsActualFileViaRunpyMain": true,
+    "noBroadImportlibHomeOrAuthorizationBypass": true,
+    "nonPlutilCommandsBlockedInChild": true,
+    "onlyCanonicalModuleAliasAndDirectEntryTestChanged": true,
+    "traceInjectsOnlySyntheticConstructorClockAndIdentityBeforeFinalEntrypoint": true
+  },
+  "audit": {
+    "externalSafeAuditOnlyRetained": true,
+    "fileSHA256": {
+      "before.json": "79b9a02d8013c80c4eec02a5f9d8ab7ea75762331feeee86dbf392bcd5bc22a2",
+      "cleanup-result.json": "a6e8e253cacde17e3af572584287a27abfb2c19c338c6e5b44f0fc8018a6bd9a",
+      "focused-result.json": "d485d964f5e47b158a7797d579bc9adb62e114263a828d40956fbb98a38ed9e4",
+      "focused.log": "793e0420470faa0c8cb161fd3ba903a7e95d3367981d0cb37e9f22c45f53d694"
+    }
+  },
+  "authorPreparationCheckSHA256": "328ef442476cd6a48122e90f93a2250f18f0e87c9ea8bfedc705f6b4521265e6",
+  "cleanup": {
+    "allPreExistingFilesUnchangedByTester": true,
+    "endUTC": "2026-11-05T08:55:54.099725+00:00",
+    "externalSafeAuditLogsRetained": true,
+    "oldTenFilePreparationNotAccessed": true,
+    "ownedFixtureTemporaryOutputsAbsent": true,
+    "preExistingE010FileCount": 319,
+    "startUTC": "2026-11-05T08:55:54.099036+00:00",
+    "syntheticChildCompletedAndNoProcessSignalled": true
+  },
+  "focusedTests": {
+    "acceptedAssetAndGUIWindowMustEachBeReached": true,
+    "actualPythonChildMainEntry": true,
+    "allNonPlutilChildCommandsBlockedByFixture": true,
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_gui_build.GUIBuildTests.test_GUI_RF03_actual_main_entry_reaches_accepted_asset_and_GUI_window",
+      "test_gui_build.GUIBuildTests.test_GUI_RF01_actual_CLI_unexpected_exception_is_closed_and_saved_privately",
+      "test_gui_build.GUIBuildTests.test_GUI_RF02_timeout_partial_bytes_and_text_are_preserved_without_public_leak",
+      "-v"
+    ],
+    "current22SHAMatched": true,
+    "endUTC": "2026-11-05T08:55:37.246095+00:00",
+    "exit": 0,
+    "logSHA256": "793e0420470faa0c8cb161fd3ba903a7e95d3367981d0cb37e9f22c45f53d694",
+    "methods": 3,
+    "onlyTwoActiveSourceChanges": [
+      "Tests/test_gui_build.py",
+      "scripts/continuity.py"
+    ],
+    "preFix22SnapshotExact": true,
+    "prior290FilesUnchanged": true,
+    "priorRFTesterReceiptUnchanged": true,
+    "realSigningOrAssetCalls": false,
+    "reportedUnittestSeconds": 2.531,
+    "skips": 0,
+    "startUTC": "2026-11-05T08:55:34.492580+00:00"
+  },
+  "handoff": {
+    "GUI05ApprovalNotSelfGranted": true,
+    "GUI06HumanSyncStillRequired": true,
+    "nextRole": "original independent GUI05 Reviewer",
+    "preparationOnly": true
+  },
+  "hardPreparationDeadlineUTC": "2026-11-05T09:14:10Z",
+  "kind": "E010-GUI04-independent-RF03-actual-entry-focused-verification",
+  "limits": {
+    "SwiftSchemesAndOtherApprovedTestsNotRerun": true,
+    "actualAppBuildOrRun": false,
+    "actualLiveRootGrantAnchorWindow": false,
+    "actualXcodeOrSignedProfileSuccessClaimed": false,
+    "mainHypothesisExecuted": false,
+    "noGitMutationOrDevWrites": true,
+    "noSourceDocsOrHistoricalReceiptsModified": true,
+    "oldTenFilePreparationAccessed": false,
+    "realAssetSigningCMSIOKitKeychainOrDPK": false,
+    "realGUIorCUA": false
+  },
+  "protection": {
+    "READMESHA256": "04fa91514c0526036d863120664eb6348a72a8f80b30a0183d39430f22877d4f",
+    "originalGUI04AndRF01RF02ReceiptsUnchanged": true,
+    "prior22SnapshotBytesExact": true,
+    "prior22SnapshotMapSHA256": "3c869dcbe96f457d58ec68622d02727a690ec79ce8d25eaef0586b7588e87905",
+    "prior290ProtectedFilesUnchanged": true,
+    "stepSHA256": "a193bd842e7c704530d9e6cf856d4d030e7d71015e9ea53c97f22247c876bb62"
+  },
+  "recordedUTC": "2026-11-05T08:56:19.292195+00:00",
+  "required_fixes": [],
+  "sourceManifest": {
+    "SHA256": "20ace0aa34395e92d3ebb2e539bc91b3910021962fc8a75e292d2eadea15e037",
+    "aggregateSHA256": "14b6705399b72fcbc9d740101a1f641b66bf1d606a297178ad40efcf751256f0",
+    "allActualSHA256Matched": true,
+    "continuitySHA256": "8d5d02c4acdf58ea31017e7647307e38a393b78e9ba2d8d2dd5e89c87e0edc09",
+    "path": "experiments/E010/evidence/gui-preparation-entry-fix-20261105/source-manifest.json",
+    "sourceCount": 22,
+    "testSHA256": "a90a7e66d1bcfceed626db2889a5dcd83ad3b5a78c140cfd8562b8bc5594f897"
+  },
+  "verdict": "approved"
+}

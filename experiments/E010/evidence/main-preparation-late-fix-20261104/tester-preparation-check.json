@@ -1,0 +1,110 @@
+{
+  "MAIN05Approval": "pending original independent Reviewer",
+  "actualTest": {
+    "PYTHONPATH": "experiments/E010/Tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_main_review_fixes.MainReviewFixTests.test_RF03_LATE_exit_zero_at_cutoff_is_control_only_and_recovery_can_finish",
+      "-v"
+    ],
+    "exit": 0,
+    "logSHA256": "128d6173263a1f2591966c519fd8796bc664eea487805918ff222ea1884aa49e",
+    "methods": 1,
+    "seconds": 0.198,
+    "skips": 0
+  },
+  "branchVerification": {
+    "exitZeroAndEndedAtOrAfterLimitClassifiedLate": true,
+    "lateAcceptedOnlyByFailedAttemptControl": true,
+    "mockFixtureExactCleanupAndFinalIndexMatch": true,
+    "mockRecoveryUsesOriginalCleanupWindowBudget": true,
+    "noSelectionOrProductHashesOrHostProofProduced": true,
+    "originalWindowBytesUnchanged": true,
+    "sameCandidateSHADualACKRequiredBeforeFixtureRemoval": true
+  },
+  "cleanup": {
+    "endUTC": "2026-11-04T10:03:43.815613+00:00",
+    "externalCompleteness": "unknown",
+    "noOpenHandlesBeforeCleanup": true,
+    "ownedEmptyTempRemoved": true,
+    "ownedSyntheticFixtureRemovedByTest": true,
+    "retainedAuditFiles": [
+      "before.json",
+      "focused-result.json",
+      "focused.log"
+    ],
+    "retainedExternalAuditBasename": "rivet-E010-MAIN04-LATE-6g47u4p5",
+    "startUTC": "2026-11-04T10:03:43.815239+00:00"
+  },
+  "hypothesis": "未執行",
+  "kind": "E010-MAIN04-independent-MAIN-RF03-LATE-focused-verification",
+  "notExecuted": [
+    "other 19 or 65 test suites",
+    "Swift or unsigned build",
+    "actual process snapshot or signal",
+    "signed build",
+    "Apple assets",
+    "App/GUI/Keychain/DPK",
+    "live anchor/window/retention/natural expiry/P1 restoration",
+    "settings query or auxiliary experiment",
+    "formal adapter",
+    "Git mutation"
+  ],
+  "protection": {
+    "allReceivedExistingE010BytesUnchangedAfterTest": true,
+    "authorBaselineSHA256": "fe2010a350e085a9a2fe8c62dc198428af64a4c60a41ded8e3ef0a8673d2e647",
+    "oldFiles": 227,
+    "oldMAIN03MAIN04RFReceiptsAnd171Snapshots22GUI13MapAQ2ProtectedByBaseline": true,
+    "onlyChangedOldFiles": [
+      "experiments/E010/Tests/test_main_review_fixes.py",
+      "experiments/E010/scripts/prepare.py"
+    ],
+    "sourceAndStepUnchangedByTester": true,
+    "unchangedOldFiles": 225
+  },
+  "recordedUTC": "2026-11-04T10:03:43.815613+00:00",
+  "required_fixes": [],
+  "scope": "only MAIN-RF03-LATE; original Reviewer re-review required; no live release",
+  "source": {
+    "HEADContext": "b930d80072909f52171a23598b923af82c7c91cc",
+    "authorPreparationReceiptSHA256": "b9fa495c72be3bf768b165fcb577294c5e60f8ccde0ef629bf289a4e42f69ad1",
+    "proofSwiftAndEightAppBuildInputsUnchanged": true,
+    "source19AggregateSHA256": "24467204e7728e8d281f3de0db951051c8428d694629329443b6594fc8966a5a",
+    "sourceChangesSincePriorRF": [
+      "scripts/prepare.py",
+      "Tests/test_main_review_fixes.py"
+    ],
+    "sourceManifestFileSHA256": "e989bbebc05e98820f996a3e35e900bb8823df40fe86aa4379685cdff72d5e1f",
+    "sourceSHA256": {
+      "DPKContinuityProbe.xcodeproj/project.pbxproj": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+      "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+      "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+      "Resources/Info.plist": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+      "Sources/DPKContinuityProbe/AppMain.swift": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+      "Sources/DPKContinuityProbe/LiveGate.swift": "50122e01c949357e8a169585bbea09b3d3e2ff3812dd56eb0c92a75e7088ab7f",
+      "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+      "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+      "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+      "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+      "Tests/WindowChainProbe.swift": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+      "Tests/test_bootstrap.py": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+      "Tests/test_continuity.py": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+      "Tests/test_main_policy.py": "4be3c1e7710b9e5f6160c2d65a3c637706270578e0ee6051ed84728d2e74107e",
+      "Tests/test_main_review_fixes.py": "de0450316cbe369b8b46f03cd137611ec4b642435f9be2c41d7ab6973de4f3ce",
+      "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+      "scripts/continuity.py": "3b292400df20b799217f391f20bd9a4c0a8d6107ecdd8c63f786832a4d31e143",
+      "scripts/prepare.py": "3682f811c6446795be6b4458e709d3db822177c81b34c5bcbe280aff231b7b07",
+      "scripts/proof.py": "005948ab131ac3618addbd937047741bf2e7f64463f23e139aca35faab3914b2"
+    },
+    "stepSHA256": "8c4fdaeda30ab1d712316dfbf3aa966eff3edf939c53af03e9a41cbd02c36835"
+  },
+  "upstreamHistory": {
+    "MAIN05": "needs-rework solely MAIN-RF03-LATE, pending independent re-review",
+    "authorVerdict": null,
+    "priorRF01RF02RF04AndOrdinaryNonzeroRF03": "resolved by original Reviewer; not retested here"
+  },
+  "verdict": "approved"
+}

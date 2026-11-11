@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme LastUpgradeVersion="2600" version="1.3">
-<BuildAction parallelizeBuildables="YES" buildImplicitDependencies="NO"><BuildActionEntries><BuildActionEntry buildForTesting="NO" buildForRunning="YES" buildForProfiling="NO" buildForArchiving="NO" buildForAnalyzing="YES"><BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="EE0000000000000000000001" BuildableName="DPKContinuityProbe.app" BlueprintName="DPKContinuityProbe" ReferencedContainer="container:DPKContinuityProbe.xcodeproj"/></BuildActionEntry></BuildActionEntries></BuildAction>
-<LaunchAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.IDEFoundation.Launcher.LLDB" launchStyle="0" useCustomWorkingDirectory="NO" ignoresPersistentStateOnLaunch="YES" debugDocumentVersioning="NO" allowLocationSimulation="NO"><BuildableProductRunnable runnableDebuggingMode="0"><BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="EE0000000000000000000001" BuildableName="DPKContinuityProbe.app" BlueprintName="DPKContinuityProbe" ReferencedContainer="container:DPKContinuityProbe.xcodeproj"/></BuildableProductRunnable></LaunchAction>
-<AnalyzeAction buildConfiguration="Debug"/>
+  <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="NO">
+    <BuildActionEntries>
+      <BuildActionEntry buildForTesting="NO" buildForRunning="YES" buildForProfiling="NO" buildForArchiving="NO" buildForAnalyzing="YES">
+        <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="EE0000000000000000000001" BuildableName="DPKContinuityProbe.app" BlueprintName="DPKContinuityProbe" ReferencedContainer="container:DPKContinuityProbe.xcodeproj" />
+      </BuildActionEntry>
+    </BuildActionEntries>
+    <PreActions>
+      <ExecutionAction ActionType="Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+        <ActionContent title="E010 GUI pre" scriptText="exec /usr/bin/python3 -B &quot;$E010_CONTROL_ROOT/frozen-source/scripts/gui_build.py&quot; --live --root &quot;$E010_CONTROL_ROOT&quot; --hook pre&#10;">
+          <EnvironmentBuildable>
+            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="EE0000000000000000000001" BuildableName="DPKContinuityProbe.app" BlueprintName="DPKContinuityProbe" ReferencedContainer="container:DPKContinuityProbe.xcodeproj" />
+          </EnvironmentBuildable>
+        </ActionContent>
+      </ExecutionAction>
+    </PreActions>
+    <PostActions>
+      <ExecutionAction ActionType="Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+        <ActionContent title="E010 GUI post" scriptText="exec /usr/bin/python3 -B &quot;$E010_CONTROL_ROOT/frozen-source/scripts/gui_build.py&quot; --live --root &quot;$E010_CONTROL_ROOT&quot; --hook post&#10;">
+          <EnvironmentBuildable>
+            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="EE0000000000000000000001" BuildableName="DPKContinuityProbe.app" BlueprintName="DPKContinuityProbe" ReferencedContainer="container:DPKContinuityProbe.xcodeproj" />
+          </EnvironmentBuildable>
+        </ActionContent>
+      </ExecutionAction>
+    </PostActions>
+  </BuildAction>
+  <LaunchAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.IDEFoundation.Launcher.LLDB" launchStyle="0" useCustomWorkingDirectory="NO" ignoresPersistentStateOnLaunch="YES" debugDocumentVersioning="NO" allowLocationSimulation="NO">
+    <BuildableProductRunnable runnableDebuggingMode="0">
+      <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="EE0000000000000000000001" BuildableName="DPKContinuityProbe.app" BlueprintName="DPKContinuityProbe" ReferencedContainer="container:DPKContinuityProbe.xcodeproj" />
+    </BuildableProductRunnable>
+  </LaunchAction>
+  <AnalyzeAction buildConfiguration="Debug" />
 </Scheme>

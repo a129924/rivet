@@ -1,0 +1,431 @@
+"""GUI evidence fixtures only; no real Xcode, certificate, App or Keychain calls."""
+import datetime as dt
+import json
+import os
+from pathlib import Path
+import plistlib
+import sys
+import unittest
+from unittest import mock
+import uuid
+import test_main_policy as prior
+import continuity as c
+import proof
+
+class GUIBuildTests(unittest.TestCase):
+    setUpBase=prior.MainPolicyTests.setUp
+    def setUp(self):
+        self.setUpBase();self.now=dt.datetime(2026,11,10,6,58,tzinfo=c.UTC);self.start=self.now
+        consent=json.loads((self.root/'main-consent.json').read_bytes())
+        consent.update(kind='E010-gui-package-consent',authorizationMode='gui-package',statement='synthetic approved GUI package',approvedUTC='2026-11-10T06:52:05Z',latestStartUTC='2026-11-10T09:35:00Z',grantsValidUntilUTC='2026-11-21T06:52:05Z',originalLeafBeforeAutoRequired=True,automaticCertificateSideEffectsAccepted=True,CUAProhibited=True,buildEvidenceType='gui-hooks-v1')
+        (self.root/'main-consent.json').write_bytes(c.canonical(consent));sha=c.file_hash(self.root/'main-consent.json')
+        for kind in ('assets','retention','recovery'):
+            p=self.root/'grants'/ (kind+'.json');value=json.loads(p.read_bytes());value.update(authorizationMode='gui-package',mainConsentSHA256=sha,validUntilUTC='2026-11-21T06:52:05Z');p.write_bytes(c.canonical(value))
+    def begin(self):
+        if not (self.root/'gui-begin-sync.json').exists():
+            c.exclusive(self.root,'gui-begin-sync.json',dict(kind='human-begin-sync',namespace=self.ns,synthetic=True,sourceSHA256=self.source,grantSHA256={kind:c.file_hash(self.root/'grants'/(kind+'.json')) for kind in ('assets','retention','recovery')},retentionRoot=str(self.root),humanCanBeginNow=True,statement='synthetic one-time begin collaboration',recordedUTC=self.clock().isoformat()))
+        c.begin_anchor(self.root,self.ns,self.source,self.out,True,self.clock);return c.Bootstrap(self.root,True,self.clock)
+    def leaf(self,ctx):
+        import gui_build as g
+        p=self.root/'inbox/original.cer';p.parent.mkdir(mode=0o700);p.write_bytes(b'\x30synthetic-public-certificate')
+        self.leaf_sha=c.file_hash(p)
+        g.freeze_leaf(ctx,inspector=lambda _:dict(certificateSHA256=self.leaf_sha,certificateNotBeforeUTC=(self.start-dt.timedelta(days=1)).isoformat(),certificateNotAfterUTC=(self.start+dt.timedelta(days=20)).isoformat(),codeSignTrustVerified=True))
+    def phase(self):
+        import gui_build as g
+        ctx=self.begin();self.leaf(ctx);g.configure(ctx);arm=g.arm(ctx,'p0');return ctx,arm
+    def environment(self,ctx,arm):
+        return {'E010_CONTROL_ROOT':str(self.root),'E010_GUI_PHASE':arm['phase'],'E010_GUI_NONCE':arm['nonce'],'PROJECT_DIR':str(self.root/'configured'),'PROJECT_FILE_PATH':str(self.root/'configured/DPKContinuityProbe.xcodeproj'),'TARGET_NAME':'DPKContinuityProbe','PRODUCT_NAME':'DPKContinuityProbe','CONFIGURATION':arm['configuration'],'PRODUCT_BUNDLE_IDENTIFIER':ctx.manifest['bundleIdentifier'],'TARGET_BUILD_DIR':str(self.root/arm['productRelative']),'WRAPPER_NAME':'DPKContinuityProbe.app','EXECUTABLE_PATH':'DPKContinuityProbe.app/Contents/MacOS/DPKContinuityProbe'}
+    def product(self,ctx,arm,marker='initial'):
+        app=self.root/arm['productRelative']/'DPKContinuityProbe.app';(app/'Contents/MacOS').mkdir(parents=True)
+        (app/'Contents/MacOS/DPKContinuityProbe').write_bytes(('synthetic-main-'+marker).encode())
+        (app/'Contents/Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier':ctx.manifest['bundleIdentifier'],'CFBundleExecutable':'DPKContinuityProbe','E010BuildMarker':marker}))
+        (app/'Contents/embedded.provisionprofile').write_bytes(b'synthetic profile not CMS')
+        return app
+    def asset(self,ctx,app):
+        group='SYNTHETIC.'+ctx.manifest['bundleIdentifier']
+        return {'synthetic':True,'hostBindingSHA256':ctx.manifest['hostBindingSHA256'],'appPath':str(app),'appSHA256':proof.app_hash(app),'executableSHA256':c.file_hash(app/'Contents/MacOS/DPKContinuityProbe'),'profileSHA256':c.file_hash(app/'Contents/embedded.provisionprofile'),'certificateSHA256':self.leaf_sha,'DRSHA256':'d'*64,'bundleIdentifier':ctx.manifest['bundleIdentifier'],'buildMarker':'initial','sourceSHA256':ctx.manifest['sourceSHA256'],'entitlements':{'com.apple.application-identifier':group,'keychain-access-groups':[group]},'profile':{'ApplicationIdentifierPrefix':['SYNTHETIC'],'ProvisionedDevices':['synthetic-device'],'Platform':['OSX'],'Entitlements':{'com.apple.application-identifier':'SYNTHETIC.*','keychain-access-groups':['SYNTHETIC.*']}},'device':'synthetic-device','profileCreationUTC':(self.start-dt.timedelta(days=1)).isoformat(),'profileExpiryUTC':(self.start+dt.timedelta(days=7)).isoformat(),'certificateNotBeforeUTC':(self.start-dt.timedelta(days=1)).isoformat(),'certificateNotAfterUTC':(self.start+dt.timedelta(days=20)).isoformat(),'profileSignatureVerified':True,'certificateInProfile':True,'appleDevelopmentChainVerified':True,'evidenceType':'gui-hooks-v1'}
+    def PF_project(self,raw):
+        import subprocess
+        return json.loads(subprocess.run(['/usr/bin/plutil','-convert','json','-o','-','-'],input=raw,capture_output=True,check=True).stdout)
+    def PF_effective_bundle(self,ctx,configuration):
+        # Apple precedence for the fixed producer: project xcconfig, project inline,
+        # target xcconfig, target inline. No CLI override exists in this fixture.
+        import re
+        project=self.PF_project((self.root/'configured/DPKContinuityProbe.xcodeproj/project.pbxproj').read_bytes())
+        objects=project['objects'];root=objects[project['rootObject']]
+        target=objects[root['targets'][0]];levels=[]
+        for owner in (root,target):
+            matches=[objects[key] for key in objects[owner['buildConfigurationList']]['buildConfigurations'] if objects[key]['name']==configuration]
+            self.assertEqual(len(matches),1);config=matches[0]
+            reference=objects[config['baseConfigurationReference']]
+            self.assertEqual(reference['path'],'private.xcconfig')
+            values=dict(line.split(' = ',1) for line in (self.root/'configured/private.xcconfig').read_text().splitlines())
+            levels.extend((values,config['buildSettings']))
+        effective={}
+        for settings in levels:effective.update(settings)
+        return re.sub(r'\$\(([^)]+)\)',lambda m:effective[m.group(1)],effective['PRODUCT_BUNDLE_IDENTIFIER'])
+    def test_DATE01_direct_GUI_and_legacy_consent_Python_Swift_match(self):
+        import copy,subprocess,types
+        source=Path(__file__).resolve().parents[1];binary=Path(self.tmp.name)/'date-consent-guard'
+        subprocess.run(['swiftc','-module-cache-path',str(Path(self.tmp.name)/'date-module-cache'),str(source/'Sources/DPKContinuityProbe/ProbeCore.swift'),str(source/'Sources/DPKContinuityProbe/LiveGate.swift'),str(source/'Tests/WindowChainProbe.swift'),'-o',str(binary)],check=True,capture_output=True,timeout=120)
+        S=c.stamp('2026-11-10T06:52:05Z');latest=c.stamp('2026-11-10T09:35:00Z');V=c.stamp('2026-11-21T06:52:05Z')
+        original=json.loads((self.root/'main-consent.json').read_bytes())
+        cases=[
+            ('new-at-S',True,dict(start=S,now=S)),
+            ('new-at-latest',True,dict(start=latest,now=latest)),
+            ('before-S',False,dict(start=S,now=S-dt.timedelta(seconds=1))),
+            ('after-latest',False,dict(start=latest+dt.timedelta(seconds=1),now=latest+dt.timedelta(seconds=1))),
+            ('before-D',True,dict(start=S,now=S+dt.timedelta(days=10)-dt.timedelta(seconds=1))),
+            ('at-D',False,dict(start=S,now=S+dt.timedelta(days=10))),
+            ('at-V',False,dict(start=latest,now=V)),
+            ('old-S',False,dict(consent={'approvedUTC':'2026-11-10T03:02:07Z'})),
+            ('wrong-latest',False,dict(consent={'latestStartUTC':'2026-11-10T09:35:01Z'})),
+            ('wrong-V',False,dict(consent={'grantsValidUntilUTC':'2026-11-21T06:52:06Z'})),
+            ('old-all-dates',False,dict(consent={'approvedUTC':'2026-11-10T03:02:07Z','latestStartUTC':'2026-11-11T03:02:07Z','grantsValidUntilUTC':'2026-11-21T03:02:07Z'})),
+            ('wrong-source',False,dict(consent={'sourceSHA256':{'synthetic-wrong-source':'f'*64}})),
+            ('wrong-namespace',False,dict(consent={'namespace':str(uuid.uuid4())})),
+            ('unapproved',False,dict(consent={'approved':False})),
+            ('wrong-leaf-scope',False,dict(consent={'originalLeafBeforeAutoRequired':False})),
+            ('wrong-CUA-scope',False,dict(consent={'CUAProhibited':False})),
+            ('wrong-slot-limit',False,dict(consent={'maxMainSignedBuilds':4})),
+            ('wrong-consent-hash',False,dict(global_={'mainConsentSHA256':'f'*64})),
+            ('wrong-grant-bind',False,dict(grant={'mainConsentSHA256':'f'*64})),
+            ('wrong-grant-V',False,dict(grant={'validUntilUTC':'2026-11-21T06:52:06Z'})),
+            ('legacy-main-valid',True,dict(legacy=True)),
+            ('legacy-main-rejects-GUI-S',False,dict(legacy=True,consent={'approvedUTC':'2026-11-10T06:52:05Z'})),
+        ]
+        for label,expected,options in cases:
+            with self.subTest(case=label):
+                legacy=options.get('legacy',False);mode='main-package' if legacy else 'gui-package'
+                start=options.get('start',c.stamp(c.MAIN_S) if legacy else S);now=options.get('now',start)
+                consent=copy.deepcopy(original)
+                if legacy:consent.update(kind='E010-main-package-consent',authorizationMode=mode,statement=c.MAIN_STATEMENT,approvedUTC=c.MAIN_S,latestStartUTC=c.MAIN_LATEST,grantsValidUntilUTC=c.MAIN_VALID)
+                consent.update(options.get('consent',{}));(self.root/'main-consent.json').write_bytes(c.canonical(consent));consent_sha=c.file_hash(self.root/'main-consent.json')
+                grants={}
+                for kind in ('assets','retention','recovery'):
+                    value=dict(kind='human-grant',scope=kind,namespace=self.ns,synthetic=True,approved=True,statement='synthetic date-only fixture grant',retentionRoot=str(self.root),validUntilUTC=c.MAIN_VALID if legacy else '2026-11-21T06:52:05Z',authorizationMode=mode,mainConsentSHA256=consent_sha,sourceSHA256=self.source,procedure='synthetic same-group cleanup',residualItemAccepted=True)
+                    if kind=='recovery':value.update(options.get('grant',{}))
+                    path=self.root/'grants'/(kind+'.json');path.write_bytes(c.canonical(value));grants[kind]=c.file_hash(path)
+                global_=dict(namespace=self.ns,synthetic=True,authorizationMode=mode,startUTC=start.isoformat(),globalDeadlineUTC=(start+dt.timedelta(days=10)).isoformat(),mainConsentSHA256=consent_sha,sourceSHA256=self.source,grantSHA256=grants)
+                if not legacy:
+                    stat=self.root.stat();global_.update(rootBinding=dict(inode=stat.st_ino,device=stat.st_dev,ownerUID=os.getuid(),mode=0o700),anchorSHA256='a'*64,buildEvidenceType='gui-hooks-v1')
+                    def write(relative,value):
+                        path=self.root/relative;path.parent.mkdir(mode=0o700,parents=True,exist_ok=True);path.write_bytes(c.canonical(value));return c.file_hash(path)
+                    cert=self.root/'reference/original.cer';cert.parent.mkdir(mode=0o700,parents=True,exist_ok=True);cert.write_bytes(b'0synthetic date fixture public certificate')
+                    reference=dict(namespace=self.ns,anchorSHA256='a'*64,certificateSHA256=c.file_hash(cert),codeSignTrustVerified=True,frozenUTC=start.isoformat(),certificateNotAfterUTC=(start+dt.timedelta(days=20)).isoformat())
+                    ref_sha=write('reference/original-leaf.json',reference)
+                    write('gui/p0/arm.json',dict(originalLeafReferenceSHA256=ref_sha,armedUTC=start.isoformat()))
+                    sync_sha=write('gui-begin-sync.json',dict(humanCanBeginNow=True,namespace=self.ns,recordedUTC=start.isoformat()))
+                    global_.update(guiBeginSyncSHA256=sync_sha,originalLeafReferenceSHA256=ref_sha,originalCertificateSHA256=reference['certificateSHA256'])
+                global_.update(options.get('global_',{}));(self.root/'global.json').write_bytes(c.canonical(global_))
+                context=types.SimpleNamespace(root=self.root,manifest=global_,synthetic=True,clock=lambda:now)
+                try:c.check_main(context);python_accepted=True
+                except c.Rejected:python_accepted=False
+                actual=subprocess.run([str(binary),str(self.root),'--synthetic-consent',str(now.timestamp())],capture_output=True,timeout=10)
+                self.assertIn(actual.returncode,(0,2));self.assertEqual(actual.stderr,b'')
+                swift_accepted=actual.returncode==0
+                print('DATE-CONSENT',label,'python',python_accepted,'swift',swift_accepted,'expected',expected)
+                self.assertEqual((python_accepted,swift_accepted),(expected,expected))
+
+    def test_PF_T01_real_template_changes_only_two_target_overrides(self):
+        import gui_build as g
+        path=Path(__file__).resolve().parents[1]/'DPKContinuityProbe.xcodeproj/project.pbxproj'
+        raw=path.read_bytes();original=self.PF_project(raw);actual=self.PF_project(g.patch_project(raw))
+        target=next(obj for obj in original['objects'].values() if obj.get('isa')=='PBXNativeTarget')
+        target_configs=original['objects'][target['buildConfigurationList']]['buildConfigurations']
+        for key,obj in original['objects'].items():
+            if obj.get('isa')!='XCBuildConfiguration':continue
+            expected=dict(obj['buildSettings'])
+            if key in target_configs:self.assertEqual(expected.pop('E010_BUNDLE_IDENTIFIER'),'local.rivet.dpkcontinuity.unconfigured')
+            generated=actual['objects'][key]
+            self.assertEqual(generated['buildSettings'],expected)
+            self.assertEqual(generated['baseConfigurationReference'],'AA0000000000000000000098')
+        self.assertEqual(raw,path.read_bytes())
+        self.assertEqual(sum(o.get('isa')=='XCBuildConfiguration' and 'baseConfigurationReference' in o for o in actual['objects'].values()),4)
+    def test_PF_T02_unexpected_target_configuration_value_or_count_rejects(self):
+        import gui_build as g
+        raw=(Path(__file__).resolve().parents[1]/'DPKContinuityProbe.xcodeproj/project.pbxproj').read_bytes()
+        entry=b'E010_BUNDLE_IDENTIFIER = local.rivet.dpkcontinuity.unconfigured;'
+        variants={
+            'target-name':raw.replace(b'name = DPKContinuityProbe;',b'name = Other;',1),
+            'target-type':raw.replace(b'com.apple.product-type.application',b'com.apple.product-type.bundle',1),
+            'target-config-list':raw.replace(b'buildConfigurationList = FF0000000000000000000002;',b'buildConfigurationList = FF0000000000000000000001;',1),
+            'root-target':raw.replace(b'targets = (EE0000000000000000000001)',b'targets = ()',1),
+            'wrong-config-name':raw.replace(b'}; name = Rebuilt; };',b'}; name = Other; };'),
+            'duplicate-config-name':raw.replace(b'}; name = Rebuilt; };',b'}; name = Debug; };'),
+            'wrong-value':raw.replace(entry,b'E010_BUNDLE_IDENTIFIER = local.other.unconfigured;',1),
+            'missing-override':raw.replace(entry,b'',1),
+            'duplicate-override':raw.replace(entry,entry+b' '+entry,1),
+            'unexpected-project-override':raw.replace(b'ALWAYS_SEARCH_USER_PATHS = NO;',entry+b' ALWAYS_SEARCH_USER_PATHS = NO;',1),
+            'duplicate-target':raw.replace(b'EE0000000000000000000002 = {isa = PBXProject;',b'EE0000000000000000000003 = {isa = PBXNativeTarget; name = Extra; };\nEE0000000000000000000002 = {isa = PBXProject;',1),
+        }
+        for label,variant in variants.items():
+            with self.subTest(label=label),self.assertRaises(c.Rejected):g.patch_project(variant)
+    def test_PF_T03_generated_precedence_reaches_hook_and_wrong_bundle_still_rejects(self):
+        import gui_build as g
+        ctx,arm=self.phase()
+        for configuration in ('Debug','Rebuilt'):
+            self.assertEqual(self.PF_effective_bundle(ctx,configuration),ctx.manifest['bundleIdentifier'])
+        env=self.environment(ctx,arm)
+        env['PRODUCT_BUNDLE_IDENTIFIER']=self.PF_effective_bundle(ctx,arm['configuration'])
+        with self.assertRaises(c.Rejected):g.hook(ctx,'pre',dict(env,PRODUCT_BUNDLE_IDENTIFIER='local.rivet.dpkcontinuity.unconfigured'))
+        g.hook(ctx,'pre',env)
+        self.assertTrue((self.root/'gui/p0/pre.json').is_file())
+        self.assertFalse((self.root/'global.json').exists())
+
+    def test_GUI_consent_leaf_before_auto_and_unique_slot(self):
+        import gui_build as g
+        ctx=self.begin()
+        with self.assertRaises(c.Rejected):g.configure(ctx)
+        self.leaf(ctx);g.configure(ctx);arm=g.arm(ctx,'p0')
+        self.assertEqual(arm['evidenceType'],'gui-hooks-v1');self.assertEqual(arm['configuration'],'Debug')
+        with self.assertRaises(c.Rejected):g.arm(ctx,'p0')
+        self.assertFalse((self.root/'global.json').exists())
+    def test_valid_hooks_actual_product_and_human_attestation_form_GUI_proof(self):
+        import gui_build as g
+        ctx,arm=self.phase();env=self.environment(ctx,arm);g.hook(ctx,'pre',env)
+        app=self.product(ctx,arm);g.hook(ctx,'post',env)
+        with self.assertRaises((c.Rejected,OSError)):g.finalize(ctx,'p0',inspector=lambda _:self.asset(ctx,app))
+        g.attest(ctx,'p0','reported-success',did_not_run=True)
+        asset=g.finalize(ctx,'p0',inspector=lambda _:self.asset(ctx,app))
+        self.assertEqual(asset['certificateSHA256'],self.leaf_sha);self.assertEqual(asset['evidenceType'],'gui-hooks-v1')
+        proof.inspect_bootstrap(ctx);c.complete_global(ctx);run=c.Run(self.root,True,self.clock)
+        self.assertEqual(run.manifest['authorizationMode'],'gui-package');self.assertIsNone(c.observation_status(run,'seed')['promptCount'])
+    def test_missing_duplicate_late_wrong_target_nonce_source_and_old_product_reject(self):
+        import gui_build as g
+        ctx,arm=self.phase();env=self.environment(ctx,arm)
+        for key,bad in [('TARGET_NAME','Other'),('CONFIGURATION','Rebuilt'),('E010_GUI_NONCE',str(uuid.uuid4())),('PROJECT_DIR',str(self.root.parent))]:
+            with self.subTest(key=key),self.assertRaises(c.Rejected):g.hook(ctx,'pre',dict(env,**{key:bad}))
+        old=self.root/arm['productRelative']/'DPKContinuityProbe.app';old.mkdir()
+        with self.assertRaises(c.Rejected):g.hook(ctx,'pre',env)
+        old.rmdir()
+        g.hook(ctx,'pre',env)
+        with self.assertRaises(c.Rejected):g.hook(ctx,'pre',env)
+        app=self.product(ctx,arm);g.hook(ctx,'post',env);g.attest(ctx,'p0','reported-success',did_not_run=True)
+        self.now=self.start+dt.timedelta(minutes=25)
+        with self.assertRaises(c.Rejected):g.finalize(ctx,'p0',inspector=lambda _:self.asset(ctx,app))
+        self.assertFalse((self.root/'selection/p0.json').exists())
+    def test_wrong_original_leaf_never_becomes_new_baseline_or_manual_fallback(self):
+        import gui_build as g,prepare
+        ctx,arm=self.phase();env=self.environment(ctx,arm);g.hook(ctx,'pre',env);app=self.product(ctx,arm);g.hook(ctx,'post',env);g.attest(ctx,'p0','reported-success',did_not_run=True)
+        bad=self.asset(ctx,app);bad['certificateSHA256']='f'*64
+        with self.assertRaises(c.Rejected):g.finalize(ctx,'p0',inspector=lambda _:bad)
+        with self.assertRaises(c.Rejected):prepare.signed_build(ctx,'p0',executor=lambda *args:None)
+        self.assertFalse((self.root/'selection/p0.json').exists());self.assertEqual(c.read(self.root,'reference/original-leaf.json')[0]['certificateSHA256'],self.leaf_sha)
+    def test_ambiguous_seed_launch_without_receipt_requires_owned_cleanup(self):
+        ctx=self.begin();c.exclusive(self.root,'write-attempts/'+str(uuid.uuid4())+'.json',{'namespace':self.ns,'synthetic':True,'operation':'seed-read-a','state':'launch-may-add'})
+        self.assertTrue(c.owned_write_possible(self.root,self.ns,True))
+        with self.assertRaises(c.Rejected):proof.stop_bootstrap(ctx)
+        self.assertTrue(self.root.exists())
+
+    def test_schemes_provide_one_target_and_explicit_Debug_Rebuilt(self):
+        import xml.etree.ElementTree as ET
+        source=Path(__file__).resolve().parents[1]
+        for name,config in [('DPKContinuityProbe','Debug'),('DPKContinuityProbe-Rebuilt','Rebuilt')]:
+            tree=ET.fromstring((source/'DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes'/(name+'.xcscheme')).read_bytes())
+            self.assertEqual(tree.find('LaunchAction').get('buildConfiguration'),config)
+            entry=tree.findall('.//BuildActionEntry/BuildableReference');self.assertEqual(len(entry),1)
+            for tag,mode in [('PreActions','pre'),('PostActions','post')]:
+                action=tree.find('BuildAction/'+tag+'/ExecutionAction/ActionContent')
+                self.assertIsNotNone(action);self.assertIn('--hook '+mode,action.get('scriptText'))
+                self.assertEqual(action.find('EnvironmentBuildable/BuildableReference').get('BlueprintIdentifier'),entry[0].get('BlueprintIdentifier'))
+    def prepared_gui(self):
+        import gui_build as g
+        ctx,arm=self.phase();env=self.environment(ctx,arm);g.hook(ctx,'pre',env);app=self.product(ctx,arm);g.hook(ctx,'post',env);g.attest(ctx,'p0','reported-success',True)
+        g.finalize(ctx,'p0',inspector=lambda _:self.asset(ctx,app));proof.inspect_bootstrap(ctx);c.complete_global(ctx)
+        return c.Run(self.root,True,self.clock)
+    def backend(self):
+        owner=self
+        class Backend:
+            adds=0
+            def stage(_,stage,run):
+                now=owner.clock().isoformat()
+                if stage in ('preflight','p1-setup','rebuild-setup'):
+                    verifier=type('Verifier',(),{'run':run,'ensure_exited':lambda _:None,'asset':lambda _,name:proof.frozen_asset(run,name)})()
+                    with mock.patch.object(proof,'utc',side_effect=owner.clock):asset,sha=proof.SetupVerifier.inspect_stage(verifier,stage)
+                else:asset,sha,proof_name=proof.operation_proof(run,stage,stage=='cleanup')
+                value=dict(startedUTC=now,endedUTC=now,completed=True,callAttempted=stage not in ('preflight','p1-setup','rebuild-setup','expired'),OSStatus=None)
+                if stage in ('seed','fresh','p1-read','rebuilt-read'):
+                    if stage=='seed':_.adds+=1
+                    value['fields']={k:True for k in c.FIELDS}
+                if stage=='cleanup':value['absent']=True
+                if stage=='expired':value.update(launch='rejected',guard='not-observed',availabilityInterrupted=True,callAttempted=False,OSStatus=None)
+                return value,sha
+            def cleanup(_,run):return False
+            def finalize(_,run):return proof.SetupVerifier.finalize(type('Files',(),{'ensure_exited':lambda _:None})(),run)
+        return Backend()
+    def test_GUI_three_windows_original_leaf_P1_true_rebuild_and_ACK_cleanup(self):
+        import gui_build as g
+        run=self.prepared_gui();backend=self.backend()
+        for stage in ('preflight','seed','fresh'):c.run_main_stage(run,1,stage,backend)
+        original=(self.root/'receipts/seed.machine.json').read_bytes()
+        self.now=self.start+dt.timedelta(days=7,seconds=1);c.run_main_stage(run,2,'expired',backend)
+        arm=g.arm(run,'p1');env=self.environment(run,arm);g.hook(run,'pre',env);app=self.product(run,arm)
+        p1bytes=b'synthetic P1 profile';(app/'Contents/embedded.provisionprofile').write_bytes(p1bytes)
+        g.hook(run,'post',env);g.attest(run,'p1','reported-success',True)
+        asset=self.asset(run,app);asset.update(profileCreationUTC=self.now.isoformat(),profileExpiryUTC=(self.now+dt.timedelta(days=7)).isoformat())
+        g.finalize(run,'p1',inspector=lambda _:asset)
+        for stage in ('p1-setup','p1-read'):c.run_main_stage(run,2,stage,backend)
+        self.now+=dt.timedelta(seconds=1);arm=g.arm(run,'rebuilt');env=self.environment(run,arm);g.hook(run,'pre',env);app=self.product(run,arm,'rebuilt');(app/'Contents/embedded.provisionprofile').write_bytes(p1bytes)
+        g.hook(run,'post',env);g.attest(run,'rebuilt','reported-success',True)
+        rebuilt=self.asset(run,app);rebuilt.update(buildMarker='rebuilt',profileCreationUTC=asset['profileCreationUTC'],profileExpiryUTC=asset['profileExpiryUTC'])
+        g.finalize(run,'rebuilt',inspector=lambda _:rebuilt)
+        for stage in ('rebuild-setup','rebuilt-read'):c.run_main_stage(run,3,stage,backend)
+        g.record_closed(run,True,True)
+        with mock.patch.object(g,'handles_absent',return_value=True):outcome=c.run_main_stage(run,3,'cleanup',backend)
+        self.assertTrue(outcome['awaitingSafeEvidenceACK']);self.assertFalse(self.out.exists());self.assertEqual(backend.adds,1)
+        self.assertEqual((self.root/'receipts/seed.machine.json').read_bytes(),original)
+        candidate=c.file_hash(self.root/'safe-candidates/pre-cleanup.index.json')
+        public=b''.join(p.read_bytes() for p in (self.root/'safe-candidates').rglob('*.json'))
+        self.assertNotIn(str(self.root).encode(),public);self.assertNotIn(b'keychain-access-groups',public)
+        c.exclusive(self.root,'publication-ack.json',dict(kind='safe-candidate-model-ack',namespace=self.ns,globalSHA256=run.global_hash,candidateIndexSHA256=candidate,readabilityAcknowledged=True,safetyAcknowledged=True,recordedUTC=self.clock().isoformat()))
+        with mock.patch.object(g,'handles_absent',return_value=True):self.assertTrue(backend.finalize(run))
+        self.assertFalse(self.root.exists());self.assertEqual(c.read(self.out,'final.index.json')[0]['files']['pre-cleanup.index.json'],candidate)
+    def test_actual_pure_Swift_GUI_chain_matches_Python_and_wrong_reference_rejects(self):
+        import subprocess
+        run=self.prepared_gui();run.arm_window(1,None)
+        source=Path(__file__).resolve().parents[1];binary=Path(self.tmp.name)/'gui-chain'
+        # No AppMain/LiveStore/Security are compiled or initialized; this only calls the chain validator.
+        subprocess.run(['swiftc','-module-cache-path',str(Path(self.tmp.name)/'swift-cache'),str(source/'Sources/DPKContinuityProbe/ProbeCore.swift'),str(source/'Sources/DPKContinuityProbe/LiveGate.swift'),str(source/'Tests/WindowChainProbe.swift'),'-o',str(binary)],check=True,capture_output=True,timeout=120)
+        def invoke():return subprocess.run([str(binary),str(self.root),'1',str(self.now.timestamp())],capture_output=True,timeout=10).returncode
+        self.assertEqual(invoke(),0)
+        path=self.root/'reference/original.cer';raw=path.read_bytes();path.write_bytes(b'wrong public certificate')
+        self.assertEqual(invoke(),2);path.write_bytes(raw)
+        self.assertEqual(invoke(),0)
+    def test_private_source_raw_safety_no_handles_and_no_live_inspector_in_prep(self):
+        import gui_build as g
+        ctx,arm=self.phase();env=self.environment(ctx,arm)
+        path=self.root/'configured/Sources/DPKContinuityProbe/AppMain.swift';original=path.read_bytes();path.write_bytes(original+b'\n// changed')
+        with self.assertRaises(c.Rejected):g.hook(ctx,'pre',env)
+        path.write_bytes(original)
+        with mock.patch.object(g.subprocess,'run') as command,self.assertRaises(c.Rejected):g.capture_command(ctx,['private raw subject must never run'])
+        command.assert_not_called()
+        g.record_closed(ctx,True,True)
+        with self.assertRaises(c.Rejected):g.closed_for_cleanup(ctx,handles=lambda _:False)
+        g.closed_for_cleanup(ctx,handles=lambda _:True)
+
+    def test_one_begin_sync_is_required_before_anchor(self):
+        with self.assertRaises((c.Rejected,OSError)):c.begin_anchor(self.root,self.ns,self.source,self.out,True,self.clock)
+        self.assertFalse((self.root/'anchor.json').exists())
+        ctx=self.begin();self.assertIn('guiBeginSyncSHA256',ctx.manifest)
+    def test_ambiguous_seed_without_receipt_still_has_cleanup_only_authority(self):
+        run=self.prepared_gui();backend=self.backend();c.run_main_stage(run,1,'preflight',backend)
+        c.exclusive(self.root,'write-attempts/'+str(uuid.uuid4())+'.json',{'namespace':self.ns,'synthetic':True,'operation':'seed-read-a','state':'launch-may-add'})
+        self.assertFalse((self.root/'receipts/seed.machine.json').exists())
+        grant,ready=c.require_recovery(run,str(uuid.uuid4()));self.assertEqual(grant,run.manifest['grantSHA256']['recovery']);self.assertEqual(len(ready),64)
+    def test_P1_old_profile_cannot_be_retried_or_reseeded(self):
+        import gui_build as g
+        run=self.prepared_gui();backend=self.backend()
+        for stage in ('preflight','seed','fresh'):c.run_main_stage(run,1,stage,backend)
+        self.now=self.start+dt.timedelta(days=7,seconds=1);c.run_main_stage(run,2,'expired',backend)
+        arm=g.arm(run,'p1');env=self.environment(run,arm);g.hook(run,'pre',env);app=self.product(run,arm);g.hook(run,'post',env);g.attest(run,'p1','reported-success',True)
+        with self.assertRaises(c.Rejected):g.finalize(run,'p1',inspector=lambda _:self.asset(run,app))
+        with self.assertRaises(c.Rejected):g.arm(run,'p1')
+        self.assertFalse((self.root/'selection/p1.json').exists());self.assertEqual(backend.adds,1)
+
+    def test_missing_hook_failure_is_only_control_and_safe_output_cannot_include_raw(self):
+        import gui_build as g
+        ctx,arm=self.phase();env=self.environment(ctx,arm);g.hook(ctx,'pre',env)
+        g.attest(ctx,'p0','reported-failure',True)
+        views=g.public_views(ctx);human=views['gui/p0/human-build.public.json']
+        self.assertEqual(human['status'],'reported-failure');self.assertIsNone(human['postSHA256'])
+        safe=g.safe_summary({'certificateSHA256':'a'*64,'TeamName':'synthetic private name','rawError':'synthetic secret'})
+        self.assertNotIn('TeamName',safe);self.assertNotIn('rawError',safe);self.assertEqual(safe['UX'],'unknown')
+        with self.assertRaises(c.Rejected):g.safe_summary({'profileExpiryUTC':'synthetic raw exception'})
+        g.record_closed(ctx,True,True);pending=proof.stop_bootstrap(ctx)
+        self.assertFalse(pending['cleanupComplete']);self.assertTrue(self.root.exists());self.assertFalse(self.out.exists())
+        candidate=pending['candidateIndexSHA256']
+        c.exclusive(self.root,'publication-ack.json',dict(kind='safe-candidate-model-ack',namespace=self.ns,anchorSHA256=ctx.anchor_hash,candidateIndexSHA256=candidate,readabilityAcknowledged=True,safetyAcknowledged=True,recordedUTC=self.clock().isoformat()))
+        with mock.patch.object(g,'handles_absent',return_value=True):self.assertTrue(proof.stop_bootstrap(ctx)['cleanupComplete'])
+        self.assertFalse(self.root.exists())
+
+    def test_GUI_RF01_actual_CLI_unexpected_exception_is_closed_and_saved_privately(self):
+        import contextlib,io,subprocess
+        run=self.prepared_gui();original=c.Run;sentinel='SYNTHETIC_PRIVATE_RAW_SENTINEL'
+        error=subprocess.CalledProcessError(1,['/private/synthetic/module.py',sentinel],stderr=b'private raw')
+        backend=type('Backend',(),{'stage':lambda *args:(_ for _ in ()).throw(error),'cleanup':lambda *args:False})()
+        out=io.StringIO();err=io.StringIO()
+        with mock.patch.object(c,'Run',side_effect=lambda root:original(root,True,self.clock)),mock.patch.object(proof,'ManualStages',return_value=backend),mock.patch.object(sys,'argv',['continuity.py','--live','--root',str(self.root),'--window','1','--stage','preflight']),contextlib.redirect_stdout(out),contextlib.redirect_stderr(err):
+            code=c.cli_entrypoint()
+        self.assertEqual(code,2);self.assertEqual(err.getvalue(),'')
+        for raw in (sentinel,'Traceback','/private/synthetic/module.py',str(self.root)):self.assertNotIn(raw,out.getvalue()+err.getvalue())
+        summary=json.loads(out.getvalue());self.assertTrue(summary['rawExceptionSaved']);self.assertEqual(summary['itemState'],'not-inferred')
+        saved=list((self.root/'raw').glob('cli-exception-*.json'));self.assertEqual(len(saved),1)
+        self.assertIn(sentinel,saved[0].read_text())
+        c.exclusive(self.root,'write-attempts/'+str(uuid.uuid4())+'.json',dict(namespace=self.ns,synthetic=True,operation='seed-read-a',state='launch-may-add'))
+        original_bootstrap=c.Bootstrap;out=io.StringIO()
+        with mock.patch.object(c,'Bootstrap',side_effect=lambda root,clock:original_bootstrap(root,True,self.clock)),mock.patch.object(sys,'argv',['continuity.py','--live','--root',str(self.root),'--stop-setup']),contextlib.redirect_stdout(out):c.cli_entrypoint()
+        stopped=list((self.root/'bootstrap').glob('stopped-*.machine.json'));self.assertTrue(stopped)
+        self.assertTrue(all(json.loads(p.read_bytes())['noSecItemWriteAttempted'] is False for p in stopped))
+        self.assertEqual(json.loads(out.getvalue())['itemState'],'not-inferred')
+    def test_GUI_RF01_invalid_expired_or_symlink_root_is_safe_refusal_and_help_survives(self):
+        import contextlib,io
+        ctx=self.begin();outside=self.root.parent/'outside';outside.mkdir();(self.root/'raw').symlink_to(outside,target_is_directory=True)
+        self.assertFalse(c.persist_cli_exception(ctx,RuntimeError('SYNTHETIC_PRIVATE_RAW')));self.assertEqual(list(outside.iterdir()),[])
+        (self.root/'raw').unlink();self.now=self.start+dt.timedelta(minutes=30)
+        self.assertFalse(c.persist_cli_exception(ctx,RuntimeError('SYNTHETIC_PRIVATE_RAW')));self.assertFalse((self.root/'raw').exists())
+        out=io.StringIO();err=io.StringIO()
+        with mock.patch.object(sys,'argv',['continuity.py','--unknown','SYNTHETIC_PRIVATE_RAW']),contextlib.redirect_stdout(out),contextlib.redirect_stderr(err):code=c.cli_entrypoint()
+        self.assertEqual(code,2);self.assertNotIn('SYNTHETIC_PRIVATE_RAW',out.getvalue()+err.getvalue());self.assertEqual(err.getvalue(),'')
+        self.assertEqual(json.loads(out.getvalue())['classification'],'safeRefusal')
+        out=io.StringIO()
+        with mock.patch.object(sys,'argv',['continuity.py','--help']),contextlib.redirect_stdout(out),self.assertRaises(SystemExit) as help_result:c.cli_entrypoint()
+        self.assertEqual(help_result.exception.code,0);self.assertIn('usage:',out.getvalue())
+    def test_GUI_RF02_timeout_partial_bytes_and_text_are_preserved_without_public_leak(self):
+        import gui_build as g,subprocess
+        ctx=self.begin()
+        for stdout,stderr,kind in [(b'\x00SYNTHETIC_PARTIAL\xff',b'\xfeprivate stderr','bytes'),('局部文字SYNTHETIC_PARTIAL','文字stderr','text')]:
+            with self.subTest(kind=kind):
+                before=set((self.root/'raw').glob('*.partial-streams.json')) if (self.root/'raw').exists() else set()
+                def timed_out(*args,**kwargs):raise subprocess.TimeoutExpired('synthetic selected verifier',1,output=stdout,stderr=stderr)
+                with self.assertRaises(c.Rejected):g.capture_command(ctx,['synthetic-only'],runner=timed_out)
+                added=set((self.root/'raw').glob('*.partial-streams.json'))-before;self.assertEqual(len(added),1)
+                metadata=json.loads(next(iter(added)).read_bytes())
+                for name,value in [('stdout',stdout),('stderr',stderr)]:
+                    stream=metadata['streams'][name];actual=(self.root/stream['relativePath']).read_bytes()
+                    self.assertEqual(actual,value if isinstance(value,bytes) else value.encode('utf-8',errors='surrogatepass'))
+                    self.assertEqual(stream['originalType'],kind);self.assertEqual(stream['originalProcessBytesAvailable'],isinstance(value,bytes))
+                    self.assertEqual(stream['encoding'],None if isinstance(value,bytes) else 'utf-8-surrogatepass')
+                self.assertTrue(metadata['partialOutputOnly'])
+        self.assertTrue(self.root.exists());self.assertEqual(len(list((self.root/'raw').glob('*.partial-streams.json'))),2)
+
+    def test_GUI_RF03_actual_main_entry_reaches_accepted_asset_and_GUI_window(self):
+        import gui_build as g,subprocess
+        ctx,arm=self.phase();env=self.environment(ctx,arm);g.hook(ctx,'pre',env);app=self.product(ctx,arm);g.hook(ctx,'post',env);g.attest(ctx,'p0','reported-success',True)
+        g.finalize(ctx,'p0',inspector=lambda _:self.asset(ctx,app))
+        launcher=Path(self.tmp.name)/'direct-entry-probe.py'
+        launcher.write_text(r'''import datetime,json,runpy,subprocess,sys
+from pathlib import Path
+entry=Path(sys.argv[1]).resolve();root=sys.argv[2];moment=datetime.datetime.fromisoformat(sys.argv[3]);sys.path.insert(0,str(entry.parent))
+real_run=subprocess.run;forbidden=[];events=[];installed=False;entry_globals=None
+entry_line=max(i for i,line in enumerate(entry.read_text().splitlines(),1) if line.startswith("if __name__ == '__main__':"))
+def run_guard(args,*values,**kwargs):
+    if args[0]!='/usr/bin/plutil':forbidden.append(True);raise AssertionError('asset/process command forbidden in fixture')
+    return real_run(args,*values,**kwargs)
+subprocess.run=run_guard
+sys.argv=[str(entry),'--live','--root',root,'--setup-only']
+def trace(frame,event,arg):
+    global installed,entry_globals
+    if event=='call' and frame.f_code.co_name in ('accepted_asset','window') and frame.f_code.co_filename.endswith('gui_build.py'):events.append(frame.f_code.co_name)
+    if not installed and event=='line' and frame.f_code.co_filename==str(entry) and frame.f_lineno==entry_line:
+        installed=True;entry_globals=frame.f_globals;kind=entry_globals['Bootstrap'];original=kind.__init__
+        def fixture_init(self,root,synthetic=False,clock=None,archived=False):return original(self,root,synthetic=True,clock=lambda:moment,archived=archived)
+        kind.__init__=fixture_init
+        entry_globals['local_identity']=lambda synthetic: {'mac':'synthetic-mac','uid':1} if synthetic else (_ for _ in ()).throw(AssertionError('real identity forbidden'))
+    return trace
+sys.settrace(trace)
+try:runpy.run_path(str(entry),run_name='__main__')
+except SystemExit as result:code=result.code
+finally:sys.settrace(None)
+print(json.dumps({'code':code,'acceptedAssetCalls':events.count('accepted_asset'),'GUIWindowCalls':events.count('window'),'forbiddenCommands':len(forbidden),'entryModule':'__main__','canonicalModule':sys.modules.get('continuity').__dict__ is entry_globals},sort_keys=True))
+raise SystemExit(0 if code==0 else 2)
+''')
+        source=Path(__file__).resolve().parents[1]
+        result=subprocess.run([sys.executable,'-B',str(launcher),str(source/'scripts/continuity.py'),str(self.root),self.now.isoformat()],capture_output=True,text=True,timeout=30)
+        self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+        summary=json.loads(result.stdout.splitlines()[-1]);self.assertEqual(summary['entryModule'],'__main__');self.assertTrue(summary['canonicalModule'])
+        self.assertGreater(summary['acceptedAssetCalls'],0);self.assertGreater(summary['GUIWindowCalls'],0);self.assertEqual(summary['forbiddenCommands'],0)
+        proof_value,_=c.read(self.root,'bootstrap/actual-proof.json');self.assertTrue(proof_value['synthetic']);self.assertEqual(proof_value['evidenceType'],'gui-hooks-v1')
+        self.assertTrue((self.root/'hosts/p0.app').is_dir());self.assertFalse((self.root/'receipts/seed.machine.json').exists())
+
+if __name__=='__main__':unittest.main()

@@ -1,0 +1,137 @@
+{
+  "actualSourceInspection": {
+    "GUISelectedVerifierUsesCaptureOutputTrue": true,
+    "ValueErrorReturnsFixedTechnicalFailureWithoutRaw": true,
+    "bootstrapAmbiguousWriteNotReportedNoWrite": true,
+    "continuityEntrypointCatchesExceptionAndKeyboardInterrupt": true,
+    "helpSystemExitZeroPreserved": true,
+    "partialBytesExact": true,
+    "partialTextEncodingExplicitUTF8SurrogatepassNotOriginalProcessBytes": true,
+    "plutilCheckTrueCalleeUsesCaptureOutputTrueBeforeCatch": true,
+    "privateExceptionDestinationRevalidatesTypedOwnerNamespaceSourceConsentExpiryAndNoSymlink": true,
+    "runtimeRawNotAutomaticallyDeleted": true,
+    "safeArgumentParserDoesNotEchoInvalidValues": true,
+    "timeoutBothPartialStreamsStoredBeforeFiniteRejection": true
+  },
+  "additionalNecessaryRF01Checks": {
+    "actualSyntheticChildOnly": true,
+    "cases": [
+      {
+        "actualCLIDispatch": true,
+        "case": "actual-child-stderr",
+        "rawSavedOnlyInValidFixture": true,
+        "safeStderr": true,
+        "safeStdout": true,
+        "subprocessCapturedBeforeCatch": true
+      },
+      {
+        "actualCLIDispatch": true,
+        "case": "ValueError",
+        "rawSavedOnlyInValidFixture": true,
+        "safeStderr": true,
+        "safeStdout": true,
+        "subprocessCapturedBeforeCatch": null
+      }
+    ],
+    "exit": 0,
+    "noRealSigningOrAssetCommand": true,
+    "outerStderrEmpty": true,
+    "passed": true,
+    "testProgramSHA256": "cf1d98f116846a8f44f8e9f9acac1042a2ad51396a057587f522c8f8ab59fa6a"
+  },
+  "audit": {
+    "SHA256": {
+      "before.json": "8df0d1d87a7ded73f62e87e752eb2d514126dc54ed3572644f72fd67d588eff9",
+      "extra-rf01-result.json": "a17a4dd18442aa46e8eb8f9127f96ab4d92848ba5664023c799c615d06e497a1",
+      "focused-result.json": "64393383e9d2118a02a0f14849fd43974915000a5e82d7e885b180e533ac7886",
+      "focused.log": "dd46e372666d2171b05f1b3afc05a69800eccc0548fa1e334c769c6de2eaa889",
+      "protection-cleanup-result.json": "0b63a3d9473fa7ed5641f67feea4214300b5de6a5c6c76fb11e0110bf17f251e"
+    },
+    "location": "external owned pure-test audit directory retained",
+    "noRepoSourceDocsOrHistoricalReceiptModified": true,
+    "onlyNewTesterReceiptAdded": true
+  },
+  "authorPreparationCheck": {
+    "SHA256": "ca4ac0e53ccdaac1cea09486c0720f7483792821bd11b00590d29c379eeb81de",
+    "path": "experiments/E010/evidence/gui-preparation-review-fixes-20261105/preparation-check.json"
+  },
+  "handoff": {
+    "GUI05ApprovalNotSelfGranted": true,
+    "GUI06ActualHumanSyncStillRequired": true,
+    "nextRole": "original independent GUI05 Reviewer",
+    "onlyPreparationVerified": true
+  },
+  "hardPreparationDeadlineUTC": "2026-11-05T09:14:10Z",
+  "independentFocusedTests": {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_gui_build.GUIBuildTests.test_GUI_RF01_actual_CLI_unexpected_exception_is_closed_and_saved_privately",
+      "test_gui_build.GUIBuildTests.test_GUI_RF01_invalid_expired_or_symlink_root_is_safe_refusal_and_help_survives",
+      "test_gui_build.GUIBuildTests.test_GUI_RF02_timeout_partial_bytes_and_text_are_preserved_without_public_leak",
+      "-v"
+    ],
+    "endUTC": "2026-11-05T08:40:51.586407+00:00",
+    "exit": 0,
+    "liveSigningOrAssetCalls": false,
+    "logSHA256": "dd46e372666d2171b05f1b3afc05a69800eccc0548fa1e334c769c6de2eaa889",
+    "methods": 3,
+    "reportedUnittestSeconds": 0.715,
+    "skips": 0,
+    "startUTC": "2026-11-05T08:40:50.718140+00:00"
+  },
+  "kind": "E010-GUI04-independent-RF01-RF02-focused-verification",
+  "limits": {
+    "CUAEntryPointInvoked": false,
+    "HumanPromptObservation": "unknown-not-measured",
+    "actualLiveRootGrantAnchorWindowCreated": false,
+    "devGitStatusNotIndependentlyRepeated": true,
+    "noGitMutationOrDevWrites": true,
+    "oldTenFilePrepAccessed": false,
+    "prior13Plus37SwiftUnsignedNotRerun": true,
+    "realGUIXcodeAppSecurityDPKExecuted": false,
+    "realSigningAssetCommandsExecuted": false
+  },
+  "protectionAndCleanup": {
+    "READMEAndStepMatchHandoff": true,
+    "actual22SHAAndAggregateMatched": true,
+    "allCurrentBeforeFilesUnchangedByTester": true,
+    "currentBeforeFileCount": 293,
+    "externalAuditOnlyRetained": true,
+    "noCUAOrAssetOrLiveOrGitActions": true,
+    "oldTenFilePreparationNotAccessed": true,
+    "onlyThreeActiveSourcePathsChanged": [
+      "Tests/test_gui_build.py",
+      "scripts/continuity.py",
+      "scripts/gui_build.py"
+    ],
+    "originalGUI04ReceiptUnchanged": true,
+    "ownedFixtureTemporaryDirectoryAbsent": true,
+    "prior22SnapshotExact": true,
+    "prior267ExceptFourAuthorizedFiles": {
+      "allSHAUnchanged": true,
+      "count": 263
+    },
+    "recordedUTC": "2026-11-05T08:42:10.871304+00:00",
+    "requirementsTechnicalSpecPlanUnchanged": true,
+    "snapshotMapSHA256": "f5a67dbdbfd560f98d9478c5f69c32969a4253bc35f1f870ca3011172d49fb93"
+  },
+  "recordedUTC": "2026-11-05T08:42:49.253337+00:00",
+  "required_fixes": [],
+  "sourceManifest": {
+    "SHA256": "c2090d9aabc04b23f6a264a85ecf54372216924f547b747fcc51f23665bc5873",
+    "aggregateSHA256": "0c9f1cc04f2af18089ea1d69b096bd5793e167e9e2f652a344a038df0f577957",
+    "allActualSHAMatched": true,
+    "path": "experiments/E010/evidence/gui-preparation-review-fixes-20261105/source-manifest.json",
+    "sourceCount": 22,
+    "threeChangedActivePaths": {
+      "Tests/test_gui_build.py": "be0c536969f2fc1e72a5cfad1ba2f8d65f05f86749f2a54a8237225f4668f319",
+      "scripts/continuity.py": "9899f831c84461c305881d371566705bf44efa83b4e82d5ada3827888db01dc4",
+      "scripts/gui_build.py": "975e0a8b7660fe669f466e94f0881a2db7017e8533caf776196299376a5ece79"
+    }
+  },
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "verdict": "approved"
+}

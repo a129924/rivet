@@ -1,0 +1,44 @@
+{
+  "allPreFixBytesReadVerified": true,
+  "baseCommitContext": "b930d80072909f52171a23598b923af82c7c91cc",
+  "changedFromPrior": [
+    "Tests/test_gui_build.py",
+    "scripts/continuity.py"
+  ],
+  "kind": "E010-GUI-RF03-actual-entry-source-manifest",
+  "liveExecuted": false,
+  "oldApprovalNotReused": true,
+  "preFix22Snapshot": {
+    "SHA256": "3c869dcbe96f457d58ec68622d02727a690ec79ce8d25eaef0586b7588e87905",
+    "path": "experiments/E010/history/pre-gui-entry-fix-20261105T084912Z-c7012146"
+  },
+  "previousSourceAggregateSHA256": "0c9f1cc04f2af18089ea1d69b096bd5793e167e9e2f652a344a038df0f577957",
+  "previousSourceManifestFileSHA256": "c2090d9aabc04b23f6a264a85ecf54372216924f547b747fcc51f23665bc5873",
+  "recordedUTC": "2026-11-05T08:52:26.574837+00:00",
+  "sourceFileCount": 22,
+  "sourceManifestSHA256": "14b6705399b72fcbc9d740101a1f641b66bf1d606a297178ad40efcf751256f0",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe-Rebuilt.xcscheme": "2422539a9f66d7913229becf89054db57e2f280e4c1a7ee9c552a036920d474a",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "023b15adab3e1ddcc56ea0034407c344b98bb93f347d70378251720140d72649",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+    "Sources/DPKContinuityProbe/AppMain.swift": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "a74cb0e08657a662f7d6d5c2e65402cc921756b376577fe66f1fbe96419f8a5e",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "a4f13222a02a3e00498277db2fc2610ceca32c2ea5aac59d1ff7ae4199e89381",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/WindowChainProbe.swift": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+    "Tests/test_bootstrap.py": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+    "Tests/test_continuity.py": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+    "Tests/test_gui_build.py": "a90a7e66d1bcfceed626db2889a5dcd83ad3b5a78c140cfd8562b8bc5594f897",
+    "Tests/test_main_policy.py": "4be3c1e7710b9e5f6160c2d65a3c637706270578e0ee6051ed84728d2e74107e",
+    "Tests/test_main_review_fixes.py": "de0450316cbe369b8b46f03cd137611ec4b642435f9be2c41d7ab6973de4f3ce",
+    "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "scripts/continuity.py": "8d5d02c4acdf58ea31017e7647307e38a393b78e9ba2d8d2dd5e89c87e0edc09",
+    "scripts/gui_build.py": "975e0a8b7660fe669f466e94f0881a2db7017e8533caf776196299376a5ece79",
+    "scripts/prepare.py": "e245ff882671b84b2d5e9f6d7b83cf145ea90cf7703bd90598dd6420773bfd21",
+    "scripts/proof.py": "c50e24e1eeebbba83169ae55a696cd20f4d34bdf206cea6b4f827c743357fecc"
+  }
+}

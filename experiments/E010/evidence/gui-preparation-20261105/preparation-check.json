@@ -1,0 +1,145 @@
+{
+  "GUI02": {
+    "required_fixes": [],
+    "source": "actual independent Plan-Reviewer handoff; four reviewed hashes bound in source manifest",
+    "verdict": "approved"
+  },
+  "GUI03": "author-completed",
+  "GUI04": "pending-independent-Tester",
+  "GUI05": "pending-independent-Reviewer",
+  "GUI06": "pending-one-Human-begin-sync-after-gates",
+  "authorVerdict": null,
+  "canonicalCommands": [
+    "python3 -B -m unittest discover -s experiments/E010/Tests -p test_gui_build.py -v",
+    "Selected MainPolicy/MainReviewFix/Bootstrap/ReviewFix Python suites; 37 pure methods",
+    "Python ast.parse + plutil in-memory project parse + plistlib/XML checks",
+    "swiftc -frontend -parse experiments/E010/Sources/DPKContinuityProbe/LiveStore.swift"
+  ],
+  "cleanup": {
+    "compiledHelperOutputsInTemporaryFixturesCleaned": true,
+    "newLiveRootOrInboxOrGrantsCreated": false,
+    "ownedAuthorHelpersRemoved": [
+      {
+        "SHA256": "b32ad134ce808e0dbb07e21886403bf83123f77bc0cbab4d8859a0e707dbb2a5",
+        "absent": true,
+        "name": "integrate-python.py",
+        "ownerNoSymlinkNoHandlesVerified": true
+      },
+      {
+        "SHA256": "7492252b019c55ffd9e07a8df719b3c95330a986cd4818876b051843ec026fe0",
+        "absent": true,
+        "name": "gui-public-fragment.py",
+        "ownerNoSymlinkNoHandlesVerified": true
+      },
+      {
+        "SHA256": "6e8e71adbe47f177f2ed05320e4ff315edb6cbd582f0bb5848896485e04c4c5d",
+        "absent": true,
+        "name": "test-gui-extra.py",
+        "ownerNoSymlinkNoHandlesVerified": true
+      }
+    ],
+    "retainedExternal": "safe test logs and author finalization script; not global tmp cleanup",
+    "syntheticFixtureRootsCleanedByUnittest": true
+  },
+  "hypothesis": "未執行",
+  "implemented": [
+    "GUI-only source evidence rejects Manual fallback",
+    "one begin-sync before anchor, new S/grants, root inode/device/owner binding",
+    "original public DER freeze/trust/date before configured Automatic project",
+    "three consumed GUI slots and one conditional cleanup-only slot, no reset/retry",
+    "target-provided scheme pre/post env, source/config/nonce/owned product checks",
+    "post action not compiler success/full-log proof; limited Human completion attestation plus actual selected App verifier",
+    "same original leaf/fullgroup/P1 profile update/rebuilt profile+DR/noRewrite guards",
+    "durable seed-launch and Add-start markers; missing seed receipt cannot imply no item",
+    "raw local capture; safe finite candidate/date/hash CLI; private candidates until same-hash dual ACK",
+    "closed-project/last-arm/owner/nohandles gates before raw cleanup; D-after minimum handoff remains"
+  ],
+  "kind": "E010-GUI03-author-preparation",
+  "notExecuted": [
+    "CUA-any-entrypoint",
+    "Xcode",
+    "GUI",
+    "AppBuild-signed-or-unsigned",
+    "xcodebuild",
+    "xcrun",
+    "realCertificateOrProfileInspection",
+    "realIOKitCMSKeychainSigning",
+    "AppLaunch",
+    "DPK",
+    "liveRootOrAnchorOrGrantOrW1",
+    "crossWeekRetention",
+    "GitStageCommitPushPR",
+    "productionAdapter"
+  ],
+  "preparationBudget": {
+    "S": "2026-11-05T07:14:10Z",
+    "authorCompletedBeforeDeadline": true,
+    "hardDeadlineUTC": "2026-11-05T09:14:10Z",
+    "notLiveClock": true
+  },
+  "protection": {
+    "allTrackedHistoricalEvidenceSnapshotGUIAndE006Files": 325,
+    "devClean": true,
+    "devHead": "758aca9bb518f2a21f20f47609335fac49043370",
+    "featureHead": "b930d80072909f52171a23598b923af82c7c91cc",
+    "indexEmpty": true,
+    "oldNineteenBytesPreservedInSnapshot": true,
+    "oldPrivatePreparationTenFilesAccessed": false,
+    "oldPrivatePreparationTenFilesModified": false,
+    "productionModified": false,
+    "selectedHistoricalFilesSHA256": {
+      "evidence/main-preparation-20261104/preparation-check.json": "cccf14a5ebb87d7b23e8ed0beb565c0152bb0866a425748682ded4087d2153f9",
+      "evidence/main-preparation-20261104/source-manifest.json": "4dadddddbcf7adabaec8d12d0273f506954447f4e84c51a0666d951c31f7a78f",
+      "evidence/main-preparation-late-fix-20261104/preparation-check.json": "b9fa495c72be3bf768b165fcb577294c5e60f8ccde0ef629bf289a4e42f69ad1",
+      "evidence/main-preparation-late-fix-20261104/source-manifest.json": "e989bbebc05e98820f996a3e35e900bb8823df40fe86aa4379685cdff72d5e1f",
+      "evidence/main-preparation-review-fixes-20261104/preparation-check.json": "6287a74277ae431b4052295dbd897ad15da4873ccf6d8dbd6072aa76ae5680c9",
+      "evidence/main-preparation-review-fixes-20261104/source-manifest.json": "6f5fa44301c6856361b1959cfd962cf6a39defc3990b99cd1477ca850ae0220e",
+      "history/pr67-422d0c7/original-files.json": "ac06351613c2aa198b2139e71cc72c8106b177f051c4732a107fa7dafc4855ef",
+      "history/renumbering-map.json": "f5f5668fb2e5b7cefdecf2d13088c7b2cc3b252d5f1bad452f1adb0a1e9d7cca"
+    },
+    "trackedHistoricalBytesMatchBase": true
+  },
+  "recordedUTC": "2026-11-05T08:01:28.247657+00:00",
+  "snapshot": {
+    "allBytesReadVerified": true,
+    "count": 19,
+    "mapSHA256": "1765b122a6ce45c78bcb8923adf55292776d50caf9f51bfeeea0a26db7af8c55",
+    "origin": "frozen workingtree, not assumed base commit blobs",
+    "path": "experiments/E010/history/pre-gui-20261105T072258Z-d9618c4e"
+  },
+  "sourceFileCount": 22,
+  "sourceManifestFileSHA256": "eaa94c627788ac8f05a0102b889426c69e44565c5d4a6b139d82846c452fb30f",
+  "sourceManifestSHA256": "b18cbf157b26ccccc17fa4cb23da40befba2ed765c24bb0c0f8503fd9eaea5b1",
+  "validation": {
+    "GUIFixtures": {
+      "durationSeconds": 12.7,
+      "failures": 0,
+      "logSHA256": "67b1d53965cfa3d2ff0cf74bf66ab9915c3f3fe49f270f619c9c6a80663300f3",
+      "methods": 13
+    },
+    "LiveStoreSyntaxParse": {
+      "exitCode": 0,
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SwiftScope": "Only ProbeCore + LiveGate + WindowChainProbe pure chain helpers; no AppMain/LiveStore/Security initialization. LiveStore frontend parse only, no App binary/link/launch.",
+    "actualXcodeResolutionOrBuildVerified": false,
+    "affectedCompatibility": {
+      "durationSeconds": 11.096,
+      "failures": 0,
+      "logSHA256": "f23ec4cf53546aed7d164e5293fd59734f8df4d887ff54235977556385bbf4da",
+      "methods": 37
+    },
+    "fixtureCorrections": [
+      "Missing leaf reference changed from OSError to finite rejection.",
+      "One three-window fixture shadowed its Backend with a proof-name string; corrected separately, not a domain red."
+    ],
+    "initialRedLogSHA256": "356b04cd1534d8ffc87d0b5734b88547a53807ccfd1df3f4dd60c09887c67276",
+    "staticChecks": {
+      "InfoEntitlementsPlist": true,
+      "PythonAST": true,
+      "logSHA256": "520abf25641d836331ab0ee60459d7b316adc354783946c29440880446d3d753",
+      "projectPlistUniqueTargetFourConfigs": true,
+      "twoSchemeXML": true
+    }
+  }
+}

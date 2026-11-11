@@ -1,0 +1,111 @@
+{
+  "authorVerdict": null,
+  "caseResults": {
+    "PF-T01": "成功：real template/settings preserved, four base refs, only two target overrides removed",
+    "PF-T02": "成功：11 malformed target/configuration/value/count variants rejected",
+    "PF-T03": "成功：effective Debug/Rebuilt bundle derived from generated project and actual private.xcconfig reaches pre-hook; wrong bundle rejected",
+    "PF-T04": "成功：six adjacent synthetic guards pass; only pure plutil parsing allowed",
+    "PF-T05": "成功：22 old source snapshots byte-exact; all preexisting protected paths except approved two match; fixture cleanup registered and passed"
+  },
+  "changedActivePaths": [
+    "experiments/E010/Tests/test_gui_build.py",
+    "experiments/E010/scripts/gui_build.py"
+  ],
+  "independentReviewerVerdict": null,
+  "independentTesterVerdict": null,
+  "kind": "E010-PF03-producer-pure-preparation-check",
+  "notValidated": [
+    "Xcode effective resolution",
+    "GUI hook execution in Xcode",
+    "signed App or P0/P1 host",
+    "profile continuity or DPK/UX",
+    "old GUIPostHookRequired cause"
+  ],
+  "preFix22Snapshot": {
+    "SHA256": "c3e76ec399d770901b9139009cb0f8acbb22aa790fec419def8a9f475f284ec1",
+    "path": "experiments/E010/history/pre-producer-fix-20261110T023509Z"
+  },
+  "preparationOnly": true,
+  "previousSourceManifestFileSHA256": "20ace0aa34395e92d3ebb2e539bc91b3910021962fc8a75e292d2eadea15e037",
+  "prohibitedOperationsExecuted": {
+    "AppLaunch": false,
+    "AppleAssets": false,
+    "Build": false,
+    "CUA": false,
+    "DPK": false,
+    "GitMutation": false,
+    "SecurityOrKeychain": false,
+    "XcodeGUI": false,
+    "compiler": false,
+    "liveClockOrGrants": false
+  },
+  "protection": {
+    "E006Unchanged": true,
+    "baselineRelativePathDigestSHA256": "eba1ea65b109642285a92e4c2889afaf8351b2741a4cfc9f9e071adbd89deb9b",
+    "devCleanObserved": true,
+    "devHEADObserved": "758aca9bb518f2a21f20f47609335fac49043370",
+    "devNotWritten": true,
+    "featureHEAD": "b930d80072909f52171a23598b923af82c7c91cc",
+    "featureIndexEmpty": true,
+    "fourContractsREADMEAndStepUnchanged": true,
+    "oldManifestsReceiptsIndexesSnapshotsAndGUIUnchanged": true,
+    "onlyApprovedTwoChanged": true,
+    "preexistingFileCount": 468,
+    "templateSchemeSwiftUnchanged": true,
+    "unchangedPreexistingCount": 466
+  },
+  "recordedUTC": "2026-11-10T02:39:01.967600+00:00",
+  "scope": "remove only the two validated target placeholder overrides in generated GUI project; original template unchanged",
+  "sourceAggregateSHA256": "e7fdeb2a5daabc5953041c51f03539916f7c70a8eb34e704e0b5b1a8079c7757",
+  "sourceManifestFileSHA256": "938a007e159c855acf737f632c4c72d6101f6ef8a8583c11e05cc11584ce9b21",
+  "sourceManifestRelativePath": "experiments/E010/evidence/producer-preparation-20261110/source-manifest.json",
+  "temporaryScope": {
+    "exactFixturePathsPersisted": false,
+    "fixtureCleanupMechanism": "exclusive TemporaryDirectory per test plus unittest.addCleanup; all cleanup callbacks completed with no suite errors",
+    "nativePlutilProcessesReturnedSynchronously": true,
+    "noGlobalTmpCleanupClaim": true,
+    "otherScratchOrPrivatePreparationTouched": false,
+    "ownedSafeAuditLogsRetainedForIndependentVerification": true,
+    "privateLiveRootCreated": false
+  },
+  "tests": {
+    "command": "PYTHONPATH=experiments/E010/Tests python3 -B -",
+    "green": {
+      "allowedPlutilCalls": 27,
+      "durationSeconds": 0.363,
+      "logSHA256": "dcb6825e314d8254c8062257baf5f085362bee3e79d6e8d270766c83a680adfd",
+      "methodNames": [
+        "test_PF_T01_real_template_changes_only_two_target_overrides",
+        "test_PF_T02_unexpected_target_configuration_value_or_count_rejects",
+        "test_PF_T03_generated_precedence_reaches_hook_and_wrong_bundle_still_rejects"
+      ],
+      "methods": 3,
+      "negativeSubcases": 11
+    },
+    "guardedPythonScript": "import subprocess,unittest\nfrom unittest import mock\nimport test_gui_build as fixture\nreal=subprocess.run;allowed=[];denied=[]\ndef pure(args,*a,**kw):\n    if args!=['/usr/bin/plutil','-convert','json','-o','-','-']:\n        denied.append(True);raise AssertionError('native command denied in PF pure fixture')\n    allowed.append(args[0]);return real(args,*a,**kw)\nnames=METHOD_NAMES\nsuite=unittest.TestSuite(fixture.GUIBuildTests(name) for name in names)\nwith mock.patch.object(subprocess,'run',side_effect=pure):result=unittest.TextTestRunner(verbosity=2).run(suite)\nprint('allowedPlutilCalls',len(allowed));print('deniedNativeAttempts',len(denied));raise SystemExit(not result.wasSuccessful())\n",
+    "guards": {
+      "allowedPlutilCalls": 135,
+      "deniedNativeAttempts": 0,
+      "durationSeconds": 1.619,
+      "logSHA256": "534e3f695885e82ede69beefae0116134de645ad80ee28496001e8a52c30b3fe",
+      "methodNames": [
+        "test_GUI_consent_leaf_before_auto_and_unique_slot",
+        "test_valid_hooks_actual_product_and_human_attestation_form_GUI_proof",
+        "test_missing_duplicate_late_wrong_target_nonce_source_and_old_product_reject",
+        "test_wrong_original_leaf_never_becomes_new_baseline_or_manual_fallback",
+        "test_private_source_raw_safety_no_handles_and_no_live_inspector_in_prep",
+        "test_P1_old_profile_cannot_be_retried_or_reseeded"
+      ],
+      "methods": 6
+    },
+    "red": {
+      "domainFailure": "generated effective bundle remained unconfigured; malformed target/config/value/count accepted",
+      "durationSeconds": 0.126,
+      "failingAssertionsIncludingSubtests": 13,
+      "logSHA256": "6945460b423b323b97ce6e7b277a860b722c7bf44169b56259ea05e580b99341",
+      "methods": 3
+    },
+    "scriptMethodNamesPlaceholder": "replace METHOD_NAMES with new or guard method list above",
+    "selection": "explicit TestSuite GUIBuildTests names; no discovery/imported suites/setUpClass compilation"
+  }
+}

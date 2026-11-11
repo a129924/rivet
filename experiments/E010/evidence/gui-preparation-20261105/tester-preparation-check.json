@@ -1,0 +1,286 @@
+{
+  "accounting": {
+    "GUIUnittestMethods": 13,
+    "LiveStoreOnlyTypecheckedNotInitialized": true,
+    "additionalSyntheticBoundaryCases": 7,
+    "affectedCompatibilityUnittestMethods": 37,
+    "allPassed": true,
+    "noAppBuild": true,
+    "onlyMemorySwiftChainProbesCompiledAndExecuted": true,
+    "unittestMethodsTotal": 50,
+    "unittestSkips": 0
+  },
+  "audit": {
+    "fileSHA256": {
+      "before.json": "431b8fcfc2a36418a5b17bd3e06e6a1cb9fc1c645c5d1e50232e9694337c60c7",
+      "cleanup-result.json": "e5001de94f85e86e5d4550ba23dbda4b95bbf51a82b7909481a1cd9cccd5e337",
+      "compatibility-result.json": "b0f8d7acb9f37a084ef34393f9f438a33561fed7ed140a61b132c34e0e68b462",
+      "compatibility.log": "5127dc7a24b34a1762b13081838660a2a7b1236c43dc533ceef90cb702dbf06d",
+      "extra-boundaries-result.json": "0e3ef846b7e2374d02445b73c6797a15b7325b7a78c070f5b4003ec29ceec5ce",
+      "gui-focused-result.json": "d986b97a49ff5fe948e9602f52afbdbcb2067431624097cd3635a5ca401a93c2",
+      "gui-focused.log": "f485519b68d1aa8ff7959d76660073407a318b9f0f9120e11c0035260ec68091",
+      "livestore-typecheck-result.json": "ad6e7bafcf9cd73b4375997e9440a4bf687ccd63bc340a724838c11119354d09",
+      "livestore-typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "static-protection-result.json": "425dbed87c43ed02c61ddad3e7440a4ab29c8897ce8a6361b18e4ffe8d26c167"
+    },
+    "location": "external owned preparation audit directory retained",
+    "noGitMutation": true,
+    "noSourceOrPlanningModified": true,
+    "ownedTemporaryOutputsCleaned": true,
+    "receiptSourcePathPrefixLookupCorrectedBeforeAnyReceiptWrite": true,
+    "temporaryToolSyntaxAndCleanupAssertionStoppedBeforeDomainExecutionOrDeletion": true
+  },
+  "authorPreparationCheck": {
+    "SHA256": "3a45f2446641e69ce62544c827b2272fd2dce1f7215e8e96b1e1608b778725b0",
+    "path": "experiments/E010/evidence/gui-preparation-20261105/preparation-check.json"
+  },
+  "contract": {
+    "GUITypeRejectsManual": true,
+    "HumanSyncBeforeAnchorAndOriginalLeafBeforeAutomaticRequired": true,
+    "P0ArmingBeforeActualProfileGlobalSupportedWithoutInventedProof": true,
+    "PythonLaunchAndSwiftAddIntentDurableBeforePossibleWrite": true,
+    "closeMustFollowLatestArmAndFreshHandleCheck": true,
+    "missingSeedReceiptRemainsPossibleOwnedWriteRecovery": true,
+    "noRewriteAndSeedAddCountOneInSyntheticChain": true,
+    "originalLeafFullGroupNewP1AndRebuiltBindingsPreserved": true,
+    "safeProjectionExcludesRaw": true,
+    "sameCandidateSHADualACKBeforeExportAndCleanup": true,
+    "singleApplicationTargetAndExplicitSchemeHookEnvironment": true,
+    "threeMainSlotsPlusOneCleanupOnly": true,
+    "wrongSourceConfigNonceOldArtifactLateDuplicateRejected": true
+  },
+  "hardPreparationDeadlineUTC": "2026-11-05T09:14:10Z",
+  "kind": "E010-GUI04-independent-preparation-verification",
+  "limits": {
+    "GUI05IndependentReviewerPending": true,
+    "GUI06HumanSyncStillRequired": true,
+    "HumanPromptObservation": "unknown-not-measured",
+    "READMEFutureCLIInterfaceSourceReviewedButNoActualXcodeOrSigningExecutionClaimed": true,
+    "actualAppLaunch": false,
+    "actualAssetsOrProfileInspection": false,
+    "actualGUIorCUA": false,
+    "actualLiveRootGrantAnchorWindow": false,
+    "actualSecurityOrDPK": false,
+    "actualSignedBuild": false,
+    "mainHypothesisExecuted": false,
+    "preparationApprovalDoesNotAuthorizeLive": true
+  },
+  "protection": {
+    "E006BaseComparisonAndDevGitStatusNotIndependentlyRepeated": true,
+    "allExistingE010BytesUnchanged": true,
+    "existingE010Files": 267,
+    "fourPlanningDocumentsUnchanged": true,
+    "noE006OrDevWritesPerformed": true,
+    "oldClosedTenFilePreparationReadOnlyUnchanged": true,
+    "original171Immutable22Snapshots13GUIProtected": true,
+    "original193ManifestRowsVerified": 193,
+    "original19SourceSnapshotExact": true,
+    "planningSHA256": {
+      "analysis/github-oauth-dpk-profile-continuity-feasibility/requirements.md": "4f423f02ebcf74e459cec4f7ee094a03f61f83c1785e1a9356a37ea8f0dda82d",
+      "analysis/github-oauth-dpk-profile-continuity-feasibility/technical-spec.md": "faed1b234e741781b52a7cbbde304e4d53dabb01763d2bdaa25c5f4fc27527ce",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md": "6949ea450fec47ee00429d660a86cc9f1dc80c677c8ad2c30def1c686d3d655b",
+      "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md": "ea4261d5172a0cd0f1a700606e8ad70d69d0788930f0a6ee9744ea19e9228dea"
+    },
+    "selectedHistoricalReceiptSHAsVerified": true
+  },
+  "recordedUTC": "2026-11-05T08:19:24.675600+00:00",
+  "required_fixes": [],
+  "scope": "independent pure/mock and controlled compiler preparation verification only",
+  "sourceManifest": {
+    "SHA256": "eaa94c627788ac8f05a0102b889426c69e44565c5d4a6b139d82846c452fb30f",
+    "actualSourceSHA256": {
+      "DPKContinuityProbe.xcodeproj/project.pbxproj": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+      "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe-Rebuilt.xcscheme": "2422539a9f66d7913229becf89054db57e2f280e4c1a7ee9c552a036920d474a",
+      "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "023b15adab3e1ddcc56ea0034407c344b98bb93f347d70378251720140d72649",
+      "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+      "Resources/Info.plist": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+      "Sources/DPKContinuityProbe/AppMain.swift": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+      "Sources/DPKContinuityProbe/LiveGate.swift": "a74cb0e08657a662f7d6d5c2e65402cc921756b376577fe66f1fbe96419f8a5e",
+      "Sources/DPKContinuityProbe/LiveStore.swift": "a4f13222a02a3e00498277db2fc2610ceca32c2ea5aac59d1ff7ae4199e89381",
+      "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+      "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+      "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+      "Tests/WindowChainProbe.swift": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+      "Tests/test_bootstrap.py": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+      "Tests/test_continuity.py": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+      "Tests/test_gui_build.py": "005244c48224f2b7c8e4d854e58db9d341389822d6d755b86bea111ec5f983ee",
+      "Tests/test_main_policy.py": "4be3c1e7710b9e5f6160c2d65a3c637706270578e0ee6051ed84728d2e74107e",
+      "Tests/test_main_review_fixes.py": "de0450316cbe369b8b46f03cd137611ec4b642435f9be2c41d7ab6973de4f3ce",
+      "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+      "scripts/continuity.py": "2445e582a93eb9c3962ce1dcd90ef0a212c8ed5614242cba74992b35b5778eeb",
+      "scripts/gui_build.py": "e8a2aea307c93de65f7b7511580ade2e1d44fc543691a6aae296b82ff431693f",
+      "scripts/prepare.py": "e245ff882671b84b2d5e9f6d7b83cf145ea90cf7703bd90598dd6420773bfd21",
+      "scripts/proof.py": "c50e24e1eeebbba83169ae55a696cd20f4d34bdf206cea6b4f827c743357fecc"
+    },
+    "aggregateSHA256": "b18cbf157b26ccccc17fa4cb23da40befba2ed765c24bb0c0f8503fd9eaea5b1",
+    "allActualBytesMatched": true,
+    "fileCount": 22,
+    "path": "experiments/E010/evidence/gui-preparation-20261105/source-manifest.json",
+    "sourcePathBase": "experiments/E010"
+  },
+  "startedUTC": "2026-11-05T08:05:13Z",
+  "topic": "github-oauth-dpk-profile-continuity-feasibility",
+  "verdict": "approved",
+  "verification": {
+    "cleanup-result.json": {
+      "allOwnedTemporaryOutputsAbsent": true,
+      "endUTC": "2026-11-05T08:18:09.029565+00:00",
+      "initialEmptyTmpAssertionStoppedBeforeDeletion": true,
+      "noExternalCacheTouched": true,
+      "noProcessSignalled": true,
+      "ownedTemporaryOutputNames": [
+        "tmp",
+        "livestore-typecheck-cache"
+      ],
+      "preCleanupLsofExit": 1,
+      "preCleanupLsofMatches": 0,
+      "safeAuditLogsRetained": true,
+      "startUTC": "2026-11-05T08:18:09.021000+00:00",
+      "temporaryCompilerCacheAlsoRemoved": true
+    },
+    "compatibility-result.json": {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_main_policy.MainPolicyTests.test_bad_package_source_namespace_grants_and_start_are_zero_live_capability",
+        "test_main_policy.MainPolicyTests.test_direct_build_actual_producer_receipt_binds_source_log_config_and_owned_app",
+        "test_main_policy.MainPolicyTests.test_fixed_stage_no_reseed_and_observation_unknown_do_not_block_data",
+        "test_main_policy.MainPolicyTests.test_python_producer_to_actual_swift_main_chain_rejects_tamper_without_human_files",
+        "test_main_policy.MainPolicyTests.test_real_observation_is_optional_but_never_inferred_from_consent",
+        "test_main_policy.MainPolicyTests.test_safe_candidate_ack_is_required_before_exact_private_cleanup",
+        "test_main_policy.MainPolicyTests.test_signed_build_bad_request_or_clock_never_constructs_executor",
+        "test_main_policy.MainPolicyTests.test_whole_package_bootstrap_is_not_future_ready_or_observation",
+        "test_main_review_fixes.MainReviewFixTests.test_RF01_injected_config_and_environment_cannot_reach_executor",
+        "test_main_review_fixes.MainReviewFixTests.test_RF02_owned_timeout_terminates_only_proven_new_descendants",
+        "test_main_review_fixes.MainReviewFixTests.test_RF02_residual_or_unknown_process_identity_remains_recovery_required",
+        "test_main_review_fixes.MainReviewFixTests.test_RF02_timeout_always_records_failure_and_blocks_following_operations",
+        "test_main_review_fixes.MainReviewFixTests.test_RF03_LATE_exit_zero_at_cutoff_is_control_only_and_recovery_can_finish",
+        "test_main_review_fixes.MainReviewFixTests.test_RF03_failed_P1_exports_as_control_only_and_recovery_can_finish",
+        "test_main_review_fixes.MainReviewFixTests.test_RF04_setup_stop_after_original_deadline_keeps_private_root",
+        "test_main_review_fixes.MainReviewFixTests.test_RF04_setup_stop_retains_raw_until_same_candidate_dual_ACK",
+        "test_bootstrap.BootstrapTests.test_actual_cli_legacy_begin_is_blocked_and_bootstrap_modes_never_make_executor",
+        "test_bootstrap.BootstrapTests.test_actual_dates_budget_cutoff_and_tampered_proof_cannot_complete",
+        "test_bootstrap.BootstrapTests.test_actual_stop_driver_pre_export_and_completion_publication_faults",
+        "test_bootstrap.BootstrapTests.test_actual_swift_w1_helper_and_later_window_regression",
+        "test_bootstrap.BootstrapTests.test_anchor_has_no_guessed_dates_and_original_time_survives_setup",
+        "test_bootstrap.BootstrapTests.test_anchor_tamper_and_duplicate_begin_never_reset_clock",
+        "test_bootstrap.BootstrapTests.test_bootstrap_archive_survives_private_cleanup_and_later_resume",
+        "test_bootstrap.BootstrapTests.test_controlled_setup_cleanup_failure_records_residual_and_cli_nonzero",
+        "test_bootstrap.BootstrapTests.test_missing_setup_ready_grant_binding_source_or_future_ready_is_zero_inspection",
+        "test_bootstrap.BootstrapTests.test_partial_complete_crash_resume_is_same_bytes_and_no_early_run",
+        "test_bootstrap.BootstrapTests.test_setup_failure_actual_cli_receipt_and_controlled_stop_zero_item",
+        "test_review_fixes.ReviewFixTests.test_absent_ready_or_proof_never_constructs_app_backend",
+        "test_review_fixes.ReviewFixTests.test_actual_archive_collision_keeps_private_root",
+        "test_review_fixes.ReviewFixTests.test_cleanup_only_after_failed_w2_preserves_clock_and_never_reseeds",
+        "test_review_fixes.ReviewFixTests.test_cleanup_only_no_host_or_unconfirmed_process_keeps_recovery",
+        "test_review_fixes.ReviewFixTests.test_mac_user_binding_missing_or_changed_is_zero_command",
+        "test_review_fixes.ReviewFixTests.test_profile_same_certificate_on_other_device_is_rejected",
+        "test_review_fixes.ReviewFixTests.test_public_archive_retains_window_ready_human_and_retention_chain",
+        "test_review_fixes.ReviewFixTests.test_ready_must_follow_human_report_and_human_cannot_be_future",
+        "test_review_fixes.ReviewFixTests.test_recovery_unconfirmed_owned_process_never_inspects_or_launches",
+        "test_review_fixes.ReviewFixTests.test_valid_ready_and_control_proof_precede_app_executor_construction"
+      ],
+      "compilerPATHPinned": true,
+      "exit": 0,
+      "logSHA256": "5127dc7a24b34a1762b13081838660a2a7b1236c43dc533ceef90cb702dbf06d",
+      "methods": 37,
+      "relativeCWD": "experiments/E010/Tests",
+      "seconds": 8.687,
+      "skips": 0
+    },
+    "extra-boundaries-result.json": {
+      "cases": [
+        {
+          "case": "GUI-old-S",
+          "rejectedBeforeAnchor": true
+        },
+        {
+          "case": "GUI-manual-evidence-type",
+          "rejectedBeforeAnchor": true
+        },
+        {
+          "case": "GUI-CUA-policy-false",
+          "rejectedBeforeAnchor": true
+        },
+        {
+          "case": "GUI-source-empty",
+          "rejectedBeforeAnchor": true
+        },
+        {
+          "case": "GUI-old-grant-horizon",
+          "rejectedBeforeAnchor": true
+        },
+        {
+          "case": "GUI-future-begin-sync",
+          "rejectedBeforeAnchor": true
+        },
+        {
+          "case": "GUI-close-before-last-arm",
+          "rejectedAndRootRetained": true
+        }
+      ],
+      "liveOperations": 0,
+      "passed": true,
+      "priorTemporaryScriptSyntaxError": "no test execution or side effects; corrected in tool-only script",
+      "scope": "seven necessary synthetic GUI policy boundary negatives",
+      "sourceModified": false
+    },
+    "gui-focused-result.json": {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "experiments/E010/Tests",
+        "-p",
+        "test_gui_build.py",
+        "-v"
+      ],
+      "compilerPATHPinned": true,
+      "exit": 0,
+      "logSHA256": "f485519b68d1aa8ff7959d76660073407a318b9f0f9120e11c0035260ec68091",
+      "methods": 13,
+      "seconds": 6.075,
+      "skips": 0
+    },
+    "livestore-typecheck-result.json": {
+      "AppBinaryProduced": false,
+      "StoreOrSecurityInitializationExecuted": false,
+      "command": [
+        "<pinnedXcode>/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+        "-typecheck",
+        "-swift-version",
+        "6",
+        "-strict-concurrency=complete",
+        "-module-cache-path",
+        "<owned-prep>/livestore-typecheck-cache",
+        "-sdk",
+        "<pinnedXcode>/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "experiments/E010/Sources/DPKContinuityProbe/ProbeCore.swift",
+        "experiments/E010/Sources/DPKContinuityProbe/LiveGate.swift",
+        "experiments/E010/Sources/DPKContinuityProbe/LiveStore.swift"
+      ],
+      "compilerSHA256": "2ed38571e92c0283091838c1649e27650ad9c99950288e883c7b2dc6c4ce89fb",
+      "exit": 0,
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "static-protection-result.json": {
+      "DebugRebuiltSchemeConfigConfirmed": true,
+      "InfoEntitlementsPlistsValid": true,
+      "PythonSeedLaunchIntentBeforePopenStaticallyConfirmed": true,
+      "SwiftAddIntentExclusiveFsyncBeforeSecItemAddStaticallyConfirmed": true,
+      "author4LogSHAsAnd3RemovedHelpersConfirmed": true,
+      "notActualXcodeResolutionOrBuild": true,
+      "oldTenFileClosedPreparationUnchanged": true,
+      "original193ManifestRowsVerified": 193,
+      "protects171Immutable22Snapshots13GUI": true,
+      "snapshot19ExactBytesAndMapConfirmed": true,
+      "uniqueApplicationTargetAndBothEnvironmentBuildableHooksConfirmed": true
+    }
+  }
+}

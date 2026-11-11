@@ -1,0 +1,292 @@
+{
+  "cleanup": {
+    "externalCacheCompleteness": "unknown",
+    "focusedPrepCleanup": {
+      "allOwnedBuildProductsBinariesCachesAndFixtureRootsAbsent": true,
+      "endUTC": "2026-11-04T09:32:40.376275+00:00",
+      "noRelevantOpenHandlesBeforeRemoval": true,
+      "removedOwnedPaths": [
+        "main-chain-module-cache",
+        "main-chain-probe",
+        "tmp"
+      ],
+      "startUTC": "2026-11-04T09:32:40.372942+00:00"
+    },
+    "initialPrepCleanup": {
+      "auditLogsRetainedOnly": true,
+      "endUTC": "2026-11-04T09:29:23.487687+00:00",
+      "externalCacheCompleteness": "unknown",
+      "noRelevantHandlesBeforeRemoval": true,
+      "ownedPreparationOutputsAbsent": true,
+      "removedOwnedPaths": [
+        "core-module-cache",
+        "core-tests",
+        "tmp",
+        "unsigned"
+      ],
+      "startUTC": "2026-11-04T09:29:23.030946+00:00"
+    },
+    "retainedExternalAuditBasename": "rivet-E010-MAIN04-ezficmqg",
+    "retainedExternalAuditFiles": [
+      "before.json",
+      "core-compile.log",
+      "core-result.json",
+      "core-tests.log",
+      "main-chain-focused-result.json",
+      "protection-cleanup-result.json",
+      "pure-final.log",
+      "pure-result.json",
+      "unsigned-result.json",
+      "unsigned.log"
+    ],
+    "retainedFilesAreLogsOrSafeJSONOnly": true
+  },
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "experiments/E010/Tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "result": {
+        "command": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "experiments/E010/Tests",
+          "-p",
+          "test_*.py",
+          "-v"
+        ],
+        "exit": 0,
+        "logSHA256": "b460adb183e8fe111663a83d643066c98ada8ebcee945c9c0528167868617ddd",
+        "methods": 65,
+        "passed": true,
+        "reportedSeconds": 12.922,
+        "skips": 0,
+        "wallSeconds": 13.05
+      }
+    },
+    {
+      "argv": [
+        "swiftc",
+        "-module-cache-path",
+        "<owned-prep>/core-module-cache",
+        "experiments/E010/Sources/DPKContinuityProbe/ProbeCore.swift",
+        "experiments/E010/Tests/CoreTests.swift",
+        "-o",
+        "<owned-prep>/core-tests"
+      ],
+      "result": {
+        "binarySHA256": "1fd091125b2b8cc33fc721bfbd9cb34deca20e8d95ca1453a245009505bc53be",
+        "compileExit": 0,
+        "compileLogSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output": "PASS: six fields, no rewrite, duplicate add, exact cleanup, invalid/technical errors, redaction, canonical LF (7 scenarios)",
+        "runExit": 0,
+        "runLogSHA256": "09ef652232f9ff9b85c18ed24d23490aa261806054ddc75a74435e6081bb62a7"
+      },
+      "then": [
+        "<owned-prep>/core-tests"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "experiments/E010/scripts/prepare.py",
+        "--out",
+        "<owned-prep>/unsigned",
+        "--unsigned-build"
+      ],
+      "result": {
+        "AppLaunched": false,
+        "actualProducts": {
+          "Debug": {
+            "actualMainSHA256": "f5c19115300a461fe7db3d4ad4c15fb26caadf499d3ac3f47d763b6e78dec4c6",
+            "debugDylibAbsent": true
+          },
+          "Rebuilt": {
+            "actualMainSHA256": "ff3d14bd5511be0191b7a21d46d0fede42b9a4cd74bea4ba7a41cd02877f7e91",
+            "debugDylibAbsent": true
+          }
+        },
+        "configurations": {
+          "Debug": {
+            "debugDylibAbsent": true,
+            "exitCode": 0,
+            "mainSHA256": "f5c19115300a461fe7db3d4ad4c15fb26caadf499d3ac3f47d763b6e78dec4c6",
+            "performed": true,
+            "signingAllowed": false,
+            "signingRequired": false
+          },
+          "Rebuilt": {
+            "debugDylibAbsent": true,
+            "exitCode": 0,
+            "mainSHA256": "ff3d14bd5511be0191b7a21d46d0fede42b9a4cd74bea4ba7a41cd02877f7e91",
+            "performed": true,
+            "signingAllowed": false,
+            "signingRequired": false
+          }
+        },
+        "exit": 0,
+        "logSHA256": "65b91411c121c8524f067be2bdbbfb4df96d052d884bc594fbd5007735c202e4",
+        "mainHashesDiffer": true,
+        "receiptSHA256": "792b0565aa6c8b2fb213dc5f19b39330f100b465326978c4ec9e0d08a641f6dc",
+        "sourceBuildInputs": {
+          "DPKContinuityProbe.xcodeproj/project.pbxproj": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+          "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+          "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+          "Resources/Info.plist": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+          "Sources/DPKContinuityProbe/AppMain.swift": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+          "Sources/DPKContinuityProbe/LiveGate.swift": "50122e01c949357e8a169585bbea09b3d3e2ff3812dd56eb0c92a75e7088ab7f",
+          "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+          "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0"
+        },
+        "unsignedOnly": true,
+        "wallSeconds": 19.828
+      }
+    },
+    {
+      "procedure": "existing MainPolicyTests synthetic producer fixture with actual WindowChainProbe Swift helper; no new permanent tests",
+      "result": {
+        "cases": [
+          {
+            "actualExit": 0,
+            "case": "MAIN-W2-valid-after-natural-expiry",
+            "expectedExit": 0
+          },
+          {
+            "actualExit": 2,
+            "case": "MAIN-W2-consent-namespace-tamper",
+            "expectedExit": 2
+          },
+          {
+            "actualExit": 2,
+            "case": "MAIN-W2-window-binding-tamper",
+            "expectedExit": 2
+          },
+          {
+            "actualExit": 0,
+            "case": "MAIN-W3-valid-same-global-chain",
+            "expectedExit": 0
+          },
+          {
+            "actualExit": 2,
+            "case": "MAIN-W3-retention-global-tamper",
+            "expectedExit": 2
+          },
+          {
+            "actualExit": 2,
+            "case": "MAIN-W3-original-D-expired",
+            "expectedExit": 2
+          }
+        ],
+        "compileExit": 0,
+        "passed": true,
+        "scope": "pure synthetic actual Python producer to Swift chain helper W2/W3; no App/Security/live assets",
+        "sourceUnmodified": true
+      }
+    }
+  ],
+  "hypothesisStatus": "未執行",
+  "kind": "E010-MAIN04-independent-preparation-verification",
+  "limitations": [
+    "Passing mock signed-build provenance is not a signed-host or certificate/profile proof.",
+    "Unsigned main hashes and markers do not establish DR/certificate equality or DPK behavior.",
+    "MAIN W2/W3 focused checks use synthetic times and assets; they are not natural-expiry evidence.",
+    "Cleanup covers this Tester owned prep outputs; outside caches are not inspected or claimed absent."
+  ],
+  "notExecuted": [
+    "actual signed xcodebuild",
+    "Apple account or asset operations",
+    "codesign or Security commands",
+    "CMS or IOKit host binding",
+    "DPKProbe App launch",
+    "SecItem",
+    "live root/grants/anchor/clock",
+    "real retention/natural profile expiry/P1 restoration",
+    "GUI",
+    "formal Keychain adapter",
+    "Git stage/commit/push/PR"
+  ],
+  "protection": {
+    "E006TrackedDiffExit": 0,
+    "E006TrackedFiles": 126,
+    "all224PresentBeforeTesterFilesSameBytesAfter": true,
+    "approvedFourDocsSameBytesAsReceived": true,
+    "author13PreparationOutputsAbsent": true,
+    "authorBaselineFileSHA256": "801d0a818e124db27ed142bd639f502070d8a98cad88ed180de09435f3c44f4f",
+    "authorThreeLogSHAsConfirmed": true,
+    "covers171Immutable22Snapshots13GUIMapAndAQ2": true,
+    "devReadOnlyStatusClean": true,
+    "oldE010Files": 219,
+    "onlyChangedOldRuntimeFiles": [
+      "experiments/E010/Sources/DPKContinuityProbe/LiveGate.swift",
+      "experiments/E010/scripts/continuity.py",
+      "experiments/E010/scripts/prepare.py",
+      "experiments/E010/scripts/proof.py"
+    ],
+    "twoIgnoredBytecodeFilesExistedBeforeTesterAndRetainedUnchanged": true,
+    "unchangedOldE010Files": 215
+  },
+  "recordedUTC": "2026-11-04T09:32:40.376275+00:00",
+  "required_fixes": [],
+  "scope": "MAIN03 preparation only; independent MAIN05 review and live verification are not approved by this receipt",
+  "source": {
+    "HEAD": "b930d80072909f52171a23598b923af82c7c91cc",
+    "allFrozenSourceAndDocsUnchangedAfterVerification": true,
+    "authorPreparationReceiptSHA256": "cccf14a5ebb87d7b23e8ed0beb565c0152bb0866a425748682ded4087d2153f9",
+    "beforeSnapshotSHA256": "b3089c7bdb7310a4fed6286bcd37f464a71cdcaa870f40327c24df20c6ecda37",
+    "manifestFileSHA256": "4dadddddbcf7adabaec8d12d0273f506954447f4e84c51a0666d951c31f7a78f",
+    "source18AggregateSHA256": "6c5f0297468e3fe0f9728562b05d28fb936dc20fb9c306a0e3675b5c3e5b3705",
+    "sourceSHA256": {
+      "DPKContinuityProbe.xcodeproj/project.pbxproj": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+      "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "ff28ab132d58588e95b173b20614c52680163fcbfa200a199c5ddcc53c17b7d7",
+      "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+      "Resources/Info.plist": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+      "Sources/DPKContinuityProbe/AppMain.swift": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+      "Sources/DPKContinuityProbe/LiveGate.swift": "50122e01c949357e8a169585bbea09b3d3e2ff3812dd56eb0c92a75e7088ab7f",
+      "Sources/DPKContinuityProbe/LiveStore.swift": "d05244661b590ad1a37238428367e4c5ccdd8cd5a2818b26c044e80e5dc67828",
+      "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+      "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+      "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+      "Tests/WindowChainProbe.swift": "c0395288855eaf42afa64eefe11bb6c79393ed596536c411e47454def3d86fcf",
+      "Tests/test_bootstrap.py": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+      "Tests/test_continuity.py": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+      "Tests/test_main_policy.py": "64820537ec04100248b164320f2929dd012f8ab982edc4657ffcf5e4e95fd5da",
+      "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+      "scripts/continuity.py": "317b9eee74bc8cf86e332b9ad7831fbd1370daf7b4daaa4146e006d1e778b2a9",
+      "scripts/prepare.py": "a6523bcd698005ff852eccab1a5ab3ff081cfcf1ecb1a13061bef783b303f612",
+      "scripts/proof.py": "558e8ade1ce4b21312cb861ca3fc9ec92a53aac35ea7a810c8584da592ee378c"
+    }
+  },
+  "upstream": {
+    "MAIN02": "explicit actual Plan-Reviewer approved handoff; required_fixes=[]",
+    "MAIN05": "pending independent Reviewer",
+    "authorVerdict": null
+  },
+  "verdict": "approved",
+  "verifiedBehavior": {
+    "PythonToSwiftMAINW1AndFocusedW2W3BindingsChecked": true,
+    "badPackageNamespaceSourceGrantActionsStartRejectedBeforeLiveCapability": true,
+    "directBuildP0ProducerUsesInjectedMockOnly": true,
+    "fixedStageRejectsReseedAndKeepsOriginalReceipts": true,
+    "mockProvenanceBinds8SourcesConfigOwnedAppLogAndHashes": true,
+    "optionalLateTruthfulObservationDoesNotRewriteRetentionHistory": true,
+    "privateCleanupRequiresDurableSafeIndexAndMatchingSafetyReadabilityACKInMock": true,
+    "unsignedInitialRebuiltMarkersConfirmed": true,
+    "unsignedMainHashesDifferAndNoDebugDylib": true,
+    "wholePackageConsentDoesNotInventHumanReadyOrObservation": true,
+    "wrongRequestLateRequestLogTamperAndDuplicateBuildRejected": true
+  }
+}
