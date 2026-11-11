@@ -111,3 +111,18 @@ class ReviewFixTests(Fixture):
         backend=Backend(self);backend.ensure_exited=mock.Mock()
         with self.assertRaises(c.Rejected):proof.SetupVerifier.finalize(backend,self.run)
         self.assertTrue(self.root.exists());self.assertTrue((self.root/'global.json').exists())
+
+    def test_PR67_non_GUI_recovery_keeps_attempt_selection(self):
+        self.failed_w2();attempt=str(uuid.uuid4());self.recovery_grant(attempt)
+        selected=self.root/'synthetic-attempt-selected.app';selected.mkdir();(selected/'fixture').write_bytes(b'synthetic attempt product, never executed')
+        decoy=self.root/'synthetic-GUI-decoy.app';decoy.mkdir();(decoy/'fixture').write_bytes(b'synthetic GUI decoy, never executed')
+        selection={'appPath':str(selected),'humanFreePersonalTeamStatement':'synthetic selection','humanSourceAndMarkerStatement':'synthetic selection'}
+        c.exclusive(self.root,'recovery-attempts/'+attempt+'/selection.json',selection)
+        c.exclusive(self.root,'selection/recovery.json',{'appPath':str(decoy)})
+        asset=self.asset('p1');asset.update(appPath=str(selected),appSHA256=proof.app_hash(selected))
+        verifier=object.__new__(proof.SetupVerifier);verifier.run=self.run;verifier.ensure_exited=mock.Mock();verifier.asset=mock.Mock(return_value=(self.asset(),'a'*64))
+        with mock.patch.object(proof,'inspect_selected',return_value=asset) as inspect,mock.patch.object(proof,'command') as command,mock.patch.object(proof.subprocess,'Popen') as launch:
+            name=verifier.inspect_recovery(attempt)
+            inspect.assert_called_once_with(selection,self.run);command.assert_not_called();launch.assert_not_called()
+        self.assertEqual((self.root/'hosts'/(name+'.app')/'fixture').read_bytes(),(selected/'fixture').read_bytes())
+        self.assertEqual(proof.app_hash(self.root/'hosts'/(name+'.app')),asset['appSHA256'])

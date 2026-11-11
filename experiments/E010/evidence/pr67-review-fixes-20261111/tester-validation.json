@@ -1,0 +1,146 @@
+{
+  "AQ2HashesUnchanged": true,
+  "HEADUnchanged": true,
+  "activeChangedFiles": [
+    "experiments/E010/scripts/proof.py",
+    "experiments/E010/Tests/WindowChainProbe.swift",
+    "experiments/E010/Tests/test_review_fixes.py",
+    "experiments/E010/Tests/test_gui_build.py"
+  ],
+  "activeOnly": true,
+  "appendOnlyDocuments": [
+    "experiments/E010/README.md",
+    "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.plan.md",
+    "plan/github-oauth-dpk-profile-continuity-feasibility/github-oauth-dpk-profile-continuity-feasibility.step.md"
+  ],
+  "authorPreparationReceiptSHA256": "75371592756e58b2866ccc81ecef7c8520bb4daa5af031feb4fa442f99954435",
+  "baselineCommit": "1f11f861aebd463db37625d8e62c92361b361cc9",
+  "baselineMapMatchesGitObjectsCount": 521,
+  "boundedFullIndexPatchMatchesWorkingtree": true,
+  "boundedFullIndexPatchSHA256": "ce35a9ff1a12d732364c8c60c664db12dbc26ca6c6c7353b7ffdad2577343c2f",
+  "documentsBaselinePrefixesExact": true,
+  "gitDiffCheckExit": 0,
+  "handoffPacketSHA256": "c03883885071d3e18d158365fe33e0104441b84aad20e6ad1de7ffed1dabb4e8",
+  "independentReviewerVerdict": null,
+  "independentTesterVerdict": "approved",
+  "indexEmpty": true,
+  "kind": "E010-PR67-active-review-fixes-independent-tester",
+  "limitations": [
+    "僅驗 active source 修正；原 b8c567 frozen source／W1／live global／configured hooks 未升級。",
+    "既有 frozen recovery 可能仍含原 bug，是否觸發未知；本輪不讀取或修補私有副本。",
+    "未來套用至 live 需另有 bounded migration／grant 審查；不沿用舊 grant 或繞 sourceChanged。",
+    "W2／W3、原 A／namespace／D 不變；未執行 App、signing、真資產、Keychain、DPK、主實驗、private root 或 handles。"
+  ],
+  "protectedBytesUnchangedCount": 514,
+  "protectedModesUnchangedCount": 521,
+  "receiptDestinationNote": "Feature worktree 不在本 agent writable roots，新增 repo receipt 遭 sandbox PermissionError；依 task 允許改存 owned tmp 安全 receipt，未修改作者檔案。",
+  "recordedUTC": "2026-11-11T07:40:23.991488+00:00",
+  "required_fixes": [],
+  "scratchCleanup": {
+    "authorPacketModified": false,
+    "externalArchiveAccessedOrModified": false,
+    "onlyOwnedTesterScratch": true,
+    "privateRuntimeAccessed": false,
+    "removedDirectoriesIncludingRoot": 3,
+    "removedRegularFiles": 4,
+    "retainedResultLocation": "此新安全 Tester receipt 的 owned tmp directory",
+    "rootAbsentAfterCleanup": true
+  },
+  "sourceAggregateSHA256": "d253834afec3efeccf5a4c04e1b08b7ab213d3cddb69114cf7a8e3a61f00f991",
+  "sourceAlgorithm": "continuity.digest(continuity.canonical(proof.source_hashes())); sorted-key UTF-8 JSON indent=2, ensure_ascii=False, allow_nan=False, trailing LF",
+  "sourceFileCount": 22,
+  "sourceHashMapEqualsManifest": true,
+  "sourceManifestFileSHA256": "083d8c8f1a4463a03474dbe67f9276fa9c8c18c8eff4f77db25a51f5365a1834",
+  "sourceStageCommitPushRemoteReplyResolvePerformed": false,
+  "testRun": {
+    "SDKSettingsJSONSHA256": "f8d005f09381389167f9e0aeaa169bc9e7dff162ef22ca2fd8e98df7ff1acafe",
+    "SDKSettingsPlistSHA256": "e5c7c40b8c5dc1a9f99f8b9fa51870f8fe180421225b8201d0c4c826aad11bdc",
+    "SDKVersion": "26.5",
+    "SwiftVersion": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101); Target arm64-apple-macosx26.0",
+    "actualPythonCommand": [
+      "python3",
+      "-B",
+      "-"
+    ],
+    "compileCommandTemplate": [
+      "swiftc",
+      "-module-cache-path",
+      "<owned-temp>/<case-cache>",
+      "Sources/DPKContinuityProbe/ProbeCore.swift",
+      "Sources/DPKContinuityProbe/LiveGate.swift",
+      "Tests/WindowChainProbe.swift",
+      "-o",
+      "<owned-temp>/<probe>"
+    ],
+    "compileInvocationCount": 3,
+    "consentAccepted": 4,
+    "consentCaseCount": 22,
+    "consentRejected": 18,
+    "elapsedSeconds": 16.6,
+    "environmentOverrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SDKROOT": "macOS SDK 26.5",
+      "TMPDIR": "本 Tester 專屬 scratch/runs"
+    },
+    "errors": 0,
+    "failures": 0,
+    "forbiddenSubprocessCount": 0,
+    "fullSuitePerformed": false,
+    "harness": "suite=unittest.defaultTestLoader.loadTestsFromNames([test_gui_build.GUIBuildTests, test_review_fixes.ReviewFixTests]); unittest.TextTestRunner(verbosity=2).run(suite)",
+    "invalidArgvAssertions": "五案真 probe 執行均通過 exit2、stdout rejected LF、stderr empty 斷言",
+    "invalidArgvCases": [
+      [],
+      [
+        "<synthetic-root>"
+      ],
+      [
+        "<synthetic-root>",
+        "1"
+      ],
+      [
+        "<synthetic-root>",
+        "1",
+        "<synthetic-timestamp>",
+        "extra"
+      ],
+      [
+        "<synthetic-root>",
+        "1",
+        "not-a-timestamp"
+      ]
+    ],
+    "newFocusedFiveIncludedIn36": true,
+    "newFocusedTests": [
+      "test_gui_build.GUIBuildTests.test_PR67_GUI_recovery_freezes_only_finalized_GUI_selection",
+      "test_gui_build.GUIBuildTests.test_PR67_GUI_recovery_ignores_different_attempt_selection",
+      "test_gui_build.GUIBuildTests.test_PR67_GUI_recovery_rejected_proof_never_copies_or_constructs_executor",
+      "test_gui_build.GUIBuildTests.test_PR67_WindowChainProbe_invalid_arguments_reject_without_trap",
+      "test_review_fixes.ReviewFixTests.test_PR67_non_GUI_recovery_keeps_attempt_selection"
+    ],
+    "separateFocusedRerunPerformed": false,
+    "skipped": 0,
+    "subprocessKindCounts": {
+      "argument-guard-probe": 5,
+      "date-consent-guard": 22,
+      "gui-chain": 3,
+      "plutil": 489,
+      "python3.14": 1,
+      "swiftc": 3
+    },
+    "testOutputDisposition": "當次 safe test log 已隨本 Tester owned scratch 清除；結果依當次工具輸出與完成後資料核對記錄，未重跑。",
+    "testOutputRetained": false,
+    "testOutputSHA256": "720b6ed375e7fe851b98dc717a8ef62bdfe4acb1ebdbc6b8d656e073ea21eefa",
+    "testsRun": 36,
+    "validTamperRestoreProbeExecutions": 3
+  },
+  "testSourceCoverage": {
+    "gap": null,
+    "includesAllTestsFolderFiles": true,
+    "newRegressionFilesIncluded": [
+      "Tests/test_gui_build.py",
+      "Tests/test_review_fixes.py"
+    ]
+  },
+  "workingtreeStatusSHA256": "aa8e68005d065d1e6a928b50e088aed397899a88b89b04b89ab638261bc91097",
+  "workingtreeStatusUnchangedThroughTests": true
+}

@@ -576,8 +576,9 @@ class SetupVerifier:
     def inspect_recovery(self,attempt):
         run=self.run;grant,ready=__import__('continuity').require_recovery(run,attempt)
         self.ensure_exited()
-        selection,_=read(run.root,'recovery-attempts/'+attempt+'/selection.json')
-        asset=__import__('gui_build').accepted_asset(run,'recovery') if run.manifest.get('authorizationMode')=='gui-package' else inspect_selected(selection,run)
+        gui_recovery=run.manifest.get('authorizationMode')=='gui-package'
+        selection,_=read(run.root,'selection/recovery.json' if gui_recovery else 'recovery-attempts/'+attempt+'/selection.json')
+        asset=__import__('gui_build').accepted_asset(run,'recovery') if gui_recovery else inspect_selected(selection,run)
         validate_asset(asset,run.manifest,run.clock(),self.asset('p0')[0],'cleanup')
         name='recovery-'+attempt;destination=safe(run.root,'hosts/'+name+'.app')
         if destination.exists(): raise Rejected('hostAlreadyFrozen')

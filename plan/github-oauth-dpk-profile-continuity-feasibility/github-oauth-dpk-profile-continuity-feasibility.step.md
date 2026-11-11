@@ -614,3 +614,12 @@ Baseline index SHA `83d02f29bd40270a016fff833fd067627afb1b3cec7006c8920e73187f23
 Human新增例外明准此metadata集合（over-min）至原D=2026-11-20T07:22:03.379959Z，不稱minimum或RP成功；RP仍blocked／minfalse／recoveryRequired=true／delete0。Future conditional正式結案discard接受未逐條映射raw之不可恢復損失與sidecar scope，但只限原W3／D內A exact delete/read-absent、必要Machine/Human成果sameSHA readability＋safety雙ACK安全封存、fresh完整FS範圍／owner／handles／nofollow及原guards全過才可清，現在未執行。Sidecar無現成finalizer；需新工具／window或guard不滿就停Human，兩root分判；D後不自主、over-min不吞minimum或默續期。
 
 W1 baseline六欄true／Human0限定UX成功保持；W2等真P0 expiry=2026-11-17T07:28:08Z（台灣11/17 15:28:08）後由Human喚醒，仍核原source／root／receipt／有效grants／noAbort preflight。P1／W3同leaf／fullgroup／profile／DR／不同binaryhash／六欄／提示／cleanup criteria不變；清cache或mincomplete不是W2技術gate，不新S／重授整包／加輔助或自排程。完整主假設與P1 W2／W3仍pending，不正式採用adapter。
+
+## PR67-RF active review 修正準備（2026-11-11）
+
+- Baseline：`1f11f861aebd463db37625d8e62c92361b361cc9`；index 原空、AQ2 local-only 保留。TriageReviewer 已核必要性與 bounded 契約；本行不代表新 implementation 的獨立核准。
+- 作者 implementation 完成：GUI recovery 按 authorization mode 讀唯一 producer selection，GUI 經原 accepted_asset 並複製相同 GUI product；non-GUI 不改。Swift count／timestamp guard 在任何 argv index／root／global 讀取前，維持 rejected／exit2。
+- 實際 red：無 GUI attempt selection 時 FileNotFoundError，誘餌時 frozenHostChanged；Swift noargs 原 return -5。初次誘餌測試受自身 Popen mock 擋到 plutil，修正 fixture 後重核，不把 setup 干擾算 review bug。
+- 實際 green：新增5 methods 通過；兩個受影響類別36 tests、0 skip／0 failure，15.699秒。原22 direct consent cases（Python／Swift 4 accept／18 reject）、valid window／tamper 保留；只編指定三份純 Swift source，SDK26.5／Swift6.3.3，無 App／真資產／DPK/live。
+- [新 manifest](../../experiments/E010/evidence/pr67-review-fixes-20261111/source-manifest.json)與[作者準備收據](../../experiments/E010/evidence/pr67-review-fixes-20261111/preparation-check.json)是本輪新 active source version。2026-11-11 獨立 Tester 已親跑36 tests、0 failure／error／skip，16.600秒，approved／required_fixes=[]；[Tester 收據](../../experiments/E010/evidence/pr67-review-fixes-20261111/tester-validation.json)原 bytes 已保存。此 Tester 結果記帳時 Code Reviewer pending，不預填通過；原作者交接所記未 stage／commit／push／遠端回覆或 resolve 為該準備時點狀態。
+- 原 NG `b8c567…`、W1／frozen／history／safe evidence／圖及外部 archive 不改；原 live global/source binding 不放寬。此補丁未進私有 copies，frozen recovery 可能仍有 bug、是否觸發未知。未來 live 套 patch 須另審 bounded migration／grant；不改原 W2/W3／D／A／namespace，AQ2 不碰。

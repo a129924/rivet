@@ -376,3 +376,11 @@ M0=2026-11-10T09:42:56Z，totalhard09:57:56Z（17:57:56），planning/審查/wai
 | RT-T05 | Future discard僅Aabsence/安全雙ACK/fullFSguards/原W3+D全過，兩root分判；無現成sidecar路徑則停，不現在delete。 |
 
 每case未執行/成功/失敗/無法判定；metadata欠證unknown不自動擴權。原主線W2真expiry後expiredhost分層、唯一DebugP1讀原A；W2retained2後可同日W3唯一Rebuilt，再absence與受限結案，沿原三窗30min/+25stop/+30end，不重問主包/不把今天18:20套未來日期。仍無scheduler保證，Human到期喚同對話。
+
+## PR67-RF：兩筆 active-only review 修正（2026-11-11）
+
+TriageReviewer 已確認兩 finding 必修並核准受限契約；本節只追加本輪範圍，不重寫舊契約。Baseline `1f11f861aebd463db37625d8e62c92361b361cc9`；implementation 限 `experiments/E010/scripts/proof.py`／`Tests/WindowChainProbe.swift`，必要 pure regression 限 `Tests/test_review_fixes.py`／`Tests/test_gui_build.py`。GUI 只用既有 finalized selection＋accepted_asset；non-GUI 保留 attempt 路徑，不新增 fallback／第二 producer，不放寬 grant、process-exit、asset 或 copy hash。Swift invalid argv 須先安全拒絕，其他 valid window／synthetic consent／tamper 保持。
+
+作者已完成 red→green：新5項 focused 通過，受影響兩類36 tests／0 skip／0 failure，僅 ProbeCore／LiveGate／WindowChainProbe 三份 source 的純 CLI 編譯與 synthetic filesystem，無 App／真資產／Keychain／DPK／live。新22-source manifest（含tests）及實際作者收據另存 `experiments/E010/evidence/pr67-review-fixes-20261111/`；2026-11-11 獨立 Tester 已親跑36 tests、0 failure／error／skip，16.600秒，approved／required_fixes=[]；同目錄的 tester-validation.json 保存原 bytes。此 Tester 結果記帳時，Code Reviewer、staged message Human 確認及發布仍待後續，不以 Tester 通過代替 Code Reviewer gate。
+
+原 `b8c567…` manifest、所有 history／W1／safe evidence／舊圖與 handoff archive 保持；原 source bytes 可由 baseline Git／既有來源封存追溯，不另盲複製 history。Active 修正是新版本，舊 live global／frozen copies／grant 不升級；frozen recovery 可能仍有 bug、是否觸發未知。任何將來 live 移植需另有 bounded migration／grant 審查，不改 W2/W3、原 D／A／namespace，不繞 sourceChanged，也不於本輪回覆或 resolve 遠端 threads。

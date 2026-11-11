@@ -428,4 +428,59 @@ raise SystemExit(0 if code==0 else 2)
         proof_value,_=c.read(self.root,'bootstrap/actual-proof.json');self.assertTrue(proof_value['synthetic']);self.assertEqual(proof_value['evidenceType'],'gui-hooks-v1')
         self.assertTrue((self.root/'hosts/p0.app').is_dir());self.assertFalse((self.root/'receipts/seed.machine.json').exists())
 
+
+    def PR67_recovery_material(self):
+        import gui_build as g
+        run=self.prepared_gui();c.run_main_stage(run,1,'preflight',self.backend())
+        c.exclusive(self.root,'write-attempts/'+str(uuid.uuid4())+'.json',dict(namespace=self.ns,synthetic=True,operation='seed-read-a',state='launch-may-add'))
+        attempt=str(uuid.uuid4());arm=g.arm(run,'recovery');env=self.environment(run,arm)
+        g.hook(run,'pre',env);app=self.product(run,arm);g.hook(run,'post',env);g.attest(run,'recovery','reported-success',True)
+        asset=g.finalize(run,'recovery',inspector=lambda _:self.asset(run,app))
+        verifier=object.__new__(proof.SetupVerifier);verifier.run=run;verifier.ensure_exited=mock.Mock()
+        return run,attempt,app,asset,verifier
+
+    def test_PR67_GUI_recovery_freezes_only_finalized_GUI_selection(self):
+        import gui_build as g
+        run,attempt,app,asset,verifier=self.PR67_recovery_material()
+        self.assertFalse((self.root/'recovery-attempts'/attempt/'selection.json').exists())
+        with mock.patch.object(g,'accepted_asset',wraps=g.accepted_asset) as accepted,mock.patch.object(proof,'inspect_selected',side_effect=AssertionError('GUI must use accepted producer')),mock.patch.object(proof,'command') as command:
+            name=verifier.inspect_recovery(attempt)
+            accepted.assert_called_once_with(run,'recovery');command.assert_not_called()
+        frozen=self.root/'hosts'/(name+'.app')
+        self.assertEqual(proof.app_hash(frozen),asset['appSHA256'])
+        self.assertEqual((frozen/'Contents/MacOS/DPKContinuityProbe').read_bytes(),(app/'Contents/MacOS/DPKContinuityProbe').read_bytes())
+        value,_=c.read(self.root,'proofs/'+name+'.json');self.assertEqual(value['frozenHost'],str(frozen))
+        binding,_=c.read(self.root,'recovery-attempts/'+attempt+'/proof.binding.json')
+        self.assertEqual(binding['proofSHA256'],c.file_hash(self.root/'proofs'/(name+'.json')))
+        verifier.ensure_exited.assert_called_once()
+
+    def test_PR67_GUI_recovery_ignores_different_attempt_selection(self):
+        run,attempt,app,asset,verifier=self.PR67_recovery_material()
+        decoy=self.root/'synthetic-attempt-decoy.app';decoy.mkdir();(decoy/'not-the-selected-product').write_bytes(b'synthetic decoy, never executed')
+        c.exclusive(self.root,'recovery-attempts/'+attempt+'/selection.json',{'appPath':str(decoy)})
+        with mock.patch.object(proof,'inspect_selected',side_effect=AssertionError('GUI must use accepted producer')),mock.patch.object(proof,'command') as command:
+            name=verifier.inspect_recovery(attempt);command.assert_not_called()
+        frozen=self.root/'hosts'/(name+'.app')
+        self.assertEqual(proof.app_hash(frozen),asset['appSHA256'])
+        self.assertFalse((frozen/'not-the-selected-product').exists())
+
+    def test_PR67_GUI_recovery_rejected_proof_never_copies_or_constructs_executor(self):
+        run,attempt,app,asset,verifier=self.PR67_recovery_material()
+        path=self.root/'gui/recovery/finalized.json';marker=json.loads(path.read_bytes());marker['assetSHA256']='f'*64;path.write_bytes(c.canonical(marker))
+        with mock.patch.object(proof,'SetupVerifier',return_value=verifier),mock.patch.object(proof.shutil,'copytree',wraps=proof.shutil.copytree) as copytree,mock.patch.object(proof,'LiveBackend') as executor,mock.patch.object(proof,'command') as command:
+            with self.assertRaises(c.Rejected):proof.ManualStages(run).recover(run,attempt)
+            copytree.assert_not_called();executor.assert_not_called();command.assert_not_called()
+        self.assertFalse((self.root/'hosts'/('recovery-'+attempt+'.app')).exists())
+        self.assertFalse((self.root/'proofs'/('recovery-'+attempt+'.json')).exists())
+
+    def test_PR67_WindowChainProbe_invalid_arguments_reject_without_trap(self):
+        import subprocess
+        source=Path(__file__).resolve().parents[1];binary=Path(self.tmp.name)/'argument-guard-probe'
+        subprocess.run(['swiftc','-module-cache-path',str(Path(self.tmp.name)/'argument-module-cache'),str(source/'Sources/DPKContinuityProbe/ProbeCore.swift'),str(source/'Sources/DPKContinuityProbe/LiveGate.swift'),str(source/'Tests/WindowChainProbe.swift'),'-o',str(binary)],check=True,capture_output=True,timeout=120)
+        for args in ([],[str(self.root)],[str(self.root),'1'],[str(self.root),'1',str(self.now.timestamp()),'extra'],[str(self.root),'1','not-a-timestamp']):
+            with self.subTest(argumentCount=len(args)):
+                actual=subprocess.run([str(binary),*args],capture_output=True,timeout=10)
+                self.assertEqual(actual.returncode,2)
+                self.assertEqual(actual.stdout,b'rejected\n');self.assertEqual(actual.stderr,b'')
+
 if __name__=='__main__':unittest.main()
