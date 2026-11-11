@@ -200,3 +200,12 @@ User本輪授權後，annotated tag `v0.1.61-rivet-login-ui` 已正常建立及�
 W2 真自然到期／P1 讀回原 A、W3 Rebuilt、完整 S07/S08 與主假設仍 pending。P0 expiry 為台灣 **2026-11-17 15:28:08**，原 D 為 **2026-11-20 15:22:03.379959**；原 A／namespace／三窗與期限不重設或延長。RP cleanup blocked／delete=0；[RT metadata index](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)及[machine receipt](E010/evidence/retention-scope-20261110T094256Z/machine.safe.json)只記一次 metadata 操作的4602 retained entries，minimumComplete=false，不稱 minimum 或 RP 清理成功。
 
 三筆 `01265ad`／`c0e6414`／`d30f5c4` 共312檔已正常 commit／push，各六個正常 hooks 通過；這不是新的真人結果或 GitHub CI 通過證據。2026-11-11 查核時，PR #67 為 Ready for review、尚未 merged。E010 的受限結果不核准新的正式 adapter 採用，不吸收 PR #60 的正式 adapter 證據，也不改 E001–E009 歷史。
+
+
+## PR #67：合併版本與受限收尾事實（2026-11-11）
+
+前一 E010 節的 Ready／未 merged 文字是合併前查核快照。[PR #67](https://github.com/a129924/rivet/pull/67) 已於 `2026-11-11T08:48:57Z`（台灣16:48:57）合併並關閉；actual merge `a554a4fee772d3976d5ca2c9331865a604e901e2` 保存最後 feature `7fa4bfffc5989a351790dca6a1695758c906950c` 的相同 tree。這是既有 E010 交付版本的保存，不把 Git 合併當作完整實驗、資料清理或新的正式 adapter 採用。[Active fix 6504801](https://github.com/a129924/rivet/commit/6504801b3b43a6ae937cbd898d9354d53ffc8543) 修正 GUI recovery producer selection 與 Swift probe argv guard；兩個必要 review threads 已回覆並 resolved，未解決數0。[新來源 manifest](E010/evidence/pr67-review-fixes-20261111/source-manifest.json)的22-source aggregate `d253834a…` 與[獨立 Tester 收據](E010/evidence/pr67-review-fixes-20261111/tester-validation.json)是 active 純修正證據，未移植至舊 W1 frozen source `b8c567…` 或升級原 grant；frozen recovery 可能仍含原 bug、是否觸發 unknown。
+
+W1 seed／fresh 六欄相符、Human 各全程0提示的受限 baseline 結果保留；W2 真自然到期／P1 讀回原 A、W3 Rebuilt、完整 S07/S08／profile 週期及主假設仍 pending。P0 expiry 台灣 **2026-11-17 15:28:08** 與原 D **2026-11-20 15:22:03.379959** 不延長，原 A／namespace 不重設。RP cleanup blocked／delete=0；RT 僅記4602 retained metadata entries，minimumComplete=false。原 PR60／66 及其他實驗 rows／來源／成功、失敗與 unknown 保持各自證據界線。
+
+Annotated tag `v0.1.62-e010-dpk-profile-continuity-baseline` 的 local／remote object 均為 `53f1efd44b4d4cdbf0b2ada8752620a2b667e8b5`，peeled commit 均為上述 actual merge；不是 GitHub Release 或後續維護 commit。原 feature remote branch 已在 server expected head `7fa4bff…` lease 保護下正常刪除，並讀回不存在，dev 與 tag lineage 仍在。Local branch／原 managed feature worktree 因兩份 AQ local-only 檔案及 W2／W3 實際 physical path 依賴 unknown 而保留，未 force remove、未搬檔；外部72檔 archive、原 W1／history／安全證據／圖及 App／Keychain／Apple 資產均未藉此清理。Git 收尾的已完成部分不解除原實驗留存與後續驗收條件。
