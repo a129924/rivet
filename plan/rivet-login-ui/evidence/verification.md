@@ -2,11 +2,11 @@
 
 2026-10-22；branch `feat/rivet-login-ui`；base `14d0832f042720889993d769b4cbfb720078e6b1`。所有寫入僅在已授權 feature worktree。IM-01初始尚未commit／push／PR；目前code commit與發布停點以下節為準。本文保留Implementer歷史及獨立Tester／Reviewer交接，不混同各角色verdict。
 
-## source公開交付／PL-04 completed，待Human兩入口（目前狀態）
+## Human review已通過並採用目前版本（目前狀態）
 
-Dispatcher正式交接獨立RV-03 `approved`、required source fix `None`。TE-05已完成partial verification：新版自動檢查、三真入口可觀察互動、13／17／21 pt五畫面及捲動可達性；主對話Tester操作CUA，本Tester獨立實看18份外置raw JPEG，精確來源與padding限制見TE-05。這些不是VoiceOver真朗讀、Human新版大字或rapid departure通過，HC-02三缺口不closed，HC-01／HC-03仍pending；原binary七類Human通過保留其來源。
+Dispatcher正式交接獨立RV-03 `approved`、required source fix `None`。TE-05已完成partial verification：新版自動檢查、三真入口可觀察互動、13／17／21 pt五畫面及捲動可達性；主對話Tester操作CUA，本Tester獨立實看18份外置raw JPEG，精確來源與padding限制見TE-05。TE-05當時的native結果不代表Human真朗讀／大字或rapid通過；本輪Human補驗另列文末，原binary七類Human通過保留其來源。
 
-IM-06已完成source commit `9f8955c40696cee6d77739da6d22d659287cfbc0`（`fix(presentation): 修正登入宣告與大字驗收`），精確13檔、全部hooks passed；正常public push與ls-remote同SHA。IM-10已將waiting修補公開交付為source `dcc48b29686ab324fc19399ef607f462a507cce5`，新debug／release實測SHA見IM-09；四canonical PNG／18份新raw JPEG來源與限制不變。PL-03已獨立完成，Draft PR #66維持target dev；HC-03 PAT兩次未通過；Human另明確回「有，其他項目會朗讀」，不是全系統無聲。PR-04／RV-04限定approved後HC-04唯一診斷case已完成，Human回「讀出驗證中」；34筆實際trace顯示同case post路徑完成、無early return。預算1／1已用，診斷logging不當功能修法；PR-05正式approved後IM-08已外置封存並移除自身探針，正常版經TE-07獨立preflight partial完成，RV-05已正式approved／required None，僅放行HC-05一次Human前景Return；本次Human在明確正常版步驟後回「讀出驗證中」，CUA確認verifyingToken，HC-05 completed-observed有聲、1／1已用。HC-01／HC-03與三缺口不closed，詳文末HC-05。
+IM-06已完成source commit `9f8955c40696cee6d77739da6d22d659287cfbc0`（`fix(presentation): 修正登入宣告與大字驗收`），精確13檔、全部hooks passed；正常public push與ls-remote同SHA。IM-10已將waiting修補公開交付為source `dcc48b29686ab324fc19399ef607f462a507cce5`，新debug／release實測SHA見IM-09；四canonical PNG／18份新raw JPEG來源與限制不變。PL-03已獨立完成，Draft PR #66維持target dev；HC-03 PAT兩次未通過；Human另明確回「有，其他項目會朗讀」，不是全系統無聲。PR-04／RV-04限定approved後HC-04唯一診斷case已完成，Human回「讀出驗證中」；34筆實際trace顯示同case post路徑完成、無early return。預算1／1已用，診斷logging不當功能修法；PR-05正式approved後IM-08已外置封存並移除自身探針，正常版經TE-07獨立preflight partial完成，RV-05已正式approved／required None，僅放行HC-05一次Human前景Return；本次Human在明確正常版步驟後回「讀出驗證中」，CUA確認verifyingToken，HC-05 completed-observed有聲、1／1已用。本輪指定狀態朗讀與大字補驗項目已Human passed；最後rapid亦Human passed，HC-03指定補驗completed。最終獨立成果review approved／required fix None，Human已明確通過並採用目前版本，HC-01 completed，最新結論見文末。
 
 ## IM-05 自驗完成／待獨立補驗（歷史）
 
@@ -601,3 +601,89 @@ Source `dcc48b29686ab324fc19399ef607f462a507cce5` 已以 `fix(presentation): 補
 - Graphify0.9.73在refresh opt-out下核availability，缺圖後採bounded source fallback。七態Archify沿用凍結圖面。
 
 最新版Welcome→waiting的Human親聽問題已提出，尚無回覆。兩入口／雙讀、Human大字／rapid與HC-01／HC-03仍pending，HC-05正常PAT有聲1／1、舊兩次無聲、probe及模糊同句各留源。交付文件與Draft PR說明由本次metadata收尾同步，Human review尚未全面通過。
+
+
+## HC-03：新版兩真waiting入口Human passed（2026-11-11交接）
+
+來源為已發布source `dcc48b29686ab324fc19399ef607f462a507cce5`、View cf1f007／debug與wrapper50a30cdc／release25a8136f（完整SHA見IM-09／TE-08）；聲音來自下列逐項Human回報，CUA只核畫面／focus，不補操作時刻。
+
+- Welcome→waiting：Human依真入口指示回「有讀出等待狀態，沒有明顯重複」；主對話唯讀CUA當次確認waiting與focused link完整context label，記此新版入口自動狀態與無明顯雙讀passed。
+- Browser failure Retry→waiting：主對話只以SimulateReturn→verifyingAccount→Complete準備failure、關Controls且Try again focus，沒有代按Return；Human依指示真Return後回「有讀出等待狀態，沒有明顯重複」。主對話本輪唯讀CUA確認waiting、focused link28為`Waiting for simulated authorization. Cancel sign in.`，記此新版入口passed；未以工具送Return或先手動尋scroll area代替。
+
+舊EA只讀Cancel的失敗、HC-05正常PAT observed有聲1／1、兩次無聲／probe與原七類pass均留源。本次兩入口passed不等整體HC-03／HC-01採用；新版最後binary的必要PAT／focus回歸、大字Human及rapid仍pending。現況waiting／Cancel context focus、System13／Browser／failure toggle1／Controls關；下一項單Escape→Welcome CTA自動讀尚未做，不預填。只寫兩metadata working變更，待後續結果一併交付，無UI／重測／build／新receipt／commit／push。
+
+
+### HC-03：單Escape回歸（2026-11-11交接）
+
+Human依單Escape指示明確回「回到 Welcome，並朗讀主按鈕」，記新版Escape→Welcome primary自動讀passed。主對話本輪僅CUA唯讀核Welcome heading與focusedUI5 `Continue with GitHub` button，未代送Escape或觸發其他動作；聲音來自Human，AX只佐證畫面／鍵盤焦點。來源沿source dcc／View cf1f／wrapper50a與全部舊證據；當前新版PAT必要回歸仍待Human真Return結果，大字／rapid及HC-01／HC-03整體採用仍pending，不預填、不重用HC-05預算。本步只追加既有兩metadata working變更，無重測／build／UI／receipt或Git發布。
+
+後續主對話CUA只準備當前50a版必要PAT回歸：System13／Browser、關simulate failure，真PAT link→空secure field focus→填14個dummy字元、Connect enabled，Controls關，停tokenEntry且尚未Return。未保存輸入值；等待Human真Return，不重用HC-05已用1／1或預填新版聲音結果。
+
+
+### HC-03：當前修補版PAT自動狀態（2026-11-11交接）
+
+Human依當前50a版PAT真Return指示回「有讀出驗證中狀態」，記本次新版PAT自動狀態Human passed。主對話本輪僅唯讀CUA確認verifyingToken heading `Simulating token verification…`、focusedUI window0，沒有代送Return或手動尋scroll area；聲音由Human提供，window focus不證VO cursor。來源source dcc／wrapper50a，無精確操作時刻或重複次數資料，不外推穩定性；舊9a兩次無聲、probe HC-04及HC-05正常版1／1有聲等全留源，不重用其預算。兩waiting真入口與Escape Human passed不變；下一大字使用Demo局部13／17／21 pt，尚無Human結果，不宣稱系統偏好整合或整體HC-01／HC-03通過；rapid仍pending。只累積兩metadata working變更，無UI／重測／build／新檔／receipt／Git發布。
+
+大字準備：主對話CUA於Controls選21pt（radio21=1／13=0）、Reset後仍21且Welcome，關Controls；現System／Welcome21、failure off／Browser、primary focus，AX有垂直scrollbar及heading／CTA／PAT link／footer。沒有resize、改全域字級或VoiceOver、替Human捲動；這只記準備，不當真放大視覺／捲動可達性passed或系統文字偏好整合，待Human逐項回報。
+
+
+### HC-03：21pt Welcome Human passed（2026-11-11交接）
+
+Human依維持窗大小、Demo局部21pt、真放大與CTA／PAT link／footer可達性等逐項指示回「通過，文字放大且內容與操作皆可到達」，記本次21pt Welcome視覺／操作Human passed（含無重疊、永久截斷或水平捲動的指定判準）。主對話本輪僅唯讀CUA核Welcome、垂直scroll資訊與CTA focus，未調字級／捲動或代操作；AX不是視覺passed來源。21pt沿上一輪Controls選取並Reset保持，source dcc／wrapper50a，不代表系統字級整合；舊TE-05矩陣留源。下一21pt PAT表單及其他大字／rapid尚無Human結果，HC-01／HC-03整體pending，只累積兩metadata working變更，不Git發布。
+
+21pt PAT準備現況：主對話CUA從真Welcome PAT link進空secure field，再填14個dummy字元，欄位secure／focus與Connect enabled、垂直scroll資訊仍在；未改字級／窗大小／System／全域設定，failure off／Browser／Controls關，尚未Return或代Human Show／Hide／捲動。未保存輸入值，Human表單放大、持續編輯與CTA／footer可達性結果仍pending。另見原樣系統Caps Lock indicator，主對話未更動、不判產品缺陷。
+
+
+### HC-03：21pt PAT Human passed（2026-11-11交接）
+
+Human依21pt PAT排版／Tab與垂直捲動可達性、無重疊或永久截斷／水平捲動、Show／Hide續編輯指示回「通過，排版清楚且切換後能繼續輸入」，記本項Human passed。主對話本輪僅唯讀CUA核tokenEntry、secure field14個bullet／Connect enabled／Show token與垂直scroll資訊；focus為Human遍歷後的Back link3，不推目前field focus，也不以字數未變否定Human續編輯回報。主對話未代Show／Hide或打字，未保存輸入值；source dcc／wrapper50a與既有passed／歷史留源。下一17pt同表單／保值與不重新點欄位續編輯尚未做，其他大字／rapid及整體HC-01／HC-03仍pending；只累積兩metadata working變更，不Git發布。
+
+17pt準備：主對話先點當前secure field建立14bullet／focus baseline，再僅用Controls從21改17（17=1／21=0），沒有Reset或phase change；關Controls後仍tokenEntry、secure14bullet／focus／Connect enabled／Show token及垂直scroll資訊，System／failureoff／Browser不變。未新增字元、提交或改窗大小，未保存值；Human真縮放／可達性及不重新點欄位續輸入仍pending，不以此準備當Human passed。
+
+
+### HC-03：17pt同表單Human passed（2026-11-11交接）
+
+Human依21→17pt文字縮小、同表單保內容／focus／直接續輸入及Tab／垂直捲動可達性指示回「通過，內容與焦點保留且排版可達」，記本項Human passed。17pt來源沿前輪Controls17=1、phase未改，source dcc／wrapper50a不變。主對話本輪只唯讀CUA見tokenEntry、shown text field／Hide、Connect disabled、focus在Hide，當時欄位已為空白字元狀態；不保存值，編輯／操作時序未知。此收尾snapshot不能證明原14字元完整保留，也不倒推Human操作或判產品缺陷；Human回報與後續AX各自留源，不因此強迫重驗。下一21pt真PAT失敗表單尚未準備／無Human結果；其他待驗項、rapid及HC-01／HC-03整體pending，僅累積兩metadata、不發布。
+
+
+### HC-03：21pt PAT Failure Human passed（2026-11-11交接）
+
+準備由主對話CUA維持同表單切17→21／開simulate failure，再真PAT submit→verifyingToken→Complete進tokenFailure，非Controls直選Failure；失敗後欄位自動空hidden／focus、CTA disabled、error可讀。Controls origin picker仍Browser不覆蓋真PAT submit產生的tokenFailure。Human依錯誤／field／Show-Hide／CTA／footer可達及無重疊／水平捲動指示回「通過，錯誤與表單完整且可重新輸入」，記21pt PAT Failure視覺／操作Human passed。
+
+主對話本輪只唯讀CUA核仍為PATFailure、error存在、secure欄位當時空／CTA disabled、Show token focus8與垂直scroll資訊；此收尾snapshot操作時序未知，不否定Human曾重新輸入、不補造值／持續字數或產品缺陷，未保存輸入。來源source dcc／wrapper50a及全部歷史保留；下一21pt waiting的layout／Cancel／footer與返回focus尚未有Human結果，Connected／rapid等及HC-01／HC-03整體仍pending。只累積兩metadata working變更，無UI／重測／新receipt／Git發布。
+
+21pt waiting準備：主對話CUA真PAT failure Back→Welcome，Controls確認System21／Browser並關failure後，真primary進waiting；AX有等待heading／body、完整context Cancel link／focus45、footer與垂直scroll資訊。未代捲動／啟用Cancel、未改窗大小或全域偏好；現waiting21／failureoff／Controls關。Human本case的21pt等待文字、Cancel／footer可達與Cancel返回Welcome CTA仍待回報，不以AX存在當passed。
+
+
+### HC-03：21pt waiting layout與Cancel Human passed（含時序釐清，2026-11-11）
+
+Human對指定21pt waiting排版、內容／Cancel／footer可達及最後Cancel返回題目選「通過，內容可達且 Cancel 正常返回」；本次layout／可達性記Human passed，**21pt Cancel返回僅reported-pass，待操作順序確認**。主對話本輪只唯讀CUA仍見waiting heading／body、完整context Cancel link focus5及垂直scroll資訊，未點／送鍵／改state；後續操作時序未知，不以快照推產品失敗或返回已證。已向Human詢問返回後重進／仍waiting／不確定，答覆前保持human-check，不強迫重驗。舊13pt Escape Human passed與TE-08 native Cancel／Escape證據各留來源；source dcc／wrapper50a及其他passed不變，Connected21／rapid等與HC-01／HC-03整體仍pending，下一準備等釐清，不預填結果。本步只累積兩metadata，不UI／重測／新receipt或發布。
+
+後續Human即時釐清「有回到 Welcome，之後再次進入等待」：21pt Cancel返回Human passed可確認，先前仍waiting的AX快照屬再進入後狀態，非矛盾或產品缺陷；前段待釐清狀態為當時歷史，現已解除、不需重驗。主線正準備Connected21，尚無該Human結果，其餘pending不變。
+
+
+### HC-03：21pt Connected與本次大字補驗完成（2026-11-11交接）
+
+主對話先遇surface-change guard後刷新見Welcome，再確認Controls System21／Browser／failureoff，走真primary→waiting→SimulateReturn→verifyingAccount→Complete→Connected並關Controls，非直選phase；早先UI變動時序不追補或判缺陷。Human依21pt完成標題／說明／footer可讀、無重疊／截斷／水平捲動指示回「通過，完成畫面文字完整清楚」，記本項Human passed。本輪主對話只唯讀CUA核Connected heading／完成說明／footer、無垂直scrollbar、focusedUI window，AX不代視覺passed或VO cursor；來源source dcc／wrapper50a，無新精確時刻。
+
+本次Human大字補驗完成：21pt Welcome／PAT／PAT Failure／Waiting／Connected五畫面及17pt PAT同表單保內容／focus／排版均passed；不冒稱13／17／21×五畫面15格皆Human逐格親驗，TE-05的15格native仍保留source9f來源。Demo局部真字級不代表系統偏好整合，13pt聲音／鍵盤及本版PAT、兩waiting入口、Cancel／Escape與全部舊failed／probe歷史各留來源。下一13pt Human快速Return→單Escape、停留檢查stale回拉尚未做；HC-03最後rapid與HC-01明確採用pending，不代Human採用。僅累積兩metadata working變更，無UI／重測／新case或Git發布。
+
+Rapid準備：主對話在surface guard刷新後，只以Controls21→13（13=1／21=0）、Reset確認Welcome且13保持、關Controls；最終System／Welcome13／Browser／failureoff／CTA focus17，無垂直scrollbar。未代送Return／Escape或快速操作、未改VoiceOver或全域偏好；Human單Return後立即單Escape與停留檢查仍待結果，不預填rapid passed。
+
+
+## TE-09／HC-03：本輪指定Human補驗收尾（2026-11-11交接）
+
+Human依13pt真Return→立即單Escape→停留檢查指示回「通過，返回後焦點與朗讀穩定」，記本次rapid／stale回拉回歸Human passed；主對話本輪僅唯讀CUA核Welcome／CTA focused5，未代送鍵或重進waiting。聲音及停留穩定觀察來自Human，AX只佐證當時畫面；System／Welcome13／Browser／failureoff／Controls關沿前輪準備與此操作追溯，無新精確操作時刻或全域設定變更。
+
+**HC-03本輪指定補驗completed；TE-09結果收尾完成／整體partial，HC-01明確採用仍pending。** source dcc／wrapper50a上的PAT自動狀態、兩真waiting入口狀態／無明顯雙讀、Cancel／Escape返回與CTA朗讀、21pt五畫面、17pt PAT同表單內容／focus／排版及13pt rapid均有逐項Human回報。PAT只確認有讀出驗證中，未單獨確認重複次數；大字只上述實際cases，不冒稱15格Human矩陣。原1009d高對比／Reduce Motion等pass、spinner觀察、舊兩次無聲／probe／模糊回報及其來源完整保留，不外推普遍穩定性或機制因果。
+
+本Tester只做一次限定唯讀freeze：View `cf1f007065af1449c5ca945dafd00fe81fbba1187479e0d501f72d651e51f1a8`與已發布source `dcc48b29686ab324fc19399ef607f462a507cce5` bytes相同；現debug／wrapper均`50a30cdc872292f8cd4de5a689b52ae2ab9d6451613067ff8440ba68b384d67f`、release `25a8136f02e9d974d27c8a644f37304ace8e7cc80ccb007c9c3db56a79dcd9c5`。HEAD `beec65f0698a58b50f4f656bfea2810295a837ce`，Sources／Tests／docs無改，只有verification／step working、無staged。未重跑build／tests／UI、未建receipt或Git發布；交獨立Reviewer核證據歸屬／完整性，不自行給approval或代Human採用。
+
+
+## HC-01 Human最終採用（2026-11-11）
+
+Human對整體最終review明確回覆「通過，採用目前這版」，HC-01 completed／passed，採用本topic原生UI與假資料Demo。最終獨立Reviewer approved／required fix None，前輪唯一required fix已閉環。受測source `dcc48b29686ab324fc19399ef607f462a507cce5`、View cf1f／debug與wrapper50a／release25a凍結來源沿TE-09，PL-04範圍止於source dcc。
+
+本輪Human通過範圍包括50a版PAT自動驗證狀態、Welcome與真Retry進waiting的清楚狀態／無明顯重複、Escape返回Welcome與主按鈕朗讀、21pt Welcome／PAT／PAT Failure／Waiting／Connected五畫面排版／捲動及操作、17pt同PAT表單的內容／焦點保留與排版、21pt Cancel返回（Human已釐清返回Welcome後再進waiting），以及13pt rapid Return→waiting→立即Escape後焦點／朗讀穩定。
+
+PAT重複次數未單獨確認，15格矩陣仍屬先前工具原生取證。大字為Demo局部13／17／21pt真字級。原1009d高對比／Reduce Motion等pass、spinner觀察、舊失敗／診斷／模糊回報及後續AX快照時序各保留原來源。收尾狀態沿主對話CUA為System／Welcome13／Browser／failureoff／Controls關／CTA focused。Draft PR維持Draft，目標dev。

@@ -11,9 +11,9 @@
 
 ## Current Phase
 
-- Phase：Human review。IM-10 source已公開交付、PL-04 completed，RV-06 approved／TE-08 completed／partial，Human兩入口及HC-01／HC-03仍pending。
-- Current Step：HC-03 pending，最新版Welcome→waiting親聽問題已提出且尚無回覆。待兩入口／雙讀、Human大字／rapid逐項回報，HC-05 observed有聲1／1及全部來源留存。
-- Upstream verdict：RV-06正式approved／required fix None由Dispatcher交接，准topic交付。PR-06正式approved／required fix None。Human Welcome→waiting needs-rework留源，待新版補驗。前輪Reviewer結果處置approved／required None准既有HC-03，不代本次通過。RV-05 approved／required None，僅放行正常版HC-05一次；PR-03 approved；TE-05 partial completed；Dispatcher正式交接獨立RV-03 approved／required source fix None，准受限source交付。最新HC-03 PAT兩次未通過，Human needs-rework與HC-01／HC-03 pending仍有效，舊code approval不等於朗讀通過或採用。
+- Phase：Human review passed，HC-01 completed／已採用目前版本。HC-03本輪指定補驗completed，最終獨立成果review approved／required fix None。
+- Current Step：HC-01 completed。2026-11-11 Human明確回「通過，採用目前這版」，實際補驗cases與舊來源分列。收尾System／Welcome13／Browser／failureoff／Controls關／CTA focus沿主對話核對。
+- Upstream verdict：最新Human通過並採用目前版本，最終獨立成果Reviewer approved／required fix None。RV-06正式approved／required fix None由Dispatcher交接，准topic交付。PR-06正式approved／required fix None。舊Human Welcome→waiting needs-rework留源；新版Welcome與Retry兩真入口均已明確Human passed，僅限此次來源。前輪Reviewer結果處置approved／required None准既有HC-03，不代本次通過。RV-05 approved／required None，僅放行正常版HC-05一次；PR-03 approved；TE-05 partial completed；Dispatcher正式交接獨立RV-03 approved／required source fix None，准受限source交付。舊HC-03 PAT兩次未通過留源；本輪指定Human補驗completed，TE-09及最終證據review完成，HC-01由Human明確採用。
 - 已發布source head：`dcc48b29686ab324fc19399ef607f462a507cce5`，七檔、完整hooks passed、正常push／ls-remote一致，source／binary凍結值見verification IM-09／TE-08。PL-04限此source，後續metadata另列版本。
 - HC-02保留七類Human通過：鍵盤、Welcome VoiceOver、PAT VoiceOver／Show-Hide、帳號／完成／重跑失敗宣告、失敗取消、高對比、Reduce Motion。三缺口為PAT verifying自動宣告、等待兩入口自動宣告、大字測法未確認；spinner旋轉只列觀察。HC-02受測binary SHA與TE-04相同；該Human交接當輪未重跑舊自動檢查。新版IM-05自驗結果見下方及verification，rootstrict仍非零。
 
@@ -76,15 +76,16 @@
 | RV-06 | completed | Reviewer | 獨立審waiting bounded修補與TE-08證據／限制，再依既有授權交付。 | Dispatcher正式交接approved／required fix None。兩行反還原原89cb、其餘六Swift相等，TE-08 checks／native／來源核准，准既有topic交付。 |
 | IM-10 | completed | Implementer | RV-06 approved後七檔staged語意／message檢查、完整hooks topic commit及正常public push，核真SHA。 | 真source dcc48b29686ab324fc19399ef607f462a507cce5，六項hooks全Passed，正常public push／ls-remote一致，feature及dev clean，cf1f／50a／25a凍結來源相同。 |
 | PL-04 | completed | Reviewer | 以真PR base與source dcc完成外置map、pinned validate／render與來源核對。 | 獨立Reviewer完成base613a505→source dcc48b2、merge-base14d0832，pinned0.11.0 validate／render0，12nodes／15edges／6steps／38refs及全部XML labels核對，raster實看未執行。完整hash見verification，map範圍止於dcc。 |
-| HC-03 | pending | Human | 逐項聽新版PAT submit／Welcome→waiting／Retry→waiting，實看13／17／21 pt與必要focus回歸。 | Welcome→waiting只讀Cancel、狀態failed留源。PC-06 Cancel focus label已實作，TE-08 partial完成，待兩入口Human補驗。兩真waiting入口／Human大字／必要focus及rapid未補驗；HC-05正常PAT有聲1／1及舊failed留源，不當穩定修復。 |
-| HC-01 | pending | Human | Draft PR 與完整證據交 Human review，決定採用／調整／放棄。 | 最新Human明示七類通過但三缺口未補驗，尚未全面通過；執行／公開授權不等於成果採用。 |
+| HC-03 | completed | Human | 逐項聽新版PAT submit／Welcome→waiting／Retry→waiting，實看13／17／21 pt與必要focus回歸。 | 新版source dcc／wrapper50a的Welcome與真Failure Retry兩入口，Human均回等待狀態有聲、無明顯重複，passed；舊EA失敗留源。單Escape回Welcome並自動讀primary亦Human passed、CUA唯讀佐證；當前50a版PAT真Return自動驗證中亦Human passed，CUA只核畫面／windowfocus；21pt Welcome／PAT排版／可達性與Show／Hide續編輯亦Human passed；17pt同表單亦Human passed；21pt PAT Failure亦Human passed；21pt waiting layout／可達性與Cancel返回Human passed，後續再進waiting已釐清；Connected21亦Human passed，本次大字補驗完成；最後13pt rapid／stale焦點回歸亦Human passed，本輪指定補驗完成；PAT未單獨核重複次數、大字不稱15格Human矩陣。HC-05有聲1／1及全部舊證據保留，最新Human已明確採用，見HC-01。 |
+| TE-09 | completed | Tester | 回寫指定Human補驗、限定freeze核對，交獨立Reviewer核證據歸屬。 | 收尾完成／整體partial：rapid Human passed；View／dcc bytes、debug／wrapper50a、release25a一致，HEADbeec僅兩metadata working，Sources／Tests／docs無改。TE-09當時採用待決，最新Human決策見HC-01。 |
+| HC-01 | completed | Human | Draft PR 與完整證據交 Human review，決定採用／調整／放棄。 | 2026-11-11 Human明確回「通過，採用目前這版」，passed／採用。限本輪實際cases與原UI／假資料Demo範圍，完整來源及限制見verification HC-01。 |
 | HC-PUB | completed | Human | 回覆自動approval review要求的具體公開發布確認。 | Human本輪明確同意將`feat/rivet-login-ui`程式／測試／原始素材／文件圖面公開推送至`a129924/rivet`，並以`dev`建立Draft PR；這不是UI成果採用。 |
 
 ## Blockers／證據邊界
 
 - 正式 PR-01／PR-02 approved 由 Dispatcher 交接；root target-set expected-set 的兩行最小修復已完成，Tester focused10／root284親跑passed。Root strict lint仍exit2；baseline37逐條等值、raw素材新增2原樣，scoped0，不冒稱rootlint通過。
-- HC-02三缺口仍open：PAT verifying自動只讀scroll area；waiting從Welcome只讀展示版不能連接GitHub的說明、從Retry只讀footer；13／15點時Codex變大而Demo未變，大字未驗。七類Human通過保留，三缺口補驗前HC-01不全面通過。舊發布拒絕已由明確公開授權解除，與新原生缺口分開。
-- Graphify沒圖的source fallback、PL-02真source map及TE-04舊證據保留來源；HC-02真Human朗讀與工具背景送鍵分開，不將背景無朗讀當缺陷。EX-01只確認可信時序候選及macOS Dynamic Type限制；PC-03採局部13／17／21 pt真字級，不宣稱系統偏好整合；PR-03已approved，IM-05已實作，仍待新版native／Human補驗。
+- HC-02當時歷史狀態（非目前未解blocker）：三缺口曾open，PAT verifying自動只讀scroll area；waiting從Welcome只讀展示版不能連接GitHub的說明、從Retry只讀footer；13／15點時Codex變大而Demo未變，大字未驗。七類Human通過與當時補驗前未全面通過的歷史保留；本輪HC-03指定補驗現已completed，HC-01已由最新Human明確通過並採用。舊發布拒絕已由明確公開授權解除，與原生缺口歷史分開。
+- HC-02／IM-05當時歷史證據：Graphify沒圖的source fallback、PL-02真source map及TE-04舊證據保留來源；真Human朗讀與工具背景送鍵分開，不將背景無朗讀當缺陷。EX-01只確認可信時序候選及macOS Dynamic Type限制；PC-03採局部13／17／21 pt真字級，不宣稱系統偏好整合；當時PR-03已approved、IM-05已實作但仍待新版native／Human補驗。本輪指定補驗現已完成（HC-03／TE-09），HC-01已由最新Human明確通過並採用。
 - Archify Showcase diagnostics 與 perceptual correction 的停止規則分開適用，以 technical-spec／plan 原值為準，不把兩者合成一個兩輪上限。
 - Exact paths 之外的 repo 輸出或 scope／baseline 衝突回 planning；外置 scratch 不加入 repo／staged diff。
 
@@ -94,7 +95,7 @@ HC-00 是方案接受及直接執行授權。Staged diff 邊界與 message 檢�
 
 ## Last Updated
 
-2026-11-11（Asia/Taipei）。IM-10 source dcc48b2完整hooks／正常public push完成，PL-04真source map completed，RV-06 approved／TE-08 partial。最新版Welcome親聽問題已提出、尚無回覆，兩入口／雙讀、Human大字／rapid及HC-01／HC-03 pending，全部舊來源留存。
+2026-11-11（Asia/Taipei，結果交接日）。Human明確「通過，採用目前這版」，HC-01 completed／passed，HC-03指定補驗completed，最終獨立Reviewer approved／required fix None。實際cases／舊來源與限制分列，source dcc／cf1f／50a／25a凍結，PL-04限source dcc。
 
 ## PC-02：必要測試契約修正與已知驗證限制
 
