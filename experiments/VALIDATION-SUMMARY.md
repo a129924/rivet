@@ -1,10 +1,12 @@
 # GitHub 連線驗證結果摘要
 
-來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本文彙整已有證據，不新增實驗、真人測量或正式產品採用決策。[導覽](README.md)列出各來源入口。
+更新日期：2026-11-11，另納入已合併的原生登入 UI／Demo 交付與 Human 採用。
+
+來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
 ## 快速總覽（保留上游各輪限制）
 
-| 實驗 | 觀察與來源 | 未由此證明的事項 |
+| 實驗／交付 | 觀察與來源 | 未由此證明的事項 |
 | --- | --- | --- |
 | [E001](E001/README.md) | 2026-10-07 真實 OAuth callback、非空 code、state 相符、exit 0。 | token exchange、refresh、儲存或正式產品登入。 |
 | [E002](E002/README.md) | 真實正向 token、六欄 bundle、GET /user 成功；反向歸因不足。總體無法判定。 | PKCE enforcement；不將後續 X 或 E008 補成此輪成功。 |
@@ -16,6 +18,7 @@
 | [E008](E008/README.md) | 2026-10-22 單次安全 JSON 與兩名獨立先封存 enum；依固定判準無法判定。 | 普遍 PKCE enforcement、OAuth 漏洞、完整 wire 或正式安全決策變更。 |
 | [E009](E009/README.md) | M03：Human 確認獨立未登入 session、未授權帳號、同輪登入／同意／300 秒內有效帳號；來源契約支持。 | agent 直接見證歷史 UI／network、2FA、完整零配置 UX、產品 readiness 或 PKCE。後續 build 不回填真人來源。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
+| [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 2026-11-11 Human完成指定狀態朗讀、局部大字與focus／rapid案例，明確通過並採用。 | 假資料展示範圍，正式 backend／OAuth 與系統字級偏好整合屬後續能力。Human大字為21pt五畫面及17pt同PAT，15格矩陣沿用工具來源。 |
 
 ## E001–E007：已知結果與不能推論之處
 
@@ -127,13 +130,13 @@ Annotated tag `v0.1.57-github-account-login-feasibility` 已推送，遠端 peel
 - profile 更新後讀回（Human 已接受限制）及已過期 profile 的恢復。
 - certificate rotation、跨使用者／跨機器及公開分發。
 
-本摘要涵上述已合併 PR #62／#61／#63／#65，及下節 PR #60 的各自固定來源，不吸收其他尚未合併 PR 或其他 worktree 的成果。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引已由 PR #64 合併至 dev；其先前 Draft／pending 記錄保留為原時點快照，後續實際收尾另見文末。
+本摘要涵已合併 PR #62／#61／#63／#65／#60，以及 PR #66 原生登入 UI／Demo 的各自固定來源。其他尚未合併工作依其自身工作線記錄。原 PR #62 的文件與 Git 收尾仍依[本 topic 帳本](../plan/github-persistent-connection/github-persistent-connection.step.md)追溯；#63 已完成收尾另列於上節。兩份索引已由 PR #64 合併至 dev；其先前 Draft／pending 記錄保留為原時點快照，後續實際收尾另見文末。
 
 ## 決策邊界
 
 各實驗的成功只適用其來源版本、前提與觀察層級；測試／build 通過、文件審查通過、驗證任務完成或 PR 合併均不能代替主要假設的證據。E002 反向／舊 missing 未知、E005 候選 UX 失敗、E007 renewal 未驗證與 E008 無法判定分別保留；既有 X wrong 的單次支持性證據不代替 missing。
 
-正式登入 UI 依自身工作線推進。正式 adapter 的後續擴展、安全決策、憑證 lifecycle 或產品採用仍依各自既有流程，不由本總覽自動核准。
+PR #66 的原生登入 UI／假資料 Demo 已依自身工作線取得 Human 採用，詳見文末。正式 backend／OAuth 串接、adapter 的後續擴展、安全決策及憑證 lifecycle 仍依各自既有流程。
 
 ## PR #64：文件驗審完成與實際清理（2026-11-03）
 
@@ -161,3 +164,26 @@ Live 適用原驗收時指定 Mac／GUI 使用者、原 certificate／Team／App
 E004 仍是真 SQLite 搭配假 refresh／clock，不證秘密保存；E005 legacy Keychain 最新 Human 0／0／1 維持 UX 失敗；E007 的兩輪 renewal read 未執行仍為 unknown。這些原 rows／來源不改，PR60 另列正式 adapter 的指定環境結果，不新增實驗編號。
 
 Annotated tag `v0.1.60-github-oauth-credential-persistence` 已正常建立／推送並讀回 object／peeled merge 一致，精確指向 `c8c989a2e4be99e73c9cdc17e82cc16ada7a489c`，不是 GitHub Release 或後續文件 commit。兩個原 untracked Xcode 個人 metadata 已在 Git 私有0700 archive 保留原 bytes／mode／owner 與私有來源對照，讀回核符後只移出兩 source leaves；archive 不進 Git、不 push，DPK item／Apple assets 未清理。這只是文件準備時的 Git 收尾事實，branch／managed worktree 刪除仍以文件先安全存入 remote dev 及當段 fresh gates 為前提；未執行項不預填成功。
+
+
+## PR #66：原生登入 UI／Demo 的交付與採用（2026-11-11）
+
+[PR #66](https://github.com/a129924/rivet/pull/66) 已於 `2026-11-11T06:55:06Z` 合併並關閉，目標為dev，merge `2c7679a8399f634dc6429fcd8bfd6018a5a0693f`、最後 feature `9eda244ff15c3928eedad2731d3680c52473d17f`。本節歸屬已合併的 Presentation 交付，E001–E009 的實驗編號、結果與額度保持原來源。交付內容為 non-BC `RivetLoginView` 與七態假資料 `RivetLoginDemo`，正式 backend／OAuth 串接及 macOS 系統文字大小偏好整合屬後續能力。[長期 UI／Demo 說明](https://github.com/a129924/rivet/blob/2c7679a8399f634dc6429fcd8bfd6018a5a0693f/docs/presentation/login-ui.md)
+
+| 來源層級 | 保存版本與可追溯範圍 |
+| --- | --- |
+| 合併／最後 feature | Merge `2c7679a8399f634dc6429fcd8bfd6018a5a0693f` 保存最後 feature `9eda244ff15c3928eedad2731d3680c52473d17f` 及 Human 採用 metadata。 |
+| 實際受測程式 | Source `dcc48b29686ab324fc19399ef607f462a507cce5`，View SHA-256 `cf1f007065af1449c5ca945dafd00fe81fbba1187479e0d501f72d651e51f1a8`。 |
+| 受測執行檔 | Debug／wrapper SHA-256 `50a30cdc872292f8cd4de5a689b52ae2ab9d6451613067ff8440ba68b384d67f`，release `25a8136f02e9d974d27c8a644f37304ace8e7cc80ccb007c9c3db56a79dcd9c5`。Merge 是保存版本，執行來源依原受測指紋判讀。 |
+
+2026-11-11 Human 最終明確回覆「通過，採用目前這版」。本輪實際通過案例包括
+
+- PAT 真 Return 自動讀出驗證中狀態，Welcome 與真 browser failure Retry 進 waiting 均讀出清楚狀態、無明顯重複，Escape 返回 Welcome 並讀主按鈕。
+- Demo 局部21pt的 Welcome／PAT／PAT Failure／Waiting／Connected 五畫面排版、必要捲動及操作可達，包含 Show／Hide續編輯、失敗後重新輸入與 Cancel返回。Human 已釐清 Cancel 返回 Welcome 後曾再進waiting。
+- 17pt同PAT表單內容／focus保留與排版可達，13pt Return→waiting→立即Escape後焦點及朗讀穩定。
+
+PAT本次聲音證據為自動驗證狀態有聲，重複次數未單獨確認。Human大字範圍為上述21pt五畫面及17pt同表單，15格矩陣仍為先前程式版本 `9f8955c40696cee6d77739da6d22d659287cfbc0` 的工具原生取證。原1009d七類Human pass、高對比／Reduce Motion、spinner旋轉觀察、舊兩次無聲／probe／模糊同句與後續AX快照時序，均保留各自原始紀錄。[採用結論與逐項來源](https://github.com/a129924/rivet/blob/2c7679a8399f634dc6429fcd8bfd6018a5a0693f/plan/rivet-login-ui/evidence/verification.md)
+
+該來源的既有自動檢查為 focused15 tests／root289 tests、debug／release、format、scoped SwiftLint（136 files、0 findings）與完整hooks通過。Root strict保留37項既有experiments加2項原樣素材，共39項非零紀錄。PR Lens pinned0.11.0的map範圍止於source dcc，validate／render0、38個exact-head refs與XML labels已核；Graphify採缺圖source fallback，Archify沿用凍結七態。[來源與工具交付紀錄](https://github.com/a129924/rivet/blob/9eda244ff15c3928eedad2731d3680c52473d17f/plan/rivet-login-ui/evidence/verification.md)
+
+User本輪授權後，annotated tag `v0.1.61-rivet-login-ui` 已正常建立及推送，local／remote tag object 均為 `2649261883b4c0f89ce47647f5b83ee1a291f309`，peeled commit 均為上述merge2c7679a。原remote branch刪除前親核仍指feature9eda244，隨後正常刪除remote branch、移除原managed worktree並以 `git branch -d` 刪除local `feat/rivet-login-ui`。Remote／local／target tracking ref及worktree目錄／註冊均已核不存在，其餘兩個worktree註冊保留。Tag固定保存PR merge，後續文件維護為獨立版本。

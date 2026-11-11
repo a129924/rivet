@@ -118,9 +118,7 @@ struct StaticIsolationTests {
     let source = "import\u{000C}Security"
     let forbiddenImports: Set = ["Security"]
 
-    #expect(
-      try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
-    )
+    #expect(try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports))
   }
 
   @Test
