@@ -19,7 +19,7 @@ Apple [AccessibilityFocusState](https://developer.apple.com/documentation/swiftu
 
 ### 狀態宣告與focus
 
-以phase對應的具名accessibility focus identity取代所有heading共用Bool；waiting指向Cancel，verifyingAccount／verifyingToken／connected指向各自status heading；welcome CTA、PAT／token failure輸入框、browser failure Retry落點維持原契約。新目標元件掛載後，使用可取消、以phase entry辨識的task協調：先清過期accessibility focus，再設本phase目標；focus與局部announcement分序，每個phase entry最多一次。每次await後及送出更新前檢查取消與phase仍相符；快速Back／Reset／Cancel後，不可由舊task拉回focus或宣告舊狀態。不得以任意固定sleep、提高通知priority、全域鍵盤攔截或再創獨立狀態模型取代協調。
+以phase對應的具名accessibility focus identity取代所有heading共用Bool；waiting指向Cancel，verifyingAccount／verifyingToken／connected指向各自status heading；welcome CTA、PAT／token failure輸入框、browser failure Retry落點維持原契約。新目標元件掛載後，使用可取消、以phase entry辨識的task協調：先清過期accessibility focus，再設本phase目標；非waiting phase的focus與局部announcement分序，每個phase entry最多一次；PC-06 waiting改由Cancel焦點label帶狀態、不另post，其他通知路徑不變。每次await後及送出更新前檢查取消與phase仍相符；快速Back／Reset／Cancel後，不可由舊task拉回focus或宣告舊狀態。不得以任意固定sleep、提高通知priority、全域鍵盤攔截或再創獨立狀態模型取代協調。
 
 PAT submit、Welcome→waiting、browser Retry→waiting必須各自親驗；同時回歸既有account／connected／failure宣告、Show／Hide持續編輯與清除、Cancel／Escape。AX只證明元素／focus；三缺口的聲音結果須由Human逐項確認，不能以Controls直切phase、背景送鍵、build或unit test判為朗讀pass。
 
@@ -218,9 +218,29 @@ None。
 | LU-03 | PAT 空白、外圍 whitespace、非固定 prefix、Show／Hide、submit、Back、token failure。 | 空白不能送；只 trim 外圍；不驗 prefix；顯示切換保留文字與編輯 focus；送出／離開清除；failure 仍可重填表單。 | `RivetLoginPresentationTests`＋原生操作；證據不保存輸入值。 | §3／10／13；素材 Spec §4 PAT。 |
 | LU-04 | System／Light／Dark、主窗 active／inactive、Increase Contrast。 | 外觀依系統或展示設定；品牌兩態深色；focus／disabled／error／success 不只靠顏色。 | 原生檢查，記錄實際系統條件。 | §7／10；AC-NI-026／035／036。 |
 | LU-05 | Demo局部13／17／21 pt、780×500 pt最小content與增大視窗；Reduce Motion。 | 右側heading／欄位／按鈕／說明／error／footer真字級依同一比例放大；無遮擋／截斷；footer及核心操作可垂直捲動到達，無水平捲動；非必要動畫不延遲狀態／focus。 | 同一point-size入口的Preview與host原生實看；記錄有效字級／比例、視窗尺寸、binary SHA。不能用Dynamic Type／系統13或15點未生效的操作當大字pass；系統偏好整合未交付。 | §8／10；AC-NI-028；PC-03。 |
-| LU-06 | 真PAT submit、Welcome→waiting、browser Retry→waiting；Keyboard／VoiceOver逐態與快速離開回歸。 | 無需手動進入scroll area即可理解正在驗證／等待；既有focus落點不變，Cancel／Escape可操作；每次phase entry局部宣告一次，過期工作不拉回focus或播報舊狀態；既有label／heading／disabled與裝飾reading order不回歸。 | Tester核新版AX／focus及來源，Human親聽三真入口並逐項回報；Controls直接show phase不替代入口；AX、背景送鍵或build不替代朗讀。缺項保持pending，保留HC-02原binary通過。 | §3／7／10；AC-NI-026／030；PC-03。 |
+| LU-06 | 真PAT submit、Welcome→waiting、browser Retry→waiting；Keyboard／VoiceOver逐態與快速離開回歸。 | 無需手動進scroll area即可理解當前狀態；PC-06 waiting由Cancel焦點label同時提供等待狀態及取消動作，不另post；其他phase通知路徑不變。Cancel／Escape與既有focus落點可用、無明顯雙讀／過期focus；label／heading／disabled與裝飾reading order不回歸。 | Tester核新版link role／label／focus與Cancel／Escape；Human逐項親聽Welcome及Failure Retry兩真waiting入口，不以Controls直切／AX／背景送鍵／build代聲音。PAT舊兩次無聲、probe／HC-05有聲及HC-02通過各留源，大字Human／rapid與未補驗項pending。 | §3／7／10；AC-NI-026／030；PC-03／PC-06。 |
 | LU-07 | Source／dependency／copy／path review。 | 無真登入、network、Keychain、persistence 或外部 help 副作用；文案明示模擬；既有 BC／兩驗證 App 不變；所有變更限 exact paths。 | 獨立 Reviewer 核對實際 diff、imports、manifest、provenance。 | §1／2／11／13；AC-NI-030。 |
 | LU-08 | bounded 自動驗證、target graph 同步及 native host 啟動。 | focused／root tests、demo debug／release build、format 成功；StaticIsolationTests 僅同步新增 Demo product／三個 targets 的 expected sets，所有 GitHubIntegration 隔離斷言不變。Root strict lint 如實記錄非0，Tester 核對 baseline 舊 findings 無回歸、原素材 SHA 未改及新增 production／tests scoped strict 0；不得為全局0修改 experiments／原素材。GUI 獨立分類，不把啟動成功當原生驗收。 | Tester 獨立跑計畫命令、targeted StaticIsolationTests、baseline／current lint 與 scoped strict 比對、verification matrix；root test 未重跑前不得宣稱修復，root lint 不冒 pass。 | §13；LU-01～07；既有 GitHubIntegration isolation contract。 |
 | LU-09 | Graphify availability／revision 檢查。 | 有可用圖時 bounded query 後 source 核實；無圖／過期／失敗則 targeted reads；沒有建圖、refresh、stamp／config／hooks 等額外 repo 輸出。 | 記錄 pinned invocation 或具體 fallback 原因與 source locations。 | Graphify local skill；Human 工具要求；§13。 |
 | LU-10 | 七態 lifecycle 的 diagnostics 修正、交付及視覺檢查。 | 與 state model 一致；Showcase 9/9、0 errors／warnings。Objective error count 創最低值時續修，連續兩輪未改善最佳值才停止。Perceptual correction 最多兩輪；修改 candidate 後重跑 validate／deliver／hash 核對／exact HTML 取證及實看。四尺寸 containment、light／dark 實看及未解問題如實記錄。 | 新版 receipts、spec／HTML SHA、九份列入 Written 的圖檔／sidecars、BUILD 中分開的修正紀錄及 `correction_rounds: 0|1|2`；獨立 review。 | Archify delivery contract；Human 工具要求；§13。 |
 | LU-11 | 實作後 bounded diff 與真 base／head commits。 | 未有真 head 前直接 review 並將 map 標 pending；真 SHA 到位才產圖。使用 pinned validate／render、適用 overlay，全程外置；不把 map 當 correctness approval。 | Reviewer 核對實際 diff／SHA、外置 graph／manifest；verification 記錄結果及限制。 | PR Lens local skill；Human 工具要求；§13。 |
+
+## PC-04：debug觀測契約（2026-11-04，待PR-04）
+
+EX-02指出source `.onChange(initial:true)`才更新focusPhase，而phase task第一guard先要求focusPhase等於entryPhase；若task較早啟動，可直接return且不重啟。這是待runtime區辨候選，非已證兩次無聲的原因；三次Task.yield不是AX-ready barrier。NSApp通知target合法；換macOS14+ Announcement／LayoutChanged／ScreenChanged API不保證出聲，macOS26 accessibilityDefaultFocus不符baseline15。
+僅在既有 `Sources/Presentation/Login/RivetLoginView.swift` 以 `#if DEBUG`、系統OSLog和可關閉的局部logger觀測，release不含該觀測；不新增檔案／public API／type／dependency／UI控制或runtime框架。不改功能guard、focus ownership、通知API／priority、sleep或yield數；可先依既有guard結果再記skip以降低干擾，但明載logger仍會改變timing，不回推前兩次原因。
+Trace採有限allowlist：phase／entryPhase／focusPhase的固定enum映射、case correlation ID、guard返回reason／cancel／match、focus request與binding enum變化、notification post前後的call標記，以及NSApp.isActive／hasMainWindow／hasKeyWindow／key==main／NSWorkspace.isVoiceOverEnabled布林。不得PAT／欄位值／任意AX label／failure message／window title／私人app資料；不得用帶associated message的enum描述字串。post只證明呼叫，mainWindow不證own View附窗或AX ready。
+Trace僅外置；先由TE-06核可讀、source／binary與敏感欄位限制，再由主對話CUA準備真PAT欄位，最多一次Human真正前景Return作主要runtime case。啟動／PAT entry可先讀preflight trace，Controls.show與背景送鍵不能替代；不動全域、TCC或VoiceOver設定。
+依trace再路由：未到post，才按guard實證修協調ownership並保留取消／stale／focus契約；post已到但window／AX未知，只補具體缺的最小event-driven觀測；條件足且Human仍無聲，需先明示單一變數scope／API probe。這些後續動作均非PC-04預先核准的修法；若須actual-attachment橋接或違反locked design，先最小planning delta。
+
+## PC-05：保存探針、單檔還原與正常版對照（2026-11-04，待PR-05）
+
+先外置保存View探針source `98bb32bd5ff4e014b9e146d42ab8cb7880d9f93793e9c571abadab7b0a6eacd3`、probe binary `18c8a3a4b81ed7bf6f335af96ab8aa4ef504a67150406eddb3f31fd250a4d2eb`，以及HC-04的34筆trace／receipts與各自完整SHA；外置檔不stage。以保存hash及既知source hash雙重guard確認未有新改動，再只把既有View還原為已發布HEAD `9dd80eaf51f0c5f4c7245db092ed3f04b92fe605` 的原blob bytes，expected SHA `89cb23c412b7d9e2b5ecefe0e1b0123731e2b4d96cfafaf366126527afc980a5`；不符即停止覆蓋。可git show讀該blob再寫單檔，禁止whole-tree restore／reset或丟失metadata；其餘六個Swift檔保持原frozen來源。
+這只移除diagnostic working diff，不修改phase／focus／字級API／priority／三yield／七態行為。正常debug／release重建後實測hash，不預填舊9a／22c或假定bit deterministic；TE-07核View與public source9f8955c同bytes、無probe marker及新wrapper／binary來源，正常版不冒稱有post trace。
+HC-05新增獨立預算0／1，最多一次正常debug真Human前景PAT Return；HC-04的1／1已用不可重用。主對話CUA只換版重啟及準備Welcome→真PAT欄位／dummy，保留Human已開的VoiceOver不切設定；Human點欄位確保前景，可等欄位朗讀完，再Return一次，事前不手動進scroll area。只收真聲音及視窗結果；單次正常／probe對照不唯一確立logging因果、穩定性或全面pass。
+
+## PC-06：waiting以既定焦點label表達狀態（2026-11-11，待PR-06）
+
+依Explorer調查充分approved及[accessibilityLabel](https://developer.apple.com/documentation/swiftui/view/accessibilitylabel(_:))可讀描述能力，在既有waiting Cancel link加簡短label `Waiting for simulated authorization. Cancel sign in.`。保留可見 `Cancel sign in`、link role、既有AX waitingCancel落點、keyboard cancel與Escape；不新增hidden announcer或改focus協調。僅waiting移除獨立announcementRequested post，讓焦點label承載等待語義並避免同狀態雙路播報；其餘phase／通知／priority／三yield／字級完全沿用。
+Human同次只讀Cancel而缺狀態足以支持此語義修補，無當次post trace，不宣稱已證失敗機制、修復歷史PAT原因或需要新probe。唯一source變更為既有View，長期說明同步既有 `docs/presentation/login-ui.md`；自動檢查與AX role／label／focus證據不代替Human聲音。Welcome→waiting、Failure Retry→waiting兩真入口逐項親聽：無需進scroll area即可理解等待、無明顯雙讀，Cancel／Escape仍可操作。
+IM-09不動running app；正常新版build／來源核對後由驗證／主線準備wrapper再交Human。保留HC-05正常PAT一次有聲、舊failed與probe來源，大字Human／rapid及整體採用仍pending；不改凍結七態Archify或三工具契約。

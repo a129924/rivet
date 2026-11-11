@@ -13,7 +13,7 @@
 
 HC-02原binary七類Human通過與完整限制已先回寫，HC-01仍pending。EX-01由Explorer明示planning sufficiency `approved`，不替代PR-03或成果review。PC-03只處理PAT verifying、Welcome／Retry進waiting兩類自動宣告與真正放大文字三缺口；新版未補驗前仍未全面通過。
 
-1. 依technical-spec PC-03採掛載後、phase對應且可取消的focus／announcement協調，保留既有focus落點；每phase entry宣告一次，過期task不拉回focus／播報舊狀態。不把source時序候選稱唯一已證root cause，不把合法NSApp通知target稱已證錯誤；不用任意固定延遲、通知priority提升或全域鍵盤攔截。
+1. 依technical-spec PC-03採掛載後、phase對應且可取消的focus／announcement協調，保留既有focus落點；PC-06 waiting由Cancel焦點label帶狀態而不另post，其他phase通知路徑不變且每entry最多一次；過期task不拉回focus／播報舊狀態。不把source時序候選稱唯一已證root cause，不把合法NSApp通知target稱已證錯誤；不用任意固定延遲、通知priority提升或全域鍵盤攔截。
 2. 依原LU-05加入Demo局部13／17／21 pt真字級，非系統文字大小偏好整合；公開init唯一增量 `bodyPointSize: CGFloat = 13` 在onIntent前，finite clamp13...21、非finite回13，舊省略參數呼叫及trailing closure可用。右側所有互動／說明字體同有效比例，左側AX隱藏裝飾固定。Demo改字級保留PAT／form identity；Reset保留字級；Preview使用同真入口。macOS Dynamic Type限制及新入口須回寫既有登入說明。
 3. 仍限既有exact paths：修補source／tests子集為 `Sources/Presentation/Login/RivetLoginView.swift`、`Sources/Presentation/Login/RivetLoginPresentation.swift`、`Sources/Presentation/Login/RivetLoginView+Previews.swift`、`Sources/RivetLoginDemoRuntime/LoginDemoHost.swift`、`Sources/RivetLoginDemoRuntime/LoginDemoModel.swift`、`Tests/RivetPresentationTests/RivetLoginPresentationTests.swift`、`Tests/RivetLoginDemoRuntimeTests/LoginDemoModelTests.swift`；加既有四planning、`docs/presentation/login-ui.md`及verification。必要native重取限原四PNG paths。ReadOnly10／Written36／Modify4／Deleted None及baseline分類完全不變，不改manifest、既有隔離test／BC／原素材／Archify或另建repo檔案。
 4. 實作前獨立PR-03明示approved；Implementer完成後交獨立Tester，再交獨立Reviewer。Focused／root tests、debug／release、format／scoped0與root strict非零分類以本輪實跑為準；不從舊10／284結果推定。有效／非法字級與model傳遞／Reset保留做必要行為測試；UI時序由native focus與Human聲音補驗，不能以鏡像helper取代。
@@ -126,7 +126,7 @@ None。
 | LU-03 | PAT 空白、外圍 whitespace、非固定 prefix、Show／Hide、submit、Back、token failure。 | 空白不能送；只 trim 外圍；不驗 prefix；顯示切換保留文字與編輯 focus；送出／離開清除；failure 仍可重填表單。 | `RivetLoginPresentationTests`＋原生操作；證據不保存輸入值。 | §3／10／13；素材 Spec §4 PAT。 |
 | LU-04 | System／Light／Dark、主窗 active／inactive、Increase Contrast。 | 外觀依系統或展示設定；品牌兩態深色；focus／disabled／error／success 不只靠顏色。 | 原生檢查，記錄實際系統條件。 | §7／10；AC-NI-026／035／036。 |
 | LU-05 | Demo局部13／17／21 pt、780×500 pt最小content與增大視窗；Reduce Motion。 | 右側heading／欄位／按鈕／說明／error／footer真字級依同一比例放大；無遮擋／截斷；footer及核心操作可垂直捲動到達，無水平捲動；非必要動畫不延遲狀態／focus。 | 同一point-size入口的Preview與host原生實看；記錄有效字級／比例、視窗尺寸、binary SHA。不能用Dynamic Type／系統13或15點未生效的操作當大字pass；系統偏好整合未交付。 | §8／10；AC-NI-028；PC-03。 |
-| LU-06 | 真PAT submit、Welcome→waiting、browser Retry→waiting；Keyboard／VoiceOver逐態與快速離開回歸。 | 無需手動進入scroll area即可理解正在驗證／等待；既有focus落點不變，Cancel／Escape可操作；每次phase entry局部宣告一次，過期工作不拉回focus或播報舊狀態；既有label／heading／disabled與裝飾reading order不回歸。 | Tester核新版AX／focus及來源，Human親聽三真入口並逐項回報；Controls直接show phase不替代入口；AX、背景送鍵或build不替代朗讀。缺項保持pending，保留HC-02原binary通過。 | §3／7／10；AC-NI-026／030；PC-03。 |
+| LU-06 | 真PAT submit、Welcome→waiting、browser Retry→waiting；Keyboard／VoiceOver逐態與快速離開回歸。 | 無需手動進scroll area即可理解當前狀態；PC-06 waiting由Cancel焦點label同時提供等待狀態及取消動作，不另post；其他phase通知路徑不變。Cancel／Escape與既有focus落點可用、無明顯雙讀／過期focus；label／heading／disabled與裝飾reading order不回歸。 | Tester核新版link role／label／focus與Cancel／Escape；Human逐項親聽Welcome及Failure Retry兩真waiting入口，不以Controls直切／AX／背景送鍵／build代聲音。PAT舊兩次無聲、probe／HC-05有聲及HC-02通過各留源，大字Human／rapid與未補驗項pending。 | §3／7／10；AC-NI-026／030；PC-03／PC-06。 |
 | LU-07 | Source／dependency／copy／path review。 | 無真登入、network、Keychain、persistence 或外部 help 副作用；文案明示模擬；既有 BC／兩驗證 App 不變；所有變更限 exact paths。 | 獨立 Reviewer 核對實際 diff、imports、manifest、provenance。 | §1／2／11／13；AC-NI-030。 |
 | LU-08 | bounded 自動驗證、target graph 同步及 native host 啟動。 | focused／root tests、demo debug／release build、format 成功；StaticIsolationTests 僅同步新增 Demo product／三個 targets 的 expected sets，所有 GitHubIntegration 隔離斷言不變。Root strict lint 如實記錄非0，Tester 核對 baseline 舊 findings 無回歸、原素材 SHA 未改及新增 production／tests scoped strict 0；不得為全局0修改 experiments／原素材。GUI 獨立分類，不把啟動成功當原生驗收。 | Tester 獨立跑計畫命令、targeted StaticIsolationTests、baseline／current lint 與 scoped strict 比對、verification matrix；root test 未重跑前不得宣稱修復，root lint 不冒 pass。 | §13；LU-01～07；既有 GitHubIntegration isolation contract。 |
 | LU-09 | Graphify availability／revision 檢查。 | 有可用圖時 bounded query 後 source 核實；無圖／過期／失敗則 targeted reads；沒有建圖、refresh、stamp／config／hooks 等額外 repo 輸出。 | 記錄 pinned invocation 或具體 fallback 原因與 source locations。 | Graphify local skill；Human 工具要求；§13。 |
@@ -239,3 +239,21 @@ swift run RivetLoginDemo
 Baseline／branch／ownership／scope 或 exact paths 衝突，需讀寫未列 repo 檔案，或需真登入／存儲／PR capability 時停止並回 planning；不自行重開 locked decision。缺 Graphify 圖採安全 fallback，不阻擋。Archify deterministic／perceptual 未達條件保留 diagnostics／缺證據，不冒充通過。PR Lens 失敗依 local skill 回 direct review並記錄工具未完成，不推導 correctness approval。任何正式 verdict 由指定獨立角色明示，checkbox 或本文件不等於 approved。
 
 使用者最新已授權 feature worktree 實作及直接 topic commit／push／Draft PR，不再為相同動作重問；此授權不取代既有 Plan-Reviewer／Tester／Reviewer 職責。最後停於 Draft PR 的 Human review，不自動合併或開始下一 capability。
+
+## PC-04：instrumentation-only執行與停點（2026-11-04，待獨立PR-04）
+
+1. EX-02 approved僅調查充分；本delta先限debug觀測，不與功能修補混合。source唯一可寫為既有 `Sources/Presentation/Login/RivetLoginView.swift`，規格與敏感資料allowlist依technical-spec PC-04；外置trace不進repo。pathsets仍ReadOnly10／Written36／Modify4／Deleted None，不改公開字級API、七態、四PNG／原素材／凍結圖面與三工具契約。
+2. 順序為獨立PR-04→IM-07 logging-only與適當focused／format／scoped lint／debug及release build檢查→TE-06核trace可讀及來源／敏感資料限制→HC-04一個真Human前景PAT Return case。只對新可觀察邊界作必要檢查，不新增鏡像logger測試；既有自動檢查結果不冒充新版成功，root strict非零仍如實記錄。
+3. Human只需聽一次；無聲仍是diagnostic資料而非全面pass。Trace若未區辨就保留unknown，不為觀測不停重試。task未到post／post到而AX未知／條件足仍無聲分別依technical-spec分支回對應角色，下一修法不得由本觀測計畫預填approved。
+4. HC-03兩次未過與「其他項目會朗讀」並存；waiting兩入口、大字Human、rapid仍pending，舊七類pass留源。原bounded fix及已確認Git發布授權持續，不要求新Human permission、不merge／release；本PC-04不執行Git發布，最後仍按逐項回報及HC-01採用邊界處理。
+
+## PC-05：正常版對照流程與預算（2026-11-04，待獨立PR-05）
+
+PC-05→獨立PR-05→IM-08外置封存／hashguard／唯一View還原及正常debug／release build與適當focused／format／scoped檢查→TE-07獨立核source／marker／binary及準備條件→Reviewer bounded正常版對照放行→HC-05一case。source唯一寫入仍為既有View，四planning與verification沿既有metadata路徑；pathsets10／36／4／None不變，不新增type／檔案／public API／framework，不重開字級、七態、BC／auth或三工具契約。
+Human只做一次；無聲回證據分類，不盲改或擴case；有聲只記本正常對照observed，不自動adopt或close三缺口。HC-04採集偏差、兩個舊failed與probe有聲均留源，waiting二入口／大字Human／rapid仍未新驗。原feature bounded work授權持續，無需新增permission；此對照步驟不commit／push、不製作workingtree PR Lens，PL-03仍限source9f，待結果後再正式文件交付，無merge／release。
+
+## PC-06：waiting語義修補的受限流程（2026-11-11，待獨立PR-06）
+
+PC-06→獨立PR-06→IM-09→TE-08→獨立RV-06；本輪唯一source為既有View，另同步既有登入說明／verification／step。修補只依technical-spec PC-06給waiting Cancel焦點label增加狀態、停用該phase獨立post；role／action／focus／Escape與其他phase通知不變，pathsets10／36／4／None、公開API、13／17／21 pt、七態皆不變。
+不加鏡像字串的unit tests；沿LU-08重跑focused／root、debug／release、format／scoped lint／diffcheck，以本輪結果為準（原15／289不預填，root strict舊39非pass）。TE-08核native link role／label／focus與Cancel／Escape；running app不在IM-09階段操作，正常新版wrapper核來源後才Human依LU-06逐項聽Welcome與Failure Retry兩真入口及雙讀情況。
+成果code review後沿既有topic commit／正常public push／Draft PR66更新授權交付，PR Lens限真新source head、Graphify targeted fallback、七態Archify未變沿用。PC-05不commit僅限已完成的對照步驟，不永久阻擋新fix發布；不merge／release、不把code approval當Human補驗／採用。

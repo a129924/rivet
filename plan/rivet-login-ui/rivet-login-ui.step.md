@@ -11,10 +11,10 @@
 
 ## Current Phase
 
-- Phase：Human review／HC-03逐項補驗；RV-03 approved、TE-05 partial、IM-06公開交付及PL-03本地map completed，HC-01 pending。
-- Current Step：HC-03 pending；等待Human三真入口聲音／新版大字及rapid回歸逐項回報，三缺口未closed。
-- Upstream verdict：PR-03 approved；TE-05 partial completed；Dispatcher正式交接獨立RV-03 approved／required source fix None，准受限source交付。Human HC-02 needs-rework與HC-01／HC-03 pending仍有效，code approval不等於成果採用。
-- 已發布source head：`9f8955c40696cee6d77739da6d22d659287cfbc0`；13檔、全部hooks passed、正常push／ls-remote一致，凍結source／binary SHA不變。PL-03限此source，不包含後續metadata。
+- Phase：RV-06 approved／required fix None，TE-08 completed／partial。進IM-10 topic交付，Human兩入口及HC-01／HC-03仍pending。
+- Current Step：IM-10 pending，依既有公開授權核七檔staged語意／message、完整hooks後topic commit及正常push。HC-05 observed有聲1／1與全部來源留存。
+- Upstream verdict：RV-06正式approved／required fix None由Dispatcher交接，准topic交付。PR-06正式approved／required fix None。Human Welcome→waiting needs-rework留源，待新版補驗。前輪Reviewer結果處置approved／required None准既有HC-03，不代本次通過。RV-05 approved／required None，僅放行正常版HC-05一次；PR-03 approved；TE-05 partial completed；Dispatcher正式交接獨立RV-03 approved／required source fix None，准受限source交付。最新HC-03 PAT兩次未通過，Human needs-rework與HC-01／HC-03 pending仍有效，舊code approval不等於朗讀通過或採用。
+- 已發布source head：`9f8955c40696cee6d77739da6d22d659287cfbc0`；13檔、全部hooks passed、正常push／ls-remote一致。IM-09現有View working diff，其餘六Swift同HEAD，新binary SHA見verification IM-09。PL-03限此source，不包含後續metadata。
 - HC-02保留七類Human通過：鍵盤、Welcome VoiceOver、PAT VoiceOver／Show-Hide、帳號／完成／重跑失敗宣告、失敗取消、高對比、Reduce Motion。三缺口為PAT verifying自動宣告、等待兩入口自動宣告、大字測法未確認；spinner旋轉只列觀察。HC-02受測binary SHA與TE-04相同；該Human交接當輪未重跑舊自動檢查。新版IM-05自驗結果見下方及verification，rootstrict仍非零。
 
 ## Artifact Register
@@ -55,7 +55,27 @@
 | RV-03 | completed | Reviewer | 獨立審查PC-03 bounded source、Tester證據／剩餘限制；真commit後本地map另列PL-03。 | Dispatcher正式交接approved、required source fix None；TE-05 partial與Human三缺口／rapid限制保留，code approval不代HC-01採用。 |
 | IM-06 | completed | Implementer | RV-03 approved後精確13檔staged語意／message核對、完整hooks commit及正常public push。 | 真source9f8955c40696cee6d77739da6d22d659287cfbc0，全部hooks passed，正常push／ls-remote同SHA；source／binary凍結不變，dev未動。 |
 | PL-03 | completed | Reviewer | 以本輪真source commit與實際PR base建立外置本地PR Lens。 | 獨立Reviewer完成base613a505→source9f8955c、merge-base14d0832；pinned0.11.0 validate／render0，12nodes／15edges／6steps／34file refs，XML核對未raster實看。完整hash見verification；不含後續metadata，不取代correctness review。 |
-| HC-03 | pending | Human | 逐項聽新版PAT submit／Welcome→waiting／Retry→waiting，實看13／17／21 pt與必要focus回歸。 | 尚未取得新版Human結果；沿每項等待回報要求，三缺口未補驗完成前不宣稱全面通過。 |
+| EX-02 | completed | Explorer | 依HC-03-PAT兩次新版無聲證據，唯讀診斷真正通知發出、AX掛載及VoiceOver scope。 | 明示planning sufficient approved僅足以一次runtime觀測；task／focusPhase初始guard先後為待區辨候選、yield非AX barrier、target合法，不預設修法。 |
+| PC-04 | completed | Plan-Creator | 四文件最小delta限定DEBUG有限觀測、外置trace與一次真Human PAT Return case及路由。 | 本delta完成，無source／測試／UI或Git發布；待獨立PR-04，不自審。 |
+| PR-04 | completed | Plan-Reviewer | 獨立審instrumentation-only範圍、敏感欄位allowlist、單case預算與不預准後續修法。 | Dispatcher正式交接approved／required None，僅准DEBUG觀測，不預准功能修法或聲音通過。 |
+| IM-07 | completed | Implementer | PR-04 approved後僅於既有View加可關閉DEBUG／OSLog觀測，完成適當自動檢查及build。 | 唯一View logging-only；focused15／root289／debugrelease／format／scoped0／diffcheck自驗通過，trace／source與新probe SHA見verification IM-07。未啟UI或驗runtime，交獨立TE-06。 |
+| TE-06 | completed | Tester | 核trace可讀、source／binary一致、欄位有限且無敏感資料；preflight後交HC-04一case。 | preflight partial：親跑focused15／root289／debugrelease／format／scoped136files0／diffcheck0，release無probe marker；PID46623 runtime20筆welcome／tokenEntry、finite schema0errors，沒有post／verifyingToken。未消耗Human case、不當聲音通過；詳verification TE-06。 |
+| RV-04 | completed | Reviewer | 獨立核logging-only source、preflight runtime／敏感欄位限制與自動證據，再交HC-04。 | Dispatcher正式交接approved／required None，僅准一次前景PAT Return診斷；核PID46623／20筆／15欄0error與source／binary凍結，不推舊原因或預准fix。 |
+| HC-04 | completed | Human | instrumented binary真正前景PAT Return最多一次，親聽並結合runtime trace分類。 | 唯一case Human回「讀出驗證中」；PID46623／34筆schema0error，同correlation post前後各一次、無guard.return；1／1已用。只屬觀測版有聲，不代正式修復、HC-03補驗／HC-01採用，詳verification HC-04。 |
+| PC-05 | completed | Plan-Creator | 四文件最小delta限定封存探針、單檔hashguard還原與一case正常版對照。 | 獨立PR-05 approved由Dispatcher正式交接；不自審或預填Human成功。 |
+| PR-05 | completed | Plan-Reviewer | 獨立審保存／還原邊界、來源與預算、正常對照不等修法／穩定性。 | Dispatcher正式交接approved／required None，僅准PC-05正常版一次對照流程。 |
+| IM-08 | completed | Implementer | PR-05 approved後外置封存及hashguard，只還原View至指定原bytes，正常build與適當檢查。 | 雙份外置20件原bytes／manifest核對、七Swift等於HEAD9dd／source9f；focused15／root289／debugrelease／format／scoped136files0／diffcheck passed，新normal SHA見verification IM-08。未UI／換wrapper／Git發布，待TE-07。 |
+| TE-07 | completed | Tester | 獨立核source／無probe marker／新normal binary與wrapper一致及Human準備條件。 | partial：七Swift等於HEAD／source9f，正常debugEA297d／releaseFE886c／wrapper marker無且hash相符；雙份archive20件符合manifest，focused15／root289／build／format／scoped1360／diffcheck通過。主CUA只準備PATdummy停entry，HC-05仍0／1；無正常post trace。 |
+| RV-05 | completed | Reviewer | 依TE-07證據放行一次bounded正常版對照或回修。 | Dispatcher正式交接approved／required None；獨立核112份Sources／Tests逐bytes、雙archive20件／manifest與TE-07，僅放行HC-05一次，不預准聲音成功／修法／採用。 |
+| HC-05 | completed | Human | 正常debug前景真PAT Return最多一次，先不手動進scroll area，收實際聲音／視窗結果。 | 本次明確正常版步驟後Human回「讀出驗證中」，CUA確認verifyingToken；normal EA297d／source89cb未變，1／1已用、observed有聲。先前無送出證據的同句歷史保留，不判穩定修復／全項採用。 |
+| EX-03 | completed | Explorer | 依Human同次Cancel可讀而等待狀態缺失，判定最小語義修補充分性。 | 正式planning sufficiency approved／required None；label可帶狀態，當次post unknown，不證唯一原因，不需新probe。 |
+| PC-06 | completed | Plan-Creator | 四文件最小delta鎖waiting Cancel焦點label與不另post，保留其他phase。 | 本delta完成，獨立PR-06 approved由Dispatcher正式交接。 |
+| PR-06 | completed | Plan-Reviewer | 獨立審label／role／focus／Cancel契約、單一phase通知變更與補驗／交付界線。 | Dispatcher正式交接approved／required fix None，准PC-06 bounded實作。 |
+| IM-09 | completed | Implementer | PR-06 approved後僅View的waiting label／post修補、既有長期文件與證據，同LU-08檢查。 | View +1／-1、既有長期說明同步，focused15／root289／debugrelease／format／scoped136files0／diffcheck自驗通過。來源及新binary SHA見verification IM-09，交TE-08。 |
+| TE-08 | completed | Tester | 獨立自動檢查及正常新版native role／label／focus／Cancel／Escape來源，準備逐項Human兩入口。 | partial：親跑focused15／root289／debugrelease／format／scoped136files0／diffcheck0；source cf1f／wrapper50a核對。主CUA真Welcome／Retry入口的link／完整label／focus、Cancel／Escape與空PAT／Back通過；AX不代Human聲音／雙讀，大字Human／rapid仍pending，詳verification TE-08。 |
+| RV-06 | completed | Reviewer | 獨立審waiting bounded修補與TE-08證據／限制，再依既有授權交付。 | Dispatcher正式交接approved／required fix None。兩行反還原原89cb、其餘六Swift相等，TE-08 checks／native／來源核准，准既有topic交付。 |
+| IM-10 | pending | Implementer | RV-06 approved後七檔staged語意／message檢查、完整hooks topic commit及正常public push，核真SHA。 | 待執行。Human兩waiting入口／大字／rapid及HC-01／HC-03 pending。 |
+| HC-03 | pending | Human | 逐項聽新版PAT submit／Welcome→waiting／Retry→waiting，實看13／17／21 pt與必要focus回歸。 | Welcome→waiting只讀Cancel、狀態failed留源。PC-06 Cancel focus label已實作，TE-08 partial完成，待兩入口Human補驗。兩真waiting入口／Human大字／必要focus及rapid未補驗；HC-05正常PAT有聲1／1及舊failed留源，不當穩定修復。 |
 | HC-01 | pending | Human | Draft PR 與完整證據交 Human review，決定採用／調整／放棄。 | 最新Human明示七類通過但三缺口未補驗，尚未全面通過；執行／公開授權不等於成果採用。 |
 | HC-PUB | completed | Human | 回覆自動approval review要求的具體公開發布確認。 | Human本輪明確同意將`feat/rivet-login-ui`程式／測試／原始素材／文件圖面公開推送至`a129924/rivet`，並以`dev`建立Draft PR；這不是UI成果採用。 |
 
@@ -73,7 +93,7 @@ HC-00 是方案接受及直接執行授權。Staged diff 邊界與 message 檢�
 
 ## Last Updated
 
-2026-11-04（Asia/Taipei）；IM-06 source9f8955c完整hooks／正常push完成，PL-03真source本地map完成，Draft66 targetdev不變。TE-05 partial／RV-03 approved，HC-01／HC-03與三缺口pending；18 rawJPEG／四canonical PNG來源限制保留。本輪僅兩檔metadata，不預填自身SHA。
+2026-11-11（Asia/Taipei）。RV-06正式approved／required fix None，TE-08 completed／partial，IM-10 topic commit／public push待執行。兩waiting入口Human聲音／雙讀、大字Human／rapid及HC-01／HC-03 pending，全部舊來源留存。
 
 ## PC-02：必要測試契約修正與已知驗證限制
 
@@ -179,7 +199,7 @@ None。
 | LU-03 | PAT 空白、外圍 whitespace、非固定 prefix、Show／Hide、submit、Back、token failure。 | 空白不能送；只 trim 外圍；不驗 prefix；顯示切換保留文字與編輯 focus；送出／離開清除；failure 仍可重填表單。 | `RivetLoginPresentationTests`＋原生操作；證據不保存輸入值。 | §3／10／13；素材 Spec §4 PAT。 |
 | LU-04 | System／Light／Dark、主窗 active／inactive、Increase Contrast。 | 外觀依系統或展示設定；品牌兩態深色；focus／disabled／error／success 不只靠顏色。 | 原生檢查，記錄實際系統條件。 | §7／10；AC-NI-026／035／036。 |
 | LU-05 | Demo局部13／17／21 pt、780×500 pt最小content與增大視窗；Reduce Motion。 | 右側heading／欄位／按鈕／說明／error／footer真字級依同一比例放大；無遮擋／截斷；footer及核心操作可垂直捲動到達，無水平捲動；非必要動畫不延遲狀態／focus。 | 同一point-size入口的Preview與host原生實看；記錄有效字級／比例、視窗尺寸、binary SHA。不能用Dynamic Type／系統13或15點未生效的操作當大字pass；系統偏好整合未交付。 | §8／10；AC-NI-028；PC-03。 |
-| LU-06 | 真PAT submit、Welcome→waiting、browser Retry→waiting；Keyboard／VoiceOver逐態與快速離開回歸。 | 無需手動進入scroll area即可理解正在驗證／等待；既有focus落點不變，Cancel／Escape可操作；每次phase entry局部宣告一次，過期工作不拉回focus或播報舊狀態；既有label／heading／disabled與裝飾reading order不回歸。 | Tester核新版AX／focus及來源，Human親聽三真入口並逐項回報；Controls直接show phase不替代入口；AX、背景送鍵或build不替代朗讀。缺項保持pending，保留HC-02原binary通過。 | §3／7／10；AC-NI-026／030；PC-03。 |
+| LU-06 | 真PAT submit、Welcome→waiting、browser Retry→waiting；Keyboard／VoiceOver逐態與快速離開回歸。 | 無需手動進scroll area即可理解當前狀態；PC-06 waiting由Cancel焦點label同時提供等待狀態及取消動作，不另post；其他phase通知路徑不變。Cancel／Escape與既有focus落點可用、無明顯雙讀／過期focus；label／heading／disabled與裝飾reading order不回歸。 | Tester核新版link role／label／focus與Cancel／Escape；Human逐項親聽Welcome及Failure Retry兩真waiting入口，不以Controls直切／AX／背景送鍵／build代聲音。PAT舊兩次無聲、probe／HC-05有聲及HC-02通過各留源，大字Human／rapid與未補驗項pending。 | §3／7／10；AC-NI-026／030；PC-03／PC-06。 |
 | LU-07 | Source／dependency／copy／path review。 | 無真登入、network、Keychain、persistence 或外部 help 副作用；文案明示模擬；既有 BC／兩驗證 App 不變；所有變更限 exact paths。 | 獨立 Reviewer 核對實際 diff、imports、manifest、provenance。 | §1／2／11／13；AC-NI-030。 |
 | LU-08 | bounded 自動驗證、target graph 同步及 native host 啟動。 | focused／root tests、demo debug／release build、format 成功；StaticIsolationTests 僅同步新增 Demo product／三個 targets 的 expected sets，所有 GitHubIntegration 隔離斷言不變。Root strict lint 如實記錄非0，Tester 核對 baseline 舊 findings 無回歸、原素材 SHA 未改及新增 production／tests scoped strict 0；不得為全局0修改 experiments／原素材。GUI 獨立分類，不把啟動成功當原生驗收。 | Tester 獨立跑計畫命令、targeted StaticIsolationTests、baseline／current lint 與 scoped strict 比對、verification matrix；root test 未重跑前不得宣稱修復，root lint 不冒 pass。 | §13；LU-01～07；既有 GitHubIntegration isolation contract。 |
 | LU-09 | Graphify availability／revision 檢查。 | 有可用圖時 bounded query 後 source 核實；無圖／過期／失敗則 targeted reads；沒有建圖、refresh、stamp／config／hooks 等額外 repo 輸出。 | 記錄 pinned invocation 或具體 fallback 原因與 source locations。 | Graphify local skill；Human 工具要求；§13。 |
@@ -300,3 +320,50 @@ Dispatcher正式交接獨立RV-03 approved／required source fix None；TE-05 pa
 ## IM-06／PL-03交付後Human停點（2026-11-04）
 
 Source9f8955c已完整hooks commit／正常公開push、ls-remote同SHA，獨立PL-03已完成並明確bounded此code head；真base／merge-base／hash／外置路徑與實看限制見verification。Draft66 targetdev仍待Human review，三真入口聲音／真正大字Human／rapid未closed；HC-02七類舊pass留源，HC-01／HC-03 pending。此輪僅兩metadata，不改source／圖像，不重跑Swift／native／產圖，不merge／release或回填自身SHA。
+
+## PC-04：一次觀測的planning delta（2026-11-04）
+
+EX-02明示planning sufficient approved僅足夠一次bounded runtime觀測，尚不足選定已證修法。HC-03 PAT兩次無聲、各次CUA verifyingToken、第二次後VoiceOver on與Human補充「有，其他項目會朗讀」一併保留；不回推首次或前兩次原因。
+PC-04只鎖定View內可關閉的DEBUG／OSLog有限allowlist觀測、外置trace及PR-04→IM-07→TE-06→HC-04一個真前景PAT Return流程；logger會影響timing，post不證聲音、mainWindow不證own View附窗／AX ready。未到post、post到但條件未知、條件足仍無聲的後續修法／單變數probe均須依新證據另路由，非本delta預准。
+四文件以外未寫；原pathsets／公開字級契約／七態／工具契約不動，waiting／大字Human／rapid仍pending，HC-01／HC-03尚未全面通過；本完成不是自審approval。
+
+
+## IM-07診斷版交接（2026-11-04）
+
+PR-04正式approved後僅既有View加DEBUG有限notice追蹤，保留第一guard／onChange／focus／通知API及priority／yield數；私有helper留同檔同View。自驗focused15／root289／debugrelease／format／scoped0／diffcheck通過，release無獨特probe marker；不是功能修補。精確source／binary SHA、外置logs與trace predicate見verification IM-07，HEAD仍9dd80ea、working diff未commit。
+
+交TE-06核trace可讀與敏感欄位／新來源後，由主對話CUA準備HC-04最多一次Human前景PAT Return；本輪未啟UI／替換runningwrapper／改VoiceOver或全域設定，case未使用。其他項目Human有聲與兩次PAT無聲並存，三缺口與HC-01／HC-03仍pending；post／window條件不當朗讀或AX-ready證據，未知保持unknown，再依runtime證據路由，不預准下一修法。
+
+
+## TE-06 preflight handoff（2026-11-04）
+
+TE-06 completed／partial verification：logging-only／敏感欄位source核對、focused15／root289／debugrelease／format／scoped136files0／diffcheck0，release marker缺席皆完成。舊wrapper由主對話CUA正常Quit，本Tester確認process結束後換probe／resources核SHA；主對話再以CUA準備Welcome→PAT entry假輸入，沒有Return。
+
+精確Unified Log predicate最近5m可讀，PID46623共20筆welcome／tokenEntry，payload allowlist及有限值schema0errors；無guard-return／post／verifyingToken。沒有post符合兩phase不宣告的source，不能據此推submit返回原因。最末main／key／active／VoiceOver布林true不證own View附窗／AX-ready／聲音；原JSON及hash只外置，詳verification。
+
+交獨立RV-04核code／probe後才HC-04一次Human前景Return；本輪HC-04 0／1、三缺口及HC-01／HC-03未closed，不預准下一功能修法。本Tester只寫verification／step，未改source或執行stage／commit／push／PR。
+
+
+## HC-04結果交接（2026-11-04）
+
+Human唯一前景Return回「讀出驗證中」，預算1／1已用；Tester獨立核34筆／PID46623／finite schema0error，同correlation90309595…於15:55:03完成post前後、無early return。後續AX binding分時記錄，不當聲音機制／own AX-ready證明；working source98bb／probe18c／HEAD9dd未變。舊兩次9a failed無trace仍cause unknown、1009d七類pass保留；logging可能改timing，不當功能修法。三缺口、waiting兩入口／大字Human／rapid及HC-01／HC-03未closed，交獨立Reviewer分類，不新case或Git發布。
+
+## PC-05：移除自身探針後的單次正常對照（2026-11-04）
+
+Reviewer正式結果處置approved／required source fix None，本次不支持功能修法；HC-04 34筆同PID／唯一post前後各一、Human有聲及24h採集偏差均保留來源，不證AX-ready／聲音機制。先封存探針與trace hashes、hashguard後只還原View原bytes，再獨立核正常版source／marker／新實測binary，依PC-05流程取得Reviewer放行後才交HC-05一次真前景Return。
+HC-04 completed-observed／1of1 used不重用；HC-05 pending／0of1為新正常版對照，非修法驗收預准。前兩次正常版failed與原因未知保留，單次有聲不證穩定修復；waiting二入口／大字Human／rapid仍pending、HC-01／HC-03未全面通過。僅四文件planning delta，不寫source／verification／UI、不跑build或Git發布。
+
+
+## TE-07交接（2026-11-04）
+
+正常版preflight partial完成：七Swift等於HEAD9dd／source9f；probe雙份20件與manifest193805…完整核對；新normal EA297d／FE886c及wrapper無marker、resources相同。獨立focused15／root289／debugrelease／format／scoped1360／diffcheck通過，舊rootlint39非pass。主CUA正常換版後僅停PATdummy14字元／entry，HC-05 0／1；待RV-05後才唯一Human前景Return。HC-04預算已用、舊failed／有聲與採集偏差不改，不判logging因果／穩定修復，三缺口及HC-01／HC-03仍pending。本Tester只寫verification／step，不改source／tests／圖或Git發布。
+
+
+## HC-05正常版結果交接（2026-11-11）
+
+Human在明確正常版Return步驟後回「讀出驗證中」，CUA僅核既有app已verifyingToken；HC-05 completed-observed有聲、1／1已用，聲音非AX推定。親核normal EA297d／View89cb／published9f bytes及HEAD9dd未變，無probe marker／正常post trace。舊failed／同句無新送出證據歷史、HC-04及七類pass留源，一次有聲不證穩定修復／logging因果；待獨立Reviewer處置，HC-01／HC-03與其他缺口pending。主對話後續只Reset至System／Welcome13、Browser／failure0、primary focus，尚未觸發新waiting case。本Tester只寫兩metadata，無UI／build／test／source或Git mutation。
+
+## PC-06：waiting焦點label最小delta（2026-11-11）
+
+Explorer明示planning sufficiency approved／required None，只支持既有Cancel焦點的狀態語義修補，不證歷史root cause；本delta只改四planning、未實作或自審。PC-03／LU-06已明確waiting改採 `Waiting for simulated authorization. Cancel sign in.` focus label且不另post，其他phase不變；兩真入口仍需Human逐項補驗。
+PC-06→PR-06→IM-09→TE-08→RV-06；唯一source View與既有長期說明／證據，其他paths／API／字級／七態／工具不擴。準備正常新版wrapper才交Human，不在Implementer階段動running app；沿既有code review後topic Git／Draft交付授權，PC-05對照不發布限制不擴套，無merge／release。HC-05正常PAT observed有聲1／1與舊failed／probe留源，HC-01／HC-03、大字Human／rapid仍未全面通過。

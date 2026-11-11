@@ -195,6 +195,7 @@ public struct RivetLoginView: View {
       .frame(maxWidth: .infinity, alignment: .leading).padding(10)
       .background(palette.surface, in: RoundedRectangle(cornerRadius: 9))
       textButton("Cancel sign in", intent: .cancelSignIn)
+        .accessibilityLabel("Waiting for simulated authorization. Cancel sign in.")
         .focused($focus, equals: .cancel).frame(maxWidth: .infinity)
         .accessibilityFocused($accessibilityFocus, equals: .waitingCancel)
         .keyboardShortcut(.cancelAction)
@@ -354,7 +355,6 @@ public struct RivetLoginView: View {
   private func announceStatus(for entryPhase: RivetLoginPhase) {
     let message: String
     switch entryPhase {
-    case .waitingForBrowser: message = "Waiting for simulated authorization."
     case .verifyingAccount: message = "Simulating account verification."
     case .verifyingToken: message = "Simulating token verification."
     case .failure(let failure): message = failure.message

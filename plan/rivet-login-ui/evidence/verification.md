@@ -2,11 +2,11 @@
 
 2026-10-22；branch `feat/rivet-login-ui`；base `14d0832f042720889993d769b4cbfb720078e6b1`。所有寫入僅在已授權 feature worktree。IM-01初始尚未commit／push／PR；目前code commit與發布停點以下節為準。本文保留Implementer歷史及獨立Tester／Reviewer交接，不混同各角色verdict。
 
-## TE-05 partial／RV-03 approved／待HC-03（目前狀態）
+## RV-06 approved／待topic交付與Human兩入口（目前狀態）
 
 Dispatcher正式交接獨立RV-03 `approved`、required source fix `None`。TE-05已完成partial verification：新版自動檢查、三真入口可觀察互動、13／17／21 pt五畫面及捲動可達性；主對話Tester操作CUA，本Tester獨立實看18份外置raw JPEG，精確來源與padding限制見TE-05。這些不是VoiceOver真朗讀、Human新版大字或rapid departure通過，HC-02三缺口不closed，HC-01／HC-03仍pending；原binary七類Human通過保留其來源。
 
-IM-06已完成source commit `9f8955c40696cee6d77739da6d22d659287cfbc0`（`fix(presentation): 修正登入宣告與大字驗收`），精確13檔、全部hooks passed；正常public push與ls-remote同SHA。7個Swift檔及debug binary保持凍結值，四canonical PNG／18份新raw JPEG來源與限制不變。PL-03已獨立完成，Draft PR #66維持target dev；目前只待HC-03逐項Human補驗與HC-01採用，三缺口不closed。
+IM-06已完成source commit `9f8955c40696cee6d77739da6d22d659287cfbc0`（`fix(presentation): 修正登入宣告與大字驗收`），精確13檔、全部hooks passed；正常public push與ls-remote同SHA。IM-09的View現為waiting語義修補working diff，其餘六個Swift檔保持已發布bytes，新debug／release實測SHA見IM-09；四canonical PNG／18份新raw JPEG來源與限制不變。PL-03已獨立完成，Draft PR #66維持target dev；HC-03 PAT兩次未通過；Human另明確回「有，其他項目會朗讀」，不是全系統無聲。PR-04／RV-04限定approved後HC-04唯一診斷case已完成，Human回「讀出驗證中」；34筆實際trace顯示同case post路徑完成、無early return。預算1／1已用，診斷logging不當功能修法；PR-05正式approved後IM-08已外置封存並移除自身探針，正常版經TE-07獨立preflight partial完成，RV-05已正式approved／required None，僅放行HC-05一次Human前景Return；本次Human在明確正常版步驟後回「讀出驗證中」，CUA確認verifyingToken，HC-05 completed-observed有聲、1／1已用。HC-01／HC-03與三缺口不closed，詳文末HC-05。
 
 ## IM-05 自驗完成／待獨立補驗（歷史）
 
@@ -450,3 +450,143 @@ Repository原四PNG完全未改、bytes與HEAD相同，仍只證舊binary `1009d
 - 外置 `$TOPIC_SCRATCH/pr-lens/9f8955c/`：`graph.json`、`SOURCE.md`、`rendered/manifest.json`、`rendered/login-change-light-bec587614a6f68b020ee67b3b797b2bf.svg`。無repo改寫／upload／publish；map僅涵蓋source9f8955c，不含本輪後續metadata、不冒稱最終head。
 
 [Draft PR #66](https://github.com/a129924/rivet/pull/66)仍交Human review，不merge／release。HC-01／HC-03 pending：三真入口VoiceOver聲音、真正大字Human實看及rapid回歸尚待逐項回報；HC-02舊binary1009d446七類pass、三缺口與所有取證限制保持。這次只補兩份metadata，source／四PNG／凍結圖未變，不回填自身新commit SHA。
+
+
+## HC-03-PAT：兩次新版實聽未通過（2026-11-04）
+
+本日為交接／觀察日期，兩次未提供精確時刻。來源是主對話Human原句與root CUA核對，受測source `9f8955c40696cee6d77739da6d22d659287cfbc0`、binary SHA `9a2828a1fee54b5dfaeba1bce72f98a675192599a5ebdc61959c072ed11cce87`；不是HC-02舊binary1009d446，本Implementer只回寫證據。
+- Attempt 1：Human回「我按RETURN出去沒有朗讀」；root CUA確認main heading為Simulating token verification，鍵盤focus顯示window，PAT自動宣告未通過。
+- Attempt 2：Human說「你再一次」後，root CUA Reset→Welcome→真PAT入口並填好dummy，再交Human前景Return；Human明確回「完全沒聲音」。root CUA再次確認verifyingToken／鍵盤focus顯示window，仍未通過。
+- 只在第二次之後，root唯讀getApp系統設定旁白頁，看到`AX_VOICEOVER_ENABLED Value:on`；沒有toggle任何系統設定。此觀察不回填第一次當時已on，也不證明音量、mute或speech channel等其他條件。
+等待兩入口、大字Human與rapid尚未在本輪補驗，不判fail／pass；舊自動／TE-05／RV-03 bounded通過保留來源，不能關閉此gap。HC-01／HC-03仍pending、Human needs-rework；下一步EX-02只讀查真正通知發出／AX掛載／VoiceOver scope的新證據，不先指定NSApp錯target、priority或任意delay為修法。本輪未改source／tests、未操作UI、未stage／commit／push。
+
+
+## IM-07：DEBUG instrumentation-only交接（2026-11-04）
+
+Dispatcher正式交接獨立PR-04 approved／required None後，只在既有View加DEBUG OSLog notice有限追蹤，同檔private extension不新增type／public API／dependency。原onChange更新順序、第一guard與全部判定、focus落點、三次yield、通知API／medium priority均保留；沒有功能修法，也沒有新增鏡像logger測試。初次helper可見性編譯錯誤只以明確private修正。
+
+Trace使用 `local.rivet.login-ui.phase-probe`／`PhaseEntry`：phase-change前後、task UUID／每guard實際返回stage、cancel／phaseMatches、有限entry／focusPhase、keyboard／AX request與binding tag、notification.post前後。第一guard先判再記start／return；未見post不能單獨當返回原因。只記有限tags與App／window／VoiceOver布林，缺值unknown；不記PAT／任意text／failure message／AX label／window title。binding只是SwiftUI值，mainWindow不證own View附窗或AX-ready，post.after只證呼叫返回，不證朗讀；logger本身會改timing，不能回推先前兩次原因。
+
+本輪真focused15／4suites（0.630s）、root289／37suites（4.161s）、debug0.76s／release4.38s、format、唯一View scoped strict0、diffcheck均通過。Logs為OS外置暫存根的 `rivet-login-ui-im07-{focused,root,debug,release,format,scoped-lint}.log` 與 `rivet-login-ui-im07-fingerprints.json`；root strict未重跑，保留既有39非零限制。未啟UI或實際收取trace，不冒稱事件已emit或敏感資料runtime核對已完成。
+
+HEAD仍`9dd80eaf51f0c5f4c7245db092ed3f04b92fe605`，診斷source為working diff；View SHA=`98bb32bd5ff4e014b9e146d42ab8cb7880d9f93793e9c571abadab7b0a6eacd3`。新debug probe SHA=`18c8a3a4b81ed7bf6f335af96ab8aa4ef504a67150406eddb3f31fd250a4d2eb`（2693328bytes），release SHA=`ad9e58408f5d71e758d62d5267cab1d80f37d56f565c5bd423c859c9846b0ab7`；獨特probe subsystem marker僅在debug binary存在、release不存在。既有running wrapper未替換，不能把原9a2828當診斷版；TE-06換版沿既有 `Contents/MacOS/RivetLoginDemo` 與 `Contents/Resources/Rivet_RivetPresentation.bundle`。
+
+收集方式僅供TE-06／主對話後續執行；先核preflight trace與source／binary，再準備最多一次真Human前景PAT Return，HC-04目前0／1、未執行。使用下列精確predicate，只將輸出放既有外置topic scratch；stream於本case結束後停止，show限同一短時間窗，不擴掃其他subsystem。
+
+```sh
+/usr/bin/log stream --style json --predicate 'subsystem == "local.rivet.login-ui.phase-probe" AND category == "PhaseEntry"' > "$TOPIC_SCRATCH/native/hc04-phase-probe-stream.jsonl"
+/usr/bin/log show --last 5m --style json --predicate 'subsystem == "local.rivet.login-ui.phase-probe" AND category == "PhaseEntry"' > "$TOPIC_SCRATCH/native/hc04-phase-probe-show.json"
+```
+
+本輪未stage／commit／push／改PR、未替換wrapper或操作UI／VoiceOver／全域設定；HC-01／HC-03／HC-04 pending。Human兩次無聲與「其他項目會朗讀」並存；等待兩入口／大字Human／rapid仍未新測。runtime結果才可決定後續修法，PC-04不預准換API／priority／delay或attachment橋接。
+
+
+## TE-06：DEBUG probe獨立preflight（2026-11-04）
+
+**TE-06 preflight完成／partial verification，交獨立RV-04；HC-04主要case仍0／1、未執行。** PR-04 approved／required None及IM-07完成由Dispatcher明示交接。本輪只核logging-only／自動檢查／runtime可讀，沒有選功能修法，沒有聲音pass或舊兩次無聲因果結論。
+
+- 親讀唯一View diff：新增DEBUG OSLog及同檔private helper；callsite只給固定event、有限phase／focus tags、UUID與布林。沒有讀PAT、任意AX label、failure message或window title作log。原第一guard判定、onChange更新順序、focus request／三次yield、NSApp announcementRequested與medium priority未改；private diagnostic ID傳遞與extension分組不形成public API。
+- 本Tester親跑：focused15／4suites（0.612s）、root289／37suites（3.800s）、debug（0.29s）／release（0.25s）、format、scoped strict136files0、diffcheck皆exit0。Logs為 `$TOPIC_SCRATCH/phase-probe-runtime/te06-{focused,root,debug,release,format,scoped-lint,diff-check}.log` 與check-results JSON；未寫鏡像logger測試，rootstrict未重跑，既有39非0分類不改。
+- Source SHA `98bb32bd5ff4e014b9e146d42ab8cb7880d9f93793e9c571abadab7b0a6eacd3`；debug／wrapper均 `18c8a3a4b81ed7bf6f335af96ab8aa4ef504a67150406eddb3f31fd250a4d2eb`；release `ad9e58408f5d71e758d62d5267cab1d80f37d56f565c5bd423c859c9846b0ab7`。獨特probe subsystem marker親核debug有、release無，收尾再次核相同值，見 `te06-freeze.json`。
+- 主對話NativeTester CUA正常Quit舊app後，本Tester以限定process比對確認無running，才更新既有wrapper binary與Contents/Resources下Presentation bundle並逐檔核SHA；沒有新bundle、啟UI、改source或替代UI操作。其後主對話CUA啟新版、真Welcome→PAT entry並填假資料，停在tokenEntry，沒有Return或Controls直切verifying。
+
+### 真runtime可讀與有限schema
+
+本Tester親跑 `/usr/bin/log show --last 5m --style json --predicate 'subsystem == "local.rivet.login-ui.phase-probe" AND category == "PhaseEntry"'`：exit0；只讀此精確subsystem／category，外置保存原JSON／stderr，沒有改logging preferences、VoiceOver或TCC。唯一受測probe PID46623，20筆全屬該PID，時間2026-11-04 15:01:47.699615～15:01:57.593502（Asia/Taipei）。
+
+`te06-preflight-show.json`原bytes SHA `9af8381a2991390a927cf7f1356d1e3cbb37d1b033495102e2f4b6cce21a8525`；另有 `te06-preflight-current-pid.json` 與 `te06-preflight-schema.json`。所有自訂eventMessage payload的15欄符合allowlist；event／phase／focus／detail皆有限tags，correlation為`-`或UUID，布林為true／false／unknown；schema errors0，沒有token／任意text或associated failure message。標準Unified Log metadata只留外置，不能把payload allowlist核對泛稱為任意app log審核。
+
+實際只見welcome→tokenEntry：Welcome與PAT各phase-task UUID、PAT另field-task UUID可追；phase-change.before的focusPhase仍welcome、after變tokenEntry，其後keyboard／accessibility request與binding可讀。沒有guard-return、notification.post或verifyingToken記錄。Welcome／tokenEntry原announce switch不發通知，故此處「未見post」不能當task提前返回，更不能外推PAT submit；沒有記錄到不存在的skip event。
+
+最早多筆appActive／hasMainWindow／hasKeyWindow=false、keyIsMain=unknown、VoiceOver=true；最後一筆為accessibility binding tokenEntry→none，當筆appActive／main／key／keyIsMain均true、VoiceOver=true。這只證當筆logger觀察與SwiftUI binding，不證own View實際附窗／AX-ready或朗讀；logger本身仍可改timing，不能回推先前兩次無聲原因。
+
+HC-04仍待獨立RV-04後，由Human最多一次真正前景PAT Return；本輪preflight不消耗該case。Post前後將來若出現也只代表呼叫／返回，不當出聲passed。HC-01／HC-03、等待兩入口／Human大字／rapid及原有來源限制均保留。本Tester只寫verification／step；未改source／tests／fonts／assets／圖面／其他contract、未stage／commit／push／改PR。
+
+
+RV-04正式交接：獨立Reviewer `approved`／required None，僅准HC-04一次真Human前景PAT Return診斷；已核logging-only原logic／API／yield／priority不變、有限tags／UUID／bool未讀敏感欄位，PID46623的20筆／15欄schema0 errors，source98bb32／debug-wrapper18c8a3／releasead9e58凍結來源均見TE-06。只有welcome／tokenEntry、無verifying／guard-return／post，不推舊兩次原因或宣稱修復；HC-04仍0／1 pending，HEAD9dd80ea的diagnostic working diff非新commit，PL-03仍限source9f8955c，不產working-tree map。
+
+
+## HC-04：唯一前景PAT Return診斷結果（2026-11-04）
+
+Human本次明確回「讀出驗證中」；主對話先保存同次精確predicate的24h範圍trace，再CUA確認verifyingToken。**本case completed-observed有聲，1／1已用；未重測。** 本Tester獨立核外置 `phase-probe-runtime/hc04-runtime.json`：34筆全屬PID46623，15欄finite schema0errors，唯一verifyingToken task correlation `90309595-A557-4A70-B879-69DB46879DBB`。原JSON57755bytes、SHA `04dc31510ba19930d1b8c6ded0ee76350f7019da265d9af70bef1eddfa9d0ffd`；詳細核對receipt為 `hc04-independent-receipt.json`。
+
+15:55:03（Asia/Taipei）同case依序task.start→keyboard.request(none)→accessibility.request(tokenStatus)→notification.post.before／after各一次；phaseMatches=true、cancelled=false，無guard.return，當筆appActive／main／key／keyIsMain／VoiceOver皆true。15:55:08 binding none→tokenStatus時appInactive／mainkeyfalse；15:55:10 tokenStatus→none時active／keytrue，只分列當筆，不回填主要case或後續CUA，不證own AX-ready／實際VO cursor，也不判聲音由哪個機制產生。
+
+HEAD仍`9dd80ea`、working View SHA `98bb32bd5ff4e014b9e146d42ab8cb7880d9f93793e9c571abadab7b0a6eacd3`、debug／wrapper `18c8a3a4b81ed7bf6f335af96ab8aa4ef504a67150406eddb3f31fd250a4d2eb`均親核不變。本次可判post路徑完成而非early return；前兩次`9a2828…`無trace且未過仍cause unknown，原`1009d446…`七類Human pass留源，VoiceOver已確on／其他項目有聲補充保留。Instrumentation可能改timing，不能把logging當已修正式PAT，waiting兩入口／新版大字Human／rapid本輪未跑，三缺口及HC-01／HC-03不closed；交獨立Reviewer分類，不自選fix。只寫兩檔metadata，未改source／UI／新case／tests／build／Git發布。
+
+
+## IM-08：探針封存、單檔還原與正常版自驗（2026-11-04）
+
+Dispatcher正式交接PR-05 `approved`／required None；本步只移除自身logging，不是功能修法。HC-04 Human「讀出驗證中」與後續Human「Yes」依上游交接保留，不擴張為穩定性或採用；原計畫短窗而實際24h精確predicate採集的偏差保留，未重收trace或重用1／1預算。HC-05正常版對照仍0／1 pending。
+
+- 外置雙份封存：`$TOPIC_SCRATCH/normal-compare/archive/`、`$TASK_ARTIFACTS/normal-compare-2026-11-04/archive/`，20件原bytes逐檔SHA一致；relative `manifest.json` SHA `193805105317e081fd4a4bdb19defe6f4b05523f026c4d2002da4df09c93c11f`。含View `98bb32bd5ff4e014b9e146d42ab8cb7880d9f93793e9c571abadab7b0a6eacd3`、debug `18c8a3a4b81ed7bf6f335af96ab8aa4ef504a67150406eddb3f31fd250a4d2eb`、release及34筆trace／receipts；原trace SHA `04dc31510ba19930d1b8c6ded0ee76350f7019da265d9af70bef1eddfa9d0ffd`，source版本為HEAD9dd80ea上的未commit probe working diff。
+- 雙重hash guard後只將View寫回HEAD `9dd80eaf51f0c5f4c7245db092ed3f04b92fe605` 原blob，SHA `89cb23c412b7d9e2b5ecefe0e1b0123731e2b4d96cfafaf366126527afc980a5`；七個Swift檔逐bytes等於HEAD及source9f8955c，其餘六檔未寫，五份metadata通過還原前後hash核對。還原／fingerprint receipts在 `$TOPIC_SCRATCH/normal-compare/im08-{restore-receipt,normal-fingerprints}.json`。
+- 正常debug新實測SHA `ea297d3d5dc63594cc20fd2a1d79cfda19994d9db7133fa4916b71aeb370f36d`（2576960bytes）；release `fe886ca50f7173e94d6dc65dd57c6f99ac4141f2a527c41a5eec8c3ee454a304`（1272064bytes）；兩者均無probe subsystem marker，不沿用舊9a／22c hash。
+- 自驗focused15／4suites（0.642s）、root289／37suites（3.868s）、debug（0.25s）／release（4.07s）、format、scoped136files0／diffcheck皆exit0；完整命令與logs為 `$TOPIC_SCRATCH/normal-compare/im08-check-results.json`、`im08-*.log`。Root strict未重跑，舊39非0不冒pass；沒有新增鏡像測試或重做native。
+- 未操作UI／系統設定、未替換running wrapper（仍probe18c8a3）、未stage／commit／push／改PR或圖面；正常版尚無runtime post trace／appActive／VoiceOver內部條件。先交獨立TE-07及RV-05，不以單次A／B推唯一原因或穩定修復；舊9a兩次failed／unknown cause、1009d七類pass留源，waiting兩入口／大字Human／rapid與HC-01／HC-03仍pending。
+
+
+## TE-07：正常版對照preflight（2026-11-04）
+
+**TE-07 partial完成，交獨立RV-05；HC-05仍0／1未用。** 親核七Swift逐bytes等於HEAD9dd80ea與已發布source9f8955c，Sources／Tests zero diff；View SHA `89cb23c412b7d9e2b5ecefe0e1b0123731e2b4d96cfafaf366126527afc980a5`。雙份archive20件逐檔符合relative manifest與相互SHA，manifest `193805105317e081fd4a4bdb19defe6f4b05523f026c4d2002da4df09c93c11f`；probe98bb／18c與34筆HC-04 trace保持原來源，未覆寫。
+
+親跑focused15／4suites（0.574s）、root289／37suites（3.695s）、debug0.24s／release0.25s、format、scoped strict136files0／diffcheck皆exit0；沒有新測試或rootlint重跑，舊39非0限制保留。Logs／receipts為 `$TOPIC_SCRATCH/normal-compare/te07-*`（含check-results、archive-check、seven-swift-source-check、wrapper-copy與freeze）。
+
+主對話CUA正常Quit probe後，本Tester親核唯一目標無running才換既有wrapper及Presentation resources；正常debug／wrapper SHA `ea297d3d5dc63594cc20fd2a1d79cfda19994d9db7133fa4916b71aeb370f36d`、release `fe886ca50f7173e94d6dc65dd57c6f99ac4141f2a527c41a5eec8c3ee454a304`，兩者及wrapper皆無probe marker，收尾hash相同。不沿用舊9a／22c，也不假稱bit deterministic或正常版有post trace。
+
+主對話NativeTester CUA其後啟正常版，Welcome primary→真PAT link→secure field focus，填14個dummy字元、Connect enabled，仍停tokenEntry；未按Return／切verifying／改全域設定。本Tester沒有UI操作；normal內部active／VoiceOver／通知條件不補造，留Human實際聲音與視窗結果。HC-04 1／1已用、舊兩次9a failed／probe18c有聲及24h採集偏差保留；一次A／B不證logging因果或穩定修復，HC-01／HC-03、三缺口與waiting兩入口／大字Human／rapid仍pending。僅更新verification／step，不改source／tests／PNG／圖面、無stage／commit／push／新map。
+
+
+## RV-05：正常版成果審查與Human邊界（2026-11-04）
+
+Dispatcher正式交接獨立RV-05 `approved`／required None：Reviewer核112份Sources／Tests逐bytes、雙archive20件／manifest與TE-07證據，僅放行HC-05一次Human前景Return；正常debug／wrapper ea297d3d…、release fe886ca5…及無probe來源不變。HC-04 1／1不重用；HC-05 human-check仍0／1，單次有聲不證穩定修復或logging因果，HC-01／HC-03及三缺口仍pending。
+
+最新Human另回「讀出驗證中」，但主對話唯讀CUA getAXState明確無變化，正常版仍tokenEntry、secure field維持焦點；未見新送出證據，正常版尚未Return。此句暫不歸因HC-05、不耗預算或判通過，也不推定指哪次；HC-04既有相同回報留源。本步僅兩檔metadata回寫，未改code／UI／build／tests或執行Git。
+
+
+## HC-05：正常版Human對照結果（2026-11-11交接／核對）
+
+最新Human於明確正常版前景PAT Return步驟後回「讀出驗證中」；主對話CUA先以listApps確認既有app running，getApp僅選取該app，讀到`Simulating token\nverification…`與模擬／no requests footer、focusedUIElement0為window，當時沒有按鍵／點擊／改狀態。**HC-05 completed-observed有聲、1／1已用，不再觸發。** 聲音證據來自Human；AX只證畫面，window focus不當實際VoiceOver cursor。日期為本次結果交接／核對日，不補填無法查證的精確操作時刻。
+
+本Tester只讀核對唯一wrapper PID70908／bundleID `local.rivet.login-ui-demo`，wrapper與debug SHA均`ea297d3d5dc63594cc20fd2a1d79cfda19994d9db7133fa4916b71aeb370f36d`（2576960bytes）、無probe marker；View SHA `89cb23c412b7d9e2b5ecefe0e1b0123731e2b4d96cfafaf366126527afc980a5`，七Swift仍等於published9f8955c、HEAD9dd80ea、Sources／Tests zero diff。正常版沒有post trace，不能補造通知／active／VO內部條件。
+
+先前同句但無新送出證據的歷史原樣保留；舊9a兩次無聲原因仍未知、probe18c的HC-04 1／1有聲與原1009d七類pass及來源限制保留。一次正常版有聲不證穩定修復或logging因果；waiting兩入口、Human大字與必要focus／rapid、HC-01／HC-03及三缺口不closed，交獨立Reviewer作結果處置。
+
+結果核對後，主對話CUA僅開Controls讀System13／Browser origin／failure0，Reset回Welcome並關Controls；最新Welcome可讀、Continue with GitHub為focusedUI17。尚未點primary／Return，只是下一項Welcome→waiting的準備，未消耗新waiting case。本Tester未操作UI／build／test／新case，只寫verification／step，沒有source或Git發布變更。
+
+
+## HC-03：Welcome→waiting Human失敗回報（2026-11-11）
+
+Human依真Welcome→waiting步驟先回「他聚焦在 Cancel sign in」，再明確回答「沒有 直接唸出 Cancel sign in」：本入口**自動等待狀態宣告failed／needs-rework，Cancel焦點符合既定契約**。主對話CUA僅唯讀核畫面為waiting，heading `Finish signing in/on GitHub`、simulated handoff／`Waiting for simulated authorization…`可讀、focus5為Cancel link，沒有其他UI操作；AX不代Human聲音，也不補造正常版post trace或精確操作時刻。
+
+來源沿用最近親核normal EA297d／View89cb、HEAD9dd。前輪獨立Reviewer結果處置approved／required None只放行既有HC-03，不代表本次通過。HC-05正常PAT單次有聲1／1、HC-04／原七類pass／兩次無聲與先前模糊回報歷史均保留；Retry→waiting仍未補驗，Human大字／必要focus與rapid及HC-01／HC-03、三缺口仍pending。交Explorer bounded調查等待宣告缺失，維持Cancel落點，不預選修法。本輪只寫兩metadata，未重測／build／UI／新receipt／Git發布。
+
+
+## IM-09 waiting Cancel焦點語義修補與自驗（2026-11-11）
+
+Dispatcher正式交接PR-06 `approved`／required fix None後，依PC-06在既有Cancel link加入 `Waiting for simulated authorization. Cancel sign in.` accessibility label，並刪除waiting的獨立announcement分支。Source diff為View +1／-1，既有長期登入說明同步等待狀態的朗讀方式。
+
+- View SHA `cf1f007065af1449c5ca945dafd00fe81fbba1187479e0d501f72d651e51f1a8`（15203bytes），來源為HEAD `9dd80eaf51f0c5f4c7245db092ed3f04b92fe605` 上的PC-06 working diff。其餘六個Swift檔親核等於HEAD，既有五份metadata在自驗前後hash一致。
+- Debug SHA `50a30cdc872292f8cd4de5a689b52ae2ab9d6451613067ff8440ba68b384d67f`（2580048bytes），release SHA `25a8136f02e9d974d27c8a644f37304ace8e7cc80ccb007c9c3db56a79dcd9c5`（1274048bytes），兩者probe marker皆缺席。
+- 本輪一次自驗focused15／4suites（0.590s）、root289／37suites（3.657s）、debug（0.25s）／release（3.57s）、`scripts/check-swift-format.sh`、scoped strict136files0與diffcheck皆exit0。完整命令／logs及精確指紋保存於 `$TOPIC_SCRATCH/im09/check-results.json`、`fingerprints.json`、各項 `.log`。Root strict保留舊39非零結果，本輪未重跑。
+- 現交獨立TE-08核新版native link role／label／focus、Cancel／Escape與來源，再由RV-06 review。兩真waiting入口的聲音、雙讀情況及Human大字／rapid列HC-03待驗，HC-01採用pending。HC-05正常PAT observed有聲1／1、舊兩次無聲／probe與HC-02七類通過均保留原來源。
+
+Running wrapper／UI由主線與Tester接續處理，本輪自驗使用feature build產物。Git交付待RV-06後依既有topic授權處理，當前HEAD仍9dd80ea，PL-03限source9f8955c。
+
+
+## TE-08：waiting修補獨立驗證（2026-11-11）
+
+**TE-08 completed／partial verification，交獨立RV-06。** 本Tester親讀View +1／-1只加waiting Cancel狀態label、移除該phase獨立post，其餘phase／focus／role／Escape路徑與六Swift／tests未改。親跑focused15／4suites（0.570s）、root289／37suites（3.442s）、debug0.27s／release0.23s、format、scoped strict136files0／diffcheck皆exit0；外置logs為 `$TOPIC_SCRATCH/te08/{check-results.json,*.log}`，rootstrict舊39非pass保留，未新增字串鏡像測試。
+
+View SHA `cf1f007065af1449c5ca945dafd00fe81fbba1187479e0d501f72d651e51f1a8`、debug／既有wrapper `50a30cdc872292f8cd4de5a689b52ae2ab9d6451613067ff8440ba68b384d67f`、release `25a8136f02e9d974d27c8a644f37304ace8e7cc80ccb007c9c3db56a79dcd9c5`收尾親核不變、均無probe marker。主對話CUA退出舊app後，本Tester親核目標process結束才換既有wrapper及正確Resources位置，逐檔相等；沒有新app或平行instance。
+
+主對話NativeTester CUA實際回歸：Welcome真primary→waiting，link role／focused label精確為 `Waiting for simulated authorization. Cancel sign in.`；點該link或另一輪單Escape均回Welcome primary。另真primary→waiting→SimulateReturn→verifyingAccount→Complete→browser failure，Try again focus後點真Try again→同waiting link／label／focus，單Escape回Welcome；沒有Controls直切waiting／Failure。再關simulate failure／Reset，PAT link→空secure field正確label／focus→Back→Welcome primary。CUA以bundleID launch回Invalidapp，改既有app path成功；先前退出工具嘗試不當Cancel pass或產品bug。
+
+以上UI由主對話Tester操作，本Tester只親核source／build／hash，不把AX當聲音、雙讀或Human通過；本輪未輸入／送出PAT、不重用HC-05 1／1、未重做大字／rapid／舊全項矩陣或新增圖片。執行項目未觀察新required fix，不代Reviewer approval；Human兩真waiting入口親聽／雙讀、大字／必要focus與rapid及HC-01／HC-03仍pending，舊failed／HC-05有聲／probe與七類pass留源。最後System／Welcome13、Browser origin、failure off、Controls關閉、primary focus，未改全域VoiceOver或設定。本Tester只寫verification／step，無source或Git發布變更。
+
+
+## RV-06交付審查（2026-11-11）
+
+Dispatcher正式交接獨立RV-06 `approved`／required fix None，核View兩行反還原精確為89cb原bytes、其餘六Swift相等，並批准TE-08 source／自動與bounded native證據。TE-08 completed／partial，兩waiting入口Human聲音／雙讀、大字Human／rapid及HC-01／HC-03仍pending。
+
+IM-10依既有topic及公開payload授權進行七檔staged語意／message檢查、完整hooks與正常public push，提交／推送結果待執行後另記。凍結View cf1f／debug50a／release25a來源沿IM-09／TE-08，舊Human紀錄與PL-03 source9f範圍留存。

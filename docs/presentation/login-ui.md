@@ -18,6 +18,8 @@ Demo的字級三選一直接傳入上述入口；更換字級不重建form ident
 
 狀態entry使用各自accessibility identity與可取消task，分序處理鍵盤focus、accessibility focus與局部announcement；每次await後確認task未取消且仍屬目前phase。Welcome為主按鈕、PAT為輸入、waiting為Cancel、browser failure為Retry，verifying／connected為對應heading；快速離開不應由舊工作拉回。這是針對HC-02時序候選的修正，不宣稱已證唯一root cause；VoiceOver真朗讀仍須新版Human補驗。
 
+等待授權時，既有 Cancel sign in 連結的 accessibility label 為 `Waiting for simulated authorization. Cancel sign in.`，讓 Welcome 與 browser failure Retry 兩個入口的 Cancel 焦點同時帶出等待狀態與取消動作。Waiting 的狀態由此焦點 label 提供，獨立 announcementRequested 僅用於驗證中、失敗與完成階段。兩個等待入口的朗讀、雙讀情況及 Cancel／Escape 操作交逐項 Human 補驗。
+
 ## 素材來源
 
 接收日期：2026-10-22；使用者提供 `rivet_login_ui` 七份原件，已原樣歸檔在 `prototypes/rivet-login-ui/`。PNG 為外觀依據，Spec 補行為；原 scaffold 不參與編譯。素材內真登入／Keychain／PR 導覽敘述沒有當作本次已交付能力。
