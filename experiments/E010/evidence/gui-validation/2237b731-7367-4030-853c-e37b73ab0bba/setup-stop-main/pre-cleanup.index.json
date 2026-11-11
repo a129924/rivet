@@ -1,0 +1,17 @@
+{
+  "cleanupComplete": false,
+  "files": {
+    "anchor.binding.public.json": "a389d725f4f29c2be4cc99826589ff048c2e7a98c286bd9a304f0130c2f06b39",
+    "anchor.public.json": "867d8c06facd80dc2d5b6d23e5ffe1e1859e70096ba530086c3460822f4f8e92",
+    "bootstrap/begin.machine.public.json": "c86585fec3545154e79d105ed862248a4efad36bc076d29d0b426d77fb636406",
+    "gui-begin-sync.public.json": "43690a4bc0fed2087973b9cdd95e363656e4d7bf417c0173ec6f4e1121882e51",
+    "gui/cleanup-human.public.json": "8391d6a597e14d93e14737ad68cb416d596d613d102cb4daf376930cace506dd",
+    "gui/p0/arm.public.json": "4dc3f45cc793685bd43d0dc70f2685e0adaba92447af29bccb099e7f3b38042b",
+    "reference/original-leaf.public.json": "c7eea84c5a3ae86e8fbcc49ce06803a2b6a4833f69309a358b83b1926a70ef51",
+    "windows/1.public.json": "7e9a9ef90298af60e0accf1d23babb972e3b5b158fe2ea9684728170f421b322"
+  },
+  "namespace": "2237b731-7367-4030-853c-e37b73ab0bba",
+  "phase": "before-private-delete",
+  "privateRootRetained": true,
+  "synthetic": false
+}

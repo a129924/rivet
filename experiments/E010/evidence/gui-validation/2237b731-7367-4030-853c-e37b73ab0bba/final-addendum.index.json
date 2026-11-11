@@ -1,0 +1,16 @@
+{
+  "cleanupComplete": true,
+  "files": {
+    "controlled-stop-final.machine.json": "98288ae07bc454c60de32139c01aa0b56023e9c60561bdf1e2968d51b19757bf",
+    "controlled-stop-summary-v2.safe.json": "14f9dc99c3210a63b4e02788a8471995edb50137136c5c2d74c1d14eb947acb5",
+    "publication-ack.safe.json": "d971931fce38348c9c28e46a3ac4eae46235049a9e14ba0a476ca50a342e8105",
+    "setup-stop-main/cleanup.machine.json": "1c655660e8a73a2e4a83435008cec449556795c83f10c6a69d208c2644e5eab4",
+    "setup-stop-main/index.json": "3b1d0b44a1a4105f1706b2738275bc6450295af134a4fbee787d8b2e0ccfe8ed",
+    "setup-stop-main/pre-cleanup.index.json": "0314f0bb0bd3c7c15a2a03f6600fe547465f53c770cfe76d23bf5ae9a98f5bf7"
+  },
+  "kind": "E010-GUI-W1-final-addendum-index",
+  "namespace": "2237b731-7367-4030-853c-e37b73ab0bba",
+  "privateRootAbsent": true,
+  "rawRetained": false,
+  "recordedUTC": "2026-11-05T09:27:49.136363+00:00"
+}

@@ -1,0 +1,86 @@
+{
+  "activity": {
+    "AppLaunches": 0,
+    "P0ProofCreated": false,
+    "SecItemCalls": 0,
+    "fixtureStoredInKeychain": false,
+    "globalCompleted": false,
+    "seedAttempted": false,
+    "signedBuildAttempts": 0
+  },
+  "anchorSHA256": "684ff0fb757fed8d56523a779606ea2cf7d5b5bb6fa5eafccc56387f5c82ac9d",
+  "beginMachineSHA256": "c81d6347fc7e7bc9efd4b7cd81febd5dfe798b94f320bc682ce3402e6b1b0d96",
+  "classification": "nativeAppEntryAutoEmittedUnrelatedSigningDisplayIdentifiersToTesterModel",
+  "clock": {
+    "globalDeadlineUTC": "2026-11-14T10:09:45.376121+00:00",
+    "startUTC": "2026-11-04T10:09:45.376121+00:00"
+  },
+  "eventExactUTC": null,
+  "eventKnownBoundsUTC": {
+    "afterSelectedLeafQualificationEndUTC": "2026-11-04T10:11:19.576653+00:00",
+    "noLaterThanPostEventClockUTC": "2026-11-04T10:14:28+00:00"
+  },
+  "grantSHA256": {
+    "assets": "30bf27b72b060c342ae4a89c7e60f5c693eb19f03e56cae3d1d06803834d07f0",
+    "recovery": "40c23e01d0fce7ddd084e667429e70227c329f11671ddc996d50a103d76220b5",
+    "retention": "cb411ef27a7b97536c695bb6d5258f8e8796ea4ccbcce61ce617720aab32428d"
+  },
+  "grantValidUntilUTC": "2026-11-15T08:56:05Z",
+  "kind": "E010-MAIN-W1-controlled-stop-privacy-incident",
+  "mainConsentSHA256": "565756f419d6c32652c59c0d40a3d203ea08836adf30ddb71344477057ce8f64",
+  "namespace": "d6da5e35-9e5d-4fc4-88dc-de795a10e5e7",
+  "outcome": {
+    "AppleAssetsRetained": true,
+    "HumanPromptCount": null,
+    "UX": "unknown",
+    "W1BaselineAndFreshRead": "未執行",
+    "cleanupComplete": false,
+    "controlledStop": "safe candidate pending independent readability+safety ACK",
+    "mechanismHypothesis": "未執行",
+    "privateRootRetained": true
+  },
+  "privacyFacts": {
+    "conversationServiceRetentionCannotBeRetractedOrClaimedCleared": true,
+    "futureUIAssetsBuildMeasurementsStopped": true,
+    "noActionsOnThatOtherProject": true,
+    "noExplicitRawAXOrScreenshotFileSavedByTester": true,
+    "notUsedAsPersonalTeamOrHostEvidenceForThisRun": true,
+    "rawSigningDisplayMetadataEnteredTesterModelContext": true,
+    "rawValuesNotRepeatedInThisCandidate": true,
+    "sourceWasAnotherTopicCurrentXcodeWindow": true
+  },
+  "rawMaterialPolicy": "Selected identity lookup/certificate metadata remains only in owned private runroot; never attach to model candidate. Unexpected native UI auto-output is separately acknowledged and cannot be retrospectively labeled local-only.",
+  "recordedUTC": "2026-11-04T10:17:09.398932+00:00",
+  "selectedLeafQualification": {
+    "P0": "not acquired or inspected",
+    "certificateNotAfterUTC": "2027-09-15T08:17:53+00:00",
+    "certificateNotBeforeUTC": "2026-09-15T08:17:54+00:00",
+    "certificateSHA256": "5c267546d016f41f0901e535847a0ab44f81382f7aaadffbbb56a09941139440",
+    "coversDPlus35Minutes": true,
+    "eligibleLabelCount": 1,
+    "freePersonalTeam": "not established for this run",
+    "privateKeyAuthorization": "not tested",
+    "safeReceiptSHA256": "b0f2267bd429cd2d647218b99ac3d04ea1428497628608900874d04e89cd05ef"
+  },
+  "setupStop": {
+    "endedUTC": "2026-11-04T10:17:09.491974+00:00",
+    "exit": 2,
+    "rawRootDeletion": "not attempted; waiting matching independent dual ACK",
+    "runtimeArchiveRelative": "setup-stop-main",
+    "runtimeFiles": {
+      "anchor.binding.public.json": "61012a2e77201c6deab3acd1618d9eef49cf7ec5ec74053367aaddc5679d0904",
+      "anchor.public.json": "ac02a96817c8c45a508c789559a15b83a3f951051f8a29c142e828eeea825095",
+      "bootstrap/begin.machine.public.json": "85c3760d907546af2a6f1837bc6157ca89af78ed31da632a3f21751ab6316c23",
+      "windows/1.public.json": "4bec14b0aae31cb94d8f22c2ab87189c0323a9a4ece61ebc03f3211ba46f878c"
+    },
+    "runtimePreCleanupIndexSHA256": "65877d2e3bae015b44c3ef48810cce1420e95412839d2d6460812428702d1cca",
+    "startedUTC": "2026-11-04T10:17:09.399231+00:00"
+  },
+  "sourceManifestFileSHA256": "e989bbebc05e98820f996a3e35e900bb8823df40fe86aa4379685cdff72d5e1f",
+  "window1": {
+    "cutoffUTC": "2026-11-04T10:34:45.376121+00:00",
+    "deadlineUTC": "2026-11-04T10:39:45.376121+00:00",
+    "startUTC": "2026-11-04T10:09:45.376121+00:00"
+  },
+  "window1SHA256": "5041fdb5acf780acd5ccfb9d891ac13567b0634081b58763c59eb2fc537b6f70"
+}

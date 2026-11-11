@@ -1,0 +1,14 @@
+{
+  "baseFinalIndexRelativePath": "final-cleanup-state.index.json",
+  "baseFinalIndexSHA256": "763ecbf9d0b1e7d68b6fdb703ab4bc722a55616bb66e423fbe0646ee3e2e260d",
+  "cleanupCompleteRemainsFalse": true,
+  "files": {
+    "date07-cleanup.human.json": "e09dd03ef82f08b31322354315e182849bbe36548772900057f1cc8faeebc9da",
+    "date07-final-cleanup-state.machine.json": "e61f9380b2fad55225cf39f06aa2927a05167a5f6e8562ba78e52e99f5da12ae"
+  },
+  "kind": "E010-DATE07-human-observation-addendum-index",
+  "namespace": "3581e693-8019-4068-a40f-311488fab764",
+  "oldPermanentReceiptsAndIndexesUnchanged": true,
+  "recordedUTC": "2026-11-10T04:07:59.929806+00:00",
+  "reportingOnlyNoPrivateRootOperation": true
+}

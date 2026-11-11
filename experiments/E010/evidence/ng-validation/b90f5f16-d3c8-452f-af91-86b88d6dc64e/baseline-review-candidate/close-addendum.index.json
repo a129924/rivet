@@ -1,0 +1,13 @@
+{
+  "files": {
+    "index.json": "83d02f29bd40270a016fff833fd067627afb1b3cec7006c8920e73187f233c7b",
+    "project-closed.human.json": "a27ed013087bebfe46859d1d3badb675f22878e991df0a7f437a693f8c644b18",
+    "retention-filesystem-guard.safe.json": "dd7a723b2ded00bc8c37ab067a4be3548d6665c30615572ae79a1825fe54988e"
+  },
+  "kind": "E010-NG07-baseline-close-addendum-index",
+  "noDeletionAttempted": true,
+  "rawIncluded": false,
+  "rawRetainedPrivately": true,
+  "recordedUTC": "2026-11-10T07:44:03.415080+00:00",
+  "reviewerACKPending": true
+}

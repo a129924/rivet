@@ -1,0 +1,13 @@
+{
+  "cleanupComplete": false,
+  "files": {
+    "anchor.binding.public.json": "61012a2e77201c6deab3acd1618d9eef49cf7ec5ec74053367aaddc5679d0904",
+    "anchor.public.json": "ac02a96817c8c45a508c789559a15b83a3f951051f8a29c142e828eeea825095",
+    "bootstrap/begin.machine.public.json": "85c3760d907546af2a6f1837bc6157ca89af78ed31da632a3f21751ab6316c23",
+    "windows/1.public.json": "4bec14b0aae31cb94d8f22c2ab87189c0323a9a4ece61ebc03f3211ba46f878c"
+  },
+  "namespace": "d6da5e35-9e5d-4fc4-88dc-de795a10e5e7",
+  "phase": "before-private-delete",
+  "privateRootRetained": true,
+  "synthetic": false
+}

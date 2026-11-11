@@ -1,0 +1,13 @@
+{
+  "baseFinalAddendumIndexRelativePath": "final-addendum.index.json",
+  "baseFinalAddendumIndexSHA256": "93fcf3730925696b6d208de0836acc8f279b507b29386e41a9491445f76d0282",
+  "files": {
+    "controlled-stop-cleanup.human.json": "c1460fb6a187de11965586638c232bafd285cd2d309f565f5233d71660c37a4d",
+    "setup-stop-main/cleanup.machine.json": "1c655660e8a73a2e4a83435008cec449556795c83f10c6a69d208c2644e5eab4"
+  },
+  "kind": "E010-GUI-W1-human-observation-addendum-index",
+  "namespace": "2237b731-7367-4030-853c-e37b73ab0bba",
+  "noLiveRootRecreated": true,
+  "oldReceiptsAndIndexesUnchanged": true,
+  "recordedUTC": "2026-11-05T09:29:56.832936+00:00"
+}

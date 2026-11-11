@@ -1,0 +1,14 @@
+{
+  "acknowledgingRole": "independent-Reviewer",
+  "anchorSHA256": "be7b556952ad118fe840a50c5939b67c5893550b6dca138a172a8c7aa1fc4717",
+  "candidateIndexSHA256": "0314f0bb0bd3c7c15a2a03f6600fe547465f53c770cfe76d23bf5ae9a98f5bf7",
+  "kind": "safe-candidate-model-ack",
+  "namespace": "2237b731-7367-4030-853c-e37b73ab0bba",
+  "readabilityAcknowledged": true,
+  "recordedUTC": "2026-11-05T09:27:48.012888+00:00",
+  "safetyAcknowledged": true,
+  "source": "explicit independent Reviewer handoff",
+  "summaryCandidateSHA256": "14f9dc99c3210a63b4e02788a8471995edb50137136c5c2d74c1d14eb947acb5",
+  "summaryReadabilityAcknowledged": true,
+  "summarySafetyAcknowledged": true
+}

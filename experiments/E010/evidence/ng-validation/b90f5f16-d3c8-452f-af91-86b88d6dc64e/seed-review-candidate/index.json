@@ -1,0 +1,27 @@
+{
+  "HumanSeedObservation": null,
+  "credentialUX": "unknown",
+  "files": {
+    "global.public.json": "dac84916b707f8027c68a184c2e9ea9e62e9767606086c40dce5dcf59090feb2",
+    "preflight.public.json": "7a50f7ee47dd970e40d4a3988e6f69d701bf0ebe8cfcf443ef5bd264e3b1d721",
+    "seed.public.json": "fe843b1ec6a03e6360beba5edf0a08bcabbd23266d82f1c69908374d9916f857",
+    "setup.public.json": "0f9a187fa80053642226b07dc3633bc46d7a1036a471f52b92305f007a3063f2"
+  },
+  "freshInvoked": false,
+  "kind": "E010-NG07-seed-safe-candidate-index",
+  "p0ReadabilityACK": true,
+  "p0ReviewCandidateSHA256": "c8f1ab0579946c27f6b638bf88abeb5ace8ee593c67cdcb18de51928e2415822",
+  "p0ReviewIndexSHA256": "1916703ca25f66f62cfcc469bb1fdea3211cfd58a76a2a30732f046e7eb353d4",
+  "p0SafetyACK": true,
+  "privateReceiptSHA256": {
+    "bootstrap/setup.machine.json": "fcf9eb8bd61871452240884068754934bc73cc863b1fe1d5a35710ef55edb25a",
+    "global.json": "e00ccb601c3e367b4128abb82b82c1367f39316bf5de639ba797b11828f393b0",
+    "receipts/preflight.machine.json": "a04a38beac4b5c376b3978b7e49659857de5b5a7e8f9ccfe066a462e47017ceb",
+    "receipts/seed.machine.json": "c898a1f75944908b64755d4491a1ba3ed04968359f448ef299ab2b66dc0b8130"
+  },
+  "rawIncluded": false,
+  "rawRetainedPrivately": true,
+  "recordedUTC": "2026-11-10T07:40:41.535494+00:00",
+  "reviewerACKPending": true,
+  "seedInvokedOnce": true
+}

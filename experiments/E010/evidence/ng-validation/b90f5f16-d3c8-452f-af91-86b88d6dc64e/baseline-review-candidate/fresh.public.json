@@ -1,0 +1,32 @@
+{
+  "DRSHA256": "510e745c0b3c06b3ec69cd06c40fd160b4111d946b87110de909de4d0c48777b",
+  "OSStatus": 0,
+  "UX": "unknown",
+  "appSHA256": "e72067eb37ad5202f256a450009ec124cbbe0b8c9b386bd8c9de172ff180108a",
+  "callAttempted": true,
+  "completed": true,
+  "endedUTC": "2026-11-10T07:41:38Z",
+  "executableSHA256": "b6f952bf46d980b784f72aa143b380adabf0ff23f8687cacf16e47a109fd5962",
+  "fields": {
+    "accessToken": true,
+    "accessTokenExpiresAt": true,
+    "grantedScopes": true,
+    "refreshToken": true,
+    "refreshTokenExpiresAt": true,
+    "tokenType": true
+  },
+  "globalSHA256": "e00ccb601c3e367b4128abb82b82c1367f39316bf5de639ba797b11828f393b0",
+  "noRewrite": true,
+  "observation": "not-observed",
+  "operation": "fresh-process-read-original-A",
+  "previousSHA256": "c898a1f75944908b64755d4491a1ba3ed04968359f448ef299ab2b66dc0b8130",
+  "privateMachineSHA256": "89a486a340aca647b113ebdbc502e8b75fb6f5b8ffc99bc30f024ebc08f8afcd",
+  "profileSHA256": "8b7cabcd79f3732a48c964eea5ee85576b8416b33b87d8144affcc0964dd3bd9",
+  "promptCount": null,
+  "proofSHA256": "93988644144907d187257677d85683c4ddb123048be1edc466122187c75e8d03",
+  "readySHA256": "cb4daa21e8a33e8cb75431dd8d792623260e95370b4652754f80e29b922e688b",
+  "stage": "fresh",
+  "startedUTC": "2026-11-10T07:41:38Z",
+  "synthetic": false,
+  "window": 1
+}

@@ -1,0 +1,28 @@
+{
+  "P0ExpiryUTC": "2026-11-17T07:28:08+00:00",
+  "W2EarliestAfterUTC": "2026-11-17T07:28:08+00:00",
+  "baselineComplete": true,
+  "files": {
+    "fresh.human.json": "e233d05defd52972e0865a49c841421ed7f038666daefe5667e84dcd22f6215a",
+    "fresh.public.json": "d77994bdf603e16ccc0d36225052c45a45871d234b9974113c3ffe97c0f7aec2",
+    "retained.public.json": "c83441ce44993ebbdbee9278bec7e37337be0c6e6f59cf259e4f52109b04a0e6",
+    "seed.human.json": "de5d7a373477beddf30ac1440388103bc73040aa775386a8f612988d88092023"
+  },
+  "freshCount": 1,
+  "globalDeadlineUTC": "2026-11-20T07:22:03.379959+00:00",
+  "kind": "E010-NG07-W1-baseline-review-index",
+  "linkedSafeIndexes": {
+    "p0-review-candidate/human-addendum.index.json": "1916703ca25f66f62cfcc469bb1fdea3211cfd58a76a2a30732f046e7eb353d4",
+    "seed-review-candidate/index.json": "06e2aa90847e32b4cf1014641e31b7194dfc1760df44ccc8709fa88a22d50036"
+  },
+  "minimumRawPruningCompleted": false,
+  "normalRetentionReceiptPresent": true,
+  "profileCycleHypothesis": "not-yet-tested",
+  "projectCloseAttestationPending": true,
+  "rawIncluded": false,
+  "rawRetainedPrivately": true,
+  "recordedUTC": "2026-11-10T07:42:48.875980+00:00",
+  "reviewerACKPending": true,
+  "seedCount": 1,
+  "sourceAggregateSHA256": "b8c567355bcccad218b4949a4e7c5c21aa806b37550cd6332f904203d9c2330d"
+}

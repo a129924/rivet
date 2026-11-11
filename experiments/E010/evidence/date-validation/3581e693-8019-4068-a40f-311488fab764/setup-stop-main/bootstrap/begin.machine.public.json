@@ -1,0 +1,13 @@
+{
+  "OSStatus": null,
+  "anchorSHA256": "a7d9066971ffe90870c828b803d8c22507211fd9ec5e0a4ab5ad544a01234158",
+  "callAttempted": false,
+  "endedUTC": "2026-11-10T03:36:15.410913+00:00",
+  "namespace": "3581e693-8019-4068-a40f-311488fab764",
+  "privateReceiptSHA256": "da3fc242fb8af364bc7deb82cabb60a57941c1dd6052e3e956cadf146a865012",
+  "promptCount": null,
+  "stage": "begin-anchor",
+  "startedUTC": "2026-11-10T03:36:15.334210+00:00",
+  "synthetic": false,
+  "windowSHA256": "c32ad3bfa994fb4c13f4643fefc3d6e69eb2008602173de0f8df3e1dd80be10c"
+}

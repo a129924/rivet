@@ -1,0 +1,38 @@
+{
+  "grantSHA256": {
+    "assets": "001ecaf201fe572cda9e909ff092c464c0af3c4aaf6cca2a4d9f1e0b478efb8b",
+    "recovery": "7bb4876a716bb8419fe936e1f64af2d7457a26b43685bfad26984b6327c120f7",
+    "retention": "76fcdb10e7d364787c29fc7c3a4c2c3a5b25258b26ac5696fa1f0412da0c0ff6"
+  },
+  "humanCanBeginNow": true,
+  "kind": "human-begin-sync",
+  "namespace": "3581e693-8019-4068-a40f-311488fab764",
+  "privateReceiptSHA256": "b4b1d846e64724626507735724b9d24530ad13cc1f5a79ce448ea85a858e198d",
+  "recordedUTC": "2026-11-10T03:34:46Z",
+  "sourceSHA256": {
+    "DPKContinuityProbe.xcodeproj/project.pbxproj": "23da8b264193cf63048a23e46efaf1f67b104b4bb284d6f4d0ebfa1640d778b1",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe-Rebuilt.xcscheme": "2422539a9f66d7913229becf89054db57e2f280e4c1a7ee9c552a036920d474a",
+    "DPKContinuityProbe.xcodeproj/xcshareddata/xcschemes/DPKContinuityProbe.xcscheme": "023b15adab3e1ddcc56ea0034407c344b98bb93f347d70378251720140d72649",
+    "Resources/DPKContinuityProbe.entitlements": "0ca405fd010ca452795f066ee4271c29b33785f65df8747a5b6e0a1909b936df",
+    "Resources/Info.plist": "18d3487c328319e71a2137006957bd58ef37265266a82e9aab4405e8082ed18d",
+    "Sources/DPKContinuityProbe/AppMain.swift": "fa17f4a9496bb2af82db7798e8a7343e474c59065a904f6c3e2a6feebca333c9",
+    "Sources/DPKContinuityProbe/LiveGate.swift": "5507d7a319bf1138cee03cdfc9dd4d2cadd64a7bd30bec161c80965c8a2aac82",
+    "Sources/DPKContinuityProbe/LiveStore.swift": "a4f13222a02a3e00498277db2fc2610ceca32c2ea5aac59d1ff7ae4199e89381",
+    "Sources/DPKContinuityProbe/ProbeCore.swift": "67ea748555b1e59899f6cbf9fd106b765d9ce1528d291b51f73fddbca31c74c0",
+    "Tests/CoreTests.swift": "3acaee52cb0ef0ea7601302e04a326b59a4720f2056f2b3276c934d4aa3155c4",
+    "Tests/ReceiptProducer.swift": "001163f12611c1731b076be341a28c0b432e7c0682f9c834c221bbf26a3f08e8",
+    "Tests/WindowChainProbe.swift": "72d1fe697022fde4b6ead460ea42359ba50bb0f15f0914c544e439a7ad7a5270",
+    "Tests/test_bootstrap.py": "a31fec51a9726281473860bd72f0b77934382f87d0c63bf7bc8d9ecf5fd31d44",
+    "Tests/test_continuity.py": "f0dd3e4559000faa8b2fbfdfb4e5e7ca833a8a0ba74763986d10df76ca53196f",
+    "Tests/test_gui_build.py": "429d85cecfaa54c7fc838509b1d62ee578b8a9e17922431d8cf2a06f7c7fda3d",
+    "Tests/test_main_policy.py": "4be3c1e7710b9e5f6160c2d65a3c637706270578e0ee6051ed84728d2e74107e",
+    "Tests/test_main_review_fixes.py": "de0450316cbe369b8b46f03cd137611ec4b642435f9be2c41d7ab6973de4f3ce",
+    "Tests/test_review_fixes.py": "f5ad26196c0530ebd63d000c1138c7b67d6d91e7947973a6daf0e59d4e08a809",
+    "scripts/continuity.py": "b76741b5abe3ea3bdd4ebacb300e36d5974a34cf4742df4bd0bfcdab846bd072",
+    "scripts/gui_build.py": "682e3944fb19a61bf2161aa535ac72837c4643daf9b7d8c875823464aca468d3",
+    "scripts/prepare.py": "e245ff882671b84b2d5e9f6d7b83cf145ea90cf7703bd90598dd6420773bfd21",
+    "scripts/proof.py": "c50e24e1eeebbba83169ae55a696cd20f4d34bdf206cea6b4f827c743357fecc"
+  },
+  "statementPresent": true,
+  "synthetic": false
+}

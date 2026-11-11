@@ -1,0 +1,10 @@
+{
+  "anchorSHA256": "a7d9066971ffe90870c828b803d8c22507211fd9ec5e0a4ab5ad544a01234158",
+  "cutoffUTC": "2026-11-10T04:01:15.334210+00:00",
+  "deadlineUTC": "2026-11-10T04:06:15.334210+00:00",
+  "namespace": "3581e693-8019-4068-a40f-311488fab764",
+  "number": 1,
+  "privateWindowSHA256": "c32ad3bfa994fb4c13f4643fefc3d6e69eb2008602173de0f8df3e1dd80be10c",
+  "startUTC": "2026-11-10T03:36:15.334210+00:00",
+  "synthetic": false
+}
