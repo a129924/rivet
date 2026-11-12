@@ -45,7 +45,7 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 
 ## 完整流程驗證與正式產品的歸屬
 
-`github-persistent-connection` 交付獨立 `apps/GitHubConnectionVerification` 驗證工具與受限可行性結果，不交付正式產品登入。其UI、OAuth session、DPK adapter、coordinator、probe、App-local refresh／DTO、停止觀察tracker、受控時鐘／收據及測試均收在驗證App；不改共用RivetPresentation、production public API或internal visibility。既有provider／scope／雙client責任維持。
+`github-persistent-connection` 交付獨立 `experiments/E014/GitHubConnectionVerification` 驗證工具與受限可行性結果，不交付正式產品登入。其UI、OAuth session、DPK adapter、coordinator、probe、App-local refresh／DTO、停止觀察tracker、受控時鐘／收據及測試均收在驗證App；不改共用RivetPresentation、production public API或internal visibility。既有provider／scope／雙client責任維持。
 
 驗證App可使用既有public契約；production不得反向依賴驗證App。移除整個App後，原production仍可build／test。驗證用tracker只觀察實際refresh／save結果，不能額外呼snapshot偽裝純觀測，也不能為驗證增加production控制開關或收據API。取消仍等原tracked Task settled；重授權先退休、成功保存新bundle才建立新generation，舊provider不復活。
 

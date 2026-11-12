@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。B1–B3完成；VO-RB4Q-F主對話完整驗證、Confucius Tester passed0、Leibniz Reviewer approved0，四canonical列已補最終hash，待修正commit綁定後續原B4；B4／B5未搬，18:20前須結果或安全中斷點。
+最後更新：2026-11-12。B1–B3與修正3fe0c9a已push；B4完整搬移main必要項、Confucius Tester passed0、Leibniz最終Reviewer approved0／RF-1closed，待整批commitpush。B5未開始；18:20前須結果或安全中斷點。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -9,7 +9,7 @@
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
-| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1–B3完成；B4 E014／原搬移契約保持，修後main完整基線通過，獨立修正gate待驗；B5 pending |
+| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1–B3完成；B4 E014原契約／修正baseline保持，完整mapping已搬且main必要項真到，本批獨立gate待驗；B5 pending |
 | VO-B01 | completed | Implementer | B1契約內完整搬移，交Tester | 四檔100%rename，三target path／lint／索引／入口同批；必要post已到達，Meitner最終approved |
 | VO-T01 | completed | Tester | B1必要項真正到達並給出結果 | 主對話post編譯／62tests／新wrapper資源入口已驗；Kepler獨立親跑62pass0fail0skip，readback artifacts相符 |
 | VO-R01 | completed | Reviewer | B1獨立成果審查與限制分類 | Meitner最終approved、required fixes0；README離線cache操作RF已關閉；只限B1 |
@@ -17,9 +17,9 @@
 | VO-B02 | completed | Implementer | B2同批接線並交Tester→Reviewer | 七檔puremove／三target／bundle輸出／lint／導覽同批完成；post主對話必要項已驗；Tester Chandrasekhar passed0；Reviewer Schrodinger approved0，准續B3 |
 | VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash原契約approved0／RF-1closed保留，現由VO-PIN3追加pin授權；非成果gate |
 | VO-B03 | completed | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 0b6c39f已push；Godelpassed0、Helmholtzpre/postcommitapproved0，170input與artifact／launcher binding真核通過 |
-| VO-B04 | blocked | Implementer | B4完整搬移，交Tester→Reviewer | 四檔18引用Human明確授權／Bohr契約approved0；main最終build／78tests／final與保護真到，獨立修正gate待驗；未搬移，B4post／production未驗 |
+| VO-B04 | completed | Implementer | B4完整搬移，交Tester→Reviewer | 原Goodall契約／修後3fe0c9a baseline保持；30檔完整搬移及全部必要項真到，Confucius passed0／Leibniz最終approved0 |
 | VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
-| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B3及5a8beed候選／停止文件已push；本輪VO-RB4Q待審，B5未開始，不宣稱五批完成 |
+| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B3及3fe0c9a獨立fix已push；B4完整搬移main pass待本批獨立gate與commit，B5未開始，不宣稱五批完成 |
 
 ## Blockers
 
@@ -31,7 +31,7 @@
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
 | BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates舊baseline及Godel移後normalhost各67pass；restricted失敗保留，RF-TPIN3-01closed，不代替commitbinding |
 | BL-E9 | resolved（B3） | 新精確授權、post正負真驗／獨立成果與commitbinding approved0；舊失配歷史保留 |
-| BL-O | B4／B5必要完整驗證未到；歷史DPK有8skip | B3完成；B4修後main source／78hosted／final已真到，獨立修正gate待驗；原失敗保留，B4post／production與B5未驗 |
+| BL-O | B1–B4必要項及獨立gate完成；B5必要驗證未到，歷史DPK有8skip | B4新入口／78hosted／final及prepost正式五targets＋兩static bodies真到；Confucius passed0／Leibniz本批approved0；B5未驗，原失敗保留 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
 | BL-B4 | resolved（VO-RB4Q-F受限修正） | main完整build／78tests／final／保護、Confucius passed0／Leibniz approved0；原根因unknown與失敗保留，修正commit綁定後才能續原B4post／productiongate |
 
@@ -304,3 +304,20 @@ VO-RB4Q-F main最終bytes必要項已真到，已向Tester完成交接；數值�
 Confucius正式獨立Tester passed、required fixes0／unresolved0，最終bytes／完整107含參數case執行／資源與保護真核；完整數值與receipt SHA只引用plan。現在交獨立Reviewer核四檔精確修正，原B4搬移／productiongate仍保持。
 
 Leibniz獨立修正成果approved、required fixes0／unresolved0。已按其明示行政允許只補唯一表原四列最終hash，source無再變；先按topic提交修正與四docs，再核committed source綁定，續原Goodall approved0 B4契約。此刻B4／B5未搬，不將修正gate寫成搬移完成。
+
+修正3fe0c9a已提交／push，所有hooks通過，四committedsource真核等於經驗證最終bytes，feature回復乾淨。已僅於唯一原列補修正commit來源；現在依原Goodall B4契約與已批准修後基線續作，沒有重開方案或把原compiler根因寫成已解。
+
+### B4 完整搬移 → Tester
+
+Implementer必要post／資源與production independence已實際到達，28puremove／兩refs／README與current導覽同批保持，無source行為改動；command／case／hash證據引用plan/spec與receipts。現在交Confucius做獨立新入口／baseline case身分比對及必要rootstatic，不先提交或進B5。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-TB4 | completed | Tester | 新入口fullsuite及baseline逐案／資源／正式static／hash保護 | Confucius passed0：78case／107execution對baseline精確一致、0新增遺漏fail/skip；新入口／兩static及完整保護真核 |
+| VO-RB4-FINAL | completed | Reviewer | B4完整puremove與接線成果approved／0fix | Leibniz本批最終approved／0fix／unresolved0，RF-1closed，非沿用fixapproval |
+
+Confucius B4獨立Tester正式passed／0fix，78cases與107含參數execution身分精確一致、必要新入口／兩static／資源與保護真到。數值與receipt只引用plan；現在交Leibniz獨立審完整B4搬移，不用其VO-RB4Q-F修正approval代替本批gate。
+
+Leibniz B4首輪needs-rework／RF-1：BL-O現行列尚混舊Tester待驗。已僅同步Confucius passed0／Reviewer待審／B5未驗，保留歷史；source無再變，必要審查其餘均通過，待原Reviewer唯讀複核。
+
+Leibniz B4最終approved、required fixes0／unresolved0，BL-O RF-1 closed；此行政補記沒有source變更。完整B4整批提交／push後續B5，不能由B4通過推導B5驗收；18:20前須有可恢復中斷點或結果。

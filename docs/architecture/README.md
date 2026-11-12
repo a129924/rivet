@@ -116,6 +116,6 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 
 ## GitHub 持續連線獨立驗證 App
 
-`github-persistent-connection` 的正式交付是 [`GitHubConnectionVerification`](../../apps/GitHubConnectionVerification/README.md) 驗證工具、可行性結果及限制。所有初次授權、DPK adapter、UI、coordinator、probe、受控clock／receipt與tests留在App-local；不新增BC或正式產品登入能力。production Sources／Tests／Package對topic前基準zero-diff，既有provider／scope／雙client／generic HTTP責任不變；不留新增正式停止API、共用UI或驗證依賴。
+`github-persistent-connection` 的正式交付是 [`GitHubConnectionVerification`](../../experiments/E014/GitHubConnectionVerification/README.md) 驗證工具、可行性結果及限制。所有初次授權、DPK adapter、UI、coordinator、probe、受控clock／receipt與tests留在App-local；不新增BC或正式產品登入能力。production Sources／Tests／Package對topic前基準zero-diff，既有provider／scope／雙client／generic HTTP責任不變；不留新增正式停止API、共用UI或驗證依賴。
 
 [新版責任canvas與流程圖](diagrams/github-persistent-connection/verification-host-v2/BUILD.md)反映驗證App單向使用既有public契約；provider在runtime經注入port呼叫App-localadapter，不形成production反向import。整個移除驗證App後production build／tests仍通過。[完整契約／結果界線](github-oauth-dual-client.md#獨立驗證-app-與可行性結果)連至本輪新host真人證據；舊production歸屬圖與原測量只作歷史保留。profile更新後讀回維持未驗證、Human已接受限制。

@@ -7,11 +7,40 @@
 在 repository 根執行，使用自行指定的私有 DerivedData；不要在另一個 worktree 寫入：
 
 ```sh
-xcodebuild build -project apps/GitHubConnectionVerification/GitHubConnectionVerification.xcodeproj -scheme GitHubConnectionVerification -destination 'platform=macOS,arch=arm64' -derivedDataPath <private-derived-data> CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=
-xcodebuild test -project apps/GitHubConnectionVerification/GitHubConnectionVerification.xcodeproj -scheme GitHubConnectionVerification -destination 'platform=macOS,arch=arm64' -derivedDataPath <private-derived-data> CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=
+xcodebuild build -project experiments/E014/GitHubConnectionVerification/GitHubConnectionVerification.xcodeproj -scheme GitHubConnectionVerification -destination 'platform=macOS,arch=arm64' -derivedDataPath <private-derived-data> CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=
+xcodebuild test -project experiments/E014/GitHubConnectionVerification/GitHubConnectionVerification.xcodeproj -scheme GitHubConnectionVerification -destination 'platform=macOS,arch=arm64' -derivedDataPath <private-derived-data> CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=
 ```
 
 共享 test scheme 注入 `GITHUB_CONNECTION_VERIFICATION_UNIT_TEST_MODE=1`；entry 最先檢查此值，早於 DPK／listener／OAuth／restore／validation 建立。測試只使用 fake Security／transport／store，不代表真 DPK 或 GitHub 已驗收。macOS15+、Swift6，Debug 只建 active architecture、停用 debug dylib、non-Sandbox。外部 package pins 沿 root，沒有新增版本或 RivetPresentation 依賴。
+
+### 本次集中後的離線入口
+
+本目錄屬 E014，原 topic 仍為 github-persistent-connection；不是正式產品登入。原真人與 profile／簽章歷史保持。以下只走 shared scheme 的 guarded hosted TestAction，不執行 normal LaunchAction 或真人流程。
+
+使用既有固定 Apollo 版本的 SourcePackages；標準 SwiftPM sandbox 保持啟用。下列 zsh／bash 範例中的兩個路徑須先換成本次可用位置；所有設定只作用於這次命令，不改全域 cache／權限／簽章或儲存：
+
+```sh
+B4_RUN="<本次外置可寫 scratch>"
+B4_SOURCE_PACKAGES="<既有固定版本的本機 SourcePackages>"
+mkdir -p "$B4_RUN/tmp" "$B4_RUN/modules" "$B4_RUN/package-cache"
+B4_ENV=(env -u RIVET_VERIFY_GITHUB_CLIENT_ID -u RIVET_VERIFY_GITHUB_CLIENT_SECRET
+  -u GITHUB_CONNECTION_VERIFICATION_MODE -u GITHUB_CONNECTION_VERIFICATION_RECEIPT
+  -u GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE
+  GIT_CONFIG_COUNT=2 GIT_CONFIG_KEY_0=protocol.https.allow GIT_CONFIG_VALUE_0=never
+  GIT_CONFIG_KEY_1=protocol.http.allow GIT_CONFIG_VALUE_1=never GIT_TERMINAL_PROMPT=0
+  GITHUB_CONNECTION_VERIFICATION_UNIT_TEST_MODE=1 TMPDIR="$B4_RUN/tmp/"
+  CLANG_MODULE_CACHE_PATH="$B4_RUN/modules" SWIFT_MODULECACHE_PATH="$B4_RUN/modules")
+B4_ARGS=(-project experiments/E014/GitHubConnectionVerification/GitHubConnectionVerification.xcodeproj
+  -scheme GitHubConnectionVerification -configuration Debug -destination 'platform=macOS'
+  -clonedSourcePackagesDirPath "$B4_SOURCE_PACKAGES" -packageCachePath "$B4_RUN/package-cache"
+  -disableAutomaticPackageResolution -onlyUsePackageVersionsFromResolvedFile -skipPackageUpdates
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=)
+"${B4_ENV[@]}" xcodebuild "${B4_ARGS[@]}" -derivedDataPath "$B4_RUN/host-DD" build-for-testing
+"${B4_ENV[@]}" xcodebuild "${B4_ARGS[@]}" -derivedDataPath "$B4_RUN/host-DD" -resultBundlePath "$B4_RUN/tests.xcresult" test-without-building
+"${B4_ENV[@]}" xcodebuild "${B4_ARGS[@]}" -derivedDataPath "$B4_RUN/final-DD" build
+```
+
+完整 suite 包含 unitmode 的 live construction／credential／network 零計數及 host isolation 斷言；fixture／transport／Security cases 的原邊界保持。Factory cases 會建構 adapter／URLSession 及隨機值，沒有真 credential I/O／GitHub request；不冒稱所有 constructor 都是假物件。本次命令／環境與逐案結果見 [歸屬修正計畫](../../../plan/verification-artifact-ownership/verification-artifact-ownership.plan.md)；build 或入口未到達不算通過，也不代表重新完成真人驗證。
 
 ## 真人驗證前提與逐段操作
 
@@ -26,7 +55,7 @@ xcodebuild test -project apps/GitHubConnectionVerification/GitHubConnectionVerif
 5. 明確 opt-in 受控 provider clock 觸發真 GitHub refresh／DPK save，驗證六欄 digest 輪替、clock 回 real、API。
 6. 完整退出，再未強制到期的新 observe 程序讀回輪替 digest 與 API；不得把自然到期說成已驗證。
 
-初次 ≤1 提示、fresh／rebuild 0 是本輪事前判準。2026-10-21 新 host 六段已由 Tester 實際驗證：真授權／DPK保存／API、同binaryfresh、真CleanBuild不同binary同身分還原、受控providerexpiry真refresh accepted1／DPKsave1、輪替後observefresh讀回同六欄digest與同帳號API。各段Human實答皆0次；依[本輪真人收據](../../plan/github-persistent-connection/evidence/verification-host-live.md)，不以舊Rivet名義host的2026-10-20數據替代。
+初次 ≤1 提示、fresh／rebuild 0 是本輪事前判準。2026-10-21 新 host 六段已由 Tester 實際驗證：真授權／DPK保存／API、同binaryfresh、真CleanBuild不同binary同身分還原、受控providerexpiry真refresh accepted1／DPKsave1、輪替後observefresh讀回同六欄digest與同帳號API。各段Human實答皆0次；依[本輪真人收據](../../../plan/github-persistent-connection/evidence/verification-host-live.md)，不以舊Rivet名義host的2026-10-20數據替代。
 
 ## 儲存、控制與限制
 
@@ -38,7 +67,7 @@ xcodebuild test -project apps/GitHubConnectionVerification/GitHubConnectionVerif
 
 profile 更新後讀回仍**未驗證、使用者已接受限制**；不開第三輪 E007。免費 profile 七日有效，過期期間不可用；certificate rotation、過期恢復、跨機、公開分發未驗證。不得把這份工具當作正式產品登入能力。
 
-[本輪需求](../../analysis/github-persistent-connection/requirements.md) · [執行計畫](../../plan/github-persistent-connection/github-persistent-connection.plan.md) · [新 host 證據](../../plan/github-persistent-connection/evidence/verification-host-live.md)
+[本輪需求](../../../analysis/github-persistent-connection/requirements.md) · [執行計畫](../../../plan/github-persistent-connection/github-persistent-connection.plan.md) · [新 host 證據](../../../plan/github-persistent-connection/evidence/verification-host-live.md)
 
 ## 本輪文件版本與觀察界線
 

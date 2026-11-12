@@ -9,6 +9,7 @@
 | [E011](E011/README.md) | `rivet-login-ui` 的 Login Demo、控制介面、專用 Runtime 與專屬測試；功能驗收展示，不是將原功能開發改寫為事前實驗 | B1 位置修正，搬移後驗證結果見 topic 帳本；正式 UI 與其既有採用／驗收保留。 |
 | [E012](E012/README.md) | `pr-reader-webview-runtime-reading` 的fixture host／Runtime／資源／專屬測試，功能驗收展示 | B2位置修正；不重做原功能開發、不搬正式bridge／Core或TS pipeline；結果見topic帳本。 |
 | [E013](E013/GitHubSignInVerification/tools/README.md) | `github-first-sign-in` 首次登入驗證App與專用PKCE tools／fixture，可行性驗證環境 | B3完整接線與現行pin結果見topic帳本；歷史真人／PKCE證據保留，不提升產品能力。 |
+| [E014](E014/GitHubConnectionVerification/README.md) | `github-persistent-connection` 持續連線App／Runtime／專屬測試，可行性驗證環境 | B4集中；不改正式能力、簽章／儲存或歷史真人結果，離線搬移結果見topic帳本。 |
 
 此配號僅集中收納驗證環境，不代表重做實驗、撤回既有採用或新增永久工具例外。下方既有索引與來源快照保留原紀錄。
 

@@ -529,3 +529,31 @@ unitmode liveConstruction／credential／network零斷言與host isolation真pas
 
 Leibniz正式approved、required fixes0／unresolved0，限定四tests＋四docs。已真核18prefix／原query、資料與期待、最終四SHA與main／Tester全部必要項、107含參數case execution及所有frozen保護；不是單看數量。明示允許依既有契約行政補原四列修後hash與commit來源，非新增RF；本次已僅在原四列補最終SHA，不維護副本。
 原compilerassertion底層原因仍未證實；只證明本受限消歧後目前完整suite／build可通。先獨立修正topic commit並實核committed blobs／source SHA，再依原Goodall approved0的B4精確契約及修後baseline、完整post／production gate續作；B4／B5仍未完成。18:20前安全結果／中斷要求保持。
+
+## B4 續作前鎖定：修後完整基線
+
+VO-RB4Q-F修正commit已push，committed blobs／worktree真核與最終驗證SHA一致（qualified18-commit-binding.json）；來源只引用spec原四列，不重複維護。Goodall原B4契約approved0及九欄／唯一30mapping／允許差異保持；Leibniz明示修正gate後依該原契約、修後baseline與post／production gate續作，不另開草案比較。
+適用搬移前baseline為本輪最終29XCTest＋49SwiftTesting／107含參數execution逐case全pass、獨立final／資源／guardedentry／audit與Tester／Reviewer均0fix；原compilerassertion／13引用失敗不改寫、不視為同條件pass。post同原argv/env僅project新路徑與獨立post-host-DD／post-final-DD／resultbundle，正常host標準sandbox、offline固定deps／unitmode unsigned保持。必須逐案比對tester-qualified18-cases.json，不只比較數量。
+原九欄不變：Goal／Non-Goal為完整E014歸屬及不改行為；In-Scope／Written／Deleted／Modify只引用spec B4及原留原位範圍，ReadOnly為正式root與B3／B5；Out-Of-Scope與TestCase／五productiontargets＋兩static bodies gate保持。28檔puremove相對本修後baseline，不冒稱相對最初盤點全部bytes不變。完整post／production／Tester／Reviewer通過前不續B5，時間要求18:20前中斷點／結果不降低驗證。
+
+### B4 Implementer 完整搬移交接
+
+以3fe0c9a修後baseline完整搬30檔，28puremove真核hash相同；project精確兩refs、README兩currentprefix／四relative links／既定offlineguide、四currentdocs的1／1／1／9個prefix及experiment索引同批完成。沒有source內容改動，root正式／B3／B5保持。新增離線命令zsh語法與READMElinks實核通過。
+主對話標準sandbox／fixedoffline正常host pre/post各以獨立SwiftPMscratch真正build五正式targets（GitHubIntegration、RivetPRInbox、RivetPRReader、RivetPRReaderWebViewBridge、RivetPresentation）及執行兩static bodies，皆exit0，不執行Keychain tests。逐command argv/env／各次時間／rawSHA於logs/B4/production-{pre,post}-* receipts；不是用舊B1環境結果替代。本批post根目錄production source／tests／Package／deps無diff。
+
+| 新路徑必要項 | 主對話結果 | raw SHA |
+|---|---|---|
+| post-host-build | exit0／16.715s | 28fe177cf1278190448e8f5a090cdbaaaf945d0a298248d8841c1425ba17ccaa |
+| post-host-tests | exit0／5.003s | 6feeed008fc1c32a229a14488d9d47c752b2e07dd04872ea4c91e690cdc9db57 |
+| post-final-build | exit0／13.275s | 9c5b466c21c95ea36f197cf2a64fb5ef7054035ad56faf09cd274ebcff558a32 |
+
+新入口完整29 XCTest＋49SwiftTesting／8suites真pass，unitmode audit／host isolation案例真到；最終新App的bundleID／executable／原資源身分及B3全部固定保護真核，詳post-protection.json。107含參數case身分逐案比對交獨立Tester對照tester-qualified18-cases.json，不以數量相同宣稱無回歸。尚待Tester／Reviewer，B5未開始；完整搬移可依唯一inverse mapping及3fe0c9a精確回復本批，保留獨立修正。
+
+### B4 獨立 Tester passed
+
+Confucius本批正式passed、required fixes0／unresolved0，正常host親跑新路徑build-for-testing exit0／3.539s（rawSHA 1b5d81fe97cb980a574f5f6717da02263341d48c048caf90e6d75a4ef93cf871），fullsuite exit0／5.418s（rawSHA 4c14e26547e45bdb9345c5336ebdafdcd89ff1d9951b54e1a5c0aba50b3eb36d），兩static bodies exit0／4.240s（rawSHA 609326f0541635a5dd209d83ed5f945aa55368afadbd44d69817ea960d52695c）。78case身份與107含參數execution身分對修後baseline精確一致，0新增／遺漏／fail／skip，不只比數量。
+28puremove／兩refs／README限定差異／links／bash-zshguide、currentdocs與索引、main新finalApp／資源與guardaudit真到；prepost五targets十份raw與compile紀錄核實，正式graph/source零diff及無反向App依賴、B5九原檔、新B5不存在、B3全部fixed保護保持。總結tester-post-summary.json SHA 892ffb360ae6676f6e6bd8f0dd9a62e11ed7d446482e3fc5a3c3c1c1bcbed36f，case／protection同logs/B4，不新增維護清單。待獨立Reviewer，不先commit或進B5。
+
+### B4 完整搬移成果最終 approved
+
+Leibniz本批最終approved、required fixes0／unresolved0，RF-1僅BL-O現行Tester狀態已closed。已核30mapping／28puremove bytes及mode相對3fe0c9a一致，兩refs／README／currentdocs／索引符合精確契約；78case與107execution精確一致、pre/post正式十次targetcompile及兩static真到、B3／B5保護保持。沒有行為／資料／簽章／儲存差異；准補行政verdict後整批commit／push同DraftPR69，不自行merge。B5尚未開始；18:20前中斷點／結果要求保持。
