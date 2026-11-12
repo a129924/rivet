@@ -1,5 +1,20 @@
 # 單次反向 PKCE 驗證
 
+> E013集中原`github-first-sign-in`的獨立驗證App與專用PKCE工具，未將驗證工具提升為產品，也未重做原驗證。歷史live argv／結果／額度下文保留，不能因搬移或新pin而再執行。
+
+## 現行離線App與工具入口
+
+從repository root使用`experiments/E013/GitHubSignInVerification/GitHubSignInVerification.xcodeproj`與原`GitHubSignInVerification` scheme。完整offline build／hosted test／post-final recipe及source綁定見[本次受限plan](../../../../plan/verification-artifact-ownership/verification-artifact-ownership.plan.md)；只使用已固定本機Apollo cache與本次scratch，缺少即停，不下載更新依賴。App hosted tests沿原UNIT_TEST_MODE guard，不載入真配置／live dependencies。
+
+```sh
+python3 -B -m unittest discover -s experiments/E013/GitHubSignInVerification/tools -p test_pkce_negative_probe.py -v
+# PINNED_APP只能指向E009最新收據指定、未再重建的固定App；不是任意新build。
+: "${PINNED_APP:?請先指向E009現行pin收據的固定App}"
+swift -swift-version 6 -strict-concurrency=complete experiments/E009/LaunchVerification.swift --preflight --app-bundle "$PINNED_APP"
+```
+
+[現行E009收據](../../../E009/README.md)記錄pin、來源指紋、build與artifact。preflight不讀憑證、不launch；新build可能改變binaryhash，失配即停，不能自動改pin或關檢查。正常launcher／Human操作仍需另有真人授權，本批沒有。下方P/Q/T/U/V/W/X歷史命令與預算原樣保留，只有上述unittest是本輪受控入口。
+
 ## T 輪現行：diagnostic_version 3
 
 Human已指示續行最小改善，取代R當時停止指示；R原保留的唯一額度移交T，共享R→T現已 **1/1用盡**，沒有新增一次。獨立Tester/Reviewer核可且版本SHA凍結後Human已執行wrong唯一一次，結果無法判定，**不要再執行下列歷史命令**。T只選wrong一次，不再missing/positive/API/refresh401/第二次；每次新process/state/challenge/code、單次token POST，無retry或code重用。正常App登入/再次查詢與canvaspassed保留，P/Q/R舊evidence及預算不改。
@@ -18,13 +33,13 @@ python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --case wro
 - description保留19個legacy完整句優先，再用事前固定bounded grammar辨識有限field alias、成對引號及prefix/suffix，必須fullmatch整句、<=512字元；不接受任意尾文、否定句或substring通過。`description_match_source`只為legacy_exact/bounded_grammar/none/not_applicable，不輸出原句。grammar是支持句法，不是GitHub官方保證。
 - 新的challenge/pkce/missing/mismatch/invalid/expired/client/redirect詞彙hints只作有限布林；即使全部true也不是proof。未知error不被grammar升級，強configuration/auth/redirect與conflict仍阻止通過。
 - 最終passed除可信error/HTTP2xx或400/無token/knownerror/required或mismatch對應case/無conflict，還必須local_consistency=consistent及正確negative提交。wrong必須valid_different；valid_same/omitted/invalid或未觀測均不能passed。若遠端分類可pass但本機gate不符，reason=local_observation_unconfirmed、indeterminate/proven=false。任一token key仍failed優先，不使用/保存token。
-- 詳細固定schema/grammar/hints與matrix見[technical-spec §11](../../../analysis/github-first-sign-in/technical-spec.md#11-t-輪現行diagnostic-version3取代r停止指示保持正式能力不變)；[本輪來源與證據](../../../plan/github-first-sign-in/evidence/pkce-diagnostics-v3.md)。callback_return_to_request_prepared只量acquire返回至Request建立前，不能稱code_age。
+- 詳細固定schema/grammar/hints與matrix見[technical-spec §11](../../../../analysis/github-first-sign-in/technical-spec.md#11-t-輪現行diagnostic-version3取代r停止指示保持正式能力不變)；[本輪來源與證據](../../../../plan/github-first-sign-in/evidence/pkce-diagnostics-v3.md)。callback_return_to_request_prepared只量acquire返回至Request建立前，不能稱code_age。
 
 所有raw值只在記憶體處理；observer在finally解除並清除context，絕不輸出/保存原始error/description/response/例外文字或秘密。只輸出固定提示和version3有限enum/bool/HTTP整數。P/Q/R歷史不能用新版語義重判。
 
 ## R 輪歷史停止提示（2026-10-21）
 
-唯讀調查來源21e2542，未找到有依據的新遠端歸因辨識契約，依Human限制本輪不修改CLI/分類、不選case、不安排真人授權，R **0/1未使用**。下列missing/wrong命令與兩次額度是P/Q歷史操作說明，不是R執行指示，不得自行重跑或消耗R唯一額度。P/Q各2/2及unknown/indeterminate結果保留，不追原始描述、不改模板；已成功的App登入/API不重做。詳見[調查證據](../../../plan/github-first-sign-in/evidence/pkce-diagnostic-investigation.md)。
+唯讀調查來源21e2542，未找到有依據的新遠端歸因辨識契約，依Human限制本輪不修改CLI/分類、不選case、不安排真人授權，R **0/1未使用**。下列missing/wrong命令與兩次額度是P/Q歷史操作說明，不是R執行指示，不得自行重跑或消耗R唯一額度。P/Q各2/2及unknown/indeterminate結果保留，不追原始描述、不改模板；已成功的App登入/API不重做。詳見[調查證據](../../../../plan/github-first-sign-in/evidence/pkce-diagnostic-investigation.md)。
 
 此 Python standard-library CLI 只驗證 GitHub.com 對缺少／錯誤 verifier 的遠端拒絕。它不載入正式 GitHubIntegration、Swift App 記憶體或既有 credential，不建立連線或執行 API／refresh／401。正式產品登入 UI 未交付。
 
@@ -56,7 +71,7 @@ missing 完全省略 code_verifier 欄位；wrong 送另一個43字元base64url 
 - `failed`：JSON object存在access_token或refresh_token key，包含空值、混合error與異常type；不使用、不保存token。
 - `indeterminate`：一般code拒絕、配置/redirect/授權、網路/HTTP/JSON/逾時、未知或衝突訊號及case不符。`remote_rejected=true`只代表可信error，`pkce_rejection_proven=true`才表示本工具固定判準已獲證。
 
-有限error、19個完整description模板、normalize與case/conflict matrix在[technical-spec §9](../../../analysis/github-first-sign-in/technical-spec.md#9-q-輪現行診斷版本2優先於-8-的舊p四errorcode判準)事前鎖定。description只在記憶體內完整比對：最多512字元，strip/lower/空白折疊/至多一個末尾句點；不輸出原文。模板是synthetic supported wording，非GitHub官方保證。invalid_grant涵蓋多種grant問題，本身不是PKCE證據；unknown error不能被description升級。`description_mentions_verifier`只是提示，不參與passed；否定句、附加字、未知描述不當證據。live後不擴表配合結果。
+有限error、19個完整description模板、normalize與case/conflict matrix在[technical-spec §9](../../../../analysis/github-first-sign-in/technical-spec.md#9-q-輪現行診斷版本2優先於-8-的舊p四errorcode判準)事前鎖定。description只在記憶體內完整比對：最多512字元，strip/lower/空白折疊/至多一個末尾句點；不輸出原文。模板是synthetic supported wording，非GitHub官方保證。invalid_grant涵蓋多種grant問題，本身不是PKCE證據；unknown error不能被description升級。`description_mentions_verifier`只是提示，不參與passed；否定句、附加字、未知描述不當證據。live後不擴表配合結果。
 
 stdout只輸出固定提示與安全JSON：case、outcome、reason、有限remote_error、HTTP整數/必要布林，加diagnostic_version、diagnostic_class、description_class、description_present、description_mentions_verifier、signals_conflict、pkce_rejection_proven。無clientID、secret、code、state、verifier、token、原始error/description/body/URL或exception文字。退出碼passed=0、failed=1、indeterminate=2；不能單憑非零當PKCE enforcement通過。
 
@@ -67,7 +82,7 @@ P輪兩次已用完，missing/wrong均HTTP400、unknown/indeterminate；原始�
 ## 受控測試
 
 ```sh
-python3 -B -m unittest discover -s apps/GitHubSignInVerification/tools -p 'test_pkce_negative_probe.py'
+python3 -B -m unittest discover -s experiments/E013/GitHubSignInVerification/tools -p 'test_pkce_negative_probe.py'
 ```
 
 只有fixture與本機loopback，沒有真OAuth、秘密或GitHub呼叫。-B避免產生__pycache__；不安裝依賴、不改工具設定。P歷史證據見topic `evidence/pkce-negative-verification.md`；Q新版見 `evidence/pkce-diagnostics-v2.md`，不得把mock green當成真實passed。
@@ -115,4 +130,4 @@ help目前尚未列出新copy旗標，是discoverability限制、非required fix
 
 ## X：唯一 wrong 收尾（2026-10-22）
 
-來源`4dbf3df`，工具凍結未改。native正常明確copy／Human手貼核對passed；本次唯一wrong為HTTP400 invalid_grant／無token／遠端拒絕，兩獨立AI的單欄語義共識為`verifier_mismatch_asserted`（`provider_description_ai_review`）。fresh／single及prepared一致、valid_different／challenge不同只支持這一次拒絕且provider歸因verifier不符，不是普遍enforcement／wire證明。自動v3仍indeterminate／provenfalse、description unknown／match none，所有歷史保留；原文不保存。新預算1/1 used，本輪結束、不得再執行case／OAuth／研究。正常APIpassed、missing舊unknown及refresh/401pending不變；native正常路徑不推論timeout／cancel／OS清除，67既有測試未重跑。[安全來源與三層限制](../../../plan/github-first-sign-in/evidence/pkce-semantic-review.md)。文件待最終獨立review／原PR61交付後Human review，無新增Human操作。
+來源`4dbf3df`，工具凍結未改。native正常明確copy／Human手貼核對passed；本次唯一wrong為HTTP400 invalid_grant／無token／遠端拒絕，兩獨立AI的單欄語義共識為`verifier_mismatch_asserted`（`provider_description_ai_review`）。fresh／single及prepared一致、valid_different／challenge不同只支持這一次拒絕且provider歸因verifier不符，不是普遍enforcement／wire證明。自動v3仍indeterminate／provenfalse、description unknown／match none，所有歷史保留；原文不保存。新預算1/1 used，本輪結束、不得再執行case／OAuth／研究。正常APIpassed、missing舊unknown及refresh/401pending不變；native正常路徑不推論timeout／cancel／OS清除，67既有測試未重跑。[安全來源與三層限制](../../../../plan/github-first-sign-in/evidence/pkce-semantic-review.md)。文件待最終獨立review／原PR61交付後Human review，無新增Human操作。

@@ -30,8 +30,8 @@ F219C0274590DA45E4BEF1EA = { isa = PBXFileReference; explicitFileType = wrapper.
 BFC937463906E5DB7A02A37C = { isa = PBXGroup; path = Tests; children = (45D995D478101A71D5A2AE22,4B4CA4D4E8146F7FB2E3BFEC,A53F225846C62D1AFA509835,8AC0123CF277D7B0B073F22C,3955B9EA0E4E1F512ACB62D6,); sourceTree = "<group>"; };
 328EC33DF3954DC9B83FA285 = { isa = PBXGroup; name = Products; children = (8BCD5BC4CDFDF0918087C782,F219C0274590DA45E4BEF1EA,); sourceTree = "<group>"; };
 E50290A24C49A459B43487C5 = { isa = PBXGroup; children = (1BDBD24583AAF7F81F76B976,BFC937463906E5DB7A02A37C,328EC33DF3954DC9B83FA285,); sourceTree = "<group>"; };
-EC980082E22C67AC3139CFB4 = { isa = XCLocalSwiftPackageReference; relativePath = ../..; };
-4DB75F63B6AACCB265AD9F4E = { isa = XCLocalSwiftPackageReference; relativePath = ../../packages/RivetHTTPClient; };
+EC980082E22C67AC3139CFB4 = { isa = XCLocalSwiftPackageReference; relativePath = ../../..; };
+4DB75F63B6AACCB265AD9F4E = { isa = XCLocalSwiftPackageReference; relativePath = ../../../packages/RivetHTTPClient; };
 5789ABBB66A7A4132BAAE62D = { isa = XCSwiftPackageProductDependency; package = EC980082E22C67AC3139CFB4; productName = GitHubIntegration; };
 B20DAFCEB05A25984198D1F4 = { isa = PBXBuildFile; productRef = 5789ABBB66A7A4132BAAE62D; };
 1285C7D2B843B275222B7AF4 = { isa = PBXBuildFile; productRef = 5789ABBB66A7A4132BAAE62D; };

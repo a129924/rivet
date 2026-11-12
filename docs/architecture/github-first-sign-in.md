@@ -14,6 +14,10 @@ Relay 僅綁 127.0.0.1 動態 port，限制 headers／connections／讀取時間
 
 驗證App的環境配置入口拒絕缺值、空字串及純空白（whitespacesAndNewlines）；不合法配置不成為prepared configuration，也不建立live dependencies。有非空白內容的配置保留原字串，不自動trim憑證。此為App-local入口規則；正式configuration initializer與OAuth factory契約保持。此受限修正不代表新binary符合E009既有pin或已重做真人驗證。
 
+## 現行驗證環境歸屬
+
+驗證App與專用PKCE工具已集中至E013；[現行離線入口](../../experiments/E013/GitHubSignInVerification/tools/README.md)及本topic唯一清單記錄新位置。下方upstream歷史build／open命令仍指原來源版本，不是現行操作入口。E009仍是受控launcher，本批新pin只能綁移後獨立final產物；既有真人／PKCE結果與額度不重做。
+
 ## 本機建置與驗證
 
 > **upstream 歷史操作，非現行 M02 流程：** 下列 Xcode／build／open 指令與 Human 自行輸入配置的文字保留為來源版本操作。現行合併候選由開發端管理者依 [E009 launcher 流程](../../experiments/E009/README.md)準備設定；登入驗證者不填憑證，正常 composition 隱藏設定欄位。直接 open 下列舊產物不能取代現行設定供給與 binary 指紋檢核。
@@ -41,7 +45,7 @@ Hosted TestAction 使用 `GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1`；entry 
 
 Human已自行開啟來源d11f343的現行canvas v2，逐步確認文字/箭頭及責任邊界、拖曳、縮放可讀、點選聚焦/說明、明暗切換皆通過。圖與frozen來源未修改，agent未繞過browser URL policy；先前工具限制與歷史pending保留。
 
-反向PKCE只使用驗證App旁的[獨立CLI](../../apps/GitHubSignInVerification/tools/README.md)，不改正式OAuth／SwiftApp，不擴張public API。missing/wrong各一個新process、新code及單POST，不重做正向/API；Human本機TTY隱藏輸入配置。固定allowlist以外均不冒稱PKCE通過，generic bad_verification_code無法歸因。2026-10-21已依序執行missing與wrong，各新process／一次授權／單次POST；Human安全報告均HTTP400、remote_rejected=true、token_present=false、unknown_error/unknown，按固定判準皆無法判定，不宣稱PKCE enforcement通過。兩次預算已用盡，未保存原body/description，不能追補原因或事後改allowlist，不重試。結果見[脫敏證據](../../plan/github-first-sign-in/evidence/pkce-negative-verification.md)。完整遠端refresh/401本輪不執行、保持pending。
+反向PKCE只使用驗證App旁的[獨立CLI](../../experiments/E013/GitHubSignInVerification/tools/README.md)，不改正式OAuth／SwiftApp，不擴張public API。missing/wrong各一個新process、新code及單POST，不重做正向/API；Human本機TTY隱藏輸入配置。固定allowlist以外均不冒稱PKCE通過，generic bad_verification_code無法歸因。2026-10-21已依序執行missing與wrong，各新process／一次授權／單次POST；Human安全報告均HTTP400、remote_rejected=true、token_present=false、unknown_error/unknown，按固定判準皆無法判定，不宣稱PKCE enforcement通過。兩次預算已用盡，未保存原body/description，不能追補原因或事後改allowlist，不重試。結果見[脫敏證據](../../plan/github-first-sign-in/evidence/pkce-negative-verification.md)。完整遠端refresh/401本輪不執行、保持pending。
 
 ### Q 輪：獨立反向 PKCE 診斷 version 2
 
@@ -57,7 +61,7 @@ Human指示續行後，獨立CLI新增實際browserURL/HTTP prepared Request被�
 
 ## U：Human-only 語義 review 工具目前狀態
 
-已實作 private Swift/AppKit helper、parent gate／先清理再匿名 pipe，以及無網路／無 ID-secret 的 `python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review` 校準入口；U03／U04 completed、獨立 U05 approved（P2 closed、無其他 required fix），工具可交付、U06 待 Human 正式 offline 校準，不自動啟動。若未來另准 live，通過 gate 的原文僅 Human 短暫看，agent／Reviewer 不看、不保存；`provider_semantic_observation` 是獨立 Human attestation，不改既有 proof／outcome。SystemRandom 打散後只送 description；工具不讀／比較 `expected_category`、不自評，末尾 opaque correlation_id＋有限 observations 由獨立 Tester 評分，9/9 decisive＋7/7 unknown 標準不變。P2 selectors/stderr 回修後獨立 Tester 親跑 57 項受控測試通過，strict format／SwiftLint exit 0；單次 smoke 不證明自然 timeout 或 Human holdout 通過，完整 UI／clipboard／restoration／timeout 與 Human 9+7 仍 pending；OAuth 新額度 0、R→T 1/1 歷史不改。[操作與限制](../../apps/GitHubSignInVerification/tools/README.md)。
+已實作 private Swift/AppKit helper、parent gate／先清理再匿名 pipe，以及無網路／無 ID-secret 的 `python3 -B experiments/E013/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review` 校準入口；U03／U04 completed、獨立 U05 approved（P2 closed、無其他 required fix），工具可交付、U06 待 Human 正式 offline 校準，不自動啟動。若未來另准 live，通過 gate 的原文僅 Human 短暫看，agent／Reviewer 不看、不保存；`provider_semantic_observation` 是獨立 Human attestation，不改既有 proof／outcome。SystemRandom 打散後只送 description；工具不讀／比較 `expected_category`、不自評，末尾 opaque correlation_id＋有限 observations 由獨立 Tester 評分，9/9 decisive＋7/7 unknown 標準不變。P2 selectors/stderr 回修後獨立 Tester 親跑 57 項受控測試通過，strict format／SwiftLint exit 0；單次 smoke 不證明自然 timeout 或 Human holdout 通過，完整 UI／clipboard／restoration／timeout 與 Human 9+7 仍 pending；OAuth 新額度 0、R→T 1/1 歷史不改。[操作與限制](../../experiments/E013/GitHubSignInVerification/tools/README.md)。
 
 ### U06 最新結果：方法未達資格，停止 live
 

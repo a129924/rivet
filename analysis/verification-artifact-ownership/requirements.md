@@ -52,3 +52,7 @@ Topic：`verification-artifact-ownership`。基準 revision：`a554a4fee772d3976
 
 Human以Execution Authorized允許決定空白配置的預期契約、受限修正與重建基線後再續B3。依既有hosted test與正式OAuth factory的有效性規則，驗證App的環境配置入口須拒絕缺值、空字串及經whitespacesAndNewlines判定為空的值；有效值保留原bytes，不自動trim憑證。
 此為搬移前獨立、可追溯的行為修正，僅限App composition與對應專屬測試；不更改正式GitHubOAuthAppConfiguration initializer／OAuth factory／API、簽章、儲存或E009 pin。先獨立審查並提交修正，再建立新的搬移基線；搬移本身仍維持bytes不變。先前基線失敗與原hash保留，確切檔案及修後搬移hash僅在唯一spec維護。
+
+## B3／E009 現行pin更新：本次明確授權
+
+Human本次授權E009現行pin的精確更新契約，綁定最終來源、建置命令與產物；沿用五批實作／commit／push／同DraftPR69／Human review授權。只在原B3批次內，對搬移後、必要tests通過且獨立建置的最終App重新綁定現行pin，保留歷史pin／hashes／receipts；這是明確追加的受限例外，不由先前approval推導。不得移除或弱化bundle／executable／digest／既有程序／TTY／launch身分保護，不新增真人OAuth／API／DPK或PKCE額度。

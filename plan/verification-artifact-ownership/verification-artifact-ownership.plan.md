@@ -343,3 +343,48 @@ B3 execution blocked，source尚未搬移，B4–B5未開始；本次已解除�
 
 Dewey文件／停止處置approved、required fixes0、unresolved0；B3 execution blocked／BL-E9有效。已獨立核四rawlogSHA、實際App及launcher digest、身分與原pin保持，確認拒絕在配置輸入／launch前；兩修後SHA符合ccf9d21與唯一原列，其他60檔原hash保持，B3–B5共62old仍原位且new不存在。dev乾淨／a554a4f，feature僅三指定文件變更。
 僅交付新pin停點證據，不更新pin或宣稱移後final已驗。Human另行pin契約仍需綁最終source／recipe／artifact，本次baseline digest不直接提升final pin；本輪按既有授權提交證據並push同DraftPR69，交Human review，不自行merge。
+
+## VO-PIN3／B3 本輪開始交接
+
+本次Human授權精確更新現行pin；可在同B3內先搬移與驗證、再綁移後final artifact更新pin。所有精確路徑／允許差異／來源投影／rollback只引用唯一spec VO-PIN3與B3列，不維護副本；舊07335a00baseline失配仍保留。固定本次normalhost／標準sandbox／既有B3 SourcePackages，與ccf9d21相同unsigned／offline flags；project改用spec new，post-host-DD跑build-for-testing→test-without-building、post-final-DD只跑build，兩DD與舊產物分開。實際argv及環境存本次logs/B3/pin-current；最終產物不在pin後重建。PKCE改用new tools path，67 cases需真到達；hosted18tests5suites需真執行。
+
+- Goal：完整完成E013搬移與現行E009新產物pin綁定，入口保護與歷史證據保持。
+- Non-Goal：不改App行為／正式API／root graph／signing／storage，不做live或新增工具／圖面。
+- In-Scope：唯一spec的B3 Written／Deleted列、既有B3適用Modify與VO-PIN3兩項明確例外。
+- Out-Of-Scope：B4／B5在本批gate前、Runtime重構、fixture／舊結果改寫、真人流程、依賴更新及merge。
+- ReadOnly：未列寫入者，含全部正式能力／正式tests／lock內容／ccf9d21兩檔修後bytes、歷史binary與receipts；launcher其他內容只讀。
+- Written：唯一spec B3 new23檔及同列project／README例外；沒有另新增repo檔案。
+- Deleted：唯一spec B3 old23檔；集中歸屬所需，反向mapping與批前snapshot可回復。
+- Modify：僅spec留原位B3適用列與VO-PIN3的新pin literal／E009追加收據、四正式文件；搬移檔的例外歸Written不重疊。
+- TestCase：TC-VO-002／005／008／009／010／011與TC-VO-013（新pin接受final、wrongID及tampered拒絕、source投影與commit tree／artifact綁定）；必要newproject build／hosted18／PKCE67、plist／fixture／操作preflight真正到達；補充hash／link／diff／format不能代替必要項。
+
+實作前交Plan-Reviewer approved／required fixes0；數值尚未量到就標待測，不先填新pin。完成後Tester→Reviewer兩gate，完整B3 topic commit→依唯一spec建立commit-binding.json並核commit tree／artifact→PR明示source commit／binding位置與指紋及核對結果→push同DraftPR69，再續B4／B5既有授權；不逐批重問。若不在精確契約內或驗證未到達則依既定停點停止，不把pin授權擴成真人或安全設定授權。
+
+### B3／VO-PIN3 Implementer完成交接
+
+相同九欄與唯一spec集合，23檔完整搬移及接線／current docs／E009 pin與追加收據已處理。170 build inputs封存，pin取獨立post-final binary，非舊baseline；尚未commit，不捏造source revision。外置prefix B1_RUN/logs/B3/pin-current，所有result含實際argv／env／baseHEAD／sourceProjection／logSHA。
+
+| 必要檢查 | 主對話真正結果 | raw log SHA |
+|---|---|---|
+| 移後host build | exit0／15.639s，實際source／test compile | 23ef97c54b20e7d5726b2cb4842d582bf14d36f8ec128a2df1d2d2f3d96394e3 |
+| hosted body | exit0／6.359s，18tests／5suites真pass | 8d503b44828b6cd8b686c5466755827ecce55fd85728513a98edb2f541f119e1 |
+| PKCE | exit0／4.653s，67cases真pass | 8442fa101faecb8dc6be195ac532509e9ee61f39c2c7fae09dbb0f9b8025c751 |
+| 獨立final build | exit0／11.925s，non-test App | 68c2ef01222d0a878a393574d4b27bdb175f8cacacf54fa11b151b3a6b8817b3 |
+| launcher compile／selftest | exit0／0.911s及0.432s，無launch／配置 | compile空log；selftest 5ae135adf013f700ec5e6808de945122707596c7c33136f8bd3d20afd76710fa |
+| fixed App preflight | exit0／0.017s，credential_input_performed=false | 69b98da3097d564adf658ec33d3fc3c2a1494a06f862f497b1c59ea5387be7af |
+| wrongID／tampered controls | exit2拒絕／0.008s及0.009s，沒有launch任何副本 | 各aa5df3d2fa75e49bd5ff22957bfb6f20799c4a32f3bfd6eb6f6547a523549a6f |
+
+精確pin／來源投影與artifact hash只見spec／E009 current收據，避免另一套逐檔清單。後續Tester親驗hosted／PKCE／launcher正負檢查與hash／link／format，Reviewer給明示verdict；通過後完整B3commit並真核commitbinding，才可push／進B4。原歷史blocked保持當時定位，不當目前失敗；目前只待獨立與commit gate，未自判approved。
+
+### B3 獨立Tester首輪執行條件修正
+
+Godel首輪hosted18／5suites（19invocations）、launcher compile／selftest及preflight0／2／2、170inputs／hash／links／history／13Swift formatlint均通過，sourceRF0。PKCE誤用受限sandbox：65pass／2error，兩loopback cases在bind被拒，assertions未完成，保留原receipt且不算pass。RF-TPIN3-01為缺正常host獨立PKCE；已在既有授權內要求同argv／env改require_escalated正常host補驗，不改系統權限，不以side限制推論main狀態。新條件另存receipt，待Godel明示RFclosed與完整verdict才放行。
+
+### B3 獨立Tester正常host補驗完成
+
+Godel RF-TPIN3-01 closed，最終Tester passed／required fixes0／unresolved0。正常host明確require_escalated、同argv／env補跑PKCE67pass／0error／skip／blocked、exit0／5.782s，兩個loopback cases均真完成；raw SHA bd79c8961ad5b5d93eef13348c381b8603d64b6d30d8ae1ddb1e2f1cfdbfcb4a，另存tester-pkce-normal-host.{result,argv,env,cases}.json及raw.log，舊65pass2error保留。
+獨立hosted18／5suites、19invocations pass（5.953s，raw SHA92e6c6eec95a91c9cada5d208dc0b6e3ca29f203a68b697d44f01963132ce33f），launcher compile／selftest與preflight0／2／2、13Swift formatlint、170source mode/blob/SHA及fixedartifact前後保持均通過；完整tester-summary.json。postcommit-binding仍待，不提前聲稱完成或進B4。
+
+### 完整B3 precommit成果最終審查
+
+Helmholtz最終approved、required fixes0／unresolved0，唯一帳本現況RF1 closed；已納Godel最終passed0與完整23檔／21puremove／refs／README／170inputs／fixedApp／launcher保護。固定Apollo checkout末查tracked乾淨、revision仍38c202227d0f09508e573dcf22f54885cfb0c5d4。現在只准完整B3commit後實核binding，binding未完成前不push／不續B4，不把precommitapproval說成postcommit已驗。

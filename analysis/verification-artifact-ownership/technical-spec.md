@@ -120,11 +120,11 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 | B2/B3/B4 | `docs/architecture/README.md` | Modify：僅現行工具路徑與本次歸屬說明 |
 | B3 | `docs/architecture/github-first-sign-in.md` | Modify：現行路徑／E009 角色與限制，不改歷史結論 |
 | B3/B4 | `docs/design-principles.md` | Modify：現行工具路徑與本次歸屬說明，不重設架構 |
-| B4 | `docs/architecture/github-oauth-dual-client.md` | Modify：現行工具路徑，不改 production 契約 |
+| B3/B4 | `docs/architecture/github-oauth-dual-client.md` | Modify：B3僅現行首次登入App路徑；B4僅現行持續連線工具路徑，不改production契約或歷史結果 |
 | B5 | `docs/architecture/github-oauth-credential-persistence.md` | Modify：現行 runner 路徑，不改正式 adapter 契約及歷史 |
 | B1/B2 | `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` | ReadOnly：保留 target 集合，未證明受影響不得改 |
-| B3 | `experiments/E009/LaunchVerification.swift` | ReadOnly：不自動更新或移除 binary pin |
-| B3 | `experiments/E009/README.md` | ReadOnly：保留舊 pin／建置來源紀錄 |
+| B3 | `experiments/E009/LaunchVerification.swift` | Modify（VO-PIN3本次明確授權）：僅expectedBinarySHA256一個64hex literal換為本次移後最終App實測SHA；所有保護／控制流程bytes不變 |
+| B3 | `experiments/E009/README.md` | Modify（VO-PIN3）：只追加現行pin、來源指紋／來源commit綁定位置、recipe／產物／preflight與限制收據；原文／舊pin／歷史來源保留 |
 
 若限定搜尋找到其他現行入口，先把精確檔案及允許路徑差異加入此表並交審，不能事後擴張白名單。歷史 plan／evidence 舊路徑保留，經本表追溯新位置；不回填舊 receipts。
 
@@ -133,7 +133,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 B3：PKCE Python、Swift helper、fixtures 保持鄰接（Path(__file__).with_name）；fixture、輪次與結果不合併。
 B5：TEMPLATE、dpk_prepare 的固定模板定位、project root package reference，以及複製模板與 dpk_prepare 兩處精確比對／替換須一起改；保留唯一匹配檢查。SOURCE_FILES 的正式來源不搬。現有 manifests 不引用 B1–B4，維持第五批。
 
-### E009 binary pin
+### E009 binary pin（本次更新前歷史契約）
 
 E009 仍是現行受控入口，不能列為 historical-only：docs/architecture/github-first-sign-in.md 的現行操作指向 launcher；E009 README 記重建失配須核對／重凍結。
 LaunchVerification.swift 的 expectedBinarySHA256 為 `66aa6f9af216198df2e982aa2e9295fc16f9124e05a848aadac9676ae57dba2f`。它檢查 bundle ID、可執行檔及 SHA；--preflight --app-bundle 分支成功後直接返回，不讀憑證或 launch。
@@ -171,3 +171,25 @@ E009仍現行受控入口。適用unsigned獨立build之binary先核身分／SHA
 受限修正獨立commit ccf9d21cda0f41db36bc8b0caf24afc7777ff5b2，兩檔修後搬移基線hash已綁於各自原列，原盤點hash與所有歷史failure保留。Noether成果approved0、Raman18hosted／67PKCE passed0；本輪不再改修正bytes。
 在該乾淨commit、原source位置，依既定offline unsigned recipe另建baseline-final App；bundle ID local.rivet.github-sign-in-verification、executable GitHubSignInVerification與可執行檔存在／權限正常。binary SHA `07335a005c322d7fd4f34e2b294d512a44253ea350cabf23902af4b0072f6b06`，與原E009 pin失配；未改launcher重新compile／self-test成功，實際--preflight exit2／invalidBundle（指紋拒絕），未launch、未讀配置。B3 blocked，尚未搬source；不能宣稱這是搬移造成，也不能推測歷史與新build之byte差異的全部原因。
 移後final artifact與所有post仍未建／未驗；本輪baseline hash不能直接作移後現行pin。若Human要讓現行launcher服務新版本，需另行授權精確pin更新契約：先列必要性、僅現行pin／新來源與產物記錄的允許差異、保留舊pin／hash／receipts，綁定最終source commit／完整recipe／artifact後再審查與實測，不移除或弱化檢查、不視為真人重驗。此次授權沒有包含pin更新，故停止。
+
+## VO-PIN3：E009 現行pin更新精確契約（取代先前未授權停點）
+
+主對話已核feature／upstream／PR69head均0f0943a，乾淨；B1／B2與ccf9d21受限修正保持。此次Human明確授權精確更新契約，允許在同B3批內解除舊baseline pin拒絕的停點，先完成已鎖定E013／23檔搬移與必要接線、hosted／PKCE，再對獨立post-final App實測更新pin。先前失敗及未授權停點保留為歷史；不是把07335a00基線hash直接當新pin。
+
+精確差異：B3唯一表的兩個package references照既定../../..與../../../packages/RivetHTTPClient各改一次；21個其他非README檔相對修後基線純搬移。tools/README屬Written，只改當前受控test命令、移後相對文件連結及追加App／pin操作說明；明示歷史live命令不可再執行並保留其argv／預算／結果。留原位Modify只限本唯一表既有B3列及本次新增requirements授權文字（同四份文件）；E009 launcher僅一個literal例外、E009 README只追加，絕不改其歷史敘述。root graph／lint涵蓋／schemeguard／signing／storage／fixtures不可改。
+
+最終來源綁定避免commit自指：build前固定來源投影，範圍為Package.swift／Package.resolved、Sources／Tests、packages/RivetHTTPClient（排除.build、.swiftpm及所有Markdown）、E011與E012的Sources／Tests、整個E013（排除Markdown）；排除repo外輸出／cache、E009 launcher與本topic／現行文件。完整相對path、mode、Git blob ID、SHA-256的排序不可變外置build-input receipt及其總SHA記錄在本spec現行pin收據，這不是第二份可維護搬移清單。所有stage後的實際工作檔與index須一致；固定Apollo lock/revision，record baseHEAD及source差異指紋。
+
+以該固定投影完成獨立DerivedData的post-final build，保存原始argv／程序env覆寫（兩client配置key移除、不dump繼承值）、Swift／Xcode／SDK／arch、依賴revision、source投影hash、plist／bundleID／executable、binary SHA及app檔案hash收據。只有所有實際build inputs在build／測試／pin／commit前後不變，才可宣稱此artifact對應該最終來源；pin／行政文件不是App build input。最終B3完整commit後，外置commit-binding receipt記錄final commit SHA並逐一核其tree mode／blob等於build-input receipt；PR description須同時明示最終source commit、外置logs/B3/pin-current/commit-binding.json的可追溯位置與整檔SHA-256、來源投影hash、逐檔mode／blob核對結果及artifact SHA。本spec綁不可變來源投影與receipt，避免把本文件自有commitSHA寫成循環，沒有來源commit前不捏造revision。
+
+新SHA只能取獨立post-final App executable實測值，不能取hosted App、舊baseline、推測值或由launcher移除檢查取得；僅替換expectedBinarySHA256原literal一次。保留0f0943a的launcher source hash9cb125cc8cd1125ae150e4c50fa8b98191ec6137441972f29ef6475f6965835a與舊66aa6f9a pin來源；E009 README歷史段落不刪改，追加舊→新與收據用途。pin後不再build／改寫該artifact；若必須重建或任一輸入變動，原收據失效，需同批重新完整綁定／驗證，不套用舊hash。
+
+必要控制：launcher Swift6 strict compile／synthetic self-test，真--preflight接受固定post-final App；對外置完整副本只改bundleID的wrong-identity及只追加binary一byte的tampered副本，兩者preflight須exit2拒絕。不launch任何副本、不改檔案mode／系統保護、不讀憑證。launcher相對原source除literal替換外須bytes相等。獨立Tester親跑必要preflight／陰性檢查與受影響tests，Reviewer核來源／recipe／artifact／歷史證據與完整scope；兩gate通過前不進B4。
+
+完整B3成一可回復topic commit（含搬移／設定／入口／pin／文件），非半套source-only commit。失敗先停後批；允許路徑漏接可同批補齊重驗。超界或無法安全完成則用0f0943a批前snapshot／精確逆mapping只撤回本批，保留ccf9d21修正與外置證據；先核無外來改動，不覆蓋無關內容。postcommit來源綁定失敗也不push／不進B4，回本批修復；不把途中狀態交後批。仍不授權真人驗證、簽章／安全改動、依賴版本或merge。
+
+### VO-PIN3 主對話移後實測收據
+
+Descartes本次契約最終approved／required fixes0／unresolved0，RF1／RF2 closed。E013二十一個puremove檔符合ccf9d21後基線，project僅兩refs、tools README只允許現行入口／相對link／用途例外；launcher相對0f0943a只替換literal。
+現行pin實測SHA `e40f84e6097853d124508b451cab68187d5555a5a8872a0579eb10064ebee427`；來源投影170檔SHA `9374b07de1d4c821021845d0914fdf297ef48a860765aa2cae4c807a75fa2ce6`；app tree SHA `304a1bb175403a46c935eef04bcef1f826fbe2f9bbd4557ec87928d76a77e832`；recipe receipt SHA `61583ebc6e8e57adba38b66b3d35e3ad0f0a4d72a3acc2bec165f5c888676edb`。固定artifact位置／toolchain／完整recipe見E009最新追加收據與外置logs/B3/pin-current/artifact.json／source-inputs.json／toolchain.json。final build前後以及pin檢查後source投影／原artifact保持，舊pin與07335a00基線保留。完整source commit與binding receipt SHA在B3commit後核對並於PR明示，不先編造值。
+必要主對話post已真正到達host build／18tests／67PKCE／獨立final build／selftest與positive preflight；wrongID與tampered均拒絕。尚待獨立Tester／Reviewer及commit-binding，不由作者提前進B4。

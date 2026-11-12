@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。分支chore/verification-artifact-ownership；B1／B2完成。VO-RB3已approved0並commit ccf9d21，18hosted／67PKCE通過，空白配置阻擋解除。接續B3的baseline-final build通過，原E009 pin preflight因SHA失配exit2，現blocked；B3未搬，B4–B5未開始。
+最後更新：2026-11-12。chore/verification-artifact-ownership；B1／B2及VO-RB3完成。VO-PIN3契約Descartes approved0，E013完整接線／現行pin已實作，main18hosted／67PKCE／獨立final build與正負preflight通過；Godel完整passed0，Helmholtz僅文件現況RF待複核／postcommit-binding待驗，B4–B5未開始。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -9,36 +9,36 @@
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
-| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1 E011／B2 E012已完成；B3 E013 mapping／入口已鎖spec，Nash契約approved0，execution blocked；B4–B5 pending |
+| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1 E011／B2 E012已完成；B3 E013依Descartes精確pin契約approved0實作，必要post與Godel passed0；待成果複核／commitbinding，B4–B5 pending |
 | VO-B01 | completed | Implementer | B1契約內完整搬移，交Tester | 四檔100%rename，三target path／lint／索引／入口同批；必要post已到達，Meitner最終approved |
 | VO-T01 | completed | Tester | B1必要項真正到達並給出結果 | 主對話post編譯／62tests／新wrapper資源入口已驗；Kepler獨立親跑62pass0fail0skip，readback artifacts相符 |
 | VO-R01 | completed | Reviewer | B1獨立成果審查與限制分類 | Meitner最終approved、required fixes0；README離線cache操作RF已關閉；只限B1 |
 | VO-PB2 | completed | Plan-Reviewer | B2契約明示approved且required fixes0 | Feynman正式approved／0fix，7/7hash核對；僅preimplementation |
 | VO-B02 | completed | Implementer | B2同批接線並交Tester→Reviewer | 七檔puremove／三target／bundle輸出／lint／導覽同批完成；post主對話必要項已驗；Tester Chandrasekhar passed0；Reviewer Schrodinger approved0，准續B3 |
-| VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash最終approved0，RF-1 closed；不放行失敗baseline |
-| VO-B03 | blocked | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 空白配置已修復approved0；新baseline-final真build通過，但E009原pin preflight exit2／SHA失配，source未搬 |
+| VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash原契約approved0／RF-1closed保留，現由VO-PIN3追加pin授權；非成果gate |
+| VO-B03 | implemented | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 本輪E013及新pin同批接線，Godel18hosted／67PKCE與正負入口passed0；Helmholtz文件RF待複核、commitbinding待驗 |
 | VO-B04 | not-started | Implementer | B4完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
 | VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
-| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1／B2已commitpush同DraftPR69；B3處置文件待獨立審查／發布，未宣稱五批完成 |
+| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1／B2／VO-RB3已commitpush同DraftPR69；完整B3待最後成果複核及commitbinding，不宣稱五批完成 |
 
 ## Blockers
 
 | ID | 狀態／問題 | 解除條件 |
 |---|---|---|
 | BL-P | resolved | Popper 正式 approved、required fixes=0；不等於五批執行通過 |
-| BL-N | B1–B3配號已確認；B4–B5 pending | E011/E012已完成；E013占用／hash查證並鎖定，B3 baseline blocked |
+| BL-N | B1–B3配號已確認；B4–B5 pending | E011/E012完成；E013占用／基線已鎖且移後必要驗證通過，B4／B5仍須批前確認 |
 | BL-B1 | resolved（B1） | baseline／post真正source build、62tests、wrapper資源／入口與獨立成果approved0，commit7e5f4fd |
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
-| BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates normalhost親跑67pass／0fail／0error／0skip，loopback／helper已到；不解除BL-B3 |
-| BL-E9 | active：原pin與修正後baseline-final SHA失配 | 原launcher實跑preflight exit2拒絕，pin不改；移後final未驗，需要Human另行pin契約授權 |
-| BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3 baseline source build已pass但hosted有1fail；final及post未驗，不能放行後批 |
+| BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates舊baseline及Godel移後normalhost各67pass；restricted失敗保留，RF-TPIN3-01closed，不代替commitbinding |
+| BL-E9 | 新授權下main及獨立post通過，待成果／commit gate | 原失配保留歷史；新pin取移後final，正向接受／陰性拒絕真到，尚不提前放行 |
+| BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3修後hosted／獨立final／入口post及Godel已真通過；目前只待成果複核／commitbinding，不以歷史fail作現況 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
 
 ## Human Check
 
 Human已接受scope五批並授權四文件建立與正式交審；現已Default mode，先前Plan Mode寫入限制不再適用。
 本訊息另明確授權feature worktree實作、commit by topic、push與Draft PR→Human review；不由planningapproved推導，仍受必要驗證／重大問題停點限制。
-系統權限、安全限制、環境擴修、真人流程、pin更新不在新增授權內；規劃通過不授權merge。
+原授權不含pin更新；Human本次已明確追加VO-PIN3精確literal更新與最終來源／recipe／artifact綁定。系統權限、安全限制、環境擴修、真人流程及merge仍未授權，不能由planningapproved推導。
 Explorer與Tester既有交接保留，作者沒跑測試不等於整輪無測試。文件WIP可交付，但必要項未驗不得宣稱搬移完成。
 
 ## 審查紀錄
@@ -176,3 +176,42 @@ BL-B3已resolved，BL-E9 active，B3 execution仍blocked；source未搬、移後
 ### 本輪最後獨立審查與Human停點
 
 Dewey最終文件／停止處置approved、required fixes0、unresolved0；B3 execution blocked。artifact實際SHA／四rawlogs／原launcher／canonical來源綁定與62未搬oldpaths均已核實，dev乾淨。空白配置修正ccf9d21已approved並提交，另交付本輪pin證據文件；兩者依既有授權push同DraftPR69。Human需另行決定現行pin更新精確契約；未授權前停在此處，B3來源未搬、post未驗，B4–B5未開始，topic未完成。
+
+## VO-PIN3 本次明確授權及審查交接
+
+主對話已確認feature／upstream／PR69head均0f0943a，Draft／open；沿原worktree。Human明確授權現行pin精確更新契約，與原五批實作／發布授權一起適用；不是由先前approved推導。完整B3含pin成一批，source投影與postcommit綁定避免自指，陰性檢查不弱化既有保護，詳唯一spec及plan九欄。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-PPIN3 | completed | Plan-Reviewer | 本次精確pin與B3契約approved／0fix | Descartes最終approved／0fix，兩RF closed；只核契約 |
+| VO-PIN3 | implemented | Implementer | 同批移後final build與pin綁定並交Tester | BL-E9是已知歷史失配，本次contract審查前仍不動 |
+| VO-TPIN3 | completed | Tester | new hosted／PKCE／resource／preflight／陰性控制與hash真到達 | Godel最終passed0；18hosted／67PKCE正常host與正負入口真到，環境RFclosed，不能用舊baseline替代 |
+| VO-RPIN3 | completed | Reviewer | 完整B3成果approved／0fix、commit綁定核對 | Helmholtz完整precommit approved0／RF1closed；postcommitbinding待驗，不以pin完成真人驗收 |
+
+### VO-PIN3 實作前審查回修
+
+Descartes首輪needs-rework、required fixes2：補漏列現行dual-client文件的B3首次登入路徑，及PR明示binding receipt位置／指紋／結果。已僅於唯一spec收緊該文件B3路徑差異、PR綁定欄位，plan引用；不增加source行為或新工具／清單。待原Plan-Reviewer複核，source／launcher仍未動。
+
+### B3 實作交接：移後post待驗
+
+Descartes正式VO-PIN3契約approved、required fixes0、unresolved0；RF1／RF2 closed。已依唯一spec搬23檔並同批接兩package refs／現行導覽／工具入口；Appsource及修後tests／fixture／scheme／plist bytes保持。尚未量post-final SHA，launcher pin未改，不先填通過。B4–B5未動，待必要post與獨立gate。
+
+### B3／VO-PIN3 Implementer → Tester
+
+23檔移後同批接線、現行pin一literal及E009追加收據已完成；main實際host／18tests／67PKCE／final build及selftest／正向preflight／兩陰性拒絕通過，來源170投影與原artifact保持。數值引用spec與plan，未複製逐檔清單；獨立及commitbinding仍待。B4／B5只做必要唯讀準備，未實作。
+
+### VO-TPIN3 首輪環境RF待補
+
+Godel sourceRF0，其餘必要項已驗；PKCE誤用restricted得65pass2error，兩bind未到assertion，不當pass。RF-TPIN3-01待用既有正常host授權補驗，舊證據保留，不用此結果推論main權限／source回歸，也不改全域或弱化保護。source與fixedartifact保持，後批仍未開始。
+
+### VO-TPIN3 最終passed
+
+Godel於明確require_escalated正常host以原argv/env補PKCE，67pass0error／skip／blocked，5.782s，RF-TPIN3-01closed、最終passed／0fix。原受限65pass2error完整保留；170input/index及fixedartifact不變。完整Tester已交Helmholtz作成果gate；commitbinding尚待。
+
+### B3 precommit成果文件RF回修
+
+Helmholtz首輪needs-rework／RF1：帳本現行列仍混舊baseline失敗／post未驗。已僅同步VOP05／BL-N／BL-O等現行摘要及Human pin新授權，歷史段落原樣保留；沒有sourceRF或驗證阻擋，Godel最終passed0已納。待原Reviewer唯讀複核，commitbinding仍待不冒稱完成。
+
+### B3 precommit最終approved
+
+Helmholtz正式approved、required fixes0、unresolved0，帳本現況RF1closed；Godel完整passed0已納。23檔完整批次及source／pin／artifact保持，先提交整批，再實核commitbinding並於PR明示receipt位置／指紋／結果；未核不push或進B4。

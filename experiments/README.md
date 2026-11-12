@@ -2,12 +2,13 @@
 
 更新日期：2026-11-11。此索引依已合併的實驗與交付文件及其有限證據整理，另分列尚未合併 PR #67 的 E010 進度；各輪前提、歷史結果與授權仍以原紀錄為準。實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
 
-## 本 topic 新增的功能驗收展示收納（尚未合併）
+## 本 topic 新增的獨立驗證環境收納（尚未合併）
 
 | 編號 | 用途與來源 | 狀態 |
 | --- | --- | --- |
 | [E011](E011/README.md) | `rivet-login-ui` 的 Login Demo、控制介面、專用 Runtime 與專屬測試；功能驗收展示，不是將原功能開發改寫為事前實驗 | B1 位置修正，搬移後驗證結果見 topic 帳本；正式 UI 與其既有採用／驗收保留。 |
 | [E012](E012/README.md) | `pr-reader-webview-runtime-reading` 的fixture host／Runtime／資源／專屬測試，功能驗收展示 | B2位置修正；不重做原功能開發、不搬正式bridge／Core或TS pipeline；結果見topic帳本。 |
+| [E013](E013/GitHubSignInVerification/tools/README.md) | `github-first-sign-in` 首次登入驗證App與專用PKCE tools／fixture，可行性驗證環境 | B3完整接線與現行pin結果見topic帳本；歷史真人／PKCE證據保留，不提升產品能力。 |
 
 此配號僅集中收納驗證環境，不代表重做實驗、撤回既有採用或新增永久工具例外。下方既有索引與來源快照保留原紀錄。
 
