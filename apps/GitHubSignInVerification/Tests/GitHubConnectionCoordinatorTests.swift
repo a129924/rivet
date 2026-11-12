@@ -218,6 +218,33 @@ struct GitHubConnectionCoordinatorTests {
     #expect(await calls.probes == 0)
   }
 
+  @Test func configurationRejectsBlankValuesAndPreservesNonblankBytes() throws {
+    for blank in ["", "  ", "\t\r\n"] {
+      for environment in [
+        [
+          "RIVET_VERIFY_GITHUB_CLIENT_ID": blank,
+          "RIVET_VERIFY_GITHUB_CLIENT_SECRET": "fixture-secret",
+        ],
+        [
+          "RIVET_VERIFY_GITHUB_CLIENT_ID": "fixture-id",
+          "RIVET_VERIFY_GITHUB_CLIENT_SECRET": blank,
+        ],
+      ] {
+        #expect(throws: GitHubOAuthAuthorizationError.clientConfiguration) {
+          try GitHubVerificationComposition.configuration(environment: environment)
+        }
+      }
+    }
+    let clientID = " fixture-id "
+    let secret = "\tfixture-secret\n"
+    let configuration = try GitHubVerificationComposition.configuration(environment: [
+      "RIVET_VERIFY_GITHUB_CLIENT_ID": clientID,
+      "RIVET_VERIFY_GITHUB_CLIENT_SECRET": secret,
+    ])
+    #expect(configuration.clientID == clientID)
+    #expect(configuration.clientSecret == secret)
+  }
+
   @Test func preparedConfigurationDoesNotRequireCredentialFields() async throws {
     let calls = AppCalls()
     let configuration = try GitHubVerificationComposition.configuration(environment: [
@@ -250,6 +277,7 @@ struct GitHubConnectionCoordinatorTests {
     for environment in environments {
       let model = GitHubVerificationComposition.makeCoordinator(environment: environment)
       #expect(!model.presentation.canStart)
+      #expect(!model.presentation.hasPreparedConfiguration)
       #expect(!model.presentation.showsConfigurationFields)
       model.clientID = "fixture-id"
       model.clientSecret = "fixture-secret"

@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。分支 chore/verification-artifact-ownership；目前 phase：B1 成果已獨立 approved／required fixes0，commit7e5f4fd已push至DraftPR69；現B2必要post／Tester passed0／Schrodinger成果approved0，B2 commit d62e0ef已push；B3 baseline hostedtest失敗blocked，B4–B5未開始。
+最後更新：2026-11-12。分支chore/verification-artifact-ownership；B1／B2完成。VO-RB3契約Gauss approved0、Raman18hosted／67PKCE passed0、Noether成果approved0，原空白配置阻擋解除；先獨立提交修正再續B3final／E009原pin檢查。B3未搬，B4–B5未開始。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -32,7 +32,7 @@
 | BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates normalhost親跑67pass／0fail／0error／0skip，loopback／helper已到；不解除BL-B3 |
 | BL-E9 | 現行E009 pin與新binary相容性未知 | B3實測最終身分／hash／既有preflight；失配先回報／修契約 |
 | BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3 baseline source build已pass但hosted有1fail；final及post未驗，不能放行後批 |
-| BL-B3 | active：baseline hosted case失敗 | 原CoordinatorTests252，空白配置canStart期待衝突；超出路徑修正，需要另行行為／test決策，重建基線後才續 |
+| BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
 
 ## Human Check
 
@@ -142,3 +142,28 @@ Socrates指定命令一次，67pass／0fail／0errors／0skip，8.413s／exit0�
 ### 本輪停止文件最終審查
 
 Jason核對最新三份文件與PKCE五份證據後，文件／停止處置最終approved、required fixes0、unresolved0；B3 execution仍blocked，不放行B3或B4／B5。主對話末查：B3／B4／B5共62個old source均原位原hash，對應new路徑不存在；dev工作樹乾淨且HEAD維持a554a4f。只提交本輪三份契約／證據文件；B2已完成的d62e0ef保留，不撤回已驗成果。更新同DraftPR69交Human review，不merge，不宣稱topic完成。
+
+## 本次 Execution Authorized：VO-RB3
+
+已唯讀確認feature／upstream／PR69均ec94bec且乾淨，沿同一worktree。Human允許受限修正及基線重建，再續B3；不再重問同範圍。直接依既有test／factory拒絕純空白，正式initializer不改；精確允許差異僅spec，九欄與TC-VO-012在plan。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-PRB3 | completed | Plan-Reviewer | 本次兩檔受限修正契約approved／0fix | Gauss approved／0fix，23原hash與newpaths未存在核對 |
+| VO-RB3 | completed | Implementer | 只改明列兩檔、red／green／完整基線後交Tester | 兩檔最小修正／main18pass，最終format快照交Raman；未取代B3pin／postgate |
+| VO-TRB3 | completed | Tester | 修正後完整hosted／PKCE及補充檢查實際執行 | Raman passed0；最終hosted18／PKCE67、formatlint與hash通過；不代替B3pin／post |
+| VO-RRB3 | completed | Reviewer | 獨立成果approved／0fix，准解除行為阻擋 | Noether最終approved／0fix，只解除本次行為阻擋；不放行pin更新／真人流程 |
+
+Gauss正式VO-RB3契約approved、required fixes0、unresolved0。先新增直接configuration測試取得red；本次approval不代替完整green與成果gate。
+
+### VO-RB3 Implementer → Tester
+
+Gauss契約approved0後，新增直接配置test：首次方法filter只有0tests，已明示未達；完整red18tests真失敗，最小guard後green18tests／5suites全部pass。只兩個允許source／test改動及現行配置規則／四文件，修後SHA維持spec單一來源，未搬source。完整命令／logSHA見plan；獨立Tester與Reviewer仍待，不把main green當gate。
+
+### VO-RB3 Tester → Reviewer
+
+Raman獨立passed／0fix：hosted18tests5suites與PKCE67全部pass，0skip／blocked／unknown；兩檔formatlint／hash及其餘21原bytes通過，未改repo。新版xcresult補充讀回cache限制分開保留，legacy讀回成功；不外推主對話權限、不修環境。Noether已完成diff review無RF，待完整Tester結果後給最終verdict。
+
+### VO-RB3 成果最終approved與交付
+
+Noether最終approved、required fixes0、unresolved0；Raman最終18hosted／67PKCE及兩檔formatlint／hash已納，原期待與正式契約保持。BL-B3解除，原17testfailure仍保留歷史。獨立fixcommit後續B3必要baseline-final／E009preflight，該入口／pin與全部post仍未驗；不自動放行搬移、B4或pin更新。

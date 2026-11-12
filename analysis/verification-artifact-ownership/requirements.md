@@ -47,3 +47,8 @@ Topic：`verification-artifact-ownership`。基準 revision：`a554a4fee772d3976
 - R6：失敗先停下一批；授權內路徑修正可批內補齊重驗，超界／行為／外部副作用／不安全才回報，必要時撤回且不覆蓋無關修改。
 - R7：E009 現行 pin 的相容性須實測；保留舊證據，不能靠沒有 source 硬編碼推論新產物相容。
 - R8：正式規劃 gate 由獨立 Plan-Reviewer 明示 approved 且 required fixes=0；與實作／發布授權分開。
+
+## B3 搬移前受限修正：本次新增授權
+
+Human以Execution Authorized允許決定空白配置的預期契約、受限修正與重建基線後再續B3。依既有hosted test與正式OAuth factory的有效性規則，驗證App的環境配置入口須拒絕缺值、空字串及經whitespacesAndNewlines判定為空的值；有效值保留原bytes，不自動trim憑證。
+此為搬移前獨立、可追溯的行為修正，僅限App composition與對應專屬測試；不更改正式GitHubOAuthAppConfiguration initializer／OAuth factory／API、簽章、儲存或E009 pin。先獨立審查並提交修正，再建立新的搬移基線；搬移本身仍維持bytes不變。先前基線失敗與原hash保留，確切檔案及修後搬移hash僅在唯一spec維護。

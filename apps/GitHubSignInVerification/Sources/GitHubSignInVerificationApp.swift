@@ -29,7 +29,9 @@ struct GitHubSignInVerificationApp: App {
 @MainActor enum GitHubVerificationComposition {
   static func configuration(environment: [String: String]) throws -> GitHubOAuthAppConfiguration {
     guard let clientID = environment["RIVET_VERIFY_GITHUB_CLIENT_ID"],
-      let secret = environment["RIVET_VERIFY_GITHUB_CLIENT_SECRET"]
+      let secret = environment["RIVET_VERIFY_GITHUB_CLIENT_SECRET"],
+      !clientID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+      !secret.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     else { throw GitHubOAuthAuthorizationError.clientConfiguration }
     return try GitHubOAuthAppConfiguration(clientID: clientID, clientSecret: secret)
   }

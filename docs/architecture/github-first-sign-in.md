@@ -12,6 +12,8 @@ Relay 僅綁 127.0.0.1 動態 port，限制 headers／connections／讀取時間
 
 驗證成功指 `/user` HTTP 200 且 login／id 有效，不是 callback 或 prepare 成功。UI 顯示身分供驗證，沒有正式帳號顯示需求。Secret／token／callback 不寫 diagnostics、檔案或證據；證據只記必要有效／一致等布林。
 
+驗證App的環境配置入口拒絕缺值、空字串及純空白（whitespacesAndNewlines）；不合法配置不成為prepared configuration，也不建立live dependencies。有非空白內容的配置保留原字串，不自動trim憑證。此為App-local入口規則；正式configuration initializer與OAuth factory契約保持。此受限修正不代表新binary符合E009既有pin或已重做真人驗證。
+
 ## 本機建置與驗證
 
 > **upstream 歷史操作，非現行 M02 流程：** 下列 Xcode／build／open 指令與 Human 自行輸入配置的文字保留為來源版本操作。現行合併候選由開發端管理者依 [E009 launcher 流程](../../experiments/E009/README.md)準備設定；登入驗證者不填憑證，正常 composition 隱藏設定欄位。直接 open 下列舊產物不能取代現行設定供給與 binary 指紋檢核。
