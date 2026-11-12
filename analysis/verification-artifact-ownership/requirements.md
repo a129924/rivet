@@ -1,0 +1,49 @@
+# 驗證產物歸屬修正：需求
+
+## 狀態與來源
+
+Topic：`verification-artifact-ownership`。基準 revision：`a554a4fee772d3976d5ca2c9331865a604e901e2`。
+本文件沿用 Human 已接受的分類、集中原則與五批方向，以及本輪補充；不重比目錄或 package 方案。
+
+## 同意範圍澄清
+
+先前同意繼續工作，包含避免半改狀態、安全收尾、恢復一致性及保留成果的考量。
+「允許安全收尾」、「接受功能／畫面／驗證結果」、「採用長期架構與歸屬」互不推導。
+新增本次澄清與後續決策，不否認或改寫既有同意、驗收、commit、PR、來源版本、測試與限制；不假稱當時已逐字記錄現在的限制。
+不得以過往 approved、驗收、合併或已寫入架構文件，證明原位置已獲永久採用。
+
+## Goal / In-Scope
+
+集中收納僅限五組已盤點的獨立驗證執行環境，以及其專用工具、host、控制介面、fixture、Runtime、資源與專屬測試。
+
+| 批次 | 環境／分類 | 原 topic |
+|---|---|---|
+| B1 | Login Demo／功能驗收展示 | `rivet-login-ui` |
+| B2 | Reader Harness／功能驗收展示 | `pr-reader-webview-runtime-reading` |
+| B3 | 首次登入 App＋PKCE tools／可行性驗證 | `github-first-sign-in` |
+| B4 | 持續連線 App／可行性驗證 | `github-persistent-connection` |
+| B5 | DPK runner／正式 adapter 功能驗收 | `github-oauth-credential-persistence` |
+
+目的地集中於對應的 experiments 編號資料夾，以用途說明區分展示與可行性實驗。編號配置不是重做實驗、撤回採用或改寫原 topic 性質。
+首次登入 App 與 tools 同組但保留子目錄、案例、輪次、版本及各自結果；重用關係保留為引用，不複製工具，不追溯改歸某個後續實驗。
+逐檔分類、old/new 路徑、hash 與允許差異以 [technical-spec](technical-spec.md#唯一逐檔清單) 為唯一來源。
+
+## Non-Goal / Out-Of-Scope
+
+- 正式產品能力及正式測試不因具有驗證用途而搬入 experiments。Presentation、WebView bridge、GitHubIntegration 與正式 Core 保留。
+- 保留 root package 現有 products、targets、dependencies、resource 宣告；不移除驗證 target、不另拆 package、不重設依賴架構。
+- 不新增共用抽象、治理框架、正式產品能力，不將驗證實作提升到 production。
+- 不修改行為、API、簽章身分、entitlements 語意、儲存設定；不重構 Runtime 或合併重複實作。
+- 不修改系統權限、解除安全限制、擴大環境修復，不啟動真人 OAuth、真 API、DPK live 或舊校準。
+- 混合職責先列明，不順手拆分；歷史 fixture、pin、hashes、receipts 與結果不可改寫。
+
+## 成功條件
+
+- R1：僅五組驗證環境集中，正式能力／測試與 root graph 維持。
+- R2：每批來源、資源、測試、建置與操作入口完整接線，可獨立驗證與回復。
+- R3：實作前鎖定精確 old/new 路徑、四組檔案集合與允許內容差異；純搬移 bytes 不變。
+- R4：分列必要驗證／補充檢查；記錄實際執行案例、到達階段、失敗位置、原因及證據，不只比較數量。
+- R5：blocked／skipped 不算通過；未執行到本批 source、資源或入口，不得以基線相同宣稱無回歸或完整驗收，也不得進入下一批。
+- R6：失敗先停下一批；授權內路徑修正可批內補齊重驗，超界／行為／外部副作用／不安全才回報，必要時撤回且不覆蓋無關修改。
+- R7：E009 現行 pin 的相容性須實測；保留舊證據，不能靠沒有 source 硬編碼推論新產物相容。
+- R8：正式規劃 gate 由獨立 Plan-Reviewer 明示 approved 且 required fixes=0；與實作／發布授權分開。
