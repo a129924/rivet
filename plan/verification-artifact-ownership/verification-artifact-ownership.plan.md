@@ -418,3 +418,54 @@ Goodall本次B4契約充分性正式approved／0 required fixes／0 unresolved�
 ### B4 阻擋文件／停止處置最終獨立審查
 
 Ramanujan正式approved（僅文件與停止處置）、required fixes0、unresolved0；B4 execution仍blocked，B5不放行。已核actualargv／rawSHA／exit65／16.176s及Swift6.3.3 compilerassertion階段，未把App link當hosted pass。B4三十與B5九個oldhash相符／new不存在，B3的170source mode/blob/SHA、固定App七檔／binary／tree、launcher pin／recipe／bindingreceipt均保持，無source變更或重建。lowercause／顯式型別候選仍unknown／未驗，不越界修正；按原授權僅交付本輪三文件證據、push同DraftPR69交Human，不宣稱topic完成。
+
+## VO-RB4 本次受限修正交接
+
+以同原feature及3818c7d為起點，先保留／核對原baseline compilerassertion rawSHA與sourcehash，使用同B4 baseline-host-build argv／env正常host離線重現（仍oldsource）；只在契約獨立approved0後套用一行候選。後續同flags／toolchain／cache與unitmode的build-for-testing→full test-without-building→獨立baseline-final build，實際命令／source指紋／HEAD／rawSHA另存B1_RUN/logs/B4/type-annotation，red／green分開；blocked／0tests不算pass。不rebuild B3 fixedApp，不改B3receipt。此為compiler相容驗證，既有test全數真執行，無需新增行為test或refactor。
+
+- Goal：驗證單行型別候選能否解除B4 testcompile assertion並完成原guarded suite基線。
+- Non-Goal：不改runtime、test expression／expectations、Swift版本／flags／signing／storage，不新增public能力。
+- In-Scope：僅spec VO-RB4 old測試檔一行與四既有文件；相容修正與搬移分開commit。
+- Out-Of-Scope：搬移及其他source內容修改、skip／縮小驗收來避crash、真人流程、版本／安全設定／工具圖面工作。
+- ReadOnly：引用spec VO-RB4其餘內容，特別B3固定170inputs／App／pin／binding與正式source／tests保持。
+- Written：空集合。
+- Deleted：空集合。
+- Modify：只引用spec VO-RB4一行型別註記與授權／證據／狀態文件；不以搬移例外藏入。
+- TestCase：TC-VO-014原compilercrash適用red／一行candidate編譯green／完整hosted實際body與資源／audit／guarded入口、獨立App baseline-final、限定test formatlint／diff、其餘hash及B3綁定保持；候選無效或新超界問題先停。獨立Tester需親跑正常host必要suite，Reviewer approved0才解除BL-B4；完整B4原post／production驗證gate仍保留。
+
+Plan-Reviewer先明示本次contractapproved0才改test；green不自動放行B4，Tester→Reviewer後先獨立修正commit／修後hash綁定，再依原B4契約繼續，不重問已授權的其餘批次。
+
+### VO-RB4 A實測未解／B開始交接
+
+原source本輪red正常host exit65／6.986s，rawSHA3318bcc1ededd9f5892cc6251faf00aa6145cef4441da175ece301e329a2b1fc。Mendel契約approved0後A只加query binding型別，green-host-build仍exit65／5.215s、同assertion／同表達式（rawSHA f58b0ac76ce81390853afa30610fba3a96662afe62f73a6963b724e5f1a866ae）。未跑testbody/final，未算green；A已原bytes還原。source namespace限定查找未發現repo自訂Dictionary，但lowercause仍unknown，不宣稱已知upstream bug。
+沿同九欄／TC-VO-014及本次限定型別註記目的，候選B精確差異只引用spec最新段；這次Modify仍只同old test一行與四docs，Written／Deleted空。新Plan-Reviewer先核scope／充分性；通過後才同flags/argv/env套B build-for-testing→完整hosted→獨立baseline-final，logs另存candidate-b前綴、不覆寫A。B失敗或判超界即停，不再擴修改。原B4移後及production必要gate仍保留。
+
+### VO-RB4 B結果／C scope交接
+
+B type annotation編譯仍同assertion，未跑hosted或final，raw log／argv／source指紋在type-annotation/candidate-b-host-build-result.json與log。已還原原檔，B段停止／不續搬移；不是測試通過。現C僅提供Dictionary／map的顯式型別資訊，精確候選以spec新段單一來源為準；仍同九欄與TC-VO-014、四docs＋同old test，先新Plan-Reviewer檢scope再套用，紅綠／完整suite／獨立gate仍必須真到，sourceHash原列保留。若scope不符或需非typeannotation更動則blocked，不用既有approval擴範圍。
+
+### VO-RB4 C 實際結果／停止契約
+
+Hubble 獨立 Plan-Reviewer 對精確 C scope／contract approved，required fixes=0、unresolved=0。main 依同一 B4 recipe／正常 host／標準 sandbox／固定 offline dependency、unitmode 與 unsigned 參數套 C；`candidate-c-host-build-result.json` 留完整 argv／程序 env／HEAD／source SHA，raw log 與同名 receipt 在既有 B1_RUN 的 `logs/B4/type-annotation/`。build-for-testing exit65／6.319s，raw SHA `a65e8a7437844c24863e8d1b88cc366d554a9cf12e4d5f7422f62b2d7310e397`。A／B 及原 red 的失敗與 log 不覆寫。
+
+這次未出現原 assertion；失敗階段為 GitHubConnectionVerificationTests 的 SwiftEmitModule。三處都同時可見 GitHubIntegration public 型別與 GitHubConnectionVerification internal 同名型別，diagnostic 為：
+
+| 原測試位置 | 明確診斷 | 判定 |
+|---|---|---|
+| GitHubConnectionCoordinatorTests.swift:485 | GitHubOAuthAppConfiguration ambiguous for type lookup | test module emit failed；不是 body expectation failure |
+| GitHubOAuthAuthorizationSessionTests.swift:256（C 暫時多兩行；還原後 :254） | GitHubOAuthAuthorizationSession ambiguous for type lookup | 同上；超出原 query 表達式 |
+| GitHubOAuthDataProtectionStoresTests.swift:210 | GitHubOAuthDataProtectionStores ambiguous for type lookup | 同上；其他 test 不在本次限定修改集合 |
+
+這三處是已查證的當前編譯阻擋；原 assertion 的底層因果，以及型別消歧後是否還有其他診斷／測試失敗，仍 unknown。沒有完整 test bundle，後續 full guarded hosted bodies、資源／audit／入口、獨立 baseline-final、B4 post 及 production 獨立驗證皆未執行；未跑不是 skipped-pass。不可用診斷改變宣稱無回歸或原問題完全解決。
+main 已精確逆轉 C，原 bytes hash 引用 spec 原列；沒有失敗 source 修正 commit，沒有 B4／B5 搬移。只保留四 docs 的授權、獨立 planning verdict、實驗／停止證據。獨立 Tester 重現與 Reviewer 停止處置審查尚待，沒有宣稱 execution gate approved。
+
+最小必要下一步是由 Human 決定是否另准三處限定測試型別消歧（其餘變更集合須由實際 compiler 診斷鎖定，不預先擴為整個測試重構）。若獲授權，先確認原測試意圖與應選模組、建立精確 contract 並獨立 approved0，再作受限 red／green、完整 guarded suite／baseline-final；原 B4 移後／production gate 仍保留。本輪沒有實作消歧、不更新編譯器／依賴／flags／權限或行為；不跑真人流程，B5 不放行。
+
+### VO-RB4 獨立 Tester 重現證據
+
+Parfit 已以 require_escalated 正常 host 真跑精確 C；argv／env overrides 與 main C 相同，候選整檔 SHA 同 spec。獨立 build-for-testing exit65／5.322s，raw SHA `c17e05a51b2497b9911a8872a8796f298fffea568b97f31f4d183365ed17c868`；原檔於 finally 精確還原、mode 保持。`tester-c-classification.json` 明示 verdict blocked：相同三處 test module emit 型別歧義、log assertion marker=0／body success marker=0；hosted／final 沒有執行，不能稱完整通過。
+獨立 `tester-c-protection-result.json` 已核 HEAD／branch／index 不變、B4／B5及B3 integrity保持，fixed App modes／hashes及整個pin收據目錄不變，main C log未覆寫、non-Markdown變更空。完整命令／環境／前後snapshot／還原與結果於同 `logs/B4/type-annotation/tester-c-*`；不把保護查核取代必要 suite。停止文件仍交獨立 Reviewer，沒有有效修正或前進 gate。
+
+### VO-RB4 獨立停止處置審查完成
+
+Pascal 最終 verdict approved，required fixes=0、unresolved required fixes=0；僅限本輪四 docs、失敗分類與停止處置。已核必要 receipts／raw SHA、A／B 原 assertion、main／Tester C 三歧義與 exit65、source bytes／mode 還原及無 source diff。Reviewer 明示 execution 仍 blocked：原 compiler 根因未證實解決、完整 hosted／final／post／production 未驗，B4 不搬、B5 不進；三處消歧須 Human 另定精確契約。依原授權只提交本輪四 docs 至同 Draft PR69，交 Human review，不把文件 approved 當作 source 修正完成。

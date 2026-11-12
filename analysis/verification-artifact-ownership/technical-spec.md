@@ -201,3 +201,24 @@ B3 source commit0b6c39f9d3fec7cbdd68d31fb826530cff9be264；binding receipt logs/
 B4 E014：76localrefs未見實體artifact，占用查證及遠端四heads均與已查refs相符，B4原30/30hash吻合。唯一表B4三十列全部鎖定；28個非project／README檔puremove。project兩refs精確各一次：../..→../../..，../../packages/RivetHTTPClient→../../../packages/RivetHTTPClient。README僅現行project操作路徑、四個root文件相對link多一層、用途／離線guarded檢查說明；原live／提示／profile結果保持。
 本表留原位B4 Modify僅README、experiments索引、docs/design-principles、docs/architecture/README及github-oauth-dual-client現行該App路徑、三topic契約／證據檔；不修改其他文件／rootPackage／正式tests。無需改任何路徑assertion：既有bundleID與rootStaticIsolation期待保持。Info.plist、entitlements、scheme、所有App runtime及專屬tests bytes不變，禁止合併重複實作或換簽章／儲存。
 既有unitguard GITHUB_CONNECTION_VERIFICATION_UNIT_TEST_MODE=1先於profile檢查／DPK／OAuth live構造，body只顯示測試文字而非正常.task；hosted isolation／auditcases驗guard及counter。完整現有offline suite並非所有constructor皆fake：factory cases會構造system Security adapter／URLSession／安全亂數，但不做真Keychain load/save、token exchange、遠端I/O；DPK與refresh注入fake Security／transport，relay testPort在NWListener前返回。此為現有受控offline驗證，不把它誤稱全依賴fake或真人驗收，不修改tests迎合名稱。
+
+## VO-RB4：編譯器相容候選精確差異
+
+主對話確認feature／upstream／PR69head均3818c7d且乾淨；Human本次授權限定型別註記。只Modify唯一表B4的old GitHubOAuthAuthorizationSessionTests.swift，在authorizationUsesStatePKCEAndNoSecret()中將唯一`let query = Dictionary(`改為`let query: [String: String] = Dictionary(`；其餘bytes保持，既有test本身作編譯與執行證據，不新增鏡像測試或更動期待。Written／Deleted空，尚不搬移。四份既有規劃只記本次授權／精確例外／基線／獨立verdict與現況。
+其餘29個B4 old檔、B5九檔、全部正式source／test／root graph、B3 170inputs／fixedApp／pin／bindingreceipt只讀。原EDF6c72d盤點hash留原列，成功後在該列允許差異補修後hash，獨立修正commit後追加來源綁定；B4之後puremove須用修後bytes。僅此一行限定候選，未驗前不稱有效；若不能安全完成，停止回報，不順改其他測試／flags／版本。
+
+### VO-RB4 候選A失敗及候選B精確替代
+
+A只加binding型別仍在同一Dictionary表達式typecheck觸發Requirement.cpp289 assertion：exit65／5.215s，rawSHA f58b0ac76ce81390853afa30610fba3a96662afe62f73a6963b724e5f1a866ae，完整body未到達。main已精確還原原檔edf6c72d...32680，未保留失敗candidate或commit。
+候選B仍限定唯一表同一B4 old檔／同一authorizationUsesStatePKCEAndNoSecret()，僅將`let query = Dictionary(`改為`let query = Dictionary<String, String>(`；其餘bytes保持，無binding額外註記、無拆表達式／換map／改值或#expect、無import/helper/runtime/flags/compiler更動。Written／Deleted空，其餘ReadOnly同VO-RB4。此精確替代需新Plan-Reviewer核本次型別註記授權scope並approved0後才套用；不是宣稱Human逐字核准此拼法。若判超界或B無效，停止，不自動擴候選。
+
+### VO-RB4 B未解後的C型別候選（另行scope審查）
+
+B在同參數正常host仍exit65／5.367s，rawSHA75c44a3dde762cc4febffbbc72200e06a8b5e8b7dc81731b65bedd215824e91e，body未到；已只逆向還原原edf檔。前B段的停點已執行（停下並還原，無commit／後批）；現在沿Human當前限定型別註記授權另提C，須新獨立scope／contract審查，不自動套用。
+C僅在同old檔的同一query Dictionary initializer明示constructor<String, String>及map closure `(item: URLQueryItem) -> (String, String) in (item.name, item.value ?? "")`；隱式$0按型別語法改名item而其欄位／fallback原值保持，純必要換行。不要抽變數、換initializer/map、加cast或強制unwrap、不改#require/#expect、inputs或任何其他方法、runtime、flags、version。ReadOnly／Written空／Deleted空／四docs集合保持；此為scope待審的型別資訊候選，未驗有效，不假稱Human逐字核准。若需要型別註記以外修正則停，不擴行為。
+
+### VO-RB4 C 實測與還原
+
+Hubble 對 C 的授權 scope／契約充分性正式 approved，required fixes=0、unresolved=0；不是執行通過。main 僅套用上段 C，候選整檔 SHA-256 `b5ba83cffe4d6213865b557017a3c048f8cd043056c027f7423af001fd9ff586`；正常 host 同原 argv／env 的 build-for-testing exit65／6.319s，raw log SHA `a65e8a7437844c24863e8d1b88cc366d554a9cf12e4d5f7422f62b2d7310e397`。
+本次 log 沒有原 compiler assertion，但 test module emit 明確報三個 ambiguous type lookup：coordinator test 的 configuration 型別、authorization session test 的 helper 回傳型別、DPK store test 的 helper 回傳型別；精確 diagnostic 位置／候選模組及原始證據只見 plan 本輪結果。不改判為 passed；全部 hosted bodies／final 未執行，尚不能確認修完這三處後是否還有其他錯誤。
+C 已精確還原唯一表原 EDF6c72d hash，不增加修後基線 hash、不修改原盤點列；所有 B4／B5 source 保持原位。此輪實際留存變更僅四份規劃文件。限定測試型別消歧是未授權的下一步提案，不是本表現有搬移例外，也不授權合併重複型別或修改正式能力。

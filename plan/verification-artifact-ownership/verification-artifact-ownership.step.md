@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。chore/verification-artifact-ownership；B1–B3完成並push，B3 final source／recipe／artifact／pin綁定獨立approved0。B4 oldsource baseline testcompile觸發Swift6.3.3內部assertion，execution blocked，未搬；B5未開始。
+最後更新：2026-11-12。chore/verification-artifact-ownership；B1–B3完成。VO-RB4 A/B仍原assertion；C在test module emit出現三處同名型別歧義，exit65，已還原。B4 blocked、B5未開始；獨立Tester明示blocked；Reviewer僅四docs／停止處置approved0。待文件commit／push至DraftPR69，execution不放行。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -17,9 +17,9 @@
 | VO-B02 | completed | Implementer | B2同批接線並交Tester→Reviewer | 七檔puremove／三target／bundle輸出／lint／導覽同批完成；post主對話必要項已驗；Tester Chandrasekhar passed0；Reviewer Schrodinger approved0，准續B3 |
 | VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash原契約approved0／RF-1closed保留，現由VO-PIN3追加pin授權；非成果gate |
 | VO-B03 | completed | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 0b6c39f已push；Godelpassed0、Helmholtzpre/postcommitapproved0，170input與artifact／launcher binding真核通過 |
-| VO-B04 | blocked | Implementer | B4完整搬移，交Tester→Reviewer | baseline SwiftCompile crash，未搬移／修改；必要hosted／post未驗 |
+| VO-B04 | blocked | Implementer | B4完整搬移，交Tester→Reviewer | 原assertion保留；C改見三處test型別歧義、仍build失敗且還原；未搬移，必要hosted／post未驗 |
 | VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
-| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B3已完整commitpush／bindingapproved0；B4僅契約及停止證據待本輪發布，B5未開始，不宣稱五批完成 |
+| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B3與3818c7d已push；本輪四docs候選／停止證據待獨立審查後發布，B5未開始，不宣稱五批完成 |
 
 ## Blockers
 
@@ -33,7 +33,7 @@
 | BL-E9 | resolved（B3） | 新精確授權、post正負真驗／獨立成果與commitbinding approved0；舊失配歷史保留 |
 | BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3必要post與commitbinding已獨立approved0；B4 testcompile因compilerassertion受阻，hostedbody／post及B5未驗 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
-| BL-B4 | active：baseline testcompile compilerassertion | 原test16–17型別推斷觸發Swiftfrontend內部assertion；必要bodies/post未驗，source型別候選須另授權且未驗 |
+| BL-B4 | active：原assertion／C test module emit三處型別歧義 | 已授權query型別候選A/B/C皆未完成build；C還原。三處test消歧超出本輪精確集合、待Human；必要bodies/final/post未驗 |
 
 ## Human Check
 
@@ -238,3 +238,37 @@ Goodall正式B4契約充分性approved、required fixes0、unresolved0；已核�
 ### 本輪最後獨立審查及Human停點
 
 Ramanujan文件／停止處置approved、required fixes0、unresolved0；B4 executionblocked、B5不放行。已真核log／argv／source原位與B3全部綁定保持，沒有重跑／改source／調compilerflags或版本。Goodall planningapproved0與baseline未通過分列；僅提交本輪三文件並push同DraftPR69，人類決策限定compiler相容修正候選後再續，不merge／不宣稱topic完成。
+
+## VO-RB4 新授權及契約交接
+
+Human已明確授權限定該test的query型別註記候選及離線驗證；精確一行只在唯一spec維護，九欄與red/green／完整suite在plan。不推翻原五批分類、不新增工具鏈／權限或真人授權；B3固定綁定保持。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-PRB4 | completed | Plan-Reviewer | 各精確候選scope／contractapproved／0fix | A Mendel、B Einstein、C Hubble皆approved／0fix；非執行通過 |
+| VO-RB4 | blocked | Implementer | 限定候選編譯／完整基線交Tester | A/B/C build皆exit65；C三處型別歧義，已還原；沒有green或完整body |
+| VO-TRB4 | blocked | Tester | 獨立重現實驗失敗與還原／完整suite若可到達 | Parfit正常host C exit65／5.322s，同三ambiguity，明示blocked；已還原／保護保持；hosted／final未驗 |
+| VO-RRB4 | completed | Reviewer | 獨立證據／停止處置approved／0fix | Pascal僅四docs／失敗分類／停止處置approved，required fixes0／unresolved0；execution仍blocked |
+
+Mendel正式VO-RB4契約approved／0 required fixes／0 unresolved；main原test正常host重現相同assertion exit65，僅已授權一行候選套用，待真正green／完整body驗證。
+
+### VO-RB4 候選A未通過／B待審
+
+A契約Mendelapproved0不等於有效：main red重現後，A build仍compilerassertion，未到hosted body／final。已只逆向還原該一行，原edf hash保持。B為同一typeannotation目的之constructor泛型一行替代，精確差異只見spec，交獨立Plan-Reviewer核scope；未自稱得到逐字拼法授權或提前套用，不進後批。
+
+Einstein本次候選B契約正式approved／0fix／0unresolved，明示仍屬Human限定typeannotationscope但不由Aapproval推導；main僅已套同一行constructor泛型，待實驗，不提前宣稱有效。
+
+### VO-RB4 B停止／C候選scope待審
+
+B即使Einsteincontractapproved0也不代表有效：main build仍同assertion，已原bytes還原，不commit不進後批。C是同typeannotation目的之closure型別資訊提案，先新獨立審查是否仍屬Human限定範圍；精確差異只見spec，不擅自套用／改行為或環境。
+
+### VO-RB4 C 實測／新停點
+
+Hubble scope／contract approved、required fixes0／unresolved0 後，main C 以原正常 host recipe 真跑 build-for-testing，exit65／6.319s；這次 log 無原 assertion，改為三處 test module emit 的同名型別歧義。具體診斷與 raw SHA 見 plan 本輪結果；source候選hash與還原身分只見唯一 spec，不維護第二份清單。
+C 已還原原 bytes。完整 hosted bodies／guarded入口／audit／資源、baseline-final、所有B4 post／production及B5未驗。三處test消歧超出本次query修改集合，先停；不宣稱compiler根因全解、不把任何未到達當pass。Parfit僅獨立重現失敗／還原，後交Reviewer審停止與範圍；Human決定前不實作消歧。
+
+Parfit 獨立 C 正常 host 重現 exit65／5.322s，明示 blocked；原 argv／env 與 candidate SHA 相同。三個診斷位置一致，沒有 assertion／body success marker；finally 原 bytes／mode 還原，HEAD／index、B4／B5及B3全部保護保持。數值／raw指紋見 plan 證據段；尚待獨立 Reviewer 的文件／停止處置 verdict，不能放行搬移。
+
+### VO-RB4 本輪文件 gate 完成／Human 停點
+
+Pascal 最終 approved、required fixes0／unresolved0，僅限四 docs／失敗證據／停止處置；已核 main 與 Parfit C 實測及原 source 還原。execution 明示仍 blocked，不放行B4／B5；三處test消歧待Human精確契約。依既有直接授權僅將四docs按topic提交／push同DraftPR69交Human，不把文件gate推導為搬移或驗收通過。

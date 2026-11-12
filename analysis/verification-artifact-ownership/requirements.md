@@ -56,3 +56,16 @@ Human以Execution Authorized允許決定空白配置的預期契約、受限修�
 ## B3／E009 現行pin更新：本次明確授權
 
 Human本次授權E009現行pin的精確更新契約，綁定最終來源、建置命令與產物；沿用五批實作／commit／push／同DraftPR69／Human review授權。只在原B3批次內，對搬移後、必要tests通過且獨立建置的最終App重新綁定現行pin，保留歷史pin／hashes／receipts；這是明確追加的受限例外，不由先前approval推導。不得移除或弱化bundle／executable／digest／既有程序／TTY／launch身分保護，不新增真人OAuth／API／DPK或PKCE額度。
+
+## VO-RB4：本次限定型別註記授權
+
+Human明確授權該測試的限定型別註記候選及離線驗證。僅允許B4搬移前的authorizationUsesStatePKCEAndNoSecret()將query binding註為[String: String]，保留Dictionary表達式與全部expectations、inputs及runtime；這是單獨compiler相容修正，不偽稱純搬移。若可解除compilerassertion，完整guarded suite與獨立審查後提交修正、建立修後搬移基線，再依原五批授權續B4／B5。原crash與原hash保留，不授權skip、換工具鏈／flags／依賴／簽章／儲存或live。
+
+本次限定型別註記候選A（query binding）已實測仍觸發同一compilerassertion並還原。續提同一方法／同一行的候選B，僅為Dictionary constructor顯式給<String, String>；這是對本次型別註記授權範圍的局部實作解讀，先交獨立Plan-Reviewer核scope，不增加行為、test期待或編譯條件。
+
+候選B constructor泛型亦未解除compilerassertion，已還原。續提同一Dictionary表達式的候選C，僅明示map closure參數及tuple回傳型別（constructor亦保持明示泛型）；仍是限定該測試的型別註記目的，先獨立scope審查，不以A/B approval推導C，不改資料／期待或編譯環境。
+
+## VO-RB4 本輪結果與新增邊界
+
+A、B 均未解除原 compiler assertion，C 在獨立 scope／contract approved 後實測仍 build-for-testing exit65。C 這次 log 沒有原 assertion，改為 test module emit 階段三處 ambiguous type lookup；不能據此宣稱原 crash 的底層原因已解或完整相容性通過。C 已還原原始 bytes，三個候選都未保留為 source 修正。
+本次僅授權該 query 表達式型別註記；新診斷涉及其他測試檔及 helper 型別宣告，尚未取得精確修正契約。先停 B4／B5，不把不同錯誤或未執行 bodies 當作無回歸；所需最小下一步是人類決定是否另准限定測試型別消歧，再獨立鎖定精確差異、重建完整離線基線。此輪不實作該提案、不修改 production 或 Runtime。
