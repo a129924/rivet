@@ -11,7 +11,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 
 ## 配號與契約鎖定
 
-初稿 E011–E015 為 B1–B5 的候選目的地；目前已鎖定 B1 使用 E011、B2 使用 E012、B3 使用 E013；E014–E015 仍待各批前確認。E011 尚非已合併或已完成的驗證。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；本輪重新列出遠端四個 branches：dev、main、docs/e010-postmerge-registry 與本 feature，SHA 均對應已查本機 refs；未見 E011 占用。本 feature 的 E011 只收納原 rivet-login-ui 功能驗收展示，不重寫其 topic 性質。
+初稿 E011–E015 為 B1–B5 的候選目的地；目前已鎖定 B1 使用 E011、B2 使用 E012、B3 使用 E013、B4 使用 E014；E015仍待批前確認。E011 尚非已合併或已完成的驗證。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；本輪重新列出遠端四個 branches：dev、main、docs/e010-postmerge-registry 與本 feature，SHA 均對應已查本機 refs；未見 E011 占用。本 feature 的 E011 只收納原 rivet-login-ui 功能驗收展示，不重寫其 topic 性質。
 每批前重新查索引／占用並鎖定編號；若衝突，回修本唯一清單並交獨立審查，不能臨場套用舊號或擴張範圍。
 每批先鎖定 baseline、old/new、ReadOnly／Written／Deleted／Modify、設定與入口、允許差異及必要檢查。B1／B2 列已鎖定；其餘批次未確認前仍不是該批實作契約。
 
@@ -20,7 +20,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 基準：`a554a4fee772d3976d5ca2c9331865a604e901e2`。共 73 檔（B1–B5：4／7／23／30／9）。hash 是搬移前檔案 bytes 的 SHA-256；數量不是永久 assertion。
 各列 old 為該批 Deleted、new 為 Written，另有下節留原位的 Modify 清單；集合互斥。未列檔案不可寫入；ReadOnly 是實際讀取但不可改的檔案，不以整目錄替代精確集合。
 
-| 批次 | old／Deleted | new／Written（B1/B2/B3 鎖定；其餘候選） | baseline SHA-256 | 允許差異 |
+| 批次 | old／Deleted | new／Written（B1/B2/B3/B4 鎖定；B5候選） | baseline SHA-256 | 允許差異 |
 |---|---|---|---|---|
 | B1 | `Sources/RivetLoginDemo/main.swift` | `experiments/E011/Sources/RivetLoginDemo/main.swift` | `8f4f4acea31d0a938f6e876d3e86be2315993dc57ef28c442a9137ec03cf1d1f` | 純搬移；bytes 不變 |
 | B1 | `Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `experiments/E011/Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `979ae090b03f1ee79e37d3feebbbcf054cca669ef38231765a9e689357060bb8` | 純搬移；bytes 不變 |
@@ -111,6 +111,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 | B1 | `Sources/Presentation/Resources/Login/GitHubMark.pdf` | ReadOnly：正式資源保留，僅比對搬移前後 bundle bytes |
 | B1 | `Tests/RivetPresentationTests/RivetLoginPresentationTests.swift` | ReadOnly：受影響正式測試保持原歸屬與內容 |
 | B1/B2 | `Package.swift` | Modify：僅 source／test path；產品、target、依賴、resource 宣告不刪改 |
+| B4 | `Package.swift` | ReadOnly：production獨立build與graph驗證，不改任何欄位 |
 | B1/B2 | `scripts/check-swift-format.sh` | Modify：接回原有涵蓋的新路徑 |
 | B1/B2 | `scripts/check-swiftlint.sh` | Modify：接回原有涵蓋的新路徑，不改執行環境 |
 | B2 | `surfaces/pr-reader-webview/package.json` | Modify：僅 bundle:reader 輸出路徑 |
@@ -122,7 +123,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 | B3/B4 | `docs/design-principles.md` | Modify：現行工具路徑與本次歸屬說明，不重設架構 |
 | B3/B4 | `docs/architecture/github-oauth-dual-client.md` | Modify：B3僅現行首次登入App路徑；B4僅現行持續連線工具路徑，不改production契約或歷史結果 |
 | B5 | `docs/architecture/github-oauth-credential-persistence.md` | Modify：現行 runner 路徑，不改正式 adapter 契約及歷史 |
-| B1/B2 | `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` | ReadOnly：保留 target 集合，未證明受影響不得改 |
+| B1/B2/B4 | `Tests/GitHubIntegrationTests/StaticIsolationTests.swift` | ReadOnly：保留target／source集合及原測試期待；B4只跑相關static cases不改檔 |
 | B3 | `experiments/E009/LaunchVerification.swift` | Modify（VO-PIN3本次明確授權）：僅expectedBinarySHA256一個64hex literal換為本次移後最終App實測SHA；所有保護／控制流程bytes不變 |
 | B3 | `experiments/E009/README.md` | Modify（VO-PIN3）：只追加現行pin、來源指紋／來源commit綁定位置、recipe／產物／preflight與限制收據；原文／舊pin／歷史來源保留 |
 
@@ -193,3 +194,10 @@ E009仍現行受控入口。適用unsigned獨立build之binary先核身分／SHA
 Descartes本次契約最終approved／required fixes0／unresolved0，RF1／RF2 closed。E013二十一個puremove檔符合ccf9d21後基線，project僅兩refs、tools README只允許現行入口／相對link／用途例外；launcher相對0f0943a只替換literal。
 現行pin實測SHA `e40f84e6097853d124508b451cab68187d5555a5a8872a0579eb10064ebee427`；來源投影170檔SHA `9374b07de1d4c821021845d0914fdf297ef48a860765aa2cae4c807a75fa2ce6`；app tree SHA `304a1bb175403a46c935eef04bcef1f826fbe2f9bbd4557ec87928d76a77e832`；recipe receipt SHA `61583ebc6e8e57adba38b66b3d35e3ad0f0a4d72a3acc2bec165f5c888676edb`。固定artifact位置／toolchain／完整recipe見E009最新追加收據與外置logs/B3/pin-current/artifact.json／source-inputs.json／toolchain.json。final build前後以及pin檢查後source投影／原artifact保持，舊pin與07335a00基線保留。完整source commit與binding receipt SHA在B3commit後核對並於PR明示，不先編造值。
 必要主對話post已真正到達host build／18tests／67PKCE／獨立final build／selftest與positive preflight；wrongID與tampered均拒絕。尚待獨立Tester／Reviewer及commit-binding，不由作者提前進B4。
+
+## B3 postcommit綁定完成／B4鎖定
+
+B3 source commit0b6c39f9d3fec7cbdd68d31fb826530cff9be264；binding receipt logs/B3/pin-current/commit-binding.json整檔SHA18946bb52063b29b7f7efd99b135716b119675ea2c45b7ce46001a4233d8c4bb，Helmholtz已獨立核170mode/blob/SHA／fixedartifact／launcher／recipe，postcommit approved／0fix。PR69已明示binding欄位且B3已push；該receipt不可再改。本輪不重建B3 App或修改pin。
+B4 E014：76localrefs未見實體artifact，占用查證及遠端四heads均與已查refs相符，B4原30/30hash吻合。唯一表B4三十列全部鎖定；28個非project／README檔puremove。project兩refs精確各一次：../..→../../..，../../packages/RivetHTTPClient→../../../packages/RivetHTTPClient。README僅現行project操作路徑、四個root文件相對link多一層、用途／離線guarded檢查說明；原live／提示／profile結果保持。
+本表留原位B4 Modify僅README、experiments索引、docs/design-principles、docs/architecture/README及github-oauth-dual-client現行該App路徑、三topic契約／證據檔；不修改其他文件／rootPackage／正式tests。無需改任何路徑assertion：既有bundleID與rootStaticIsolation期待保持。Info.plist、entitlements、scheme、所有App runtime及專屬tests bytes不變，禁止合併重複實作或換簽章／儲存。
+既有unitguard GITHUB_CONNECTION_VERIFICATION_UNIT_TEST_MODE=1先於profile檢查／DPK／OAuth live構造，body只顯示測試文字而非正常.task；hosted isolation／auditcases驗guard及counter。完整現有offline suite並非所有constructor皆fake：factory cases會構造system Security adapter／URLSession／安全亂數，但不做真Keychain load/save、token exchange、遠端I/O；DPK與refresh注入fake Security／transport，relay testPort在NWListener前返回。此為現有受控offline驗證，不把它誤稱全依賴fake或真人驗收，不修改tests迎合名稱。

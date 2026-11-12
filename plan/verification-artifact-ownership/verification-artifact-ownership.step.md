@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。chore/verification-artifact-ownership；B1／B2及VO-RB3完成。VO-PIN3契約Descartes approved0，E013完整接線／現行pin已實作，main18hosted／67PKCE／獨立final build與正負preflight通過；Godel完整passed0，Helmholtz僅文件現況RF待複核／postcommit-binding待驗，B4–B5未開始。
+最後更新：2026-11-12。chore/verification-artifact-ownership；B1–B3完成並push，B3 final source／recipe／artifact／pin綁定獨立approved0。B4 oldsource baseline testcompile觸發Swift6.3.3內部assertion，execution blocked，未搬；B5未開始。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -9,30 +9,31 @@
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
-| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1 E011／B2 E012已完成；B3 E013依Descartes精確pin契約approved0實作，必要post與Godel passed0；待成果複核／commitbinding，B4–B5 pending |
+| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1–B3完成；B4 E014已鎖、Goodall契約approved0，但baseline compilerassertion blocked；B5 pending |
 | VO-B01 | completed | Implementer | B1契約內完整搬移，交Tester | 四檔100%rename，三target path／lint／索引／入口同批；必要post已到達，Meitner最終approved |
 | VO-T01 | completed | Tester | B1必要項真正到達並給出結果 | 主對話post編譯／62tests／新wrapper資源入口已驗；Kepler獨立親跑62pass0fail0skip，readback artifacts相符 |
 | VO-R01 | completed | Reviewer | B1獨立成果審查與限制分類 | Meitner最終approved、required fixes0；README離線cache操作RF已關閉；只限B1 |
 | VO-PB2 | completed | Plan-Reviewer | B2契約明示approved且required fixes0 | Feynman正式approved／0fix，7/7hash核對；僅preimplementation |
 | VO-B02 | completed | Implementer | B2同批接線並交Tester→Reviewer | 七檔puremove／三target／bundle輸出／lint／導覽同批完成；post主對話必要項已驗；Tester Chandrasekhar passed0；Reviewer Schrodinger approved0，准續B3 |
 | VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash原契約approved0／RF-1closed保留，現由VO-PIN3追加pin授權；非成果gate |
-| VO-B03 | implemented | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 本輪E013及新pin同批接線，Godel18hosted／67PKCE與正負入口passed0；Helmholtz文件RF待複核、commitbinding待驗 |
-| VO-B04 | not-started | Implementer | B4完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
+| VO-B03 | completed | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 0b6c39f已push；Godelpassed0、Helmholtzpre/postcommitapproved0，170input與artifact／launcher binding真核通過 |
+| VO-B04 | blocked | Implementer | B4完整搬移，交Tester→Reviewer | baseline SwiftCompile crash，未搬移／修改；必要hosted／post未驗 |
 | VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
-| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1／B2／VO-RB3已commitpush同DraftPR69；完整B3待最後成果複核及commitbinding，不宣稱五批完成 |
+| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B3已完整commitpush／bindingapproved0；B4僅契約及停止證據待本輪發布，B5未開始，不宣稱五批完成 |
 
 ## Blockers
 
 | ID | 狀態／問題 | 解除條件 |
 |---|---|---|
 | BL-P | resolved | Popper 正式 approved、required fixes=0；不等於五批執行通過 |
-| BL-N | B1–B3配號已確認；B4–B5 pending | E011/E012完成；E013占用／基線已鎖且移後必要驗證通過，B4／B5仍須批前確認 |
+| BL-N | B1–B3配號已確認；B4–B5 pending | E011–E013完成；E014占用／三十hash已查並鎖定，B5仍待批前確認 |
 | BL-B1 | resolved（B1） | baseline／post真正source build、62tests、wrapper資源／入口與獨立成果approved0，commit7e5f4fd |
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
 | BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates舊baseline及Godel移後normalhost各67pass；restricted失敗保留，RF-TPIN3-01closed，不代替commitbinding |
-| BL-E9 | 新授權下main及獨立post通過，待成果／commit gate | 原失配保留歷史；新pin取移後final，正向接受／陰性拒絕真到，尚不提前放行 |
-| BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3修後hosted／獨立final／入口post及Godel已真通過；目前只待成果複核／commitbinding，不以歷史fail作現況 |
+| BL-E9 | resolved（B3） | 新精確授權、post正負真驗／獨立成果與commitbinding approved0；舊失配歷史保留 |
+| BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3必要post與commitbinding已獨立approved0；B4 testcompile因compilerassertion受阻，hostedbody／post及B5未驗 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
+| BL-B4 | active：baseline testcompile compilerassertion | 原test16–17型別推斷觸發Swiftfrontend內部assertion；必要bodies/post未驗，source型別候選須另授權且未驗 |
 
 ## Human Check
 
@@ -184,9 +185,9 @@ Dewey最終文件／停止處置approved、required fixes0、unresolved0；B3 ex
 | ID | Status | Owner role | 完成條件 | 證據／缺口 |
 |---|---|---|---|---|
 | VO-PPIN3 | completed | Plan-Reviewer | 本次精確pin與B3契約approved／0fix | Descartes最終approved／0fix，兩RF closed；只核契約 |
-| VO-PIN3 | implemented | Implementer | 同批移後final build與pin綁定並交Tester | BL-E9是已知歷史失配，本次contract審查前仍不動 |
+| VO-PIN3 | completed | Implementer | 同批移後final build與pin綁定並交Tester | 0b6c39f完整B3及pin已驗、postcommitbindingapproved0／push，歷史失配保留 |
 | VO-TPIN3 | completed | Tester | new hosted／PKCE／resource／preflight／陰性控制與hash真到達 | Godel最終passed0；18hosted／67PKCE正常host與正負入口真到，環境RFclosed，不能用舊baseline替代 |
-| VO-RPIN3 | completed | Reviewer | 完整B3成果approved／0fix、commit綁定核對 | Helmholtz完整precommit approved0／RF1closed；postcommitbinding待驗，不以pin完成真人驗收 |
+| VO-RPIN3 | completed | Reviewer | 完整B3成果approved／0fix、commit綁定核對 | Helmholtz完整pre/postcommitapproved0／RF1closed；binding已真核，不以pin完成真人驗收 |
 
 ### VO-PIN3 實作前審查回修
 
@@ -215,3 +216,25 @@ Helmholtz首輪needs-rework／RF1：帳本現行列仍混舊baseline失敗／pos
 ### B3 precommit最終approved
 
 Helmholtz正式approved、required fixes0、unresolved0，帳本現況RF1closed；Godel完整passed0已納。23檔完整批次及source／pin／artifact保持，先提交整批，再實核commitbinding並於PR明示receipt位置／指紋／結果；未核不push或進B4。
+
+## B3 完成→B4 preflight
+
+B3 postcommit Helmholtz finalapproved／0fix／unresolved0，170 committedinput mode/blob/SHA／fixedApp／launcher／recipe真核一致，bindingreceipt原樣。PR已明示sourcecommit0b6c39f、receipt位置／SHA／投影／結果／artifact，該commit已push，非推測完成；完整指紋引用spec。據原五批授權續B4，不逐批重問。
+B4原30hash已核、E014無占用、root正式無反向App依賴；guard與受控offline範圍依Explorer原source查證，九欄／必要命令在plan。先baseline與獨立Plan-Reviewer，沒有搬移。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-PB4 | completed | Plan-Reviewer | B4契約approved／0fix | Goodall僅契約充分性approved／0fix；baseline compilerassertion未解，不放行搬移 |
+| VO-TB4-BASE | blocked | Tester | 正常host App build／fullsuite／資源／guarded入口baseline真到 | main normalhost build-for-testing exit65，Swift frontend assertion；hosted bodies/final/post未驗，oldsource保持 |
+
+### B4 baseline已查具體阻擋
+
+main baseline-host-build exit65／16.176s，SwiftCompile在原Tests/GitHubOAuthAuthorizationSessionTests.swift16–17 Dictionary表達式typecheck觸發Requirement.cpp289 assertion。原因不是已查證權限故障；更底層原因／workaround unknown。App部分已compile/link不等於hosted通過；bodies／guardedentry／final與post／production本批驗證未到達，B4未搬、B5不進。詳plan原始log／argv／env與最小未授權候選，交獨立Reviewer分類，不改無關source。
+
+### B4契約審查與實測停點分列
+
+Goodall正式B4契約充分性approved、required fixes0、unresolved0；已核三十hash／新位置未存在與guard／production必要項／ReadOnly範圍。此審查不放行baseline失敗：main已確認compilerassertion觸發位置，底層原因／未驗候選仍unknown，B4 execution blocked，B5不進；獨立Reviewer分類及停止文件仍待。
+
+### 本輪最後獨立審查及Human停點
+
+Ramanujan文件／停止處置approved、required fixes0、unresolved0；B4 executionblocked、B5不放行。已真核log／argv／source原位與B3全部綁定保持，沒有重跑／改source／調compilerflags或版本。Goodall planningapproved0與baseline未通過分列；僅提交本輪三文件並push同DraftPR69，人類決策限定compiler相容修正候選後再續，不merge／不宣稱topic完成。

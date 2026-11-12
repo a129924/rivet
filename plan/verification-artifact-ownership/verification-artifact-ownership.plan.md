@@ -388,3 +388,33 @@ Godel RF-TPIN3-01 closed，最終Tester passed／required fixes0／unresolved0�
 ### 完整B3 precommit成果最終審查
 
 Helmholtz最終approved、required fixes0／unresolved0，唯一帳本現況RF1 closed；已納Godel最終passed0與完整23檔／21puremove／refs／README／170inputs／fixedApp／launcher保護。固定Apollo checkout末查tracked乾淨、revision仍38c202227d0f09508e573dcf22f54885cfb0c5d4。現在只准完整B3commit後實核binding，binding未完成前不push／不續B4，不把precommitapproval說成postcommit已驗。
+
+## B4 開始交接與適用基線命令
+
+B3 postcommit已approved0並push0b6c39f；source／binding指紋只引用spec，不重複維護。全程原feature。B4 E014／三十路徑與允許差異已鎖唯一spec，先正常host離線baseline build-for-testing→完整test-without-building→獨立build，source仍old。沿用本次固定B3 SourcePackages、-disableAutomaticPackageResolution／-onlyUsePackageVersionsFromResolvedFile／-skipPackageUpdates與Debug／platform=macOS／CODE_SIGNING_ALLOWED=NO／CODE_SIGNING_REQUIRED=NO／CODE_SIGN_IDENTITY=；project／scheme改為B4唯一表與GitHubConnectionVerification。本批輸出／modulecache／tmp／packagecache分到B4目錄，baseline與post各獨立host-DD及final-DD。
+僅程序注入GITHUB_CONNECTION_VERIFICATION_UNIT_TEST_MODE=1；清除GITHUB_CONNECTION_VERIFICATION_MODE／GITHUB_CONNECTION_VERIFICATION_RECEIPT與兩RIVET_VERIFY clientkeys，不dump繼承值；GitHTTPHTTPS拒絕、GIT_TERMINAL_PROMPT=0。完整實際argv／env／HEAD／toolchain／rawlogs存B1_RUN/logs/B4，各case真正到達才pass，完整case集合用baseline與post名稱核對，非比失敗數。
+
+- Goal：持續連線獨立驗證App完整集中E014，維持受控offline build／hosted入口、原資源身分與production獨立性。
+- Non-Goal：不改App／DPK／OAuth／取消／儲存行為、簽章／profile、正式API或合併Runtime。
+- In-Scope：只引用spec B4三十Written／Deleted與其例外、留原位B4 current導覽及topic證據／狀態。
+- Out-Of-Scope：其他批次、真人OAuth／API／DPK、normal LaunchAction、讀真profile或credential、全域環境修復及新圖面／工具。
+- ReadOnly：spec不可寫者；production與正式tests／rootgraph、B3 source／pin／fixedartifact／receipt保持。
+- Written：spec B4 new30檔，project／README明列例外隨Written；無額外新增。
+- Deleted：spec B4 old30檔；完整逆mapping與批前0b6c39f bytes可回復，不覆蓋無關修改。
+- Modify：僅spec留原位B4適用列；無RootPackage／lint或test期待變更。
+- TestCase：TC-VO-002／006／008／009／010；必要baseline/post App與hosted fullsuite、真guarded hosted launch／isolation／audit、plist／entitlements原bytes與build身分。post獨立SwiftPM scratch實際build五正式targets GitHubIntegration／RivetPRInbox／RivetPRReader／RivetPRReaderWebViewBridge／RivetPresentation，並跑filter packageDeclaresTheLockedTargetGraph|targetContainsOnlyTheLockedSourceFilesAndNoForbiddenImports，必須真到兩個正式static test bodies；不要跑會真增刪Keychain的整個GitHubIntegrationTests。補充links／hash／refs／formatlint不代替必要項。
+
+Production recipe沿既有swift offline標準sandbox參數，僅scratch/cache/modules改B4獨立目錄，從既有barecache固定Apollo seed、不更新版本；順序失敗即停。新App hosted suite僅無真I/O的既有受控路徑，不宣稱所有constructorfake；具體邊界見spec。baseline必要項真正完成且Plan-Reviewer approved0才搬移；post Tester／Reviewer approved0後完整commit／push，再續B5；不擴無關修正。
+
+## B4 baseline compiler assertion：停止搬移
+
+主對話以正常host／標準sandbox、既定offline／unsigned與B4 unitguard原source執行baseline-host-build，source HEAD0b6c39f；exit65／16.176s，raw SHA cf4f6e757ea86d24e4e3917c10b3fc5a4a7d872a196641f9f84c4b51bc71ade1，完整argv／env／log在B1_RUN/logs/B4/baseline-host-build-result.json及log。
+失敗階段是GitHubConnectionVerificationTests的SwiftCompile，檔案GitHubOAuthAuthorizationSessionTests.swift；Apple Swift6.3.3 frontend內部Assertion failed: (!firstType->hasTypeVariable()), checkRequirementsImpl at Requirement.cpp:289。stack定位authorizationUsesStatePKCEAndNoSecret()第12行method內，第16–17行Dictionary(uniqueKeysWithValues: (components.queryItems ?? []).map { ($0.name, $0.value ?? "") })表達式的type check。這是compiler assertion crash，並非test expectation failure或已查證的權限／manifest／signing阻擋；更底層原因及可行workaround仍unknown，不宣稱有已驗證修法。
+App sources已實際編譯／連結，但test bundle未成功完成；完整hosted bodies、isolation／audit／guarded入口、獨立baseline-final及所有B4post／production獨立驗證均未執行，不能以App link或其他檔編譯成功算完整通過。後兩個既定baseline命令未繼續。B4 source尚未搬移／修改；B5未開始，B3固定artifact／pin／binding保留。
+既有授權只許搬移／路徑接線／相關斷言；這個型別推斷表達式不屬路徑修改。本輪不改test期待、不skip該case、不加放寬編譯／安全flags、不換版本或重建B3。最小下一步交Human：另行授權限定該test表達式的顯式型別註記候選（例如只將query binding標為[String: String]、保持原表達式與所有expectations），先取得受控red／green證據與獨立審查，再重建B4必要基線；此候選尚未套用／驗證，不保證解crash，不自行實作。
+
+Goodall本次B4契約充分性正式approved／0 required fixes／0 unresolved；不取代baseline，未宣稱hostedbody或final通過。主對話已查明compilerassertion及表達式位置，底層原因仍unknown，交獨立Reviewer核原始證據及停止處置。
+
+### B4 阻擋文件／停止處置最終獨立審查
+
+Ramanujan正式approved（僅文件與停止處置）、required fixes0、unresolved0；B4 execution仍blocked，B5不放行。已核actualargv／rawSHA／exit65／16.176s及Swift6.3.3 compilerassertion階段，未把App link當hosted pass。B4三十與B5九個oldhash相符／new不存在，B3的170source mode/blob/SHA、固定App七檔／binary／tree、launcher pin／recipe／bindingreceipt均保持，無source變更或重建。lowercause／顯式型別候選仍unknown／未驗，不越界修正；按原授權僅交付本輪三文件證據、push同DraftPR69交Human，不宣稱topic完成。
