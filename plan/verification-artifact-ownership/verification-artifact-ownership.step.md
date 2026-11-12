@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。B1–B3與修正3fe0c9a已push；B4完整搬移main必要項、Confucius Tester passed0、Leibniz最終Reviewer approved0／RF-1closed，待整批commitpush。B5未開始；18:20前須結果或安全中斷點。
+最後更新：2026-11-12（18:20前安全中斷）。B1–B4完成，修正3fe0c9a及B4搬移2ede7ad已push／gate全0fix。B5僅原位baseline：187pass＋8optional skip、CLIhelp及unsigned Debug/Rebuilt真compile；未搬移／未改source。topic未完成，交Human review；既有B5授權保留。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -9,7 +9,7 @@
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
-| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1–B3完成；B4 E014原契約／修正baseline保持，完整mapping已搬且main必要項真到，本批獨立gate待驗；B5 pending |
+| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1–B4完整mapping／必要驗證與獨立gate完成；B5 E015無占用／九hash及原位baseline已核，精確pathassert契約與實作gate待補審 |
 | VO-B01 | completed | Implementer | B1契約內完整搬移，交Tester | 四檔100%rename，三target path／lint／索引／入口同批；必要post已到達，Meitner最終approved |
 | VO-T01 | completed | Tester | B1必要項真正到達並給出結果 | 主對話post編譯／62tests／新wrapper資源入口已驗；Kepler獨立親跑62pass0fail0skip，readback artifacts相符 |
 | VO-R01 | completed | Reviewer | B1獨立成果審查與限制分類 | Meitner最終approved、required fixes0；README離線cache操作RF已關閉；只限B1 |
@@ -18,8 +18,8 @@
 | VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash原契約approved0／RF-1closed保留，現由VO-PIN3追加pin授權；非成果gate |
 | VO-B03 | completed | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 0b6c39f已push；Godelpassed0、Helmholtzpre/postcommitapproved0，170input與artifact／launcher binding真核通過 |
 | VO-B04 | completed | Implementer | B4完整搬移，交Tester→Reviewer | 原Goodall契約／修後3fe0c9a baseline保持；30檔完整搬移及全部必要項真到，Confucius passed0／Leibniz最終approved0 |
-| VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
-| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B3及3fe0c9a獨立fix已push；B4完整搬移main pass待本批獨立gate與commit，B5未開始，不宣稱五批完成 |
+| VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 前批已完成；僅原位baseline187pass/8optional skip及copied兩build，B5實作／搬移未開始 |
+| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B4及獨立fix已commitpush；B5只唯讀前置／baseline，未搬移，topic尚未完成 |
 
 ## Blockers
 
@@ -31,7 +31,7 @@
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
 | BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates舊baseline及Godel移後normalhost各67pass；restricted失敗保留，RF-TPIN3-01closed，不代替commitbinding |
 | BL-E9 | resolved（B3） | 新精確授權、post正負真驗／獨立成果與commitbinding approved0；舊失配歷史保留 |
-| BL-O | B1–B4必要項及獨立gate完成；B5必要驗證未到，歷史DPK有8skip | B4新入口／78hosted／final及prepost正式五targets＋兩static bodies真到；Confucius passed0／Leibniz本批approved0；B5未驗，原失敗保留 |
+| BL-O | B1–B4完成；B5只有原位baseline，必要post／copybranch與獨立gate未到 | B5本次187pass＋8optional skip、兩unsignedbuild／CLIhelp0；skip不算pass，未搬／未驗post；原失敗與歷史保留 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
 | BL-B4 | resolved（VO-RB4Q-F受限修正） | main完整build／78tests／final／保護、Confucius passed0／Leibniz approved0；原根因unknown與失敗保留，修正commit綁定後才能續原B4post／productiongate |
 
@@ -321,3 +321,17 @@ Confucius B4獨立Tester正式passed／0fix，78cases與107含參數execution身
 Leibniz B4首輪needs-rework／RF-1：BL-O現行列尚混舊Tester待驗。已僅同步Confucius passed0／Reviewer待審／B5未驗，保留歷史；source無再變，必要審查其餘均通過，待原Reviewer唯讀複核。
 
 Leibniz B4最終approved、required fixes0／unresolved0，BL-O RF-1 closed；此行政補記沒有source變更。完整B4整批提交／push後續B5，不能由B4通過推導B5驗收；18:20前須有可恢復中斷點或結果。
+
+## B4已推送／B5唯讀基線前置
+
+2ede7ad完整B4已push，feature已核乾淨、所有hooks通過；目前安全恢復點。B5只按plan九欄建立唯讀baseline，九原hash/E015無占用已核，repo source不改；後續實作前兩個copy branch的必要pathassert契約仍待補／Plan-Reviewer，不從baseline推導完成。18:20前須以完整既有批次及原B5source交可恢復中斷點。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-B5-PREFLIGHT | completed | Implementer | 唯讀原hash／195cases／copied Debug與Rebuilt／資源與CLI基線 | 原九hash/E015無占用真核，187pass/8optional skip、兩compile/CLIhelp0；只baseline，不是B5驗收 |
+
+## 時間中斷交接
+
+B4 source 2ede7ad已push／postcommit30bytes及mode真核，Confucius passed0／Leibniz本批approved0；B5原九source保持、E015不存在，唯讀baseline結果及未驗項只引用plan/spec及receipts。下一步先補B5原testrow必要兩copybranches的精確pathassert契約／Plan-Reviewer，再依既有授權完成B5，不重新詢問同範圍。此處因Human時間要求安全中斷，不宣稱五批或topic完成，不merge／live。
+
+Leibniz最後文件checkpoint／B4postcommit讀回approved、required fixes0／unresolved0，已核本次基線與未驗界線及repo source保持。僅補本行政verdict後提交三docs／push同DraftPR69交Human；B5實作／post／兩copybranches／獨立gate仍未完成，原授權保持，topic不宣稱完成。

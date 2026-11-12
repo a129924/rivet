@@ -557,3 +557,37 @@ Confucius本批正式passed、required fixes0／unresolved0，正常host親跑�
 ### B4 完整搬移成果最終 approved
 
 Leibniz本批最終approved、required fixes0／unresolved0，RF-1僅BL-O現行Tester狀態已closed。已核30mapping／28puremove bytes及mode相對3fe0c9a一致，兩refs／README／currentdocs／索引符合精確契約；78case與107execution精確一致、pre/post正式十次targetcompile及兩static真到、B3／B5保護保持。沒有行為／資料／簽章／儲存差異；准補行政verdict後整批commit／push同DraftPR69，不自行merge。B5尚未開始；18:20前中斷點／結果要求保持。
+
+## B4 完成後的 B5 唯讀前置／時間中斷契約
+
+B4完整批次2ede7ad已commit／push、hooks全通過，Confucius本批passed0／Leibniz最終approved0；B4來源binding只見既有commit與spec。B5九原hash已核，E015目前無占用；本輪先建立必要離線baseline並在18:20前交可恢復中斷點，B5來源仍原位，不由baseline推導搬移驗收。後續精確新舊mapping仍只在spec。
+
+- Goal：建立B5當前來源的適用離線測試／copied-project unsigned Debug與Rebuilt基線，留下可續作證據。
+- Non-Goal：不是B5搬移／真人驗收，不重播舊run或修改歷史pin／hash／receipt。
+- In-Scope：唯讀spec B5九檔與正式SOURCE_FILES；原unittest完整套件、scratch複製PROJECT_FILES六葉與唯一root-reference接線後build兩原configuration、CLI --help、資源／manifest身分核對。
+- Out-Of-Scope：本輪B5 repo source／test內容修正或搬移、normal dpk-prepare／launch／DPK／OAuth/API、真profile或private context讀取、簽章／儲存／全域／安全／版本改動、新工具／圖。
+- ReadOnly：B5九檔、root正式能力及tests／products／targets／dependencies，B1–B4及B3固定source／pin／產物／receipts。
+- Written：repo空；只本次外置scratch的copied project／root既有Package.resolved副本、DerivedData／cache／tmp與驗證receipts。
+- Deleted：空集合。
+- Modify：repo僅plan／step的本輪證據與中斷狀態；scratch copied project只把唯一相對ref接到原feature root，不回寫template。
+- TestCase：原195unittests按case／skip原因記錄，不把8個可選輸入skip算通過；無額外binary/replay env，非到達必要項保持blocked。複製六葉保留source bytes／resources／schemes，只scratch project ref例外；正常host標準sandbox／固定Apollooffline與unsigned Debug／Rebuilt source實際compile，無normal App launch。原正式SOURCE_FILES四識別與BINDING_SOURCES九葉保持。尚未搬移，不能拿baseline當post證據。
+
+本次只建立baseline；後續B5實作前仍須依既定Plan-Reviewer鎖定精確路徑斷言差異：既有195未直接到達prepare／dpk_prepare兩個copy-and-replace branches，須以原test檔內必要synthetic repo／假profile metadata、禁止external calls與build前sentinel的相關路徑測試補真到，不能用原195或僅manifest代替。這是下一執行契約待補／待審事項，不在本輪解鎖test修改，不新增工具或改Runner行為。
+
+### B5 原位離線 baseline 結果／安全中斷
+
+本次正常host／標準sandbox／fixedoffline／本次TMP/cache的新條件已獨立記錄，不拿早期195計數代替實測。完整195案例為187pass／8optional skip、0failure/error，逐case與skip理由在logs/B5/baseline-cases.json；8skip不算pass，也不是本次必要copybranch／post驗證。CLI --help真exit0。只scratch複製六PROJECT_FILES、原root lock及唯一root ref，unsigned Debug／Rebuilt實際compile；兩binary不同、bundle／executable可讀且無embedded profile，沒有normal App launch。
+
+| baseline必要項 | 實際結果 | raw SHA |
+|---|---|---|
+| baseline-unit-tests | exit0／5.411s | fa1aedb9cebff8b0df63f21bce021489b51d344b5898534b845d9f85d62e83ea |
+| baseline-cli-help | exit0／0.071s | 5ee52417e4950d4be8fa5e467126015af85737b10a9b968a13ba80e8793ed7b5 |
+| baseline-Debug-build | exit0／15.729s | 1119fe6103ceb4247bef118eaad05f62cf0acf7c67a33a76ae17cac98f74edcc |
+| baseline-Rebuilt-build | exit0／18.936s | 8c589447a6e59aad093fb12b93008852303357806334b45484c0135f00082aa6 |
+
+完整argv/env overrides／removed keys／source HEAD綁定各result receipt；不dump繼承secret值。baseline-artifact-summary.json與baseline-protection.json記source/leaf identity、原九hash／E015不存在／正式root及B4保持。B4 postcommit30bytes／modes綁定亦已核。B5必要新增pathassert契約／正式Plan-Reviewer、真正搬移後入口／source／資源／suite與獨立Tester／Reviewer均未完成，不宣稱B5或topic完成。
+依Human18:20前中斷點要求，本輪以已push完整B4與原位B5baseline交Human review，收尾source不留半套。後續仍依原五批B5授權續作，只需補現有testrow所需精確pathassert例外／gate，不重問已授權範圍、不重開目錄/package方案；新具體超界才停。這是時間中斷，不是新功能或新外部副作用授權。
+
+### 時間中斷文件／B4 postcommit 最終獨立審查
+
+Leibniz正式approved、required fixes0／unresolved0，僅限三docs checkpoint與B4 postcommit讀回。已核PR69 openDraft/head2ede7ad、30 committed/worktree／已測SHA與modes、B3binding、B5九原hash／E015不存在，以及本次195中187pass／8有理由skip、CLI與copied兩build／產物。現行summary／ledger一致，未把baseline當post或開啟B5source修改；原B5授權保持，實作與驗收仍待精確契約／gate。此行政verdict不增加操作授權，不把topic標為完成。

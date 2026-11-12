@@ -239,3 +239,8 @@ VO-RB4Q-F完整精確集合為原三檔13引用加本次5，共四檔18既有引
 ## B4 修後基線鎖定與完整搬移續作
 
 獨立VO-RB4Q-F已完整通過，修正commit及postSHA只見本表原四列；commit receipts已核committed blobs／worktree等於最終驗證bytes。B4原Goodall approved0之精確三十mapping／兩refs／README及現行導覽差異保持，現在只以修後四檔bytes作puremove基線，沒有新增source內容修正。28 puremove含四個已獨立修正tests；project兩refs、README現行兩commandprefix／四relative links與既定offline操作說明例外。E014目錄目前不存在，其他mapping／分類／正式rootgraph／產品能力與原歷史保持。
+
+## 18:20前時間中斷點：B4完成、B5原位基線
+
+B4完整來源commit `2ede7adfde625fa22365ebc1555298ae0327677d` 已push；postcommit-binding.json真核30個committed／worktree bytes一致、全部tracked modes相對修後baseline保持。四test修正來源仍在原四列，不重複維護hash。Confucius本批passed0／Leibniz本批最終approved0；B3 pin／fixed產物／歷史收據保持。
+B5僅唯讀前置：九原hash相符、E015未建立，repo source／test／manifest／signing／storage不改。原195tests實際187pass＋8optional skip，CLIhelp與scratch copied-project Debug／Rebuilt source compile皆exit0，非搬移後驗證。來源與leaf身分保持；scratch中唯一root ref接線不回寫template。不把原195當成prepare／dpk_prepare兩copybranches已真驗，不把8skip算通過；下一實作契約必須先鎖必要相關pathassert精確差異並經Plan-Reviewer，才續B5。這是時間中斷點，不新增人類授權需求或重開方案。
