@@ -11,7 +11,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 
 ## 配號與契約鎖定
 
-初稿 E011–E015 為 B1–B5 的候選目的地；目前已鎖定 B1 使用 E011、B2 使用 E012；E013–E015 仍待各批前確認。E011 尚非已合併或已完成的驗證。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；本輪重新列出遠端四個 branches：dev、main、docs/e010-postmerge-registry 與本 feature，SHA 均對應已查本機 refs；未見 E011 占用。本 feature 的 E011 只收納原 rivet-login-ui 功能驗收展示，不重寫其 topic 性質。
+初稿 E011–E015 為 B1–B5 的候選目的地；目前已鎖定 B1 使用 E011、B2 使用 E012、B3 使用 E013；E014–E015 仍待各批前確認。E011 尚非已合併或已完成的驗證。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；本輪重新列出遠端四個 branches：dev、main、docs/e010-postmerge-registry 與本 feature，SHA 均對應已查本機 refs；未見 E011 占用。本 feature 的 E011 只收納原 rivet-login-ui 功能驗收展示，不重寫其 topic 性質。
 每批前重新查索引／占用並鎖定編號；若衝突，回修本唯一清單並交獨立審查，不能臨場套用舊號或擴張範圍。
 每批先鎖定 baseline、old/new、ReadOnly／Written／Deleted／Modify、設定與入口、允許差異及必要檢查。B1／B2 列已鎖定；其餘批次未確認前仍不是該批實作契約。
 
@@ -20,7 +20,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 基準：`a554a4fee772d3976d5ca2c9331865a604e901e2`。共 73 檔（B1–B5：4／7／23／30／9）。hash 是搬移前檔案 bytes 的 SHA-256；數量不是永久 assertion。
 各列 old 為該批 Deleted、new 為 Written，另有下節留原位的 Modify 清單；集合互斥。未列檔案不可寫入；ReadOnly 是實際讀取但不可改的檔案，不以整目錄替代精確集合。
 
-| 批次 | old／Deleted | new／Written（B1/B2 鎖定；其餘候選） | baseline SHA-256 | 允許差異 |
+| 批次 | old／Deleted | new／Written（B1/B2/B3 鎖定；其餘候選） | baseline SHA-256 | 允許差異 |
 |---|---|---|---|---|
 | B1 | `Sources/RivetLoginDemo/main.swift` | `experiments/E011/Sources/RivetLoginDemo/main.swift` | `8f4f4acea31d0a938f6e876d3e86be2315993dc57ef28c442a9137ec03cf1d1f` | 純搬移；bytes 不變 |
 | B1 | `Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `experiments/E011/Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `979ae090b03f1ee79e37d3feebbbcf054cca669ef38231765a9e689357060bb8` | 純搬移；bytes 不變 |
@@ -151,3 +151,10 @@ B3 必須對最終新產物實際記錄來源 revision、允許 diff、build rec
 B2 E012未見占用：已查現有本機refs及遠端四branches（SHA對應已查refs）；不改E011／E009。唯一表B2七列均純搬移、bytes不變，三resources亦不得重產不同內容。TS pipeline留原處，只改bundle:reader輸出。
 本批source／test targets沿用root同名target與依賴／resources宣告；format／lint只再接回E012 Sources／Tests。現行docs/architecture/README只補E012入口連結，不重畫凍結圖、不改正式BC契約。
 原文件swift run可執行，但原始程序不具CUA app識別；沿用歷史暫存app-wrapper驗法，不新增repo工具或簽章設定。wrapper只包同一已建置binary；既有SwiftPM resource accessor優先查app根目錄的Rivet_RivetPRReaderHarnessRuntime.bundle，否則查build目錄。baseline初次畫面由build目錄載入，post須記錄實際URL並驗new資源與Viewed，不用copied資源存在假稱已載入。暫存wrapper識別僅local.rivet.reader-harness-verification，沒有production簽章／profile或storage。
+
+### B3 實作前鎖定
+
+E013未占用：重新確認76個localrefs的實體artifact paths，遠端四heads均與已查refs對應。來源d62e0ef，B3唯一表23/23舊hash吻合；本節鎖定唯一表B3全部new路徑，不另複製逐檔清單。
+唯一source內容例外為project.pbxproj兩個XCLocalSwiftPackageReference：root relativePath由../..改../../..；HTTPClient由../../packages/RivetHTTPClient改../../../packages/RivetHTTPClient，各精確一次。其餘21個非README檔含scheme、plist、source/tests、fixtures、Python及Swift helper皆純搬移bytes不變；tools/README只改現行操作路徑、用途及安全離線操作說明，不改凍結結果／預算。
+必要Modify僅本表列明的README／docs current導覽與本topic三檔、experiments索引；不改lint涵蓋（B3原本不在root lint迴圈）、root manifest／targets／products／dependency版本、scheme guard、簽章／儲存及E009 pin。沒有新增repo檔案或工具。
+E009仍現行受控入口。適用unsigned獨立build之binary先核身分／SHA，再跑既有--self-test與--preflight；若baseline已失配即blocked，不聲稱已驗final移後產物、不搬source。若baseline適用則post最終產物仍須另驗；失配停止下一批，若已搬移只依本批mapping與原bytes反向撤回，不覆蓋其他修改，保留receipts。更新pin仍是未授權人類決策，不自行調整。

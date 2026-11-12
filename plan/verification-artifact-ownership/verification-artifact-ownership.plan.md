@@ -229,3 +229,58 @@ Chandrasekhar verdict passed、required fixes0；親跑68Swift tests／6suites e
 ### B2 最終成果審查
 
 Schrodinger正式approved、required fixes0、unresolved required fixes0；已納Chandrasekhar最終Tester及主對話UI證據，7puremove與允許接線完整、必要post真正執行。Reviewer／Tester未重跑nativeUI，也未另實跑全新空cache的README全流程，不誇大驗證範圍。依既有Human直接commit／push授權提交完整B2，接續B3，不將本批等同topic完成。
+
+## B3 preflight：命令與九欄
+
+B2已獨立approved0，提交d62e0ef；B3沿同一featureworktree，E013／23files／精確兩個reference例外與其他現行導覽允許差異鎖在唯一spec。B3開始前尚未搬source，先重建本主對話正常host基線。B3_RUN表示既有本次暫存根下B3子目錄；logs沿B1_RUN/logs/B3。只複製既有本機SourcePackages（Apollo2.1.2，固定revision38c202227d0f09508e573dcf22f54885cfb0c5d4）至本次scratch，核對checkout與root／project lockfiles；缺少則停止，不抓網路。標準sandbox保留。
+
+```sh
+# PROJECT先指向spec的B3 old project；post須改用同表new project。
+# SOURCE_PACKAGES指向本次copy，DERIVED_DATA按baseline-host／baseline-final／post-host／post-final分開。
+env -u RIVET_VERIFY_GITHUB_CLIENT_ID -u RIVET_VERIFY_GITHUB_CLIENT_SECRET   GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1   GIT_CONFIG_COUNT=2 GIT_CONFIG_KEY_0=protocol.https.allow GIT_CONFIG_VALUE_0=never   GIT_CONFIG_KEY_1=protocol.http.allow GIT_CONFIG_VALUE_1=never   xcodebuild -project "$PROJECT" -scheme GitHubSignInVerification     -configuration Debug -destination 'platform=macOS'     -clonedSourcePackagesDirPath "$SOURCE_PACKAGES" -packageCachePath "$B3_RUN/package-cache"     -disableAutomaticPackageResolution -onlyUsePackageVersionsFromResolvedFile -skipPackageUpdates     -derivedDataPath "$DERIVED_DATA"     CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= build-for-testing
+# 成功後同參數test-without-building（既有scheme guard），final-DD另行build。
+# PKCE只跑unittest discover；不執行--case／校準UI／live，helper protocol分支不開GUI。
+python3 -B -m unittest discover -s "$PKCE_TOOLS" -p test_pkce_negative_probe.py -v
+xcrun swiftc -swift-version 6 -strict-concurrency=complete -warnings-as-errors   -module-cache-path "$B3_RUN/modules" experiments/E009/LaunchVerification.swift -o "$B3_RUN/e009-launcher"
+"$B3_RUN/e009-launcher" --self-test
+"$B3_RUN/e009-launcher" --preflight --app-bundle "$FINAL_APP"
+```
+
+實際argv／env／toolchain／source HEAD／logSHA另存本次receipts。unsigned只限既有計畫的build參數，不寫project簽章設定。hosted與PKCE必要測試若未到test body即blocked；baseline與post在不同DD／source paths要明示，不以同failcount等價。現行pin拒絕baseline時保留事實並停，不假設final新binary必然同hash。
+
+- Goal：既有首次登入驗證App與PKCE工具／fixture完整集中E013，維持受控離線build／tests與E009入口契約。
+- Non-Goal：不改OAuth、UI、helper行為、API／依賴版本、簽章／storage，不採用驗證工具為正式能力。
+- In-Scope：唯一spec B3 locked23列及列明current文件／索引／本topic契約；只兩reference例外與必要路徑文字。
+- Out-Of-Scope：其餘批次、正式能力與正式tests搬移、pin更新／弱化、真人OAuth／API、校準、外部副作用及圖面／治理。
+- ReadOnly：引用spec B3及其他非寫入列，含E009 launcher／歷史README與所有正式能力；不讀憑證。
+- Written：只引用spec B3 new檔，含同表project與tools README的明列內容例外；無額外新增檔案。
+- Deleted：只引用spec B3 old檔；若未搬移則零，反向mapping與hash可復原。
+- Modify：只引用spec B3適用且留在原位的Modify列；搬移後檔案的允許例外歸Written，不與Modify重疊；不改root graph、schemeguard、資源身分與pin。
+- TestCase：TC-VO-002／005／008／009／010／011；必要old／new unsigned source build、guarded hostedtests、PKCE受控cases、fixturebytes、實際finalbundleID／executable／SHA及E009preflight；補充package refs／schemes／README連結與diffhash。必要baseline未到達／失敗即保留未驗與停止，不進下一批。
+
+本節待Plan-Reviewer實作前審查；baseline執行只為取得適用證據，未授權提前搬移。通過後仍須獨立Tester與Reviewer成果gate；失敗可在原範圍內補路徑，超出範圍或pin問題交Human。
+
+## B3 搬移前必要基線失敗：停止
+
+主對話正常host已實際使用上述離線Xcode參數、本次SourcePackages copy、獨立baseline-host-DD、程序限定modulecache與TMPDIR。source HEAD d62e0ef，B3全部source仍是原bytes／原位置。標準package sandbox保留，Apollo固定revision，兩個真配置環境key在子程序移除；既有scheme UNIT_TEST_MODE=1防止App啟動載入live配置。
+
+| 必要項 | 實際結果／到達階段 | log SHA-256 |
+|---|---|---|
+| baseline build-for-testing | exit0／16.780s，App與hosted test source、資源／plist、test bundle實際編譯連結 | aa486f6cd7854151c19010b3b7239e0415c495e9ba5cf26ca4db596143675415 |
+| baseline test-without-building | exit65／19.634s，17tests／5suites真到testbody；16pass、1fail，該case內2issues；不是manifest或權限阻擋 | 1422daa73b0af6d6982704fc05b72ea550d48af1fd6fd6eca863206a49556c89 |
+| 既有E009 launcher compile／self-test | compile exit0／4.930s；self-test exit0／0.406s，live_launch_performed=false、credential_input_performed=false | 外置launcher-compile／launcher-self-test-result.json；不等於App入口preflight |
+
+失敗case：GitHubConnectionCoordinatorTests.absentOrPartialConfigurationNeverStartsLiveAuthorization()，原test第252行，canStart實際true而期待false，2issues。其餘16case包括真正loopback傳遞／取消通過，不把XCTest的0tests摘要或通過suite誤當全通過。
+source查證鏈：App composition僅檢查兩key存在後交給正式GitHubOAuthAppConfiguration initializer；initializer只檢查非空，故空白字串仍可成為preparedConfiguration；coordinator presentation據此canStart=true。case的兩個空白輸入與這個差異吻合（raw log只定位共同斷言，沒有個別迭代標籤，個別輸入歸因來自source核對）。正式OAuth factory另有trim檢查，於建立authorization session前拒絕；不能由UI斷言失敗推論已發生真OAuth／token exchange。這是搬移前既有行為與test期待衝突，具體需要修改何者須另行決策，不納入本次純搬移。
+
+B3成果狀態blocked；未搬23source，不留下半套接線，B4–B5未開始。baseline-final與所有post source／resource／entry均未驗；E009 App preflight尚未執行，pin相容性維持unknown，既有pin／hash／receipts不改，不能聲稱匹配或失配。PKCE獨立Tester結果待補；任何局部通過不解除hosted必要case失敗。
+最小必要下一步：在獨立受限修正授權下決定並修復configuration接受條件與既有test的衝突，完成適用正常host基線與審查，再續既有B3契約。沒有建議更新正式API／storage／signing或弱化test／pin；本topic不自行做行為修正。
+
+### B3 獨立審查結論
+
+Plan-Reviewer Nash最終B3-preimplementation contract approved、required fixes0、unresolved required fixes0，唯一RF-1（Written／Modify互斥）已closed；只是契約足夠，execution仍blocked。獨立Reviewer Jason核對rawlog／receipt SHA、23source原位及原hash、相關正式source未改與具體source因果鏈：B3成果blocked，不放行搬移或後批。對本輪失敗記錄與停止處置明示approved、required fixes0；超出本topic的行為／test衝突保留1個執行阻擋事項，不冒作文件RF已清而執行gate通過。尚待PKCE獨立結果補記；任意局部pass都不解除hostedfail。
+
+### B3 獨立 PKCE baseline 完成
+
+Socrates親跑既定unittest命令一次，source HEAD d62e0ef；normalhost、標準compiler、兩client配置key移除、bytecode停用，TMPDIR與compiler cache僅本次B3子目錄。exit0／8.413s，67pass／0fail／0errors／0skip；loopback兩案、helper真編譯、v1／v3 --protocol-check與受控Swift harness真正到達。23sourcebytes保持，無bytecode新增。這是與前輪受限環境不同條件的新baseline，不比較64舊case總數或把前輪失敗回填成pass。
+外置prefix：logs/B3/pkce-baseline-20261112T075035Z-48040，保留raw.log／argv.json／env.json／receipt.json／cases.json（67逐case）；raw SHA f5cff2aa1cf6c38245626f173d2dc846c675d4014afe320a19eae4c415d484a6。Tester局部verdict passed、required fixes0，明示B3整體仍blocked。hosted唯一失敗與2issues未解，baseline-final／所有post／E009 App preflight及pin相容性仍未驗，不以PKCE成功取代。

@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。分支 chore/verification-artifact-ownership；目前 phase：B1 成果已獨立 approved／required fixes0，commit7e5f4fd已push至DraftPR69；現B2必要post／Tester passed0／Schrodinger成果approved0，接續B3 preflight，B3–B5未開始。
+最後更新：2026-11-12。分支 chore/verification-artifact-ownership；目前 phase：B1 成果已獨立 approved／required fixes0，commit7e5f4fd已push至DraftPR69；現B2必要post／Tester passed0／Schrodinger成果approved0，B2 commit d62e0ef已push；B3 baseline hostedtest失敗blocked，B4–B5未開始。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -9,28 +9,30 @@
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
-| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1 E011及B2 E012 mapping／入口已鎖spec；B2 Feynman approved0；B3–B5仍pending |
+| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1 E011／B2 E012已完成；B3 E013 mapping／入口已鎖spec，Nash契約approved0，execution blocked；B4–B5 pending |
 | VO-B01 | completed | Implementer | B1契約內完整搬移，交Tester | 四檔100%rename，三target path／lint／索引／入口同批；必要post已到達，Meitner最終approved |
 | VO-T01 | completed | Tester | B1必要項真正到達並給出結果 | 主對話post編譯／62tests／新wrapper資源入口已驗；Kepler獨立親跑62pass0fail0skip，readback artifacts相符 |
 | VO-R01 | completed | Reviewer | B1獨立成果審查與限制分類 | Meitner最終approved、required fixes0；README離線cache操作RF已關閉；只限B1 |
 | VO-PB2 | completed | Plan-Reviewer | B2契約明示approved且required fixes0 | Feynman正式approved／0fix，7/7hash核對；僅preimplementation |
 | VO-B02 | completed | Implementer | B2同批接線並交Tester→Reviewer | 七檔puremove／三target／bundle輸出／lint／導覽同批完成；post主對話必要項已驗；Tester Chandrasekhar passed0；Reviewer Schrodinger approved0，准續B3 |
-| VO-B03 | not-started | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 新binary pin未知；不自動更新 |
+| VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash最終approved0，RF-1 closed；不放行失敗baseline |
+| VO-B03 | blocked | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 未搬source；baseline17tests中1fail／2issues，需行為決策；final binary／pin未知，不自動更新 |
 | VO-B04 | not-started | Implementer | B4完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
 | VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
-| VO-D01 | pending | Implementer | 已審bounded topic commit、push、Draft PR交Human | Human直接授權；不得將文件WIP誤稱五批完成 |
+| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1／B2已commitpush同DraftPR69；B3處置文件待獨立審查／發布，未宣稱五批完成 |
 
 ## Blockers
 
 | ID | 狀態／問題 | 解除條件 |
 |---|---|---|
 | BL-P | resolved | Popper 正式 approved、required fixes=0；不等於五批執行通過 |
-| BL-N | B1/B2配號已確認；其餘pending | E011/E012已查占用並鎖定；B2 Feynman approved0；B3–B5仍須各批前確認 |
-| BL-B1 | resolved（僅基線） | Human Execution Authorized後，正常host保留SwiftPM sandbox已完成manifest／product build／62tests；post仍待驗 |
+| BL-N | B1–B3配號已確認；B4–B5 pending | E011/E012已完成；E013占用／hash查證並鎖定，B3 baseline blocked |
+| BL-B1 | resolved（B1） | baseline／post真正source build、62tests、wrapper資源／入口與獨立成果approved0，commit7e5f4fd |
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
-| BL-PK | loopback權限／helpercompile阻擋，部分原因unknown | 逐case證據及適用離線環境；不猜測根因或啟真人流程 |
+| BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates normalhost親跑67pass／0fail／0error／0skip，loopback／helper已到；不解除BL-B3 |
 | BL-E9 | 現行E009 pin與新binary相容性未知 | B3實測最終身分／hash／既有preflight；失配先回報／修契約 |
-| BL-O | GUI／Xcode／DPK build未驗，DPK有8skip | 分必要／補充及到達階段，不把skip算pass，不取未知外部輸入 |
+| BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3 baseline source build已pass但hosted有1fail；final及post未驗，不能放行後批 |
+| BL-B3 | active：baseline hosted case失敗 | 原CoordinatorTests252，空白配置canStart期待衝突；超出路徑修正，需要另行行為／test決策，重建基線後才續 |
 
 ## Human Check
 
@@ -113,4 +115,30 @@ Chandrasekhar passed、required fixes0；68Swift tests／6suites與99TS tests、
 
 ### B2 最終成果審查與交付
 
-Schrodinger正式approved、required fixes0、unresolved required fixes0；已核staged diff、七檔bytes、必要build／tests／resource／native入口及獨立Tester。Reviewer／Tester未重跑nativeUI；README全新空cache全流程未另跑，不增加驗收宣稱。B2完整提交後接續B3 preflight；B3–B5未開始搬移，E009 pin不自動更新。
+Schrodinger正式approved、required fixes0、unresolved required fixes0；已核staged diff、七檔bytes、必要build／tests／resource／native入口及獨立Tester。Reviewer／Tester未重跑nativeUI；README全新空cache全流程未另跑，不增加驗收宣稱。B2完整提交後B2 commit d62e0ef已push；B3 baseline hostedtest失敗blocked，B4–B5未開始；B3–B5未開始搬移，E009 pin不自動更新。
+
+### B3 preflight鎖定（未搬移）
+
+B2 d62e0ef完整提交且hooks通過；E013編號與23sourcehash主對話查證完成，精確路徑與允許差異只見spec。九欄與正常host／標準sandbox／離線Xcode及PKCErecipe見plan。B3先取得新條件baseline；必要項未到或E009 pin拒絕則停，不從B2 approval推導B3通過。B4–B5未動。
+
+### B3 必要baseline失敗（本輪現況）
+
+主對話正常host build-for-testing exit0已編譯App／testbundle；test-without-building exit65，17tests／5suites中16pass、1fail／2issues：原CoordinatorTests252，空白配置相關canStart=true與期待衝突。具體source鏈與logSHA見plan，不把原因猜成權限或搬移回歸。E009僅compile／self-test成功，未跑App preflight，final artifact／pin相容性仍unknown。
+B3 blocked／source未搬，B4–B5未動；不得進下一批或為全通過修改行為／測試。待PKCE Tester與獨立Reviewer分類；必要最小下一步是另行決策configuration與test衝突後重建基線，本輪只記錄證據與停止。
+
+### B3 契約審查回修
+
+Nash首輪needs-rework、required fixes1：九欄Modify錯含搬移後的內容例外，與Written集合重疊。已僅將例外引用歸Written，Modify限定留原位的列，未改清單／允許差異／scope；待Nash複核。execution仍因必要hosted baseline失敗blocked，不由契約回修解除。
+
+### B3 正式獨立判定
+
+Nash契約最終approved、required fixes0／unresolved0、RF-1 closed；Jason獨立成果verdict blocked，禁止搬移／後批，失敗文件及停止處置approved、required fixes0。23source保持原位及原bytes，問題與搬移無關；超出scope的行為／test決策保留1個阻擋，不將契約approved或文件0fix挪成成果gate。本輪等待PKCE Tester後只補事實／發布文件，不繼續source實作。
+
+### B3 PKCE獨立結果與最終停點
+
+Socrates指定命令一次，67pass／0fail／0errors／0skip，8.413s／exit0；兩loopback與helper／protocol真到達，23sourcebytes不變，詳plan及外置逐case receipt。局部passed0，不解除hostedfail；B3 execution blocked，B4–B5未開始。
+本輪只有B2實作commit d62e0ef及B3契約／失敗證據文件；B3 source未搬、root／正式能力未改，沒有半套批次或pin改動。最新文件／PKCEreceipt交Jason複核後，依Human既有授權提交文件、push更新同DraftPR69並交Human，不自行merge或宣稱topic完成。
+
+### 本輪停止文件最終審查
+
+Jason核對最新三份文件與PKCE五份證據後，文件／停止處置最終approved、required fixes0、unresolved0；B3 execution仍blocked，不放行B3或B4／B5。主對話末查：B3／B4／B5共62個old source均原位原hash，對應new路徑不存在；dev工作樹乾淨且HEAD維持a554a4f。只提交本輪三份契約／證據文件；B2已完成的d62e0ef保留，不撤回已驗成果。更新同DraftPR69交Human review，不merge，不宣稱topic完成。
