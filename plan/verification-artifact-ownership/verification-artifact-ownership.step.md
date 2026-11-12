@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。分支 chore/verification-artifact-ownership；目前 phase：正式規劃 approved；B1 前置 blocked；僅交付文件 WIP。
+最後更新：2026-11-12。分支 chore/verification-artifact-ownership；目前 phase：正式規劃 approved；B1 主環境路徑重定向後仍 blocked；僅交付文件 WIP。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -25,7 +25,7 @@
 |---|---|---|
 | BL-P | resolved | Popper 正式 approved、required fixes=0；不等於五批執行通過 |
 | BL-N | 配號候選／未保留 | 各批前核對索引與新占用，必要時回修唯一清單交審 |
-| BL-B1 | Swift manifest先被ModuleCache權限阻擋，未驗product | 原授權限制內取得可實際到達source／tests／入口的離線環境；不改權限或解除安全限制 |
+| BL-B1 | 主對話已重現原 cache 寫入阻擋；標準參數改用可寫目錄後，manifest 的 sandbox_apply 仍被拒，未到 product | 取得可啟動 SwiftPM 標準 sandbox 的適用執行環境；保持 sandbox，不修改權限或繞過限制 |
 | BL-W | 歷史wrapper存在，但新版生成入口／新資源載入未驗 | 定位既有recipe並鎖定，驗新產物；不覆蓋舊freeze |
 | BL-PK | loopback權限／helpercompile阻擋，部分原因unknown | 逐case證據及適用離線環境；不猜測根因或啟真人流程 |
 | BL-E9 | 現行E009 pin與新binary相容性未知 | B3實測最終身分／hash／既有preflight；失配先回報／修契約 |
@@ -54,3 +54,12 @@ manifest 編譯因 ModuleCache 寫入 Operation not permitted 及 .build/reposit
 未到 product source、資源或入口；model／Presentation tests、wrapper／bundle 資源與新版原生入口皆未驗。沒有以相同失敗判定無回歸。
 Tester 確認 tracked staged／unstaged diff 不變，未修改系統權限、環境、安全限制，未重試或啟動真人流程。
 B1 not-started，B2–B5 not-started。僅文件 WIP 交付，不交接任何半套來源給下一批。
+
+## 本輪主對話查證更新（2026-11-12）
+
+Human 新增有限授權：本次可用 SwiftPM／compiler 標準參數把輸出、scratch、cache 指到可寫位置；不改系統／全域／簽章／安全／版本，不停用 sandbox，不在 dev 實作。
+主對話（非 side chat）於 revision 2103e5624ec7597aca2c7eefac879b6c330aa4b6 執行原 build、可寫路徑 dump-package 與完整 build；完整命令及證據僅見 [plan 的本輪重現](verification-artifact-ownership.plan.md#主對話-b1-局部建置路徑重現2026-11-12)。
+實測 scratch/cache/modules/logs 可寫，新 Swift／PackageDescription cache 實際產生；完整 build exit1、1.113s，錯誤改為 sandbox-exec: sandbox_apply: Operation not permitted。
+標準 sandbox 啟動被拒的背後政策原因 unknown；不直接沿用先前推測，不把不同條件的失敗當成等價。
+VO-T01 仍 blocked：未到 B1 source、tests、資源或入口；VO-B01–VO-B05 仍 not-started。沒有搬移或安全繞過；本輪只補現有 plan／step 的命令與證據，不複製單一逐檔清單。
+本輪文件增補已由獨立 Plan-Reviewer Nietzsche 審查：approved，required fixes=0；只確認文件與主環境原始證據一致，不放行 B1，也不挪用前輪 approval。最小下一步交 Human：以能啟動標準 SwiftPM sandbox 的適用環境重跑同參數基線，成功後仍須完成 B1 必要 source／tests／資源／入口驗證。

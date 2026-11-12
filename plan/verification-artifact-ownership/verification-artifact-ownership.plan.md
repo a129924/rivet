@@ -42,6 +42,55 @@ DPK 比較保持可選輸入未設定：RIVET_DIAGNOSTIC_PROBE_BINARY、RIVET_FA
 Reader Swift build／filtered tests、GUI WKWebView、兩個 Xcode App build／tests、DPK copied-project build 未驗。GUI／可寫 cache／既有離線依賴等解除條件不構成自動環境修復授權。
 後續 unsigned build 指定 CODE_SIGNING_ALLOWED=NO、CODE_SIGNING_REQUIRED=NO、CODE_SIGN_IDENTITY=，使用獨立 DerivedData，不沿用歷史 ad-hoc signing。Hosted tests 先確認既有 UNIT_TEST_MODE=1 guard；不啟動正常 App／真人流程。
 
+## 主對話 B1 局部建置路徑重現（2026-11-12）
+
+本次依 Human 新授權，由主對話自己的 exec 環境重現，不把 side chat 權限檢查當成主環境事實。
+新測試 revision：`2103e5624ec7597aca2c7eefac879b6c330aa4b6`。Swift 6.3.3、arm64，使用既有 Xcode toolchain／macOS26.5 SDK；未改版本、全域設定、簽章、安全限制或依賴。
+Human 允許本次以標準參數重定向 scratch／輸出／cache；此為有限的新授權，不改先前歷史限制，也不授權停用 sandbox 或擴大環境修復。
+
+### 原命令及新條件
+
+主對話先直接執行本文件原 Login Demo 離線 build 命令：exit 1。錯誤明列預設 Clang ModuleCache 寫入 Operation not permitted、worktree .build/repositories 寫入被拒，並有使用者層 SwiftPM cache 不可寫警告。這是本主環境觀測，不代表系統檔案權限本身故障；更底層政策原因未調查。
+
+接著建立獨立暫存根，逐目錄建立／移除 write-probe，確認 scratch、cache、modules、logs 可寫。以下 B1_RUN 表示該實際暫存根；外置紀錄可用 basename `rivet-ownership-b1-99s8ewap` 識別。本文件不保存本機絕對路徑。
+SwiftPM --help-hidden 確認支援 -Xbuild-tools-swiftc；不使用已棄用的 -Xmanifest。以下是實際參數的符號路徑表示，變數僅限此建置，不寫入全域環境：
+
+```sh
+# B1_RUN 指向本次已確認可寫的獨立暫存根。
+swift build --skip-update --disable-automatic-resolution \
+  --disable-keychain --disable-netrc \
+  --scratch-path "$B1_RUN/scratch" --cache-path "$B1_RUN/cache" \
+  --manifest-cache local \
+  -Xbuild-tools-swiftc -module-cache-path \
+  -Xbuild-tools-swiftc "$B1_RUN/modules" \
+  -Xswiftc -module-cache-path -Xswiftc "$B1_RUN/modules" \
+  -Xcc "-fmodules-cache-path=$B1_RUN/modules" \
+  --product RivetLoginDemo
+```
+
+先以相同 scratch/cache/manifest-cache/build-tools 參數跑 `swift package ... dump-package` 隔離 manifest；不解析／更新依賴、不啟動產品。之後才跑上列完整 build。
+沒有傳入 --disable-sandbox、沒有修改 HOME／全域設定、沒有 sudo／chmod，沒有對 build 指令要求超出原執行限制的權限，也沒有啟動真人流程。
+
+### 新條件的實測結果（不能與舊條件直接視為等價）
+
+| 操作 | 實際到達／結果 | 未到達 |
+|---|---|---|
+| 原離線 build | exit 1；預設 ModuleCache／.build 寫入受拒 | B1 source、tests、資源、入口 |
+| 指定可寫目錄的 dump-package | exit 1；錯誤改為 sandbox-exec: sandbox_apply: Operation not permitted | manifest 成功執行／package graph、產品與測試 |
+| 上列指定可寫目錄的完整 build | exit 1；1.113s，manifest 標準 sandbox 啟動被拒；無原 ModuleCache／repositories 寫入錯誤 | B1 product source、tests、resource 載入、操作入口 |
+
+新 modules 目錄有10個 cache 檔，包含 Swift、PackageDescription、SwiftOnoneSupport 與 SwiftShims；scratch 有 manifest.db／ManifestLoading。這證明路徑重定向實際生效，不等於 product source 已編譯或 manifest 已成功執行。
+SwiftPM configuration／security 使用者層不可寫警告仍在；未變更這些設定。當前阻擋的明確錯誤是標準 sandbox_apply 呼叫遭拒，拒絕背後的主機／執行政策原因維持 unknown，不臆測為原始碼或依賴錯誤。
+主對話外置原始紀錄：logs/manifest-command.json、logs/manifest.log、logs/build-relocated.log、logs/build-relocated-result.json；均位於上述 B1_RUN。
+完整 build log SHA-256：`b4fc5aa8f2480623d41769b4610fa07dda2b7345193168d7296a2d7d7d0ec181`；結果時間 UTC 2026-11-12T06:52:18。紀錄包含完整 argv、revision、exit、耗時與到達階段，不追補先前未保存的原始輸出。
+
+### 停點與最小下一步
+
+B1 必要 source／測試／新版 wrapper、bundle 資源與入口仍未驗，B1–B5 不開始搬移。既有唯一逐檔清單、候選編號、分類、五批範圍與集中原則不變。
+單純再換可寫目錄沒有證據可解決 sandbox_apply；不以停用 sandbox、改系統權限、要求繞過執行限制、換引擎規避檢查或直接執行 manifest 作為 fallback。
+最小下一步是在允許 SwiftPM 標準 sandbox 啟動的正常本機執行環境，保持 sandbox 開啟、固定來源及依賴，以同一組可寫目錄參數重新取得適用基線。若需由 Human 調整執行政策或另提供環境，先交 Human，不能自行做。
+即使 dump-package／manifest 成功，仍必須實際完成 B1 product build、必要測試、新版 wrapper／資源與入口，經獨立審查後才能繼續；blocked／skipped／unknown 不算通過。
+
 ## swift-implementation 交接
 
 每批開始與完成皆列 Goal、Non-Goal、In-Scope、Out-Of-Scope、ReadOnly、Written、Deleted、Modify、TestCase。
