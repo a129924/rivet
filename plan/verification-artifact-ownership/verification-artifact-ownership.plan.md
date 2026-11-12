@@ -126,3 +126,54 @@ Graphify：既有五工作樹標準位置未見可用 graph，已用限定 rg/so
 PR Lens：實際 bounded diff 後以真實 base／head，固定本機0.11.0，讀既有 overlay（若有），於 repository 外 validate／render。保留 unchanged neighbors／file refs；不改設定、不建立 repo .pr-lens、不上傳或發布。
 Archify 僅在既定 workflow 說明確有必要時使用，不把圖當新治理或 gate 必備；若交付則依技能 showcase／deliver／visual-check。此輪不新增圖面工作。
 工具不取代測試或獨立審查；工具缺失記限制，不擴大安裝、整合或 provider 操作。
+
+## Execution Authorized 後的新基線與 B1 契約（2026-11-12）
+
+Human 明確授權提供可啟動標準 SwiftPM sandbox 的執行環境。主對話以正常本機執行上下文重跑既有 argv（本次輸出／cache/module 路徑不變），未加 --disable-sandbox，未改系統權限／全域設定／簽章／安全政策。這是不同於前輪受限上下文的新基線，不改寫先前 sandbox_apply 失敗。
+來源為 feature HEAD 0fdb01c46df9a3633806745b59a85f8bd26acd97，工作樹無程式變更。Apollo 2.1.2／38c202227d0f09508e573dcf22f54885cfb0c5d4 由既有本機 bare cache 複製到本次 cache；lockfile 不變，程序限定 Git HTTP/HTTPS transport=never，離線 build 明示 fetched from cache。
+
+| 本次基線 | 實際結果 | log SHA-256 |
+|---|---|---|
+| 同參數 dump-package（標準 sandbox 開啟） | exit0，1.319s；manifest／graph 真正執行 | 79f7542623558dfc38d5712bbeecf40acec23ca9c224f9474abfac69e3902545 |
+| 既定 B1 product build | exit0，10.633s；Presentation、LoginDemoModel、LoginDemoHost、main 真正編譯、連結；GitHubMark.pdf 複製 | 039072e5e4d20198c3d285aacdb6ce244d82ba2f84751601089708f8bb052870 |
+| 同選項 swift test，filter LoginDemoModelTests\|RivetLoginPresentationTests\|StaticIsolationTests | exit0，16.302s；62 tests／6 suites 真正執行通過，非 XCTest 的0tests摘要 | 46f297602666233f760e3c76c7f7cb6a4e904f48aca8d0f2de4c5de2ce305d8a |
+| baseline 新 wrapper／入口 | binary SHA 43030844dd2d5b3e17323ddee26881120f1beb92b9190a75bf78dc71389e5d08；主對話 CUA 親見 Welcome／PDF圖示／無網路footer、Continue→模擬waiting→Cancel、PAT本地表單；歷史 wrapper 未改 | 外置 logs/wrapper-baseline.json、ui-baseline.json；CUA 原生畫面與AX於本輪工具紀錄 |
+
+所有外置 receipts 沿用前節 B1_RUN，檔名為 manifest-standard-context-result.json、dependency-seed.json、build-standard-context-result.json、tests-baseline-result.json 與對應 logs。沒有修改 dev 工作樹。
+本次只鎖定／實作 B1，B2–B5 未開始；baseline 通過不等於搬移後通過。E011 與逐檔允許差異以唯一 spec 為準，B1 四個移檔 bytes 不變，root products／targets／dependencies 不變。
+
+### swift-implementation：B1 開始交接
+
+- Goal：僅將 Login 驗收展示完整集中 E011，維持 build／tests／資源與既有離線操作入口。
+- Non-Goal：不改正式 UI／API／行為／簽章／儲存，不新增 package／工具，不處理 B2–B5。
+- In-Scope：唯一 spec 的 B1 移檔列、B1／B1-B2／各批的必要接線與明列新增 README；只作本批需要的列。
+- Out-Of-Scope：其餘批次、正式能力／正式測試搬移、歷史來源與 frozen wrappers／pins 改寫、真人流程。
+- ReadOnly：引用唯一 spec 的 B1 及相關 ReadOnly 列，未列入寫入集合的檔案不可改。
+- Written：引用唯一 spec B1 的四個 new 路徑與 E011 README，沒有其他新增檔案。
+- Deleted：引用唯一 spec B1 四個 old 路徑；原因僅集中收納；回復時反向映射且保留原 bytes。
+- Modify：引用唯一 spec 的 B1／B1-B2／各批中本批必要列；僅三 target 路徑、lint涵蓋、現行導覽與本 topic 契約／證據／狀態。
+- TestCase：TC-VO-002／003／008／009／010；同一參數與正常本機執行條件重驗 post build、上述62tests、hash、正式PDF與bundle、新wrapper原生UI／控制入口；不得只以artifact存在或baseline通過放行。
+
+新增 E011 README 僅補既有操作的可重現步驟；所有逐檔路徑仍只在 spec 維護。B1 契約須先經獨立 Plan-Reviewer approved／required fixes0，再搬檔；搬移後由獨立 Tester／Reviewer 驗證，不把本節當成果approval。
+
+## swift-implementation：B1 完成交接（待成果 Reviewer）
+
+本節承接 B1 開始交接的相同 Goal／Non-Goal／In-Scope／Out-Of-Scope 與 spec 唯一 Written／Deleted／Modify／ReadOnly 集合；沒有事後新增 scope。四個移檔均 bytes 相同，正式UI／正式測試／lockfiles／root products、targets、dependencies、resources不變。
+下列為搬移後相同正常host、標準sandbox、同scratch/cache/module argv、固定本機依賴及程序GitHTTP/HTTPS禁用條件；不是前輪受限上下文的等價推論。
+
+| TestCase／必要或補充 | 真正執行與結果 | 原始證據 |
+|---|---|---|
+| TC-VO-003 必要source build | exit0，4.531s；新E011 Host／Model／main重新編譯及連結；非只manifest | build-post.log SHA 9564d13c757d9bef4a26245abbdc126c3151af5ed1fdc19f9f563d2c73b2e8d6 |
+| TC-VO-003 主對話必要tests | exit0，3.712s；相同62tests／6suites通過 | tests-post.log SHA 24d04aaf4f2de60fb79a19ad43ddf1f6cd2aaaf5f2a829bb0293854694b37d22 |
+| TC-VO-003 獨立Tester必要tests | Kepler 親跑原argv，exit0，3.877s；62pass／0fail／0skip，6suites；案例集合與baseline相同 | tester-post.log SHA 0617d1688eda08465aeb9285f2c3e87073f5f2c0c3abc2c4ff6153cbb60245c6 |
+| TC-VO-003 必要資源／操作入口 | 主對話親驗post wrapper：Welcome、PDF圖示、no-network footer、Continue→模擬waiting→Cancel、PAT範例輸入／Show／submit→verifying、Window→DemoControls→Complete→Connected；關控制窗後主窗顯示simulation完成 | ui-post.json；原生CUA AX／截圖為本輪工具紀錄。Tester只讀證據與核artifact，不聲稱親驗UI |
+| TC-VO-002 補充hash／graph | 4/4移檔SHA符合唯一表；舊path消失；build graph／source lists三target均指E011；正式來源／測試與lockfiles未改 | tester-static-post-result.json；不是另一份受維護清單 |
+| TC-VO-002 補充format／lint／入口語法 | format exit0；SwiftLint正常host exit0，138files／0violations；兩script與README兩shellblocks bash-n均exit0 | Tester保留最初受限上下文SwiftLint cache寫入exit1與正常hostexit0的不同紀錄，不混算 |
+
+post debug／wrapper binary SHA：1aeff9ea17fd45c909dc351ded6c7423d60a7fbb3c39e56fb302d0052de6d870；與本次build產物一致。PDF SHA：37623a1d6bed743407256099357e4a5a93c278903932ae55307d1602fb87a3f1，與正式Presentation資源相同；Info.plist bytes與歷史wrapper相同，歷史wrapper未改。
+全部外置證據沿用 B1_RUN/logs，另含wrapper-post.json、ui-post.json、tester-post-result.json、tester-summary-post.json。未提交原生截圖檔，不將工具畫面誤稱repoPNG artifact；不宣稱重做原topic完整Human／VoiceOver驗收。
+目前 B1 post 必要項均已實際到達，Tester已交接；成果仍待獨立Reviewer明示verdict。B2–B5維持未開始；本輪只交付B1，不將五批一併宣稱完成。
+
+### B1 最終審查補記
+
+Meitner 成果最終 approved／required fixes0。唯一RF為README空cache準備缺口，已補既有barecache與lockfile revision檢查，主對話實跑文件流程exit0／25.972s、source編譯與62tests6suites通過；log SHA ed058de529a63e85d3ff07ca50c6d756d0e8105d183d3dad314063e78e091788，外置readme-offline-workflow-result.json／log。只補原有操作說明，沒有變更scope或source bytes。前節待Reviewer文字為交接當時快照，本節為最新獨立結果；不宣稱B2–B5通過。

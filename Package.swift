@@ -61,16 +61,17 @@ let package = Package(
     .target(
       name: "RivetLoginDemoRuntime",
       dependencies: ["RivetPresentation"],
-      path: "Sources/RivetLoginDemoRuntime"
+      path: "experiments/E011/Sources/RivetLoginDemoRuntime"
     ),
     .executableTarget(
       name: "RivetLoginDemo",
       dependencies: ["RivetLoginDemoRuntime"],
-      path: "Sources/RivetLoginDemo"
+      path: "experiments/E011/Sources/RivetLoginDemo"
     ),
     .testTarget(
       name: "RivetLoginDemoRuntimeTests",
-      dependencies: ["RivetLoginDemoRuntime", "RivetPresentation"]
+      dependencies: ["RivetLoginDemoRuntime", "RivetPresentation"],
+      path: "experiments/E011/Tests/RivetLoginDemoRuntimeTests"
     ),
     .testTarget(
       name: "RivetPRInboxTests",

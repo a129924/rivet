@@ -11,16 +11,16 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 
 ## 配號與契約鎖定
 
-E011–E015 為 B1–B5 的候選目的地，不是已保留或已搬移的編號。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；遠端 dev 與基準 HEAD 相同，但其他遠端新占用未完整查證。
+初稿 E011–E015 為 B1–B5 的候選目的地；本輪已鎖定 B1 使用 E011，E012–E015 仍待各批前確認。E011 尚非已合併或已完成的驗證。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；本輪重新列出遠端四個 branches：dev、main、docs/e010-postmerge-registry 與本 feature，SHA 均對應已查本機 refs；未見 E011 占用。本 feature 的 E011 只收納原 rivet-login-ui 功能驗收展示，不重寫其 topic 性質。
 每批前重新查索引／占用並鎖定編號；若衝突，回修本唯一清單並交獨立審查，不能臨場套用舊號或擴張範圍。
-每批先鎖定 baseline、old/new、ReadOnly／Written／Deleted／Modify、設定與入口、允許差異及必要檢查。以下候選表未完成占號確認前，不是搬移授權。
+每批先鎖定 baseline、old/new、ReadOnly／Written／Deleted／Modify、設定與入口、允許差異及必要檢查。以下 B1 四列已鎖定；其餘批次未確認前仍不是該批實作契約。
 
 ## 唯一逐檔清單
 
 基準：`a554a4fee772d3976d5ca2c9331865a604e901e2`。共 73 檔（B1–B5：4／7／23／30／9）。hash 是搬移前檔案 bytes 的 SHA-256；數量不是永久 assertion。
 各列 old 為該批 Deleted、new 為 Written，另有下節留原位的 Modify 清單；集合互斥。未列檔案不可寫入；ReadOnly 是實際讀取但不可改的檔案，不以整目錄替代精確集合。
 
-| 批次 | old／Deleted | new／Written（候選） | baseline SHA-256 | 允許差異 |
+| 批次 | old／Deleted | new／Written（B1 鎖定；其餘候選） | baseline SHA-256 | 允許差異 |
 |---|---|---|---|---|
 | B1 | `Sources/RivetLoginDemo/main.swift` | `experiments/E011/Sources/RivetLoginDemo/main.swift` | `8f4f4acea31d0a938f6e876d3e86be2315993dc57ef28c442a9137ec03cf1d1f` | 純搬移；bytes 不變 |
 | B1 | `Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `experiments/E011/Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `979ae090b03f1ee79e37d3feebbbcf054cca669ef38231765a9e689357060bb8` | 純搬移；bytes 不變 |
@@ -96,12 +96,18 @@ E011–E015 為 B1–B5 的候選目的地，不是已保留或已搬移的編�
 | B5 | `validation/github-oauth-credential-persistence/Tests/test_live_protocol.py` | `experiments/E015/github-oauth-credential-persistence/Tests/test_live_protocol.py` | `f0b5f63a15a09b23dd22db15a0d06f67ac28b07d9ab248ff9025413efb7d3b80` | 純搬移；bytes 不變 |
 | B5 | `validation/github-oauth-credential-persistence/scripts/credential_storage_live.py` | `experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py` | `b4e28abb50c348f93870aadb4ad6256805c275039c7242530cb7fa19c8d40916` | 例外：模板定位及兩處精確路徑替換；不改邏輯 |
 
-## 留原位的接線清單
+## 留原位的接線與明列新增清單
 
 下表也是本文件唯一清單的一部分。每批開始前把該批實際檔案集合鎖定在此，交接只引用列，不複製另一清單。純搬移檔案不改 bytes；路徑例外只能改該列明示內容。
 
-| 批次 | 精確既有檔案 | 集合／允許差異 |
+| 批次 | 精確檔案 | 集合／允許差異 |
 |---|---|---|
+| B1 | `experiments/E011/README.md` | Written：本驗收展示用途、原 topic、root build／test 與既有 wrapper 包裝／啟動操作，不新增工具或 package |
+| 各批 | `analysis/verification-artifact-ownership/technical-spec.md` | Modify：本唯一清單的批次鎖定與允許差異／證據，不複製另一清單 |
+| 各批 | `plan/verification-artifact-ownership/verification-artifact-ownership.plan.md` | Modify：建置命令、適用基線與驗證證據 |
+| 各批 | `plan/verification-artifact-ownership/verification-artifact-ownership.step.md` | Modify：角色交接、獨立 verdict 與真實狀態 |
+| B1 | `Sources/Presentation/Resources/Login/GitHubMark.pdf` | ReadOnly：正式資源保留，僅比對搬移前後 bundle bytes |
+| B1 | `Tests/RivetPresentationTests/RivetLoginPresentationTests.swift` | ReadOnly：受影響正式測試保持原歸屬與內容 |
 | B1/B2 | `Package.swift` | Modify：僅 source／test path；產品、target、依賴、resource 宣告不刪改 |
 | B1/B2 | `scripts/check-swift-format.sh` | Modify：接回原有涵蓋的新路徑 |
 | B1/B2 | `scripts/check-swiftlint.sh` | Modify：接回原有涵蓋的新路徑，不改執行環境 |
@@ -136,4 +142,4 @@ B3 必須對最終新產物實際記錄來源 revision、允許 diff、build rec
 
 既有外置 wrapper 的符號路徑為 $TOPIC_SCRATCH/native/RivetLoginDemo.app；證據為 plan/rivet-login-ui/evidence/verification.md 及 docs/presentation/login-ui.md。
 既有 bundle ID 為 local.rivet.login-ui-demo，wrapper 使用 executable 與 Rivet_RivetPresentation.bundle。Explorer 讀到歷史 binary SHA `50a30cdc872292f8cd4de5a689b52ae2ab9d6451613067ff8440ba68b384d67f`，不等於本 feature 新產物可用性。
-tracked wrapper 生成入口尚未找到；B1 必須先定位／鎖定既有建置與包裝方法，再驗新版入口與資源，不覆蓋舊凍結產物、不另造功能。
+既有包裝方法已鎖定：保留歷史 Info.plist bytes 與 bundle ID，只在本次獨立 scratch 的 native-baseline／native-post 各複製一份 wrapper；以本次 debug binary 與 Rivet_RivetPresentation.bundle 替換各自 copy，open 該 app。不得改歷史 wrapper、簽章身分或正式 UI。用途文件可提供同一 plist keys 的可重現包裝命令，不新增 repo script／target／package。主對話已親驗 baseline UI，post-move 仍須實際驗證。

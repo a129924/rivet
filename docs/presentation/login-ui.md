@@ -4,6 +4,8 @@
 
 ## 執行與操作
 
+驗收展示 host、專用 Runtime 與專屬測試現集中於 [E011](../../experiments/E011/README.md)；root products／targets 維持。正式 `RivetPresentation` 元件、資源與正式測試保留原歸屬。可寫快取參數與獨立 wrapper 操作見 E011 說明；原 topic 來源／驗收紀錄不追改。
+
 在feature checkout以 `swift build --product RivetLoginDemo` 建置，再以既有驗收 `.app` wrapper啟動；wrapper使用同一debug執行檔與 `Rivet_RivetPresentation.bundle`。主視窗初始 content 780×500 pt，40／60 雙欄，可增大；操作區可垂直捲動。保持系統 titlebar、traffic lights、拖曳與原生輸入控制。
 
 獨立Demo Controls提供System／Light／Dark、Demo text size 13／17／21 pt、七態、failure origin、模擬返回、完成結果與Reset。使用範例輸入即可；沒有 timer、外部連結或 credential storage。Connected 停留展示，不打開 PR；Cancel 回 Welcome；PAT failure 保留可重填表單。

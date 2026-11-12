@@ -19,6 +19,8 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 ## 目前狀態
 
+登入驗收展示的 host、Runtime 與專屬測試集中於 [E011](experiments/E011/README.md)，仍由 root package 既有 target 建置。這只修正歸屬，不撤回正式 UI 採用或改寫原 topic 驗收。
+
 登入 UI topic 已新增 non-BC `RivetLoginView` 與獨立 `RivetLoginDemo` 假資料展示：七態、PAT 本地編輯、原生主窗與獨立控制窗；沒有連接正式 OAuth／PAT、GitHub API 或儲存。Focused 自我測試與 Demo build 通過；root284tests及 lifecycle 四尺寸containment自驗通過，原生完整驗收仍待獨立驗證，未宣稱正式產品登入已交付。詳見 [登入 UI 說明](docs/presentation/login-ui.md)。
 
 `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
