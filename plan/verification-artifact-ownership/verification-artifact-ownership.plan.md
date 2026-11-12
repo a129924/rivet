@@ -324,3 +324,22 @@ Raman verdict VO-TRB3 passed、required fixes0。正常host親跑最終格式快
 ### VO-RB3 最終成果審查
 
 Noether正式VO-RB3 approved、required fixes0、unresolved0；已納Raman最終18hosted／67PKCE、formatlint／hash與原bytes保持證據，確認bounded diff與四artifacts／現行配置說明符合契約，原期待未弱化。只解除空白配置行為阻擋，不代替B3final／pin／post；先獨立behaviorcommit綁修後基線，再接續既有B3必要檢查。Human既有topic commit／push／DraftPR授權沿用，不自行merge。
+
+## 接續 B3：受限修正後獨立 final 基線及 E009 拒絕
+
+VO-RB3獨立fix commit ccf9d21cda0f41db36bc8b0caf24afc7777ff5b2，hooks全部通過。主對話在乾淨已提交feature tree，使用同一B3 sourcepackages copy／固定Apollo／HTTPHTTPS deny／正常host／標準sandbox與modulecache選項；來源仍在唯一spec的old位置，沒有提前搬移。重用green argv，移除resultBundlePath、action改build、DerivedData改本次repaired-baseline-final-DD；env／build設定不變。完整實際argv／env／HEAD及logSHA在logs/B3/blank-config/baseline-final-build-result.json。
+
+| 必要項 | 真正到達結果 | log SHA-256 |
+|---|---|---|
+| 獨立baseline-final App build | exit0／15.220s；乾淨修正source與依賴實際編譯連結，不是hosted test artifact | ad6a9c7ff3062fec892474102f6022d2681499f6797eba4fd4ed9d14284f5bfa |
+| 當前E009 launcher重新compile | 未改source，Swift6 strict／warnings-as-errors及既有modulecache參數；exit0／0.847s | emptylog SHA e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| 當前launcher --self-test | exit0／0.372s，self_test_passed=true；live_launch／credential_input=false | 5ae135adf013f700ec5e6808de945122707596c7c33136f8bd3d20afd76710fa |
+| 原pin --preflight --app-bundle 本次App | exit2／0.019s，App bundle或執行檔指紋拒絕，未launch | aa5df3d2fa75e49bd5ff22957bfb6f20799c4a32f3bfd6eb6f6547a523549a6f |
+
+來源／產物身分與SHA只見spec本輪停點；外置baseline-final-identity.json與launcher-current-{compile,self-test}／baseline-final-preflight-result.json存完整command／sourcehash／launcher binaryhash／exit／logSHA。bundle ID／executable name、檔案存在／可執行核對正常，實際binaryhash與原pin不同；不是以沒有source硬編碼推論相容。launcher與歷史pin／hash／receipts原樣保留，不將unsigned新artifact視為歷史binary重現，也不追認真人驗證。
+B3 execution blocked，source尚未搬移，B4–B5未開始；本次已解除空白配置阻擋，但沒有解除pin邊界。移後source／資源／tests／入口與最終pin相容性仍未驗；不可把本次baseline digest當移後final pin。最小必要下一步：由Human決定是否另行授權新版本現行pin的受限契約，列明精確允許差異與最終來源／recipe／artifact綁定，保留舊證據並經獨立審查後再執行；未授權前不改pin、不搬source或進後批。最新證據交獨立Reviewer分類，不由作者放行。
+
+### 接續B3停止證據最終獨立審查
+
+Dewey文件／停止處置approved、required fixes0、unresolved0；B3 execution blocked／BL-E9有效。已獨立核四rawlogSHA、實際App及launcher digest、身分與原pin保持，確認拒絕在配置輸入／launch前；兩修後SHA符合ccf9d21與唯一原列，其他60檔原hash保持，B3–B5共62old仍原位且new不存在。dev乾淨／a554a4f，feature僅三指定文件變更。
+僅交付新pin停點證據，不更新pin或宣稱移後final已驗。Human另行pin契約仍需綁最終source／recipe／artifact，本次baseline digest不直接提升final pin；本輪按既有授權提交證據並push同DraftPR69，交Human review，不自行merge。

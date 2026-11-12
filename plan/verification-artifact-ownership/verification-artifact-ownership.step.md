@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。分支chore/verification-artifact-ownership；B1／B2完成。VO-RB3契約Gauss approved0、Raman18hosted／67PKCE passed0、Noether成果approved0，原空白配置阻擋解除；先獨立提交修正再續B3final／E009原pin檢查。B3未搬，B4–B5未開始。
+最後更新：2026-11-12。分支chore/verification-artifact-ownership；B1／B2完成。VO-RB3已approved0並commit ccf9d21，18hosted／67PKCE通過，空白配置阻擋解除。接續B3的baseline-final build通過，原E009 pin preflight因SHA失配exit2，現blocked；B3未搬，B4–B5未開始。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -16,7 +16,7 @@
 | VO-PB2 | completed | Plan-Reviewer | B2契約明示approved且required fixes0 | Feynman正式approved／0fix，7/7hash核對；僅preimplementation |
 | VO-B02 | completed | Implementer | B2同批接線並交Tester→Reviewer | 七檔puremove／三target／bundle輸出／lint／導覽同批完成；post主對話必要項已驗；Tester Chandrasekhar passed0；Reviewer Schrodinger approved0，准續B3 |
 | VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash最終approved0，RF-1 closed；不放行失敗baseline |
-| VO-B03 | blocked | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 未搬source；baseline17tests中1fail／2issues，需行為決策；final binary／pin未知，不自動更新 |
+| VO-B03 | blocked | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 空白配置已修復approved0；新baseline-final真build通過，但E009原pin preflight exit2／SHA失配，source未搬 |
 | VO-B04 | not-started | Implementer | B4完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
 | VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
 | VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1／B2已commitpush同DraftPR69；B3處置文件待獨立審查／發布，未宣稱五批完成 |
@@ -30,7 +30,7 @@
 | BL-B1 | resolved（B1） | baseline／post真正source build、62tests、wrapper資源／入口與獨立成果approved0，commit7e5f4fd |
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
 | BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates normalhost親跑67pass／0fail／0error／0skip，loopback／helper已到；不解除BL-B3 |
-| BL-E9 | 現行E009 pin與新binary相容性未知 | B3實測最終身分／hash／既有preflight；失配先回報／修契約 |
+| BL-E9 | active：原pin與修正後baseline-final SHA失配 | 原launcher實跑preflight exit2拒絕，pin不改；移後final未驗，需要Human另行pin契約授權 |
 | BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3 baseline source build已pass但hosted有1fail；final及post未驗，不能放行後批 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
 
@@ -167,3 +167,12 @@ Raman獨立passed／0fix：hosted18tests5suites與PKCE67全部pass，0skip／blo
 ### VO-RB3 成果最終approved與交付
 
 Noether最終approved、required fixes0、unresolved0；Raman最終18hosted／67PKCE及兩檔formatlint／hash已納，原期待與正式契約保持。BL-B3解除，原17testfailure仍保留歷史。獨立fixcommit後續B3必要baseline-final／E009preflight，該入口／pin與全部post仍未驗；不自動放行搬移、B4或pin更新。
+
+### 接續B3的現行pin停點
+
+ccf9d21乾淨source獨立build exit0；App身分／executable正常，但binary SHA與原E009 pin不同，未改launcher重新compile／self-test成功，真preflight exit2／指紋拒絕。完整數值僅引用spec，命令／logs見plan與本次外置receipts，不新增逐檔清單。
+BL-B3已resolved，BL-E9 active，B3 execution仍blocked；source未搬、移後final／post未驗，B4–B5未開始。待獨立Reviewer分類此新停點，之後只提交證據／push同DraftPR69交Human；不自動更新pin、不將本輪baselinehash當最終pin，不宣稱topic完成。
+
+### 本輪最後獨立審查與Human停點
+
+Dewey最終文件／停止處置approved、required fixes0、unresolved0；B3 execution blocked。artifact實際SHA／四rawlogs／原launcher／canonical來源綁定與62未搬oldpaths均已核實，dev乾淨。空白配置修正ccf9d21已approved並提交，另交付本輪pin證據文件；兩者依既有授權push同DraftPR69。Human需另行決定現行pin更新精確契約；未授權前停在此處，B3來源未搬、post未驗，B4–B5未開始，topic未完成。
