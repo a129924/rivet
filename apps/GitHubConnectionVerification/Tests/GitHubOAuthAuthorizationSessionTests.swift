@@ -204,9 +204,10 @@ struct GitHubOAuthAuthorizationSessionTests {
   @Test func requestEscapingPreservesReservedCharacters() async throws {
     let secret = "fake-secret &+=?/☃"
     let code = "fake-code &+=?/☃"
-    let configuration = try GitHubOAuthAppConfiguration(clientID: "fake-id", clientSecret: secret)
+    let configuration = try GitHubConnectionVerification.GitHubOAuthAppConfiguration(
+      clientID: "fake-id", clientSecret: secret)
     let recorder = ExchangeRecorder()
-    let session = try GitHubOAuthAuthorizationSession(
+    let session = try GitHubConnectionVerification.GitHubOAuthAuthorizationSession(
       configuration: configuration, redirectURI: redirect, state: "fake-state",
       verifier: "fake-verifier", now: { authorizationDate }, exchange: recorder.exchange)
     var callback = URLComponents(url: redirect, resolvingAgainstBaseURL: false)!
@@ -251,9 +252,10 @@ private enum FakeAuthorizationFailure: Error { case failed }
 private func makeSession(
   now: @escaping @Sendable () -> Date = { authorizationDate },
   exchange: @escaping @Sendable (URLRequest) async throws -> HTTPResponse = { _ in tokenResponse() }
-) throws -> GitHubOAuthAuthorizationSession {
-  try GitHubOAuthAuthorizationSession(
-    configuration: GitHubOAuthAppConfiguration(clientID: "fake-id", clientSecret: "fake-secret"),
+) throws -> GitHubConnectionVerification.GitHubOAuthAuthorizationSession {
+  try GitHubConnectionVerification.GitHubOAuthAuthorizationSession(
+    configuration: GitHubConnectionVerification.GitHubOAuthAppConfiguration(
+      clientID: "fake-id", clientSecret: "fake-secret"),
     redirectURI: redirect, state: "fake-state", verifier: "fake-verifier", now: now,
     exchange: exchange)
 }

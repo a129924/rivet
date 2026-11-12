@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。chore/verification-artifact-ownership；B1–B3完成。VO-RB4 A/B仍原assertion；C在test module emit出現三處同名型別歧義，exit65，已還原。B4 blocked、B5未開始；獨立Tester明示blocked；Reviewer僅四docs／停止處置approved0。待文件commit／push至DraftPR69，execution不放行。
+最後更新：2026-11-12。B1–B3完成；VO-RB4Q-F主對話完整驗證、Confucius Tester passed0、Leibniz Reviewer approved0，四canonical列已補最終hash，待修正commit綁定後續原B4；B4／B5未搬，18:20前須結果或安全中斷點。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -9,7 +9,7 @@
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
-| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1–B3完成；B4 E014已鎖、Goodall契約approved0，但baseline compilerassertion blocked；B5 pending |
+| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1–B3完成；B4 E014／原搬移契約保持，修後main完整基線通過，獨立修正gate待驗；B5 pending |
 | VO-B01 | completed | Implementer | B1契約內完整搬移，交Tester | 四檔100%rename，三target path／lint／索引／入口同批；必要post已到達，Meitner最終approved |
 | VO-T01 | completed | Tester | B1必要項真正到達並給出結果 | 主對話post編譯／62tests／新wrapper資源入口已驗；Kepler獨立親跑62pass0fail0skip，readback artifacts相符 |
 | VO-R01 | completed | Reviewer | B1獨立成果審查與限制分類 | Meitner最終approved、required fixes0；README離線cache操作RF已關閉；只限B1 |
@@ -17,9 +17,9 @@
 | VO-B02 | completed | Implementer | B2同批接線並交Tester→Reviewer | 七檔puremove／三target／bundle輸出／lint／導覽同批完成；post主對話必要項已驗；Tester Chandrasekhar passed0；Reviewer Schrodinger approved0，准續B3 |
 | VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash原契約approved0／RF-1closed保留，現由VO-PIN3追加pin授權；非成果gate |
 | VO-B03 | completed | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 0b6c39f已push；Godelpassed0、Helmholtzpre/postcommitapproved0，170input與artifact／launcher binding真核通過 |
-| VO-B04 | blocked | Implementer | B4完整搬移，交Tester→Reviewer | 原assertion保留；C改見三處test型別歧義、仍build失敗且還原；未搬移，必要hosted／post未驗 |
+| VO-B04 | blocked | Implementer | B4完整搬移，交Tester→Reviewer | 四檔18引用Human明確授權／Bohr契約approved0；main最終build／78tests／final與保護真到，獨立修正gate待驗；未搬移，B4post／production未驗 |
 | VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
-| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B3與3818c7d已push；本輪四docs候選／停止證據待獨立審查後發布，B5未開始，不宣稱五批完成 |
+| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B3及5a8beed候選／停止文件已push；本輪VO-RB4Q待審，B5未開始，不宣稱五批完成 |
 
 ## Blockers
 
@@ -31,9 +31,9 @@
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
 | BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates舊baseline及Godel移後normalhost各67pass；restricted失敗保留，RF-TPIN3-01closed，不代替commitbinding |
 | BL-E9 | resolved（B3） | 新精確授權、post正負真驗／獨立成果與commitbinding approved0；舊失配歷史保留 |
-| BL-O | B4／B5 source build及必要入口未驗；歷史DPK有8skip | B3必要post與commitbinding已獨立approved0；B4 testcompile因compilerassertion受阻，hostedbody／post及B5未驗 |
+| BL-O | B4／B5必要完整驗證未到；歷史DPK有8skip | B3完成；B4修後main source／78hosted／final已真到，獨立修正gate待驗；原失敗保留，B4post／production與B5未驗 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
-| BL-B4 | active：原assertion／C test module emit三處型別歧義 | 已授權query型別候選A/B/C皆未完成build；C還原。三處test消歧超出本輪精確集合、待Human；必要bodies/final/post未驗 |
+| BL-B4 | resolved（VO-RB4Q-F受限修正） | main完整build／78tests／final／保護、Confucius passed0／Leibniz approved0；原根因unknown與失敗保留，修正commit綁定後才能續原B4post／productiongate |
 
 ## Human Check
 
@@ -272,3 +272,35 @@ Parfit 獨立 C 正常 host 重現 exit65／5.322s，明示 blocked；原 argv�
 ### VO-RB4 本輪文件 gate 完成／Human 停點
 
 Pascal 最終 approved、required fixes0／unresolved0，僅限四 docs／失敗證據／停止處置；已核 main 與 Parfit C 實測及原 source 還原。execution 明示仍 blocked，不放行B4／B5；三處test消歧待Human精確契約。依既有直接授權僅將四docs按topic提交／push同DraftPR69交Human，不把文件gate推導為搬移或驗收通過。
+
+## VO-RB4Q 新授權與精確契約 gate
+
+Human新授權三處測試型別消歧，並要求18:20前中斷點或結果。舊VO-RB4的blocked及文件approved0保留，不回寫歷史；這次新授權才可核scope／實作，不由舊planningapproval推導。精確差異只見spec，九欄與必要red／green／完整suite／保護在plan。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-PRB4Q | completed | Plan-Reviewer | 三種型別13引用prefix契約approved／0fix | Archimedes approved／0fix；僅原三檔，不含Factory追加 |
+| VO-RB4Q | blocked | Implementer | 精確prefix及完整修後基線交Tester | 三檔實驗build exit65，Factory五處init歧義；已還原，無body/final |
+| VO-TRB4Q | pending | Tester | 正常host完整suite真到、資源／guarded入口／audit／hash保護 | 未驗，不用manifest或log無assertion代替body |
+| VO-RRB4Q | pending | Reviewer | 獨立修正成果approved／0fix | 此gate不取代後續B4搬移／production gate |
+
+18:10起預留收尾時間；18:20前需有完整結果或可恢復的中斷狀態。未完成必要項不可進下一批；如需還原只還原本輪三檔，四docs及原始實驗證據保留。
+
+### VO-RB4Q-F 明確追加後的新 gate
+
+Human已明確授權Factory test五個constructor前綴／必要換行，與原三檔合為18引用。三檔實驗的approved／failed／rollback留作歷史，不把它當成新集合approval。精確差異只見spec；本輪source目前原bytes。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-PRB4QF | completed | Plan-Reviewer | 四檔18引用精確追加契約approved／0fix | Bohr最終approved／0fix／unresolved0，RF-1closed；只contract |
+| VO-RB4QF | completed | Implementer | 精確18引用及完整修後基線交Tester | 最終bytes main build／29XCTest＋49Swift／final／formatlint及保護真pass，待獨立gate，不放行搬移 |
+| VO-TRB4QF | completed | Tester | 正常host完整suite／資源／guardedentry／audit與保護 | Confucius passed／0fix：29XCTest＋49SwiftTesting，107含參數execution，0fail/skip；資源／guard／全部保護真pass |
+| VO-RRB4QF | completed | Reviewer | 獨立成果approved／0fix | Leibniz approved／0fix／unresolved0；准行政補原列SHA／commit來源，仍不代替B4 post／productiongate |
+
+VO-PRB4QF 首輪 Bohr needs-rework／RF-1：現行 BL-B4／VO-B04／BL-O 還混用舊「待Human」範圍，未同步已明確追加的四檔18引用。已僅同步三個現行列，舊授權／實驗／停止歷史原樣保留，source原bytes；待原Plan-Reviewer複核，沒有先行套用。
+
+VO-RB4Q-F main最終bytes必要項已真到，已向Tester完成交接；數值／rawSHA與sourcehash引用plan/spec及原receipts。首次lint問題僅必要原statement換行已同批補齊並重驗，資料／期待／query保持。Bohr契約approved0不替代Tester／Reviewer；B4未搬、B5未進。
+
+Confucius正式獨立Tester passed、required fixes0／unresolved0，最終bytes／完整107含參數case執行／資源與保護真核；完整數值與receipt SHA只引用plan。現在交獨立Reviewer核四檔精確修正，原B4搬移／productiongate仍保持。
+
+Leibniz獨立修正成果approved、required fixes0／unresolved0。已按其明示行政允許只補唯一表原四列最終hash，source無再變；先按topic提交修正與四docs，再核committed source綁定，續原Goodall approved0 B4契約。此刻B4／B5未搬，不將修正gate寫成搬移完成。

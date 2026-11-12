@@ -469,3 +469,63 @@ Parfit 已以 require_escalated 正常 host 真跑精確 C；argv／env override
 ### VO-RB4 獨立停止處置審查完成
 
 Pascal 最終 verdict approved，required fixes=0、unresolved required fixes=0；僅限本輪四 docs、失敗分類與停止處置。已核必要 receipts／raw SHA、A／B 原 assertion、main／Tester C 三歧義與 exit65、source bytes／mode 還原及無 source diff。Reviewer 明示 execution 仍 blocked：原 compiler 根因未證實解決、完整 hosted／final／post／production 未驗，B4 不搬、B5 不進；三處消歧須 Human 另定精確契約。依原授權只提交本輪四 docs 至同 Draft PR69，交 Human review，不把文件 approved 當作 source 修正完成。
+
+## VO-RB4Q 新授權／實作前九欄交接
+
+main 已核 feature／upstream／DraftPR69 head5a8beed且乾淨。Human 明確授權三處測試型別消歧；原三類診斷及 A/B/C歷史保留。本輪精確 old/new／hash／允許差異只引用 spec原列與VO-RB4Q，不重複維護逐檔清單。
+
+- Goal：明確三種受測 App-local 型別，解除測試型別歧義並建立真正到達完整 hosted bodies 的離線修後基線。
+- Non-Goal：不修改或合併正式能力／本地Runtime、API、資料／期待、query表達式、編譯器／版本／flags或簽章／儲存。
+- In-Scope：spec VO-RB4Q 三個原test的13個識別字引用加模組前綴及必要statement換行；四文件授權／契約／實驗／verdict更新。
+- Out-Of-Scope：其他型別名字／測試／production修改、搬移混入本修正commit、真人OAuth/API/DPK、normal launch、環境擴修與新工具／圖面。
+- ReadOnly：spec VO-RB4Q其他27個B4檔／全部B5及B3 frozen保護範圍，root正式source/tests/manifest保持。
+- Written：空集合。
+- Deleted：空集合。
+- Modify：只引用spec VO-RB4Q唯一三列及四docs；純修正與B4搬移分開commit。
+- TestCase：TC-VO-015 同recipe原source red／精確prefix修正後 build-for-testing、完整guarded test-without-building（不可filter掉case）、獨立App baseline-final build；資源／scheme guard／isolation與audit真到、原fake資料與期待保持、limited format/lint／diff／hash及B3 receipt保護。獨立Tester正常host親跑完整suite，獨立Reviewer approved且required fixes0才能提交有效修正並續原B4。
+
+實際命令沿既有 B4 baseline-host-build receipt的argv/env，保持正常host require_escalated、Swift標準sandbox、Apollo固定本機SourcePackages及GitHTTPHTTPS拒絕、unsigned／unitmode／清除原五環境keys。本次repro沿原hostDD，red／green各記獨立receipt，不覆寫歷史；完整suite結果bundle與baseline-final新DD分開。逐次記HEAD、三source SHA、完整argv/env、exit/elapsed/rawSHA、實際到達階段、錯誤case／原因。必要命令順序失敗即停，blocked／skipped／unknown／0 tests不算pass。
+先獨立 Plan-Reviewer核13引用範圍及模組選擇approved0，才改source。成功後先完成Tester／Reviewer與精確修正commit，再用修後基線續原B4；原B4 post／production gate不降低。若有同契約內漏 prefix／必要換行可本批補齊；任何其他名稱或行為需求先停。失敗／時限無法安全完成時，精確還原本輪三檔至5a8beed（先核無外來變更），保留全部外置證據與四docs，不留下半套fix；不覆蓋無關修改。
+時間要求是操作中斷點：18:10起收斂，不啟動無法完整收尾的新批；最遲18:20前回報結果或安全中斷狀態，包含已完成／未驗／在手變更與下一步，不把時間需求當通過理由。
+
+### VO-RB4Q 首次三檔實測／VO-RB4Q-F 最新九欄
+
+Archimedes三檔13引用契約approved、required fixes0／unresolved0；不是執行通過。main red原assertion再現exit65／6.522s；精確三檔prefix後build exit65／5.173s，失敗改為Factory test五處ambiguous init，完整hosted／final未跑；raw與source指紋引用spec及B1_RUN/logs/B4/type-disambiguation的red-build／green-host-build receipts。已精確還原三檔，原source無diff，不以無assertion宣稱根因解決。
+第四檔原11／13／31／60行config constructor、19行stores constructor均明確列出GitHubIntegration public及驗證App internal兩候選，失敗是test SwiftCompile而非body。Human經具體追加問題後明確授權五處，同一類型名稱但原契約外的檔案不得由舊approval推導。
+
+- Goal：完成同三種受測App-local型別的精確消歧，真正建立完整guarded suite基線。
+- Non-Goal：不改行為／資料／期待、query、Runtime／API／正式能力、flags／工具鏈／安全／簽章／儲存。
+- In-Scope：只引用spec VO-RB4Q-F四原test18引用及必要statement換行，四docs證據與gate。
+- Out-Of-Scope：第五檔／其他名字、全域消歧、重構、搬移混入fix、真人／外部副作用、新工具／圖面。
+- ReadOnly：其他26個B4檔、全部B5／B3 frozen與正式source/tests/rootgraph；精確集合引用spec。
+- Written：空集合。
+- Deleted：空集合。
+- Modify：只引用spec VO-RB4Q-F四列及四docs；有效fix與完整B4搬移分開commit。
+- TestCase：原TC-VO-015必要項全保留；四檔18引用以相同正常host／標準sandbox／offline／unitguard recipe build-for-testing→full test-without-building→獨立final DD build，逐phase新receipt前綴qualified18，不覆寫三檔失敗；limited format/lint／輸入期待／資源／guardedentry／audit及B3保護均必要。Tester親跑完整suite、Reviewer approved0後才續B4。
+
+新Plan-Reviewer先核四檔18引用contractapproved0才套用。失敗立即停後命令；可補齊只限這18引用與必要statement換行，不擴第五檔／其他名字。必要項仍未到或時限無法安全完成，先確認外來變更，再精確還原本次四檔至5a8beed，保留四docs／外置證據；18:10收斂／18:20前回報不變。原B4移後／production與B5gate保持。
+
+### VO-RB4Q-F Implementer 完成交接
+
+Bohr最終scope／contract approved、required fixes0／unresolved0，RF-1現行ledger已closed，才套四檔18引用。第一次全build／29XCTest＋49SwiftTesting（8suites）及獨立final均exit0；limitedlint發現makeStores宣告必要換行的opening_brace規則衝突，僅調該原statement換行後format／lint均exit0。沒有token／query／行為差異，舊首次lint failure完整保留。
+對最終bytes已重新執行下列必要項，完整argv/env／四sourcehash／HEAD及raw在B1_RUN/logs/B4/type-disambiguation各receipt，並非沿用第一次不同sourcehash的成功：
+
+| 必要檢查 | 主對話實際結果 | raw SHA |
+|---|---|---|
+| qualified18-wrapped-host-build | exit0／5.556s | e04da221d07649158af78ff8e28dd7b4c89d4dff08be51e91db510ddab061f45 |
+| qualified18-wrapped-host-tests | exit0／4.358s | d29059c7af21f6724e179ddfaa5347ac49895511f2fcdc03242b332deb9fcf30 |
+| qualified18-wrapped-final-build | exit0／1.779s | 7e6916a6378c7e9c9d828f1b10ea7038fa91a6a70837c771a82a4e7e189d138f |
+| qualified18-final-format | exit0／0.156s | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| qualified18-final-lint | exit0／0.275s | 418dde6c0331f0455fd203ad41cea98716f8b611f533f515134c0b50be231361 |
+
+完整hosted為29 XCTest／49 SwiftTesting（8suites），0fail；unitmode live-dependency audit／host isolation案例已真到。最終App實際bundleID／executable與原資源身份核對通過；其餘26 B4／9 B5原hash、39new不存在、B3170inputs／fixedApp各檔／launcher及不可變bindingreceipt皆真核保持（qualified18-protection.json）。尚未搬移、未commitfix，獨立Tester／Reviewer仍待，不提前放行B4。最終candidate SHA只作外置receipt實驗證據；獨立approved後才於原四列追加修後baselinehash。
+
+### VO-TRB4QF 獨立 Tester passed
+
+Confucius明示passed、required fixes0／unresolved0。正常host真跑build-for-testing exit0／5.173s（rawSHA a5e90545a995e9316f5d6e44f2e6aaa6b6b7671e05d34d26476bffd531bd334a），full test-without-building exit0／5.873s（rawSHA 9103422fc8b44fee27febe28850894efd40406956df361f63b7fc1724e54029f）。29XCTest＋49SwiftTesting／8suites全pass，107次含參數化execution passed，0fail／skip，逐案身分與source集合一致；case明細用同目錄tester-qualified18-cases.json保存，不重列維護清單。
+unitmode liveConstruction／credential／network零斷言與host isolation真pass，formatlint0，四檔prefix／query／字串／期待、26 B4／9 B5／39新位置不存在、B3170inputs／fixedApp／23份舊收據／binding及launcher保護通過。總結receipt tester-qualified18-summary.json SHA be706000abc620e6ab6e199baa00a4d24694ba44e25327e117b03656184c6ce2；未改source/docs/index，不重建B3，main final App僅讀回。待獨立Reviewer，不先採納修後baseline或搬移。
+
+### VO-RRB4QF 最終獨立成果 approved
+
+Leibniz正式approved、required fixes0／unresolved0，限定四tests＋四docs。已真核18prefix／原query、資料與期待、最終四SHA與main／Tester全部必要項、107含參數case execution及所有frozen保護；不是單看數量。明示允許依既有契約行政補原四列修後hash與commit來源，非新增RF；本次已僅在原四列補最終SHA，不維護副本。
+原compilerassertion底層原因仍未證實；只證明本受限消歧後目前完整suite／build可通。先獨立修正topic commit並實核committed blobs／source SHA，再依原Goodall approved0的B4精確契約及修後baseline、完整post／production gate續作；B4／B5仍未完成。18:20前安全結果／中斷要求保持。

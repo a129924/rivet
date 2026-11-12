@@ -69,3 +69,10 @@ Human明確授權該測試的限定型別註記候選及離線驗證。僅允許
 
 A、B 均未解除原 compiler assertion，C 在獨立 scope／contract approved 後實測仍 build-for-testing exit65。C 這次 log 沒有原 assertion，改為 test module emit 階段三處 ambiguous type lookup；不能據此宣稱原 crash 的底層原因已解或完整相容性通過。C 已還原原始 bytes，三個候選都未保留為 source 修正。
 本次僅授權該 query 表達式型別註記；新診斷涉及其他測試檔及 helper 型別宣告，尚未取得精確修正契約。先停 B4／B5，不把不同錯誤或未執行 bodies 當作無回歸；所需最小下一步是人類決定是否另准限定測試型別消歧，再獨立鎖定精確差異、重建完整離線基線。此輪不實作該提案、不修改 production 或 Runtime。
+
+## VO-RB4Q：三處測試型別消歧的新授權
+
+Human 明確授權三處測試型別消歧的精確契約，並要求台北時間 18:20 前有安全中斷點或結果。此授權沿用原五批與 topic commit／push／Draft PR69／Human review，不由舊 approved 推導。目的為在原三個測試檔中，明確選定其受測驗證 App 的三種本地型別；既有正式模組不改。精確內容差異只見 spec VO-RB4Q，不擴成所有測試／同名 Runtime 整理，不保證三種消歧後沒有其他阻擋。
+原 A／B／C 失敗與已還原證據保留。本次先核 scope／contract，再實際 red／green、完整 guarded suite／資源與入口、獨立 baseline-final、Tester／Reviewer；必要項未到達不放行 B4。約 18:10 起不開始無法完整收尾的新批，18:20 前必須給出結果或明確可恢復的中斷狀態，不能因時限降低驗證標準。
+
+VO-RB4Q 三檔13引用實驗未完成build，新增確認第四個Factory測試檔五個constructor歧義；已精確還原三檔。Human隨後明確回答「授權此五處限定追加」：僅同兩種型別的五處constructor加模組前綴及必要換行，其餘限制不變。現在執行契約以spec VO-RB4Q-F四檔18引用為準，先獨立審查再實作；舊三檔gate與失敗不改寫、不當作新契約已approved。

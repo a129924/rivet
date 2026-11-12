@@ -29,7 +29,7 @@ struct GitHubOAuthDataProtectionStoresTests {
   @Test func configurationAndFullExpiredBundleRoundTripWithBinding() async throws {
     let security = FakeOAuthSecurity()
     let stores = makeStores(security)
-    let configuration = try GitHubOAuthAppConfiguration(
+    let configuration = try GitHubConnectionVerification.GitHubOAuthAppConfiguration(
       clientID: "fake-id", clientSecret: "fake-secret")
     try await stores.configurationStore.save(configuration)
     let loaded = try #require(try await stores.configurationStore.load())
@@ -138,7 +138,8 @@ struct GitHubOAuthDataProtectionStoresTests {
     security.setWriteStatuses(update: [errSecAuthFailed], add: [])
     await #expect(throws: GitHubOAuthStoreError.denied) {
       try await makeStores(security).configurationStore.save(
-        GitHubOAuthAppConfiguration(clientID: "fake-id", clientSecret: "fake-secret"))
+        GitHubConnectionVerification.GitHubOAuthAppConfiguration(
+          clientID: "fake-id", clientSecret: "fake-secret"))
     }
     #expect(security.operations.map(\.kind) == ["update"])
   }
@@ -185,7 +186,8 @@ struct GitHubOAuthDataProtectionStoresTests {
         group.addTask {
           if index.isMultiple(of: 2) {
             try await stores.configurationStore.save(
-              GitHubOAuthAppConfiguration(clientID: "fake-id", clientSecret: "fake-secret"))
+              GitHubConnectionVerification.GitHubOAuthAppConfiguration(
+                clientID: "fake-id", clientSecret: "fake-secret"))
           } else {
             try await stores.credentialStore(clientID: "fake-id").save(storedBundle())
           }
@@ -207,8 +209,10 @@ struct GitHubOAuthDataProtectionStoresTests {
   }
 }
 
-private func makeStores(_ security: FakeOAuthSecurity) -> GitHubOAuthDataProtectionStores {
-  GitHubOAuthDataProtectionStores(
+private func makeStores(
+  _ security: FakeOAuthSecurity
+) -> GitHubConnectionVerification.GitHubOAuthDataProtectionStores {
+  GitHubConnectionVerification.GitHubOAuthDataProtectionStores(
     accessGroup: "fake-group", service: "fake-service", security: security)
 }
 

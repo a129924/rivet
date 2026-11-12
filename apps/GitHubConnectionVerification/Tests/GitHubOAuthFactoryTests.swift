@@ -8,15 +8,17 @@ import Testing
 struct GitHubOAuthFactoryTests {
   @Test func configurationIsValidatedAndRedacted() throws {
     #expect(throws: GitHubOAuthError.clientConfiguration) {
-      try GitHubOAuthAppConfiguration(clientID: "", clientSecret: "fake-secret")
+      try GitHubConnectionVerification.GitHubOAuthAppConfiguration(
+        clientID: "", clientSecret: "fake-secret")
     }
-    let configuration = try GitHubOAuthAppConfiguration(
+    let configuration = try GitHubConnectionVerification.GitHubOAuthAppConfiguration(
       clientID: "fake-id", clientSecret: "fake-secret")
     #expect(!String(describing: configuration).contains("fake-"))
     #expect(!String(reflecting: configuration).contains("fake-"))
     #expect(Mirror(reflecting: configuration).children.isEmpty)
     _ = try GitHubOAuth.makeTokenFetcher(configuration: configuration)
-    let stores = GitHubOAuthDataProtectionStores(accessGroup: "fake-group", service: "fake-service")
+    let stores = GitHubConnectionVerification.GitHubOAuthDataProtectionStores(
+      accessGroup: "fake-group", service: "fake-service")
     _ = stores.configurationStore
     _ = stores.credentialStore(clientID: "fake-id")
   }
@@ -28,7 +30,7 @@ struct GitHubOAuthFactoryTests {
     #expect(settings.requestCachePolicy == .reloadIgnoringLocalCacheData)
     #expect(settings.timeoutIntervalForRequest == 30)
     #expect(settings.timeoutIntervalForResource == 30)
-    let configuration = try GitHubOAuthAppConfiguration(
+    let configuration = try GitHubConnectionVerification.GitHubOAuthAppConfiguration(
       clientID: "fake-id", clientSecret: "fake-secret")
     let redirect = URL(string: "http://127.0.0.1:43210/oauth/callback")!
     let first = try GitHubOAuth.makeAuthorizationSession(
@@ -57,7 +59,7 @@ struct GitHubOAuthFactoryTests {
     "http://127.0.0.1:43210/oauth/callback?state=preexisting",
   ])
   func verificationRejectsInvalidRedirect(_ raw: String) throws {
-    let configuration = try GitHubOAuthAppConfiguration(
+    let configuration = try GitHubConnectionVerification.GitHubOAuthAppConfiguration(
       clientID: "fake-id", clientSecret: "fake-secret")
     #expect(throws: GitHubOAuthError.clientConfiguration) {
       try GitHubOAuth.makeAuthorizationSession(

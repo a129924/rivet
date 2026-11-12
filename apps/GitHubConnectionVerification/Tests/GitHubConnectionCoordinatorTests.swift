@@ -51,7 +51,7 @@ import XCTest
       let harness = ConnectionHarness(configuration: configState == "mismatch", credential: true)
       if configState == "corrupt" { harness.configurationError = .corrupt }
       if configState == "mismatch" {
-        harness.configuration = try? GitHubOAuthAppConfiguration(
+        harness.configuration = try? GitHubConnectionVerification.GitHubOAuthAppConfiguration(
           clientID: "other-id", clientSecret: "fake-secret")
       }
       let coordinator = harness.coordinator()
@@ -482,7 +482,7 @@ extension GitHubConnectionCoordinatorTests {
 
 @MainActor private final class ConnectionHarness {
   var expiryValidation: GitHubExpiryValidation?
-  var configuration: GitHubOAuthAppConfiguration?
+  var configuration: GitHubConnectionVerification.GitHubOAuthAppConfiguration?
   var configurationError: GitHubOAuthStoreError?
   var credentialError: GitHubOAuthStoreError?
   var configurationSaveError: GitHubOAuthStoreError?
@@ -506,7 +506,8 @@ extension GitHubConnectionCoordinatorTests {
   ) {
     self.configuration =
       configuration
-      ? try? GitHubOAuthAppConfiguration(clientID: "fake-id", clientSecret: "fake-secret") : nil
+      ? try? GitHubConnectionVerification.GitHubOAuthAppConfiguration(
+        clientID: "fake-id", clientSecret: "fake-secret") : nil
     store = ConnectionCredentialStore(
       bundle: credential ? fakeBundle("initial", expired: expired) : nil, gate: saveGate)
     fetcher = ConnectionFetcher(gate: refreshGate)
