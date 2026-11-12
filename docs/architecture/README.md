@@ -74,6 +74,8 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 
 ### Fixture runtime 人工驗收
 
+驗收環境已集中於 [E012](../../experiments/E012/README.md)；正式 bridge／Core／TS pipeline 不搬移，root product不變。標準 sandbox 的build／tests、bundle與暫存wrapper入口見E012操作說明；原topic證據與凍結圖保持來源版本。
+
 在 macOS 於 repository 根目錄執行 `swift run RivetPRReaderHarness`。視窗標示「本地 fixture」；依序確認六種檔案狀態、四個 patch 與兩個 metadata-only 提示。點選第一檔「標記 Viewed」，待 Swift 發布新快照後確認按鈕顯示「已 Viewed · 取消」；再點選取消並確認恢復。這只驗證本地 fixture 的 runtime 往返，不涉及 GitHub 資料或跨啟動儲存。
 
 ## 文件導覽

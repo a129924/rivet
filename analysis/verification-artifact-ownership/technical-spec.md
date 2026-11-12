@@ -11,16 +11,16 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 
 ## 配號與契約鎖定
 
-初稿 E011–E015 為 B1–B5 的候選目的地；本輪已鎖定 B1 使用 E011，E012–E015 仍待各批前確認。E011 尚非已合併或已完成的驗證。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；本輪重新列出遠端四個 branches：dev、main、docs/e010-postmerge-registry 與本 feature，SHA 均對應已查本機 refs；未見 E011 占用。本 feature 的 E011 只收納原 rivet-login-ui 功能驗收展示，不重寫其 topic 性質。
+初稿 E011–E015 為 B1–B5 的候選目的地；目前已鎖定 B1 使用 E011、B2 使用 E012；E013–E015 仍待各批前確認。E011 尚非已合併或已完成的驗證。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；本輪重新列出遠端四個 branches：dev、main、docs/e010-postmerge-registry 與本 feature，SHA 均對應已查本機 refs；未見 E011 占用。本 feature 的 E011 只收納原 rivet-login-ui 功能驗收展示，不重寫其 topic 性質。
 每批前重新查索引／占用並鎖定編號；若衝突，回修本唯一清單並交獨立審查，不能臨場套用舊號或擴張範圍。
-每批先鎖定 baseline、old/new、ReadOnly／Written／Deleted／Modify、設定與入口、允許差異及必要檢查。以下 B1 四列已鎖定；其餘批次未確認前仍不是該批實作契約。
+每批先鎖定 baseline、old/new、ReadOnly／Written／Deleted／Modify、設定與入口、允許差異及必要檢查。B1／B2 列已鎖定；其餘批次未確認前仍不是該批實作契約。
 
 ## 唯一逐檔清單
 
 基準：`a554a4fee772d3976d5ca2c9331865a604e901e2`。共 73 檔（B1–B5：4／7／23／30／9）。hash 是搬移前檔案 bytes 的 SHA-256；數量不是永久 assertion。
 各列 old 為該批 Deleted、new 為 Written，另有下節留原位的 Modify 清單；集合互斥。未列檔案不可寫入；ReadOnly 是實際讀取但不可改的檔案，不以整目錄替代精確集合。
 
-| 批次 | old／Deleted | new／Written（B1 鎖定；其餘候選） | baseline SHA-256 | 允許差異 |
+| 批次 | old／Deleted | new／Written（B1/B2 鎖定；其餘候選） | baseline SHA-256 | 允許差異 |
 |---|---|---|---|---|
 | B1 | `Sources/RivetLoginDemo/main.swift` | `experiments/E011/Sources/RivetLoginDemo/main.swift` | `8f4f4acea31d0a938f6e876d3e86be2315993dc57ef28c442a9137ec03cf1d1f` | 純搬移；bytes 不變 |
 | B1 | `Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `experiments/E011/Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `979ae090b03f1ee79e37d3feebbbcf054cca669ef38231765a9e689357060bb8` | 純搬移；bytes 不變 |
@@ -102,6 +102,8 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 
 | 批次 | 精確檔案 | 集合／允許差異 |
 |---|---|---|
+| B2 | `experiments/E012/README.md` | Written：原Reader fixture驗收用途、root build/tests、本機cache與暫存wrapper入口；不新增工具／package |
+| B2 | `Sources/PRReaderWebViewBridge/BridgeSession.swift` | ReadOnly：正式bridge不搬不改 |
 | B1 | `experiments/E011/README.md` | Written：本驗收展示用途、原 topic、root build／test 與既有 wrapper 包裝／啟動操作，不新增工具或 package |
 | 各批 | `analysis/verification-artifact-ownership/technical-spec.md` | Modify：本唯一清單的批次鎖定與允許差異／證據，不複製另一清單 |
 | 各批 | `plan/verification-artifact-ownership/verification-artifact-ownership.plan.md` | Modify：建置命令、適用基線與驗證證據 |
@@ -115,7 +117,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 | 各批 | `experiments/README.md` | Modify：經確認的新編號／用途／原 topic 索引，不改舊結果 |
 | 各批 | `README.md` | Modify：現行連結與本次澄清，不改舊輪結論 |
 | B1 | `docs/presentation/login-ui.md` | Modify：現行 Demo 路徑／操作入口，不改 UI 採用與驗收歷史 |
-| B3/B4 | `docs/architecture/README.md` | Modify：僅現行工具路徑與本次歸屬說明 |
+| B2/B3/B4 | `docs/architecture/README.md` | Modify：僅現行工具路徑與本次歸屬說明 |
 | B3 | `docs/architecture/github-first-sign-in.md` | Modify：現行路徑／E009 角色與限制，不改歷史結論 |
 | B3/B4 | `docs/design-principles.md` | Modify：現行工具路徑與本次歸屬說明，不重設架構 |
 | B4 | `docs/architecture/github-oauth-dual-client.md` | Modify：現行工具路徑，不改 production 契約 |
@@ -143,3 +145,9 @@ B3 必須對最終新產物實際記錄來源 revision、允許 diff、build rec
 既有外置 wrapper 的符號路徑為 $TOPIC_SCRATCH/native/RivetLoginDemo.app；證據為 plan/rivet-login-ui/evidence/verification.md 及 docs/presentation/login-ui.md。
 既有 bundle ID 為 local.rivet.login-ui-demo，wrapper 使用 executable 與 Rivet_RivetPresentation.bundle。Explorer 讀到歷史 binary SHA `50a30cdc872292f8cd4de5a689b52ae2ab9d6451613067ff8440ba68b384d67f`，不等於本 feature 新產物可用性。
 既有包裝方法已鎖定：保留歷史 Info.plist bytes 與 bundle ID，只在本次獨立 scratch 的 native-baseline／native-post 各複製一份 wrapper；以本次 debug binary 與 Rivet_RivetPresentation.bundle 替換各自 copy，open 該 app。不得改歷史 wrapper、簽章身分或正式 UI。用途文件可提供同一 plist keys 的可重現包裝命令，不新增 repo script／target／package。主對話已親驗 baseline UI，post-move 仍須實際驗證。
+
+## B2 實作前鎖定
+
+B2 E012未見占用：已查現有本機refs及遠端四branches（SHA對應已查refs）；不改E011／E009。唯一表B2七列均純搬移、bytes不變，三resources亦不得重產不同內容。TS pipeline留原處，只改bundle:reader輸出。
+本批source／test targets沿用root同名target與依賴／resources宣告；format／lint只再接回E012 Sources／Tests。現行docs/architecture/README只補E012入口連結，不重畫凍結圖、不改正式BC契約。
+原文件swift run可執行，但原始程序不具CUA app識別；沿用歷史暫存app-wrapper驗法，不新增repo工具或簽章設定。wrapper只包同一已建置binary；既有SwiftPM resource accessor優先查app根目錄的Rivet_RivetPRReaderHarnessRuntime.bundle，否則查build目錄。baseline初次畫面由build目錄載入，post須記錄實際URL並驗new資源與Viewed，不用copied資源存在假稱已載入。暫存wrapper識別僅local.rivet.reader-harness-verification，沒有production簽章／profile或storage。

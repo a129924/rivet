@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12。分支 chore/verification-artifact-ownership；目前 phase：B1 成果已獨立 approved／required fixes0，準備 commit／push／更新 Draft PR #69 交 Human review；B2–B5未開始。
+最後更新：2026-11-12。分支 chore/verification-artifact-ownership；目前 phase：B1 成果已獨立 approved／required fixes0，commit7e5f4fd已push至DraftPR69；現B2必要post／Tester passed0／Schrodinger成果approved0，接續B3 preflight，B3–B5未開始。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -9,11 +9,12 @@
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
-| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1 E011／四移檔／README／既有wrapper recipe已鎖spec；B2–B5仍pending |
+| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1 E011及B2 E012 mapping／入口已鎖spec；B2 Feynman approved0；B3–B5仍pending |
 | VO-B01 | completed | Implementer | B1契約內完整搬移，交Tester | 四檔100%rename，三target path／lint／索引／入口同批；必要post已到達，Meitner最終approved |
 | VO-T01 | completed | Tester | B1必要項真正到達並給出結果 | 主對話post編譯／62tests／新wrapper資源入口已驗；Kepler獨立親跑62pass0fail0skip，readback artifacts相符 |
 | VO-R01 | completed | Reviewer | B1獨立成果審查與限制分類 | Meitner最終approved、required fixes0；README離線cache操作RF已關閉；只限B1 |
-| VO-B02 | not-started | Implementer | B2同批接線並交Tester→Reviewer | 依賴B1通過；無搬移 |
+| VO-PB2 | completed | Plan-Reviewer | B2契約明示approved且required fixes0 | Feynman正式approved／0fix，7/7hash核對；僅preimplementation |
+| VO-B02 | completed | Implementer | B2同批接線並交Tester→Reviewer | 七檔puremove／三target／bundle輸出／lint／導覽同批完成；post主對話必要項已驗；Tester Chandrasekhar passed0；Reviewer Schrodinger approved0，准續B3 |
 | VO-B03 | not-started | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 新binary pin未知；不自動更新 |
 | VO-B04 | not-started | Implementer | B4完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
 | VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 依賴前批；無搬移 |
@@ -24,7 +25,7 @@
 | ID | 狀態／問題 | 解除條件 |
 |---|---|---|
 | BL-P | resolved | Popper 正式 approved、required fixes=0；不等於五批執行通過 |
-| BL-N | B1 resolved；其餘pending | B1 E011已查占用並鎖定；B2–B5仍須各批前確認 |
+| BL-N | B1/B2配號已確認；其餘pending | E011/E012已查占用並鎖定；B2 Feynman approved0；B3–B5仍須各批前確認 |
 | BL-B1 | resolved（僅基線） | Human Execution Authorized後，正常host保留SwiftPM sandbox已完成manifest／product build／62tests；post仍待驗 |
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
 | BL-PK | loopback權限／helpercompile阻擋，部分原因unknown | 逐case證據及適用離線環境；不猜測根因或啟真人流程 |
@@ -90,3 +91,26 @@ BL-B1／BL-W 已在本次授權正常host條件下解除；原受限上下文失
 獨立 Reviewer Meitner 首輪 needs-rework 僅1項：README新空cache缺少具體準備。已於同一允許README補齊本機barecache、Package.resolved revision、copy後核對與失敗即停，未新增工具或版本。
 主對話實跑修後README第一段：exit0／25.972s，固定本機cache、source編譯與62tests6suites通過；log SHA ed058de529a63e85d3ff07ca50c6d756d0e8105d183d3dad314063e78e091788。Reviewer核對stagedREADME／receipt／rawlog一致，最終B1 approved、required fixes0，唯一RF關閉。
 本結論只限B1。B2–B5尚未開始，E009 pin與其他topic歷史未改；本次提交依Human既有直接commit／push／Draft PR授權，最後交Human review，不自行merge。
+
+## 接續B2–B5：唯讀確認及B2 preflight
+
+已由主對話確認feature乾淨、HEAD/upstream/PR69head均7e5f4fd，B1 Meitner approved／0fix記錄仍在；不把Human摘要當即時事實。正常host與本次scratch/cache仍可用。
+B2 E012與七移檔／必要接線鎖在spec；baseline實際bundle同bytes、68Swift tests、99TS與CUA Viewed往返已驗。原受限coverage失敗／raw-entry CUA識別限制分列於plan，不算pass。現等獨立Plan-Reviewer，沒有提前搬檔。
+B1交付不是topic完成。Human已重申全部五批授權；B2成果approved後續B3，B3遇具體pin／外部副作用或其他人類邊界才停，不能自行省略後批。
+
+### B2 實作交接（post待驗）
+
+Feynman正式B2-preimplementation approved、required fixes0。Implementer依plan九欄與spec唯一B2列完成七檔puremove與必要接線／E012操作README；Written／Deleted／Modify／ReadOnly只引用spec，不另建清單。
+必要post：同條件product／68Swift tests／TScheck99tests／bundle同bytes／實際resource URL與Viewed往返；補充hash／graph／lint／入口語法。B3–B5未動，必待獨立Tester與Reviewer明示結果才前進。
+
+### B2 post 主對話完成
+
+新路徑source編譯與連結、68Swift tests／6suites、TScheck／99tests、bundle同bytes及原生資源／Viewed設定取消實際通過；完整命令與logSHA見plan，外置receipts見B1_RUN/logs/B2。wrapper實際使用SwiftPM build-bundle fallback，未誤稱獨立可攜包。Tester／Reviewer結果尚待，不由作者放行B3。
+
+### B2 獨立 Tester
+
+Chandrasekhar passed、required fixes0；68Swift tests／6suites與99TS tests、check／format／lint、7hash與graph／bundle／README語法均通過，必要項skip／blocked／unknown0。UI只核主對話證據；詳plan及logs/B2/tests-independent-summary.json。仍待獨立Reviewer，B3–B5未動。
+
+### B2 最終成果審查與交付
+
+Schrodinger正式approved、required fixes0、unresolved required fixes0；已核staged diff、七檔bytes、必要build／tests／resource／native入口及獨立Tester。Reviewer／Tester未重跑nativeUI；README全新空cache全流程未另跑，不增加驗收宣稱。B2完整提交後接續B3 preflight；B3–B5未開始搬移，E009 pin不自動更新。

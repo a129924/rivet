@@ -7,6 +7,7 @@
 | 編號 | 用途與來源 | 狀態 |
 | --- | --- | --- |
 | [E011](E011/README.md) | `rivet-login-ui` 的 Login Demo、控制介面、專用 Runtime 與專屬測試；功能驗收展示，不是將原功能開發改寫為事前實驗 | B1 位置修正，搬移後驗證結果見 topic 帳本；正式 UI 與其既有採用／驗收保留。 |
+| [E012](E012/README.md) | `pr-reader-webview-runtime-reading` 的fixture host／Runtime／資源／專屬測試，功能驗收展示 | B2位置修正；不重做原功能開發、不搬正式bridge／Core或TS pipeline；結果見topic帳本。 |
 
 此配號僅集中收納驗證環境，不代表重做實驗、撤回既有採用或新增永久工具例外。下方既有索引與來源快照保留原紀錄。
 

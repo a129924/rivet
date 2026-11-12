@@ -177,3 +177,55 @@ post debug／wrapper binary SHA：1aeff9ea17fd45c909dc351ded6c7423d60a7fbb3c39e5
 ### B1 最終審查補記
 
 Meitner 成果最終 approved／required fixes0。唯一RF為README空cache準備缺口，已補既有barecache與lockfile revision檢查，主對話實跑文件流程exit0／25.972s、source編譯與62tests6suites通過；log SHA ed058de529a63e85d3ff07ca50c6d756d0e8105d183d3dad314063e78e091788，外置readme-offline-workflow-result.json／log。只補原有操作說明，沒有變更scope或source bytes。前節待Reviewer文字為交接當時快照，本節為最新獨立結果；不宣稱B2–B5通過。
+
+## B2 開始交接與搬移前適用基線
+
+來源7e5f4fd44c64a956ed133096939d42f37de4ff2f，feature乾淨、upstream及Draft PR69 head一致，B1獨立approved保留。Human重申五批直接授權，不逐批重問，也不因B2完成自行停止。
+沿用已確認可啟動標準SwiftPMsandbox的normalhost、原scratch/cache/module argv與程序GitHTTP/HTTPS拒絕；只將product換RivetPRReaderHarness，test filter換ReaderHarnessTests|BridgeSessionTests|WireContractTests|StaticIsolationTests。
+外置證據沿用B1_RUN/logs/B2，以下均實際執行，不採歷史disable-sandbox測試命令。
+
+| 必要檢查 | baseline結果／到達階段 |
+|---|---|
+| bun run bundle:reader | exit0，reader.js SHA 2ab5fdf0daad9aff9ccefb1f61021b54c1ce57fc8019b85b84a3c2f47abd4cba，與既有bytes相同 |
+| Reader product build | exit0／3.079s，使用本次build graph／資源；log SHA 26580cf472a7aaa22ead1fbb1207990c7de85d933d289d263b1c08b6a1fa8a43 |
+| Swift指定tests | exit0／7.062s，68tests6suites pass；真WKWebView資源、Viewed往返、failure／timeouts／external拒絕實際執行；log SHA 9a14ef4bad39ac146bb3984e86ac085413b54bbbddcdccd5010987697f52601d |
+| TScheck／tests | check exit0；normalhost 99pass0fail，log SHA 55c1372a4be4a4544e7298f3dc95091441ccccac03805b0925e36563004063d9 |
+| 主對話原生fixture入口 | 暫存wrapper真顯示六狀態／四patch／兩metadata；首檔Viewed設為已Viewed再取消復原；file URL實際為本次debug resource bundle，非遠端頁面 |
+
+TS tests首次受限context的coverage寫入exit1保留於ts-tests-baseline.log，normalhost重跑成功另存ts-tests-baseline-host.log，不以相同failcount視為pass。原swift-run模式CUA無app識別，改採既有歷史暫存wrapper模式，未改source行為；入口條件與實際資源URL分列，post獨立驗證，不宣稱portable app。
+
+### swift-implementation 九欄（B2）
+
+- Goal：Reader驗收host／Runtime／fixture／resources／專屬測試完整集中E012，既有入口及Viewed往返可用。
+- Non-Goal：不改bridge／Core／TS行為、API、簽章／儲存，不開始B3–B5。
+- In-Scope：唯一spec的B2七移檔、E012README、B1/B2及各批中B2必要接線；docs架構README只更新現行入口。
+- Out-Of-Scope：正式能力／正式測試搬移、圖面重產、新package／抽象／工具、真人API／OAuth／DPK。
+- ReadOnly：引用spec B2正式bridge及相關不可寫檔；未列寫入檔一律不可改。
+- Written：spec B2七個new檔與E012README，無其他新增。
+- Deleted：spec B2七個old檔；集中歸屬所需，反向mapping及原hash可完整回復。
+- Modify：spec B2／B1-B2／B2-B3-B4／各批中本批必要列；只三targetpaths、bundle輸出、lint涵蓋、現行導覽與topic證據狀態。
+- TestCase：TC-VO-002／004／008／009／010；必要post product、68tests、TScheck99tests、bundle bytes／實際資源URL與Viewed原生入口；補充hash／graph／lint不能替代必要項。
+
+本段是實作前契約，尚待Plan-Reviewer明示approved／required fixes0，不等於post通過。B2通過成果審查後立即續B3；若遇E009 pin等人類邊界才停止，不以單批完成結束topic。
+
+## B2 post 實際驗證交接
+
+七個source／resource／test純搬移bytes相同，接線限spec唯一B2集合；同一正常host、標準SwiftPMsandbox、scratch/cache/modules與GitHTTP/HTTPS拒絕，實際argv存B1_RUN/logs/B2各result.json。
+
+| 必要項 | post真正執行與結果 | log SHA-256 |
+|---|---|---|
+| product build | exit0／4.413s；新路徑ReaderFixture、ReaderHarness、resource_accessor及main實際編譯、三資源複製與連結 | cca282e3323e6288213b28bdea260089896bf415c71305dd4270a9095db44bc6 |
+| Swift指定tests | exit0／6.371s；68tests／6suites，包含真WKWebView與Viewed往返、failure／timeout及external拒絕 | 09b2b871c3efdfb31d9ce53a5cd827871983a1142fb737fd5ee5375373d157ec |
+| TScheck／tests | check exit0；99pass0fail，沿相同本機依賴／host條件；原受限coverage失敗仍保留 | check a6d6f8c683e65d0638ff6b37fcf18bf4de11c891ae3d07ef63adb976c94b2413；tests 6aa9142318e98409b8562a3dcf3638db57b0341b2a91a196b06048f82f000091 |
+| bundle輸出 | 新路徑bun run bundle:reader exit0；產物bytes與baseline／唯一spec相同 | b7b68b83d58046c07bf80dabd3d09fb666f783ab697b84804f035697ed9a1723 |
+| 原生資源與入口 | 主對話CUA親驗六狀態／四patch／兩metadata、Viewed設定後取消；實際file URL為本次debug resource bundle fallback，wrapper Info.plist與baseline bytes相同 | ui-post.json、wrapper-post.json；原生AX／截圖在本輪工具紀錄，沒有宣稱已存repo圖片 |
+
+post binary SHA a0179c6eb6c52f4ff6e4fee9383ae96c7b2c1a0e958d0eef33e5cd45f3fceef3。三resource hashes相符，不在本處另維護逐檔清單。主對話實測不代替獨立Tester／Reviewer；目前待其明示verdict，B3–B5未動。沒有真人API、持久化Viewed或重新完成原topic Human驗收的宣稱。
+
+### B2 獨立 Tester
+
+Chandrasekhar verdict passed、required fixes0；親跑68Swift tests／6suites exit0／6.321s、99TS tests0fail、check／format／lint／shell syntax通過。Swift log SHA 00b67e1d8f586924d5c7b567244e076bfdeb67ce97dfab155b126eed32dd537d。7/7hash、正式graph與bundle外置重現相符；必要項skip／blocked／unknown0。UI由主對話親驗，Tester只核receipt與artifact。詳logs/B2/tests-independent-summary.json及swift／checks／static-result.json；目前成果仍待Reviewer，不由Tester放行。
+
+### B2 最終成果審查
+
+Schrodinger正式approved、required fixes0、unresolved required fixes0；已納Chandrasekhar最終Tester及主對話UI證據，7puremove與允許接線完整、必要post真正執行。Reviewer／Tester未重跑nativeUI，也未另實跑全新空cache的README全流程，不誇大驗證範圍。依既有Human直接commit／push授權提交完整B2，接續B3，不將本批等同topic完成。
