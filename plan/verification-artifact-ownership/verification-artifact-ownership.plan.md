@@ -665,3 +665,12 @@ Anscombe獨立讀取兩份真正11-12歷史recursive snapshots及current199檔�
 
 Fermat最終approved、required fixes0／unresolved0，無新增RF。已核九mapping／五pure bytes/mode／四允許例外、原195bytes與197逐案結果、真copy/digest/sentinel/external0calls、兩unsigned source cleancompile／資源入口，以及root正式與B1–B4／B3全部保護。歷史recursive199補證來源可信、各名稱/mode/SHA0差異，原helperfailure／blocked／top120保留；接受Tester final passed而未弱化必要項。
 明示允許在唯一原四例外列補postSHA／來源commit及本verdict；SHA已真核，只作行政補記、source無再變。五批實作及必要離線驗證／適用獨立gate已完成；現在整批topic commit並核source與committed blobs/modes綁定、push及PR69 metadata後交Human review，不merge，不把8optional skip或live未驗寫成pass。VO-D01待實際Git／PR交接後完成，不以approval代替已發布事實。
+
+## 實際 Git／PR 交接
+
+B5整批fbf4e7a已commit／push，hooks的whitespace／EOF／Swift format／consumer contract／SwiftLint／renderer全通過；原九source之committed mode/blob/SHA、四formal identifiers／source SHA、兩unsigned artifacts與實際recipes已核綁定，收據位置／hash只引用spec交付段。原4例外列補來源commit，source無再變。PR69已實際更新五批完成表與每批gate／B5補證／8optional及live界線、B3 E009完整source/recipe/artifact綁定；維持open Draft／未merge。
+現在只作本交接行政紀錄與postcommit讀回，待Human review，不新增功能或驗收門檻。B1–B5實作及必要offline與適用獨立審查已完成；Human接受／merge／真OAuth/API/DPK或新live窗口均不由本結果推導。原blocked／helperfailure／top120記錄及歷史199補證全保留。
+
+### postcommit／行政交接最後獨立複核
+
+Fermat再次approved、required fixes0／unresolved0，僅postcommit讀回與行政交接。已核binding整檔SHA及九committed modes/blob/SHA／當前bytes、四正式來源／兩unsigned產物／recipes保持，actualbuild-base fb74a83正確；PR69 openDraft/headfbf4e7a且body各批／8optional／補證／live界線符合實際。三docs只原四例外列補commit及交接事實，VO-D01 completed與VO-H01 pending分界正確；無source-binding自指或scope擴張。明示可補此行政verdict後提交三docs／push，Human接受／merge／live仍不因此授權。

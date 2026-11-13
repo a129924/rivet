@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-13。B1–B5已完整集中；B5 main必要post真到，Anscombe最終passed0／evidencegap closed、Fermat Reviewer approved0。九source未再變，原四例外列已行政補postSHA；待實際commit／source綁定／push／PR交接，Human review未完成。
+最後更新：2026-11-13。B1–B5受限實作／必要offline與適用獨立gate完成；B5 source fbf4e7a已commit／push／九input綁定，PR69已更新且維持open Draft。待Human review；八optional skip／live未驗，原失敗與補證保持。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -19,7 +19,7 @@
 | VO-B03 | completed | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 0b6c39f已push；Godelpassed0、Helmholtzpre/postcommitapproved0，170input與artifact／launcher binding真核通過 |
 | VO-B04 | completed | Implementer | B4完整搬移，交Tester→Reviewer | 原Goodall契約／修後3fe0c9a baseline保持；30檔完整搬移及全部必要項真到，Confucius passed0／Leibniz最終approved0 |
 | VO-B05 | completed | Implementer | B5完整搬移，交Tester→Reviewer | 九檔／五puremove／精確接線及必要post真到，Anscombe final passed0／Fermat approved0，來源SHA已核 |
-| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | 五批source／必要offline與獨立gate全完成；B5待實際commit／source綁定／push／PR交Human，不能先宣稱已發布 |
+| VO-D01 | completed | Implementer | 已審bounded topic commit、push、Draft PR交Human | B5 fbf4e7a完整commitpush／九input綁定及PR69 metadata已真完成；仍Draft，Human接受未完成 |
 
 ## Blockers
 
@@ -356,3 +356,13 @@ Anscombe首輪blocked／sourceRF0／evidencegap1：main pre-frozen漏nested79，
 Anscombe最終passed／required0／unresolved0／sourceRF0，歷史before/after199與current199逐項相符，evidencegap closed；原top120／helperfailure／blocked記錄保持。數值與補證SHA引用plan，不建立另一份inventory；source未再變。現在交獨立Reviewer審本批來源及證據，不把Tester結果當codeapproval。
 
 Fermat正式B5成果approved、required fixes0／unresolved0，所有source／模式與必要驗證及補證通過；只補原四列postSHA與行政verdict，source未再變。B1–B5實作gate完成，現在按topic提交完整B5並核來源／Git綁定及PR交接；VO-D01尚待實際執行，不預填發布完成或Human接受。
+
+## 最終交接／Human review
+
+B5 source fbf4e7a已commitpush、hooks全通過；九committed inputs／modes／blob/SHA與經驗證source及兩unsigned產物／recipe綁定，完整receipt引用spec。PR69已實際更新所有批次結果及限制，open Draft、未merge；本段只是發布後行政事實，不補造先前驗證或Human批准。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-H01 | pending | Human | review同DraftPR69並明確決定後續 | 五批實作／必要offline／獨立gate已完成；8optional及live未驗，Human接受與merge未授權 |
+
+Fermat最後postcommit／行政交接複核approved／required0／unresolved0，真核PR openDraft及binding／9source／4formal／2unsigned recipes，三docs純行政與Human pending分界正確。僅補本verdict後按既有授權提交／push；Human接受與merge/live尚未授權，原失敗與補證紀錄維持。
