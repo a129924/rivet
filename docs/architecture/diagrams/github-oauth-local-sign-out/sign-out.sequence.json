@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "本地登出：先退休，再清除",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1600,
+      640
+    ]
+  },
+  "participants": [
+    {
+      "id": "owner",
+      "type": "backend",
+      "label": "連線持有者"
+    },
+    {
+      "id": "provider",
+      "type": "security",
+      "label": "Token Provider"
+    },
+    {
+      "id": "store",
+      "type": "database",
+      "label": "Credential Store"
+    }
+  ],
+  "messages": [
+    {
+      "id": "write",
+      "from": "provider",
+      "to": "store",
+      "y": 180,
+      "label": "已開始的 save",
+      "variant": "default"
+    },
+    {
+      "id": "logout",
+      "from": "owner",
+      "to": "provider",
+      "y": 250,
+      "label": "signOut：立即永久退休",
+      "variant": "security"
+    },
+    {
+      "id": "settled",
+      "from": "store",
+      "to": "provider",
+      "y": 320,
+      "label": "既有 save 結束（成功或失敗）",
+      "variant": "return"
+    },
+    {
+      "id": "clear",
+      "from": "provider",
+      "to": "store",
+      "y": 390,
+      "label": "clear：精確刪除 credential",
+      "variant": "security"
+    },
+    {
+      "id": "absent",
+      "from": "store",
+      "to": "provider",
+      "y": 460,
+      "label": "確認刪除成功或原本不存在",
+      "variant": "return"
+    },
+    {
+      "id": "done",
+      "from": "provider",
+      "to": "owner",
+      "y": 530,
+      "label": "登出成功；舊 provider 不再供應 token",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "晚到 refresh",
+      "items": [
+        "退休後丟棄結果，不開始新 save。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "清除失敗",
+      "items": [
+        "回報錯誤，舊 provider 仍退休；只可重試清除。"
+      ]
+    }
+  ]
+}

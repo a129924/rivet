@@ -80,7 +80,7 @@ internal final class GitHubGraphQLClient: GitHubGraphQLServing {
     if let error = error as? OAuthTokenRefreshError, case .cancelled = error { return true }
     guard let error = error as? OAuthTokenProviderError else { return false }
     switch error {
-    case .missingCredential, .authenticationRequired:
+    case .signedOut, .missingCredential, .authenticationRequired:
       return false
     case .restore(let underlying), .refresh(let underlying), .persist(let underlying):
       return isCancellation(underlying)
@@ -91,7 +91,7 @@ internal final class GitHubGraphQLClient: GitHubGraphQLServing {
     if let error = error as? GitHubGraphQLClientError { return error }
     guard let error = error as? OAuthTokenProviderError else { return .executionFailed }
     switch error {
-    case .missingCredential, .authenticationRequired: return .authenticationRequired
+    case .signedOut, .missingCredential, .authenticationRequired: return .authenticationRequired
     case .restore: return .credentialLifecycle(stage: .restore)
     case .refresh: return .credentialLifecycle(stage: .refresh)
     case .persist: return .credentialLifecycle(stage: .persist)

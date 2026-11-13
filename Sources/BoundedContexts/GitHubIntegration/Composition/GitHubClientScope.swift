@@ -50,7 +50,7 @@ public struct GitHubClientScope: Sendable {
     if let error = error as? OAuthTokenRefreshError, case .cancelled = error { return true }
     guard let error = error as? OAuthTokenProviderError else { return false }
     switch error {
-    case .missingCredential, .authenticationRequired: return false
+    case .signedOut, .missingCredential, .authenticationRequired: return false
     case .restore(let underlying), .refresh(let underlying), .persist(let underlying):
       return isCancellation(underlying)
     }
@@ -61,7 +61,7 @@ public struct GitHubClientScope: Sendable {
   ) -> GitHubClientPreparationError {
     switch error {
     case .missingCredential: .missingCredential
-    case .authenticationRequired: .authenticationRequired
+    case .signedOut, .authenticationRequired: .authenticationRequired
     case .restore: .credentialLifecycle(stage: .restore)
     case .refresh: .credentialLifecycle(stage: .refresh)
     case .persist: .credentialLifecycle(stage: .persist)

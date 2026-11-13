@@ -199,3 +199,13 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 ### Q 輪：獨立反向 PKCE 診斷 version 2
 
 本輪僅改善獨立驗證 CLI 的有限脫敏分類，不改正式 OAuth、credential/provider/scope或refresh/401契約。事前固定完整模板與case/衝突規則，區分GitHub拒絕及已證明PKCE拒絕；僅提及verifier、一般invalid_grant或unknown都不是通過證據。P兩次HTTP400 unknown/indeterminate保留，不追補原回應。Q新missing/wrong各一次、總2/2已用完：兩案HTTP400 invalid_grant/code_problem、無token，description unknown且mentions_verifier=true，均無法判定；hint不能證明PKCE原因，不擴表或重試。受控25tests通過不代表遠端通過。[新版來源與證據](../../plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md)。正常登入/再次查詢及canvas既有Human結果沿用；正式Rivet產品登入UI、完整遠端refresh/401仍未交付或pending。
+
+## 本地登出
+
+`OAuthTokenProvider.signOut()` 是單一連線 owner 的明確 lifecycle 意圖。它先永久退休 provider，清空其 credential／snapshot references，等待已啟動的 store save 真正結束，再清除 credential。晚到 load／refresh 結果不發布、不保存；原 caller cancellation 不因此變更，清除也不因登出 caller 取消而中止。已取得的 token 或已發出的 request 無法撤回。
+
+同時登出共用清除，成功後重複呼叫成功；失敗仍保持退休，只可重試清除。store 須實作 additive `OAuthCredentialClearingStore`，否則回報 `.unsupportedStore`，不宣稱已清除。provider 新公開 `.signedOut` case 對 exhaustive switches 有 source compatibility 影響；REST／GraphQL／scope 映射成既有 authentication-required 語意。新登入必須清除成功後另建 provider。
+
+保證範圍是同 namespace 的唯一 owner／writer，沒有跨 facade／程序協調，也不保證記憶體安全抹除。受控競態測試與真 DPK 跨程序驗收分開；本輪指定簽章環境 fresh-process 實驗尚未執行，不宣稱真人重啟驗收已通過。
+
+[登出順序](diagrams/github-oauth-local-sign-out/sign-out.html) · [執行契約](../../plan/github-oauth-local-sign-out/github-oauth-local-sign-out.plan.md)
