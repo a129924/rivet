@@ -35,3 +35,9 @@ let provider = OAuthTokenProvider(store: credentialStore, fetcher: fetcher)
 本輪 live 只涵蓋 credential item，沒有因此驗證 configuration item、系統拒絕、crash／斷電 durability、跨程序 refresh 協調、真 OAuth／遠端 refresh／API／產品登入或其他 OS／公開發行／簽章環境。模擬 backend 的失敗一致性也不構成系統原子性或斷電證據。Cleanup（LC06）未做且本輪不授權；原資產、ownership proof、失敗／unknown 及已耗額度均保留。圖的 Human 視覺接受與 topic Human review（S08）仍 pending，不以技術審查或 Draft PR 代替。
 
 [保存與還原 sequence](diagrams/github-oauth-credential-persistence/storage-sequence.html)以繁中作者內容呈現；固定 Viewer UI／HTML lang 使用 English fallback。本圖是初始 adapter 交付的歷史 snapshot，補充保存與 provider 邊界，沒有描繪後續驗證 host／authority 流程。原圖 bytes 與技術 QA 沿用，Human 視覺接受仍 pending；本輪不重畫或重新認證此圖。
+
+## 本地 credential 清除
+
+`credentialStore(clientID:)` 現回傳 `OAuthCredentialClearingStore`。`clear()` 在相同 storage actor、無 suspension 的操作內驗證既有 clientID binding，並以完整 class／access group／service／credential account／DPK／synchronizable=false selector 刪除。不存在是冪等成功；identity mismatch、損壞 payload 及 Security 錯誤保留 item 並明確報錯。configuration 與相鄰 namespace 不變。caller 應透過 provider 的 `signOut()` 協調退休和 pending write，不可把單獨 clear 當作停止 refresh 的保證。
+
+此為正式 adapter 能力與 fake Security 測試契約；指定簽章環境的 fresh-process absence 尚未實證。原保存／替換真人證據不當作本次刪除證據。

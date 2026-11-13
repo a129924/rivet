@@ -7,6 +7,59 @@ import Testing
 @Suite("OAuth data protection stores (fake Security only)")
 struct GitHubOAuthDataProtectionStoresTests {
   @Test
+  func clearIsExactAndPreservesConfiguration() async throws {
+    let security = FakeOAuthSecurity()
+    let stores = try makeStores(security)
+    let configuration = try GitHubOAuthAppConfiguration(clientID: "app-id", clientSecret: "fake")
+    try await stores.configurationStore.save(configuration)
+    security.setItem(Data("sentinel".utf8), account: "neighbor")
+    let store = stores.credentialStore(clientID: "app-id")
+    try await store.save(bundle("A"))
+    try await store.clear()
+    try await store.clear()
+    #expect(try await store.load() == nil)
+    #expect(try await stores.configurationStore.load()?.clientID == "app-id")
+    #expect(security.item("neighbor") == Data("sentinel".utf8))
+    let deletes = security.calls.filter { $0.operation == "delete" }
+    #expect(deletes.count == 1)
+    let query = try #require(deletes.first?.query)
+    #expect(query.count == 6)
+    #expect(query[kSecAttrAccount] as? String == "credential")
+    #expect(query[kSecAttrService] as? String == "test.service")
+    #expect(query[kSecAttrAccessGroup] as? String == "test.group")
+    #expect(query[kSecClass] as? String == kSecClassGenericPassword as String)
+    #expect(query[kSecUseDataProtectionKeychain] as? Bool == true)
+    #expect(query[kSecAttrSynchronizable] as? Bool == false)
+  }
+
+  @Test
+  func clearRejectsWrongIdentityAndCorruptData() async throws {
+    let security = FakeOAuthSecurity()
+    let stores = try makeStores(security)
+    try await stores.credentialStore(clientID: "app-id").save(bundle("A"))
+    await #expect(throws: GitHubOAuthDataProtectionStoreError.identityMismatch) {
+      try await stores.credentialStore(clientID: "wrong-id").clear()
+    }
+    security.setItem(Data("bad".utf8), account: "credential")
+    await #expect(throws: GitHubOAuthDataProtectionStoreError.corrupt) {
+      try await stores.credentialStore(clientID: "app-id").clear()
+    }
+    #expect(security.calls.allSatisfy { $0.operation != "delete" })
+    #expect(security.item("credential") == Data("bad".utf8))
+  }
+
+  @Test(arguments: [errSecAuthFailed, errSecInteractionNotAllowed, errSecDecode])
+  func clearPropagatesSecurityFailure(_ status: OSStatus) async throws {
+    let security = FakeOAuthSecurity()
+    let stores = try makeStores(security)
+    let store = stores.credentialStore(clientID: "app-id")
+    try await store.save(bundle("A"))
+    security.deleteStatus = status
+    await #expect(throws: GitHubOAuthDataProtectionStoreError.self) { try await store.clear() }
+    expectBundle(try await store.load(), equals: bundle("A"))
+  }
+
+  @Test
   func configurationRoundTripsWithoutDiagnosticDisclosure() async throws {
     let security = FakeOAuthSecurity()
     let stores = try makeStores(security)
@@ -354,10 +407,15 @@ private final class FakeOAuthSecurity: GitHubOAuthSecurityClient, @unchecked Sen
   private let lock = NSLock()
   private var items: [String: Data] = [:]
   private var recordedCalls: [Call] = []
+  private var forcedDeleteStatus: OSStatus?
   private var forcedReadStatus: OSStatus?
   private var forcedUpdateStatuses: [OSStatus] = []
   private var forcedAddStatuses: [OSStatus] = []
 
+  var deleteStatus: OSStatus? {
+    get { lock.withLock { forcedDeleteStatus } }
+    set { lock.withLock { forcedDeleteStatus = newValue } }
+  }
   var calls: [Call] { lock.withLock { recordedCalls } }
   var readStatus: OSStatus? {
     get { lock.withLock { forcedReadStatus } }
@@ -392,6 +450,14 @@ private final class FakeOAuthSecurity: GitHubOAuthSecurityClient, @unchecked Sen
         : forcedUpdateStatuses.removeFirst()
       if status == errSecSuccess { items[account] = attributes[kSecValueData] as? Data }
       return status
+    }
+  }
+  func delete(_ query: [CFString: Any]) -> OSStatus {
+    lock.withLock {
+      recordedCalls.append(Call(operation: "delete", query: query, attributes: [:]))
+      let account = query[kSecAttrAccount] as? String ?? ""
+      if let forcedDeleteStatus { return forcedDeleteStatus }
+      return items.removeValue(forKey: account) == nil ? errSecItemNotFound : errSecSuccess
     }
   }
   func add(_ query: [CFString: Any]) -> OSStatus {
