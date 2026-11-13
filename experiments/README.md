@@ -93,3 +93,12 @@ Annotated tag `v0.1.61-rivet-login-ui` 已正常建立、推送並核對 local�
 W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pending。P0 expiry 為台灣 **2026-11-17 15:28:08**，原 D 為 **2026-11-20 15:22:03.379959**，不延長、不重設 A／namespace。RP cleanup 仍 blocked／delete=0；[RT index](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)記錄4602 retained metadata entries，不是 minimum 完成，也不解除 RP blocker。
 
 三筆 `01265ad`／`c0e6414`／`d30f5c4` 共312檔已正常發布。2026-11-11 查核時，PR #67 為 Ready for review、尚未 merged。E001–E009、E005 UX 失敗、E006 受限成功及各輪 unknown／逾時歷史保持；E010 不藉此核准新的正式 adapter 採用、產品登入或公開分發。
+
+
+## PR #67：合併與受限 Git 收尾（2026-11-11）
+
+上方 E010 段落及其中「Ready／尚未 merged」保留為合併前查核快照。[PR #67](https://github.com/a129924/rivet/pull/67) 已合併並關閉，GitHub `mergedAt=2026-11-11T08:48:57Z`（台灣16:48:57）；actual merge 為 `a554a4fee772d3976d5ca2c9331865a604e901e2`，最後 feature head 為 `7fa4bfffc5989a351790dca6a1695758c906950c`。兩親 merge 保存相同 feature tree，只證明交付版本已納入 dev，不是新的實驗量測、完整週期通過或新的正式 adapter 採用。[Active 修正 6504801](https://github.com/a129924/rivet/commit/6504801b3b43a6ae937cbd898d9354d53ffc8543) 已交付 GUI recovery selection 來源與 Swift probe 參數檢查；兩個 review threads 均已回覆並 resolved，未解決數0。[新22-source manifest](E010/evidence/pr67-review-fixes-20261111/source-manifest.json)的 aggregate `d253834a…` 與[獨立 Tester 收據](E010/evidence/pr67-review-fixes-20261111/tester-validation.json)只歸屬 active 純修正；舊 W1 frozen source `b8c567…`／grant 未升級，未作 live migration，frozen recovery 是否觸發舊 bug 仍 unknown。
+
+W1 仍只支持一次 seed／一次 fresh 六欄相符、Human 各全程0提示的受限 baseline；W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pending。P0 expiry 為台灣 **2026-11-17 15:28:08**，原 D 為 **2026-11-20 15:22:03.379959**；原 A／namespace 不重設，期限不延長。RP cleanup 仍 blocked／delete=0；RT 的4602 retained metadata entries 不是 minimum 完成。Git 合併不改判 E001–E009、原失敗／unknown 或上述限制。
+
+Annotated tag `v0.1.62-e010-dpk-profile-continuity-baseline` 已正常建立、推送並核對 local／remote tag object `53f1efd44b4d4cdbf0b2ada8752620a2b667e8b5` 與 peeled commit，精確保存上述 merge；不是 GitHub Release 或後續文件版本。原 `chore/github-oauth-dpk-profile-continuity-feasibility` remote branch 已以 expected head `7fa4bff…` 的 server lease 正常刪除，並讀回不存在；dev 與 tag lineage 保留。Local branch／原 managed feature worktree 仍保留，因兩份 AQ local-only 診斷檔尚在、W2／W3 實際 physical path 依賴仍 unknown，未強制移除或搬檔；外部72檔 handoff archive 未改，亦未清理 App／Keychain／Apple 資產。
