@@ -1,8 +1,8 @@
 # OAuth／PAT 雙登入契約步驟帳本
 
 - Topic：`github-dual-login-contract`
-- Current phase：S05 獨立成果審查 approved；S06 發布準備進行中。
-- Current step：S06 / in-progress。
+- Current phase：S06 已 commit／push 並建立 Draft PR；S07 Human review。
+- Current step：S07 / human-check。
 - Branch：`feat/github-dual-login-contract`；base SHA：`2973150b2789d63c10226b57150073ccc793c509`。
 - 配對：[需求](../../analysis/github-dual-login-contract/requirements.md)、[技術規格](../../analysis/github-dual-login-contract/technical-spec.md)、[計畫](github-dual-login-contract.plan.md)。
 - Upstream：Planner approved 僅准起草；Human 已接受對話計畫並明示本次受限執行／topic commit／push／Draft PR 授權；原版獨立 Plan-Reviewer 明示 approved、無 required fix；inventory 維護 delta 另經獨立 Plan-Reviewer approved，無 required fix，之後才恢復實作。
@@ -16,14 +16,14 @@
 | S03 | completed | Implementer | 待 S02 delta approved，再新增 inventory 一條路徑並完成原範圍；其餘 source/test format/lint 與 Archify 照原計畫驗證。 | 歷史 red：新公開型別不存在；focused 8 tests green。原 regression 僅 inventory 失敗，獨立 delta approved 後只新增一項；重跑 229 tests／25 suites passed、consumer 15 tests passed，format/root lint/diff check exit0。Archify showcase9/9、deliver0、四尺寸containment及4張截圖自驗passed；PR Lens local validate/render0，工作樹provenance另存。這是交接證據，非獨立成果 approval。 | — |
 | S04 | completed | Tester | 接獲 S03 明示交接，獨立執行 T01–T09，記錄命令、exit、來源 SHA/hash 及限制。 | 獨立 focused8、GitHubIntegration229／25 suites、consumer15／3 suites、format、lint140files零違規、diffcheck皆exit0；Archify validate9/9零錯警、11檔hash核對與四張截圖實看；PR Lens validate0。下列 Tester verification 記錄限制與舊狀態文字。此為測試交接，非成果審查 approval。 | — |
 | S05 | completed | Reviewer | 依 S04 證據審查 bounded diff／契約／scope／圖與診斷；明示 verdict。 | 歷史：原 Reviewer needs-rework 僅三份 planning 文件開頭狀態 P2，無 required code fix；Plan-Creator 已限定回修，原 Reviewer 最終明示 approved，無剩餘 required fix。 | approved |
-| S06 | in-progress | Implementer | 前置 gate satisfied，依明示 topic 授權與 staged semantic/message 檢查，commit／push／建立 dev 目標 Draft PR；不 merge。 | 待實際 commit SHA、push 結果、Draft PR；不得把授權寫成已執行。 | — |
-| S07 | pending | Human | 審閱 Draft PR、契約限制、圖視覺及未完成事項。 | 待 Human 明示 review 結果。 | — |
+| S06 | completed | Implementer | 前置 gate satisfied，依明示 topic 授權與 staged semantic/message 檢查，commit／push／建立 dev 目標 Draft PR；不 merge。 | Primary commit `0b8c4d11d89115a3362b86bdc876d789cc2eb93b` 已 push；[Draft PR #71](https://github.com/a129924/rivet/pull/71)，base dev、draft true。PR Lens 已綁 primary commit 的實際 diff 並 validate/render exit0；最終 head 由 PR 與本機 map provenance 核對。 | — |
+| S07 | human-check | Human | 審閱 Draft PR、契約限制、圖視覺及未完成事項。 | 待 Human 明示 review 結果。 | — |
 
 ## Blockers
 
 - 既有 source inventory 缺新檔已經 bounded planning delta 獨立 approved 後回修；未改其餘隔離規則。
 - S02 原版及 delta approval 歷史保留；S03／S04 completed。S05 曾 needs-rework（文件 P2，無 required code fix），限定回修後原 Reviewer 明示 approved；不把此結果當作 S07 Human review。
-- PR Lens CLI 0.11.0 已實際驗證；map 尚綁 working-tree snapshot，S06 commit 後須重綁實際 head 並 validate/render。Graphify 無 graph，未呼 CLI，採 source-search fallback且未建圖。
+- 無未解決 required code fix。PR Lens CLI 0.11.0 的已提交版本 map 已 validate/render 通過，舊 working-tree provenance 另外保留為歷史。Graphify 無 graph，未呼 CLI，採 source-search fallback 且未建圖。
 - 任何 required fix、不可用工具、檔案 allowlist 衝突與 sandbox 阻擋由實際 owner 回報；不得擅改 dev／安裝工具繞過。
 
 ## Human Check
@@ -60,10 +60,19 @@
 ## Reviewer verification
 
 - 原 Reviewer 已確認三份 planning 文件的限定狀態回修，最終 verdict approved、無剩餘 required fix；首次 needs-rework 與回修歷史保留。
-- 依此明示 verdict 進入 S06，只準備 stage／semantic boundary／message 與遠端狀態檢查；commit、push 與 Draft PR 結果待實際執行記錄。
+- 依此明示 verdict 完成 S06；尚待 S07 Human review，不將本次成果審查當作人類接受。
+
+## Delivery verification
+
+- Staged semantic boundary：22 檔均屬本 topic 與已 approved inventory 單條 delta；訊息 `feat(github-integration): 新增 OAuth／PAT 雙登入契約`。diff check 通過，無未授權檔案。
+- Primary commit：`0b8c4d11d89115a3362b86bdc876d789cc2eb93b`；已 push 至 `origin/feat/github-dual-login-contract`，upstream 已設定。
+- [Draft PR #71](https://github.com/a129924/rivet/pull/71)：base `dev`、head `feat/github-dual-login-contract`、draft true；不 merge／release。
+- 首次 commit 因 feature worktree 缺既有 renderer 依賴而被 hook 拒絕（biome command not found）；未略過 hook。唯讀核對既有依賴與相同 bun.lock 後，複用到 feature 的 ignored node_modules；沒有安裝／升級、修改 tracked 配置或寫入 dev。重試完整 hooks 全通過，含 Swift format、consumer、SwiftLint、renderer format／lint／typecheck。
+- PR Lens 以真實 base `2973150b2789d63c10226b57150073ccc793c509` 與已提交 head 建圖，保存 commit-range diff／hash、22 檔 blob hashes、7 個 source refs 核對；validate／render exit0、manifest 為1張 SVG。交付記錄 commit 後再以最終 head 重綁；外部產物不 upload、不附加到 PR。
+- Graphify 無既存 graph，維持已記錄 source-search fallback。GitHub Actions 狀態與最終 Human review 另行確認，不冒稱遠端 CI 通過。
 
 ## Last updated
 
-- 2026-11-13 17:59:43  Asia/Taipei
-- Updated by：Implementer（S06 發布準備）。
-- 更新內容：記錄原 Reviewer 最終 approved、保留 needs-rework 歷史，S06 標為 in-progress；未預填 commit／push／PR 成功。
+- 2026-11-13 18:03:31 Asia/Taipei
+- Updated by：Implementer（S06 交付記錄）。
+- 更新內容：記錄實際 primary commit／push／Draft PR 與工具驗證，S06 completed、S07 human-check；不改公開契約、程式、測試或圖。
