@@ -1,6 +1,6 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-12（18:20前安全中斷）。B1–B4完成，修正3fe0c9a及B4搬移2ede7ad已push／gate全0fix。B5僅原位baseline：187pass＋8optional skip、CLIhelp及unsigned Debug/Rebuilt真compile；未搬移／未改source。topic未完成，交Human review；既有B5授權保留。
+最後更新：2026-11-13。B1–B5已完整集中；B5 main必要post真到，Anscombe最終passed0／evidencegap closed、Fermat Reviewer approved0。九source未再變，原四例外列已行政補postSHA；待實際commit／source綁定／push／PR交接，Human review未完成。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
@@ -9,7 +9,7 @@
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
-| VO-P05 | in-progress | Explorer | 各批前配號／mapping／差異／入口鎖定 | B1–B4完整mapping／必要驗證與獨立gate完成；B5 E015無占用／九hash及原位baseline已核，精確pathassert契約與實作gate待補審 |
+| VO-P05 | completed | Explorer | 各批前配號／mapping／差異／入口鎖定 | E011–E015全部mapping／originalSHA／例外／入口已鎖，Sartre B5契約approved0且完整九檔實作／main與獨立gate真到 |
 | VO-B01 | completed | Implementer | B1契約內完整搬移，交Tester | 四檔100%rename，三target path／lint／索引／入口同批；必要post已到達，Meitner最終approved |
 | VO-T01 | completed | Tester | B1必要項真正到達並給出結果 | 主對話post編譯／62tests／新wrapper資源入口已驗；Kepler獨立親跑62pass0fail0skip，readback artifacts相符 |
 | VO-R01 | completed | Reviewer | B1獨立成果審查與限制分類 | Meitner最終approved、required fixes0；README離線cache操作RF已關閉；只限B1 |
@@ -18,20 +18,20 @@
 | VO-PB3 | completed | Plan-Reviewer | B3契約approved且required fixes0 | Nash原契約approved0／RF-1closed保留，現由VO-PIN3追加pin授權；非成果gate |
 | VO-B03 | completed | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 0b6c39f已push；Godelpassed0、Helmholtzpre/postcommitapproved0，170input與artifact／launcher binding真核通過 |
 | VO-B04 | completed | Implementer | B4完整搬移，交Tester→Reviewer | 原Goodall契約／修後3fe0c9a baseline保持；30檔完整搬移及全部必要項真到，Confucius passed0／Leibniz最終approved0 |
-| VO-B05 | not-started | Implementer | B5完整搬移，交Tester→Reviewer | 前批已完成；僅原位baseline187pass/8optional skip及copied兩build，B5實作／搬移未開始 |
-| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | B1–B4及獨立fix已commitpush；B5只唯讀前置／baseline，未搬移，topic尚未完成 |
+| VO-B05 | completed | Implementer | B5完整搬移，交Tester→Reviewer | 九檔／五puremove／精確接線及必要post真到，Anscombe final passed0／Fermat approved0，來源SHA已核 |
+| VO-D01 | in-progress | Implementer | 已審bounded topic commit、push、Draft PR交Human | 五批source／必要offline與獨立gate全完成；B5待實際commit／source綁定／push／PR交Human，不能先宣稱已發布 |
 
 ## Blockers
 
 | ID | 狀態／問題 | 解除條件 |
 |---|---|---|
 | BL-P | resolved | Popper 正式 approved、required fixes=0；不等於五批執行通過 |
-| BL-N | B1–B3配號已確認；B4–B5 pending | E011–E013完成；E014占用／三十hash已查並鎖定，B5仍待批前確認 |
+| BL-N | E011–E015配號與mapping已鎖定 | B5搬移前九原hash／E015無占用已重核；目前九檔已完整寫入E015，獨立post gate待驗，不重開編號方案 |
 | BL-B1 | resolved（B1） | baseline／post真正source build、62tests、wrapper資源／入口與獨立成果approved0，commit7e5f4fd |
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
 | BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates舊baseline及Godel移後normalhost各67pass；restricted失敗保留，RF-TPIN3-01closed，不代替commitbinding |
 | BL-E9 | resolved（B3） | 新精確授權、post正負真驗／獨立成果與commitbinding approved0；舊失配歷史保留 |
-| BL-O | B1–B4完成；B5只有原位baseline，必要post／copybranch與獨立gate未到 | B5本次187pass＋8optional skip、兩unsignedbuild／CLIhelp0；skip不算pass，未搬／未驗post；原失敗與歷史保留 |
+| BL-O | resolved（必要offline搬移驗證） | B5必要197/兩branches/兩build/CLI/資源真到，Anscombe passed0／Fermat approved0；recursive199補證已關gap，8optional及live未驗維持界線 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
 | BL-B4 | resolved（VO-RB4Q-F受限修正） | main完整build／78tests／final／保護、Confucius passed0／Leibniz approved0；原根因unknown與失敗保留，修正commit綁定後才能續原B4post／productiongate |
 
@@ -335,3 +335,24 @@ Leibniz B4最終approved、required fixes0／unresolved0，BL-O RF-1 closed；�
 B4 source 2ede7ad已push／postcommit30bytes及mode真核，Confucius passed0／Leibniz本批approved0；B5原九source保持、E015不存在，唯讀baseline結果及未驗項只引用plan/spec及receipts。下一步先補B5原testrow必要兩copybranches的精確pathassert契約／Plan-Reviewer，再依既有授權完成B5，不重新詢問同範圍。此處因Human時間要求安全中斷，不宣稱五批或topic完成，不merge／live。
 
 Leibniz最後文件checkpoint／B4postcommit讀回approved、required fixes0／unresolved0，已核本次基線與未驗界線及repo source保持。僅補本行政verdict後提交三docs／push同DraftPR69交Human；B5實作／post／兩copybranches／獨立gate仍未完成，原授權保持，topic不宣稱完成。
+
+## 2026-11-13 恢復 B5／實作前 gate
+
+原五批授權持續，昨18:20只記歷史中斷；Runner自身live window／deadline不因此重開。四正式文件已補原九mapping／4內容例外與兩真copybranches必要斷言、九欄／正常host離線recipe／回復界線；source未改。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-PB5 | completed | Plan-Reviewer | B5精確契約approved／0fix | Sartre最終approved／0fix／unresolved0，RF-B5-01closed；只契約，非execution |
+| VO-TB5-BASE | completed | Implementer | 今日主對話原195／copied兩build／CLIhelp基線真到 | 今日187pass／8optional skip、CLIhelp／Debug-Rebuilt全0；逐case原因對舊baseline一致，獨立post仍待 |
+| VO-TB5 | completed | Tester | 真兩copybranches／移後suite／資源與source compile／case及hash保護 | Anscombe final passed／required0／unresolved0，197=189pass/8optional skip及兩build/CLI/branches真到；recursive199補證gap closed、原失敗保留 |
+| VO-RB5 | completed | Reviewer | 整批成果approved／0fix | Fermat本批approved／0fix／unresolved0，接受historical199補證；非沿用規劃／B4approval |
+
+Sartre B5首輪needs-rework／RF-B5-01：最新九欄把四個搬移內容例外重列Modify，與Written九new重疊。已僅將例外歸Written允許差異，Modify保留原位文件，實作scope不變、source未改。今日原source baseline四命令已實跑exit0，完整數值待證據整理；規劃gate待原Reviewer複核，不以baseline代approval。
+
+B5 Implementer已完成本批全source／入口／資源真驗並正式交Tester；數值／SHA及scope引用plan/spec與receipts。原195bytes保持、新兩test red為真舊定位拒絕、green真copy／digest／sentinel；八skip未驗，不能替代必要項。此時未commit或push本批、未宣稱topic完成。
+
+Anscombe首輪blocked／sourceRF0／evidencegap1：main pre-frozen漏nested79，不能當pass。原失敗與top120記錄保持。已唯讀找到真正11-12 recursive199 before／after並由main逐項核當前0差異，交原Tester獨立複核；沒有改source、弱化guard或降級檢查，不先交Reviewer或commit。
+
+Anscombe最終passed／required0／unresolved0／sourceRF0，歷史before/after199與current199逐項相符，evidencegap closed；原top120／helperfailure／blocked記錄保持。數值與補證SHA引用plan，不建立另一份inventory；source未再變。現在交獨立Reviewer審本批來源及證據，不把Tester結果當codeapproval。
+
+Fermat正式B5成果approved、required fixes0／unresolved0，所有source／模式與必要驗證及補證通過；只補原四列postSHA與行政verdict，source未再變。B1–B5實作gate完成，現在按topic提交完整B5並核來源／Git綁定及PR交接；VO-D01尚待實際執行，不預填發布完成或Human接受。

@@ -76,3 +76,7 @@ Human 明確授權三處測試型別消歧的精確契約，並要求台北時�
 原 A／B／C 失敗與已還原證據保留。本次先核 scope／contract，再實際 red／green、完整 guarded suite／資源與入口、獨立 baseline-final、Tester／Reviewer；必要項未到達不放行 B4。約 18:10 起不開始無法完整收尾的新批，18:20 前必須給出結果或明確可恢復的中斷狀態，不能因時限降低驗證標準。
 
 VO-RB4Q 三檔13引用實驗未完成build，新增確認第四個Factory測試檔五個constructor歧義；已精確還原三檔。Human隨後明確回答「授權此五處限定追加」：僅同兩種型別的五處constructor加模組前綴及必要換行，其餘限制不變。現在執行契約以spec VO-RB4Q-F四檔18引用為準，先獨立審查再實作；舊三檔gate與失敗不改寫、不當作新契約已approved。
+
+## 2026-11-13 恢復 B5
+
+User已明確表示可以繼續，原五批與feature實作／topic commit／push／同DraftPR69／human review授權保持。此次完成B5原九檔集中、必要路徑接線及原test內兩copy分支斷言，屬原已允許的相關路徑測試；精確新增差異先交Plan-Reviewer，不擴為Runtime行為或新工具。11-12的18:20時間中斷保留為歷史，沒有新真人／簽章／儲存／安全／版本／merge授權。正式能力／正式測試與原SOURCE_FILES manifest識別保持。

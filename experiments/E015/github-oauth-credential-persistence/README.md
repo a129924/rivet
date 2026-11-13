@@ -4,9 +4,27 @@
 
 ## 目前驗證狀態（2026-11-05）
 
-[LG81-Cap-R](../../plan/github-oauth-credential-persistence/evidence/live-preparation-review.md)已獨立確認：指定簽章環境的正式 public adapter，以完整假 bundle 完成 A→writer 結束→fresh A→整筆 B→fresh B→同身分真 clean/build／簽章→rebuilt fresh B；五個 runtime Human 全程觀察均 0 提示。完整六欄、fresh instance、不同 binary、原 identity/profile/claims 與同 request/report/ACK/final/operation 鏈均成立，詳[逐段紀錄](../../plan/github-oauth-credential-persistence/evidence/live-validation.md)及[長期契約](../../docs/architecture/github-oauth-credential-persistence.md)。不是 OAuth／產品登入或所有環境保證；configuration item、系統拒絕、斷電 durability 不在本輪 live 證據內。
+[LG81-Cap-R](../../../plan/github-oauth-credential-persistence/evidence/live-preparation-review.md)已獨立確認：指定簽章環境的正式 public adapter，以完整假 bundle 完成 A→writer 結束→fresh A→整筆 B→fresh B→同身分真 clean/build／簽章→rebuilt fresh B；五個 runtime Human 全程觀察均 0 提示。完整六欄、fresh instance、不同 binary、原 identity/profile/claims 與同 request/report/ACK/final/operation 鏈均成立，詳[逐段紀錄](../../../plan/github-oauth-credential-persistence/evidence/live-validation.md)及[長期契約](../../../docs/architecture/github-oauth-credential-persistence.md)。不是 OAuth／產品登入或所有環境保證；configuration item、系統拒絕、斷電 durability 不在本輪 live 證據內。
 
 全部 live 已停止，原窗口／readies／額度不可重用。LC06 cleanup 未做且本輪禁止；Human 視覺與 topic 接受仍 pending。下文依原階段保留工具與候選歷史，舊「待驗／仍停」只描述當時狀態，舊命令不構成新授權或可直接續行的 ready；歷史 unknown 不改成功。本 README 的本次文字修訂不改寫舊 buildsource9／manifest／收據 hash，也不表示曾以此新 doc hash 重跑或建置。
+
+## E015 現行位置與離線檢查
+
+本環境集中於 E015，仍屬 github-oauth-credential-persistence 正式 adapter 的功能驗收 runner；正式 adapter、正式測試及四個 SOURCE_FILES 識別留在 root。這次只修正獨立驗收環境歸屬，不提升整套 runner 為產品能力。
+
+在 repository root 使用下列離線入口；八個 optional binary／captured replay／DER 輸入未提供時維持 skip，不計為 pass：
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover \
+  -s experiments/E015/github-oauth-credential-persistence/Tests -p test_live_protocol.py -v
+python3 -B experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py --help
+```
+
+新增兩個 ownership cases 在 owned synthetic repo 實際呼叫 prepare／source_table 及 dpk_prepare 的 copy／replace／digest：fixture只有新E015路徑，假profile僅metadata；後者在讀buildCommand／subprocess／profile內容之前以test-only sentinel停止，外部操作必須零呼叫。這不代表正常dpk-prepare完成、live窗口重開或真人驗收。
+
+現行 template 的唯一 local package reference 是 `../../..`。Unsigned offline build 使用本次私有 scratch 複製原 PROJECT_FILES 六葉與 root 既有 Package.resolved，只在副本把該唯一字串接到目前feature root；依原 Debug／Rebuilt schemes 各自 DerivedData，CODE_SIGNING_ALLOWED=NO、CODE_SIGNING_REQUIRED=NO、CODE_SIGN_IDENTITY=，並指定已固定版本的本機 SourcePackages／本次 package cache、-disableAutomaticPackageResolution／-onlyUsePackageVersionsFromResolvedFile／-skipPackageUpdates。標準 SwiftPM sandbox 保持，不查真profile、不簽章或啟動App。完整本次argv／程序env及結果見[歸屬修正計畫](../../../plan/verification-artifact-ownership/verification-artifact-ownership.plan.md)。
+
+以下歷史準備的 `../..` 是原位置的 template ref；現行copy須以上述三層ref為準。下列操作定位連結接至現址，原LG來源版本／hash／pins／receipts及live停止限制保持，不能把新路徑當成當年原source或重做真人流程的證據。
 
 ## 歷史準備與操作說明（非目前執行授權）
 
@@ -14,7 +32,7 @@
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
-  -s validation/github-oauth-credential-persistence/Tests -p test_live_protocol.py
+  -s experiments/E015/github-oauth-credential-persistence/Tests -p test_live_protocol.py
 ```
 
 Unsigned compile 可將 project／Sources／Resources 複製到一般編譯暫存（不是 live runroot），把 project 的 local package reference 從 `../..` 換成本 feature worktree，依序執行：
@@ -35,7 +53,7 @@ xcodebuild -project "$RIVET_BUILD_PROJECT" -scheme CredentialStorageProbeRebuilt
 設 `RIVET_VALIDATION_REPO` 為本 feature worktree、`RIVET_VALIDATION_PARENT` 為 repository 外的私有暫存父目錄；runner 只會建立 exclusive `rivet-credential-storage-<UUID>`、0700 的 owned root。
 
 ```sh
-python3 validation/github-oauth-credential-persistence/scripts/credential_storage_live.py \
+python3 experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py \
   prepare --repo "$RIVET_VALIDATION_REPO" --parent "$RIVET_VALIDATION_PARENT"
 ```
 
@@ -56,7 +74,7 @@ Agent 使用下列 `stage setup --built-app` 接線：以當段已取得的 read
 正式 setup 會對私有 project 以固定既有選擇執行實際 `xcodebuild clean build`，保留 command/source/build proof，檢查 profile、cert、App ID、唯一 keychain group、DR、非 ad-hoc，安裝到同 root 固定 `current/CredentialStorageProbe.app`。沒有足夠 profile 不會因 identity count=1 而放行。
 
 ```sh
-python3 validation/github-oauth-credential-persistence/scripts/credential_storage_live.py \
+python3 experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py \
   stage --root "$RIVET_VALIDATION_ROOT" --phase setup \
   --ready-file "$RIVET_READY_FILE" --built-app "$RIVET_MANUAL_BUILT_APP"
 ```
@@ -83,7 +101,7 @@ python3 validation/github-oauth-credential-persistence/scripts/credential_storag
 actions 僅 none／allow／deny／authenticate／other；count>0 時每提示一個 action，count=0 只准 [] 或 ["none"]。沒有自由敏感文字。未知 count 用 null、觀察不完整 false；不推定 0。
 
 ```sh
-python3 validation/github-oauth-credential-persistence/scripts/credential_storage_live.py \
+python3 experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py \
   observe --root "$RIVET_VALIDATION_ROOT" --phase save-a --human-file "$RIVET_HUMAN_FILE"
 ```
 
@@ -94,7 +112,7 @@ python3 validation/github-oauth-credential-persistence/scripts/credential_storag
 任何可能寫過的錯誤／crash都保留 owned root／markers，不能 reset UUID 或用新 root 冒充已清。cleanup 可跳過後續測量但不能跳過 ready／所有 ownership／signed App guards。第一次 cleanup 仍用 stage cleanup；需要再恢復則用：
 
 ```sh
-python3 validation/github-oauth-credential-persistence/scripts/credential_storage_live.py \
+python3 experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py \
   recover-cleanup --root "$RIVET_VALIDATION_ROOT" --ready-file "$RIVET_FRESH_CLEANUP_READY"
 ```
 
@@ -103,7 +121,7 @@ Recovery 使用同 service／item、獨立 private attempt UUID、一次性 read
 export 只往 plan 精確 `evidence/live/<UUID>` 位置，allowlist 投影去除 PID／paths／group／IDs／payload／任意錯誤；Human SHA 綁的是 export 的原封 public machine bytes，不重綁或改寫：
 
 ```sh
-python3 validation/github-oauth-credential-persistence/scripts/credential_storage_live.py \
+python3 experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py \
   export --root "$RIVET_VALIDATION_ROOT" --destination "$RIVET_EXACT_EVIDENCE_DESTINATION"
 ```
 
@@ -116,7 +134,7 @@ python3 validation/github-oauth-credential-persistence/scripts/credential_storag
 ```sh
 PYTHONDONTWRITEBYTECODE=1 RIVET_FAKE_PROBE_BINARY="$RIVET_UNSIGNED_PROBE_BINARY" \
   python3 -m unittest discover \
-  -s validation/github-oauth-credential-persistence/Tests -p test_live_protocol.py -v
+  -s experiments/E015/github-oauth-credential-persistence/Tests -p test_live_protocol.py -v
 ```
 
 沒有設定 binary 會明示 skip Swift case，不能當完整準備通過。唯一獲准 raw CLI 執行例外是 exact `--self-test-fakes`；此分支在所有 live validation／SecTask／SecItem／GUI 入口之前，只用 fake store／delete 及 TemporaryDirectory 的真 durable proof，同一個 perform／cleanup 控制流程。真人操作仍只准 LaunchServices sequential open -W。
@@ -149,7 +167,7 @@ Human 仍須實際觀察 cleanup、綁 machine 原bytes SHA並 observe；final e
 - `private/setup-retry-1-fresh-ready.json`：沿既有runUUID／phase=setup／ready=true／全新readyUUID，源於本次當段Human ready。
 
 ```sh
-python3 validation/github-oauth-credential-persistence/scripts/credential_storage_live.py \
+python3 experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py \
   retry-setup --root "$RIVET_VALIDATION_ROOT" \
   --ready-file "$RIVET_VALIDATION_ROOT/private/setup-retry-1-fresh-ready.json" \
   --policy-adoption-file "$RIVET_VALIDATION_ROOT/private/setup-retry-1-policy.json"
@@ -160,7 +178,7 @@ Preflight驗原machine／完整Human SHA與frozen run／identity／PBX／profile
 Retry結束後另取actual count/actions/whole觀察，Human JSON仍phase=setup並綁retry machine原bytes SHA：
 
 ```sh
-python3 validation/github-oauth-credential-persistence/scripts/credential_storage_live.py \
+python3 experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py \
   observe --root "$RIVET_VALIDATION_ROOT" --phase setup \
   --setup-attempt retry-1 --human-file "$RIVET_RETRY_HUMAN_FILE"
 ```
@@ -289,7 +307,7 @@ Non-live 122/122、零skip，AST/Ruff通過；first/second各post狀態／原err
 只有上述操作階段完成、外部核 actual runner SHA 等於獨立 Reviewer approved freeze，且另取得當段 fresh Human ready，才可呼叫唯一一次：
 
 ```sh
-python3 validation/github-oauth-credential-persistence/scripts/credential_storage_live.py binding-launch \
+python3 experiments/E015/github-oauth-credential-persistence/scripts/credential_storage_live.py binding-launch \
   --context "$R/context.json" --context-sha "$CONTEXT_SHA256" \
   --attempt-uuid "$ATTEMPT_UUID" --ready-uuid "$READY_UUID" --ready-confirmed
 ```

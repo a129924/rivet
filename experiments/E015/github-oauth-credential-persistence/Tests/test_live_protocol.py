@@ -24,6 +24,172 @@ class Controls(unittest.TestCase):
                         "comparison": {key: True for key in live.FIELDS}}
         self.sha = "a" * 64
 
+    def _ownership_fixture(self, temporary):
+        formal = (
+            "Package.swift",
+            "Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift",
+            "Sources/BoundedContexts/GitHubIntegration/Stores/GitHubOAuthDataProtectionStores.swift",
+            "Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthCredentialBundle.swift",
+        )
+        projects = (
+            "CredentialStorageProbe.xcodeproj/project.pbxproj",
+            "CredentialStorageProbe.xcodeproj/xcshareddata/xcschemes/CredentialStorageProbe.xcscheme",
+            "CredentialStorageProbe.xcodeproj/xcshareddata/xcschemes/CredentialStorageProbeRebuilt.xcscheme",
+            "Sources/main.swift",
+            "Resources/Info.plist",
+            "Resources/CredentialStorageProbe.entitlements",
+        )
+        bindings = projects + (
+            "scripts/credential_storage_live.py", "Tests/test_live_protocol.py", "README.md",
+        )
+        self.assertEqual(live.SOURCE_FILES, formal)
+        self.assertEqual(live.PROJECT_FILES, projects)
+        self.assertEqual(live.BINDING_SOURCES, bindings)
+        root = Path(temporary).resolve()
+        repo, parent = root / "repository", root / "caller"
+        repo.mkdir(mode=0o700)
+        parent.mkdir(mode=0o700)
+        template = Path("experiments/E015/github-oauth-credential-persistence")
+
+        def write(path, data):
+            path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+            descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            with os.fdopen(descriptor, "wb") as stream:
+                stream.write(data)
+
+        original = {}
+        relatives = tuple(Path(name) for name in formal) + tuple(template / name for name in bindings)
+        for index, relative in enumerate(relatives):
+            data = ("synthetic-source-" + str(index) + ":" + str(relative) + "\n").encode()
+            if relative == template / projects[0]:
+                data = (b'ROOT = { relativePath = "../../.."; };\n'
+                        b'KEEP = { relativePath = "fixture/unchanged"; };\n')
+            path = repo / relative
+            write(path, data)
+            original[path] = data
+        self.assertFalse((repo / "validation/github-oauth-credential-persistence").exists())
+        return {"repo": repo, "parent": parent, "template": template, "original": original,
+                "formal": formal, "projects": projects, "bindings": bindings, "write": write}
+
+    def _ownership_assert_copy(self, fixture, project):
+        import re
+        raw = (project / fixture["projects"][0]).read_bytes()
+        root = re.search(rb'^ROOT = \{ relativePath = (".*"); \};$', raw, re.MULTILINE)
+        self.assertIsNotNone(root)
+        self.assertEqual(json.loads(root.group(1)), str(fixture["repo"]))
+        self.assertEqual(raw.splitlines(),
+                         [b"ROOT = { relativePath = " + json.dumps(str(fixture["repo"])).encode() + b"; };",
+                          b'KEEP = { relativePath = "fixture/unchanged"; };'])
+        for leaf in fixture["projects"][1:]:
+            self.assertEqual((project / leaf).read_bytes(),
+                             fixture["original"][fixture["repo"] / fixture["template"] / leaf])
+
+    def test_ownership_prepare_uses_relocated_template(self):
+        import hashlib
+        from contextlib import ExitStack
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = self._ownership_fixture(temporary)
+            with ExitStack() as stack:
+                guards = [
+                    stack.enter_context(patch.object(owner, name,
+                                                     side_effect=AssertionError("external operation")))
+                    for owner, name in (
+                        (live, "private_command"), (live, "profile_data"),
+                        (live, "build_selected"), (live, "private_revision"),
+                        (live.subprocess, "run"), (live.subprocess, "Popen"),
+                    )
+                ]
+                result = live.prepare(fixture["repo"], fixture["parent"], self.run)
+            self.assertEqual(result, {"runUUID": self.run, "status": "prepared"})
+            root = fixture["parent"] / ("rivet-credential-storage-" + self.run)
+            self._ownership_assert_copy(fixture, root / "project")
+            manifest = json.loads((root / "run.json").read_text())
+            self.assertEqual(manifest["sources"], {
+                str(fixture["repo"] / name):
+                    hashlib.sha256(fixture["original"][fixture["repo"] / name]).hexdigest()
+                for name in fixture["formal"]
+            })
+            self.assertEqual(manifest["copiedSources"], {
+                str(root / "project" / leaf):
+                    hashlib.sha256(fixture["original"][fixture["repo"] / fixture["template"] / leaf]).hexdigest()
+                for leaf in fixture["projects"][1:]
+            })
+            self.assertEqual(manifest["templateProjectSHA256"],
+                             hashlib.sha256(fixture["original"][
+                                 fixture["repo"] / fixture["template"] / fixture["projects"][0]]).hexdigest())
+            for path, data in fixture["original"].items():
+                self.assertEqual(path.read_bytes(), data)
+            for guard in guards:
+                guard.assert_not_called()
+
+    def test_ownership_dpk_prepare_copies_then_stops_before_build(self):
+        from collections import Counter
+        from contextlib import ExitStack
+        from unittest.mock import call, patch
+
+        class StopBeforeBuild(Exception):
+            pass
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = self._ownership_fixture(temporary)
+            profile = fixture["parent"] / "profile-acquisition-1/profile.provisionprofile"
+            config = fixture["parent"] / "config-report-timeout-amendment-1.json"
+            fixture["write"](profile, b"FAKE_ONLY_NOT_A_PROFILE")
+            fixture["write"](config, json.dumps({"repo": str(fixture["repo"])}).encode())
+            allowed = {fixture["repo"] / fixture["template"] / leaf for leaf in fixture["bindings"]}
+            reads = []
+            real_read, real_load = Path.read_bytes, live.load
+            sentinel = StopBeforeBuild()
+
+            def checked_read(path):
+                self.assertIn(Path(path), allowed)
+                reads.append(Path(path))
+                return real_read(path)
+
+            def checked_load(path):
+                self.assertEqual(Path(path), config)
+                return real_load(path)
+
+            with ExitStack() as stack:
+                guards = [
+                    stack.enter_context(patch.object(owner, name,
+                                                     side_effect=AssertionError("external operation")))
+                    for owner, name in (
+                        (live, "private_command"), (live, "profile_data"),
+                        (live, "build_selected"), (live, "private_revision"),
+                        (live.subprocess, "run"), (live.subprocess, "Popen"),
+                    )
+                ]
+                clock = stack.enter_context(patch.object(
+                    live, "dpk_time", side_effect=[live.DPK_DEADLINE - 600, sentinel]))
+                digests = stack.enter_context(patch.object(live, "digest", wraps=live.digest))
+                stack.enter_context(patch.object(live, "load", side_effect=checked_load))
+                stack.enter_context(patch.object(Path, "read_bytes", checked_read))
+                with self.assertRaises(StopBeforeBuild) as caught:
+                    live.dpk_prepare(fixture["repo"], fixture["parent"], profile)
+            self.assertIs(caught.exception, sentinel)
+            self.assertEqual(clock.call_args_list, [call(540), call(540)])
+            self.assertEqual(digests.call_args_list, [
+                call(fixture["original"][fixture["repo"] / fixture["template"] / leaf])
+                for leaf in fixture["bindings"]
+            ])
+            self.assertEqual(Counter(reads), Counter({
+                fixture["repo"] / fixture["template"] / leaf:
+                    2 if leaf in fixture["projects"] else 1
+                for leaf in fixture["bindings"]
+            }))
+            self.assertNotIn(profile, reads)
+            workspaces = list(fixture["parent"].glob("rivet-dpk-preparation-*"))
+            self.assertEqual(len(workspaces), 1)
+            self._ownership_assert_copy(fixture, workspaces[0] / "project")
+            for leaf in ("Debug.command.json", "Rebuilt.command.json", "preparation.json"):
+                self.assertFalse((workspaces[0] / leaf).exists())
+            for path, data in fixture["original"].items():
+                self.assertEqual(path.read_bytes(), data)
+            for guard in guards:
+                guard.assert_not_called()
+
     def human(self, phase="save-a", count=0):
         return {"runUUID": self.run, "phase": phase, "machineSHA256": self.sha,
                 "promptCount": count, "wholeStageObserved": True,

@@ -591,3 +591,77 @@ B4完整批次2ede7ad已commit／push、hooks全通過，Confucius本批passed0�
 ### 時間中斷文件／B4 postcommit 最終獨立審查
 
 Leibniz正式approved、required fixes0／unresolved0，僅限三docs checkpoint與B4 postcommit讀回。已核PR69 openDraft/head2ede7ad、30 committed/worktree／已測SHA與modes、B3binding、B5九原hash／E015不存在，以及本次195中187pass／8有理由skip、CLI與copied兩build／產物。現行summary／ledger一致，未把baseline當post或開啟B5source修改；原B5授權保持，實作與驗收仍待精確契約／gate。此行政verdict不增加操作授權，不把topic標為完成。
+
+## B5 續作完整批次：實作前九欄
+
+本輪唯讀已核feature／upstream／PR69 headfb74a83，source乾淨，原九hash／E015無占用，Swift6.3.3／Xcode26.6 17F113／SDK26.5與前次一致。昨日時間中斷是歷史；今天仍先建自身環境適用baseline，不以舊相同計數替代。唯一逐檔路徑／原hash／允許差異只引用spec B5九列與最新鎖定段。
+
+- Goal：將DPK正式adapter的獨立驗收runner完整集中E015，保留實際source編譯／resources／兩copy-and-replace分支／CLI入口。
+- Non-Goal：不重做真人驗證、不改正式能力／tests／manifest識別、Runtime／API／pins／deadline／簽章／儲存或安全設定。
+- In-Scope：只引用spec B5九檔搬移及4內容例外；原test內2private helpers＋2copybranch regressions，README／experiments索引及四topic文件必要現況。
+- Out-Of-Scope：正式source與root products/targets/dependencies、另拆package／共用抽象／合併重複實作、真profile/private context或credential、normal dpk-prepare／launch／OAuth/API/DPKlive、外部副作用、新工具／治理／圖面。
+- ReadOnly：B1–B4、B3 170inputs／fixedApp／E009pin／immutable receipts、root正式SOURCE_FILES與tests／rootgraph／依賴版本；原歷史LG來源及證據保持。
+- Written：只spec B5九個new（包含project／README／runner／test四項內容例外及其精確允許差異）；scratch copied project六葉／root既有lock副本、DerivedData／cache／module／tmp與receipts，非repo新工具。
+- Deleted：只spec B5九old；inverse mapping及fb74a83可精確回復本批，不覆蓋外來修改。
+- Modify：只留原位的experiments索引／四topic文件；搬移四項內容例外屬Written允許差異，不與Modify重疊。無其他rootREADME或正式storage文件／build設定改動。
+- TestCase：TC-VO-B5-R 今日原195／unsigned copied Debug與Rebuilt／CLIhelp基線；TC-VO-B5-P 兩test真prepare／dpk_prepare copy分支、單一新rootref／manifest／guard／禁止external與build前sentinel、red→green；TC-VO-B5-G 移後full197（189pass＋8optional skip須以實際結果確認）、原195逐case/skip理由一致、新兩tests真到、CLIhelp／copied兩config實際compile及resources／hash／來源／pins保護，獨立Tester親跑必要suite／branch與Reviewer approved且required fixes0，才算本批完成。
+
+精確source修改先Plan-Reviewer明示approved／0 unresolved fixes。先更新今日baseline，命令沿前次baseline-{unit-tests,cli-help,Debug-build,Rebuilt-build}-result的argv/env規則，正常host require_escalated、標準SwiftPM sandbox、固定本機Apollo2.1.2 checkout、禁GitHTTPHTTPS／禁止更新依賴、unsigned原schemes；本輪scratch/cache/module/tmp在B5/resume-20261113，baseline與post DD／workspace分開。清原可選八inputs及五OAuth控制keys，不dump繼承值；完整argv／overrides／removed keys／HEAD／source SHA／toolchain／時間／exit／rawSHA每phase新receipt，舊證據原樣。
+原template不呼prepare/dpk-prepare CLI或讀真profile；actual unsigned build只複製六PROJECT_FILES及rootlock，在scratch把唯一ref接同feature root。兩configuration沿原Debug/Rebuilt，不新增DPK_ONLY或optional helper variants。path tests只用synthetic metadata/fake clock並在build前停止；這與真copy project compile分別提供分支及source證據，不推成真人或完整歷史操作入口可用。
+原八skip是在事前明列的optional binary/replay/DER，baseline與post按case/原因精確比較，未提供保持未驗；新兩branch／copied compile／資源入口皆必要，不可降級或以manifest／0test／無assertion取代。失敗先停後批；契約內漏路徑／path assertion可本批補重驗，超界／行為／外部需求或無法安全完成則停回報，依fb74a83 snapshot／唯一逆mapping精確回復本批source，保留所有證據與B1–B4，不留半套。
+Tester／獨立Reviewer gate通過後按原授權整批topic commit／push，更新同DraftPR69交human review；不自行merge。原同意目的澄清與逐檔單一來源保持，不從planningapproved推導新授權。
+
+### B5 今日適用原位 baseline
+
+主對話2026-11-13正常host／標準sandbox／固定依賴與新scratch/cache已實跑原source，沒有改B5source。195case為187pass／8optional skip，按case與原因精確對前次baseline相同；這是今日真跑證據，不是只比計數。兩unsigned copied-project config確實compile，Info／executable可讀、無embedded profile、兩binary不同，未啟動App或讀profile。pre-cases／pre-artifacts／pre-frozen receipts於logs/B5/resume-20261113；B3170inputs／fixedApp／immutable binding及既有pin目錄保護前snapshot已核。
+
+| 原位必要項 | 今日結果 | raw SHA |
+|---|---|---|
+| pre-unit-tests | exit0／5.396s | faead8c38890f0e80bfa32726262cb47f0f2d997280a1cc848706a6389ea9160 |
+| pre-cli-help | exit0／0.067s | 5ee52417e4950d4be8fa5e467126015af85737b10a9b968a13ba80e8793ed7b5 |
+| pre-Debug-build | exit0／16.664s | 9f34fe9202d5a0f42d96b27ffb46193e00cad4cdbdff148b4b9fa7329f147f12 |
+| pre-Rebuilt-build | exit0／19.339s | 942ad04a2577bf30dfbaa1241c84b1276d305cf41d28273c20aa0374a59879d1 |
+
+四命令完整argv/env／HEAD與raw指紋各有新receipt，舊11-12結果保持。八skip仍未驗，不當必要copybranch通過；兩新增path assertions／post與獨立gate未到。planning RF只集合欄位分類已回修，未用baseline越過待審gate。
+
+### B5 Implementer 完成交接
+
+Sartre最終契約approved、required fixes0／unresolved0，RF-B5-01集合分類closed後才改source。已依唯一九mapping整批集中E015，五puremove bytes／mode保持；project唯一ref、runner三prefix／四count-replace字串、README十prefix／三links＋既定guide與index同批完成。Runner逆向路徑normalize後與原bytes完全一致，count==1／pins／windows／deadline／行為無更動；test只插已鎖定block，刪該block後與原195cases全部bytes相等。
+red原命令-k ownership實際選4cases：舊2pass、新2分別在prepare來源is_file／dpk_prepare舊模板is_dir真拒絕（來源line331／2839），不是helper未編或expectation被改；raw43038adc5101d0d4dd8703895d76b4e2ff6b671d5c9e94b20f5242eb14b3be88，原證據保持。移後精確-k test_ownership_只選新兩branches真pass，再完整197為189pass／8optional skip。pre195全部case身分／status／skip理由對post精確不變，新增恰兩cases且均pass，見post-cases.json，不只比較數量。
+兩分支測試真copy／source_table／digest／ref／manifest／readcounts／sentinel及外部零呼叫皆真到。post copied project六葉接同feature root後與pre副本逐byte相同，兩原configuration仍真正clean compile，不以此相同取代build；實際結果如下：
+
+| 移後必要項 | 實際結果 | raw SHA |
+|---|---|---|
+| post-path-tests | exit0／0.167s | 00b71087fbfdd55d4f1fbc5351f1f6c8e33969b2f40ac4e2e97435b4986ab968 |
+| post-unit-tests | exit0／5.424s | fcf1c42ffa753b6368ae76530f77ce1b726c57b5156c80a56525aaa79a171b88 |
+| post-cli-help | exit0／0.067s | 5ee52417e4950d4be8fa5e467126015af85737b10a9b968a13ba80e8793ed7b5 |
+| post-Debug-build | exit0／16.55s | b54240eaaa32dbb1fc73175b96b9dbae13b6feabb238b632c62e9936cbfa48b0 |
+| post-Rebuilt-build | exit0／19.296s | cb5c097702caf5d1c332ff1323cfe7124b415ee9b2093ead108a365c47c90586 |
+
+source／模式／scope proof為post-source.json；兩App bundle／executable／resources及無profile／不同binary在post-artifacts.json。根SOURCE_FILES及manifest識別不變，root正式source／tests／package graph／deps與B1–B4零diff；B3 170inputs／fixedApp／pin目錄全部檔與modes對pre-frozen保持。沒有真profile／private context、sign／App launch／DPK live。尚待獨立Tester親跑與Reviewer，不宣稱本批或topic完成；四例外最終SHA在Reviewer准許後只補canonical原列。
+
+### B5 獨立 Tester 首輪 blocked：凍結證據覆蓋缺口
+
+Anscombe已親跑新兩case／197suite／CLIhelp／兩unsigned cleanbuild皆exit0，來源／guard required fixes0；但本輪pre-frozen只用頂層iterdir，覆蓋120檔，另79個子目錄檔缺前置hash，明示blocked／evidence gap1／unresolved1。Main先前「全部pin目錄」描述對該快照的覆蓋過廣，當時不能把79檔視為pass；原pre-frozen、首次helperfailure及tester blocked紀錄全部保留，不改寫成已完整驗過。
+必要唯讀補查找到本來就存在的11-12 Tester C recursive before／after snapshots，欄位b3_pin_directory_files各199entries，包含top120＋nested79；兩舊snapshot本身逐項相同。來源為logs/B4/type-annotation/tester-c-{before,after}-snapshot.json，time分別2026-11-12T09:15:14.329812Z／09:15:20.009781Z、head3818c7d，整檔SHA分別6152ce2e49caa2be02fca02dac651b48a9bd8f74f4f404d429416b01453f2328／52e050c5a8360a4e279309fa986b4e020cb84189db0fa8c76875b4692cd6480a。沒有製作或倒填新的歷史before。
+Main已對current recursive199檔逐項核名稱／SHA／mode，全相同、missing／extra／mismatch皆0，另記historical-frozen-reference-check.json；這只提供可追溯補證，仍待原獨立Tester複核後才能關gap，不降級必要檢查或以執行結果相同推論。九個B5source bytes未變，不重跑已完成build/tests來掩蓋證據缺口。
+
+### B5 獨立 Tester 最終 passed／證據gap closed
+
+Anscombe獨立讀取兩份真正11-12歷史recursive snapshots及current199檔，確認舊資料一致、199個名稱／mode／SHA全相符，missing／extra／mismatch全0，補足79子目錄檔。僅新增tester-historical-reference-supplement.json（SHA b858170c5344acbece9df0ba20620c2f182f54eef9846dd673d4877403de30d3）與tester-final-verdict.md；top-only pre-frozen、原helperfailure及blocked原檔不改寫。證據gap正式closed，最終passed／required0／unresolved0／sourceRF0；沒有以降低必要範圍換通過。
+獨立親跑結果如下；來源從移後E015實際複製到Tester own workspace，僅scratch唯一rootref接同feature、沿原unsigned Debug/Rebuilt兩configuration，所有argv／overrides／removedkeys／source SHA／raw各receipt具備。
+
+| 獨立必要項 | 真實結果 | raw SHA |
+|---|---|---|
+| tester-path-tests | exit0／0.183552s | a8f50b64943a26d283409e9f42bfd4b42c785189b3de0bc0d78f52a3446be78f |
+| tester-unit-tests | exit0／5.508142s | f06586e9d16f956ce5eb40a221d1b649eed0e2107bde3f016dd2abdee471293f |
+| tester-cli-help | exit0／0.070303s | 5ee52417e4950d4be8fa5e467126015af85737b10a9b968a13ba80e8793ed7b5 |
+| tester-Debug-build | exit0／17.89094s | 212388f9474ad1f872664f2c5a0cb3b47cd10464c2772e92f8850917cdc1fd51 |
+| tester-Rebuilt-build | exit0／20.180223s | d4c91946d5ace74091973c62ff7bbdf624228c2e28bb770e0ceb0019e3645a4e |
+
+197=189pass／8optional skip；原195身分/status/skip原因完全一致、恰新增2pass。真copy/digest／第二次540 sentinel／external零呼叫、兩App資源與入口／無profile及binary不同均真核；五pure／mode、inverse normalize／pins／window／guards／manifest、README／index、root正式及B1–B4／B3 170inputs／fixedApp均通過。source未變，補證後無重跑已完成項；live與optional8保持未驗。現在交獨立Reviewer，不先commit或宣稱topic交付完成。
+
+### B5 最終 Reviewer approved／實作 gate 完成
+
+Fermat最終approved、required fixes0／unresolved0，無新增RF。已核九mapping／五pure bytes/mode／四允許例外、原195bytes與197逐案結果、真copy/digest/sentinel/external0calls、兩unsigned source cleancompile／資源入口，以及root正式與B1–B4／B3全部保護。歷史recursive199補證來源可信、各名稱/mode/SHA0差異，原helperfailure／blocked／top120保留；接受Tester final passed而未弱化必要項。
+明示允許在唯一原四例外列補postSHA／來源commit及本verdict；SHA已真核，只作行政補記、source無再變。五批實作及必要離線驗證／適用獨立gate已完成；現在整批topic commit並核source與committed blobs/modes綁定、push及PR69 metadata後交Human review，不merge，不把8optional skip或live未驗寫成pass。VO-D01待實際Git／PR交接後完成，不以approval代替已發布事實。

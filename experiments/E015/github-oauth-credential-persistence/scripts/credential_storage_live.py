@@ -39,7 +39,7 @@ PROJECT_FILES = (
     "CredentialStorageProbe.xcodeproj/xcshareddata/xcschemes/CredentialStorageProbeRebuilt.xcscheme",
     "Sources/main.swift", "Resources/Info.plist", "Resources/CredentialStorageProbe.entitlements",
 )
-TEMPLATE = "validation/github-oauth-credential-persistence"
+TEMPLATE = "experiments/E015/github-oauth-credential-persistence"
 # This bounded retry belongs only to the already-observed run. Hashes are safe evidence.
 RETRY_PINS = {
     "runUUID": "8ad8fb3b-51d9-4162-98fb-067521a37b4e",
@@ -333,9 +333,9 @@ def prepare(repo, parent, run):
         target.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
         data = source.read_bytes()
         if name.endswith("project.pbxproj"):
-            require(data.count(b'relativePath = "../..";') == 1)
+            require(data.count(b'relativePath = "../../..";') == 1)
             replacement = json.dumps(str(repo)).encode()
-            data = data.replace(b'relativePath = "../..";', b"relativePath = " + replacement + b";")
+            data = data.replace(b'relativePath = "../../..";', b"relativePath = " + replacement + b";")
         with target.open("xb") as stream:
             stream.write(data)
         if not name.endswith("project.pbxproj"):
@@ -2836,20 +2836,20 @@ def dpk_prepare(repo_path,parent_path,profile_path):
     import shutil,tempfile,time
     dpk_time(540)
     repo=Path(repo_path).resolve(); parent=Path(parent_path).resolve(); profile=Path(profile_path).absolute()
-    require((repo/"validation/github-oauth-credential-persistence").is_dir())
+    require((repo/"experiments/E015/github-oauth-credential-persistence").is_dir())
     binding_owned(parent,parent,directory=True)
     require(profile == parent/"profile-acquisition-1/profile.provisionprofile")
     binding_owned(parent,profile)
     baseline=load(parent/"config-report-timeout-amendment-1.json")
     require(baseline["repo"] == str(repo))
     workspace=Path(tempfile.mkdtemp(prefix="rivet-dpk-preparation-",dir=parent))
-    source=repo/"validation/github-oauth-credential-persistence"
+    source=repo/"experiments/E015/github-oauth-credential-persistence"
     for leaf in PROJECT_FILES:
         target=workspace/"project"/leaf;target.parent.mkdir(parents=True,exist_ok=True,mode=0o700)
         data=(source/leaf).read_bytes()
         if leaf.endswith("pbxproj"):
-            require(data.count(b'relativePath = "../..";')==1)
-            data=data.replace(b'relativePath = "../..";',("relativePath = "+json.dumps(str(repo))+";").encode())
+            require(data.count(b'relativePath = "../../..";')==1)
+            data=data.replace(b'relativePath = "../../..";',("relativePath = "+json.dumps(str(repo))+";").encode())
         fd=os.open(target,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
         with os.fdopen(fd,"wb") as handle: handle.write(data);handle.flush();os.fsync(handle.fileno())
     hashes={leaf:digest((source/leaf).read_bytes()) for leaf in BINDING_SOURCES}

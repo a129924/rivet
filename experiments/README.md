@@ -10,6 +10,7 @@
 | [E012](E012/README.md) | `pr-reader-webview-runtime-reading` 的fixture host／Runtime／資源／專屬測試，功能驗收展示 | B2位置修正；不重做原功能開發、不搬正式bridge／Core或TS pipeline；結果見topic帳本。 |
 | [E013](E013/GitHubSignInVerification/tools/README.md) | `github-first-sign-in` 首次登入驗證App與專用PKCE tools／fixture，可行性驗證環境 | B3完整接線與現行pin結果見topic帳本；歷史真人／PKCE證據保留，不提升產品能力。 |
 | [E014](E014/GitHubConnectionVerification/README.md) | `github-persistent-connection` 持續連線App／Runtime／專屬測試，可行性驗證環境 | B4集中；不改正式能力、簽章／儲存或歷史真人結果，離線搬移結果見topic帳本。 |
+| [E015](E015/github-oauth-credential-persistence/README.md) | `github-oauth-credential-persistence` 正式DPK adapter的獨立功能驗收runner／專用測試 | B5集中；正式adapter/tests留root，歷史真人／pins／receipts保持；本次離線結果見topic帳本。 |
 
 此配號僅集中收納驗證環境，不代表重做實驗、撤回既有採用或新增永久工具例外。下方既有索引與來源快照保留原紀錄。
 
