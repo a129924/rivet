@@ -74,6 +74,8 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 
 ### Fixture runtime 人工驗收
 
+驗收環境已集中於 [E012](../../experiments/E012/README.md)；正式 bridge／Core／TS pipeline 不搬移，root product不變。標準 sandbox 的build／tests、bundle與暫存wrapper入口見E012操作說明；原topic證據與凍結圖保持來源版本。
+
 在 macOS 於 repository 根目錄執行 `swift run RivetPRReaderHarness`。視窗標示「本地 fixture」；依序確認六種檔案狀態、四個 patch 與兩個 metadata-only 提示。點選第一檔「標記 Viewed」，待 Swift 發布新快照後確認按鈕顯示「已 Viewed · 取消」；再點選取消並確認恢復。這只驗證本地 fixture 的 runtime 往返，不涉及 GitHub 資料或跨啟動儲存。
 
 ## 文件導覽
@@ -102,7 +104,7 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 
 ## 正式 OAuth 能力與獨立驗證 App
 
-`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
+`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `experiments/E013/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
 
 2026-10-21，Human 在來源版本 `e941d88` 的獨立驗證 App 完成真實授權；agent 觀察實際 API 成功與同程序再次查詢成功。舊版 `e63eeb2` 證據另保留；現行 canvas v2 的人工互動已通過。2026-10-21 反向 PKCE missing／wrong 各執行一次，均 HTTP400 拒絕但原因 unknown，兩者結論皆無法判定；完整遠端 refresh／401 本輪不執行，持久化亦未因此驗證。詳見 [首次 OAuth 契約](github-first-sign-in.md)。
 
@@ -114,6 +116,6 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 
 ## GitHub 持續連線獨立驗證 App
 
-`github-persistent-connection` 的正式交付是 [`GitHubConnectionVerification`](../../apps/GitHubConnectionVerification/README.md) 驗證工具、可行性結果及限制。所有初次授權、DPK adapter、UI、coordinator、probe、受控clock／receipt與tests留在App-local；不新增BC或正式產品登入能力。production Sources／Tests／Package對topic前基準zero-diff，既有provider／scope／雙client／generic HTTP責任不變；不留新增正式停止API、共用UI或驗證依賴。
+`github-persistent-connection` 的正式交付是 [`GitHubConnectionVerification`](../../experiments/E014/GitHubConnectionVerification/README.md) 驗證工具、可行性結果及限制。所有初次授權、DPK adapter、UI、coordinator、probe、受控clock／receipt與tests留在App-local；不新增BC或正式產品登入能力。production Sources／Tests／Package對topic前基準zero-diff，既有provider／scope／雙client／generic HTTP責任不變；不留新增正式停止API、共用UI或驗證依賴。
 
 [新版責任canvas與流程圖](diagrams/github-persistent-connection/verification-host-v2/BUILD.md)反映驗證App單向使用既有public契約；provider在runtime經注入port呼叫App-localadapter，不形成production反向import。整個移除驗證App後production build／tests仍通過。[完整契約／結果界線](github-oauth-dual-client.md#獨立驗證-app-與可行性結果)連至本輪新host真人證據；舊production歸屬圖與原測量只作歷史保留。profile更新後讀回維持未驗證、Human已接受限制。

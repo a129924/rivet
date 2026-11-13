@@ -19,6 +19,10 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 ## 目前狀態
 
+Reader fixture 驗收 host、Runtime、資源與專屬測試集中於 [E012](experiments/E012/README.md)，root target／正式 bridge 與 TS pipeline 保持。
+
+登入驗收展示的 host、Runtime 與專屬測試集中於 [E011](experiments/E011/README.md)，仍由 root package 既有 target 建置。這只修正歸屬，不撤回正式 UI 採用或改寫原 topic 驗收。
+
 登入 UI topic 已新增 non-BC `RivetLoginView` 與獨立 `RivetLoginDemo` 假資料展示：七態、PAT 本地編輯、原生主窗與獨立控制窗；沒有連接正式 OAuth／PAT、GitHub API 或儲存。Focused 自我測試與 Demo build 通過；root284tests及 lifecycle 四尺寸containment自驗通過，原生完整驗收仍待獨立驗證，未宣稱正式產品登入已交付。詳見 [登入 UI 說明](docs/presentation/login-ui.md)。
 
 `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
@@ -35,7 +39,7 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 
 ## 正式 OAuth 能力與獨立驗證 App
 
-`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
+`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `experiments/E013/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
 
 2026-10-21，Human 在來源版本 `e941d88` 的獨立驗證 App 完成真實授權；agent 觀察實際 API 成功與同程序再次查詢成功。舊版 `e63eeb2` 證據另保留；現行 canvas v2 的人工互動已通過。2026-10-21 反向 PKCE missing／wrong 各執行一次，均 HTTP400 拒絕但原因 unknown，兩者結論皆無法判定；完整遠端 refresh／401 本輪不執行，持久化亦未因此驗證。詳見 [首次 OAuth 契約](docs/architecture/github-first-sign-in.md)。
 
@@ -53,7 +57,7 @@ Human指示續行後，獨立CLI新增實際browserURL/HTTP prepared Request被�
 
 ### U：Human-only 離線語義 review 工具
 
-已實作 private Swift/AppKit helper 與無網路校準入口 `python3 -B apps/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review`，U03／U04 已完成、獨立 U05 approved（P2 closed、無其他 required fix），可交付工具並由 Human 明確參與正式 offline 校準。若將來另准 live，原文只能通過 gate 後由 Human 短暫閱讀，agent／Reviewer 不看、不保存；新增 `provider_semantic_observation` 只是 Human attestation，不改 proof／outcome。工具以 SystemRandom 打散 synthetic cases，不讀／比較 `expected_category`、不自評；末尾僅輸出 opaque correlation_id 與有限 observations，交獨立 Tester 核分。P2 selectors/stderr 回修後，獨立 Tester 親跑 57 項受控測試通過、strict format／SwiftLint 均 exit 0；完整 UI／clipboard／restoration／timeout 實證及 U06 Human 9+7 校準仍 pending，單次 smoke 不當作校準通過。新增 OAuth=0，共享 R→T 1/1 已用盡；[操作與限制](apps/GitHubSignInVerification/tools/README.md)。
+已實作 private Swift/AppKit helper 與無網路校準入口 `python3 -B experiments/E013/GitHubSignInVerification/tools/pkce_negative_probe.py --calibrate-semantic-review`，U03／U04 已完成、獨立 U05 approved（P2 closed、無其他 required fix），可交付工具並由 Human 明確參與正式 offline 校準。若將來另准 live，原文只能通過 gate 後由 Human 短暫閱讀，agent／Reviewer 不看、不保存；新增 `provider_semantic_observation` 只是 Human attestation，不改 proof／outcome。工具以 SystemRandom 打散 synthetic cases，不讀／比較 `expected_category`、不自評；末尾僅輸出 opaque correlation_id 與有限 observations，交獨立 Tester 核分。P2 selectors/stderr 回修後，獨立 Tester 親跑 57 項受控測試通過、strict format／SwiftLint 均 exit 0；完整 UI／clipboard／restoration／timeout 實證及 U06 Human 9+7 校準仍 pending，單次 smoke 不當作校準通過。新增 OAuth=0，共享 R→T 1/1 已用盡；[操作與限制](experiments/E013/GitHubSignInVerification/tools/README.md)。
 
 ### U06 最新結果：方法未達資格，停止 live
 
@@ -75,6 +79,6 @@ Human已明確批准單欄copy與手動AI閱讀例外及offline實作。W03新fi
 
 ## GitHub 整條流程可行性驗證
 
-[`GitHubConnectionVerification`](apps/GitHubConnectionVerification/README.md) 是獨立驗證工具，畫面明示驗證用途；交付的是「登入 → 保存 → 重啟還原 → 自動刷新 → 輪替後讀回 → API」的可行性結果與限制。初次授權、DPK adapter、UI、coordinator、probe、受控到期與收據全部位於該 App；正式 Sources、共用 RivetPresentation 與 root package 保持 topic 前契約。移除整個驗證 App 後 production 仍可建置與測試，沒有新增正式產品登入能力。
+[`GitHubConnectionVerification`](experiments/E014/GitHubConnectionVerification/README.md) 是獨立驗證工具，畫面明示驗證用途；交付的是「登入 → 保存 → 重啟還原 → 自動刷新 → 輪替後讀回 → API」的可行性結果與限制。初次授權、DPK adapter、UI、coordinator、probe、受控到期與收據全部位於該 App；正式 Sources、共用 RivetPresentation 與 root package 保持 topic 前契約。移除整個驗證 App 後 production 仍可建置與測試，沒有新增正式產品登入能力。
 
 2026-10-21 新驗證 App 已通過真 GitHub 授權／DPK 保存、同版本新程序還原、同身分真正 Clean／Build 還原、受控 provider 到期觸發真刷新與保存、輪替後新程序讀回與同帳號 API；各段 Human 系統提示皆0次。適用有效 profile、同機同GUI使用者、相同AppID／private group／原certificate。profile更新後讀回仍未驗證、使用者已接受限制；受控觸發不代表自然到期已測。詳見[新版真人證據](plan/github-persistent-connection/evidence/verification-host-live.md)、[責任與流程圖](docs/architecture/diagrams/github-persistent-connection/verification-host-v2/BUILD.md)及[逐檔歸屬清單](plan/github-persistent-connection/evidence/verification-host-manifest.md)。舊2026-10-20 Rivet名義host結果保留為原版本歷史，不能冒充本 App 的驗收或正式產品交付。

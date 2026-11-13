@@ -219,3 +219,18 @@ Tester 的最終 hosted mock 為 17 definitions／18 executions、0 failures，b
 本次沒有真人 App launch、憑證輸入、OAuth 或 PKCE 操作。launcher 的隱藏 TTY、無秘密 argv／檔案／log、拒絕既有 App 與新程序身分檢核保持原樣；手動 URL 仍為同一 session、最多 300 秒、單輪後停止。合併候選尚未 commit，獨立 Tester／Reviewer 尚待核對；先前 approved 僅屬各歷史範圍。
 
 本輪 launcher 已以 Swift 6／complete strict concurrency／warnings-as-errors 編譯及 synthetic self-test exit 0，明示無 live launch／credential input；host／launcher strict format、SwiftLint（13 files、0 violations）均 exit 0。此為 Implementer 檢查，獨立 Tester／Reviewer 尚待；未 commit／push，未重跑 PKCE／root 全 suite。
+
+
+## 2026-11-12：E013搬移後現行pin（本次非真人驗證）
+
+Human明確授權現行pin精確更新；只替換launcher一個literal，隱藏TTY、無秘密argv／log、拒絕既有App、bundle／executable／SHA與launch身分保護原樣。原66aa6f9a pin及本節之前所有來源／hash／receipts均保留；原launcher完整bytes可由commit0f0943a追溯（source SHA9cb125cc8cd1125ae150e4c50fa8b98191ec6137441972f29ef6475f6965835a），不以新build改寫真人成功。
+
+現行binary pin：`e40f84e6097853d124508b451cab68187d5555a5a8872a0579eb10064ebee427`。固定App為本次既有暫存根下`B3/pin-post-final-DD/Build/Products/Debug/GitHubSignInVerification.app`；bundle ID `local.rivet.github-sign-in-verification`、executable `GitHubSignInVerification`，app tree SHA `304a1bb175403a46c935eef04bcef1f826fbe2f9bbd4557ec87928d76a77e832`。不是hosted-test產物，也不是先前07335a00baseline；pin後不再重建／改寫。換來源、compiler、路徑或重建都可能改hash，失配須停止，不保證任意機器重現相同binary。
+
+來源base commit0f0943a加本B3完整移動／接線差異；最終build inputs是170檔不可變來源投影，SHA `9374b07de1d4c821021845d0914fdf297ef48a860765aa2cae4c807a75fa2ce6`，詳`B1_RUN/logs/B3/pin-current/source-inputs.json`。完整B3最終commit／逐檔tree mode與blob核對及receipt整檔SHA由同目錄`commit-binding.json`與PR69明示；不在本文件填造自有commitSHA。receipt為一次build證據，不另維護搬移清單。
+
+建置工具鏈：Xcode 26.6；Build version 17F113；swift-driver version: 1.148.6 Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)；Target: arm64-apple-macosx26.0；SDK 26.5、arm64、macOS 26.5.2。固定本機Apollo2.1.2／38c202227d0f09508e573dcf22f54885cfb0c5d4，標準sandbox開啟，GitHTTP／HTTPS程序內拒絕；兩client配置環境key移除，GITHUB_SIGN_IN_VERIFICATION_UNIT_TEST_MODE=1僅作建置／hosted測試防護。沒有更新依賴或簽章／storage設定。
+
+精確recipe的完整argv／程序env覆寫見`logs/B3/pin-current/final-build-result.json`（整檔SHA `61583ebc6e8e57adba38b66b3d35e3ad0f0a4d72a3acc2bec165f5c888676edb`），App project使用E013新位置、Debug／platform=macOS、只build、獨立post-final-DD；沿既有SourcePackages／packageCache、-disableAutomaticPackageResolution／-onlyUsePackageVersionsFromResolvedFile／-skipPackageUpdates，CODE_SIGNING_ALLOWED=NO／CODE_SIGNING_REQUIRED=NO／CODE_SIGN_IDENTITY=。symbolic root B1_RUN指既有本次scratch，不把本機絕對路徑寫進repo。
+
+主對話self-test及固定App preflight皆exit0；外置WrongIdentity／Tampered完整副本preflight皆exit2拒絕，原App／來源投影不變。argv／logSHA／launcher source及binarySHA見上述目錄各receipt。這些只證離線入口保護，無credential input／live launch，未重新完成OAuth／API／PKCE／Human驗證；獨立Tester／Reviewer與postcommit綁定仍依[本topic帳本](../../plan/verification-artifact-ownership/verification-artifact-ownership.step.md)判定，不能由此段自判全topic完成。

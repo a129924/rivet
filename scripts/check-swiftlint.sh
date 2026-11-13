@@ -4,7 +4,9 @@ set -euo pipefail
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 targets=()
 
-for directory in Sources Tests packages/RivetHTTPClient/Sources packages/RivetHTTPClient/Tests; do
+for directory in Sources Tests packages/RivetHTTPClient/Sources packages/RivetHTTPClient/Tests \
+  experiments/E011/Sources experiments/E011/Tests \
+  experiments/E012/Sources experiments/E012/Tests; do
   if [[ -d "$root_dir/$directory" ]]; then
     targets+=("$directory")
   fi

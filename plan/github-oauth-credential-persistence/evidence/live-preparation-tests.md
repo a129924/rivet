@@ -889,3 +889,114 @@ Verdict：**needs-rework**；required fixes=[RF-LG85-01]。只核 LG82/CD01–05
 Verdict：**approved**；required fixes=[]，RF-LG85-01解除，前輪needs-rework及已通檢查歷史保留。實讀現行label已改為「指定環境假憑證 DPK 已驗」，指向同頁正式adapter段，provider rotation／persist-stop另標假backend；與相鄰正文／LG81-Cap-R及原S05/S06界線一致，不擴真OAuth或所有環境。
 
 實際doc SHA=`ed7fe11066eecec9f7d1cacc0378df621aeff8b5cf613c6a5675bf89378a5ee0`。獨立於記憶體將此唯一新label還原舊label，重算恰等原author result快照SHA `14038dc4e4f05e8a30a4cb9149ee6bac2c547ec7b4596d7d8fb928a72a509702`，證明精確一行delta；其餘五D文件與publication逐一hash等原快照，index仍空。未重跑已通checks、suite或任何native/App/DPK/cleanup；未修改受測文件/source，未stage/commit/merge/發布。交LG86獨立Reviewer，只核本次closeout成果，不代Topic完成或Human接受。
+
+## E015 optional skip 離線補測（2026-11-13）
+
+本節是 verification-artifact-ownership 完成搬移後的受限覆蓋補測，來源 HEAD `3123ea44a9a373c84aab882a4dc4c59821691ee1`，分支 `chore/verification-artifact-ownership`。沒有 source／test／project／resource delta；逐檔歸屬只引用[原 technical-spec](../../../analysis/verification-artifact-ownership/technical-spec.md)。本節新增有條件實測，不改寫前述或 B5 原有 8 skipped，不擴張為 live、signed-host 或正式產品驗收。
+
+本輪局部 scratch basename `rivet-e015-offline-20261113-uf1s3gev` 以下稱 E015_RUN，來源 feature root 稱 WT，E015 相對來源稱 E015_SOURCE；OWNERSHIP_RUN 指既有 ownership scratch（原計畫的 B1_RUN）。只使用此既有 feature worktree。完整逐案、來源／產物綁定、實際 argv／flags／env／exit／raw log SHA 在 E015_RUN/receipts；不在此維護另一份逐檔清單。
+
+### 執行環境與新建置綁定
+
+正常主對話 host 實際重查：macOS 26.5.2（25F84）、arm64，Xcode 26.6（17F113）、SDK 26.5、Swift 6.3.3／driver 1.148.6、Python 3.14.0。標準 SwiftPM sandbox 保持；沒有 sudo、停用 sandbox、系統權限或全域設定變更。執行時清除所有繼承 RIVET_／GITHUB_ 及 environment.json 明列入口 keys，不記錄原值；本輪只加五個指定 binary 變數。TMPDIR、CLANG_MODULE_CACHE_PATH、SWIFT_MODULECACHE_PATH 與 package cache 全在 E015_RUN，各 swiftc variant 另有 module cache。Git HTTP／HTTPS 以本次程序設定拒絕，GIT_TERMINAL_PROMPT=0，PYTHONDONTWRITEBYTECODE=1。
+
+先由目前 E015 六個 project/resource/source 葉建立新 project copy；僅 scratch pbxproj 唯一 root ref 接 WT、複製當前 Package.resolved。沿既有固定 Apollo checkout `38c202227d0f09508e573dcf22f54885cfb0c5d4`，tracked clean，版本 2.1.2 未變。下列命令在新 DerivedData 實際 clean/build，exit0／17.500s；只生成新依賴與未啟動 App，未呼叫 codesign／簽章入口：
+
+```sh
+xcodebuild -project "$E015_RUN/project/CredentialStorageProbe.xcodeproj" \
+  -scheme CredentialStorageProbe -configuration Debug \
+  -destination platform=macOS,arch=arm64 \
+  -clonedSourcePackagesDirPath "$OWNERSHIP_RUN/B3/SourcePackages" \
+  -packageCachePath "$E015_RUN/package-cache" \
+  -disableAutomaticPackageResolution -onlyUsePackageVersionsFromResolvedFile -skipPackageUpdates \
+  -derivedDataPath "$E015_RUN/Debug-DD" \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= \
+  CODE_SIGN_ENTITLEMENTS= CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
+  ARCHS=arm64 ONLY_ACTIVE_ARCH=YES clean build
+```
+
+新四 target aggregates（GitHubIntegration／RivetHTTPClient／Apollo／ApolloAPI）只作本次來源依賴連結，hash 與 fresh-build receipt 綁在各 compile receipt；不拿舊 probe binary 當證據。三 CLI 皆由同一目前 main 建立，main SHA 仍為原歷史 `78eede7ec1132d7dc84d6762d0e61c737d6eac9e51950b623194fda05b680213`。編譯共同 recipe 如下；DEBUG_PRODUCTS 指剛建立的 Debug products，SDK 取本次 xcrun --show-sdk-path：
+
+```sh
+xcrun swiftc -swift-version 6 -target arm64-apple-macos15.0 -sdk "$SDK" \
+  -I "$DEBUG_PRODUCTS" -F "$DEBUG_PRODUCTS/PackageFrameworks" \
+  -module-cache-path "$E015_RUN/modules-$VARIANT" \
+  -framework Security -framework CryptoKit $VARIANT_DEFINES \
+  "$WT/$E015_SOURCE/Sources/main.swift" \
+  "$DEBUG_PRODUCTS/GitHubIntegration.o" "$DEBUG_PRODUCTS/RivetHTTPClient.o" \
+  "$DEBUG_PRODUCTS/Apollo.o" "$DEBUG_PRODUCTS/ApolloAPI.o" \
+  -o "$E015_RUN/bin/probe-$VARIANT"
+```
+
+| Variant | 精確 defines | compile exit／秒 | 新 binary SHA256 | Compile receipt SHA256 |
+|---|---|---|---|---|
+| default | -D DEBUG | 0／3.614 | 55c39afbb2c69f5161779cada054381785ad1d185f3946ce19a7a815abe1696c | f4947a3a8d63001ad4ae86837a1203237bc2e86a67b92fc9a81306e85a5b37f4 |
+| report | -D DEBUG -D LAUNCH_REPORT_ONLY | 0／3.189 | ede824d453c95564d7effb4df669d1ea130263761c0a5d19d99cc859257ce5cb | 50911827eca8eea92e902c1aea2abf27e5e3f6d635e22c006adc350dd548570e |
+| dpk | -D DEBUG -D DPK_VALIDATION_ONLY | 0／2.952 | bb6d88f53c6ac034002065e8174014d57fba9f835405b2970d004a334d68519c | 79c27fd928e08247d4b7f2c7753a036686f541c7fc639c11a380062821d97cdc |
+
+三次 stdout／stderr 都空，沒有 CREDENTIAL_STORAGE_REBUILT 或同時開啟兩 purpose defines。以上 build／compile 自身不算 testcase passed。
+
+### 新 baseline、實際測試與逐項結果
+
+新 baseline 清除全部可選輸入，以 Python unittest 載入當前 `test_live_protocol.py`：197 cases／189 passed／8 skipped、0 failure/error、exit0／5.276s。原結果不與新增 binary 條件直接等同。各 `*-result.json` 保存完整 `python3 -c <unittest recorder>` 命令：recorder 只記錄原 case/subtest 身分與狀態，不改 test／expectation／skip。下面是同一載入方式的標準 unittest selector 表達；實際逐項命令、環境與 log 分別為 `focused-<shared|diagnostic|binding|startup|report|dpk>-result.json`。
+
+執行 cwd 為 `$WT/$E015_SOURCE/Tests`，五個 inputs 明確映射：
+
+- RIVET_FAKE_PROBE_BINARY、RIVET_DIAGNOSTIC_PROBE_BINARY、RIVET_LAUNCH_BINDING_PROBE_BINARY → 本輪 probe-default。
+- RIVET_PROFILE_FREE_PROBE_BINARY → 本輪 probe-report。
+- RIVET_DPK_PROBE_BINARY → 本輪 probe-dpk。
+- RIVET_CAPTURED_REPLAY_SOURCE／RIVET_CAPTURED_REPLAY_ROOT／RIVET_DPK_PUBLIC_DER 均未設定；未沿用舊 binary 或 fixture。
+
+| 原 optional 項目 | 本輪結果 | 實際 selector／入口與證據 |
+|---|---|---|
+| SwiftSharedOperations | passed | `python3 -m unittest test_live_protocol.SwiftSharedOperations`；--self-test-fakes；1/1、0 skip。Probe.perform 實走，store／delete 注入 fake，僅自有 fixture |
+| SwiftDiagnosticOperations | passed | 同模組 .SwiftDiagnosticOperations；--self-test-diagnostics；1/1、0 skip。真 guards／receipt，bundle／entitlement／store 皆 fake |
+| SwiftLaunchBindingOperations | passed | 同模組 .SwiftLaunchBindingOperations；--self-test-launch-binding；1/1、0 skip。真協定核心，instance／clock／ACK fake |
+| SwiftLaunchStartupControls | passed | 同模組 .SwiftLaunchStartupControls.test_actual_filesystem_number_bridge_and_self_only_native_accessor；--self-test-launch-startup；1/1、0 skip。真 owned FS／NSNumber，native 僅 getpid 自身；mode 負例只改暫存 fixture，不動系統權限 |
+| SwiftProfileFreeVariant | passed | 同模組 .SwiftProfileFreeVariant；1/1，七組既有 argv subtests 全 pass，stdout 空、有限 stderr、未讀 DO_NOT_READ；沒有合法 live 啟動 |
+| SwiftDPKChecks | passed | 同模組 .SwiftDPKChecks；--self-test-dpk；1/1、0 skip。既有 14 window／9 handshake checks 與三組非法入口驗證通過，fake store／window、零真 DPK |
+| 歷史 captured context replay | skipped | 原 case .SwiftLaunchStartupControls.test_original_captured_bytes_use_actual_swift_core_and_real_filesystem 未執行 replay；缺可信原 source tree／App／proof/context/request bytes。原 request pin 不變，不新造 |
+| exact certificate hash 公開 DER | skipped | 原 case .StaticEvidenceModeControls.test_default_rejects_fake_explicit_fake_uses_real_validator_wrong_mode_rejects 未進 DER validator；缺可重新核 hash 的既有公開 DER。未查 Keychain／取得新 cert／改 pin |
+
+focused 六項合計 6/6、0 skipped、0 failure/error。帶五個新 binary inputs 執行當前完整 suite，197 cases／195 passed／2 skipped、0 failure/error、exit0／6.177s；原189個 passed 的逐案身分／狀態保持，六個指定 case 是本輪新條件下實際通過，兩缺料 case 名稱／skip 原因保持；missing／extra case 均0，並非只比較總數。這不是八項全驗收。
+
+- baseline-result.json SHA `596632550c03eb265caf9c67c9d9b5ff887b01f4c515233c4991fac19c7b2c11`；baseline-cases.json 保留本輪原8 skip。
+- regression-result.json SHA `f1d8fe40465d982418e7f5ffa990f2bfb6942478f41cad78a469ef20b9180427`；regression-cases.json 保留新2 skip。
+- main-summary.json SHA `a85822262d7cbefac1d173ffeb7552af568b3180be25bd9c8c5e74042351eb45`；六個逐case轉換、189保持及保護快照核對在此，不覆舊 result。
+- pre-snapshot.json SHA `8758b6f44a1e3390353e0c077e184e123f7fb6b8e02b06def463830ff25b136b`。非本輪三份文件的 tracked bytes／mode 不變，既有 ownership logs 6442 檔逐檔 hash／mode 原樣。pin／hash 常數與歷史 receipts 未改。
+
+### 既有缺口與最小必要材料
+
+獨立 Reviewer Plato 唯讀確認六入口安全、三 variant 互斥與 self-only accessor；此為前置查證，最終成果 verdict 另記。限定既有 LG51/LG55/LG57/LG58 evidence pointers 與允許 scratch：相關 preparation／replay 目錄存在但必要 bytes 已不在；沒有取得可信 fixture。
+
+歷史 replay 的最小輸入是可信原目錄，含 source／app 原 tree 及 context.json、build.machine.json、signing.machine.json、binding-consumed.json、attempt/request.json，request 原 SHA 必須仍為 `297a4dd546bb28f262cf4c7f00f437e95ad238e21867827867dbb7e316ffdfa6`，且其餘 bindings 必須通過既有 validator。測試只會將原 bytes 複製至新 owned replay fixture，使用歷史 clock／fake instance／ACK；不是重啟歷史 App 或補做 signed-host／真人驗證。
+
+DER 的最小輸入是來源可信、已允許使用且可讀的公開 DER 副本，SHA 必須精確為 `5c267546d016f41f0901e535847a0ab44f81382f7aaadffbbb56a09941139440`；不需 private key，不透過真實憑證儲存取得。該 case 才能做原 fake-only identity validator／公開 bytes 離線解碼，不可拿替代 cert 或新造資料通過。
+
+這兩項是本輪重查的既有材料缺口；六項原先是 optional binary 未提供，並非原 Runtime failure。本輪尚無新 source／test failure，未要求修行為、期待、skip 或防護。獨立 Tester／最終 Reviewer 正式 verdict 待追加；此處不預填 gate 通過，無 commit／push／PR 更新或 live。
+
+### 獨立 Tester Epicurus 正式交付
+
+Verdict **approved**，required fixes=[]；未解的是兩項缺料 optional case，並非 required fix，也不宣稱兩項已驗。Tester 在 E015_RUN/tester-pjq_8d_m 使用自己的 tmp／三個 variant cache／輸出，以目前 main 獨立重編三 CLI；只有 output 與 module-cache 路徑不同，defines／source／fresh dependency objects 保持並親自核 provenance，三 stdout／stderr 空、binary SHA 各自重算與上述相同。完整 argv／環境、逐次原始 CLI stdout/stderr、每個 unittest／subtest 與來源保護在 own receipts，未修改原 tests。
+
+獨立六 focused 實到：Shared 12／Diagnostic 22／Launch binding 28 個共用 checks 全 pass；Startup 所有必要布林檢查 true，native 僅自身；Profile-free 七組非法 argv 全拒絕；DPK 9 handshake＋14 window checks pass，三組非法 argv 全拒絕。獨立完整回歸 197 cases／195 passed／2 skipped、0 failure/error、7.590s；原189逐案保持，missing／extra0、六個指定原skip有本輪新pass，兩缺料的 case／skip reason 精確不變。
+
+正式 summary 為 `E015_RUN/tester-pjq_8d_m/receipts/summary.json`，SHA `4a8f1eb0c5421d2f4715c99aecefca4645c77b49546a42c21f67fa2f7f0a41bd`，其內引用 own pre/post snapshot、provenance／toolchain、三compile、六focused、原始CLI streams與regression逐案證據的 SHA。來源／模板／測試／root formal inputs 與6442份舊logs保持，並行新增 docs-check.json 只屬本輪新檢查、不覆舊receipt。這是 Tester 的受限補測 verdict，最終 Reviewer 尚待。
+
+Plato 的既有 fixture 查證詳細範圍及限制另存 `E015_RUN/receipts/reviewer-fixture-check.json`，SHA `72e1daa5fbee46b7dc9dfd8f0356b4ffcf2a49e9f4725c189473757c3dba48df`：只檢具名 preparation／replay root、限定深度及檔名的既有 scratch，非整台電腦不存在證明；原 hash／receipt／private fixture bytes 未改，未查 Keychain。
+
+### 獨立 Reviewer Plato 最終成果審查
+
+Verdict **approved**，required fixes=0；unresolved blockers=0。兩項 unresolved 為原可信 fixture 缺料，仍 skipped／未驗，非本輪六項交付 blocker。Reviewer 獨立讀取實際文件、來源邊界與 main／Tester receipts／raw streams／逐案與保護證據，未冒稱自己代 Tester 親跑。正式結果 `E015_RUN/receipts/reviewer-final.json`，SHA `ad135b451ccb65a87e62d5690cb64bad4c700394b544b5909ada457ed06b1941`。
+
+Reviewer 明示只允許在三份既有文件的本輪段落行政回填已發生的 Tester／Reviewer verdict、195 passed／2 skipped 及相符狀態，再交最後 diff 窄複核。此回填沒有 source／test／project／flags／guard 差異，原歷史前綴與本輪189/8 baseline保持。最終可補範圍為六項實際通過，兩項缺料未驗；沒有新的 source／test failure。未 stage／commit／push／更新 PR／merge，亦未 live、簽章或存取真憑證儲存。
+
+### E015 補測成果文件交付前核對（2026-11-13）
+
+最後行政窄複核已實際完成：Plato **approved**，required fixes=0、unresolved blockers=0。正式收據為 `E015_RUN/receipts/reviewer-administrative-final.json`，SHA `0a69c1cd6a63371c7c87034f21430f8ed338b820b7f672668815a46a0cffdd9e`；原 Reviewer final 與 Tester summary 收據保持。此 verdict 審查的是前述三份文件的行政接合，不冒稱重新執行測試。
+
+本次主對話唯讀重核來源 HEAD、三份已審文件的 SHA、三 CLI 來源／flags／產物及 Tester 61 個證據指標；Tester／Reviewer／最後行政窄複核均 approved，required fixes=0。既有197案例為195 passed／2 skipped、0 failure/error，原189逐案保持、恰六項新增實際 pass。Source／test／Runtime／guard、pin／hash／歷史 receipts 均未改；本輪只做文件交付，不重跑補測或建立 fixture。
+
+兩項 skipped 仍是查證範圍內缺少可信原 captured tree 與 exact pinned 公開 DER 的覆蓋缺口；所需原 leaves 與兩個完整 hash 只引用上方「既有缺口與最小必要材料」。它們不是已確認的 Runtime failure，也不是 required fix，不阻擋六項成果交付；不宣稱整台電腦無副本或推測缺料原因，不新造替代資料／重建歷史／查 Keychain／更動 pin。
+
+前述補測階段「無 commit／push／PR 授權」保留為當時事實。Human 本輪另行明確授權僅三份文件整理，以預先確認訊息 `docs: record E015 offline coverage` 按 topic 提交、推送既有分支並更新同一 Draft PR #69；不授權 merge、真人 OAuth／API／DPK live。實際 Git／PR 結果依交付紀錄讀回，不在此預填成功；**Human review 仍 pending**。
