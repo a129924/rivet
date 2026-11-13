@@ -366,3 +366,21 @@ B5 source fbf4e7a已commitpush、hooks全通過；九committed inputs／modes／
 | VO-H01 | pending | Human | review同DraftPR69並明確決定後續 | 五批實作／必要offline／獨立gate已完成；8optional及live未驗，Human接受與merge未授權 |
 
 Fermat最後postcommit／行政交接複核approved／required0／unresolved0，真核PR openDraft及binding／9source／4formal／2unsigned recipes，三docs純行政與Human pending分界正確。僅補本verdict後按既有授權提交／push；Human接受與merge/live尚未授權，原失敗與補證紀錄維持。
+
+## E015 optional skip 後續補測（2026-11-13）
+
+本輪只依 plan 同名節的九欄契約補既有離線覆蓋，不重開 B1–B5。原八項 skipped 保留；新增條件與逐案結果只追加[既有測試證據](../github-oauth-credential-persistence/evidence/live-preparation-tests.md)，技術逐檔清單不複製。Source／test 皆 ReadOnly，無 commit／push／PR／live 授權。
+
+| ID | Status | Owner role | 完成條件 | 證據／缺口 |
+|---|---|---|---|---|
+| VO-E015-SUP | completed | Implementer | 新來源 CLI、八項分項狀態、適用 baseline／回歸及保護真核 | 六pass／兩缺料skip、完整195pass/2skip與保護真核，詳原evidence；非八項全pass |
+| VO-E015-TEST | completed | Tester | 獨立實跑安全 selectors／受影響回歸及 provenance 查核 | Epicurus approved／required fixes0；own三compile、六focused與195pass/2缺料skip真到，詳原evidence |
+| VO-E015-REVIEW | completed | Reviewer | 獨立核安全邊界、證據與允許差異，明示 verdict／required fixes | Plato approved／required fixes0／unresolved blockers0，兩fixture未驗；行政接合後窄複核 |
+
+Epicurus 獨立 Tester 與 Plato 最終 Reviewer 均 approved／required fixes0；本輪可補六項已真驗，兩缺料 unresolved 非 blocker且仍skip，不改寫原八skip。Reviewer 明示允許只在這三docs的本輪段落行政回填結果／verdict／相符狀態，現送最後diff窄複核；沒有 Git publication 或 live 授權，原 VO-H01 Human pending 保持。
+
+### E015 文件交付交接
+
+最後行政窄複核已由 Plato 明示 approved／required fixes0，收據 SHA 與 Tester／Reviewer 正式結果引用既有 E015 證據；本次主對話已唯讀核對實際收據及 source 綁定。六項 passed、兩項材料缺口 skipped，非 Runtime failure／required fix；197項195 passed／2 skipped／0 failure/error與原189逐案保持，歷史不改寫。
+
+Human 本輪明確另准僅三份文件整理、以預先確認的 `docs: record E015 offline coverage` 提交／推送既有分支及更新同 Draft PR #69。這是後續文件交付授權，不改前述補測當時限制；source／test／Runtime／guard不變，不重新補測或新增 fixture。文件檢查／既有 hooks與Git／PR結果以實際交付讀回為準，不預填成功。**VO-H01 Human review 仍 pending；PR維持Draft，不merge。**

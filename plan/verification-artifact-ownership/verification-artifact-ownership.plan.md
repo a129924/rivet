@@ -674,3 +674,33 @@ B5整批fbf4e7a已commit／push，hooks的whitespace／EOF／Swift format／cons
 ### postcommit／行政交接最後獨立複核
 
 Fermat再次approved、required fixes0／unresolved0，僅postcommit讀回與行政交接。已核binding整檔SHA及九committed modes/blob/SHA／當前bytes、四正式來源／兩unsigned產物／recipes保持，actualbuild-base fb74a83正確；PR69 openDraft/headfbf4e7a且body各批／8optional／補證／live界線符合實際。三docs只原四例外列補commit及交接事實，VO-D01 completed與VO-H01 pending分界正確；無source-binding自指或scope擴張。明示可補此行政verdict後提交三docs／push，Human接受／merge／live仍不因此授權。
+
+## E015 optional skip 受限離線補測（2026-11-13）
+
+本節承接 Human 新授權，只補既有八個 optional case 的覆蓋。B1–B5 已接受的分類、搬移與目錄決策不變；前段 189 passed／8 skipped 與各歷史 verdict 原樣保留。本輪新增條件另建 baseline，結果與獨立查核追加於[既有測試證據](../github-oauth-credential-persistence/evidence/live-preparation-tests.md)，逐檔歸屬仍只引用 technical-spec。
+
+- Goal：用目前最終來源新建普通 CLI，實際補六個 fake／拒絕入口，另依可信既有材料可用性補 replay／公開 DER。
+- Non-Goal：真人、簽章、真實憑證儲存、pin／hash／receipts／歷史變更、來源修正、再次搬移、發布或重開 package／架構。
+- In-Scope：唯讀安全路徑與 fixture 查證；獨立局部 scratch／cache 內建立當前 unsigned CLI、必要 compile flags、離線 baseline／focused／受影響 full regression；獨立 Tester／Reviewer。
+- Out-Of-Scope：OAuth／API／DPK live、Keychain 查詢、sudo、sandbox 停用、系統權限／全域設定／依賴更新、Runtime／測試期待／skip／guard 修改，以及 stage／commit／push／PR 更新／merge。
+- ReadOnly：既有 feature 分支與最終 source／test／project／資源／root package／lock、原 pin／hash／receipts 與歷史證據；可信原 fixture 只讀。不得切至 dev 實作或建立 worktree。
+- Written：無新增 repository 檔案；新建置、逐案結果、完整 argv／flags／環境／來源版本／產物綁定及保護快照只寫本輪局部 scratch。它們不是新增專案工具。
+- Deleted：無。
+- Modify：本 plan、本 topic step 與上述既有測試證據僅追加本輪契約、實測與獨立 verdict；與 Written／Deleted 不重疊。
+- TestCase：先清可選與真人入口環境建立新 197-case baseline，保留逐案狀態／原因。新 default CLI 跑 Shared／Diagnostic／LaunchBinding／Startup 六項中對應四入口；DEBUG LAUNCH_REPORT_ONLY 跑舊 fake／legacy／unknown 入口拒絕；DEBUG DPK_VALIDATION_ONLY 跑 fake handshake 與非法入口拒絕。另兩項只有可信原 replay 與 exact pinned public DER 可用才執行。最後帶明列可選輸入重跑受影響 197-case suite，逐案對 baseline，skipped／blocked／unknown／compile-only 不算通過。
+
+scratch basename 為 `rivet-e015-offline-20261113-uf1s3gev`，本文以 E015_RUN 代稱。正常 host 實際執行，標準 SwiftPM sandbox 不停用；新 copied-project Debug build 僅 scratch 唯一 root ref 接同 feature、固定既有 Apollo checkout／lock 並拒 Git HTTP／HTTPS，產生全新四個依賴 target objects；三個 swiftc CLI 以同一最終 main、Swift 6／arm64 macOS 15、獨立 variant module cache、DEBUG 及兩互斥 define 建立，不使用舊 probe binary。完整命令與來源／dependency object／產物 SHA 保存 E015_RUN/receipts，不在規劃維護第二份來源 inventory。
+
+若需 source／test 修改，該路徑停止並回報精確原因及最小變更契約，不自行修正；缺歷史材料只保留該項未驗，不阻擋其他可補項。異常按具體 case／階段判斷，不用相同失敗數宣稱等價。不移除防護或更新舊 pin；不覆寫歷史。Tester／Reviewer 明示 verdict 與 required fixes；無操作或發布授權可由補測／審查通過推導。
+
+### E015 補測成果交接
+
+受限補測實際完成六個指定 case，完整回歸195 passed／2既有材料缺口 skipped；原189/8 baseline與歷史證據保持。Epicurus 獨立 Tester approved／required fixes0；Plato 獨立 Reviewer approved／required fixes0／unresolved blockers0，兩項 fixture unresolved 仍未驗。命令、compile flags、來源／產物綁定與正式 verdict SHA 均引用既有 E015 測試證據，不另建 inventory。
+
+僅三份既有文件追加／本輪狀態接合，source／test及舊receipts不變；行政接合依 Reviewer 明示範圍交最後 diff 窄複核。這是本輪可執行補測範圍的交付，不是八項全通過或 Human 接受；未 commit／push／PR 更新／merge／真人驗證。
+
+### E015 文件交付授權與最後窄複核
+
+主對話本輪已唯讀重核最終來源與補測證據；Epicurus Tester、Plato Reviewer 及最後行政窄複核均 approved／required fixes0，兩項缺可信原 fixture 的 skipped 仍未驗，非已確認 Runtime failure／required fix。精確命令、flags、197項195 passed／2 skipped／0 failure/error、原189逐案保持與窄複核收據只引用[既有 E015 證據](../github-oauth-credential-persistence/evidence/live-preparation-tests.md)，不複製 inventory。
+
+Human 本輪另行授權既有三份文件的必要整理、預先確認訊息 `docs: record E015 offline coverage`、按 topic commit／push 至既有分支及更新同一 Draft PR #69。前述未授權發布的補測歷史保持；本輪 source／test／Runtime／guard 不改、不重跑兩項缺料或無關測試。交付仍須實際執行適用文件檢查與既有 hooks，Git／PR 成功依實際讀回，不由既有 verdict 推導。**Human review pending；不得 merge／改 Ready 或啟動真人流程。**
