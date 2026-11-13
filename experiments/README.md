@@ -1,8 +1,8 @@
 # 實驗索引
 
-更新日期：2026-11-11。此索引依已合併的實驗與交付文件及其有限證據整理，另分列尚未合併 PR #67 的 E010 進度；各輪前提、歷史結果與授權仍以原紀錄為準。實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
 
-## 本 topic 新增的獨立驗證環境收納（尚未合併）
+## PR #69：已合併的獨立驗證環境收納
 
 | 編號 | 用途與來源 | 狀態 |
 | --- | --- | --- |
@@ -13,6 +13,18 @@
 | [E015](E015/github-oauth-credential-persistence/README.md) | `github-oauth-credential-persistence` 正式DPK adapter的獨立功能驗收runner／專用測試 | B5集中；正式adapter/tests留root，歷史真人／pins／receipts保持；本次離線結果見topic帳本。 |
 
 此配號僅集中收納驗證環境，不代表重做實驗、撤回既有採用或新增永久工具例外。下方既有索引與來源快照保留原紀錄。
+
+### PR #69 合併與清理事實（2026-11-13）
+
+[PR #69](https://github.com/a129924/rivet/pull/69) 已合併並關閉，目標為 `dev`，`mergedAt=2026-11-13T06:16:39Z`；merge commit 為 `4c2153963fe7c41cc36b56f2a4fe3ae3b79ba6c2`，最後 feature head 為 `a4c4f6bc23f00ae746ad48c69f6779ca993a1d03`。兩親 merge tree 與最後 feature 相同；這是來源保存點，不是新 build 或真人量測。
+
+本次交付分列純搬移、必要接線，以及兩項獨立受限修正：`ccf9d21` 空白配置拒絕與 `3fe0c9a` 測試型別消歧，不將整份 PR 稱為無行為差異的純搬檔。正式能力／正式測試與 root products／targets／dependencies 保留；唯一逐檔歸屬與允許差異見[固定 technical-spec](https://github.com/a129924/rivet/blob/4c2153963fe7c41cc36b56f2a4fe3ae3b79ba6c2/analysis/verification-artifact-ownership/technical-spec.md)。
+
+E015 最新離線補測為197項：**195 passed／2 skipped，0 failure／error**；原189項逐案保持、六項 focused 真正通過，Tester／Reviewer／最後行政窄複核均 approved、required fixes0。兩項 skipped 為可信歷史 captured context 與 pinned 公開 DER 材料缺口，非已確認 Runtime failure／required fix；原189/8等歷史及所有真人限制不回寫。完整來源／flags／結果與最小必要材料見[固定補測證據](https://github.com/a129924/rivet/blob/4c2153963fe7c41cc36b56f2a4fe3ae3b79ba6c2/plan/github-oauth-credential-persistence/evidence/live-preparation-tests.md)。
+
+Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；local／remote tag object 同為 `c5039b06d294a1cd0139fba2528ee5e09d886ede`，peeled commit 精確為上述 merge。它不指向後續文件 commit，也不是 GitHub Release；沒有新增真人 OAuth／API／DPK、fixture 或 pin 更新。
+
+原 `chore/verification-artifact-ownership` local／remote branch 已在核對相同 a4c4f6b、merge lineage 與 tag 保存後正常刪除，未 force。兩份索引的本次事實更新由 `docs/verification-artifact-ownership-postmerge` 後續文件分支交付；沿用原 managed worktree 完成，未在 dev 工作樹實作，worktree 只在文件安全提交／推送後移除。其他 worktree 與 E010 獨立收尾工作不動。
 
 ## 既有實驗與已合併交付
 

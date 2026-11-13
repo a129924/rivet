@@ -1,8 +1,22 @@
 # GitHub 連線驗證結果摘要
 
-更新日期：2026-11-11，另納入已合併的原生登入 UI／Demo 交付與 Human 採用。
+基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；本次只補驗證產物集中收納與既有離線補測的交付事實。
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
+
+## PR #69：驗證產物歸屬與受限離線補測（2026-11-13）
+
+[PR #69](https://github.com/a129924/rivet/pull/69) 已於 `2026-11-13T06:16:39Z` 合併至 `dev` 並關閉；merge `4c2153963fe7c41cc36b56f2a4fe3ae3b79ba6c2`、最後 feature `a4c4f6bc23f00ae746ad48c69f6779ca993a1d03`，兩者 tree 相同。E011–E015 集中五組獨立驗證環境；正式能力與正式測試保留，不新增產品登入、package 或共用抽象。索引位置見[README 的已合併收納表](README.md#pr-69已合併的獨立驗證環境收納)，逐檔真相只引用[固定 technical-spec](https://github.com/a129924/rivet/blob/4c2153963fe7c41cc36b56f2a4fe3ae3b79ba6c2/analysis/verification-artifact-ownership/technical-spec.md)。
+
+- 純搬移：依原始或已核准修後基線保持 bytes／mode。
+- 必要接線：source／test 路徑、project refs、資源／操作入口、路徑斷言與導覽；E009 現行 pin 依原 VO-PIN3 精確授權綁來源／產物，歷史 pin／receipts 保留。
+- 兩項受限修正：`ccf9d21` 拒絕空白配置是行為修正；`3fe0c9a` 僅測試型別消歧，資料與期待不變。兩者各自提交／驗證，不能把整份 PR 說成無行為差異的純搬檔。
+
+E015 的六個 focused case 由最終來源新建 CLI，使用 DEBUG、互斥 LAUNCH_REPORT_ONLY／DPK_VALIDATION_ONLY 等必要 flags，實際通過。完整197項為 **195 passed／2 skipped、0 failure／error**，原189項逐案保持。Epicurus Tester、Plato Reviewer 與最後行政窄複核均 approved／required fixes0；精確命令／環境／來源版本與產物綁定見[固定補測證據](https://github.com/a129924/rivet/blob/4c2153963fe7c41cc36b56f2a4fe3ae3b79ba6c2/plan/github-oauth-credential-persistence/evidence/live-preparation-tests.md)。
+
+兩個 skipped 仍缺可信原 captured context 的 source／app tree 與 context／proof／request bytes，以及符合原 certificate hash、已允許使用的公開 DER 副本。這是限定查證範圍內的材料不足覆蓋缺口，非已確認 Runtime failure／required fix，不阻擋六項成果交付；不宣稱整台電腦無副本、不猜測缺料原因、不新造替代資料／重建歷史／查 Keychain／改 pin。原189/8、各輪 pending／失敗、E001–E010、PR #60／#61／#62／#63／#65／#66等原證據均按其來源閱讀；本次 merge 不重新驗證真人流程或把合併點冒充實際測量版本。
+
+語意 annotated tag `v0.1.63-verification-artifact-ownership` 已推送，tag object `c5039b06d294a1cd0139fba2528ee5e09d886ede` 的 local／remote 值一致，peeled commit 為上述 merge；不是後續文件 commit 或 GitHub Release。原 feature local／remote branch 已在 fresh SHA／lineage 核對後正常刪除；文件以獨立 postmerge 分支保存，managed worktree 於文件安全推送後才移除，不碰 E010 或其他 worktree／安全資產。
 
 ## 快速總覽（保留上游各輪限制）
 
@@ -37,7 +51,7 @@ E007 [第一輪](E007/evidence/run-20261020T055923Z-6ff205d6-7110-4ba3-bf42-c98c
 
 ## PR #62：新獨立驗證 App 的整條流程
 
-2026-10-21 的 [GitHubConnectionVerification](../apps/GitHubConnectionVerification/README.md) 明示「驗證用途，非 Rivet 正式產品」。真實服務與儲存結果見[新 host 真人證據](../plan/github-persistent-connection/evidence/verification-host-live.md)：
+2026-10-21 的 [GitHubConnectionVerification](https://github.com/a129924/rivet/blob/aa16de91b560027325419b7bc904d831851c9fcb/apps/GitHubConnectionVerification/README.md) 明示「驗證用途，非 Rivet 正式產品」。真實服務與儲存結果見[新 host 真人證據](../plan/github-persistent-connection/evidence/verification-host-live.md)：
 
 | 流程 | 本輪結果 |
 |---|---|
