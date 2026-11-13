@@ -1,11 +1,11 @@
 # 驗證產物歸屬修正：步驟帳本
 
-最後更新：2026-11-13。B1–B5受限實作／必要offline與適用獨立gate完成；B5 source fbf4e7a已commit／push／九input綁定，PR69已更新且維持open Draft。待Human review；八optional skip／live未驗，原失敗與補證保持。
+最後更新：2026-11-13。B1–B5／E011–E015受限實作、必要offline與適用獨立gate完成；B5 source fbf4e7a已commit／push／九input綁定。E015最新補測197項：195 passed／2 skipped、0 failure／error，原189項逐案保持、六項focused實際通過；Tester／Reviewer／最後行政窄複核均approved、required fixes0，既有補測文件6906104已交付同PR69。兩skip是材料缺口、非required fix；PR維持open Draft，Human review pending、live未驗，各輪歷史pending／189/8與原始結果保持。
 四實體文件已落檔；先前 draft-only approved／0 fixes 不挪作正式 gate。逐檔資料只引用 [spec](../../analysis/verification-artifact-ownership/technical-spec.md#唯一逐檔清單)。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／缺口 |
 |---|---|---|---|---|
-| VO-P01 | completed | Explorer | 五組分類、E009角色、wrapper及主要接線查證 | 基準a554a4f；E009現行入口；73file單一spec；候選配號未reserve |
+| VO-P01 | completed | Explorer | 五組分類、E009角色、wrapper及主要接線查證 | 初期查證基準a554a4f；E009現行入口；73file單一spec；E011–E015後續已由VO-P05鎖定並完成五批 |
 | VO-P02 | completed | Tester | 限定離線基線已執行並分類 | plan基線；不表示失敗解除或必要項全到達 |
 | VO-P03 | completed | Plan-Creator | 四正式文件落檔，納最新驗證／pin要求 | 本四檔；未自判品質或gate |
 | VO-P04 | completed | Plan-Reviewer | 正式實體審查 approved 且 required fixes=0 | Popper 已審四實體，approved，required fixes=0；73/73 source hash 相符 |
@@ -19,21 +19,21 @@
 | VO-B03 | completed | Implementer | B3接線及E009最終產物相容性，交Tester→Reviewer | 0b6c39f已push；Godelpassed0、Helmholtzpre/postcommitapproved0，170input與artifact／launcher binding真核通過 |
 | VO-B04 | completed | Implementer | B4完整搬移，交Tester→Reviewer | 原Goodall契約／修後3fe0c9a baseline保持；30檔完整搬移及全部必要項真到，Confucius passed0／Leibniz最終approved0 |
 | VO-B05 | completed | Implementer | B5完整搬移，交Tester→Reviewer | 九檔／五puremove／精確接線及必要post真到，Anscombe final passed0／Fermat approved0，來源SHA已核 |
-| VO-D01 | completed | Implementer | 已審bounded topic commit、push、Draft PR交Human | B5 fbf4e7a完整commitpush／九input綁定及PR69 metadata已真完成；仍Draft，Human接受未完成 |
+| VO-D01 | completed | Implementer | 已審bounded topic commit、push、Draft PR交Human | 既有B5 fbf4e7a完整commitpush／九input綁定與補測文件6906104及PR69更新已完成；仍Draft，Human review pending |
 
 ## Blockers
 
-| ID | 狀態／問題 | 解除條件 |
+| ID | 現行狀態／問題 | 解除證據／保留限制 |
 |---|---|---|
 | BL-P | resolved | Popper 正式 approved、required fixes=0；不等於五批執行通過 |
-| BL-N | E011–E015配號與mapping已鎖定 | B5搬移前九原hash／E015無占用已重核；目前九檔已完整寫入E015，獨立post gate待驗，不重開編號方案 |
+| BL-N | resolved（B1–B5配號與mapping） | E011–E015已鎖定並完整收納；B5九檔及必要post gate已完成，Anscombe passed0／Fermat approved0，不重開編號方案 |
 | BL-B1 | resolved（B1） | baseline／post真正source build、62tests、wrapper資源／入口與獨立成果approved0，commit7e5f4fd |
 | BL-W | resolved（B1） | recipe、baseline與post新wrapper／PDF資源／離線操作均已實際驗證；未覆蓋歷史freeze |
 | BL-PK | 本輪baseline已解除；歷史失敗保留 | Socrates舊baseline及Godel移後normalhost各67pass；restricted失敗保留，RF-TPIN3-01closed，不代替commitbinding |
 | BL-E9 | resolved（B3） | 新精確授權、post正負真驗／獨立成果與commitbinding approved0；舊失配歷史保留 |
-| BL-O | resolved（必要offline搬移驗證） | B5必要197/兩branches/兩build/CLI/資源真到，Anscombe passed0／Fermat approved0；recursive199補證已關gap，8optional及live未驗維持界線 |
+| BL-O | resolved（必要offline搬移驗證與受限補測） | B5必要197／兩branches／兩build／CLI／資源真到，Anscombe passed0／Fermat approved0，recursive199補證已關gap；最新E015為195 passed／2 skipped、0 failure／error，兩材料缺口非required fix、live仍未驗；原189/8等歷史保留 |
 | BL-B3 | resolved（VO-RB3） | Gauss契約approved0、Raman18hosted／67PKCE pass0、Noether成果approved0；原失敗保留，不代替BL-E9 |
-| BL-B4 | resolved（VO-RB4Q-F受限修正） | main完整build／78tests／final／保護、Confucius passed0／Leibniz approved0；原根因unknown與失敗保留，修正commit綁定後才能續原B4post／productiongate |
+| BL-B4 | resolved（VO-RB4Q-F受限修正及B4後續gate） | 修正3fe0c9a已綁定，B4搬移2ede7ad的post／正式能力獨立驗證已完成，Confucius passed0／Leibniz本批approved0；原根因unknown與失敗保留 |
 
 ## Human Check
 

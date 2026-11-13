@@ -11,6 +11,20 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 
 ## 配號與契約鎖定
 
+B1–B5 的 E011–E015 配號與契約均已鎖定，五批集中收納及必要 post gate 已完成；B5／E015 來源為 `fbf4e7a`，Anscombe Tester passed／required fixes0、Fermat Reviewer approved／required fixes0，不再是候選或待批前確認。正式能力與正式測試保留，root products／targets／dependencies 不變。
+
+E015 最新補測為 **197 項：195 passed／2 skipped，0 failure／error**，原189項逐案保持；六個 focused case 實際通過。Epicurus Tester、Plato Reviewer 與最後行政窄複核均 approved／required fixes0；補測文件已由 `6906104` 交付。兩個 skip 為可信歷史 captured context／pinned 公開 DER 材料缺口，非已確認 Runtime failure／required fix；詳細結果只引用[既有 E015 證據](../../plan/github-oauth-credential-persistence/evidence/live-preparation-tests.md)，不另建逐檔清單。
+
+交付差異分列如下，不將整份 PR 描述為無行為差異的純搬檔：
+
+- 純搬移：唯一表標示純搬移的檔案，依原始或已核准修後基線保持 bytes／mode。
+- 必要接線：source／test 路徑、project references、資源與操作入口、路徑斷言及現行導覽；E009 現行 pin 更新另依 VO-PIN3 精確授權與來源／產物綁定，舊證據保留。
+- 兩項受限修正：`ccf9d21` 的空白配置拒絕（行為修正），以及 `3fe0c9a` 的測試型別消歧（限定模組前綴／必要換行，資料與期待不變）；兩者各自提交與驗證，不混稱純搬移。
+
+### 初期配號查證與批前鎖定（歷史快照）
+
+以下初期紀錄及後續各輪 pending／候選／待驗、189/8 等原始結果保持當時狀態，不作現行 blocker；現行完成狀態見上文與 step。唯一表的路徑、原 hash 與允許差異仍是單一來源。
+
 初稿 E011–E015 為 B1–B5 的候選目的地；目前已鎖定 B1 使用 E011、B2 使用 E012、B3 使用 E013、B4 使用 E014；E015仍待批前確認。E011 尚非已合併或已完成的驗證。Explorer 已查五個工作樹與 75 個本機 refs，未見 E011 以上；本輪重新列出遠端四個 branches：dev、main、docs/e010-postmerge-registry 與本 feature，SHA 均對應已查本機 refs；未見 E011 占用。本 feature 的 E011 只收納原 rivet-login-ui 功能驗收展示，不重寫其 topic 性質。
 每批前重新查索引／占用並鎖定編號；若衝突，回修本唯一清單並交獨立審查，不能臨場套用舊號或擴張範圍。
 每批先鎖定 baseline、old/new、ReadOnly／Written／Deleted／Modify、設定與入口、允許差異及必要檢查。B1／B2 列已鎖定；其餘批次未確認前仍不是該批實作契約。
@@ -20,7 +34,7 @@ format／lint 僅接回搬移前已涵蓋的檔案，不擴掃所有 experiments
 基準：`a554a4fee772d3976d5ca2c9331865a604e901e2`。共 73 檔（B1–B5：4／7／23／30／9）。hash 是搬移前檔案 bytes 的 SHA-256；數量不是永久 assertion。
 各列 old 為該批 Deleted、new 為 Written，另有下節留原位的 Modify 清單；集合互斥。未列檔案不可寫入；ReadOnly 是實際讀取但不可改的檔案，不以整目錄替代精確集合。
 
-| 批次 | old／Deleted | new／Written（B1/B2/B3/B4 鎖定；B5候選） | baseline SHA-256 | 允許差異 |
+| 批次 | old／Deleted | new／Written（B1–B5 已鎖定並完成） | baseline SHA-256 | 允許差異 |
 |---|---|---|---|---|
 | B1 | `Sources/RivetLoginDemo/main.swift` | `experiments/E011/Sources/RivetLoginDemo/main.swift` | `8f4f4acea31d0a938f6e876d3e86be2315993dc57ef28c442a9137ec03cf1d1f` | 純搬移；bytes 不變 |
 | B1 | `Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `experiments/E011/Sources/RivetLoginDemoRuntime/LoginDemoHost.swift` | `979ae090b03f1ee79e37d3feebbbcf054cca669ef38231765a9e689357060bb8` | 純搬移；bytes 不變 |
