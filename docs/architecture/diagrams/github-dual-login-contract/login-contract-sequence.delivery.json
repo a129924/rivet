@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-dual-login-contract/login-contract-sequence.json",
+  "output": "docs/architecture/diagrams/github-dual-login-contract/login-contract-sequence.html",
+  "specification": {
+    "sha256": "ca93dbf5075cf3ae03fa85face228b4a5aad7362aa9e9d645154c955049abb67",
+    "bytes": 1940
+  },
+  "artifact": {
+    "sha256": "780a4548b93326caae7303d5830f96501cc734c021df0a982ee542cafd18130c",
+    "bytes": 696188
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

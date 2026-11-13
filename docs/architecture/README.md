@@ -80,6 +80,8 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 
 ## 文件導覽
 
+- [OAuth／PAT 雙登入契約](github-dual-login-contract.md)：既有 GitHubIntegration 的請求 VO、共同 Protocol、受控結果與取消語義；不含真登入或 session 組裝。
+
 - [GitHub PKCE missing-verifier 補證界線](github-pkce-missing-verifier-feasibility.md)：單次 missing 交換遭拒；provider 要求聲明一致，當次因果判讀分歧，主要假設仍無法判定。
 
 - [GitHub 初次登入與驗證工具](github-first-sign-in.md)：已交付的一次性授權 session／exchange 與獨立 host；不代表正式產品登入或持久化。

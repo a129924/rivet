@@ -1,0 +1,46 @@
+{
+  "login-contract-sequence.delivery.json": {
+    "sha256": "12b38ed45564b1a5606c504c8ce730fe8c1803076d5134837b66022724b83f70",
+    "bytes": 702
+  },
+  "login-contract-sequence.html": {
+    "sha256": "780a4548b93326caae7303d5830f96501cc734c021df0a982ee542cafd18130c",
+    "bytes": 696188
+  },
+  "login-contract-sequence.json": {
+    "sha256": "ca93dbf5075cf3ae03fa85face228b4a5aad7362aa9e9d645154c955049abb67",
+    "bytes": 1940
+  },
+  "login-contract-sequence.validation.json": {
+    "sha256": "d749b7eb4a8d6cad2a5756dbfa9258cb1078bb7a7c5a993b9c352f06c407d246",
+    "bytes": 1909
+  },
+  "login-contract-sequence.visual-check.1440x900.dark.png": {
+    "sha256": "11655b71f61d32e318a4491c1fc854df24040433f689e39b8175676a89c3aa8d",
+    "bytes": 100293
+  },
+  "login-contract-sequence.visual-check.1440x900.light.png": {
+    "sha256": "4e81b60643ef90cdb68b7221c485719e81907a4c09759a7feba3f2296223260e",
+    "bytes": 99316
+  },
+  "login-contract-sequence.visual-check.2048x1320.dark.png": {
+    "sha256": "5d32a21f5d36423f0c12948429f740413d9d57e44100affd4acfb2ca8a4791d4",
+    "bytes": 117355
+  },
+  "login-contract-sequence.visual-check.2048x1320.light.png": {
+    "sha256": "28ec7ff2229b3969ae16c7c1f882ffb0486b0110f69aaaa2b9f4c82d89ce07d0",
+    "bytes": 115450
+  },
+  "login-contract-sequence.visual-check.html": {
+    "sha256": "7d6f13b0100fd26469bfcb53d29274b1d21516c5dc800dd88e1ab2381b873193",
+    "bytes": 1948
+  },
+  "login-contract-sequence.visual-check.json": {
+    "sha256": "d4a9534435f93aefda6a6e68905c3713d85b37cee2f1897224fd0c70d7de6dd6",
+    "bytes": 14621
+  },
+  "login-contract-sequence.visual-review.json": {
+    "sha256": "ea559ca05b13e384ab8de84afe03930f2f13976ca65c547cf3036568b7adaceb",
+    "bytes": 552
+  }
+}
