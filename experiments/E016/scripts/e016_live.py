@@ -192,8 +192,19 @@ def process_info(pid):
         raise ProtocolError('process_identity')
     return {'start': ' '.join(parts[:5]), 'path': parts[5]}
 
+def require_same_path(left, right):
+    # Python resolves /tmp aliases differently from Foundation. Compare the
+    # actual filesystem objects instead of replacing path prefixes.
+    try:
+        if not Path(left).samefile(Path(right)):
+            raise ProtocolError('process_path_mismatch')
+    except OSError as error:
+        raise ProtocolError('process_path_unverifiable') from error
+
+
 def require_process(hello, pid, path, binary_hash):
-    require_equal((hello['pid'], hello['path'], hello['binary_hash']), (pid, path, binary_hash))
+    require_equal((hello['pid'], hello['binary_hash']), (pid, binary_hash))
+    require_same_path(hello['path'], path)
 
 def stopped(pid, start):
     try:
@@ -282,7 +293,7 @@ def launch_phase(app, root, phase):
     pid = hello['pid']
     process = process_info(pid)
     require_process(hello, pid, frozen['executable'], frozen['binary_hash'])
-    require_equal(process['path'], frozen['executable'])
+    require_same_path(process['path'], frozen['executable'])
     require_equal(sha(Path(process['path']).read_bytes()), frozen['binary_hash'])
     require_equal(source_manifest(), frozen['source'])
     write_once(root / (phase + '-authorize.json'), {

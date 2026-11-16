@@ -1,0 +1,23 @@
+{
+  "authorize_available": false,
+  "binary_hash": "1521a3473844d968060e527b0e7b048c47b3bfa57f60d3dfa8c5827c981fb9e0",
+  "exact_process_exit_proven": false,
+  "failureKind": "operation_or_prerequisite",
+  "first_budget_consumed": true,
+  "fresh_executed": false,
+  "hello_available": false,
+  "human_observation_complete": true,
+  "human_observation_hash": "9e790b87775810a4e3b952f6dcb7f3ad8c2c640a39e7b491367c9dd3d09a6157",
+  "machine_hash": "f25823c44bf1820a0b45111ba8b3acac0329caeba90b362eb7744cd86697c0c4",
+  "outcome": "indeterminate",
+  "path_policy_bug_confirmed": true,
+  "phase": "first",
+  "profile_hash": "8b7cabcd79f3732a48c964eea5ee85576b8416b33b87d8144affcc0964dd3bd9",
+  "prompt_count_class": "zero",
+  "protocol_public_receipt_available": false,
+  "schema": "e016.stop-summary.v1",
+  "source_hash": "6f1155f92c4f65e054f65ba6adfc47ca59cf3a34ff40151f698a73e7760a3fbd",
+  "unique_runtime_cause_proven": false,
+  "write_attempt_marker_available": false,
+  "write_attempted": false
+}

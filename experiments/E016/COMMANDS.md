@@ -27,6 +27,18 @@ E016_APP="$E016_BUILD_DIR/Build/Products/Debug/E016LogoutProbe.app"
 
 不得編輯 build-source companion；來源／commit 改變即停止使用該 build，回準備／獨立審查，不在 first/fresh 間 rebuild。建置執行的是 root public GitHubIntegration，不是 E015 副本。
 
+## 純 Foundation path checks（不啟動 host）
+
+此離線小程式編譯並直接測試host共用的path helper，只建立及移除合成暫存檔案，沒有AppKit、GitHubIntegration或DPK操作：
+
+```sh
+E016_PATH_CHECK_DIR="$(mktemp -d -t rivet-e016-path-check)"
+swiftc experiments/E016/Sources/E016PathIdentity.swift experiments/E016/Tests/path_identity_checks.swift -o "$E016_PATH_CHECK_DIR/path-checks"
+"$E016_PATH_CHECK_DIR/path-checks"
+```
+
+目前唯一first額度已消耗並停止；下列準備／live命令保留為受限協定說明，沒有新的續行授權時不得重跑或換root。
+
 ## 審查後的 manual signing 準備（未執行）
 
 先把既有 exact profile 私有實際路徑指定給 `E016_PROFILE`；主 session 核對 profile UUID／SHA、expiry、identity 與憑證後才可使用。這不是新資產操作。`E016_GROUP` 為 technical-spec 鎖定的唯一 exact group；不使用 wildcard。

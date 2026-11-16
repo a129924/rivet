@@ -13,7 +13,7 @@ SPEC.loader.exec_module(MODULE)
 
 class LaunchChecks(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory()
+        self.temp = tempfile.TemporaryDirectory(dir="/private/tmp")
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.root.chmod(0o700)
@@ -61,6 +61,46 @@ class LaunchChecks(unittest.TestCase):
             with self.assertRaises(MODULE.ProtocolError):
                 MODULE.launch_phase(self.app, self.root, 'first')
         self.assertEqual(self.popen.call_count, 1)
+        self.assert_not_authorized()
+
+    def test_complete_handshake_accepts_tmp_private_alias(self):
+        alias = Path('/tmp') / self.executable.relative_to('/private/tmp')
+        self.assertNotEqual(str(alias), str(self.executable))
+        self.assertTrue(alias.samefile(self.executable))
+        hello = {**self.hello, 'path': str(alias)}
+        MODULE.process_info.return_value = {'start': 'fake-start', 'path': str(alias)}
+        machine = {'schema': 'e016.v1', 'phase': 'first', 'outcome': 'passed', 'failureKind': 'none',
+                   **dict.fromkeys(['seed_absent', 'seed_readback', 'write_attempted', 'signout_returned',
+                                   'same_process_absent', 'configuration_intact', 'sentinel_intact'], True)}
+        MODULE.write_once(self.root / 'first-machine.json', machine)
+        self.wait_file.side_effect = [hello, machine]
+        with patch.object(MODULE, 'stopped', return_value=True):
+            MODULE.launch_phase(self.app, self.root, 'first')
+        self.assertTrue((self.root / 'first-authorize.json').is_file())
+        self.assertEqual(self.popen.call_count, 1)
+        private = MODULE.read(self.root / 'first-private.json')
+        self.assertTrue(private['terminated'])
+        self.assertEqual(private['path'], str(alias))
+
+    def test_different_object_with_identical_content_never_authorizes(self):
+        different = self.root / 'Different.app/Contents/MacOS/E016LogoutProbe'
+        different.parent.mkdir(parents=True)
+        different.write_bytes(self.executable.read_bytes())
+        self.assertFalse(different.samefile(self.executable))
+        self.wait_file.return_value = {**self.hello, 'path': str(different)}
+        MODULE.process_info.return_value = {'start': 'fake-start', 'path': str(different)}
+        with self.assertRaises(MODULE.ProtocolError):
+            MODULE.launch_phase(self.app, self.root, 'first')
+        self.assert_not_authorized()
+        self.assertEqual(self.popen.call_count, 1)
+
+    def test_actual_process_different_object_with_matching_hello_rejected(self):
+        different = self.root / 'Different.app/Contents/MacOS/E016LogoutProbe'
+        different.parent.mkdir(parents=True)
+        different.write_bytes(self.executable.read_bytes())
+        MODULE.process_info.return_value = {'start': 'fake-start', 'path': str(different)}
+        with self.assertRaises(MODULE.ProtocolError):
+            MODULE.launch_phase(self.app, self.root, 'first')
         self.assert_not_authorized()
 
     def test_source_mismatch_never_launches_or_authorizes(self):

@@ -62,11 +62,12 @@ private actor ForbiddenFetcher: OAuthTokenFetcher {
     let frozen = try readJSON(root.appendingPathComponent("frozen.json"))
     guard let runID = frozen["run_id"] as? String, UUID(uuidString: runID) != nil,
       let appPath = frozen["app"] as? String,
-      Bundle.main.bundleURL.standardizedFileURL.path == appPath,
+      try E016PathIdentity.matches(Bundle.main.bundleURL, expected: appPath),
       Bundle.main.bundleIdentifier
         == "local.rivet.dpkcontinuity.b90f5f16d3c8452faf9186b88d6dc64e",
       let executable = Bundle.main.executableURL,
-      executable.standardizedFileURL.path == frozen["executable"] as? String,
+      let executablePath = frozen["executable"] as? String,
+      try E016PathIdentity.matches(executable, expected: executablePath),
       digest(try Data(contentsOf: executable)) == frozen["binary_hash"] as? String,
       digest(
         try Data(
@@ -75,7 +76,8 @@ private actor ForbiddenFetcher: OAuthTokenFetcher {
     else { throw ProbeFailure.prerequisite }
     try writeJSON(
       [
-        "pid": ProcessInfo.processInfo.processIdentifier, "path": executable.path,
+        "pid": ProcessInfo.processInfo.processIdentifier,
+        "path": E016PathIdentity.normalized(executable).path,
         "binary_hash": frozen["binary_hash"]!, "phase": phase, "run_id": runID,
       ], root.appendingPathComponent("\(phase)-hello.json"))
     let permission = root.appendingPathComponent("\(phase)-authorize.json")

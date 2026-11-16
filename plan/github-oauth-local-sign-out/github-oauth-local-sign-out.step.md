@@ -1,7 +1,7 @@
 # 本地登出與 OAuth 憑證清除：狀態帳本
 
 - Topic：github-oauth-local-sign-out
-- Phase：T09 unsigned harness 驗證（系統驗證未完成）
+- Phase：T09 first 已停止；path identity 工具回修待獨立驗證
 - 基線：2973150b2789d63c10226b57150073ccc793c509
 - Branch：feat/github-oauth-local-sign-out
 - 最後更新：2026-11-16 Asia/Taipei（T09補充契約，尚待獨立Plan-Reviewer）
@@ -67,7 +67,7 @@ Reviewer 明示 approved（受限 code/tests）：T04、T08 required fixes close
 | T09-R1 | pending | Reviewer | 獨立審查新harness與fake evidence | [獨立unsigned先驗](evidence/e016-unsigned-tests.md)：7fakechecks／unsignedbuild／format／lint／rootzero-diff通過，helper與整runner覆蓋差異及attestation流程依賴交Reviewer；不沿用S05 approval。 |
 | T09-V1 | pending | Tester | 審查後signing preflight、frozen binary/profile及actual launch identity證據 | 尚未執行；不能稱signed ready。 |
 | T09-H | pending | Human | 工具具體可檢視後安排兩段完整prompt觀察，attestation綁receipt hash | 未執行；promptcount unknown。 |
-| T09-V2 | pending | Tester | 唯一first/fresh序列、判準分類／safe receipt／殘留紀錄 | 實驗未執行。 |
+| T09-V2 | stopped | Tester | 唯一first/fresh序列、判準分類／safe receipt／殘留紀錄 | first已消耗並在hello前停止；Reviewer分類無法判定，fresh未執行，缺exact process證據；見停點摘要。 |
 | T09-R2 | pending | Reviewer | 獨立審查系統結果與限制，回原topic | 尚無。 |
 
 本次沒有 production 修改、build/test/sign、Keychain操作或commit。既有資產重用是主session明示決策；資產expiry前提須在實際兩段啟動時重新驗，不把唯讀inventory當preflight成功。
@@ -85,3 +85,13 @@ Reviewer要求unsigned→signed provenance鏈及實際launch_phase mock coverage
 014bab2 的全新 unsigned build 成功；codesign 實際成功，後續 certificate extraction 因 optional argument 分離語法錯誤停止，沒有完整 signing transition receipt。未進 preflight、未啟 App、未操作 DPK；T09 仍未執行，first/fresh 額度未消耗。舊 App、attempt marker、停止收據保持不動，未重建／重簽或補造 receipt。
 
 signed_info 已改為單一 --extract-certificates=<prefix> 參數。獨立 Tester 17fakechecks/diffcheck 通過，記憶體反向形狀驗證能拒舊寫法；Reviewer approved（bounded command fix），無其他required fix。下一停點：依 COMMANDS 的不自行重試規則等待 Human 明確續行，才可用修正版重新凍結/build/sign/preflight。此處不是 T09 passed 或 signed-ready。
+
+## T09 唯一first停止／path identity bounded回修
+
+2026-11-16，ff672c7準備及preflight後唯一first已消耗並在hello前停止，fresh未執行。Reviewer分類無法判定，不是production failure；缺actual PID/starttime與exact退出證明。Human全程觀察公開投影為zero／complete，但只綁machineSHA，無原協定publicreceipt。停點摘要見experiments/E016/evidence/first-stop-summary.json，不補造原receipt。
+
+已確認path normalization策略bug，無當次runtime path因此不稱唯一根因。Implementer只回修E016共用Foundation雙側helper／hello path與Python samefile握手；純Foundation正反checks及20mock checks通過，待Tester/Reviewer。沒有build主App／sign／launch／DPK／新run，舊App與consumed markers不動；任何新準備／run須Human續行。
+
+## 2026-11-16 path fix 最終離線審查
+
+獨立Tester：20Pythonchecks、實際共用Foundationhelper alias/不同物件正反測試、format/lint/diffcheck通過，production零diff。Reviewer approved（bounded path fix／離線證據），required fix closed，無其他required fix。本次T09維持無法判定，first已耗用/fresh未執行，Human完整觀察zero，缺exact process exit/publicreceipt限制保留。不恢復額度、不自動重試；任何新準備與live序列須Human明確新額度。

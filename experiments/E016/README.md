@@ -45,14 +45,14 @@
 
 ## 是否成功
 
-- 執行日期：未執行，不填。
-- 實驗狀態：未執行。
-- 本輪驗證任務完成：否。harness已建立且unsigned／7 fakechecks先驗通過；尚缺獨立驗證／審查、簽章preflight、唯一run與Human觀察。
+- 執行日期：2026-11-16，唯一first已啟動並停止；fresh未執行。
+- 實驗狀態：無法判定。
+- 本輪驗證任務完成：否。準備與preflight曾完成；first在握手前停止且額度已消耗，缺exact process身分／退出證據及fresh讀回，不能宣稱T09通過。
 - 本次planning補充不是系統觀察，不能宣稱T09通過。
 
 ## 結果與證據
 
-目前無E016系統觀察、seed、delete或fresh-read。11/13受控tests與code審查證據保留原topic，不改寫為本實驗成功；11/16簽章inventory僅前提調查。具體source/binary/profile freeze、actual PID/path/processexit、machine receipt／Human attestation hashes與結果，待實際取得後寫回；未知不能補造。
+最新停點：first已有有限machine receipt與綁machine hash的Human觀察；沒有seed／delete／fresh-read證據。後文「未執行」保留為先前階段歷史，以本節及末段最新結果為準。11/13受控tests與code審查證據保留原topic，不改寫為本實驗成功；11/16簽章inventory僅前提調查。具體source/binary/profile freeze、actual PID/path/processexit、machine receipt／Human attestation hashes與結果，待實際取得後寫回；未知不能補造。
 
 ## 結論與限制
 
@@ -84,3 +84,15 @@ sourcefreeze helper在建置前後比較commit／dirty狀態／實際package與h
 唯讀診斷：codesign signature verify通過、exact AppID／group相符；原split參數`--extract-certificates <prefix>`在此codesign版本將prefix當輸入path而exit1。唯讀改用`--extract-certificates=<prefix>`擷取成功，實際leaf certificate SHA-256與既定pin相符。診斷只抽出公開certificate到暫存，沒有第二次簽章或資產修改。
 
 本次限定修正signed_info的一行參數，新增走完整signed_info且模擬真CLI optional-argument解析／產生certificate檔的regression；舊split形狀先得到可歸因red，修正後17fakechecks green。測試固定clock，避免既定profile到期污染純commandshape判準。未更改一次停止規則、未補造舊transition、未重build／re-sign；新的準備嘗試須在fix獨立審查後由主session向Human交代並確認，不自行換root繞過marker。
+
+## 唯一 first 停點與 path identity 回修（2026-11-16）
+
+Reviewer將本次T09分類為「無法判定」，不是production OAuth failure。first額度已消耗，fresh未執行。machine receipt為indeterminate／operation_or_prerequisite／write_attempted=false；沒有hello、authorize、write-attempted marker，亦沒有原協定first-public／first-private receipt。只能依原始碼ordering推論停在DPK前，沒有成功seed／signOut／fresh-read證據。pgrep同名程序不存在不能代替exact PID/starttime／退出證明。
+
+Human回覆全程觀察，公開表示為prompt_count_class=zero／observation_complete=true；原私有觀察綁machineSHA，不是不存在的publicreceipt。新[停點摘要projection](evidence/first-stop-summary.json)保留此限制，沒有補造原協定receipt、raw count／路徑／identity或payload。
+
+唯讀診斷確認Python frozen與Foundation runtime路徑正規化策略不一致，兩種tmp alias指同物件；原host只正規化一側且runner後續有raw path比較。這是可確認的工具策略bug，但當次沒有hello／runtime path，因此不能宣稱它是唯一實際根因，也不能回填當次程序身分。舊App／receipts／consumed marker完全保留。
+
+本輪限定工具回修：新增實際由host使用的純Foundation path helper，雙側同樣normalize並核device/inode，hello也輸出同策略路徑；runner以samefile比對hello及actual executable，不用字串prefix替換，PID／starttime／binary／profile／source guards維持。純Swift離線程式直接呼叫共用helper，驗tmp alias及不同App／同內容不同物件；完整mock握手驗alias可authorize，different object不得authorize。20個Python checks與純Foundation checks通過，不是主App或DPK驗證。
+
+本輪沒有build主App、sign、launch、DPK或新run。任何新的準備／run都待Human續行，不恢復舊額度或清理殘留；最後仍須獨立Tester／Reviewer核對回修。
