@@ -1,5 +1,7 @@
 # Rivet 設計原則
 
+`GitHubPATDataProtectionStore` 已新增單一 PAT 的正式 DPK 保存、讀回與完整替換，採 caller 明確 access group、獨立 namespace 與有限錯誤。受控測試及獨立 E016 unsigned host 為離線準備；真 DPK、跨程序／重建與 Human 提示驗收仍 pending，不代表產品登入或整題完成。詳見 [PAT 儲存契約](architecture/github-pat-dpk-storage.md)。
+
 ## 產品取捨
 
 - Rivet 是個人 GitHub PR 工作台，不是 GitHub 或 Graphite 的完整替代品。

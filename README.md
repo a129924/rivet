@@ -1,5 +1,7 @@
 # Rivet
 
+`GitHubPATDataProtectionStore` 已新增單一 PAT 的正式 DPK 保存、讀回與完整替換，採 caller 明確 access group、獨立 namespace 與有限錯誤。受控測試及獨立 E016 unsigned host 為離線準備；真 DPK、跨程序／重建與 Human 提示驗收仍 pending，不代表產品登入或整題完成。詳見 [PAT 儲存契約](docs/architecture/github-pat-dpk-storage.md)。
+
 Rivet 是一個個人 GitHub PR 工作台。
 
 它的首版目標是集中查看目前等待使用者 review 的 GitHub.com open Pull Request，降低在 GitHub 網站、repository 與 PR 之間切換的成本，並成為日常挑選與開啟 PR 的優先入口。

@@ -380,9 +380,8 @@ struct StaticIsolationTests {
       "REST/GitHubRestClient.swift",
       "REST/GitHubHTTPClientError.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
-      "Stores/InMemoryGitHubTokenStore.swift",
-      "Stores/KeychainTokenStore.swift",
-      "Stores/GitHubOAuthDataProtectionStores.swift",
+      "Stores/InMemoryGitHubTokenStore.swift", "Stores/KeychainTokenStore.swift",
+      "Stores/GitHubOAuthDataProtectionStores.swift", "Stores/GitHubPATDataProtectionStore.swift",
     ]
 
     let actualPaths = try sourcePaths(in: sourceDirectory)
@@ -426,6 +425,7 @@ struct StaticIsolationTests {
 
       let securityFiles: Set = [
         "Stores/KeychainTokenStore.swift", "Stores/GitHubOAuthDataProtectionStores.swift",
+        "Stores/GitHubPATDataProtectionStore.swift",
       ]
       if securityFiles.contains(path) {
         #expect(imports == ["Foundation", "Security"])

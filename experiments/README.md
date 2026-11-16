@@ -118,3 +118,7 @@ Annotated tag `v0.1.61-rivet-login-ui` 已正常建立、推送並核對 local�
 W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pending。P0 expiry 為台灣 **2026-11-17 15:28:08**，原 D 為 **2026-11-20 15:22:03.379959**，不延長、不重設 A／namespace。RP cleanup 仍 blocked／delete=0；[RT index](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)記錄4602 retained metadata entries，不是 minimum 完成，也不解除 RP blocker。
 
 三筆 `01265ad`／`c0e6414`／`d30f5c4` 共312檔已正常發布。2026-11-11 查核時，PR #67 為 Ready for review、尚未 merged。E001–E009、E005 UX 失敗、E006 受限成功及各輪 unknown／逾時歷史保持；E010 不藉此核准新的正式 adapter 採用、產品登入或公開分發。
+
+## E016 — PAT DPK 儲存
+
+[`github-pat-dpk-storage`](E016/github-pat-dpk-storage/README.md) 專屬驗證 host 直接使用正式 PAT adapter。只含離線 controls 與 unsigned 準備；signed/live、跨程序／重建、Human 提示及 cleanup 驗收 pending。與 E015 OAuth 歷史結果分開，不新增產品登入。
