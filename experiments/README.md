@@ -1,6 +1,18 @@
 # 實驗索引
 
-基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約合併／清理事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約合併／清理與 PR #72 本地登出合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+
+## PR #72／E016：正式本地登出與有限 DPK 結果（2026-11-16）
+
+[PR #72](https://github.com/a129924/rivet/pull/72) 已於 `2026-11-16T09:00:10Z` 合併至 `dev` 並關閉；merge 為 `88ec4a0e13bf68fb489fd9b06895591a0663ba53`，最後 feature head 為 `641789fad88d2a3ad7e3fe990fa56d1c0e540fe3`。Merge parents 為 `5713025e3312c0fbc9a7b02a222db0b91d6e1b58`／上述 feature head，tree 與最後 feature 相同。這是交付保存點，不是新的 live 受測版本。
+
+正式 non-BC `GitHubIntegration` 提供 `OAuthTokenProvider.signOut()`、永久退休舊 provider、已開始寫入結束後精確 clear credential，保留 configuration；晚到 restore／refresh 不發布或重新保存由正式受控 tests 支持。[本地登出長期契約](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/docs/architecture/github-oauth-dual-client.md#本地登出)與[精確清除契約](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/docs/architecture/github-oauth-credential-persistence.md#本地-credential-清除)固定引用合併來源。
+
+獨立 [E016 八段紀錄](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/experiments/E016/README.md)以受測來源 `bb6752aa483a68043174723a6b3ff2653abe79ce`、同一 frozen signed binary／profile、固定 synthetic credential／configuration／sentinel，於真 DPK 完成 first seed/readback→正式 signOut→同程序 absent，以及新 exact process 的 fresh 只讀 absent／configuration／sentinel intact。兩程序歸屬與退出有證據，Human 各完整觀察、提示 class 為 zero；Tester／Reviewer接受本次有限成功。Merge／最後 feature head 均不是此 live 受測來源，不能拿合併後版本冒充重驗。[Live 與收據綁定](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/plan/github-oauth-local-sign-out/evidence/e016-live.md)及[安全結果 projection](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/experiments/E016/evidence/success-summary.json)保留分層證據。
+
+014bab2 的簽章後 certificate extraction 工具停止、ff672c7 first 的 indeterminate／缺 exact-process 證據及 fresh 未執行均保留；後者已耗額度，Human 另授權的 bb6752a first／fresh 額度也已用完。原 public 的 Human unknown／false 由獨立 attestation 綁 SHA 補充，不覆寫原收據。隔離 configuration／sentinel 殘留未清，沒有追加 cleanup。結果只適用當次同機／GUI 使用者／既有 signer、有效 profile、exact group、frozen binary 與唯一 writer；不外推真 OAuth、UI、其他 profile、跨 writer 或 durability。本次 live 沒有 refresh/network，不取代原受控競態 tests，亦不回改 E010／E015 歷史。
+
+Annotated tag `v0.1.65-github-oauth-local-sign-out` 已建立／推送並讀回核對：local／remote tag object 同為 `96fba09f65a1c2f42fe8501fa4bd5623ea57bafd`，peeled commit 精確為上述 merge；不是後續文件 commit、live build pin 或 GitHub Release。原 `feat/github-oauth-local-sign-out` local／remote branch 與 tracking refs 已正常刪除並核 absent，未 force。兩索引由 `docs/github-oauth-local-sign-out-postmerge` 文件分支維護；本輪不重跑實驗、不清 DPK 或 Apple 資產，也不將 PR 合併視為原 topic Human 最終接受或圖面接受。
 
 ## PR #71：OAuth／PAT 雙登入契約合併與清理（2026-11-16）
 
@@ -52,6 +64,7 @@ Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；loc
 | [E008](E008/README.md) | missing-verifier 拒絕的 PKCE 歸因 | 無法判定：HTTP400 拒絕、無 token；provider 要求 enum 一致，當次因果判讀分歧，1/1 用盡。 |
 | [E009](E009/README.md) | 手動獨立 browser 的首次登入／同意／帳號結果 | M03 在 Human 回報與來源契約層級受限成功；M04 建置與 mock 檢查不構成另一次真人成功。 |
 | [E010](E010/README.md) | DPK profile 自然到期後原假憑證恢復 | W1 seed／fresh 六欄相符、Human 各全程0提示，僅受限 baseline 成功；W2 真到期／P1、W3 Rebuilt 與完整週期待驗，RP cleanup blocked。 |
+| [E016](E016/README.md) | 正式本地 signOut／精確 credential clear 的獨立 DPK first／fresh 驗收 | PR #72 已合併；bb6752a 真 DPK／synthetic 兩程序有限成功，Human 各完整觀察 zero；舊停點／已耗額度與 configuration／sentinel 殘留保留，不代表真 OAuth／UI 或普遍環境。 |
 | [GitHubConnectionVerification](E014/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 原生 Presentation 元件、假資料 Demo 與 Human 驗收 | 2026-11-11 指定聲音、大字與焦點案例通過，Human明確採用。正式 backend／OAuth 串接屬後續能力。 |

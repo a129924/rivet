@@ -1,8 +1,22 @@
 # GitHub 連線驗證結果摘要
 
-基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約合併／清理事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；新增雙登入契約的受控交付事實，不擴張既有實驗結果。
+基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約合併／清理與 PR #72 本地登出合併事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；分列雙登入契約及本地登出／E016 的交付事實，不擴張其他實驗結果。
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
+
+## PR #72／E016：本地登出的三層證據與 Git 收尾（2026-11-16）
+
+[PR #72](https://github.com/a129924/rivet/pull/72) 已於 `2026-11-16T09:00:10Z` 合併至 `dev` 並關閉。固定 merge 為 `88ec4a0e13bf68fb489fd9b06895591a0663ba53`，最後 feature head 為 `641789fad88d2a3ad7e3fe990fa56d1c0e540fe3`；merge parents 是 `5713025e3312c0fbc9a7b02a222db0b91d6e1b58`／上述 head，merge tree 與 feature 相同。此保存來源與 live 受測 commit `bb6752aa483a68043174723a6b3ff2653abe79ce` 分開，不將合併／文件版本稱為重測來源。
+
+| 證據層級 | 本次支持與限制 |
+| --- | --- |
+| 正式 src／受控 Swift | non-BC GitHubIntegration 的 signOut 永久退休舊 provider，等待已開始 save 結束後精確 clear credential；晚到 restore／refresh 不發布／寫回、舊 clients 後續需求與401 recovery拒絕由受控 tests驗證。保留configuration，不提供遠端 revoke或產品UI。[長期契約](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/docs/architecture/github-oauth-dual-client.md#本地登出)／[精確清除](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/docs/architecture/github-oauth-credential-persistence.md#本地-credential-清除)。 |
+| 真 DPK／synthetic／兩程序 | E016 bb6752a first seed完整假credential/configuration/sentinel、逐欄readback、正式signOut及同程序credential absent；fresh不同exact process只讀確認absent、configuration/sentinel intact。兩exact processes歸屬／退出、同frozen source/binary/profile及Human各complete zero有證據，Tester／Reviewer核准本次有限成功。[八段紀錄](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/experiments/E016/README.md)／[live與收據綁定](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/plan/github-oauth-local-sign-out/evidence/e016-live.md)／[success projection](https://github.com/a129924/rivet/blob/88ec4a0e13bf68fb489fd9b06895591a0663ba53/experiments/E016/evidence/success-summary.json)。 |
+| 真 OAuth／refresh／產品 UI | 本次live未執行真OAuth、refresh/network或UI驗收。晚到refresh競態沿原受控測試，不能把synthetic DPK成功當作遠端能力或普遍零提示保證。 |
+
+適用條件為當次同機、同GUI使用者、既有signer／有效profile／exact group、同frozen binary與唯一writer；不外推其他profile、跨writer／跨機、產品UI或斷電durability。原public的Human unknown／false不回填，Human獨立attestation各綁原publicSHA；成功projection是獨立彙整，不冒充原receipt。014bab2的簽章後工具停止、ff672c7 first indeterminate、fresh未執行及其程序／public缺口不改；舊first與新授權first/fresh兩組額度都已使用完，不恢復或重試。隔離configuration／sentinel仍保留，沒有cleanup；本輪索引更新不執行App／DPK，也不吸收E010／E015的不同驗收。
+
+語意 annotated tag `v0.1.65-github-oauth-local-sign-out` 的 local／remote object 均核為 `96fba09f65a1c2f42fe8501fa4bd5623ea57bafd`，peeled精確指向上述merge，不指向live受測source或後續文件commit，亦非GitHub Release。原feature local／remote branch `feat/github-oauth-local-sign-out` 及tracking refs已正常刪除並核absent，未force。兩索引在獨立 `docs/github-oauth-local-sign-out-postmerge` 文件分支編輯，不在dev實作；PR合併／Git收尾不代替原topic Human最終接受或圖面視覺接受。
 
 ## PR #71：雙登入契約的受控證據與 Git 收尾（2026-11-16）
 
@@ -50,6 +64,7 @@ E015 的六個 focused case 由最終來源新建 CLI，使用 DEBUG、互斥 LA
 | [E008](E008/README.md) | 2026-10-22 單次安全 JSON 與兩名獨立先封存 enum；依固定判準無法判定。 | 普遍 PKCE enforcement、OAuth 漏洞、完整 wire 或正式安全決策變更。 |
 | [E009](E009/README.md) | M03：Human 確認獨立未登入 session、未授權帳號、同輪登入／同意／300 秒內有效帳號；來源契約支持。 | agent 直接見證歷史 UI／network、2FA、完整零配置 UX、產品 readiness 或 PKCE。後續 build 不回填真人來源。 |
 | [E010](E010/README.md) | 新 W1 seed／fresh 六欄相符、Human 各全程0提示；原遷移／controlled-stop 歷史保留。 | W2 真自然到期／P1、W3 Rebuilt／完整週期、minimum 完成或新的正式 adapter 採用；RP delete=0，RT 僅 metadata。 |
+| [E016／PR #72 本地登出](E016/README.md) | bb6752a 真DPK／synthetic first／fresh成功，兩exact processes退出及Human各complete zero，受控refresh競態另列。 | 不證真OAuth／UI／其他profile／crosswriter／durability；舊indeterminate、兩組已耗額度及configuration／sentinel殘留保持。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 2026-11-11 Human完成指定狀態朗讀、局部大字與focus／rapid案例，明確通過並採用。 | 假資料展示範圍，正式 backend／OAuth 與系統字級偏好整合屬後續能力。Human大字為21pt五畫面及17pt同PAT，15格矩陣沿用工具來源。 |
 | [PR #71 OAuth／PAT 雙登入契約](https://github.com/a129924/rivet/pull/71) | 合併來源保存與既有受控契約／工具驗證，非新增 E。 | success 無帳號／session／clients；不證真登入、UI 接線、遠端有效性或新的 Human 視覺接受。 |
