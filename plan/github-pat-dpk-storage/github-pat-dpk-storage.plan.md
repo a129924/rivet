@@ -4,11 +4,11 @@ Topic：`github-pat-dpk-storage`。基準 `origin/dev@5713025e3312c0fbc9a7b02a22
 
 ## Goal／Non-Goal／In-Scope／Out-Of-Scope
 
-Goal 是正式 PAT DPK 的保存、讀回、整筆替換與獨立補驗。Non-Goal 是登入產品化或遠端有效性證明。In-Scope 為 PAT 專用 async actor、有限錯誤／隔離／協調／遮蔽、受控測試、public consumer、E016 host、採用與清理證據。Out-Of-Scope 沿用 requirements 的登入 runtime／UI／session／clients／migration／產品 delete／同步與分發等排除項，不為實作便利擴張。
+Goal 是正式 PAT DPK 的保存、讀回、整筆替換與獨立補驗。Non-Goal 是登入產品化或遠端有效性證明。In-Scope 為 PAT 專用 async actor、有限錯誤／隔離／協調／遮蔽、受控測試、public consumer、驗收 host（原 P 階段 E016，本次 R 階段移至 E017）、採用與清理證據。Out-Of-Scope 沿用 requirements 的登入 runtime／UI／session／clients／migration／產品 delete／同步與分發等排除項，不為實作便利擴張。
 
 ## ReadOnly／Written／Deleted／Modify／TestCase
 
-四個檔案變更欄位及 TestCase 的精確清單只由 technical-spec 維護，本計畫以引用構成契約：ReadOnly 只能讀；Written 只新增；Modify 只作列明差異；Deleted 為無。TC01–TC04 是本輪必要離線驗證；TC05 與 AC2／3／9／10 的真人部分原先 pending；Human 續行後已在固定 source `5465d3c`／run `39c22b57` 完成並經獨立 P07 approved，圖與最終 Human 接受仍 pending。新增 store 所需 StaticIsolationTests 白名單變更已列 Modify，不修改 root package graph 或 OAuth 來源。
+四個檔案變更欄位及 TestCase 的精確清單只由 technical-spec 維護，本計畫以引用構成契約：ReadOnly 只能讀；Written 只新增；Modify 只作列明差異；原 P 階段 Deleted 為無；本次 R 階段僅舊工具路徑成對移轉，依 technical-spec 的 R 集合限制。TC01–TC04 是本輪必要離線驗證；TC05 與 AC2／3／9／10 的真人部分原先 pending；Human 續行後已在固定 source `5465d3c`／run `39c22b57` 完成並經獨立 P07 approved，圖與最終 Human 接受仍 pending。新增 store 所需 StaticIsolationTests 白名單變更已列 Modify，不修改 root package graph 或 OAuth 來源。
 
 ## 派遣與 gate
 
@@ -51,3 +51,22 @@ Live 固定序列為 save A→writer 結束→fresh A→replace B→fresh B→�
 ## 交付與 topic 完成分離
 
 初次離線成果已按 topic commit／push 並開 Draft PR；本次追加受測 code freeze `5465d3c7308e74bc2b3b51878acd190d4f2babda` 的 live 證據及 metadata 回寫，後續文件 commit 不冒充 native 受測來源。P06 完成、P07 approved，圖的 Human 視覺與 topic 最終 Human review 仍 pending，整題不標 complete；merge、release、tag 不在本次授權。後續 metadata 先交獨立 bounded doc review，再提交／推送，不重跑已通過 runtime 或改寫失敗歷史。
+
+## 本次 bounded relocation：E016 → E017
+
+本次基準 `98521e342b63eb6391e7d538882e984fcb8d39f2`，topic／feature branch／Draft PR #73 不變；PR #72 保留 E016。Scope、ReadOnly／Written／Deleted／Modify／TestCase 以 technical-spec 的 R 節為準。原 P03／P04／TC05 的 E016 是真實歷史，不改名成 E017 已驗收。
+
+| Step | Owner | 完成條件／gate |
+| --- | --- | --- |
+| R01 | Plan-Creator | 四 planning artifacts 同步現行 E017 path、十檔 inventory、唯讀證據與驗證邊界；只編寫，不搬移。 |
+| R02 | Plan-Reviewer | 獨立審查 R 契約明示 approved 才能 move；needs-rework 只回 Plan-Creator。 |
+| R03 | Implementer | 在既有 feature worktree 一對一搬十檔，只允許 runner 兩字串／README及 current docs 最小路徑文字；新增 relocation mapping，既有證據及圖 bytes 保持。 |
+| R04 | Tester | 親跑 TC-R01–05 中搬後 paths／byte inventory、Python54、新 scratch 兩 unsigned variants 各113 fake checks、format／lint／diff；不 signed build／live Run／DPK／Human 重驗。 |
+| R05 | Reviewer | 獨立核必要差異、P 歷史／新工具兩鏈、既有 evidence 全 bytes 與私有狀態未碰；明示 approved、required fixes 清零。 |
+| R06 | Implementer | staged semantic review 後按已明示 topic commit／push 授權提交，原 hooks不skip；更新既有 Draft PR #73 的 E017 歸屬與限制並回讀，未 merge／ready。 |
+
+E017 available 的 Explorer snapshot涵蓋四 worktrees、五 remote heads、未合併 PR68／72／73 與最近五個 closed PR；搬移前只確認無新占用，不能碰 PR72 staged 內容。搬後驗證不重跑原真人序列，舊 successful／unknown 與 Human 觀察不被改判，原 live export E016 source map／hash 不重算。PR Lens 原初始 diff map 不冒稱涵蓋本次 relocation；不建 Graphify graph、不改圖。
+
+新 evidence `e016-e017-relocation.md` 保存完整新舊 path／編號 mapping、fixed commit links 與兩鏈：E006／E007／E015 既有成果→正式 Sources 採用→原 E016 路徑實機驗收；E017 為現行驗收工具歸屬。其餘三份新 evidence 分別記 R02／R04／R05 verdict 或實際結果，不改既有 evidence。若涉及 byte-identical 項目變更、行為／簽章 contract、私有 metadata 或 package reference 寫入，停止回報，不為移動順便修復。HC04／HC05 仍 pending，整 topic 不自行 complete。
+
+R 階段現況（2026-11-16）：R04 [獨立測試](../../plan/github-pat-dpk-storage/evidence/e016-e017-tests.md)完成、R05 [獨立審查](../../plan/github-pat-dpk-storage/evidence/e016-e017-review.md) approved／required fixes 0；R06 publication 進行中，實際結果依帳本與 Git／Draft PR #73 記錄，不預填推送成功。HC04／HC05 仍 pending，topic 不標 complete。

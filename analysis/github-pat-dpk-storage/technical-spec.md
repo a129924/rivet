@@ -48,14 +48,14 @@ Caller 提供 explicit access group；空字串或純空白 group／service、�
 | --- | --- |
 | ReadOnly | `Package.swift`、`Tests/GitHubIntegrationConsumer/Package.swift`；`Sources/BoundedContexts/GitHubIntegration/Contracts/**`、`Composition/**`、`Providers/**`、`OAuth/**`；既有 `Stores/GitHubOAuthDataProtectionStores.swift`、`Stores/KeychainTokenStore.swift`（以上省略的前綴均為 `Sources/BoundedContexts/GitHubIntegration/`）；既有 OAuth／PAT 測試（下列 Modify 檔除外）；`docs/architecture/github-oauth-credential-persistence.md`、`docs/architecture/github-dual-login-contract.md`；E006／E007／E015 相關來源與歷史證據；使用到的 SKILL／設定檔。 |
 | Written | `Sources/BoundedContexts/GitHubIntegration/Stores/GitHubPATDataProtectionStore.swift`；`Tests/GitHubIntegrationTests/GitHubPATDataProtectionStoreTests.swift`；`Tests/GitHubIntegrationConsumer/Tests/GitHubIntegrationConsumerTests/PATStorageContractTests.swift`。 |
-| Written | `experiments/E016/github-pat-dpk-storage/**`，限本 topic 的 Xcode project／schemes、Swift host、Info／entitlements 範本、runner、專屬測試與 README；不新增 root target 或相依。 |
+| Written | `experiments/E017/github-pat-dpk-storage/**`，現行工具位置由本次受限移轉建立；原 P 階段為 E016，限本 topic 的 Xcode project／schemes、Swift host、Info／entitlements 範本、runner、專屬測試與 README；不新增 root target 或相依。 |
 | Written | `docs/architecture/github-pat-dpk-storage.md`；`docs/architecture/diagrams/github-pat-dpk-storage/**`，限保存還原 sequence 的 JSON／HTML、skill 產生 snapshot／receipts／截圖及視覺證據。 |
 | Written | `analysis/github-pat-dpk-storage/requirements.md`、`analysis/github-pat-dpk-storage/technical-spec.md`、`plan/github-pat-dpk-storage/github-pat-dpk-storage.plan.md`、`plan/github-pat-dpk-storage/github-pat-dpk-storage.step.md`、`plan/github-pat-dpk-storage/evidence/**`，限本 topic 的 implementation／tests／review／工具與 live 證據。 |
 | Modify | `Tests/GitHubIntegrationTests/StaticIsolationTests.swift`：expectedPaths 與 securityFiles 各加入新 store，不放寬其他 dependency 或 import 限制。 |
-| Modify | `README.md`、`docs/design-principles.md`、`docs/architecture/README.md`、`experiments/README.md`：只同步本題能力、導覽、E016 歸屬及證據限制。 |
-| Deleted | 無 repository 檔案刪除。owned DPK item 清理另屬驗證工具行為，不是產品 delete 或本欄的檔案刪除。 |
+| Modify | `README.md`、`docs/design-principles.md`、`docs/architecture/README.md`、`experiments/README.md`：只同步本題能力、導覽、現行 E017 歸屬與原 E016 驗收證據限制。 |
+| Deleted | 原 P 階段無檔案刪除；本次僅將舊 E016 tracked inventory 與新 E017 路徑成對移轉，不刪功能／歷史證據。owned DPK item 清理不屬本次操作。 |
 
-E016 在建立 planning 時路徑／索引均未占用；建立 host 前再核對。若衝突回修本規格並交獨立審查，不臨場換號。其他功能分支與 worktree 不在寫入範圍。
+原 P 階段採 E016 的規劃／實作／真人驗收歷史保留。本次 Human 明確決定 PAT 工具移至 E017、PR #72 保留 E016；Explorer 已核 E017 available。正式搬移前核 target 仍不存在；若出現占用或必要行為／簽章契約變更，停止回報，不臨場換號或擴 scope。其他分支／worktree 不在寫入範圍。
 
 ## TestCase
 
@@ -97,3 +97,32 @@ Cleanup 僅限有 ownership 的 exact DPK group／service／pat account，由驗
 正常 launch 使用固定 `open -a`，不帶 `-W`／`-n` 或 raw live binary，仍要求 native rc=0。Secure receipt 有界等待與完整校驗後，只對已驗正整數 PID 以 signal 0 等待 ESRCH；權限／其他錯誤或 timeout 拒絕，退出後 receipt 穩定才發布 acceptance。這替換有 kevent 失敗證據的等待實作，不弱化前一程序結束或新程序證據。
 
 只讀 recover-absence 另建 immutable amendment／controller，綁原 Git source／namespace／ownership 與新正式 host 身分／來源；不改原 proofs。Runner 與 Swift host 皆在 Security 前將 recovery 限為 verify-absence，僅正式 load=nil，不能 save／delete 或進普通 phases。新觀察不借用舊 0 次提示，不把原 unknown 改判。
+
+## R 階段現行路徑與變更集合
+
+本節是本次 relocation 的唯一寫入授權，覆蓋上方已完成 P 階段的廣泛 Written／Modify 清單；不重新授權改產品程式。以 `98521e3` 的 `git ls-files` 完整 inventory 做一對一移轉：
+
+| 舊 E016／新 E017 共用 suffix | 搬移後內容要求 |
+| --- | --- |
+| `PATStorageProbe.xcodeproj/project.pbxproj` | byte-identical；相對 package `../../..` 層級不變 |
+| `PATStorageProbe.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved` | byte-identical，固定版本不變 |
+| `PATStorageProbe.xcodeproj/xcshareddata/xcschemes/PATStorageProbe.xcscheme`、`PATStorageProbeRebuilt.xcscheme` | 兩個 schemes 各 byte-identical |
+| `Resources/Info.plist`、`Resources/PATStorageProbe.entitlements`、`Sources/main.swift`、`Tests/test_probe.py` | 四檔各 byte-identical |
+| `scripts/pat_storage_probe.py` | 只改 docstring 的 E 編號及 HOST 常數 `E016`→`E017`；其餘 bytes 不變 |
+| `README.md` | 只改現行操作路徑／編號、補新舊歸屬及固定歷史 links；不重寫原驗收結果 |
+
+Bundle ID `local.rivet.pat-storage-probe`、Team／certificate／profile／group、namespace／markers、controller／gates／schema 不變。新位置不沿用原私有 signed setup root 或修改其 package reference。
+
+| 欄位 | 本次 R 階段限制 |
+| --- | --- |
+| ReadOnly | 所有 production `Sources/**`、`Tests/**`、root／package manifests；上述 host 除 runner／README 外八檔內容；所有既有 `plan/github-pat-dpk-storage/evidence/**`、圖 bytes 與其他 topic／PR72；兩處原 private `.swiftpm`、私有 Xcode 副本／runs／signed artifacts／receipts／Human 觀察不操作。 |
+| Written | `experiments/E017/github-pat-dpk-storage/**` 只接收上述十檔；新 evidence 僅 `e016-e017-relocation.md`、`e016-e017-planning-review.md`、`e016-e017-tests.md`、`e016-e017-review.md`，皆位於本題 evidence 目錄。 |
+| Modify | 四份 planning artifacts；搬後 runner／README 的上述最小差異；`README.md`、`docs/design-principles.md`、`docs/architecture/README.md`、`docs/architecture/github-pat-dpk-storage.md`、`experiments/README.md` 只同步現行歸屬／links與歷史界線。 |
+| Deleted | 只移除舊 `experiments/E016/github-pat-dpk-storage/` 十個 tracked 路徑，必須各有新位置對應；不額外刪檔，不清 private assets 或 DPK item。 |
+| TestCase | TC-R01 完整 inventory／rename／八檔 bytes／runner 僅兩字串差異／相對 package／settings／身分 namespace 不變；TC-R02 現行 paths／links 與 historical exceptions；TC-R03 新 E017 Python 54 tests；TC-R04 Debug／Rebuilt unsigned compile 與各 113 fake-only checks；TC-R05 strict format／lint／diff 與原 commit hooks。 |
+
+TC-R04 各 variant 使用本次全新 scratch DerivedData／SourcePackages，明確 `CODE_SIGNING_ALLOWED=NO`、`CODE_SIGNING_REQUIRED=NO`、`CODE_SIGN_IDENTITY=`；禁止 provisioning updates／device registration／簽章／live app Run。只允許 unsigned binary 明確 `--self-test` fake-only 分支，不呼 DPK。不得使用或修改原 signed setup roots、Xcode 副本或既有 private package metadata；若 build 必須改動這些狀態，停止回報限制。Root 324／consumer 18 不另重跑，原 hooks 自行要求的檢查照常。
+
+移轉證據記完整 mapping／內容 hash、原 `5465d3c` 與 `98521e3` 固定 GitHub links、新舊兩條採用／驗收鏈。既有 evidence 的舊 E016 keys／argv／links、原 P03／TC05 歷史與 frozen 圖為明列 historical exceptions，保持 bytes；不能全域替換舊路徑。Current docs 改指 E017，歷史來源改以新 mapping 的固定 commit links 解釋，不修改原證據。
+
+R 階段現況（2026-11-16）：R04 [獨立測試](../../plan/github-pat-dpk-storage/evidence/e016-e017-tests.md)完成、R05 [獨立審查](../../plan/github-pat-dpk-storage/evidence/e016-e017-review.md) approved／required fixes 0；R06 publication 進行中，實際結果依帳本與 Git／Draft PR #73 記錄，不預填推送成功。HC04／HC05 仍 pending，topic 不標 complete。

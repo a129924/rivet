@@ -3,10 +3,10 @@
 - Topic：`github-pat-dpk-storage`
 - Branch：`feat/github-pat-dpk-storage`
 - 基準：`origin/dev@5713025e3312c0fbc9a7b02a222db0b91d6e1b58`
-- Current phase：Human review 邊界（P08 metadata approved，P09 最後發布讀回由本次交付執行）
-- Current step：HC04／HC05 pending（P06 completed、P07／P08 Reviewer approved；只完成本次 topic 文件提交／推送／Draft PR 讀回，不新增 runtime）
+- Current phase：R 階段獨立驗證（PAT 驗收工具 E016 → E017）
+- Current step：R06／in-progress（R04 completed、R05 approved／required fixes 0；準備 publication）
 - Topic status：pending（指定環境真人序列與清理已完成／P07 approved；HC04 圖的 Human 視覺及 HC05 最終接受未完成）
-- 最後更新：2026-11-16，Implementer；受測 code freeze `5465d3c7308e74bc2b3b51878acd190d4f2babda`，本次 metadata 回寫與受測 code freeze 分開；文件提交由本次 commit／branch 歷史識別，不重標 native 來源。
+- 最後更新：2026-11-16，Implementer；R04 獨立驗證完成、R05 approved，R06 執行 staged review／hooks／publication；不改原受測 code freeze `5465d3c`。
 
 文件：[requirements](../../analysis/github-pat-dpk-storage/requirements.md)、[technical-spec](../../analysis/github-pat-dpk-storage/technical-spec.md)、[plan](github-pat-dpk-storage.plan.md)。ReadOnly／Written／Deleted／Modify／TestCase 的唯一變更清單見 technical-spec。
 
@@ -46,3 +46,22 @@
 E007 profile renewal 舊無法判定／Human 接受限制、OAuth 真人結果及歷史項目原樣保留。本題不清 OAuth 歷史 item、不重用舊 ready 或把舊 OAuth 結果當 PAT AC。對外回覆與 Draft PR 區分已實作／離線驗證／指定來源真人 approved，以及圖與 topic 最終 Human pending。
 
 下一步：P08 metadata diff 已經獨立 bounded doc review approved；按既有授權完成本次文件 commit／push、更新既有 Draft PR #73 並讀回後，停止於 Human review。維持受測 code freeze `5465d3c`、原 unknown／Human 觀察歷史、圖 bytes 及私有 generated metadata 不變，等待 HC04／HC05，不再執行 runtime。
+
+## R 階段：工具歸屬搬移
+
+Human 已明確授權 PAT host 移至 E017、PR72 保留 E016；Explorer 已查 E017 available，完整 tracked inventory 為十檔（含 project Package.resolved），詳 technical-spec。R02 已獨立 approved，R03 依其受限授權完成；R04 completed、R05 approved，已可執行 R06 publication。原 P01–P09、live 成功／unknown／Human 觀察保持原來源與 E016 歷史。
+
+| ID | Status | Owner role | 完成條件 | 驗證證據 | Blocker／verdict |
+| --- | --- | --- | --- | --- | --- |
+| R01 | completed | Plan-Creator | 四文件補齊 E017 current path、完整 inventory、R 唯一變更集合／tests／gates。 | 四份本次實際內容；只有編寫交接。 | 無 approval 宣告 |
+| R02 | completed | Plan-Reviewer | 獨立審查明示 approved 才能 move。 | [relocation planning review](evidence/e016-e017-planning-review.md)：approved、required fixes 0。 | approved，僅受限搬移 |
+| R03 | completed | Implementer | 十檔對應移轉、允許兩字串與文件路徑差異、mapping；既有證據／圖 bytes 不變。 | [relocation mapping](evidence/e016-e017-relocation.md)：十檔／mode／八檔 bytes／runner 差異及歷史 preservation 交接。 | 完成交接，不代表 R04／R05 approved |
+| R04 | completed | Tester | TC-R01–05：paths／bytes／links、Python54、全新 scratch 兩 unsigned variants 各113 fake checks、format／lint／diff。 | [relocation tests](evidence/e016-e017-tests.md)：Python54、兩 unsigned 各113、paths／bytes／links／private stats 與 strict checks 全通過。 | 依賴 R03；零 signed／live／DPK |
+| R05 | completed | Reviewer | 獨立 bounded diff／證據鏈／私有狀態 review approved，required fixes 清零。 | [relocation review](evidence/e016-e017-review.md)：approved、required fixes 0。 | approved；准 R06 |
+| R06 | in-progress | Implementer | staged semantic review、原 hooks、topic commit／push／原 Draft PR73 metadata 回讀。 | 待本次 commit／remote／PR 實際結果，追加新 relocation 紀錄。 | 依賴 R05；不 merge／ready |
+
+R-B01：R02 approved、R04 completed／R05 approved 已解除 publication gate；R06 只依真實 commit／push／PR 回讀填結果，不預填成功。R-B02：原私有 Xcode 副本、兩處未追蹤 `.swiftpm`、原 runs／signed artifacts／收據與 Human 觀察不可操作；build 若需改它們就停止回報。R-B03：任何 target 新占用、byte-identical 項目差異或功能／簽章 contract 變更，回修規劃，不能擴大範圍。
+
+HC06：本次 E016→E017 歸屬移轉授權 confirmed；不改產品 API、namespace、簽章身分或原真人結果，不含新的 Human 重驗。HC04／HC05 仍 pending。
+
+當前下一動作：Implementer 依 R06 契約執行 staged semantic review／原 hooks／commit／push／既有 Draft PR73 更新與回讀；原生 signed／live／DPK／Human 重驗仍禁止。原上節 Human review 交付已於 `98521e3` 完成，這次新增 R 工作不重寫原 P 結果。

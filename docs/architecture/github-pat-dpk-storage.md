@@ -17,7 +17,7 @@ Save 先安全讀取既存項目；壞資料／拒絕／不可用時零覆寫。
 
 [保存與還原 sequence](diagrams/github-pat-dpk-storage/storage-sequence.html) 描述儲存契約；作者內容繁中，固定 Viewer UI／HTML lang 使用 English fallback。[圖形證據](diagrams/github-pat-dpk-storage/BUILD.md) 區分自動檢查、Agent 視覺檢視與 Human pending。
 
-受控測試採 internal fake Security，一般 import consumer 不呼真 Security。獨立 [E016 host](../../experiments/E016/github-pat-dpk-storage/README.md) 直接使用 public adapter，並提供 run 專屬 exact cleanup；production 不反向依賴 host。OAuth store 與 E015 僅作機制採用來源，舊成功不當 PAT 證據。
+受控測試採 internal fake Security，一般 import consumer 不呼真 Security。獨立 [E017 host](../../experiments/E017/github-pat-dpk-storage/README.md) 直接使用 public adapter，並提供 run 專屬 exact cleanup；production 不反向依賴 host。OAuth store 與 E015 僅作機制採用來源，舊成功不當 PAT 證據。現行 E017 由原 E016 工具移轉；下節真人驗收仍屬原 `5465d3c` 的 E016 路徑，見[新舊證據鏈](../../plan/github-pat-dpk-storage/evidence/e016-e017-relocation.md)，不追補為新版本 live 通過。
 
 ## 指定簽章環境的真人驗收
 

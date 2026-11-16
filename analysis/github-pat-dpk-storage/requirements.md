@@ -59,3 +59,15 @@ OAuth 舊成功不是 PAT 成功。E007 的 profile 更新後讀回仍沿用原�
 ## 最新驗證狀態
 
 受測 code freeze 為 `5465d3c7308e74bc2b3b51878acd190d4f2babda`，run `39c22b57-de4f-463c-aa4b-8de277c1f60a`；TC05 六 runtime accepted／Human 各全程 0 提示，setup／rebuild 另各 0，exact-owned cleanup 後正式 load=nil。見[真人紀錄](../../plan/github-pat-dpk-storage/evidence/live-validation.md)、[公開結果](../../plan/github-pat-dpk-storage/evidence/live-run-39c22b57.json)與[P07 審查](../../plan/github-pat-dpk-storage/evidence/live-review.md)。此 metadata 回寫不改受測來源；圖與完整 topic 的 Human 接受未完成。
+
+## 本次受限追加：驗收工具 E016 → E017 歸屬移轉
+
+Human 已授權在既有 feature branch／Draft PR #73 將 PAT 驗收工具由 `experiments/E016/github-pat-dpk-storage/` 遷至 `experiments/E017/github-pat-dpk-storage/`，topic slug 不變，正式 store 仍留 `Sources`；PR #72 保留其 E016 歸屬，不修改該分支／worktree 的既有 staged 變更。
+
+本次 Goal 僅為工具目錄、runner HOST 與現行導覽一致；In-Scope 為完整 tracked inventory 搬移、必要路徑／編號文字、採用映射與相稱離線驗證。Non-Goal／Out-Of-Scope 包含任何功能、公開 API、簽章身分／namespace／gates／schema 變更，以及 signed build、live Run／DPK、Human 重驗、私有 Xcode 副本／原 runs／產物／觀察操作。原 AC 與 P06／P07 結果不重開。
+
+Explorer 已唯讀確認 E017 未占用；本題準備基準為 `98521e342b63eb6391e7d538882e984fcb8d39f2`。本 feature 的完整 `git ls-files experiments/E016/github-pat-dpk-storage` inventory 是 10 檔，包含 project 的 `Package.resolved`；live source proof 的九個項目不是搬移檔數。獨立 Plan-Reviewer approved 前只修改四份 planning artifacts，不實際搬移。
+
+原實機驗收仍是 source `5465d3c` 下的 E016 路徑。既有 evidence bytes、live export 的 E016 source keys／hash、原 signed artifacts 與成功／unknown／Human 觀察全部保留；E017 只表示搬移後工具歸屬，不追補為新來源簽章或真人驗收通過。新的移轉紀錄須同時呈現「E006／E007／E015 既有成果→正式 Sources 採用→原 E016 實機驗收」與「現行 E017 工具位置」兩條證據鏈，保持 E007 限制與 HC04／HC05 pending。
+
+R 階段現況（2026-11-16）：R04 [獨立測試](../../plan/github-pat-dpk-storage/evidence/e016-e017-tests.md)完成、R05 [獨立審查](../../plan/github-pat-dpk-storage/evidence/e016-e017-review.md) approved／required fixes 0；R06 publication 進行中，實際結果依帳本與 Git／Draft PR #73 記錄，不預填推送成功。HC04／HC05 仍 pending，topic 不標 complete。

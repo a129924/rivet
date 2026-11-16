@@ -1,6 +1,12 @@
-# E016 — PAT DPK 儲存驗證
+# E017 — PAT DPK 儲存驗證
 
-本 host 只屬於 `github-pat-dpk-storage`，一般 `import GitHubIntegration` 直接使用正式 `GitHubPATDataProtectionStore`。沒有登入、網路、真 PAT 輸入或產品 delete；刪除只在 owned cleanup 使用精確 group／service／`pat` account。Root package 不反向依賴 E016。
+本 host 只屬於 `github-pat-dpk-storage`，一般 `import GitHubIntegration` 直接使用正式 `GitHubPATDataProtectionStore`。沒有登入、網路、真 PAT 輸入或產品 delete；刪除只在 owned cleanup 使用精確 group／service／`pat` account。Root package 不反向依賴 E017。
+
+## 現行位置與原驗收來源
+
+本目錄由原 E016 工具完整搬至 E017；topic 與正式 `Sources` adapter 不變，E016 編號保留給 [PR #72](https://github.com/a129924/rivet/pull/72)。本次只改工具歸屬、runner HOST／編號與現行路徑，不改 bundle ID、簽章／namespace 或控制契約。
+
+下節真人結果仍屬來源 `5465d3c` 當時的 E016 路徑；[原受測 host](https://github.com/a129924/rivet/blob/5465d3c7308e74bc2b3b51878acd190d4f2babda/experiments/E016/github-pat-dpk-storage/Sources/main.swift)與[搬移前說明](https://github.com/a129924/rivet/blob/98521e342b63eb6391e7d538882e984fcb8d39f2/experiments/E016/github-pat-dpk-storage/README.md)固定其來源，不追補為 E017 新版本 live 通過。原 evidence／source map／hash、私有 Xcode／runs／signed artifacts／Human 觀察保持；本次不以新工具操作舊 private roots。完整對應見[移轉紀錄](../../../plan/github-pat-dpk-storage/evidence/e016-e017-relocation.md)。
 
 ## 目前真人驗收結果
 
@@ -15,10 +21,10 @@
 在 repository root：
 
 ```sh
-python3 -B experiments/E016/github-pat-dpk-storage/scripts/pat_storage_probe.py --help
+python3 -B experiments/E017/github-pat-dpk-storage/scripts/pat_storage_probe.py --help
 PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover \
-  -s experiments/E016/github-pat-dpk-storage/Tests -v
-xcodebuild -project experiments/E016/github-pat-dpk-storage/PATStorageProbe.xcodeproj \
+  -s experiments/E017/github-pat-dpk-storage/Tests -v
+xcodebuild -project experiments/E017/github-pat-dpk-storage/PATStorageProbe.xcodeproj \
   -scheme PATStorageProbe -configuration Debug -derivedDataPath "$RIVET_PAT_BUILD" \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= build
 "$RIVET_PAT_BUILD/Build/Products/Debug/PATStorageProbe.app/Contents/MacOS/PATStorageProbe" --self-test
@@ -45,7 +51,7 @@ Runtime 提示門檻：save A ≤1；replace B、fresh A／B、rebuilt B 各 0�
 
 ## 選擇性採用
 
-由 E015 選取 public adapter 接線、真正新程序／重建、absence→write-attempt ownership 與有限 evidence 的方法；沒有複製 OAuth payload codec、登入、歷史 controller、憑證或 ready。正式 PAT query／codec 全部留在 production store；E016 只有受限驗證與 exact cleanup。
+由 E015 選取 public adapter 接線、真正新程序／重建、absence→write-attempt ownership 與有限 evidence 的方法；沒有複製 OAuth payload codec、登入、歷史 controller、憑證或 ready。正式 PAT query／codec 全部留在 production store；E017 只有受限驗證與 exact cleanup。
 
 ## Runner acceptance（RF-P05-01）
 
@@ -53,7 +59,7 @@ Host receipt 的 completed 只代表 host 結果。Runner 只有在 open 正常�
 
 ## P06 前原生 preflight 相容性修正
 
-Designated requirement 從 codesign stdout 解析，stderr 的 Executable 僅為診斷。Profile 可用 exact 或唯一末尾 `.*` prefix 授權一個具體 group；signed app 本身仍須只宣告單一明確非 wildcard group。Signed／profile 兩端 application identifier 支援 canonical／fallback keys，缺值、衝突、wildcard 或不符 E016 固定身分均拒絕。獨立 29 tests 與 bounded review approved 只證明工具回修，不代表任何真 profile／DPK 驗收已通過。
+Designated requirement 從 codesign stdout 解析，stderr 的 Executable 僅為診斷。Profile 可用 exact 或唯一末尾 `.*` prefix 授權一個具體 group；signed app 本身仍須只宣告單一明確非 wildcard group。Signed／profile 兩端 application identifier 支援 canonical／fallback keys，缺值、衝突、wildcard 或不符本 host 固定身分均拒絕。獨立 29 tests 與 bounded review approved 只證明工具回修，不代表任何真 profile／DPK 驗收已通過。
 
 ## Managed profile 的明確建置模式
 
@@ -66,7 +72,7 @@ Designated requirement 從 codesign stdout 解析，stderr 的 Executable 僅為
 若原 run 已有 owned cleanup 的物理結果，另經授權只補驗缺值，可使用獨立入口：
 
 ```sh
-python3 -B experiments/E016/github-pat-dpk-storage/scripts/pat_storage_probe.py \
+python3 -B experiments/E017/github-pat-dpk-storage/scripts/pat_storage_probe.py \
   recover-absence --original-root "$RIVET_PAT_ORIGINAL_RUN" \
   --host-root "$RIVET_PAT_NEW_HOST_RUN" --human-ready
 ```

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""E016 local verification controls. No live action without --human-ready."""
+"""E017 local verification controls. No live action without --human-ready."""
 import argparse
 import datetime as dt
 import errno
@@ -16,7 +16,7 @@ import time
 import uuid
 
 TOPIC = "github-pat-dpk-storage"
-HOST = f"experiments/E016/{TOPIC}"
+HOST = f"experiments/E017/{TOPIC}"
 SOURCES = [
     "Package.swift", "Package.resolved",
     "Sources/BoundedContexts/GitHubIntegration/Stores/GitHubPATDataProtectionStore.swift",
