@@ -63,3 +63,11 @@ Tester任務完成：unsigned先驗結果與缺口已如實保存，明示交Rev
 以上補足前輪純helper測試未接實際runner之缺口。仍未測Swift host fresh的mock store write監測、完整成功launch→machine→public管線、實際簽章／PID/starttime取得或DPK；相關靜態分支與live前提交Reviewer審查。Human attestation仍由主session於兩階段間完成，工具不自動核對。
 
 本次source/runner已變更，前輪unsigned companion不再適用live；最終freeze應在審查後重建。獨立重驗結果明示交Reviewer，不自評required fixes closed或approval。T09維持未執行。
+
+## Certificate command bounded fix：獨立重驗
+
+Tester親跑unittest discover：17tests／0.022秒，exit0；git diff --check exit0；正式 Sources／Tests／Package／HTTPClient 對目前HEAD零diff。只檢視runner一行commandshape改動、新增regression及README準備停止紀錄；無build／sign／preflight／launch／DPK操作。
+
+新CertificateCommandChecks實際呼叫signed_info，mock command模擬optional-argument解析，並以固定clock、fake profile／certificate和fingerprint完成驗證。Tester另於記憶體中把signed_info恢復舊split參數再執行該regression，確實得到唯一可歸因錯誤detached_optional_argument_is_an_input_path；沒有改檔或執行真codesign。這支持新測試能區分兩種命令形狀，不構成真signed preflight通過證據。
+
+014bab2已signed但工具準備停止／無完整transitionreceipt的原狀由主session保留；本Tester未讀寫其私有App／marker／receipts，未補造結果、重試簽章或改額度。新的準備須由主session依Human明確續行處理。T09仍未執行；回交Reviewer判定bounded fix。

@@ -76,3 +76,11 @@ sourcefreeze helper在建置前後比較commit／dirty狀態／實際package與h
 - 以mock實際launch_phase的測試取代未接流程的policy toy helpers：檢查launch前consume、啟動中斷後不可再Popen、source/binary/actualprocess不符不得authorize、fresh缺first通過／termination／provenance不得launch。另mock signing轉換檢查替換unsignedbuild不codesign，以及preflight拒絕缺鏈。
 
 回修後16個fakechecks通過，全部使用暫存fixture與mock subprocess，沒有launch/sign/DPK。原7個先驗數字保留歷史，不能當本輪最新覆蓋。最終sourcefreeze須待最後文件／review完成後重建；先前unsigned companion不能代表後續回修來源。
+
+## 014bab2 準備停止與 bounded command bugfix
+
+2026-11-16，在乾淨014bab2來源及全新私有輸出執行sourcefreeze unsigned build後，唯一sign_prepared嘗試實際完成codesign，但後續signed_info在公開certificate擷取的optional argument語法停止。signing-attempt marker／stopped receipt／已signed App保持原狀；沒有完整signing.json，未進preflight，未執行first／fresh、App launch或DPK。這是工具準備失敗，不是T09假設失敗，實驗仍未執行。
+
+唯讀診斷：codesign signature verify通過、exact AppID／group相符；原split參數`--extract-certificates <prefix>`在此codesign版本將prefix當輸入path而exit1。唯讀改用`--extract-certificates=<prefix>`擷取成功，實際leaf certificate SHA-256與既定pin相符。診斷只抽出公開certificate到暫存，沒有第二次簽章或資產修改。
+
+本次限定修正signed_info的一行參數，新增走完整signed_info且模擬真CLI optional-argument解析／產生certificate檔的regression；舊split形狀先得到可歸因red，修正後17fakechecks green。測試固定clock，避免既定profile到期污染純commandshape判準。未更改一次停止規則、未補造舊transition、未重build／re-sign；新的準備嘗試須在fix獨立審查後由主session向Human交代並確認，不自行換root繞過marker。

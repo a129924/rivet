@@ -79,3 +79,9 @@ Reviewer要求unsigned→signed provenance鏈及實際launch_phase mock coverage
 ## 2026-11-16 E016 unsigned 回修審查
 
 獨立Tester親跑16fake checks、format/lint/Python AST/diffcheck通過；production零差異。Reviewer明示approved（unsigned harness／回修），兩項required fixes closed：unsigned→signed來源轉換鏈，actual orchestration mock guards。准凍結後重建／manual signing／preflight，不代表signed ready或T09 passed。最終Human觀察與真DPK兩程序仍pending；不沿用舊build。
+
+## 2026-11-16 簽章準備停止與 bounded fix
+
+014bab2 的全新 unsigned build 成功；codesign 實際成功，後續 certificate extraction 因 optional argument 分離語法錯誤停止，沒有完整 signing transition receipt。未進 preflight、未啟 App、未操作 DPK；T09 仍未執行，first/fresh 額度未消耗。舊 App、attempt marker、停止收據保持不動，未重建／重簽或補造 receipt。
+
+signed_info 已改為單一 --extract-certificates=<prefix> 參數。獨立 Tester 17fakechecks/diffcheck 通過，記憶體反向形狀驗證能拒舊寫法；Reviewer approved（bounded command fix），無其他required fix。下一停點：依 COMMANDS 的不自行重試規則等待 Human 明確續行，才可用修正版重新凍結/build/sign/preflight。此處不是 T09 passed 或 signed-ready。

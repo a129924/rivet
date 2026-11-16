@@ -1,6 +1,8 @@
 from contextlib import ExitStack
+import datetime as dt
 import importlib.util
 from pathlib import Path
+import plistlib
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -170,6 +172,57 @@ class SigningChecks(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):
                 MODULE.preflight(self.app, self.root / 'run')
         self.assertFalse((self.root / 'run').exists())
+
+class CertificateCommandChecks(unittest.TestCase):
+    def test_signed_info_uses_attached_optional_certificate_prefix(self):
+        # Model codesign's real optional-argument parser: a detached prefix is
+        # treated as an input path, not as the extraction destination.
+        with tempfile.TemporaryDirectory() as scratch:
+            app = Path(scratch) / 'E016LogoutProbe.app'
+            executable = app / 'Contents/MacOS/E016LogoutProbe'
+            executable.parent.mkdir(parents=True)
+            executable.write_bytes(b'fake-binary')
+            (app / 'Contents/Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': MODULE.BUNDLE_ID}))
+            profile_bytes = b'fake-profile'
+            (app / 'Contents/embedded.provisionprofile').write_bytes(profile_bytes)
+            certificate = b'fake-public-certificate'
+            profile = {'UUID': MODULE.PROFILE_UUID,
+                       'ExpirationDate': dt.datetime(2026, 11, 17, 7, 28, 8),
+                       'Entitlements': {'com.apple.application-identifier': MODULE.APP_ID,
+                                        'keychain-access-groups': ['4Q76YL5UQ5.*']},
+                       'DeveloperCertificates': [certificate]}
+            entitlement = {'com.apple.application-identifier': MODULE.APP_ID,
+                           'keychain-access-groups': [MODULE.APP_ID]}
+            profile_document = plistlib.dumps(profile)
+            class FrozenTime(dt.datetime):
+                @classmethod
+                def now(cls, tz=None):
+                    return cls(2026, 11, 16, 0, 0, 0, tzinfo=tz)
+            extraction_calls = []
+            def emulate_command(args):
+                if args[:2] == ['codesign', '--verify']:
+                    return b''
+                if args[:2] == ['security', 'cms']:
+                    return profile_document
+                if args[:3] == ['codesign', '-d', '--entitlements']:
+                    return plistlib.dumps(entitlement)
+                if args[:2] == ['codesign', '-d']:
+                    extraction_calls.append(args)
+                    if len(args) != 4 or not args[2].startswith('--extract-certificates='):
+                        raise MODULE.ProtocolError('detached_optional_argument_is_an_input_path')
+                    prefix = args[2].split('=', 1)[1]
+                    Path(prefix + '0').write_bytes(certificate)
+                    return b''
+                if args == ['xcodebuild', '-version']:
+                    return b'fake-Xcode'
+                raise AssertionError('Unexpected command')
+            with patch.object(MODULE.dt, 'datetime', FrozenTime), \
+                 patch.object(MODULE, 'PROFILE_HASH', MODULE.sha(profile_bytes)), \
+                 patch.object(MODULE, 'CERT_HASH', MODULE.sha(certificate)), \
+                 patch.object(MODULE, 'command', side_effect=emulate_command):
+                value = MODULE.signed_info(app)
+            self.assertEqual(value['binary_hash'], MODULE.sha(b'fake-binary'))
+            self.assertEqual(len(extraction_calls), 1)
 
 class ReceiptChecks(unittest.TestCase):
     def test_projection_rejects_payload_path_and_identity(self):

@@ -126,7 +126,7 @@ def signed_info(app):
     import tempfile
     with tempfile.TemporaryDirectory(prefix='e016-cert-') as scratch:
         prefix = str(Path(scratch) / 'cert')
-        command(['codesign', '-d', '--extract-certificates', prefix, str(app)])
+        command(['codesign', '-d', '--extract-certificates=' + prefix, str(app)])
         require_equal(sha(Path(prefix + '0').read_bytes()), CERT_HASH)
     if not any(sha(cert) == CERT_HASH for cert in profile['DeveloperCertificates']):
         raise ProtocolError('profile_certificate')
