@@ -199,3 +199,17 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 ### Q 輪：獨立反向 PKCE 診斷 version 2
 
 本輪僅改善獨立驗證 CLI 的有限脫敏分類，不改正式 OAuth、credential/provider/scope或refresh/401契約。事前固定完整模板與case/衝突規則，區分GitHub拒絕及已證明PKCE拒絕；僅提及verifier、一般invalid_grant或unknown都不是通過證據。P兩次HTTP400 unknown/indeterminate保留，不追補原回應。Q新missing/wrong各一次、總2/2已用完：兩案HTTP400 invalid_grant/code_problem、無token，description unknown且mentions_verifier=true，均無法判定；hint不能證明PKCE原因，不擴表或重試。受控25tests通過不代表遠端通過。[新版來源與證據](../../plan/github-first-sign-in/evidence/pkce-diagnostics-v2.md)。正常登入/再次查詢及canvas既有Human結果沿用；正式Rivet產品登入UI、完整遠端refresh/401仍未交付或pending。
+
+## 本地登出
+
+`OAuthTokenProvider.signOut()` 是單一連線 owner 的明確 lifecycle 意圖。它先永久退休 provider，清空其 credential／snapshot references，等待已啟動的 store save 真正結束，再清除 credential。晚到 load／refresh 結果不發布、不保存；原 caller cancellation 不因此變更，清除也不因登出 caller 取消而中止。已取得的 token 或已發出的 request 無法撤回。
+
+同時登出共用清除，成功後重複呼叫成功；失敗仍保持退休，只可重試清除。store 須實作 additive `OAuthCredentialClearingStore`，否則回報 `.unsupportedStore`，不宣稱已清除。provider 新公開 `.signedOut` case 對 exhaustive switches 有 source compatibility 影響；REST／GraphQL／scope 映射成既有 authentication-required 語意。新登入必須清除成功後另建 provider。
+
+保證範圍是同 namespace 的唯一 owner／writer，沒有跨 facade／程序協調，也不保證記憶體安全抹除。晚到 refresh／已開始 save 的競態保證沿正式受控測試；系統驗證與這些測試分開。
+
+2026-11-16，獨立 [E016 本地登出實驗](../../plan/github-oauth-local-sign-out/evidence/e016-live.md)在受測來源 `bb6752aa483a68043174723a6b3ff2653abe79ce`，以真 DPK、固定合成完整 credential／configuration／sentinel，完成正式 `signOut()`、同程序 credential absent，以及同一 frozen signed binary 的新 exact process 只讀確認 credential absent、configuration／sentinel 保持。兩程序身分與退出均有證據，Human 每段完整觀察的提示 class 為 zero；獨立 Reviewer 已 approved 本次有限實驗，Human 最終 topic review 仍 pending。
+
+結果只適用當次同機／同 GUI 使用者／既有 signer、有效 profile、exact group、frozen binary 與唯一 writer。它沒有重驗 live refresh，也不代表真 OAuth、產品 UI、其他 profile、跨 writer 或斷電 durability。舊 `ff672c7` first 的無法判定與已耗額度保留；新增序列的 first／fresh 也均已使用，沒有重試或 cleanup。原 public receipts 的 Human unknown 保留，後補獨立 attestation 綁其 SHA；configuration／sentinel 留存。後續文件 commit 不是受測來源，也不改寫已完成的歷史 run。
+
+[登出順序](diagrams/github-oauth-local-sign-out/sign-out.html) · [執行契約](../../plan/github-oauth-local-sign-out/github-oauth-local-sign-out.plan.md)

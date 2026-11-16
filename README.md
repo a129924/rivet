@@ -21,6 +21,8 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 `GitHubIntegration` 新增 [OAuth／PAT 雙登入契約](docs/architecture/github-dual-login-contract.md)：請求 VO、PAT 本地驗證、共同 async Protocol 與有限 Outcome；目前僅受控契約，不含正式登入服務、UI 接線或 session／clients 交接。
 
+`GitHubIntegration` 已提供正式本地 `OAuthTokenProvider.signOut()`：永久退休舊 provider、等待已開始寫入結束後精確清除 credential，保留 App configuration；晚到 refresh 由受控測試驗證不寫回。2026-11-16 的 [E016 有限 DPK 驗證](plan/github-oauth-local-sign-out/evidence/e016-live.md)以來源 `bb6752a`、同一 frozen signed binary 及固定合成資料，完成登出後同程序／fresh process credential absent、configuration／sentinel 保持，兩段 Human 全程觀察 class 為 zero；獨立 Reviewer approved，Human 最終 topic review pending。只支持當次同機／GUI 使用者／既有 signer、profile、exact group 與唯一 writer，不代表真 OAuth、產品 UI、其他環境或 durability。舊無法判定／已耗額度保留，新增序列也已用完；configuration／sentinel 未清理。
+
 Reader fixture 驗收 host、Runtime、資源與專屬測試集中於 [E012](experiments/E012/README.md)，root target／正式 bridge 與 TS pipeline 保持。
 
 登入驗收展示的 host、Runtime 與專屬測試集中於 [E011](experiments/E011/README.md)，仍由 root package 既有 target 建置。這只修正歸屬，不撤回正式 UI 採用或改寫原 topic 驗收。
