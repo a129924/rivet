@@ -12,7 +12,7 @@ Topic `github-oauth-local-sign-out`；feature branch `feat/github-oauth-local-si
 - 修改同 target OAuthTokenProvider、GitHubOAuthDataProtectionStores，及 GitHubHTTPClient／GitHubGraphQLClient／GitHubClientScope 的必要 enum mapping。
 - 修改對應 GitHubIntegration tests、external consumer tests、isolation checks；不擴張其他 BC／HTTPClient／Presentation。
 - 長期結論回寫 OAuth dual-client／credential-persistence 文件，必要 README／architecture index 入口；新增最多一份 topic sequence 圖，不改歷史驗收結果。
-- E016 候選目錄僅收隔離假憑證實驗必要 harness、八段 README 與安全 receipts；執行前重查編號。E001–E015 不修改。
+- E016 既有目錄僅收隔離假憑證實驗必要 harness、八段 README 與安全 receipts；不得覆寫歷史證據。E001–E015 不修改。
 - 無 repo 檔案刪除計畫；PR Lens 僅 repo 外 local-only 產物。不得因工具啟用修改 config／hooks／AGENTS／gitignore。
 
 ## 實作與驗收
@@ -55,6 +55,18 @@ Topic `github-oauth-local-sign-out`；feature branch `feat/github-oauth-local-si
 
 ## 派遣與停止
 
-Plan-Creator 落四份→獨立 Plan-Reviewer 明示 approved→Implementer→Tester→獨立 Reviewer→Human review。scope／locked contract 衝突、跨 writer 要求及不能解除的簽章前提缺口交回原決策位置，不冒稱完成。18:20 台北為本輪收斂界線，保留實際完成、未驗證與下一停點，不因時間到宣稱 gate passed。Human 於本輪明確授權按 topic commit、push、開 Draft PR；執行前仍檢查 staged diff 語意邊界，由主 agent 處理，最後交 Human review。
+Plan-Creator 落四份→獨立 Plan-Reviewer 明示 approved→Implementer→Tester→獨立 Reviewer→Human review。scope／locked contract 衝突、跨 writer 要求及不能解除的簽章前提缺口交回原決策位置，不冒稱完成。2026-11-13 的18:20台北收斂界線作歷史保留；2026-11-16續行僅補T09。保留實際完成、未驗證與下一停點，不以舊時間界線宣稱 gate passed。Human 於本輪明確授權按 topic commit、push、開 Draft PR；執行前仍檢查 staged diff 語意邊界，由主 agent 處理，最後交 Human review。
 
 [狀態帳本](github-oauth-local-sign-out.step.md)
+
+## 2026-11-16：T09 有限執行安排
+
+沿 technical-spec 的既有簽章資產與 E016 專屬 namespace／output 決策；不改已審查的 src。具體固定輸入、兩程序 ordering、簽章與程序 identity、收據 allowlist／殘留規則全部依該補充契約。
+
+1. Implementer 僅在 E016 新增獨立 public-API host、Xcode project/resources、最小 preflight/first/fresh runner、fake protocol checks；補八段 README 的可重現命令。unsigned build 不得碰 DPK；fake checks 檢查 absence 前置、phase write policy、receipt redaction、不可重試及 process/provenance mismatch fail closed。
+2. 交獨立 Reviewer 檢查 harness／fake evidence／精確命令與來源 freeze；不以舊 S05 的 code approved 取代新 harness 審查。
+3. 審查後 manual signing，核新 E016 app 的 embedded profile/cert/exact group/AppID、signature、expiry/source/binary hashes，無新增資產／舊 app/profile 修改。preflight 只驗環境與 provenance，不 seed/delete。
+4. 工具與命令均具體可檢視後，主 session 才安排 Human 兩程序完整提示觀察。first 一次 seed/readback→formal signOut→same-process readback→exit；證 exact process 結束後 fresh 相同 signed binary 一次只讀。實際 prompt count 未知不得填0，Human attestation 綁 receipt hash。
+5. Tester 依原成功／失敗／無法判定分類，將 safe receipts 與執行日期／實際停止點回填 E016，交獨立 Reviewer。configuration/sentinel 殘留如實記錄，不增加清理序列。無新OAuth、無refresh/network；T09之外仍沿11/13受控證據。
+
+任一first中斷即停止，不換run重試；fresh前置不足不能補跑。既有profile到期或需新資產則停止回Human，不擴張授權。新harness／環境與T09仍未執行，planning補充不等於實驗完成。

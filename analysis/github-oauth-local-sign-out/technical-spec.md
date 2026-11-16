@@ -45,3 +45,36 @@ Graphify 只用既有 graph bounded query 並核對 revision／source，所有 C
 ## 連結
 
 [需求](requirements.md) · [執行計畫](../../plan/github-oauth-local-sign-out/github-oauth-local-sign-out.plan.md) · [狀態帳本](../../plan/github-oauth-local-sign-out/github-oauth-local-sign-out.step.md)
+
+## 2026-11-16：T09 獨立 harness 補充契約
+
+本節只具體化既定 T09，不改正式 API。Explorer 於 2026-11-16 查得既有資產，主 session 已選用較晚到期的一組；找到資產不代表 E016 已完成簽章／啟動／DPK 存取。
+
+### 簽章與 host
+
+- 重用 exact application-identifier `4Q76YL5UQ5.local.rivet.dpkcontinuity.b90f5f16d3c8452faf9186b88d6dc64e`；CFBundleIdentifier 為移除 team prefix 後的 `local.rivet.dpkcontinuity.b90f5f16d3c8452faf9186b88d6dc64e`；唯一 exact keychain-access-group 等於完整 application-identifier，不使用 wildcard group。
+- 既有 Apple Development identity SHA-1 `59E8ED4B0CCD45ED27129C7A3C6CC1EC510B87E9`，公開 certificate SHA-256 `5c267546d016f41f0901e535847a0ab44f81382f7aaadffbbb56a09941139440`。重用 profile UUID `b6dca18c-18aa-438b-b2d9-0fcf6f577399`，expiry `2026-11-17T07:28:08Z`（台北 15:28:08）；每段啟動前都須仍有效，過期停止，不借 certificate 效期延長。
+- E016 新 macOS application target `E016LogoutProbe`，直接連結此 feature worktree root package 的 public GitHubIntegration；non-sandbox、ENABLE_DEBUG_DYLIB=NO、單一 exact group。參照 E015 project/entitlements 形狀，不複製其 live runner 契約、stage 額度、namespace、ready 或舊 receipt。
+- 只新增 E016 host/project/Resources、最小 runner 與 fake checks；不修改 root package/Sources/Tests、不導入 production 控制開關。E016 專用 private build/output/DerivedData；不覆蓋原 E010/E015 app。
+- manual signing 指定原 identity/profile；禁止 automatic provisioning、register device、新資產、trust/ACL 變更。unsigned/fake checks 與獨立審查先完成，再簽章 preflight，最後才 Human 完整觀察的唯一 run。
+
+### 資料與兩程序協定
+
+- 每 run 僅一個新 UUID，主 service `local.rivet.experiment.e016.logout.<UUID>`，sentinel service 為主 service 加 `.sentinel`；同 exact group。主 service 經正式 stores 保存 fake configuration 與完整 credential，sentinel 經另一正式 stores 的 credential account 保存完整不同 fake bundle。
+- clientID/clientSecret/accessToken/refreshToken、scope、expiry 均為固定合成 fixture，expiry 選未到期；fixture 在 unsigned 階段凍結。收據只記逐欄相符布林／hash，不輸出任何 payload。刷新 fetcher 被呼叫即 fail，不建立任何網路 transport；in-flight refresh 保證只沿既有受控測試，不冒稱本序列重驗。
+- first 程序先讀三者均 absent，錯誤或存在立即停止且不覆寫；逐一 seed/readback 成功後，建立 caller-owned 正式 provider，僅呼叫 provider.signOut；驗主 credential absent、configuration/sentinel intact，寫一次 receipt 後正常退出。不得直接以 adapter.clear 代替正式入口。
+- fresh 程序只讀相同 service/run UUID；同一份 signed binary/source/profile，不 rebuild/resign，驗 credential absent、configuration/sentinel intact。沒有 seed/save/delete/retry/cleanup 分支。
+- 兩段均以完整 App path 的 bundle launch；不以 bundle ID lookup、不用 open -n 或 raw GUI executable。runner 必須核 actual PID/start time/executable path/binary hash；若 LaunchServices 導向舊 E010 app，停止且不讀寫 Keychain。先確認相關舊 app 已退出，fresh 前另確認 first 的 exact process 已實際退出；未知不 kill、不假設退出。
+- App 在任何 DPK 操作前自行核 bundle/executable 與 frozen source/binary/profile identity、phase 與 run UUID；runner 核對 actual process。此 guard 只在 E016，不能增加 production 驗證 API。
+
+### 最小實作與收據
+
+可重現入口固定 E016 下 `E016LogoutProbe.xcodeproj`（shared scheme E016LogoutProbe）、`Sources/main.swift`、`Resources/Info.plist`、`Resources/E016LogoutProbe.entitlements`、`scripts/e016_live.py`、`Tests/test_e016_protocol.py`。runner 只提供 preflight/first/fresh 三個有限命令，不建立通用任務引擎；build/sign 使用明確 xcodebuild/codesign 準備命令，實際完整參數由 Implementer 在 unsigned review handoff 凍結。
+
+來源凍結 manifest 包含當前 commit、dirty source 的逐檔 hash、root Package.swift/Package.resolved、實際使用的 package source、E016 host/project/resources/runner；簽章後綁 Mach-O/app bundle/embedded profile hash、cert fingerprint、工具版本及 signature verification 結果。兩段 source/binary/profile 必須相同。private run root owner-only；本機路徑、raw identity/group/profile、實際 PID/start time 只留私有 provenance，不進公開 projection。
+
+公開 receipt 僅 allowlisted booleans/enums/SHA-256：schema/phase/outcome/failureKind enums、run/process/provenance hashes、seed_absent/seed_readback/signout_returned/same_process_absent/configuration_intact/sentinel_intact/fresh_read_verified/previous_process_terminated/launch_identity_verified、source/binary/profile hashes。任意 error 原文與 payload 禁止。各寫入前保存 write_attempted 布林；中斷保留可能已寫入狀態，不用新 UUID 掩蓋。
+
+Human 每段完整觀察與實際 prompt count 綁 machine receipt hash；private attestation 保存實際數字，公開只出 `zero/nonzero/unknown` enum 與 observation_complete 布林／attestation hash，未知不得填 zero。提示數不是預設 0，也不是以舊 E015 觀察推得。
+
+任一中斷、不相符、超時、簽章/profile/程序歸屬前提不足皆停止，不自動重試、不清理殘留。唯一 run 的 first 一旦啟動就消耗序列，即使未產生完整 receipt 仍記錄。fresh 只可在 first 成功且退出已證明後執行一次。T09 判準與 E016 八段 README 一致。

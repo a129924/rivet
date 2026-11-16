@@ -42,3 +42,7 @@
 - [技術契約](technical-spec.md)
 - [執行計畫](../../plan/github-oauth-local-sign-out/github-oauth-local-sign-out.plan.md)
 - [狀態帳本](../../plan/github-oauth-local-sign-out/github-oauth-local-sign-out.step.md)
+
+## 2026-11-16：T09 續行邊界
+
+Human 續行原計畫；只補 E016 獨立 signed harness 與一次兩程序序列，不重開已受限 approved 的 src API／競態設計。不新增或更新 cert/profile/AppID，不修改 E010／E015 bundle、profile、items 或歷史。沿既有 E010 AppID 的可用簽章資產，新 E016 output 與每 run UUID namespace；選定資產及程序契約見 technical-spec。剩餘 configuration／sentinel 如實記錄，不額外清理。提示數未知不能填 0。
