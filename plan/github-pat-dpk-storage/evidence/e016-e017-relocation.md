@@ -40,3 +40,11 @@
 R04 [獨立測試](e016-e017-tests.md) completed，R05 [獨立 review](e016-e017-review.md) approved／required fixes 0；以下是 publication 前唯讀重查，不取代原 Explorer 當時 snapshot。PR72 已由其他工作線合併，原 head `641789fad88d2a3ad7e3fe990fa56d1c0e540fe3`，merge／remote dev 為 `88ec4a0e13bf68fb489fd9b06895591a0663ba53`；該新 tree 無 `experiments/E017` 或獨立 E017 編號宣告。其 worktree 當時已 clean，未由本工作修改。
 
 其餘 remote heads 為 docs `82b64bbb8076f0128074ed559f0302c8594d88dd`、本 feature `98521e342b63eb6391e7d538882e984fcb8d39f2`、main `3ec3042bc9ab9b4604c89117e1369b0815ddd414`，均與原 snapshot 相同；open PR 僅未變的 #68 與本題 #73。本題已核准的新 E017 目錄不算其他 topic 占用。沒有 fetch、改別 worktree、重選編號或改原 live 來源。R06 staged semantic review／原 hooks／commit／push／PR73 回讀尚待本次實際執行，後續以本題 Git history 與帳本記錄。
+
+## R06 實際 publication 與停點
+
+搬移 commit [`831b0f12e33d28d722c6584a2e0948851be0ffbc`](https://github.com/a129924/rivet/commit/831b0f12e33d28d722c6584a2e0948851be0ffbc) 已完成 staged semantic review：僅十檔 rename、六份 current metadata 與四份本次新 evidence；八檔 bytes／十檔 modes 不變、runner 僅兩字串，production／舊 evidence／圖零差異，無私人值或本機絕對路徑。原六 hooks（whitespace、EOF、Swift format、consumer contract、SwiftLint、renderer）全部 Passed，沒有 skip。
+
+已 push 既有 `feat/github-pat-dpk-storage`，remote HEAD 與該 commit 一致；[原 Draft PR #73](https://github.com/a129924/rivet/pull/73) 更新後讀回 body 完全一致，head 同該 commit、base `dev`、Draft=true、merged=false。PR 說明區分正式 Sources 實作、原 source5465／E016 實機驗收與 E017 離線搬移結果，保留原成功／unknown、PR Lens 初始範圍與 Graphify 限制。
+
+本節及帳本為其後最小 publication metadata 收尾，該 commit／push 由本題 Git history 定位，避免自我 SHA 引用；沒有重跑 runtime／DPK、改舊收據、原 source keys／hash 或私人資產。R06 completed，HC04／HC05 仍 pending，保留 Draft 並停 Human review，不 merge／ready／標 topic complete。

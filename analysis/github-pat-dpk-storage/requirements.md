@@ -70,4 +70,4 @@ Explorer 已唯讀確認 E017 未占用；本題準備基準為 `98521e342b63eb6
 
 原實機驗收仍是 source `5465d3c` 下的 E016 路徑。既有 evidence bytes、live export 的 E016 source keys／hash、原 signed artifacts 與成功／unknown／Human 觀察全部保留；E017 只表示搬移後工具歸屬，不追補為新來源簽章或真人驗收通過。新的移轉紀錄須同時呈現「E006／E007／E015 既有成果→正式 Sources 採用→原 E016 實機驗收」與「現行 E017 工具位置」兩條證據鏈，保持 E007 限制與 HC04／HC05 pending。
 
-R 階段現況（2026-11-16）：R04 [獨立測試](../../plan/github-pat-dpk-storage/evidence/e016-e017-tests.md)完成、R05 [獨立審查](../../plan/github-pat-dpk-storage/evidence/e016-e017-review.md) approved／required fixes 0；R06 publication 進行中，實際結果依帳本與 Git／Draft PR #73 記錄，不預填推送成功。HC04／HC05 仍 pending，topic 不標 complete。
+R 階段現況（2026-11-16）：R04 [獨立測試](../../plan/github-pat-dpk-storage/evidence/e016-e017-tests.md)完成、R05 [獨立審查](../../plan/github-pat-dpk-storage/evidence/e016-e017-review.md) approved／required fixes 0；R06 publication 已完成：搬移 commit `831b0f12e33d28d722c6584a2e0948851be0ffbc` 六 hooks Passed、push／remote HEAD 一致，既有 Draft PR #73 body 與 head 讀回確認；後續 metadata commit 由 Git history 定位。HC04／HC05 仍 pending，topic 不標 complete。

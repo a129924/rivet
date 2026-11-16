@@ -125,4 +125,4 @@ TC-R04 各 variant 使用本次全新 scratch DerivedData／SourcePackages，明
 
 移轉證據記完整 mapping／內容 hash、原 `5465d3c` 與 `98521e3` 固定 GitHub links、新舊兩條採用／驗收鏈。既有 evidence 的舊 E016 keys／argv／links、原 P03／TC05 歷史與 frozen 圖為明列 historical exceptions，保持 bytes；不能全域替換舊路徑。Current docs 改指 E017，歷史來源改以新 mapping 的固定 commit links 解釋，不修改原證據。
 
-R 階段現況（2026-11-16）：R04 [獨立測試](../../plan/github-pat-dpk-storage/evidence/e016-e017-tests.md)完成、R05 [獨立審查](../../plan/github-pat-dpk-storage/evidence/e016-e017-review.md) approved／required fixes 0；R06 publication 進行中，實際結果依帳本與 Git／Draft PR #73 記錄，不預填推送成功。HC04／HC05 仍 pending，topic 不標 complete。
+R 階段現況（2026-11-16）：R04 [獨立測試](../../plan/github-pat-dpk-storage/evidence/e016-e017-tests.md)完成、R05 [獨立審查](../../plan/github-pat-dpk-storage/evidence/e016-e017-review.md) approved／required fixes 0；R06 publication 已完成：搬移 commit `831b0f12e33d28d722c6584a2e0948851be0ffbc` 六 hooks Passed、push／remote HEAD 一致，既有 Draft PR #73 body 與 head 讀回確認；後續 metadata commit 由 Git history 定位。HC04／HC05 仍 pending，topic 不標 complete。
