@@ -2,6 +2,7 @@
 """E016 local verification controls. No live action without --human-ready."""
 import argparse
 import datetime as dt
+import errno
 import hashlib
 import json
 import os
@@ -11,6 +12,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import time
 import uuid
 
 TOPIC = "github-pat-dpk-storage"
@@ -27,6 +29,8 @@ SOURCES = [
 PHASES = ["save-a", "read-a", "replace-b", "read-b", "rebuilt-read-b", "cleanup"]
 LIMITS = {phase: (1 if phase == "save-a" else 0) for phase in PHASES}
 LIMITS["cleanup"] = None  # Record cleanup prompts; no additional UX threshold.
+RECOVERY_PHASE = "verify-absence"
+LIMITS[RECOVERY_PHASE] = 0
 
 
 class GuardError(Exception):
@@ -167,11 +171,18 @@ def inspect(app, group, root):
 def acceptance_binding(root, phase, machine):
     variant = machine["buildVariant"]
     require(variant in ("debug", "rebuilt"))
-    return {"runID": read(root / "run.json")["runID"], "phase": phase,
+    run = read(root / "run.json")
+    binding = {"runID": run["runID"], "phase": phase,
             "attemptSHA256": digest(root / (phase + ".attempt.json")),
             "hostSHA256": digest(root / (phase + ".host.json")),
             "buildProofSHA256": digest(root / ("build-" + variant + ".json")),
             "sourceProofSHA256": digest(root / "source.json")}
+    if "recoveryID" in run:
+        require(phase == RECOVERY_PHASE and machine.get("recoveryID") == run["recoveryID"])
+        verify_recovery_links(root)
+        binding.update(recoveryID=run["recoveryID"], amendmentSHA256=digest(root / "amendment.json"),
+                       controllerSHA256=digest(root / "controller.py"))
+    return binding
 
 
 def accepted(root, phase, machine):
@@ -183,7 +194,7 @@ def accepted(root, phase, machine):
         expected = acceptance_binding(root, phase, machine)
         return (proof == expected and machine["runID"] == expected["runID"]
                 and machine["phase"] == phase and machine["outcome"] == "completed")
-    except (FileNotFoundError, KeyError, TypeError, ValueError):
+    except (FileNotFoundError, KeyError, TypeError, ValueError, GuardError):
         return False
 
 
@@ -205,9 +216,17 @@ def no_active_host(app):
     require(not any(line.strip().split(None, 1)[-1] == target for line in listing.splitlines() if line.strip()))
 
 
+def recovery_trace(root, run):
+    source = read(root / "source.json")
+    return ("recoveryID" in run or root.name.startswith("recovery-") or
+            "recoveryID" in source or "recoveryPurpose" in source or
+            any(os.path.lexists(root / leaf) for leaf in ("amendment.json", "controller.py")))
+
+
 def build(args):
     require(args.human_ready)
     root, run, repo, _ = context(args.root)
+    require(not recovery_trace(root, run))
     variant = args.variant
     if variant == "rebuilt":
         observed(root, "read-b")
@@ -260,10 +279,106 @@ def build(args):
     print("build-completed; build/sign prompt observation remains separate")
 
 
+def receipt_snapshot(path):
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as handle:
+        info = os.fstat(handle.fileno())
+        require(info.st_uid == os.getuid() and stat.S_ISREG(info.st_mode)
+                and stat.S_IMODE(info.st_mode) == 0o600 and info.st_size <= 1_048_576)
+        raw = handle.read(1_048_577)
+    require(len(raw) <= 1_048_576)
+    return json.loads(raw), hashlib.sha256(raw).hexdigest()
+
+
+def validate_receipt(root, run, phase, proof, variant, receipt, history_roots):
+    require(receipt["runID"] == run["runID"] and receipt["phase"] == phase)
+    require(receipt["binarySHA256"] == proof["binarySHA256"] and receipt["buildVariant"] == variant)
+    require(receipt["outcome"] == "completed")
+    require(type(receipt["processID"]) is int and receipt["processID"] > 0)
+    require(type(receipt["processStartSeconds"]) is int and receipt["processStartSeconds"] > 0)
+    require(type(receipt["processStartMicroseconds"]) is int
+            and 0 <= receipt["processStartMicroseconds"] < 1_000_000)
+    require(isinstance(receipt["processInstance"], str) and receipt["processInstance"])
+    if "recoveryID" in run:
+        attempt = read(root / (phase + ".attempt.json"))
+        amendment = read(root / "amendment.json")
+        require(phase == RECOVERY_PHASE and receipt.get("recoveryID") == run["recoveryID"]
+                == attempt.get("recoveryID") == amendment.get("recoveryID"))
+        require(attempt.get("amendmentSHA256") == digest(root / "amendment.json"))
+    for previous_root in history_roots:
+        for other in PHASES + [RECOVERY_PHASE]:
+            previous = previous_root / (other + ".host.json")
+            if previous == root / (phase + ".host.json") or not previous.exists():
+                continue
+            prior = read(previous)
+            require(prior["processInstance"] != receipt["processInstance"])
+            require((prior["processID"], prior["processStartSeconds"], prior["processStartMicroseconds"])
+                    != (receipt["processID"], receipt["processStartSeconds"], receipt["processStartMicroseconds"]))
+
+
+def wait_for_receipt_exit(root, run, phase, proof, variant, history_roots, timeout=120):
+    deadline = time.monotonic() + timeout
+    first_sha = None
+    path = root / (phase + ".host.json")
+    while time.monotonic() < deadline:
+        try:
+            receipt, snapshot_sha = receipt_snapshot(path)
+        except (FileNotFoundError, json.JSONDecodeError):
+            time.sleep(0.05)
+            continue
+        validate_receipt(root, run, phase, proof, variant, receipt, history_roots)
+        require(first_sha is None or first_sha == snapshot_sha)
+        first_sha = snapshot_sha
+        try:
+            os.kill(receipt["processID"], 0)  # Existence check only; never sends a signal.
+        except ProcessLookupError:
+            break
+        except OSError as error:
+            if error.errno == errno.ESRCH:
+                break
+            raise
+        time.sleep(0.05)
+    else:
+        raise GuardError()
+    final, final_sha = receipt_snapshot(path)
+    require(final_sha == first_sha)
+    validate_receipt(root, run, phase, proof, variant, final, history_roots)
+    return final, final_sha
+
+
+def launch_verified(root, run, phase, variant, proof, history_roots):
+    app = root / "current/PATStorageProbe.app"
+    require(inspect(app, run["accessGroup"], root) == read(root / "identity.json"))
+    require(digest(app / "Contents/MacOS/PATStorageProbe") == proof["binarySHA256"])
+    no_active_host(app)
+    require(not (root / (phase + ".host.json")).exists())
+    attempt = {"phase": phase, "runID": run["runID"], "attemptID": str(uuid.uuid4())}
+    if "recoveryID" in run:
+        verify_recovery_links(root)
+        attempt.update(recoveryID=run["recoveryID"], amendmentSHA256=digest(root / "amendment.json"),
+                       controllerSHA256=digest(root / "controller.py"))
+    publish(root / (phase + ".attempt.json"), attempt)
+    result = command(["open", "-a", str(app), "--args", "--root", str(root), "--phase", phase], timeout=120)
+    require(result.returncode == 0)
+    receipt, stable_sha = wait_for_receipt_exit(root, run, phase, proof, variant, history_roots)
+    context(root)
+    require(inspect(app, run["accessGroup"], root) == read(root / "identity.json"))
+    require(digest(app / "Contents/MacOS/PATStorageProbe") == proof["binarySHA256"])
+    final, final_sha = receipt_snapshot(root / (phase + ".host.json"))
+    require(final_sha == stable_sha and final == receipt)
+    validate_receipt(root, run, phase, proof, variant, final, history_roots)
+    binding = acceptance_binding(root, phase, final)
+    require(binding["hostSHA256"] == stable_sha)
+    publish(root / (phase + ".accepted.json"), binding)
+    print("runner-accepted; Human observation pending")
+
+
 def launch(args):
     require(args.human_ready)
     root, run, _, _ = context(args.root)
+    require(not recovery_trace(root, run))
     phase = args.phase
+    require(phase in PHASES)
     if phase != "cleanup":
         index = PHASES.index(phase)
         if index:
@@ -272,28 +387,123 @@ def launch(args):
     if phase == "cleanup":
         variant = "rebuilt" if (root / "build-rebuilt.json").exists() else "debug"
     proof = read(root / ("build-" + variant + ".json"))
-    app = root / "current/PATStorageProbe.app"
-    require(inspect(app, run["accessGroup"], root) == read(root / "identity.json"))
+    launch_verified(root, run, phase, variant, proof, [root])
+
+
+def original_recovery_context(original):
+    original = Path(original).absolute()
+    require(original == original.resolve())
+    secure(original, directory=True)
+    run = read(original / "run.json")
+    require(set(run) == {"runID", "service", "accessGroup"})
+    require(str(uuid.UUID(run["runID"])) == run["runID"])
+    require(run["service"] == "local.rivet.github.pat.validation." + run["runID"])
+    require(isinstance(run["accessGroup"], str) and run["accessGroup"].strip() and "*" not in run["accessGroup"])
+    for marker in ("absence", "write-attempt"):
+        require(read(original / (marker + ".json")) == run)
+    private = read(original / "source.json")
+    commit = private["commit"]
+    require(isinstance(commit, str) and len(commit) == 40 and all(c in "0123456789abcdef" for c in commit))
+    require(set(private["sources"]) == set(SOURCES))
+    repo = Path(private["repo"])
+    require(repo.is_absolute() and repo == repo.resolve())
+    for name in SOURCES:
+        raw = command(["git", "-C", str(repo), "show", commit + ":" + name]).stdout
+        require(hashlib.sha256(raw).hexdigest() == private["sources"][name])
+    return original, run, private
+
+
+def verify_recovery_links(root):
+    run = read(root / "run.json")
+    recovery_id = run["recoveryID"]
+    require(str(uuid.UUID(recovery_id)) == recovery_id and root.name == "recovery-" + recovery_id)
+    amendment = read(root / "amendment.json")
+    require(amendment["recoveryID"] == recovery_id and amendment["originalRunID"] == run["runID"])
+    require(amendment["purpose"] == "verify-owned-absence")
+    source = read(root / "source.json")
+    require(source.get("recoveryPurpose") == "verify-owned-absence" and source.get("recoveryID") == recovery_id)
+    require(set(run) == {"runID", "service", "accessGroup", "recoveryID"})
+    require({key: value for key, value in run.items() if key != "recoveryID"}
+            == read(Path(amendment["originalRoot"]) / "run.json"))
+    require(digest(root / "controller.py") == amendment["controllerSHA256"])
+    require(digest(root / "source.json") == amendment["recoverySourceProofSHA256"])
+    for key in ("originalFiles", "hostFiles"):
+        parent = Path(amendment["originalRoot" if key == "originalFiles" else "hostRoot"])
+        require(parent.is_absolute() and parent == parent.resolve())
+        secure(parent, directory=True)
+        for name, expected in amendment[key].items():
+            require(name in {"run.json", "source.json", "identity.json", "absence.json", "write-attempt.json",
+                             "build-debug.json", "build-rebuilt.json"} or
+                    any(name == phase + suffix for phase in PHASES
+                        for suffix in (".attempt.json", ".host.json", ".accepted.json", ".observation.json")))
+            secure(parent / name)
+            require(digest(parent / name) == expected)
+    require(digest(Path(amendment["originalRoot"]) / "source.json") == amendment["originalSourceProofSHA256"])
+    require(read(root / "absence.json") == read(Path(amendment["originalRoot"]) / "absence.json"))
+    require(read(root / "write-attempt.json") == read(Path(amendment["originalRoot"]) / "write-attempt.json"))
+
+
+def recover_absence(args):
+    require(args.human_ready)
+    original, old_run, old_source = original_recovery_context(args.original_root)
+    host_root, host_run, _, new_source = context(args.host_root)
+    require(not recovery_trace(host_root, host_run) and host_root != original)
+    require(host_run["accessGroup"] == old_run["accessGroup"])
+    controller = Path(__file__)
+    require(digest(controller) == new_source["sources"][HOST + "/scripts/pat_storage_probe.py"])
+    old_identity = read(original / "identity.json")
+    identity = read(host_root / "identity.json")
+    require(identity == old_identity and identity["group"] == old_run["accessGroup"])
+    variant = "rebuilt" if (host_root / "build-rebuilt.json").exists() else "debug"
+    old_variant = "rebuilt" if (original / "build-rebuilt.json").exists() else "debug"
+    proof = read(host_root / ("build-" + variant + ".json"))
+    old_proof = read(original / ("build-" + old_variant + ".json"))
+    app = host_root / "current/PATStorageProbe.app"
+    old_app = original / "current/PATStorageProbe.app"
+    require(inspect(old_app, old_run["accessGroup"], host_root) == old_identity)
+    require(inspect(app, old_run["accessGroup"], host_root) == identity)
+    require(digest(old_app / "Contents/MacOS/PATStorageProbe") == old_proof["binarySHA256"])
     require(digest(app / "Contents/MacOS/PATStorageProbe") == proof["binarySHA256"])
+    no_active_host(old_app)
     no_active_host(app)
-    require(not (root / (phase + ".host.json")).exists())
-    publish(root / (phase + ".attempt.json"), {
-        "phase": phase, "runID": run["runID"], "attemptID": str(uuid.uuid4())})
-    # -W waits for the one launched app to exit; no -n and no raw live executable.
-    command(["open", "-W", "-a", str(app), "--args", "--root", str(root), "--phase", phase], timeout=120)
-    receipt = read(root / (phase + ".host.json"))
-    require(receipt["runID"] == run["runID"] and receipt["phase"] == phase)
-    require(receipt["binarySHA256"] == proof["binarySHA256"] and receipt["buildVariant"] == variant)
-    for other in PHASES:
-        previous = root / (other + ".host.json")
-        if other != phase and previous.exists():
-            prior = read(previous)
-            require(prior["processInstance"] != receipt["processInstance"])
-            require((prior["processID"], prior["processStartSeconds"], prior["processStartMicroseconds"])
-                    != (receipt["processID"], receipt["processStartSeconds"], receipt["processStartMicroseconds"]))
-    require(receipt["outcome"] == "completed")
-    publish(root / (phase + ".accepted.json"), acceptance_binding(root, phase, receipt))
-    print("runner-accepted; Human observation pending")
+    original_names = {"run.json", "source.json", "identity.json", "absence.json", "write-attempt.json",
+                      "build-" + old_variant + ".json"}
+    for phase in PHASES:
+        for suffix in (".attempt.json", ".host.json", ".accepted.json", ".observation.json"):
+            if (original / (phase + suffix)).exists():
+                original_names.add(phase + suffix)
+    original_files = {name: digest(secure(original / name)) for name in original_names}
+    host_names = {"run.json", "source.json", "identity.json", "build-" + variant + ".json"}
+    host_files = {name: digest(secure(host_root / name)) for name in host_names}
+    recovery_id = str(uuid.uuid4())
+    recovery = original / ("recovery-" + recovery_id)
+    recovery.mkdir(mode=0o700)
+    publish(recovery / "run.json", dict(old_run, recoveryID=recovery_id))
+    publish(recovery / "source.json", dict(new_source, recoveryID=recovery_id,
+                                          recoveryPurpose="verify-owned-absence"))
+    for marker in ("absence", "write-attempt"):
+        publish(recovery / (marker + ".json"), read(original / (marker + ".json")))
+    publish(recovery / "identity.json", identity)
+    publish(recovery / ("build-" + variant + ".json"), proof)
+    descriptor = os.open(recovery / "controller.py", os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(descriptor, "wb") as handle:
+        handle.write(controller.read_bytes())
+        handle.flush()
+        os.fsync(handle.fileno())
+    (recovery / "current").mkdir(mode=0o700)
+    shutil.copytree(app, recovery / "current/PATStorageProbe.app")
+    amendment = {"recoveryID": recovery_id, "originalRunID": old_run["runID"], "purpose": "verify-owned-absence",
+                 "originalRoot": str(original), "hostRoot": str(host_root),
+                 "originalSourceCommit": old_source["commit"], "newSourceCommit": new_source["commit"],
+                 "originalSourceProofSHA256": original_files["source.json"],
+                 "recoverySourceProofSHA256": digest(recovery / "source.json"),
+                 "controllerSHA256": digest(recovery / "controller.py"),
+                 "originalFiles": original_files, "hostFiles": host_files}
+    publish(recovery / "amendment.json", amendment)
+    verify_recovery_links(recovery)
+    launch_verified(recovery, read(recovery / "run.json"), RECOVERY_PHASE, variant, proof,
+                    [recovery, original, host_root])
+    print(recovery)
 
 
 def observe(args):
@@ -311,7 +521,11 @@ def export(args):
     root, run, _, private = context(args.root)
     result = {"runID": run["runID"], "sourceCommit": private["commit"],
               "sources": private["sources"], "phases": {}}
-    for phase in PHASES:
+    if "recoveryID" in run:
+        verify_recovery_links(root)
+        result.update(recoveryID=run["recoveryID"], originalRunID=run["runID"],
+                      amendmentSHA256=digest(root / "amendment.json"))
+    for phase in ([RECOVERY_PHASE] if "recoveryID" in run else PHASES):
         path = root / (phase + ".host.json")
         if not path.exists():
             result["phases"][phase] = {"outcome": "unknown" if (root / (phase + ".attempt.json")).exists() else "notExecuted", "promptCount": None}
@@ -351,8 +565,13 @@ def parser():
     item.add_argument("--phase", choices=PHASES, required=True)
     item.add_argument("--human-ready", action="store_true")
     item.set_defaults(action=launch)
+    item = commands.add_parser("recover-absence")
+    item.add_argument("--original-root", required=True)
+    item.add_argument("--host-root", required=True)
+    item.add_argument("--human-ready", action="store_true")
+    item.set_defaults(action=recover_absence)
     item = commands.add_parser("observe")
-    item.add_argument("--phase", choices=PHASES, required=True)
+    item.add_argument("--phase", choices=PHASES + [RECOVERY_PHASE], required=True)
     item.add_argument("--prompts", type=int)
     item.add_argument("--whole-stage-observed", action="store_true")
     item.set_defaults(action=observe)
@@ -360,7 +579,7 @@ def parser():
     item.add_argument("--destination", required=True)
     item.set_defaults(action=export)
     for name, item in commands.choices.items():
-        if name != "prepare":
+        if name not in ("prepare", "recover-absence"):
             item.add_argument("--root", required=True)
     return cli
 

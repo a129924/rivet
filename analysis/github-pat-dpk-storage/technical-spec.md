@@ -91,3 +91,9 @@ Cleanup 僅限有 ownership 的 exact DPK group／service／pat account，由驗
 ## E016 簽章建置模式補充
 
 工具明確提供 manual／automatic（預設 manual）。Automatic 僅使用已準備的 cached signing assets，不加 provisioning 更新旗標；三欄私人 settings 的 identity 為 selected certificate 的 40-hex SHA1。產物在安裝／發布成功 proof 前須核對 selected Team、profile Name、certificate SHA1 與既有 group／App ID 條件；兩種模式都不得默默替換身分。此為驗證 host 的環境相容選項，不改正式 PAT 儲存介面。來源變更後另建有界 round、保留原失敗與 Human 觀察，並取得新階段 ready。
+
+## E016 等待與只讀 recovery 補充
+
+正常 launch 使用固定 `open -a`，不帶 `-W`／`-n` 或 raw live binary，仍要求 native rc=0。Secure receipt 有界等待與完整校驗後，只對已驗正整數 PID 以 signal 0 等待 ESRCH；權限／其他錯誤或 timeout 拒絕，退出後 receipt 穩定才發布 acceptance。這替換有 kevent 失敗證據的等待實作，不弱化前一程序結束或新程序證據。
+
+只讀 recover-absence 另建 immutable amendment／controller，綁原 Git source／namespace／ownership 與新正式 host 身分／來源；不改原 proofs。Runner 與 Swift host 皆在 Security 前將 recovery 限為 verify-absence，僅正式 load=nil，不能 save／delete 或進普通 phases。新觀察不借用舊 0 次提示，不把原 unknown 改判。

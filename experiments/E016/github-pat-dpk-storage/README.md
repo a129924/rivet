@@ -33,7 +33,7 @@ Swift self-test 直接呼叫 live 也使用的 `Probe.perform`，但注入記憶
 5. `run ... --phase cleanup --human-ready` 只清本 run exact owned PAT item，再透過正式 store load=nil。清理可在中途失敗後另段進行，但仍需 ownership、來源與身分 proof 及無殘留 host。清理提示如實記錄，不另設 UX 門檻。
 6. `export --root "$RIVET_PAT_RUN" --destination "$RIVET_PAT_EVIDENCE"` 只輸出有限結果、來源／產物摘要與 Human 觀察；不輸出 group、私人路徑、token 或原始 errors。未執行段保持 notExecuted，沒有觀察保持 null／false。獨立 Reviewer 仍須判讀，export 本身不宣稱驗收通過。
 
-Runtime 提示門檻：save A ≤1；replace B、fresh A／B、rebuilt B 各 0。Human 必須全段觀察。固定 `open -W -a`，不用 `-n` 或 raw live binary；host 收據包含本程序 PID／OS 起始時間、instance、binary 與 build variant。來源及產物改變會拒絕續行。
+Runtime 提示門檻：save A ≤1；replace B、fresh A／B、rebuilt B 各 0。Human 必須全段觀察。固定一般 `open -a`，不用 `-W`、`-n` 或 raw live binary；仍要求 open rc=0。Runner 有界等候 secure receipt，再以正整數 PID 的 `os.kill(pid, 0)` 檢查存在（不送訊號），只接受 ESRCH／ProcessLookupError 為退出證據；EPERM／其他錯誤／timeout 不算退出。Host 收據包含本程序 PID／OS 起始時間、instance、binary 與 build variant，退出後重讀完整 guards／穩定 SHA 才發布 acceptance。來源及產物改變會拒絕續行。
 
 寫入前依序 fsync absence 與 write-attempt markers；失敗不丟棄 run／換 namespace。每次 attempt／receipt 獨占建立，不覆寫失敗歷史。若 runtime timeout，可能仍有 host，必須先確認其結束；不自動 kill、不重試原段。清理也失敗時保留完整私有 run 供受限恢復處理，不自行猜測刪除。新 helper 的 signed/live 路徑目前未實測；unsigned compile／fakes 不證明簽章或 DPK 可用。
 
@@ -52,3 +52,21 @@ Designated requirement 從 codesign stdout 解析，stderr 的 Executable 僅為
 ## Managed profile 的明確建置模式
 
 `--signing-style automatic` 是本題既有 cached assets 的受限建置選項，不授權新增或更新 Apple assets。CLI 的通用 `Apple Development` selector 不取代私人 selected certificate SHA-1；產物若選錯 Team／profile／certificate，postguard 在安裝或產生成功 proof 前拒絕。Rebuilt 仍須與原 identity 完全一致且 binary 不同。新的工具來源必須另建來源凍結 round，等當段 Human 就緒，不改寫或重試先前失敗 run。此選項的離線測試不表示正式簽章／DPK 驗收通過。
+
+## 一般 open 與 readonly absence recovery
+
+原 source `55aa57a` 的 read A／cleanup 因 `open -W` 等待錯誤而 unknown；即使 raw host completed／Human 全程 0 提示，原 runnerAccepted=false 與原收據仍保留，不追補為成功。新 launcher 用一般 `open -a` 加有界 receipt／程序退出 gate；收據以 O_NOFOLLOW／O_NONBLOCK 開啟並核 owner、0600、regular file 與大小，只有缺檔／JSON 尚未完整可節流重讀。PID 必須 exact int>0，不以 sleep、EPERM 或仍存在的 reused PID 當退出證據。
+
+若原 run 已有 owned cleanup 的物理結果，另經授權只補驗缺值，可使用獨立入口：
+
+```sh
+python3 -B experiments/E016/github-pat-dpk-storage/scripts/pat_storage_probe.py \
+  recover-absence --original-root "$RIVET_PAT_ORIGINAL_RUN" \
+  --host-root "$RIVET_PAT_NEW_HOST_RUN" --human-ready
+```
+
+這需要新 source 的正式建置 host、相同 Team／group／certificate／profile／DR，以及本段 fresh Human ready。Runner 核原 run namespace、absence／write-attempt ownership，並以原 recorded commit 的 Git blobs 驗原 source hashes；不拿目前改過的 source 冒充原版本。新 host 的 context／identity／binary 也須有效。驗證完成才在原 root 下新增獨占 `recovery-<UUID>` 0700 子目錄，建立新 controller／source／immutable amendment，綁原與新 proof，保留原 run ID／namespace 並另列 recoveryID。
+
+該子目錄只准 `verify-absence`：Swift host 在建立 LiveStore／任何 Security 操作前核 recovery traces、UUID、source purpose、amendment／controller／attempt hashes 及 ownership。普通 save／read A／replace／cleanup 在 recovery root 都拒絕；normal root 也不能冒用 verify-absence。唯一 storage 操作為正式 load==nil，不 save、不 delete；有值或 load failure 都失敗。Python normal build／run 同樣拒絕任何 recovery 痕跡。
+
+完成後可針對回報的新 recovery root 執行 `observe --phase verify-absence ...` 與 `export ...`，提示門檻為全段 0 次。新 acceptance 綁 recoveryID／amendment，不改原 unknown／receipt／source proof；即使補驗成功，也只表示同 owned namespace 目前缺值，不能提升舊 fresh-read／cleanup unknown 或替代完整新 round 的 A／B／重建驗收。工具修改與 offline fakes 不等同已執行上述 native recovery。
