@@ -35,7 +35,7 @@
 
 基線 `2973150b2789d63c10226b57150073ccc793c509`。Planner 唯讀查到 store 只有 load/save、provider 無退休、await 後無 fencing、scope 強持有 provider、正式 Security seam 無 delete。詳見 technical-spec。
 
-文件／原始碼足以選定 concurrency 方向，無須獨立 concurrency feasibility harness。真 DPK exact delete／fresh-process absence 仍需系統實驗，目前未執行；既有 E015 cleanup 不是本次產品清除證據。
+文件／原始碼足以選定 concurrency 方向，無須獨立 concurrency feasibility harness。規劃時真 DPK exact delete／fresh-process absence 尚未執行；既有 E015 cleanup 不是本次產品清除證據。2026-11-16 最新 E016 有限實驗成功且獨立 Reviewer approved，受測來源固定 bb6752a；適用範圍與舊停點見下段。
 
 ## 連結
 
@@ -46,3 +46,9 @@
 ## 2026-11-16：T09 續行邊界
 
 Human 續行原計畫；只補 E016 獨立 signed harness 與一次兩程序序列，不重開已受限 approved 的 src API／競態設計。不新增或更新 cert/profile/AppID，不修改 E010／E015 bundle、profile、items 或歷史。沿既有 E010 AppID 的可用簽章資產，新 E016 output 與每 run UUID namespace；選定資產及程序契約見 technical-spec。剩餘 configuration／sentinel 如實記錄，不額外清理。提示數未知不能填 0。
+
+## 現行驗收狀態（2026-11-16）
+
+T09 本次有限實驗成功／驗證任務完成，詳[系統證據](../../plan/github-oauth-local-sign-out/evidence/e016-live.md)。受測commit為bb6752aa483a68043174723a6b3ff2653abe79ce；first/fresh同一frozenbinary/profile/source、不同exactprocess均退出，Human各完整觀察zero，獨立Reviewer approved。只支持當次同機／GUI使用者／既有signer與有效profile／exactgroup／synthetic／uniquewriter。晚到refresh沿既有受控tests，不外推其他profile／真OAuth／UI／crosswriter／durability。
+
+舊ff672c7 first無法判定與已耗額度保留，新增序列first/fresh也用完；configuration/sentinel留存，不cleanup。原public Human unknown由獨立attestation補充，原bytes不改。Human最終topic接受仍pending；本段是結果同步，不重開scope或改寫歷史run。

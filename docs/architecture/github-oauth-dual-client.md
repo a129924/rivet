@@ -206,6 +206,10 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 
 同時登出共用清除，成功後重複呼叫成功；失敗仍保持退休，只可重試清除。store 須實作 additive `OAuthCredentialClearingStore`，否則回報 `.unsupportedStore`，不宣稱已清除。provider 新公開 `.signedOut` case 對 exhaustive switches 有 source compatibility 影響；REST／GraphQL／scope 映射成既有 authentication-required 語意。新登入必須清除成功後另建 provider。
 
-保證範圍是同 namespace 的唯一 owner／writer，沒有跨 facade／程序協調，也不保證記憶體安全抹除。受控競態測試與真 DPK 跨程序驗收分開；本輪指定簽章環境 fresh-process 實驗尚未執行，不宣稱真人重啟驗收已通過。
+保證範圍是同 namespace 的唯一 owner／writer，沒有跨 facade／程序協調，也不保證記憶體安全抹除。晚到 refresh／已開始 save 的競態保證沿正式受控測試；系統驗證與這些測試分開。
+
+2026-11-16，獨立 [E016 本地登出實驗](../../plan/github-oauth-local-sign-out/evidence/e016-live.md)在受測來源 `bb6752aa483a68043174723a6b3ff2653abe79ce`，以真 DPK、固定合成完整 credential／configuration／sentinel，完成正式 `signOut()`、同程序 credential absent，以及同一 frozen signed binary 的新 exact process 只讀確認 credential absent、configuration／sentinel 保持。兩程序身分與退出均有證據，Human 每段完整觀察的提示 class 為 zero；獨立 Reviewer 已 approved 本次有限實驗，Human 最終 topic review 仍 pending。
+
+結果只適用當次同機／同 GUI 使用者／既有 signer、有效 profile、exact group、frozen binary 與唯一 writer。它沒有重驗 live refresh，也不代表真 OAuth、產品 UI、其他 profile、跨 writer 或斷電 durability。舊 `ff672c7` first 的無法判定與已耗額度保留；新增序列的 first／fresh 也均已使用，沒有重試或 cleanup。原 public receipts 的 Human unknown 保留，後補獨立 attestation 綁其 SHA；configuration／sentinel 留存。後續文件 commit 不是受測來源，也不改寫已完成的歷史 run。
 
 [登出順序](diagrams/github-oauth-local-sign-out/sign-out.html) · [執行契約](../../plan/github-oauth-local-sign-out/github-oauth-local-sign-out.plan.md)

@@ -36,7 +36,7 @@ clientID-bound 讀取／驗證與 delete 在同一 storage actor 操作內完成
 
 官方依據：[Swift cancellation](https://docs.swift.org/latest/documentation/swift/task/cancel%28%29/)、[Actor reentrancy](https://developer.apple.com/videos/play/wwdc2021/10133/)、[SecItemDelete](https://developer.apple.com/documentation/security/secitemdelete(_:))、[更新及刪除 Keychain items](https://developer.apple.com/documentation/security/updating-and-deleting-keychain-items)。合作式取消與 actor reentrancy 不自動防止晚到寫回；此設計以 retirement／write barrier 解決。這是來源判讀，不是已執行測試結果。
 
-文件足以支持 concurrency 實作方向，不建立另一套 concurrency experiment；正式 gated tests 驗證實作。指定簽章環境的提示、精確刪除及 fresh-process absence 不能由文件證明，另按 plan 的 E016 候選實驗驗證。狀態目前未執行；不外推其他環境或斷電 durability。
+文件足以支持 concurrency 實作方向，不建立另一套 concurrency experiment；正式 gated tests 驗證實作。指定簽章環境的提示、精確刪除及 fresh-process absence 不能由文件證明，原規劃另按 plan 的 E016 實驗驗證。規劃時未執行，現行有限成功與限制見本文件末段；不外推其他環境或斷電 durability。
 
 ## 工具限制
 
@@ -78,3 +78,9 @@ Graphify 只用既有 graph bounded query 並核對 revision／source，所有 C
 Human 每段完整觀察與實際 prompt count 綁 machine receipt hash；private attestation 保存實際數字，公開只出 `zero/nonzero/unknown` enum 與 observation_complete 布林／attestation hash，未知不得填 zero。提示數不是預設 0，也不是以舊 E015 觀察推得。
 
 任一中斷、不相符、超時、簽章/profile/程序歸屬前提不足皆停止，不自動重試、不清理殘留。唯一 run 的 first 一旦啟動就消耗序列，即使未產生完整 receipt 仍記錄。fresh 只可在 first 成功且退出已證明後執行一次。T09 判準與 E016 八段 README 一致。
+
+## 現行系統證據（2026-11-16）
+
+E016來源bb6752aa483a68043174723a6b3ff2653abe79ce已完成本次first/fresh有限驗證，獨立Reviewer approved。[證據與收據綁定](../../plan/github-oauth-local-sign-out/evidence/e016-live.md)包含同signedbinary/profile/source、兩個actualexactprocess歸屬／退出，以及Human各完整觀察zero。結果支持正式signOut後credential absent、configuration/sentinel保持；適用當次同機／GUI使用者／既有signer與有效profile／exactgroup／synthetic／uniquewriter。原晚到refresh保證仍由受控tests支持，沒有live refresh或真OAuth／產品UI／跨writer／其他profile／durability結論。
+
+ff672c7舊無法判定與已耗first不改；新增bb6752a序列也已耗first/fresh，不再執行或cleanup。原public Human unknown/false保留，由獨立attestation綁SHA補充。後續文件變更不是受測來源，不影響已完成歷史run；Human最終topicreview仍pending。公開API及locked decisions維持。

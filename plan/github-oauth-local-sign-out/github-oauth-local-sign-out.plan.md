@@ -37,7 +37,7 @@ Topic `github-oauth-local-sign-out`；feature branch `feat/github-oauth-local-si
 
 執行前按 feasibility-validation 八段模板固定 environment、來源版本、日期、前提、命令、資料與證據。使用隔離 namespace／完整 fake credential／configuration／相鄰 sentinel，執行一次 seed→正式 signOut→程序結束→fresh-read。最多一次完整序列，不自動重試、不真 OAuth、不操作既有 items。
 
-成功：credential absent、其他 items 保持；失敗：credential 仍在、晚到寫回或誤改 item；無法判定：簽章、程序或觀察前提不足。實驗狀態目前未執行。build/tests 不是系統判準；不外推其他 signer／程序 writer／斷電 durability。缺 T09 不宣稱重啟驗收通過。
+成功：credential absent、其他 items 保持；失敗：credential 仍在、晚到寫回或誤改 item；無法判定：簽章、程序或觀察前提不足。此段為原規劃判準；2026-11-16有限實驗已成功，見末段現行結果。build/tests 不是系統判準；不外推其他 signer／程序 writer／斷電 durability。缺 T09 不宣稱重啟驗收通過。
 
 ## 三項工具
 
@@ -69,4 +69,10 @@ Plan-Creator 落四份→獨立 Plan-Reviewer 明示 approved→Implementer→Te
 4. 工具與命令均具體可檢視後，主 session 才安排 Human 兩程序完整提示觀察。first 一次 seed/readback→formal signOut→same-process readback→exit；證 exact process 結束後 fresh 相同 signed binary 一次只讀。實際 prompt count 未知不得填0，Human attestation 綁 receipt hash。
 5. Tester 依原成功／失敗／無法判定分類，將 safe receipts 與執行日期／實際停止點回填 E016，交獨立 Reviewer。configuration/sentinel 殘留如實記錄，不增加清理序列。無新OAuth、無refresh/network；T09之外仍沿11/13受控證據。
 
-任一first中斷即停止，不換run重試；fresh前置不足不能補跑。既有profile到期或需新資產則停止回Human，不擴張授權。新harness／環境與T09仍未執行，planning補充不等於實驗完成。
+任一first中斷即停止，不換run重試；fresh前置不足不能補跑。既有profile到期或需新資產則停止回Human，不擴張授權。此處保留執行前規劃狀態，不當作實驗證據；現行結果見下段。
+
+## 現行交付狀態（2026-11-16）
+
+T09有限實驗成功、驗證任務完成，獨立Reviewer approved，見[e016-live.md](evidence/e016-live.md)。歷史受測來源固定bb6752aa483a68043174723a6b3ff2653abe79ce；不得用本次文件commit替代來源pin或要求重跑來追逐文件hash。first/fresh同signedbinary/profile/source、兩exactprocess退出與Human各完整觀察zero有分列證據；原public Human unknown保留，由獨立attestation補充。
+
+本結論受限於當次同機／GUI使用者／既有signer、有效profile、exactgroup、synthetic及uniquewriter；晚到refresh沿正式受控tests，未測trueOAuth／UI／otherprofile／crosswriter／durability。舊ff672c7 first無法判定與已耗額度原樣保留，Human新增序列first/fresh也已使用完。configuration/sentinel留存，無cleanup；不再執行App/build/sign/DPK/retry。後續只交文件一致性審查及S06 Human最終review，不擴張topic。

@@ -2,7 +2,7 @@
 
 ## 驗證什麼
 
-- 原設計2026-11-13；2026-11-16補具體harness契約，執行日期尚無。
+- 原設計2026-11-13；2026-11-16補具體harness契約並完成修正版bb6752a唯一first/fresh有限驗證。ff672c7較早停點仍為無法判定。
 - E016於11/13確認未占用後建立，現延用本實驗，不覆寫其他編號或歷史。
 - 唯一問題：正式 provider.signOut 經DPK exact clear後，fresh process是否credential absent，且configuration／相鄰sentinel完整保持？
 - 假設：有效既有簽章、同機同GUI使用者、同namespace唯一writer下成立。in-flight refresh競態沿正式受控tests，不由本實驗重驗。
@@ -20,7 +20,7 @@
 - 成功：seed absence/readback成立，正式signOut成功，first與fresh兩程序credential absent且configuration/sentinel逐欄相符；來源／signed binary／profile一致，actual程序歸屬與前程序退出證明及Human完整觀察齊備。
 - 失敗：在前提可判定時credential仍在／恢復，或configuration/sentinel被誤改。
 - 無法判定：簽章、profile、程序歸屬／終止、receipts或完整觀察不足；不能把環境阻礙記成假設失敗。任意操作失敗先停止，不以新run補救。
-- 投入：一個新UUID、一次first→fresh序列；first啟動即消耗，即使中斷或無完整receipt仍保留write-attempted／停止點。不自動retry、換namespace重來、refresh/network或補cleanup。
+- 投入：每次Human明確授權的一個新UUID、一次first→fresh序列；first啟動即消耗，不自動retry、換namespace重來、refresh/network或補cleanup。ff672c7 first中斷後已停留；Human另行明確批准修正版bb6752a新準備與新增一次first/fresh額度，本次兩段均已用完，不恢復舊額度。
 
 ## 環境與前置條件
 
@@ -32,33 +32,37 @@
 
 ## 重現步驟
 
-下列入口已由Implementer建立，unsigned／fakechecks先驗可執行；signed preflight／first／fresh尚未執行。完整命令見[COMMANDS.md](COMMANDS.md)：
+下列為受審操作流程，不是重跑授權。bb6752a signed preflight與first/fresh已實際完成；命令形狀見[COMMANDS.md](COMMANDS.md)，本次實際觀察與凍結hash見[獨立live證據](../../plan/github-oauth-local-sign-out/evidence/e016-live.md)：
 
 1. `E016LogoutProbe.xcodeproj` shared scheme `E016LogoutProbe`、`Sources/main.swift`、`Resources/Info.plist`、`Resources/E016LogoutProbe.entitlements`；最小` scripts/e016_live.py`（實際路徑不含前導空白）僅preflight/first/fresh；`Tests/test_e016_protocol.py`。
-2. unsigned build命令形狀：`xcodebuild -project experiments/E016/E016LogoutProbe.xcodeproj -scheme E016LogoutProbe -configuration Debug -derivedDataPath <E016-private-derived-data> CODE_SIGNING_ALLOWED=NO build`。fakechecks：`python3 -m unittest discover -s experiments/E016/Tests -p 'test_*.py'`。這些命令尚未執行；Implementer須在handoff補完整有效參數、fixture與hash，交獨立Reviewer。fakechecks覆蓋phase write policy、redaction、absence gate、retry拒絕與process/provenance mismatch；不存取真DPK。
+2. unsigned build命令形狀：`xcodebuild -project experiments/E016/E016LogoutProbe.xcodeproj -scheme E016LogoutProbe -configuration Debug -derivedDataPath <E016-private-derived-data> CODE_SIGNING_ALLOWED=NO build`。fakechecks：`python3 -m unittest discover -s experiments/E016/Tests -p 'test_*.py'`。unsigned與fakechecks已由Implementer／Tester先驗；harness與簽章前提經獨立Reviewer審查，最新離線20checks與共用Foundation path checks保留獨立證據。fake/mock不取代真DPK兩程序結果。
 3. 獨立harness審查後，manual signing指定已選資產與完整bundle；preflight核AppID/exactgroup/embeddedprofile/cert/signature/expiry/source-binary hashes，僅讀環境不seed/delete。將實際完整命令凍結於private provenance，公開只記hash。
 4. 工具與命令可檢視後，主session安排Human完整觀察。run生成一個UUID：主service=`local.rivet.experiment.e016.logout.<UUID>`；sentinelservice=主service+`.sentinel`。first經完整App path bundle launch，不能bundleID lookup、open -n或raw GUI binary。runner核actual PID/starttime/executable path/binary hash；App在DPK前自核frozenidentity/phase/run。
 5. first：主configuration/credential及sentinel credential先讀均absent，否則停止不覆寫；正式stores seed固定fixtures並讀回逐欄相符；建立正式provider僅signOut；同程序驗主credential absent/configuration/sentinel intact；write receipt並正常exit。
 6. 核實first exact process已退出，再由相同App/signedbinary/profile/run launch fresh一次：只讀三項，相同absence/intact判準。fresh不得任何save/delete/seed。runner命令形狀為`python3 experiments/E016/scripts/e016_live.py <preflight|first|fresh> --app <E016-private-app> --run-root <private-run-root>`；實際private inputs由review凍結，不能臨場換app或run。
 7. private runroot owner-only，保存actual paths/PID/starttime及identity/group/profile provenance，公開projection只allowlisted booleans/enums/SHA-256，包含phase/outcome/failureKind、run/process/provenance hashes、seed_absent/seed_readback/write_attempted/signout_returned/same_process_absent/configuration_intact/sentinel_intact/fresh_read_verified/previous_process_terminated/launch_identity_verified、source/binary/profile hashes。禁止payload／任意錯誤原文／raw本機路徑或identity。
-8. Human每段實際promptcount與完整觀察綁machine receipt hash；private attestation保留數字，公開prompt_count_class為zero/nonzero/unknown enum，另observation_complete與attestation hash。未知不得填0。實際停止點與殘留要記錄；configuration/sentinel留下，不順手清除。
+8. bb6752a兩段Human完整觀察各綁其原public receipt SHA，private attestation保留實際數字，公開只記prompt_count_class=zero／observation_complete=true及attestation hash。原public的Human unknown／false不覆寫，由獨立成功projection補充；較早ff672c7因無public，Human只綁machine SHA，兩者不能混用。configuration/sentinel留下，不順手清除。
 
 ## 是否成功
 
-- 執行日期：2026-11-16，唯一first已啟動並停止；fresh未執行。
-- 實驗狀態：無法判定。
-- 本輪驗證任務完成：否。準備與preflight曾完成；first在握手前停止且額度已消耗，缺exact process身分／退出證據及fresh讀回，不能宣稱T09通過。
-- 本次planning補充不是系統觀察，不能宣稱T09通過。
+- 執行日期：2026-11-16。
+- 實驗狀態：成功（bb6752a修正版、Human另授權的新first/fresh有限序列）。
+- 本輪驗證任務完成：是。seed absence/readback、正式signOut、兩程序absence及configuration/sentinel完整保持、同source/binary/profile、actual exact process退出與兩段Human全程觀察均有證據；獨立Reviewer已對本次有限結果明示approved。
+- Human最終topic接受仍pending；此狀態不推翻ff672c7的indeterminate歷史。
 
 ## 結果與證據
 
-最新停點：first已有有限machine receipt與綁machine hash的Human觀察；沒有seed／delete／fresh-read證據。後文「未執行」保留為先前階段歷史，以本節及末段最新結果為準。11/13受控tests與code審查證據保留原topic，不改寫為本實驗成功；11/16簽章inventory僅前提調查。具體source/binary/profile freeze、actual PID/path/processexit、machine receipt／Human attestation hashes與結果，待實際取得後寫回；未知不能補造。
+受測來源固定`bb6752aa483a68043174723a6b3ff2653abe79ce`，Xcode26.6／17F113、Swift6.3.3、Python3.14.0。first seed完整synthetic資料並逐欄讀回，正式provider.signOut成功後credential absent，configuration/sentinel保持。fresh為不同actual exact process，只讀確認同樣absence/intact，write_attempted=false；兩段exact process均已退出。同一signed binary／profile／source保持，啟動前有效性各自重驗。
+
+兩段Human皆確認完整觀察、公開prompt class=zero；各自attestation綁原public receipt SHA。原public之Humanunknown不改寫。安全[success-summary projection](evidence/success-summary.json)採獨立schema，不冒充原協定receipt；完整安全hash、實際commands及限制見[獨立live證據](../../plan/github-oauth-local-sign-out/evidence/e016-live.md)。
+
+較早ff672c7 first仍為無法判定：machine write_attempted=false，無hello/authorize/public/private或exact process證據，fresh未執行；[舊停點projection](evidence/first-stop-summary.json)與舊App／marker／receipts保留，不回填成功。
 
 ## 結論與限制
 
-T09仍pending。下一步先Implementer完成最小unsigned工具與fakechecks，再獨立Reviewer，preflight後才Human觀察兩程序唯一run，Tester按既定判準分類、獨立Reviewer核對。資產到期／需新資產／程序不明／任一中斷停止，不重試。configuration/sentinel可能殘留新隔離namespace，無額外cleanup授權。
+T09在本次受限環境通過，獨立Reviewer已approved有限結果；準備、舊停點、回修及新額度來源分開保留。新first/fresh兩段額度皆已消耗，不自動追加。隔離configuration與sentinel保留，沒有cleanup或額外Keychain讀寫。
 
-結論只適用當次同機、同GUI使用者、既有簽章及唯一writer；不外推其他signer／profile更新／自然到期refresh／跨程序writer／斷電durability／正式產品UI。原11/13僅設計且缺harness的紀錄為歷史；11/16補契約後仍未執行，不因紀錄完整宣稱驗收完成。
+只支持當次同機、同GUI使用者、有效既有signer/profile與唯一writer；不外推其他signer／profile更新／跨程序writer／自然到期refresh／斷電durability／正式產品UI或真OAuth。晚到refresh競態沿11/13正式受控tests，本次live沒有refresh/network。後文為各階段歷史，若與本節時間不同，以本節最新有限結果為準；沒有改寫當時的未執行／停止結果。
 
 ## 11/16 Implementer unsigned 交接
 

@@ -1,32 +1,33 @@
 # 本地登出與 OAuth 憑證清除：狀態帳本
 
 - Topic：github-oauth-local-sign-out
-- Phase：T09 first 已停止；path identity 工具回修待獨立驗證
+- Phase：T09 有限實驗完成／Reviewer approved；文件一致性審查與 S06 Human review 待辦
 - 基線：2973150b2789d63c10226b57150073ccc793c509
 - Branch：feat/github-oauth-local-sign-out
-- 最後更新：2026-11-16 Asia/Taipei（T09補充契約，尚待獨立Plan-Reviewer）
-- 上游：Planner 已判規劃輸入充分可交 Plan-Creator；不是 planning gate approved。
+- 最後更新：2026-11-16 Asia/Taipei（bb6752a 有限系統驗證完成，僅同步文件）
+- 現行上游：Reviewer 已獨立核對 bb6752a 兩程序／原始收據／Human attestation，明示 approved（本次有限實驗）；不代表 Human 最終 topic 接受。
 
 | ID | Status | Owner role | 完成條件 | 驗證證據／verdict |
 | --- | --- | --- | --- | --- |
 | S01 | completed | Plan-Creator | 四份同 slug artifacts 落 feature worktree，保留九欄、API、三 tools、feasibility 與邊界 | 本次四份 artifacts；未執行實作／測試，品質由 S02 獨立審查；無自評 approval。 |
 | S02 | completed | Plan-Reviewer | 四份均可讀，獨立核對需求／scope／contract／readiness | 獨立 Plan-Reviewer 明示 approved（2026-11-13），無 required fix；已核對四份及 provider／DPK／scope source。 |
-| S03 | completed | Implementer | 僅依 S02 approved bounded contract 完成 src/tests/docs/必要實驗入口 | src／focused tests／長期文件完成；root316 tests passed、format exit0、focused GitHubIntegration lint 0。E016僅未執行設計，harness未建立，T09不宣稱完成。 |
-| S04 | completed | Tester | 親跑受控／consumer回歸並如實列出 T01–T09 證據限制 | [獨立驗證](evidence/tests.md)：44 focused／316 root／15 consumer通過；回修11 sign-out tests通過，T04/T08補證；T09仍未執行，交Reviewer分類；不是所有驗收通過。 |
+| S03 | completed | Implementer | 僅依 S02 approved bounded contract 完成 src/tests/docs/必要實驗入口 | 11/13受限src／tests完成，root316tests／format／focused lint通過；當時E016未建立。T09後續完成狀態另見下表，歷史不覆寫。 |
+| S04 | completed | Tester | 親跑受控／consumer回歸並如實列出 T01–T09 證據限制 | [獨立驗證](evidence/tests.md)：44 focused／316 root／15 consumer通過；回修11 sign-out tests通過，T04/T08補證；11/13當時T09未執行；後續T09另見下表，不混用兩輪證據。 |
 | S05 | completed | Reviewer | 獨立核對受限 code/tests 與 required fixes | 2026-11-13 18:16 明示 approved，T04/T08 closed；不包含未建立的 E016 harness／T09。 |
 | S06 | pending | Human | 最終 review／必要圖面接受／既有 commit boundary | 未開始。 |
 
-## Blockers
+## Blockers／目前停點
 
-- S02 的原契約已 approved；本次 T09 補充須獨立審查，不以歷史 approval 推定新 harness 放行。
-- PR 狀態先前因網路未驗證，不推測。
-- 2026-11-16 已由 Explorer 查得且主 session 選定既有 signer/profile；E016 尚無 signed harness／preflight／真實兩程序證據，不宣稱重啟驗收完成。
-- Graphify 可用 graph／revision、PR Lens runtime／actual diff 及圖面結果未驗證。
+- T09本次有限實驗已成功，獨立Reviewer approved；受測commit固定bb6752aa483a68043174723a6b3ff2653abe79ce，詳[e016-live.md](evidence/e016-live.md)。
+- 目前只待最終文件一致性審查與S06 Human最終topic review／必要圖面接受；不把技術approved當作Human接受。
+- ff672c7舊first的無法判定與額度消耗保留；Human新增bb6752a序列first/fresh也已用完，不再執行或cleanup。
+- PR發佈狀態由主session處理，本文件不新增遠端判定。Graphify／PR Lens／圖面既有證據與限制沿原記錄，不由T09實驗補成其他工具通過。
 
 ## Human Check
 
 - 已確認：單一 owner／唯一 writer；保留 App configuration；執行已接受的 feature-worktree 計畫。
-- 尚待：必要系統提示／圖面視覺接受／最終 review，均依實際執行記錄。
+- 本次first/fresh Human皆已確認完整觀察，提示class為zero；各attestation綁原publicSHA，原unknown欄位不覆寫。
+- 尚待：S06最終topic review及必要圖面視覺接受，不由本次實驗approved替代。
 - Human 本輪明確授權按 topic commit、push、開 Draft PR；仍先檢查 staged semantic boundary，由主 agent 執行；最終交 Human review。
 - 2026-11-13 18:20 收斂為歷史；11/16續行只補T09，不以時間上限代替完成。
 
@@ -57,20 +58,20 @@ Reviewer 明示 approved（受限 code/tests）：T04、T08 required fixes close
 
 ## 2026-11-16：T09 continuation
 
-下列是本次補充的待執行 steps；不是過去 approval 的延伸。既有 S01–S05 的歷史 evidence 原樣保留，S06 Human 最終review仍pending。
+下列為11/16補充steps的現行狀態；各輪needs-rework／stopped歷史保留於後段，不回寫舊approval。既有S01–S05歷史evidence原樣保留，S06 Human最終review仍pending。
 
 | ID | Status | Owner role | 完成條件 | 證據／verdict |
 | --- | --- | --- | --- | --- |
 | T09-P1 | completed | Plan-Creator | 四份artifacts及E016八段README具體化既有資產、獨立host、一次兩程序、safe receipt／停止規則 | 本次補充文件；未自評approved。 |
 | T09-P2 | completed | Plan-Reviewer | 獨立審查補充契約，明示verdict | 2026-11-16 獨立Plan-Reviewer approved，無required fix。 |
-| T09-I | completed | Implementer | E016 unsigned host／最小runner／fakechecks、實際命令與source freeze | 已建立；7 fakechecks與unsigned build通過，交獨立Tester/Reviewer；未sign/live。 |
-| T09-R1 | pending | Reviewer | 獨立審查新harness與fake evidence | [獨立unsigned先驗](evidence/e016-unsigned-tests.md)：7fakechecks／unsignedbuild／format／lint／rootzero-diff通過，helper與整runner覆蓋差異及attestation流程依賴交Reviewer；不沿用S05 approval。 |
-| T09-V1 | pending | Tester | 審查後signing preflight、frozen binary/profile及actual launch identity證據 | 尚未執行；不能稱signed ready。 |
-| T09-H | pending | Human | 工具具體可檢視後安排兩段完整prompt觀察，attestation綁receipt hash | 未執行；promptcount unknown。 |
-| T09-V2 | stopped | Tester | 唯一first/fresh序列、判準分類／safe receipt／殘留紀錄 | first已消耗並在hello前停止；Reviewer分類無法判定，fresh未執行，缺exact process證據；見停點摘要。 |
-| T09-R2 | pending | Reviewer | 獨立審查系統結果與限制，回原topic | 尚無。 |
+| T09-I | completed | Implementer | E016 unsigned host／最小runner／fakechecks、實際命令與source freeze | 已建立並經後續bounded fixes；20mock checks與共享Foundation離線測試通過，正式Sources零diff；相關歷史見後段。 |
+| T09-R1 | completed | Reviewer | 獨立審查新harness與fake evidence | provenance／實際orchestration／certificate optionalarg／path identity required fixes均已獨立approved；不沿用S05。歷史見後段及[unsigned先驗](evidence/e016-unsigned-tests.md)。 |
+| T09-V1 | completed | Tester | 審查後signing preflight、frozen binary/profile及actual launch identity證據 | bb6752a全新凍結／build／manual sign／preflight完成，兩live段每次重核；source/binary/profile/transition與actual process證據見[e016-live.md](evidence/e016-live.md)。 |
+| T09-H | completed | Human | 工具具體可檢視後安排兩段完整prompt觀察，attestation綁receipt hash | bb6752a first/fresh各全程觀察zero，各attestation綁原publicSHA；原machine/public bytes不覆寫；不是S06最終接受。 |
+| T09-V2 | completed | Tester | 唯一first/fresh序列、判準分類／safe receipt／殘留紀錄 | Human另授權bb6752a新序列first/fresh皆passed，兩exact processes歸屬／退出及Human綁定核對完成；configuration/sentinel留存。舊ff672c7 stopped保留，不覆寫。 |
+| T09-R2 | completed | Reviewer | 獨立審查系統結果與限制，回原topic | 2026-11-16明示approved（本次有限實驗）；核originalreceipts／attestations／frozen來源／兩exactprocess退出及限制，無其他required fix。 |
 
-本次沒有 production 修改、build/test/sign、Keychain操作或commit。既有資產重用是主session明示決策；資產expiry前提須在實際兩段啟動時重新驗，不把唯讀inventory當preflight成功。
+本句原為規劃落檔時狀態：當時沒有production修改或build/test/sign／Keychain操作。之後僅E016受限工具與明確授權live序列推進；bb6752a的實際結果／有效性重驗依上述證據，不能以早期inventory替代。
 
 ## T09-R1 needs-rework 回修交接
 
@@ -95,3 +96,15 @@ signed_info 已改為單一 --extract-certificates=<prefix> 參數。獨立 Test
 ## 2026-11-16 path fix 最終離線審查
 
 獨立Tester：20Pythonchecks、實際共用Foundationhelper alias/不同物件正反測試、format/lint/diffcheck通過，production零diff。Reviewer approved（bounded path fix／離線證據），required fix closed，無其他required fix。本次T09維持無法判定，first已耗用/fresh未執行，Human完整觀察zero，缺exact process exit/publicreceipt限制保留。不恢復額度、不自動重試；任何新準備與live序列須Human明確新額度。
+
+## 現行結果與最終文件交接（2026-11-16）
+
+Tester已完成[系統驗證紀錄](evidence/e016-live.md)與E016獨立success-summary projection；Reviewer獨立核原收據、attestations、frozen來源及兩exactprocess退出，最終approved本次有限實驗。T09實驗狀態成功／驗證任務完成；S06 Human最終review仍pending。
+
+本次first/fresh皆使用固定bb6752aa483a68043174723a6b3ff2653abe79ce的同一signedbinary/profile/source；後續文件commit不是受測來源，不需要重跑歷史run追逐文件hash。適用當次同機／同GUI使用者／既有signer與有效profile／exactgroup／synthetic／uniquewriter；不外推真OAuth／UI／其他profile／crosswriter／durability。晚到refresh沿11/13受控tests，本次未做refresh/network。
+
+ff672c7舊first無法判定與已耗額度保留；Human新增序列first/fresh也已使用完，不恢復或重試。configuration/sentinel未清理；原public Humanunknown/false由另立attestation補充且綁SHA，不覆寫machine/public/private。只允許最終文件一致性審查／既有Git交付與Humanreview，不再build/sign/launch/DPK。
+
+## 最終文件交付審查
+
+2026-11-16獨立Reviewer approved（最終文件／evidence一致性），無required fix。T09本次有限成功、來源bb6752a、八項receipt/hash綁定、歷史停點與適用限制已核對；S06 Human最終review仍pending。後續只提交文件／push／更新Draft PR，不merge或追加live操作。
