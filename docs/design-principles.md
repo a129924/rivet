@@ -1,5 +1,7 @@
 # Rivet 設計原則
 
+`GitHubPATDataProtectionStore` 已提供單一 PAT 的正式 DPK 保存、讀回與完整替換。2026-11-16 在指定有效簽章環境，以正式 adapter 完成保存 A、fresh A、整筆 B、fresh B、真正同身分 clean/build、rebuilt fresh B 及 exact-owned cleanup／load=nil；六個 runtime 均 accepted，Human 各全程觀察 0 提示，setup／rebuild 另各 0。受測來源 `5465d3c`，獨立 P07 approved；圖的 Human 視覺與 topic 最終接受仍 pending，不代表產品登入或所有環境保證。詳見 [PAT 儲存契約](architecture/github-pat-dpk-storage.md)。
+
 ## 產品取捨
 
 - Rivet 是個人 GitHub PR 工作台，不是 GitHub 或 Graphite 的完整替代品。
