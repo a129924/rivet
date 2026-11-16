@@ -10,7 +10,7 @@
 - render `--theme light --no-config` exit 0；repository 沒有既有 config，未建立設定或 `.pr-lens`。Manifest：1 SVG／1 diagram，head SHA 與實作 commit 相同。
 - graph SHA-256：`c307626817da4d52c0e7f1d6d680c59e3425cfcaa72de9bc0439b04b675b3c19`。Renderer `@coldtea/pr-lens-renderer@0.3.1`；SVG bytes：12070，manifest contentHash：`06a4d79bca7436e32f6b25c03dec2b27`。
 - 獨立 Reviewer `/root/planner` change-map verdict：approved，required fixes 0。確認新增 store／host／tests／consumer、unchanged PAT VO／OAuth／DPK 與關係忠於實作 diff，沒有新增 OAuth 依賴。
-- 圖鎖定上述實作 commit；後續只新增交付文件，不宣稱此圖包含收尾 metadata diff。圖不是 correctness 或 live review。
+- 圖鎖定上述實作 commit；後續交付文件與 E016 原生 preflight 工具回修不在此圖的來源版本中，不宣稱此圖涵蓋後續 diff。圖不是 correctness 或 live review。
 
 ## Graphify
 

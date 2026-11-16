@@ -44,3 +44,7 @@ Runtime 提示門檻：save A ≤1；replace B、fresh A／B、rebuilt B 各 0�
 ## Runner acceptance（RF-P05-01）
 
 Host receipt 的 completed 只代表 host 結果。Runner 只有在 open 正常結束及 run／phase、binary／variant、新程序等 guards 全通過後，才 fsync 獨占發布 acceptance proof，綁定 attempt、host receipt、來源與 build proof。後續 observed gate 必須核對此 proof；Human 如實記錄提示不能把未驗證階段升格。Export 分開 hostOutcome、runnerAccepted 與整段 outcome；即使 host completed，缺有效 acceptance 仍是 unknown。原 receipt／失敗 attempt 不覆寫。
+
+## P06 前原生 preflight 相容性修正
+
+Designated requirement 從 codesign stdout 解析，stderr 的 Executable 僅為診斷。Profile 可用 exact 或唯一末尾 `.*` prefix 授權一個具體 group；signed app 本身仍須只宣告單一明確非 wildcard group。Signed／profile 兩端 application identifier 支援 canonical／fallback keys，缺值、衝突、wildcard 或不符 E016 固定身分均拒絕。獨立 29 tests 與 bounded review approved 只證明工具回修，不代表任何真 profile／DPK 驗收已通過。

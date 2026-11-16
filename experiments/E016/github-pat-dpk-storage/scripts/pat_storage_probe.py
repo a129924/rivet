@@ -108,31 +108,51 @@ def prepare(args):
     print(root)
 
 
+def application_identifier(claims):
+    require(isinstance(claims, dict))
+    values = [claims[key] for key in ("com.apple.application-identifier", "application-identifier")
+              if key in claims]
+    require(values and all(isinstance(value, str) and value and "*" not in value for value in values))
+    require(all(value == values[0] for value in values))
+    return values[0]
+
+
+def profile_allows_group(allowed_groups, group):
+    require(isinstance(allowed_groups, list))
+    return any(isinstance(allowed, str) and
+               (allowed == group or (allowed.endswith(".*") and allowed.count("*") == 1
+                                     and group.startswith(allowed[:-1])))
+               for allowed in allowed_groups)
+
+
 def inspect(app, group, root):
+    require(isinstance(group, str) and group.strip() and "*" not in group)
     command(["codesign", "--verify", "--deep", "--strict", str(app)])
     details = command(["codesign", "-d", "--verbose=4", str(app)]).stderr.decode()
     require("Signature=adhoc" not in details)
     fields = dict(line.split("=", 1) for line in details.splitlines() if "=" in line)
     require(fields.get("Identifier") == "local.rivet.pat-storage-probe")
-    require(fields.get("TeamIdentifier") not in (None, "not set"))
+    require(fields.get("TeamIdentifier") not in (None, "", "not set"))
     claims = plistlib.loads(command(["codesign", "-d", "--entitlements", ":-", str(app)]).stdout)
-    require(claims.get("keychain-access-groups") == [group])
+    require(isinstance(claims, dict) and claims.get("keychain-access-groups") == [group])
     embedded = app / "Contents/embedded.provisionprofile"
     profile = plistlib.loads(command(["security", "cms", "-D", "-i", str(embedded)]).stdout)
     expiry = profile["ExpirationDate"].replace(tzinfo=dt.timezone.utc)
     require(expiry > dt.datetime.now(dt.timezone.utc))
     require(fields["TeamIdentifier"] in profile["TeamIdentifier"])
     entitlements = profile["Entitlements"]
-    require(group in entitlements.get("keychain-access-groups", []))
-    require(entitlements.get("com.apple.application-identifier") == claims.get("com.apple.application-identifier"))
+    require(isinstance(entitlements, dict))
+    require(profile_allows_group(entitlements.get("keychain-access-groups", []), group))
+    expected_identifier = fields["TeamIdentifier"] + "." + fields["Identifier"]
+    require(application_identifier(entitlements) == application_identifier(claims) == expected_identifier)
     prefix = root / ("certificate-" + str(uuid.uuid4()) + "-")
-    command(["codesign", "-d", "--extract-certificates", str(prefix), str(app)])
+    command(["codesign", "-d", "--extract-certificates=" + str(prefix), str(app)])
     certificate = Path(str(prefix) + "0")
     cert_bytes = certificate.read_bytes()
     require(cert_bytes in profile["DeveloperCertificates"])
     command(["openssl", "x509", "-inform", "DER", "-in", str(certificate), "-checkend", "0", "-noout"])
     certificate.unlink()
-    requirement_output = command(["codesign", "-d", "-r-", str(app)]).stderr.decode()
+    requirement_output = command(["codesign", "-d", "-r-", str(app)]).stdout.decode()
     requirements = [line for line in requirement_output.splitlines() if line.startswith("designated =>")]
     require(len(requirements) == 1)
     requirement = requirements[0]
