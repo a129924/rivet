@@ -19,6 +19,8 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 ## 目前狀態
 
+`GitHubIntegration` 新增 [OAuth／PAT 雙登入契約](docs/architecture/github-dual-login-contract.md)：請求 VO、PAT 本地驗證、共同 async Protocol 與有限 Outcome；目前僅受控契約，不含正式登入服務、UI 接線或 session／clients 交接。
+
 Reader fixture 驗收 host、Runtime、資源與專屬測試集中於 [E012](experiments/E012/README.md)，root target／正式 bridge 與 TS pipeline 保持。
 
 登入驗收展示的 host、Runtime 與專屬測試集中於 [E011](experiments/E011/README.md)，仍由 root package 既有 target 建置。這只修正歸屬，不撤回正式 UI 採用或改寫原 topic 驗收。
