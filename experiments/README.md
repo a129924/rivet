@@ -1,6 +1,18 @@
 # 實驗索引
 
-基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約合併／清理事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+
+## PR #71：OAuth／PAT 雙登入契約合併與清理（2026-11-16）
+
+[PR #71](https://github.com/a129924/rivet/pull/71) 已於 `2026-11-16T02:15:39Z` 合併至 `dev` 並關閉；merge 為 `4ddca1864557c2858266c2cc6d0a21f1e0bb7237`，最後 feature head 為 `3cdbde753ebefb26564d1135376d043e682b13e7`。兩親 merge 的 tree 與最後 feature 相同，只證明交付來源保存，不是新 build 或重新受測。
+
+本次是既有 non-BC `GitHubIntegration` 的正式技術契約，不新增 E 編號或驗證 App。交付 OAuth／PAT 請求 VO、PAT 本地 trim／空值拒絕、共同 Sendable async Protocol、有限 Outcome、取消義務與診斷遮蔽；`.success` 不帶帳號、session、token capability 或 clients。真登入、UI 接線、遠端帳號驗證、儲存與 refresh／401 未由此交付。[固定長期說明](https://github.com/a129924/rivet/blob/4ddca1864557c2858266c2cc6d0a21f1e0bb7237/docs/architecture/github-dual-login-contract.md)與[技術規格](https://github.com/a129924/rivet/blob/4ddca1864557c2858266c2cc6d0a21f1e0bb7237/analysis/github-dual-login-contract/technical-spec.md)界定公開契約。
+
+原交付的獨立驗證為 focused 8 tests、GitHubIntegration 229 tests／25 suites、既有 consumer 15 tests／3 suites、format／SwiftLint／diff check，以及完整 commit hooks 通過。Archify showcase 9/9、0 errors／warnings、deliver 與四尺寸 containment 已通過，最小／最大 light／dark 截圖經獨立審視；PR Lens pinned 0.11.0 在本機 validate／render 通過並綁定最後 feature head，Graphify 無既存 graph 而採 source-search fallback，未建圖。詳見[固定交付帳本](https://github.com/a129924/rivet/blob/4ddca1864557c2858266c2cc6d0a21f1e0bb7237/plan/github-dual-login-contract/github-dual-login-contract.step.md)。這些是原受控證據，本輪不將文件提交 hooks 視為新一輪 topic 驗收，也未重新產圖或新增真人結果；合併也不代替圖的 Human 視覺接受。原帳本 Draft／human-check 文字按當時交付快照閱讀。
+
+Annotated tag `v0.1.64-github-dual-login-contract` 已建立／推送並讀回核對：local／remote tag object 同為 `7eacd8e747eb5be78936cf237fa9f15b7a6671a4`，peeled commit 精確為上述 merge；不是後續文件 commit 或 GitHub Release。
+
+原 `feat/github-dual-login-contract` local／remote branch 與原 managed feature worktree 已在 fresh clean／head／lineage／tag 核對後正常刪除，相關 tracking ref、目錄與註冊均已核不存在，未 force／prune。PR 的五個分支型審閱入口已改為固定 merge permalinks。兩份索引在獨立 `docs/github-dual-login-contract-postmerge` managed worktree 維護，不在 dev 編輯；該後續文件分支與維護 worktree 尚待本輪文件安全交付後收尾。E010、local-sign-out 等其他工作線與安全資產未操作。
 
 ## PR #69：已合併的獨立驗證環境收納
 
@@ -43,6 +55,7 @@ Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；loc
 | [GitHubConnectionVerification](E014/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 原生 Presentation 元件、假資料 Demo 與 Human 驗收 | 2026-11-11 指定聲音、大字與焦點案例通過，Human明確採用。正式 backend／OAuth 串接屬後續能力。 |
+| [PR #71 OAuth／PAT 雙登入契約](https://github.com/a129924/rivet/pull/71) | GitHubIntegration 的請求 VO、共同 Protocol 與受控結果 | 正式 non-BC 技術契約；success 無帳號／session／clients，未交付真登入，不新增 E 編號。 |
 
 結果的證據層級、主要缺口與決策限制另見 [驗證總覽](VALIDATION-SUMMARY.md)。本索引不授權執行任何 README 中的重現命令、新 OAuth、重試或秘密清理。
 
