@@ -1,8 +1,26 @@
 # GitHub 連線驗證結果摘要
 
-基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；本次只補驗證產物集中收納與既有離線補測的交付事實。
+基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約合併／清理事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；新增雙登入契約的受控交付事實，不擴張既有實驗結果。
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
+
+## PR #71：雙登入契約的受控證據與 Git 收尾（2026-11-16）
+
+[PR #71](https://github.com/a129924/rivet/pull/71) 已於 `2026-11-16T02:15:39Z` 合併並關閉。固定 merge 為 `4ddca1864557c2858266c2cc6d0a21f1e0bb7237`，最後 feature head 為 `3cdbde753ebefb26564d1135376d043e682b13e7`；兩親 merge tree 相同，只證明來源保存，不是本輪新測量版本。
+
+這是既有 non-BC `GitHubIntegration` 的正式技術契約，不是新增 E 實驗或真登入服務。[長期契約](https://github.com/a129924/rivet/blob/4ddca1864557c2858266c2cc6d0a21f1e0bb7237/docs/architecture/github-dual-login-contract.md)、[公開規格](https://github.com/a129924/rivet/blob/4ddca1864557c2858266c2cc6d0a21f1e0bb7237/analysis/github-dual-login-contract/technical-spec.md)與[原驗證／交付帳本](https://github.com/a129924/rivet/blob/4ddca1864557c2858266c2cc6d0a21f1e0bb7237/plan/github-dual-login-contract/github-dual-login-contract.step.md)均固定引用 merge。
+
+| 證據層級 | 原交付支持與限制 |
+| --- | --- |
+| 受控 Swift 契約 | focused 8 tests、GitHubIntegration 229 tests／25 suites、既有 consumer 15 tests／3 suites 通過；focused 新契約使用一般 import，涵蓋 PAT 本地規則、共同結果、診斷遮蔽及取消。三組數字各按原測試邊界閱讀，不相加宣稱獨立案例總數；consumer 15 不冒稱包含新契約。 |
+| 靜態與提交檢查 | format、SwiftLint 140 files／0 violations、diff check 與完整 commit hooks 通過。首次缺 renderer 依賴的 hook 失敗後，以相同 lock 的既有依賴補足 feature 的 ignored cache，重試全通過；沒有略過 hook 或改工具配置。 |
+| 文件與導覽工具 | Archify showcase 9/9、0 errors／warnings、deliver／hashes、四尺寸 containment 通過；最小／最大 light／dark 截圖經獨立審視。PR Lens pinned 0.11.0 在本機 validate／render 通過、綁定最後 feature head 的真實 diff；Graphify 無既存 graph，採 source-search fallback，沒有 build／upload。 |
+
+成功結果只有無 payload `.success`，不交付帳號、session、token capability 或 clients；取消仍是 conformer 義務，不是 Protocol 自動執行。上述受控結果不證明 GitHub 真實授權、PAT 遠端有效性、UI 串接、持久化、refresh／401 或產品登入完成。這輪文件整理不新增 topic 測試／真人證據，提交 hooks 照常執行，不視為重新驗收或驗圖；PR 合併不等於圖的 Human 視覺接受，原帳本的 Draft／human-check 是交付時點快照，不回寫歷史。
+
+語意 annotated tag `v0.1.64-github-dual-login-contract` 已正常建立／推送，local／remote object 都是 `7eacd8e747eb5be78936cf237fa9f15b7a6671a4`，peeled commit 都是上述 merge；不指後續文件 commit，未建立 GitHub Release。原 `feat/github-dual-login-contract` local／remote branch、tracking ref 與原 managed feature worktree 已在最新 clean／head／merge lineage／tag 核對後正常移除，目錄／註冊均不存在，沒有 force／prune。PR 五個分支審閱連結已固定至 merge。
+
+本輪兩份索引由獨立 `docs/github-dual-login-contract-postmerge` managed worktree 編輯，dev 只 fast-forward；該文件分支與維護 worktree 仍待文件安全交付後清理，不預填其成功。E010、local-sign-out、其他 worktree、App／Keychain／Apple 資產不在本輪操作範圍。
 
 ## PR #69：驗證產物歸屬與受限離線補測（2026-11-13）
 
@@ -34,6 +52,7 @@ E015 的六個 focused case 由最終來源新建 CLI，使用 DEBUG、互斥 LA
 | [E010](E010/README.md) | 新 W1 seed／fresh 六欄相符、Human 各全程0提示；原遷移／controlled-stop 歷史保留。 | W2 真自然到期／P1、W3 Rebuilt／完整週期、minimum 完成或新的正式 adapter 採用；RP delete=0，RT 僅 metadata。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 2026-11-11 Human完成指定狀態朗讀、局部大字與focus／rapid案例，明確通過並採用。 | 假資料展示範圍，正式 backend／OAuth 與系統字級偏好整合屬後續能力。Human大字為21pt五畫面及17pt同PAT，15格矩陣沿用工具來源。 |
+| [PR #71 OAuth／PAT 雙登入契約](https://github.com/a129924/rivet/pull/71) | 合併來源保存與既有受控契約／工具驗證，非新增 E。 | success 無帳號／session／clients；不證真登入、UI 接線、遠端有效性或新的 Human 視覺接受。 |
 
 ## E001–E007：已知結果與不能推論之處
 

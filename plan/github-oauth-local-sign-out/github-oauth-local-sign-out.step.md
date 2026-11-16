@@ -108,3 +108,13 @@ ff672c7舊first無法判定與已耗額度保留；Human新增序列first/fresh�
 ## 最終文件交付審查
 
 2026-11-16獨立Reviewer approved（最終文件／evidence一致性），無required fix。T09本次有限成功、來源bb6752a、八項receipt/hash綁定、歷史停點與適用限制已核對；S06 Human最終review仍pending。後續只提交文件／push／更新Draft PR，不merge或追加live操作。
+
+## PR72 base integration（2026-11-16）
+
+依Human修merge conflicts要求，在feature worktree將origin/dev `5713025e3312c0fbc9a7b02a222db0b91d6e1b58`（含PR71雙登入契約）合入既有HEAD `a3271b20584a9f733e1d0b6707935c9a1dd34ede`，使用merge不rebase。唯一人工衝突為README目前狀態段落，保留雙登入契約及本地signOut兩個獨立段落，各驗收／限制不混用。StaticIsolationTests自動合併保留LoginAuthentication、OAuthCredentialClearingStore與OAuthSignOutError的union allowlist；不擴張本topic程式實作。
+
+此為後續base整合，不改E016歷史受測來源bb6752aa483a68043174723a6b3ff2653abe79ce或原live收據，也不重跑App/sign/DPK。待獨立核對後由主session檢查staged diff並處理merge commit／push；本角色不commit。
+
+Implementer局部檢查：unmerged清單為空；cached diffcheck通過，StaticIsolationTests格式strict通過；OAuthLocalSignOutTests／LoginAuthenticationContractTests／StaticIsolationTests共67tests／5suites通過。此為merge後受控檢查，不是重驗E016 live，停在merge待commit，交獨立核對。
+
+PR72衝突解決最終審查：獨立Reviewer approved（conflict resolution／base integration），無required fix；Tester親跑67tests/5suites、format/diffcheck通過，README兩parent原文與contract union保留。使用者已另授權PR Ready，本次維持Ready、不執行遠端merge；受測T09歷史來源bb6752a不變。

@@ -361,7 +361,7 @@ struct StaticIsolationTests {
       "Contracts/OAuthCredentialStore.swift", "Contracts/OAuthCredentialClearingStore.swift",
       "Contracts/OAuthSignOutError.swift", "Contracts/OAuthTokenFetcher.swift",
       "Contracts/OAuthTokenRefreshError.swift",
-      "Contracts/TokenSnapshot.swift",
+      "Contracts/TokenSnapshot.swift", "Contracts/LoginAuthentication.swift",
       "GraphQL/GitHubGraphQLClient.swift",
       "GraphQL/ApolloGraphQLClient.swift",
       "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
