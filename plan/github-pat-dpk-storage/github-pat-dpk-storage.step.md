@@ -3,10 +3,10 @@
 - Topic：`github-pat-dpk-storage`
 - Branch：`feat/github-pat-dpk-storage`
 - 基準：`origin/dev@5713025e3312c0fbc9a7b02a222db0b91d6e1b58`
-- Current phase：Draft 交付準備
-- Current step：P09／in-progress
-- Topic status：pending（離線實作／獨立驗證／審查 approved；Draft 交付中，live 未執行）
-- 最後更新：2026-11-16，Plan-Creator；四份正式 planning artifacts 首次落檔。
+- Current phase：Human review（離線 Draft 已交付）
+- Current step：P06／pending（Human live deferred；P09 已完成離線 Draft 交付）
+- Topic status：pending（離線實作／獨立驗證／審查 approved；Draft PR #73 已交付，live 未執行）
+- 最後更新：2026-11-16，Implementer；獨立審查與工具證據、實作 commit／push／Draft PR 已回讀，Human pending。
 
 文件：[requirements](../../analysis/github-pat-dpk-storage/requirements.md)、[technical-spec](../../analysis/github-pat-dpk-storage/technical-spec.md)、[plan](github-pat-dpk-storage.plan.md)。ReadOnly／Written／Deleted／Modify／TestCase 的唯一變更清單見 technical-spec。
 
@@ -21,14 +21,14 @@
 | P05 | completed | Reviewer | 獨立 code／證據 review，required fixes 清零。 | [review](evidence/review.md)：RF-P05-01 closed，最終離線 approved，required fixes 0。 | approved（離線）；真人仍 pending |
 | P06 | pending | Tester（Human 觀察協作） | 當次 preflight、TC05 跨程序／真正重建、UX 及 owned cleanup 全部有證據。 | 未執行；本輪 Human 明示先跳過 live。 | Human live deferred；不啟動真 Keychain |
 | P07 | pending | Reviewer | 獨立判讀本題 live 結果與限制。 | 尚無。 | 依賴 P06；未判定 |
-| P08 | in-progress | Implementer／Tester／Reviewer | 長期文件、採用紀錄、Archify／PR Lens 實際結果一致；獨立離線審查。 | 尚無；live／Human 視覺結果需如實 pending。 | 離線部分可在 P06 前完成；最終 Human 接受不由本步取代 |
-| P09 | in-progress | Implementer | 已授權 topic commit／push／Draft PR，完成 staged semantic review、必要 checks、推送與 PR 讀回。 | 尚無 commit／push／PR；不得預填。 | 依賴 P02／P04／P05 及 P08 離線 approved；不依賴 deferred P06／P07 |
+| P08 | completed | Implementer／Tester／Reviewer | 長期文件、採用紀錄、Archify／PR Lens 實際結果一致；獨立離線審查。 | [review](evidence/review.md) 離線 approved；[tools](evidence/tools.md) PR Lens map review approved；Human 視覺 pending。 | 離線部分可在 P06 前完成；最終 Human 接受不由本步取代 |
+| P09 | completed | Implementer | 已授權 topic commit／push／Draft PR，完成 staged semantic review、必要 checks、推送與 PR 讀回。 | [publication](evidence/publication.md)：cdddaf6、push 成功、Draft PR #73 回讀。 | 離線交付 completed；不替代 deferred P06／P07 |
 
 ## Blockers
 
 - B01：已解除；P02 獨立 planning verdict approved，限離線範圍。
 - B02：當前有效 signing profile／主機條件未核，且 Human 要求先跳過 live。只阻擋 P06／P07 與整題最終完成，不阻擋 gate 通過後的離線實作或 Draft 交付。
-- B03：RF-P05-01 已經獨立補驗與 Reviewer 關閉，離線 approved。PR Lens 待實際 commit diff；Graphify 無 graph，依 skill 來源搜尋。
+- B03：RF-P05-01 已經獨立補驗與 Reviewer 關閉，離線 approved。PR Lens 實作 commit diff 已 validate／render／獨立 map review approved；Graphify 無 graph，依 skill 來源搜尋。
 - 未有 unresolved code required fix，因 code review 尚未開始；此句不表示已 reviewed。
 
 ## Human Check
@@ -45,4 +45,4 @@
 
 E007 profile renewal 舊無法判定／Human 接受限制、OAuth 真人結果及歷史項目原樣保留。本題不能清舊 item、重用舊 ready 或把舊結果當 PAT AC。對外回覆與 Draft PR 必須區分已實作／已離線驗證／真人 pending。
 
-下一步：依明確 Human 授權 staged semantic review 後 commit／push／Draft PR；實際 commit diff 供 PR Lens。獨立離線 approved 不取代真人 pending。
+下一步：Human review Draft PR #73。Human 回來後再決定是否依 E016 說明進入 P06；不要自行開始簽章或真 DPK。獨立離線 approved 不取代真人 pending。
