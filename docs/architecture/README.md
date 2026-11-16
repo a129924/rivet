@@ -1,6 +1,6 @@
 # Rivet 架構規範
 
-`GitHubPATDataProtectionStore` 已新增單一 PAT 的正式 DPK 保存、讀回與完整替換，採 caller 明確 access group、獨立 namespace 與有限錯誤。受控測試及獨立 E016 unsigned host 為離線準備；真 DPK、跨程序／重建與 Human 提示驗收仍 pending，不代表產品登入或整題完成。詳見 [PAT 儲存契約](github-pat-dpk-storage.md)。
+`GitHubPATDataProtectionStore` 已提供單一 PAT 的正式 DPK 保存、讀回與完整替換。2026-11-16 在指定有效簽章環境，以正式 adapter 完成保存 A、fresh A、整筆 B、fresh B、真正同身分 clean/build、rebuilt fresh B 及 exact-owned cleanup／load=nil；六個 runtime 均 accepted，Human 各全程觀察 0 提示，setup／rebuild 另各 0。受測來源 `5465d3c`，獨立 P07 approved；圖的 Human 視覺與 topic 最終接受仍 pending，不代表產品登入或所有環境保證。詳見 [PAT 儲存契約](github-pat-dpk-storage.md)。
 
 登入 UI topic 已新增 non-BC `RivetLoginView` 與獨立 `RivetLoginDemo` 假資料展示：七態、PAT 本地編輯、原生主窗與獨立控制窗；沒有連接正式 OAuth／PAT、GitHub API 或儲存。Focused 自我測試與 Demo build 通過；root284tests及 lifecycle 四尺寸containment自驗通過，原生完整驗收仍待獨立驗證，未宣稱正式產品登入已交付。詳見 [登入 UI 說明](../presentation/login-ui.md)。
 

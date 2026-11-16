@@ -121,4 +121,4 @@ W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pen
 
 ## E016 — PAT DPK 儲存
 
-[`github-pat-dpk-storage`](E016/github-pat-dpk-storage/README.md) 專屬驗證 host 直接使用正式 PAT adapter。只含離線 controls 與 unsigned 準備；signed/live、跨程序／重建、Human 提示及 cleanup 驗收 pending。與 E015 OAuth 歷史結果分開，不新增產品登入。
+[`github-pat-dpk-storage`](E016/github-pat-dpk-storage/README.md) 專屬驗證 host 直接使用正式 PAT adapter。來源 `5465d3c`／run `39c22b57` 在指定有效簽章環境完成 A→fresh A→整筆 B→fresh B→真正同身分 clean/build→rebuilt fresh B→exact-owned cleanup／load=nil；六 runtime accepted、Human 各全程 0 提示，setup／rebuild 另各 0，獨立 P07 approved。圖與 topic Human 最終接受仍 pending；舊 unknown 原樣保留，與 E015 OAuth 歷史結果分開，不新增產品登入。

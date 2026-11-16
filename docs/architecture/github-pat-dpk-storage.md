@@ -19,4 +19,12 @@ Save 先安全讀取既存項目；壞資料／拒絕／不可用時零覆寫。
 
 受控測試採 internal fake Security，一般 import consumer 不呼真 Security。獨立 [E016 host](../../experiments/E016/github-pat-dpk-storage/README.md) 直接使用 public adapter，並提供 run 專屬 exact cleanup；production 不反向依賴 host。OAuth store 與 E015 僅作機制採用來源，舊成功不當 PAT 證據。
 
-目前交付為正式 adapter、受控驗證與 unsigned host 準備。**真 DPK、跨程序／同身分真正重建、Human 提示觀察及真項目清理均 pending；完整 topic 未完成。** 不推論 profile renewal、certificate rotation、公開分發或 GitHub 遠端接受。詳見本題 [需求](../../analysis/github-pat-dpk-storage/requirements.md)、[規格](../../analysis/github-pat-dpk-storage/technical-spec.md)、[計畫](../../plan/github-pat-dpk-storage/github-pat-dpk-storage.plan.md) 與 [帳本](../../plan/github-pat-dpk-storage/github-pat-dpk-storage.step.md)。
+## 指定簽章環境的真人驗收
+
+2026-11-16，受測來源 `5465d3c7308e74bc2b3b51878acd190d4f2babda`、run `39c22b57-de4f-463c-aa4b-8de277c1f60a`，在當次有效 macOS／簽章／private group 環境，以正式 public adapter 完成非機密 A 保存→writer 結束→fresh A→整筆替換 B→fresh B→真正同身分 clean/build→rebuilt fresh B→exact-owned cleanup→正式 load=nil。六個 runtime 都 runnerAccepted=true，Human 每段 wholeStageObserved=true／0 提示；setup／rebuild 另各全程 0 提示。
+
+真正 Rebuilt 使用獨立 DerivedData，實際 compiler log 核到 `-DPAT_STORAGE_REBUILT`；新 binary 與 Debug 不同，原 certificate／profile／Team／group／DR 及 private pins 保持。原 source `55aa57a` namespace 另以新 readonly recovery 正式 load=nil、accepted／Human 0，沒有再次 delete，也不提升原 read A／cleanup unknown；source `0b0692e` setup unknown 同樣保留。
+
+[真人逐段證據](../../plan/github-pat-dpk-storage/evidence/live-validation.md)、[有限公開結果](../../plan/github-pat-dpk-storage/evidence/live-run-39c22b57.json)與[獨立 P07 審查](../../plan/github-pat-dpk-storage/evidence/live-review.md)界定本次成立範圍；P07 approved、required fixes 0。後續文件 commit 只同步 metadata，不冒充受測程式來源。
+
+圖的 Human 視覺接受與 topic 最終 Human review 仍 pending，**整個 topic 不標 complete**。本次不驗 profile renewal、certificate rotation、其他環境或公開分發、斷電 durability、真 GitHub 遠端接受或產品登入。E007 profile renewal 的既有無法判定及 Human 接受限制不變。詳見本題 [需求](../../analysis/github-pat-dpk-storage/requirements.md)、[規格](../../analysis/github-pat-dpk-storage/technical-spec.md)、[計畫](../../plan/github-pat-dpk-storage/github-pat-dpk-storage.plan.md) 與 [帳本](../../plan/github-pat-dpk-storage/github-pat-dpk-storage.step.md)。

@@ -8,7 +8,7 @@ Goal 是正式 PAT DPK 的保存、讀回、整筆替換與獨立補驗。Non-Go
 
 ## ReadOnly／Written／Deleted／Modify／TestCase
 
-四個檔案變更欄位及 TestCase 的精確清單只由 technical-spec 維護，本計畫以引用構成契約：ReadOnly 只能讀；Written 只新增；Modify 只作列明差異；Deleted 為無。TC01–TC04 是本輪必要離線驗證；TC05 與 AC2／3／9／10 的真人部分保留 pending。新增 store 所需 StaticIsolationTests 白名單變更已列 Modify，不修改 root package graph 或 OAuth 來源。
+四個檔案變更欄位及 TestCase 的精確清單只由 technical-spec 維護，本計畫以引用構成契約：ReadOnly 只能讀；Written 只新增；Modify 只作列明差異；Deleted 為無。TC01–TC04 是本輪必要離線驗證；TC05 與 AC2／3／9／10 的真人部分原先 pending；Human 續行後已在固定 source `5465d3c`／run `39c22b57` 完成並經獨立 P07 approved，圖與最終 Human 接受仍 pending。新增 store 所需 StaticIsolationTests 白名單變更已列 Modify，不修改 root package graph 或 OAuth 來源。
 
 ## 派遣與 gate
 
@@ -19,9 +19,9 @@ Goal 是正式 PAT DPK 的保存、讀回、整筆替換與獨立補驗。Non-Go
 | P03 | Implementer | 新 PAT actor／有限錯誤／internal fake seam、測試、consumer、E016 與使用說明完成；不呼真 Keychain。交付實際變更與待驗範圍。 | P04 |
 | P04 | Tester | 親跑 TC01–04、受影響 OAuth／static 回歸、consumer、E016 runner 離線測試與 unsigned host compile、必要 format／lint／diff 檢查。記來源、命令、結果與 skip。 | P05 |
 | P05 | Reviewer | 獨立檢查 bounded diff、公開／private 契約、隔離、證據與 live 準備，required fixes 清零。 | approved→P08／P09；needs-rework→Implementer |
-| P06 | Human／Tester | 當前 deferred。未來 Human 明確就緒後，核當次 preflight，執行 TC05 並記全段提示與 owned cleanup。 | 本輪保持 pending，不啟動 live |
-| P07 | Reviewer | 當前 pending。獨立判讀 PAT 真 DPK／UX／清理證據，不把 OAuth 或 fake 證據當通過。 | 未完成不宣稱 topic complete |
-| P08 | Implementer → Tester → Reviewer | 回寫長期 PAT 契約、導覽、採用紀錄、Archify sequence 與工具結果，明列真人 pending；Tester 驗圖，Reviewer 獨立核對。離線文件可在 P06 前交付，未來補 live 結果仍需獨立 review。 | 離線 approved 可交 P09；最終 Human 接受仍 pending |
+| P06 | Human／Tester | Human 已逐段就緒並完成 TC05；六 runtime accepted／Human 各全程 0，setup／rebuild 另各 0，指定來源與 run 見帳本。 | Tester completed；交獨立 P07 |
+| P07 | Reviewer | 已獨立判讀指定來源的 PAT 真 DPK／UX／清理證據並明示 approved；舊 unknown 不升格。 | P08 metadata 同步；Human 接受仍待確認 |
+| P08 | Implementer → Tester → Reviewer | 回寫長期 PAT 契約、導覽、採用紀錄、Archify sequence 與工具結果，明列真人結果的來源與剩餘 Human pending；Tester 驗圖，Reviewer 獨立核對。離線文件可在 P06 前交付，未來補 live 結果仍需獨立 review。 | 離線 approved 可交 P09；最終 Human 接受仍 pending |
 | P09 | Implementer | Human 本次已授權 topic commit／push／Draft PR。待 P02／P04／P05 與 P08 離線審查完成，檢查 staged diff、提出 semantic message 並依已明示直接 commit 授權提交；push topic branch、建立指向 dev 的 Draft PR、讀回核對。 | 交付可完成；整個 topic 不標 complete |
 
 Reviewer／Tester 不審查自己的實作；需要修正只回對應產出角色。step status、checkbox 或 tracker 不替代獨立 approved。新 required fix 需 bounded 回修及對應補驗，不無條件重跑已通過檢查。
@@ -44,10 +44,10 @@ Reviewer／Tester 不審查自己的實作；需要修正只回對應產出角�
 
 ## 驗收序列與停止條件
 
-未來 live 固定為 save A→writer 結束→fresh A→replace B→fresh B→真正同身分 clean/build→rebuilt fresh B→exact owned cleanup→正式 load=nil。Human 提示 save A ≤1，其餘四 runtime 各 0，build／sign 另計。失敗／unknown 不啟動相依段；marker／原收據保留，不換 run 或 namespace 掩蓋。
+Live 固定序列為 save A→writer 結束→fresh A→replace B→fresh B→真正同身分 clean/build→rebuilt fresh B→exact owned cleanup→正式 load=nil。Human 提示 save A ≤1，其餘四 runtime 各 0，build／sign 另計。失敗／unknown 不啟動相依段；marker／原收據保留，不換 run 或 namespace 掩蓋。
 
-本輪不開始 P06；有效 profile／主機未核不阻塞已授權離線實作／Draft 交付。scope／path／contract 衝突、缺 required gate、runtime／圖驗證失敗或 required fix 未解時，依明示 verdict 回修或停止；不得把缺證據標成已通過。E007 profile renewal 的歷史與 OAuth 舊證據保持。
+初次 P06 defer 讓離線成果先交付；後續 Human 續行後已完成本次 P06／P07，見帳本與固定來源證據。新的 live 執行仍需當次有效 profile／主機與 Human ready，不能沿用本輪放行。scope／path／contract 衝突、缺 required gate、runtime／圖驗證失敗或 required fix 未解時，依明示 verdict 回修或停止；不得把缺證據標成已通過。E007 profile renewal 的歷史與 OAuth 舊證據保持。
 
 ## 交付與 topic 完成分離
 
-本次可先交付已測、獨立 reviewed 的正式程式／測試／host／文件、topic commits 與 Draft PR；PR 及最終回覆明列 live／UX／cleanup 尚未驗證，不宣稱完整 topic 完成。Human live、圖的 Human 視覺接受、topic 最終 Human review 維持 pending；merge、release、tag 不在本次授權。之後補驗仍沿同 topic 與原帳本追加，不重寫失敗歷史。
+初次離線成果已按 topic commit／push 並開 Draft PR；本次追加受測 code freeze `5465d3c7308e74bc2b3b51878acd190d4f2babda` 的 live 證據及 metadata 回寫，後續文件 commit 不冒充 native 受測來源。P06 完成、P07 approved，圖的 Human 視覺與 topic 最終 Human review 仍 pending，整題不標 complete；merge、release、tag 不在本次授權。後續 metadata 先交獨立 bounded doc review，再提交／推送，不重跑已通過 runtime 或改寫失敗歷史。

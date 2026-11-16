@@ -30,7 +30,7 @@ OAuth／PAT 登入 runtime、登入 UI 與畫面驗收、遠端帳號驗證、se
 1. PAT 專用 async load／save 使用 `PersonalAccessToken`，missing 以 nil 表示；不適配同步且要求 delete 的 `GitHubTokenStore`，不新增產品 delete。
 2. 真 DPK runtime 提示：save A 最多一次；replace B、fresh A、fresh B、rebuilt B 各零次，由 Human 全段觀察。建置／簽章提示另行記錄。
 3. 主機條件不足時，受控成果可先交付，live AC 維持 pending；整個 topic 不宣稱完成。
-4. 最新執行授權允許在唯一 feature worktree 實現、topic commit／push／Draft PR；本輪先跳過 Human live 觀察，不啟動真 DPK runtime，live 與最終 Human 接受維持 pending。此 defer 不移除任何 AC。
+4. 初次執行授權先完成唯一 feature worktree 的實現、topic commit／push／Draft PR並 defer live；Human 後續明確續行，逐段 ready／觀察後已完成 source `5465d3c`／run `39c22b57` 的 TC05，獨立 P07 approved。圖與最終 Human 接受仍 pending；scope／API／path／AC 不變。
 5. Topic commit 仍從 staged diff 依 git-commit-convention 檢查語意邊界並提出 message；Human 已明示直接 commit，無須再次詢問 message。未授權 merge、release 或 tag。
 
 ## Acceptance Criteria
@@ -52,6 +52,10 @@ OAuth／PAT 登入 runtime、登入 UI 與畫面驗收、遠端帳號驗證、se
 
 既有 [OAuth 儲存契約](../../docs/architecture/github-oauth-credential-persistence.md)提供 explicit DPK query、禁止同步、group／service／account、有限錯誤、actor 協調及完整替換策略；[雙登入契約](../../docs/architecture/github-dual-login-contract.md)提供 PAT 值語義與遮蔽。E015 的正式 adapter 驗證接線、跨程序、重建、ownership 與安全收據可選擇採用必要機制，不重用其 ready、額度、真人通過或清理授權。
 
-OAuth 舊成功不是 PAT 成功。E007 的 profile 更新後讀回仍沿用原無法判定及 Human 接受限制。舊 profile 到期資訊不代表目前主機狀態；當次有效 profile／簽章環境尚未核對，真 DPK 執行前必須 preflight。
+OAuth 舊成功不是 PAT 成功。E007 的 profile 更新後讀回仍沿用原無法判定及 Human 接受限制。舊 profile 到期資訊不代表其他當次主機狀態；本次已核有效 profile／簽章環境，且 TC05 完成並經 P07 approved，結果僅限固定來源與 run。新的執行仍須當次 preflight。
 
 後續登入 runtime、UI 接入、啟動恢復及帳號管理為獨立 follow-up，不在本題補造需求。
+
+## 最新驗證狀態
+
+受測 code freeze 為 `5465d3c7308e74bc2b3b51878acd190d4f2babda`，run `39c22b57-de4f-463c-aa4b-8de277c1f60a`；TC05 六 runtime accepted／Human 各全程 0 提示，setup／rebuild 另各 0，exact-owned cleanup 後正式 load=nil。見[真人紀錄](../../plan/github-pat-dpk-storage/evidence/live-validation.md)、[公開結果](../../plan/github-pat-dpk-storage/evidence/live-run-39c22b57.json)與[P07 審查](../../plan/github-pat-dpk-storage/evidence/live-review.md)。此 metadata 回寫不改受測來源；圖與完整 topic 的 Human 接受未完成。

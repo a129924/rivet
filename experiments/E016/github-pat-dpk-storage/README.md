@@ -2,7 +2,13 @@
 
 本 host 只屬於 `github-pat-dpk-storage`，一般 `import GitHubIntegration` 直接使用正式 `GitHubPATDataProtectionStore`。沒有登入、網路、真 PAT 輸入或產品 delete；刪除只在 owned cleanup 使用精確 group／service／`pat` account。Root package 不反向依賴 E016。
 
-目前只交付工具與離線結果。**真 DPK、有效簽章環境、跨程序／重建還原、Human 提示與真項目清理均未執行，維持 pending。** 不繼承 E015 的窗口、ready、真人結果或歷史項目清理權限。E007 profile renewal 限制保持。
+## 目前真人驗收結果
+
+受測來源 `5465d3c7308e74bc2b3b51878acd190d4f2babda`、run `39c22b57-de4f-463c-aa4b-8de277c1f60a`，在指定有效簽章環境完成正式 adapter 的 A 保存→fresh A→整筆 B→fresh B→真正同身分 clean/build→rebuilt fresh B→exact-owned cleanup／正式 load=nil。六個 runtime 均 accepted、Human 各全程觀察 0 提示；setup／rebuild 另各 0。Rebuilt 為不同 binary，實際 `-DPAT_STORAGE_REBUILT` 生效，full identity 保持。
+
+原 source `55aa57a` namespace 另經新 readonly recovery 正式 load=nil、accepted／Human 0；原 read A／cleanup unknown 不升格，source `0b0692e` setup unknown 保留。見[真人紀錄](../../../plan/github-pat-dpk-storage/evidence/live-validation.md)、[公開結果](../../../plan/github-pat-dpk-storage/evidence/live-run-39c22b57.json)及[獨立 P07 approved](../../../plan/github-pat-dpk-storage/evidence/live-review.md)。本次 metadata 更新不改受測 code freeze。
+
+圖的 Human 視覺與 topic 最終接受仍 pending，不表示所有簽章環境、profile renewal／certificate rotation、公開分發、斷電 durability 或遠端登入通過。不繼承 E015 的窗口、ready、真人結果或歷史項目清理權限；E007 renewal 限制保持。
 
 ## 離線入口
 
@@ -22,9 +28,9 @@ xcodebuild -project experiments/E016/github-pat-dpk-storage/PATStorageProbe.xcod
 
 Swift self-test 直接呼叫 live 也使用的 `Probe.perform`，但注入記憶體 store／journal：驗保存 A、替換 B、讀回、無 ownership 不刪除、寫入失敗仍保留 ownership 可清理，以及 marker 寫入失敗時零保存。Python 測試涵蓋實際 prepare／context／publish／observation／export 與 readiness guards，不呼 Security／sign／launch。
 
-## 未來有 Human 在場時
+## 後續操作契約（每次仍須 Human 在場）
 
-以下是操作說明，**不是本輪 live 已完成或自動放行**。每段由 Human 明確表示就緒後才帶 `--human-ready`；前段程序未結束、來源／身分不明、unknown 或提示超標時停止依賴段。不可沿用舊 ready。
+以下是保留的操作說明；本次已執行結果只以上節固定來源／run 證據為準，**不授權自動重跑或新 round**。每段由 Human 明確表示就緒後才帶 `--human-ready`；前段程序未結束、來源／身分不明、unknown 或提示超標時停止依賴段。不可沿用舊 ready。
 
 1. 用已存在的有效私有 access group，在 repository 外的私有父目錄執行 `prepare --repo "$RIVET_PAT_REPO" --parent "$RIVET_PAT_PARENT" --access-group "$RIVET_PAT_GROUP"`。產生唯一 0700 run root；其中 JSON 為 0600，不提交私人目錄。
 2. 在私有 0600 settings JSON 指定已選的 `team`、`identity`、`profile` 三欄：`identity` 必須是已選 certificate 的 40 位十六進位 SHA-1（大小寫皆可），`profile` 是已選 profile 的 Name，不填通用 identity 名稱。不得建立／更新 Apple assets，不使用 provisioning updates。`build --root "$RIVET_PAT_RUN" --variant debug --settings "$RIVET_PAT_SETTINGS" --human-ready` 預設 `--signing-style manual`，將選定 SHA-1／profile Name 作 manual build settings。需要相容已存在的 Xcode-managed profile 時，明確加 `--signing-style automatic`；只重用已快取資產，帶 Automatic／Apple Development 並清空 profile specifier，不帶 provisioning updates／device registration。缺資產就失敗，不下載、不建立新 certificate／profile、不自動重試。兩模式在 copy 到 current、發布 identity 或 build proof 前，都核新 built app 的 Team、profile Name、certificate SHA-1 與三欄 pin 相同，並保留有效 profile、certificate、entitlements、App ID／group、DR 檢查；通過才固定安裝到本 run 的 `current/PATStorageProbe.app`。身分、argv 與原始 build logs 只留私有 root。
@@ -35,7 +41,7 @@ Swift self-test 直接呼叫 live 也使用的 `Probe.perform`，但注入記憶
 
 Runtime 提示門檻：save A ≤1；replace B、fresh A／B、rebuilt B 各 0。Human 必須全段觀察。固定一般 `open -a`，不用 `-W`、`-n` 或 raw live binary；仍要求 open rc=0。Runner 有界等候 secure receipt，再以正整數 PID 的 `os.kill(pid, 0)` 檢查存在（不送訊號），只接受 ESRCH／ProcessLookupError 為退出證據；EPERM／其他錯誤／timeout 不算退出。Host 收據包含本程序 PID／OS 起始時間、instance、binary 與 build variant，退出後重讀完整 guards／穩定 SHA 才發布 acceptance。來源及產物改變會拒絕續行。
 
-寫入前依序 fsync absence 與 write-attempt markers；失敗不丟棄 run／換 namespace。每次 attempt／receipt 獨占建立，不覆寫失敗歷史。若 runtime timeout，可能仍有 host，必須先確認其結束；不自動 kill、不重試原段。清理也失敗時保留完整私有 run 供受限恢復處理，不自行猜測刪除。新 helper 的 signed/live 路徑目前未實測；unsigned compile／fakes 不證明簽章或 DPK 可用。
+寫入前依序 fsync absence 與 write-attempt markers；失敗不丟棄 run／換 namespace。每次 attempt／receipt 獨占建立，不覆寫失敗歷史。若 runtime timeout，可能仍有 host，必須先確認其結束；不自動 kill、不重試原段。清理也失敗時保留完整私有 run 供受限恢復處理，不自行猜測刪除。上節固定來源／run 已有 signed/live 證據；這不擴及其他來源或環境，unsigned compile／fakes 本身仍不證明簽章或 DPK 可用。
 
 ## 選擇性採用
 
@@ -69,4 +75,4 @@ python3 -B experiments/E016/github-pat-dpk-storage/scripts/pat_storage_probe.py 
 
 該子目錄只准 `verify-absence`：Swift host 在建立 LiveStore／任何 Security 操作前核 recovery traces、UUID、source purpose、amendment／controller／attempt hashes 及 ownership。普通 save／read A／replace／cleanup 在 recovery root 都拒絕；normal root 也不能冒用 verify-absence。唯一 storage 操作為正式 load==nil，不 save、不 delete；有值或 load failure 都失敗。Python normal build／run 同樣拒絕任何 recovery 痕跡。
 
-完成後可針對回報的新 recovery root 執行 `observe --phase verify-absence ...` 與 `export ...`，提示門檻為全段 0 次。新 acceptance 綁 recoveryID／amendment，不改原 unknown／receipt／source proof；即使補驗成功，也只表示同 owned namespace 目前缺值，不能提升舊 fresh-read／cleanup unknown 或替代完整新 round 的 A／B／重建驗收。工具修改與 offline fakes 不等同已執行上述 native recovery。
+完成後可針對回報的新 recovery root 執行 `observe --phase verify-absence ...` 與 `export ...`，提示門檻為全段 0 次。新 acceptance 綁 recoveryID／amendment，不改原 unknown／receipt／source proof；即使補驗成功，也只表示同 owned namespace 目前缺值，不能提升舊 fresh-read／cleanup unknown 或替代完整新 round 的 A／B／重建驗收。原 source55 namespace 的本次 qualified readonly recovery 已記於上節；工具修改與 offline fakes 本身不等同任何額外 native recovery，也不授權再執行。

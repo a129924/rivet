@@ -65,7 +65,7 @@ E016 在建立 planning 時路徑／索引均未占用；建立 host 前再核�
 | TC02 | 缺值 nil；有效 A→完整 B；缺 Data／JSON／欄位／型別／版本／空 token／非 canonical token 為 corrupt；拒絕／不可用／編解碼與保存失敗分類；讀取異常零 update／add。 | AC1、5、6 |
 | TC03 | 精確 read／update／add query、accessibility、sync=false；相同 service 下 PAT／OAuth account 隔離；legacy selector 不被操作。 | AC4 |
 | TC04 | continuation／barrier 或同步 fake 觀察同 actor 操作完整序列，不用 sleep 推測；update→notFound→add→duplicate→一次 update，各失敗不假報成功；PAT／錯誤／runner 遮蔽；受影響既有 OAuth 測試回歸。 | AC6、7、8 |
-| TC05 | E016 真 DPK：save A→writer 結束→fresh A→replace B→fresh B→真正 clean/build→rebuilt fresh B→exact owned cleanup→正式 load=nil；獨立記來源／產物／Human 提示。當前 deferred，不執行。 | AC2、3、8、9、10 |
+| TC05 | E016 真 DPK：save A→writer 結束→fresh A→replace B→fresh B→真正 clean/build→rebuilt fresh B→exact owned cleanup→正式 load=nil；獨立記來源／產物／Human 提示。原先 deferred；Human 續行後，source `5465d3c`／run `39c22b57` 已完成並經 P07 approved，見 live 證據。 | AC2、3、8、9、10 |
 
 ## 獨立驗證 host 與 ownership
 
@@ -75,9 +75,9 @@ Host 提供非機密 A／B 與上述受限序列。離線可驗 runner 的實際
 
 Cleanup 僅限有 ownership 的 exact DPK group／service／pat account，由驗證工具刪除，接著正式 load=nil。無 proof 不猜測刪除；未知或仍活 child 不啟動後續依賴。清理失敗保留恢復交接，不刪 OAuth 歷史項目或 Apple signing assets。
 
-未來 live preflight 核對當次有效 profile／certificate、entitlements、App ID／group、DR 與固定啟動位置；同身分重建僅相對 PAT host 本身，不要求與 OAuth host 同 App ID。每段前一程序已結束，新程序有獨立 proof；重建需真正 clean/build、不同產物及相同身分證據，不只重啟舊 binary。Human 全段觀察 save A ≤1 次，其餘 replace B／fresh A／fresh B／rebuilt B 各 0 次；build／sign 提示另列，缺觀察不是 0。
+每次 live preflight 核對當次有效 profile／certificate、entitlements、App ID／group、DR 與固定啟動位置；同身分重建僅相對 PAT host 本身，不要求與 OAuth host 同 App ID。每段前一程序已結束，新程序有獨立 proof；重建需真正 clean/build、不同產物及相同身分證據，不只重啟舊 binary。Human 全段觀察 save A ≤1 次，其餘 replace B／fresh A／fresh B／rebuilt B 各 0 次；build／sign 提示另列，缺觀察不是 0。
 
-收據綁定本題來源、正式 adapter、產物、run、操作與 Human 實際觀察；公開投影不帶私人 identifiers／本機絕對路徑／PAT／原始錯誤。unknown／failure 保留，停止依賴段。當前 Human 已要求跳過 live，故不為此自動查新 signing assets、啟動 signed host 或操作真 Keychain。
+收據綁定本題來源、正式 adapter、產物、run、操作與 Human 實際觀察；公開投影不帶私人 identifiers／本機絕對路徑／PAT／原始錯誤。unknown／failure 保留，停止依賴段。初次 Human 要求先跳過 live；後續另經明確授權，已完成指定來源／run 的正式序列與 P07 approved，詳見 [live-validation](../../plan/github-pat-dpk-storage/evidence/live-validation.md)／[live-review](../../plan/github-pat-dpk-storage/evidence/live-review.md)。本次 metadata 回寫不授權新 signing assets、額外 signed host 或 Keychain 操作。
 
 ## 採用映射
 
