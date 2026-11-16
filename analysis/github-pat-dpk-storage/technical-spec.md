@@ -87,3 +87,7 @@ Cleanup 僅限有 ownership 的 exact DPK group／service／pat account，由驗
 | 雙登入契約／PersonalAccessToken | trim／空值語義及診斷遮蔽 | PAT roundtrip、strict restore 與診斷測試 |
 | E015 正式 adapter host | 必要接線、程序／重建、ownership、有限收據 | E016 離線控制與未來 TC05 |
 | 本題新增 | PAT actor、private schema、一般 import consumer | implementation／tests／review 證據 |
+
+## E016 簽章建置模式補充
+
+工具明確提供 manual／automatic（預設 manual）。Automatic 僅使用已準備的 cached signing assets，不加 provisioning 更新旗標；三欄私人 settings 的 identity 為 selected certificate 的 40-hex SHA1。產物在安裝／發布成功 proof 前須核對 selected Team、profile Name、certificate SHA1 與既有 group／App ID 條件；兩種模式都不得默默替換身分。此為驗證 host 的環境相容選項，不改正式 PAT 儲存介面。來源變更後另建有界 round、保留原失敗與 Human 觀察，並取得新階段 ready。

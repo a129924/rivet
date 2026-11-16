@@ -137,6 +137,8 @@ def inspect(app, group, root):
     require(isinstance(claims, dict) and claims.get("keychain-access-groups") == [group])
     embedded = app / "Contents/embedded.provisionprofile"
     profile = plistlib.loads(command(["security", "cms", "-D", "-i", str(embedded)]).stdout)
+    profile_name = profile.get("Name")
+    require(isinstance(profile_name, str) and profile_name.strip())
     expiry = profile["ExpirationDate"].replace(tzinfo=dt.timezone.utc)
     require(expiry > dt.datetime.now(dt.timezone.utc))
     require(fields["TeamIdentifier"] in profile["TeamIdentifier"])
@@ -158,6 +160,7 @@ def inspect(app, group, root):
     requirement = requirements[0]
     return {"identifier": fields["Identifier"], "team": fields["TeamIdentifier"],
             "group": group, "certificateSHA256": hashlib.sha256(cert_bytes).hexdigest(),
+            "certificateSHA1": hashlib.sha1(cert_bytes).hexdigest(), "profileName": profile_name,
             "profileSHA256": digest(embedded), "requirement": requirement}
 
 
@@ -211,6 +214,10 @@ def build(args):
     settings = read(args.settings)
     require(set(settings) == {"team", "identity", "profile"})
     require(all(isinstance(value, str) and value.strip() and "\n" not in value for value in settings.values()))
+    require(len(settings["identity"]) == 40 and
+            all(character in "0123456789abcdef" for character in settings["identity"].lower()))
+    signing_style = getattr(args, "signing_style", "manual")
+    require(signing_style in ("manual", "automatic"))
     no_active_host(root / "current/PATStorageProbe.app")
     attempt = root / ("build-" + variant + ".attempt.json")
     publish(attempt, {"variant": variant})
@@ -219,15 +226,22 @@ def build(args):
     argv = ["xcodebuild", "-project", str(repo / HOST / "PATStorageProbe.xcodeproj"),
             "-scheme", "PATStorageProbe" if variant == "debug" else "PATStorageProbeRebuilt",
             "-configuration", configuration, "-derivedDataPath", str(derived),
-            "DEVELOPMENT_TEAM=" + settings["team"], "CODE_SIGN_IDENTITY=" + settings["identity"],
-            "PROVISIONING_PROFILE_SPECIFIER=" + settings["profile"],
-            "RIVET_VALIDATION_GROUP=" + run["accessGroup"], "clean", "build"]
+            "DEVELOPMENT_TEAM=" + settings["team"]]
+    if signing_style == "automatic":
+        argv += ["CODE_SIGN_STYLE=Automatic", "CODE_SIGN_IDENTITY=Apple Development",
+                 "PROVISIONING_PROFILE_SPECIFIER="]
+    else:
+        argv += ["CODE_SIGN_STYLE=Manual", "CODE_SIGN_IDENTITY=" + settings["identity"],
+                 "PROVISIONING_PROFILE_SPECIFIER=" + settings["profile"]]
+    argv += ["RIVET_VALIDATION_GROUP=" + run["accessGroup"], "clean", "build"]
     result = command(argv, timeout=600)
     publish(root / ("build-" + variant + ".private.json"), {"argv": argv,
             "stdout": result.stdout.decode(errors="replace"), "stderr": result.stderr.decode(errors="replace")})
     context(root)
     app = derived / "Build/Products" / configuration / "PATStorageProbe.app"
     identity = inspect(app, run["accessGroup"], root)
+    require(identity["team"] == settings["team"] and identity["profileName"] == settings["profile"]
+            and identity["certificateSHA1"].lower() == settings["identity"].lower())
     current = root / "current"
     current.mkdir(mode=0o700, exist_ok=True)
     destination = current / "PATStorageProbe.app"
@@ -330,6 +344,7 @@ def parser():
     item = commands.add_parser("build")
     item.add_argument("--variant", choices=["debug", "rebuilt"], required=True)
     item.add_argument("--settings", required=True)
+    item.add_argument("--signing-style", choices=["manual", "automatic"], default="manual")
     item.add_argument("--human-ready", action="store_true")
     item.set_defaults(action=build)
     item = commands.add_parser("run")

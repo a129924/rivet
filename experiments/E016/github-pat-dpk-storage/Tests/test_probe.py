@@ -61,7 +61,7 @@ class ProbeControls(unittest.TestCase):
         claims = dict(defaults) if signed_claims is None else signed_claims
         entitlements = dict(defaults) if profile_claims is None else profile_claims
         profile = {"ExpirationDate": probe.dt.datetime(2000 if expired else 2099, 1, 1),
-                   "TeamIdentifier": ["TEAM"], "Entitlements": entitlements,
+                   "TeamIdentifier": ["TEAM"], "Name": "Synthetic Profile", "Entitlements": entitlements,
                    "DeveloperCertificates": [b"synthetic-certificate"]}
 
         def fake_command(argv, timeout=30):
@@ -230,6 +230,134 @@ class ProbeControls(unittest.TestCase):
                 with patch.object(probe, "command", side_effect=fake):
                     with self.assertRaises(probe.GuardError):
                         probe.inspect(app, "test.group", self.root)
+
+    def test_inspect_returns_private_profile_name_and_certificate_sha1_pins(self):
+        app = self.root / "selected-pins.app"
+        with patch.object(probe, "command", side_effect=self.signing_fixture(app)):
+            identity = probe.inspect(app, "test.group", self.root)
+        self.assertEqual(identity["profileName"], "Synthetic Profile")
+        self.assertEqual(identity["certificateSHA1"], probe.hashlib.sha1(b"synthetic-certificate").hexdigest())
+
+    def build_fixture(self, style="manual", overrides=None, selected_identity="A" * 40):
+        settings = self.root / "settings.json"
+        probe.publish(settings, {"team": "TEAM", "identity": selected_identity, "profile": "Synthetic Profile"})
+        identity = {"team": "TEAM", "profileName": "Synthetic Profile", "certificateSHA1": "a" * 40,
+                    "identifier": "local.rivet.pat-storage-probe", "group": "test.group",
+                    "certificateSHA256": "b" * 64, "profileSHA256": "c" * 64,
+                    "requirement": "designated => identifier signed-host"}
+        identity.update(overrides or {})
+        calls = []
+
+        def fake_command(argv, timeout=30):
+            self.assertEqual(argv[0], "xcodebuild")
+            self.assertEqual(timeout, 600)
+            calls.append(argv)
+            derived = Path(argv[argv.index("-derivedDataPath") + 1])
+            binary = derived / "Build/Products/Debug/PATStorageProbe.app/Contents/MacOS/PATStorageProbe"
+            binary.parent.mkdir(parents=True)
+            binary.write_bytes(b"synthetic-debug-binary")
+            return subprocess.CompletedProcess(argv, 0, stdout=b"synthetic build", stderr=b"")
+
+        args = argparse.Namespace(root=str(self.root), variant="debug", settings=str(settings),
+                                  human_ready=True, signing_style=style)
+        return args, identity, calls, fake_command
+
+    def test_build_signing_style_cli_defaults_manual_and_accepts_automatic(self):
+        base = ["build", "--root", str(self.root), "--variant", "debug", "--settings", "settings"]
+        self.assertEqual(probe.parser().parse_args(base).signing_style, "manual")
+        self.assertEqual(probe.parser().parse_args(base + ["--signing-style", "automatic"]).signing_style,
+                         "automatic")
+
+    def test_automatic_build_uses_cached_assets_and_postverifies_selected_pins(self):
+        args, identity, calls, fake = self.build_fixture(style="automatic")
+        with patch.object(probe, "command", side_effect=fake), \
+             patch.object(probe, "no_active_host"), \
+             patch.object(probe, "inspect", return_value=identity), \
+             contextlib.redirect_stdout(io.StringIO()):
+            probe.build(args)
+        self.assertEqual(len(calls), 1)
+        argv = calls[0]
+        self.assertIn("CODE_SIGN_STYLE=Automatic", argv)
+        self.assertIn("CODE_SIGN_IDENTITY=Apple Development", argv)
+        self.assertIn("PROVISIONING_PROFILE_SPECIFIER=", argv)
+        self.assertNotIn("A" * 40, " ".join(argv))
+        self.assertNotIn("Synthetic Profile", " ".join(argv))
+        self.assertFalse(any("ProvisioningUpdates" in arg or "ProvisioningDeviceRegistration" in arg for arg in argv))
+        self.assertEqual(probe.read(self.root / "identity.json"), identity)
+        self.assertTrue((self.root / "build-debug.json").exists())
+        self.assertTrue((self.root / "current/PATStorageProbe.app").is_dir())
+
+    def test_manual_build_retains_selected_certificate_sha1_and_profile(self):
+        args, identity, calls, fake = self.build_fixture()
+        with patch.object(probe, "command", side_effect=fake), \
+             patch.object(probe, "no_active_host"), \
+             patch.object(probe, "inspect", return_value=identity), \
+             contextlib.redirect_stdout(io.StringIO()):
+            probe.build(args)
+        self.assertIn("CODE_SIGN_STYLE=Manual", calls[0])
+        self.assertIn("CODE_SIGN_IDENTITY=" + "A" * 40, calls[0])
+        self.assertIn("PROVISIONING_PROFILE_SPECIFIER=Synthetic Profile", calls[0])
+        self.assertFalse(any("ProvisioningUpdates" in arg or "ProvisioningDeviceRegistration" in arg
+                             for arg in calls[0]))
+        self.assertTrue((self.root / "build-debug.json").exists())
+
+    def test_cached_asset_build_failure_does_not_retry_provision_or_publishproof(self):
+        args, identity, calls, _ = self.build_fixture(style="automatic")
+
+        def missing_cached_asset(argv, timeout=30):
+            calls.append(argv)
+            raise subprocess.CalledProcessError(65, argv)
+
+        with patch.object(probe, "command", side_effect=missing_cached_asset), \
+             patch.object(probe, "no_active_host"), \
+             patch.object(probe, "inspect") as inspect, \
+             patch.object(probe.shutil, "copytree") as copy:
+            with self.assertRaises(subprocess.CalledProcessError):
+                probe.build(args)
+            inspect.assert_not_called()
+            copy.assert_not_called()
+        self.assertEqual(len(calls), 1)
+        self.assertFalse(any("ProvisioningUpdates" in arg or "ProvisioningDeviceRegistration" in arg
+                             for arg in calls[0]))
+        self.assertTrue((self.root / "build-debug.attempt.json").exists())
+        self.assertFalse((self.root / "identity.json").exists())
+        self.assertFalse((self.root / "build-debug.json").exists())
+
+    def test_selected_team_profile_or_certificate_mismatch_prevents_copy_and_buildproof(self):
+        for style in ("manual", "automatic"):
+            for field, value in (("team", "OTHER"), ("profileName", "Other Profile"),
+                                 ("certificateSHA1", "d" * 40)):
+                with self.subTest(style=style, field=field):
+                    case = ProbeControls()
+                    case.setUp()
+                    try:
+                        args, identity, calls, fake = case.build_fixture(style=style, overrides={field: value})
+                        with patch.object(probe, "command", side_effect=fake), \
+                             patch.object(probe, "no_active_host"), \
+                             patch.object(probe, "inspect", return_value=identity), \
+                             patch.object(probe.shutil, "copytree", wraps=probe.shutil.copytree) as copy, \
+                             contextlib.redirect_stdout(io.StringIO()):
+                            with case.assertRaises(probe.GuardError):
+                                probe.build(args)
+                            copy.assert_not_called()
+                        case.assertEqual(len(calls), 1)
+                        case.assertFalse((case.root / "current").exists())
+                        case.assertFalse((case.root / "identity.json").exists())
+                        case.assertFalse((case.root / "build-debug.json").exists())
+                        case.assertTrue((case.root / "build-debug.attempt.json").exists())
+                    finally:
+                        case.tearDown()
+
+    def test_automatic_settings_require_selected_certificate_sha1_before_build(self):
+        args, identity, calls, fake = self.build_fixture(style="automatic", selected_identity="Apple Development")
+        with patch.object(probe, "command", side_effect=fake), \
+             patch.object(probe, "no_active_host"), \
+             patch.object(probe, "inspect", return_value=identity), \
+             contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(probe.GuardError):
+                probe.build(args)
+        self.assertEqual(calls, [])
+        self.assertFalse((self.root / "build-debug.json").exists())
 
     def launch_fixture(self, mutation=None):
         app = self.root / "current/PATStorageProbe.app"

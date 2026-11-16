@@ -3,8 +3,8 @@
 - Topic：`github-pat-dpk-storage`
 - Branch：`feat/github-pat-dpk-storage`
 - 基準：`origin/dev@5713025e3312c0fbc9a7b02a222db0b91d6e1b58`
-- Current phase：P06 簽章準備與 preflight
-- Current step：P06／in-progress（Human 已續行並批准私有 Xcode 配置／Build；runtime 未開始）
+- Current phase：P06 正式 setup 相容修補後待新 round
+- Current step：P06／in-progress（原正式 setup unknown／Human 全程 0 提示；新模式已離線 approved，待新來源／run／ready）
 - Topic status：pending（離線實作／獨立驗證／審查 approved；Draft PR #73 已交付，live 未執行）
 - 最後更新：2026-11-16，Implementer；獨立審查與工具證據、實作 commit／push／Draft PR 已回讀，Human pending。
 
@@ -19,7 +19,7 @@
 | P03 | completed | Implementer | 依 approved 契約完成 adapter／tests／consumer／E016，明示交接。 | [store](evidence/implementation-store.md)／[host](evidence/implementation-host.md) 完成交接。 | P02 approved；交獨立 Tester |
 | P04 | completed | Tester | 親跑 TC01–04、回歸、consumer、host 離線驗證／unsigned compile及必要格式檢查。 | [tests](evidence/tests.md)：獨立 Tester 完整離線結果，RF 補驗另列。 | P03 已交接；離線驗證完成 |
 | P05 | completed | Reviewer | 獨立 code／證據 review，required fixes 清零。 | [review](evidence/review.md)：RF-P05-01 closed，最終離線 approved，required fixes 0。 | approved（離線）；真人仍 pending |
-| P06 | in-progress | Tester（Human 觀察協作） | 當次 preflight、TC05 跨程序／真正重建、UX 及 owned cleanup 全部有證據。 | 先前 deferred；Human 已回來續行，私有 Xcode 準備 Build succeeded；[live-preflight](evidence/live-preflight.md) 新當次唯讀查核通過，正式固定位置 build／runtime 待驗。 | 正式 runtime 尚未開始；當段 Human ready／觀察仍必需 |
+| P06 | in-progress | Tester（Human 觀察協作） | 當次 preflight、TC05 跨程序／真正重建、UX 及 owned cleanup 全部有證據。 | 先前 deferred；Human 已回來續行，私有 Xcode 準備 Build succeeded；[live-preflight](evidence/live-preflight.md) 新當次唯讀查核通過，[live-validation](evidence/live-validation.md)：原固定位置 setup 因 managed profile／manual style 不相容失敗；新模式已離線 approved，runtime 待驗。 | 正式 runtime 尚未開始；當段 Human ready／觀察仍必需 |
 | P07 | pending | Reviewer | 獨立判讀本題 live 結果與限制。 | 尚無。 | 依賴 P06；未判定 |
 | P08 | completed | Implementer／Tester／Reviewer | 長期文件、採用紀錄、Archify／PR Lens 實際結果一致；獨立離線審查。 | [review](evidence/review.md) 離線 approved；[tools](evidence/tools.md) PR Lens map review approved；Human 視覺 pending。 | 離線部分可在 P06 前完成；最終 Human 接受不由本步取代 |
 | P09 | completed | Implementer | 已授權 topic commit／push／Draft PR，完成 staged semantic review、必要 checks、推送與 PR 讀回。 | [publication](evidence/publication.md)：cdddaf6、push 成功、Draft PR #73 回讀。 | 離線交付 completed；不替代 deferred P06／P07 |
@@ -27,7 +27,7 @@
 ## Blockers
 
 - B01：已解除；P02 獨立 planning verdict approved，限離線範圍。
-- B02：初次唯讀 preflight 的兩份有效 profile 不匹配 E016 App ID；Human 已批准於私有 Xcode 副本自動配置並 Build，畫面顯示 Build succeeded。新準備 App 已經當次唯讀完整 preflight 通過，profile 有效至 2026-11-23；正式 fixed-location build／runtime 仍待驗，不以 UI／metadata 當 DPK 證據。
+- B02：初次唯讀 preflight 的兩份有效 profile 不匹配 E016 App ID；Human 已批准於私有 Xcode 副本自動配置並 Build，畫面顯示 Build succeeded。新準備 App 已經當次唯讀完整 preflight 通過，profile 有效至 2026-11-23；原正式 setup unknown、Human 全程 0；managed-profile 修補已獨立 37 tests／Reviewer approved，下一次另新 run／ready；不以 UI／metadata 當 DPK 證據。
 - B03：RF-P05-01 已經獨立補驗與 Reviewer 關閉，離線 approved。PR Lens 實作 commit diff 已 validate／render／獨立 map review approved；Graphify 無 graph，依 skill 來源搜尋。
 - P06 前工具四項回修已獨立 30 tests 與 Reviewer approved／closed，見 preflight-review；實際準備產物 metadata 成功另見 live-preflight，runtime 尚未開始。
 
@@ -45,4 +45,4 @@
 
 E007 profile renewal 舊無法判定／Human 接受限制、OAuth 真人結果及歷史項目原樣保留。本題不能清舊 item、重用舊 ready 或把舊結果當 PAT AC。對外回覆與 Draft PR 必須區分已實作／已離線驗證／真人 pending。
 
-下一步：凍結並提交工具修正，核對私有準備產物；使用有效配置做正式固定來源／位置建置。每段 runtime 仍需 Human 當次就緒與提示觀察，之後獨立 Reviewer 判讀 P06。
+下一步：凍結並提交工具修正，核對私有準備產物；使用有效配置做正式固定來源／位置建置。新來源另建 round 並取得當段 Human ready，先正式 automatic clean/build；各 runtime 仍需當次就緒與提示觀察，之後獨立 Reviewer 判讀 P06。
