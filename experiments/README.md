@@ -1,6 +1,24 @@
 # 實驗索引
 
-基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約合併／清理與 PR #72 本地登出合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。
+
+## PR #73／E017：正式 PAT DPK 儲存合併與清理（2026-11-16）
+
+[PR #73](https://github.com/a129924/rivet/pull/73) 已於 `2026-11-16T09:42:56Z` 合併至 `dev` 並關閉；merge 為 `cd76cd3faa192134b77b1c1816bbef2c184ede7b`，最後 feature head 為 `8ffcff3ed2bcf01cccc80ce30078b5c0bcfdbaec`。Merge parents 是 `f89120d61278af6cd696f134762e75487b94ee8a`／上述 feature head；merged tree 同時保存 PR #72 的 E016、本題 E017 與正式 PAT Sources，並非與 feature tree 相同。Merge／後續文件版本是保存點，不是新 live 受測來源。
+
+正式 non-BC `GitHubIntegration` 的 [PAT adapter](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/Sources/BoundedContexts/GitHubIntegration/Stores/GitHubPATDataProtectionStore.swift)提供 caller-owned 單一 GitHub.com PAT 保存、讀回與整筆替換，具明確 namespace、嚴格資料還原、有限錯誤、同實例協調與診斷遮蔽；公開值沿用 `PersonalAccessToken`。[長期契約](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/docs/architecture/github-pat-dpk-storage.md)不包含登入 runtime／UI、遠端有效性、session／clients、legacy 遷移或產品 delete。
+
+採用與驗收鏈為 E006／E007／E015 既有成果 → 正式 Sources 實作 → 原 source `5465d3c7308e74bc2b3b51878acd190d4f2babda` 的 E016 路徑實機驗收 → 現行 [E017 host](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/experiments/E017/github-pat-dpk-storage/README.md)。原 run `39c22b57-de4f-463c-aa4b-8de277c1f60a` 以非機密樣本完成保存 A→writer 結束→fresh A→整筆 B→fresh B→真正同身分 clean/build→rebuilt fresh B→exact-owned cleanup／正式 load=nil。六 runtime 均 accepted、Human whole observed=true／各0提示；setup／rebuild 另各全程0。Full identity 相同、binary不同及實際 Rebuilt compiler flag 均有證據。[真人紀錄](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/plan/github-pat-dpk-storage/evidence/live-validation.md)、[有限結果](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/plan/github-pat-dpk-storage/evidence/live-run-39c22b57.json)與 [P07 approved review](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/plan/github-pat-dpk-storage/evidence/live-review.md)固定原來源，不將合併或改號冒充重驗。
+
+原 `55aa57a` read A／cleanup 的 unknown／accepted=false 與 `0b0692e` setup unknown 保留；55 namespace 的新唯讀 recovery 只證當次正式 load=nil、accepted／Human全程0，沒有重 delete。E016→E017 十檔移轉中八檔 bytes 相同、runner只改兩字串，Python54、全新 scratch 兩 unsigned builds 各113 fake checks、R02／R05 approved僅支持離線歸屬接線，沒有新 signed／Run／DPK驗收。[移轉 mapping](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/plan/github-pat-dpk-storage/evidence/e016-e017-relocation.md)保留固定舊來源及九項 E016 source keys／hash；[移轉測試](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/plan/github-pat-dpk-storage/evidence/e016-e017-tests.md)／[獨立 review](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/plan/github-pat-dpk-storage/evidence/e016-e017-review.md)另列。E016 歸 PR #72，E017 歸本題。
+
+結果限當次同機／GUI使用者／有效簽章與存取身分，驗收 profile 有效至2026-11-23；不證 renewal、certificate rotation、其他環境／公開分發、斷電 durability、真 PAT 遠端有效性或產品登入。E007 renewal 原無法判定與 Human 接受限制不改。HC04 圖的 Human 視覺及 HC05 topic 最終 Human review 仍 pending，PR合併不代替接受；[原帳本](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/plan/github-pat-dpk-storage/github-pat-dpk-storage.step.md)的 Draft／未merge文字是當時快照，不回寫原 evidence／圖。
+
+本次已將精確兩份 untracked Xcode 個人 metadata 可回復保存在 Git common 私有0700 archive，0600 manifest僅存私人來源對照；bytes／mode／owner讀回核符後只移出兩 source leaves，feature fresh clean／無untracked。Archive不commit／push，外部私有 Xcode／signed artifacts／runs／proofs及Apple／DPK資產保持。
+
+Annotated tag `v0.1.66-github-pat-dpk-storage` 已建立／推送並讀回核對：local／remote tag object 同為 `cd8fa8ea85c3f44e059de4fde47b8d1a304677ea`，peeled commit 精確為上述 merge `cd76cd3faa192134b77b1c1816bbef2c184ede7b`；不指後續文件 commit 或原 live binary，不是 GitHub Release。原 `feat/github-pat-dpk-storage` 在 fresh clean／無untracked／head／merge lineage／locks／無active mutation核對後，已正常移除managed feature worktree、以 `git branch -d` 刪local branch，並在remote仍為feature `8ffcff3` 時刪exact remote ref；local／remote／tracking refs、worktree目錄／精確registration均已核不存在，未force／prune。
+
+PR #73 的十四個branch型blob／tree URL已固定為上述merge permalinks，逐項object與最後feature相同，body其他bytes不變；讀回仍closed／merged。兩索引由獨立 `docs/github-pat-dpk-storage-postmerge` managed worktree交付，文件commit由本次Git history定位；原hooks照常，remote dev只接受safe fast-forward，dev工作樹只作clean gate後的 `--ff-only` baseline同步、不在dev編輯。本文件分支／worktree只於文件安全保存remote及fresh clean後正常移除，不預填該後續動作成功。E010工作線、外部私有Xcode／signed artifacts／runs／proofs、DPK／Apple資產與原topic artifacts／evidence／圖不操作；本次不重跑實驗，也不將merge／Git清理代替HC04／HC05接受。
 
 ## PR #72／E016：正式本地登出與有限 DPK 結果（2026-11-16）
 
@@ -65,6 +83,7 @@ Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；loc
 | [E009](E009/README.md) | 手動獨立 browser 的首次登入／同意／帳號結果 | M03 在 Human 回報與來源契約層級受限成功；M04 建置與 mock 檢查不構成另一次真人成功。 |
 | [E010](E010/README.md) | DPK profile 自然到期後原假憑證恢復 | W1 seed／fresh 六欄相符、Human 各全程0提示，僅受限 baseline 成功；W2 真到期／P1、W3 Rebuilt 與完整週期待驗，RP cleanup blocked。 |
 | [E016](E016/README.md) | 正式本地 signOut／精確 credential clear 的獨立 DPK first／fresh 驗收 | PR #72 已合併；bb6752a 真 DPK／synthetic 兩程序有限成功，Human 各完整觀察 zero；舊停點／已耗額度與 configuration／sentinel 殘留保留，不代表真 OAuth／UI 或普遍環境。 |
+| [E017／PR #73 PAT 儲存](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/experiments/E017/github-pat-dpk-storage/README.md) | 正式 PAT adapter 的獨立儲存驗收host | source5465原E016路徑真DPK六runtime accepted／Human各全程0；現E017只做離線改號驗證，不冒稱新live pass，HC04／HC05 pending。 |
 | [GitHubConnectionVerification](E014/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 原生 Presentation 元件、假資料 Demo 與 Human 驗收 | 2026-11-11 指定聲音、大字與焦點案例通過，Human明確採用。正式 backend／OAuth 串接屬後續能力。 |
