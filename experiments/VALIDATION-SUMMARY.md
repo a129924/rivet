@@ -1,8 +1,23 @@
 # GitHub 連線驗證結果摘要
 
-基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；分列雙登入契約及本地登出／E016 的交付事實，不擴張其他實驗結果。
+基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；分列雙登入契約及本地登出／E016 的交付事實，不擴張其他實驗結果。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
+
+## PR #74：登入 runtime 的交付、證據與 Git 收尾（2026-11-17）
+
+[PR #74](https://github.com/a129924/rivet/pull/74) 於 `2026-11-17T04:02:54Z` merged／closed 至 `dev`。固定 merge `4912c5a8d89a1f8e5cbac8d4e9ae4be5bacd009e` 的 parents 為 `1f31b35604adb5bb36326e52f9d6dbcff0cac763`／最後 feature `163047f0a295707f957bce96025b4cd9e79f36f9`，tree 與 feature 相同。Runtime commit `fa93773ed090a4d07eb96f6bd43f3ab0b922cbb5` 之後只有交付 metadata；merge／tag 是保存點，不是新 build 或新的真人受測來源。
+
+| 證據層級 | 已支持結果與界線 |
+| --- | --- |
+| 正式 runtime／受控依賴 | OAuth／PAT 共同入口、候選 token `/user` 驗證後才保存、另一 store 保留、整次登入與收尾期間拒絕重疊、取消傳遞／等待 settled／最後同步 check。原 focused20 tests、root358 tests／45 suites、consumer19 tests／5 suites、format、strict lint155 files／0 violations與hooks通過；R02與R05 approved、required fixes0。不是本次cleanup重驗或真遠端／Security結果。 |
+| 隔離工具與圖 | [獨立 Swift package](https://github.com/a129924/rivet/blob/4912c5a8d89a1f8e5cbac8d4e9ae4be5bacd009e/experiments/github-dual-login-runtime/README.md)只 build、未執行 binary，root不反向依賴、無新E編號。Archify9/9／0errors0warnings、deliver、四尺寸containment與Agent看圖通過，Human視覺pending。PR Lens0.11.0只本機validate／render；Graphify0.9.73無圖採原始碼fallback，未建圖。 |
+| 真 GitHub／DPK／Human | TC08真OAuth／PAT、當次有效signed host、fresh-process讀回尚未執行；圖Human與topic最終接受pending。舊E013／E014、OAuth完整bundle或PAT儲存live不得回填；合併不代表產品登入UI、session／clients或refresh／恢復流程已交付。 |
+
+[長期契約](https://github.com/a129924/rivet/blob/4912c5a8d89a1f8e5cbac8d4e9ae4be5bacd009e/docs/architecture/github-dual-login-runtime.md)、[獨立測試](https://github.com/a129924/rivet/blob/4912c5a8d89a1f8e5cbac8d4e9ae4be5bacd009e/plan/github-dual-login-runtime/evidence/verification.md)、[成果審查](https://github.com/a129924/rivet/blob/4912c5a8d89a1f8e5cbac8d4e9ae4be5bacd009e/plan/github-dual-login-runtime/evidence/review.md)、[交付帳本](https://github.com/a129924/rivet/blob/4912c5a8d89a1f8e5cbac8d4e9ae4be5bacd009e/plan/github-dual-login-runtime/github-dual-login-runtime.step.md)及[圖收據](https://github.com/a129924/rivet/blob/4912c5a8d89a1f8e5cbac8d4e9ae4be5bacd009e/docs/architecture/diagrams/github-dual-login-runtime/BUILD.md)固定引用保存來源；原pre-merge狀態按歷史快照閱讀，不改原證據。儲存正式能力沿用原stores，沒有legacy遷移／delete或active-mode紀錄；已保存後觀察取消可回cancelled且不回滾。
+
+Annotated tag `v0.1.67-github-dual-login-runtime` 已建立／推送並核 local／remote object 均為 `8910b7ee3ee6498b47ab5a14522b553534ada7ad`，peeled精確指向merge `4912c5a8d89a1f8e5cbac8d4e9ae4be5bacd009e`；不是新live、後續文件版本或GitHub Release。原feature local／remote／tracking refs與managed worktree已正常刪除並核absent，無force／prune。兩索引以獨立postmerge文件分支維護，remote dev只接受安全fast-forward，dev不直接編輯；本次文件hooks不當新runtime驗收。臨時文件worktree只在內容安全保存及fresh clean後收尾，不預填成功；其他工作線／App／Keychain／Apple資產不動。
+
 
 ## PR #73／E017：PAT 儲存的三層證據與 Git 收尾（2026-11-16）
 
