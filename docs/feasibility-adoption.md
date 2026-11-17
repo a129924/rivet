@@ -64,3 +64,9 @@ LU-A02／03／04的native互動／時序及Human聲音／最終UI接受仍缺證
 | LU-A05／06 | 已排除，理由不變 | 展示／外部測試host僅作受控消費端，快捷鍵不進production；認證／儲存／session不在本topic。 |
 
 證據來源是Human對話回報，無音檔或精確時間量測；跨視窗Controls未驗及原`⌘⇧3／4`截圖衝突不算元件失敗，也不算通過。第二組只改外部host兩個快捷鍵為`⌘⇧7／8`後取得新確認，第一組與先前結果保留。採用方式及來源關係不變，本輪更新經[R03獨立審查](../plan/rivet-login-ui-adoption/evidence/voiceover-review.md)approved，僅限補證與既有Draft更新；不因checkbox或文件存在推定approval。
+
+### Human 正式 UI 接受：2026-11-17
+
+Human明確回覆「接受目前這版正式 Login UI／UX」，[HC01紀錄](../plan/rivet-login-ui-adoption/evidence/human-acceptance.md)對應交付`3c9baf3`、乾淨預覽程式`42e99fa`及binary SHA4d4cf13f719e…。前述T03／R03當時的最終接受pending保留為歷史；最新正式文案與視覺／UI已獲Human接受。
+
+LU-A01／02／03／04維持「已採用，限既有所列UI契約／受測案例」，採用方式不變；本次只是Human接受，不增加未執行的native／VoiceOver結果或外推所有環境。LU-A05／06仍排除正式搬移；驗證host與乾淨預覽是分開的消費端，真認證／Adapter／儲存／session仍不在本topic。原來源與歷史限制不覆寫，PR仍Draft／未merge。
