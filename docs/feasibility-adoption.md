@@ -30,3 +30,11 @@ Topic：`rivet-login-ui-adoption`。識別 LU-A01–LU-A06 為本輪補建，不
 ### 歷次更新
 
 - 2026-11-17：唯讀audit先記LU-A01–03原契約已採用、LU-A04部分、LU-A05–06本次排除。實作後新增各子能力的新版缺口判定，原接受紀錄保留；本次來源為base＋feature工作區尚未commit，不填虛構SHA。待獨立驗證後按實際證據續記，不覆蓋本輪限制。
+
+### Draft 交付補充：2026-11-17
+
+以上初次 I01／T01 觀察保留為歷史。交付實作 commit 為 `d762f935ec2d4e220e7bc2135e6b80daa21bef3e`，整合 base 為 `ab77391b73291deb1ce3d96cef72f981aeb3104a`；[Draft PR #75](https://github.com/a129924/rivet/pull/75) 以 dev 為目標，未 merge。
+
+獨立 Tester 已完成有界驗證，focused32 tests／7 suites、Demo build／scoped checks與圖hash通過，但TC02／03／05 native未驗；R01及post-rebase補充皆approved僅Draft交付。原root基線編譯失敗由上游修正，整合後root361 tests／46 suites實際通過，不覆蓋舊失敗。
+
+LU-A02／03／04的native互動／時序及Human聲音／最終UI接受仍缺證據，維持部分採用；不把root全測通過當成native UI已驗。來源與接入關係不變，沒有新建登入VO或接認證／儲存／session。最新缺口改由Draft Human checklist續驗，詳見本topictesting／review／delivery evidence。

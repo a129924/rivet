@@ -84,6 +84,6 @@ RivetLoginView(
 
 本 topic 的實作／測試證據見 [I01](../../plan/rivet-login-ui-adoption/evidence/implementation.md)，採用程度與方式見 [獨立採用紀錄](../feasibility-adoption.md)。目前已完成 helper／content／model 自測與 root Demo build；真正 SwiftUI 操作、focus／identity／callbacks 的獨立驗證及 Human 聲音／最終接受分列待驗，不能用 model tests 代替 native UI。
 
-root `swift test` 被基線既有 `FakePATSecurity` 缺 `GitHubOAuthSecurityClient.delete` 編譯缺陷阻擋，相關檔案與 base bytes 相同；不改認證來源來取得綠燈。外部 focused manifest 直接引用本 feature 的正式 Presentation／E011 sources/tests，用相同 Swift6、macOS15、target names 與資源規則驗證，不等於 root suite 通過。
+初次查核基線 `1f31b35` 的 root `swift test` 被既有 `FakePATSecurity` 缺 `GitHubOAuthSecurityClient.delete` 編譯缺陷阻擋，相關檔案與當時 base bytes 相同；原失敗歷史保留。上游修正後，本 feature 整合至 `ab77391`，root 實際執行 **361 tests／46 suites 通過**，正式 Demo build 也通過；本 topic 沒有修改認證來源。獨立 focused 32 tests／7 suites 證據仍只支持其 helper／content／model 範圍，不替代 native 互動。整合與 Draft 交付見 [D01／D02](../../plan/rivet-login-ui-adoption/evidence/delivery.md)。上游已有登入 runtime，UI 與其間的外層 Adapter 仍未接線。
 
 [原七態 lifecycle](diagrams/rivet-login-ui/login-lifecycle.html) 保持凍結；本次 [後繼 lifecycle](diagrams/rivet-login-ui/login-lifecycle-v2-r1.html) 與 [BUILD 證據](diagrams/rivet-login-ui/BUILD.md) 記錄 UI events／parent-owned phase，文件層 VO 對應沒有畫成已接線 runtime。圖面視覺接受與產品 VoiceOver 接受是不同證據。

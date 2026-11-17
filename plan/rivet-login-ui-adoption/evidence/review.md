@@ -36,3 +36,20 @@ r1 spec 為 4216 bytes、SHA `cbe8f9ddf635ca045a0605af215ff7f9b13fa44132be96c93c
 允許 D01／D02，前提是僅提交已審 topic 範圍，PR target=dev、保持 Draft，描述明列 root 編譯阻擋與 native 未驗 checklist，不 merge／tag／release。Delivery 記錄可補真實 commit／PR 與暫存 process 收尾事實，但不得回填 native pass、改寫 T01 incomplete 或擴張受審 source。
 
 `current_step: R01 completed`；`next_step: D01`；`status: COMPLETE`（本輪有界獨立 review）；`verdict: approved`（僅 Draft 交付）。
+
+
+## R01 補充：未 push 前 rebase 的有界核對
+
+- 日期：2026-11-17；Reviewer，僅核對整合差異，未重做 native／GUI，未重跑 build／tests。
+- 原規劃／T01 基線仍為 `1f31b35604adb5bb36326e52f9d6dbcff0cac763`；原始 payload commit `cd49069caba650c76bb330ae6fad0727d591f00a`。
+- 遠端 dev 合入正式登入 runtime 後，新的 integration base 為 `ab77391b73291deb1ce3d96cef72f981aeb3104a`；rebase 後 payload 為 `d762f935ec2d4e220e7bc2135e6b80daa21bef3e`。沒有把新結果回填舊基線。
+
+### 核對結果
+
+1. 以兩個 payload commit 的 `git show` 逐 bytes 比較 I01 列明的 13 份 UI／E011／Presentation 測試來源，全部相同，SHA 仍符合原 I01 表格。沒有 UI source 修正或新的未審行為。
+2. 新 integration base 到 rebased payload 的實際 topic diff 不含 `Package.swift`、GitHubIntegration 來源或其測試；README／架構首頁只改原 topic 的 UI 摘要，新上游 `github-dual-login-runtime.md` 現況保留。
+3. 既有 `LoginAuthentication.swift` 在原基線與新 dev 間逐 bytes 相同。UI 的 VO 對應仍僅文件，`RivetPresentation` 沒有認證依賴／Adapter／request 建構；上游 runtime 存在不代表本 topic 已接入。
+4. Root 在新基線親跑 `swift test --disable-automatic-resolution`，回報 exit 0；Reviewer 讀 raw log 核對 `361 tests in 46 suites passed after 3.458 seconds`。該 log SHA-256 為 `fbe7994758046d53cb309a9e51dc278e226423e267a11c17b4deec4eb7bcbd64`。這是 root 新整合測試證據，不冒稱本 Reviewer 另行重跑。
+5. Root 另回報新基線 Demo build exit 0、0.84s。原 T01 在舊基線親跑 `FakePATSecurity.delete(_:)` 缺項的失敗歷史保留；該限制已由上游修正，不能繼續當作新基線全測試未通過。
+
+**補充 verdict：延續 approved，仍僅放行 D01／D02 的 topic commit／push／Draft PR；required fixes 無。** Native TC02／TC03／TC05、VoiceOver 與最終 UI 接受仍 pending；361 tests 不代替 native UI 互動，也不放行 merge。交付文件以新／舊基線分列最新 root pass 與舊失敗，不覆寫 T01 原紀錄。
