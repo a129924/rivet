@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "OAuth／PAT 登入：驗證後保存",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1280,
+      600
+    ]
+  },
+  "participants": [
+    {
+      "id": "caller",
+      "type": "external",
+      "label": "呼叫端"
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "登入服務"
+    },
+    {
+      "id": "coordinator",
+      "type": "backend",
+      "label": "協調器"
+    },
+    {
+      "id": "oauth",
+      "type": "security",
+      "label": "OAuth 通道"
+    },
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub API"
+    },
+    {
+      "id": "store",
+      "type": "database",
+      "label": "憑證儲存"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m1",
+      "from": "caller",
+      "to": "service",
+      "y": 160.0,
+      "label": "authenticate(request)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m2",
+      "from": "service",
+      "to": "coordinator",
+      "y": 195.5,
+      "label": "取得整次登入占用權",
+      "variant": "default"
+    },
+    {
+      "id": "m3",
+      "from": "coordinator",
+      "to": "service",
+      "y": 231.0,
+      "label": "允許；已占用則拒絕",
+      "variant": "return"
+    },
+    {
+      "id": "m4",
+      "from": "service",
+      "to": "oauth",
+      "y": 266.5,
+      "label": "僅 OAuth：瀏覽器授權與交換",
+      "variant": "security"
+    },
+    {
+      "id": "m5",
+      "from": "oauth",
+      "to": "service",
+      "y": 302.0,
+      "label": "完整 bundle；通道已收尾",
+      "variant": "return"
+    },
+    {
+      "id": "m6",
+      "from": "service",
+      "to": "github",
+      "y": 337.5,
+      "label": "兩路候選 token：GET /user",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m7",
+      "from": "github",
+      "to": "service",
+      "y": 373.0,
+      "label": "HTTP 200 與有效帳號",
+      "variant": "return"
+    },
+    {
+      "id": "m8",
+      "from": "service",
+      "to": "store",
+      "y": 408.5,
+      "label": "提交前取消檢查後，保存對應憑證",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m9",
+      "from": "store",
+      "to": "service",
+      "y": 444.0,
+      "label": "保存成功或有限失敗",
+      "variant": "return"
+    },
+    {
+      "id": "m10",
+      "from": "service",
+      "to": "coordinator",
+      "y": 479.5,
+      "label": "原 worker settled 後釋放占用權",
+      "variant": "default"
+    },
+    {
+      "id": "m11",
+      "from": "service",
+      "to": "caller",
+      "y": 515.0,
+      "label": "最後同步取消檢查，再回傳 Outcome",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "取消與提交",
+      "items": [
+        "預先取消不開始工作；執行中取消傳給原 worker",
+        "等待原工作與通道收尾；最後同步檢查後不再 await",
+        "保存完成後仍可能 cancelled，保留副作用、不回滾"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "隔離與結果",
+      "items": [
+        "共享任一保存目的地，所有 service 共用同一協調器",
+        "重疊登入直接拒絕；不涵蓋其他程序或背景 provider",
+        "OAuth／PAT 分開保留；成功不交付帳號或 session"
+      ]
+    }
+  ]
+}
