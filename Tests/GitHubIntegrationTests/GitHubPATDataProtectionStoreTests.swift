@@ -336,4 +336,9 @@ private var invalidPATPayloads: [Data] {
     + [Data([0xFF]), Data("[]".utf8)]
 }
 
-extension FakePATSecurity: GitHubOAuthSecurityClient {}
+extension FakePATSecurity: GitHubOAuthSecurityClient {
+  func delete(_ query: [CFString: Any]) -> OSStatus {
+    Issue.record("PAT isolation tests must never delete an OAuth item")
+    return errSecUnimplemented
+  }
+}
