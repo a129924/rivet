@@ -30,6 +30,27 @@ RivetLoginView(
 
 `RivetLoginContent`／`RivetLoginStatusContent` 是 immutable、Equatable、Sendable 的 display-ready copy，具 public initializer。正式 `.standard` 無模擬／Demo Controls／example-only 文案。Connected 的標題／宣告為 `Sign-in completed.`，只表示本次登入完成，不表示 session、account payload、provider 或 clients 已建立，也不宣稱已保存憑證。Failure 沿用 parent 提供的 `RivetLoginFailure(message:origin:)`。
 
+## 乾淨原生預覽（I02）
+
+正式外觀預覽與下節受控展示是兩個獨立入口，使用同一 `RivetLoginView`；預覽固定傳入 `RivetLoginContent.standard`。Footer 與 failure message 不屬於 `.standard`，由預覽 host 提供中性正式文字：footer 為 `Connect your GitHub account to Rivet.`；兩種 failure 分別提示重試或檢查 token，不使用模擬錯誤文字。
+
+乾淨 host 只建一個原生主窗，沒有 Demo Controls、測試 overlay、debug label、事件計數或測試選單。預覽的 parent 仍使用既有假事件處理，不接認證、儲存或 session；不會自動完成等待／驗證。驗證中與完成畫面由啟動參數指定，切換畫面需重新啟動。
+
+同一既有 executable 的使用方式：
+
+```sh
+# 先在 feature checkout 使用固定依賴與標準 SwiftPM sandbox build。
+swift build --skip-update --disable-automatic-resolution --product RivetLoginDemo
+# 原生 GUI 透過下述獨立 .app wrapper 啟動，不直接執行裸 binary。
+open "$PREVIEW_APP" --args --state pat --appearance dark --text-size 17
+```
+
+App-local CLI 契約為 `--preview [--state <state>] [--appearance system|light|dark] [--text-size <13...21>]`；預設 welcome／system／13，字級可為範圍內有限小數。State 是 welcome、pat、waiting、verifying-account、verifying-token、browser-failure、token-failure、completed。缺值、未知／重複選項及不合法字級在建窗前拒絕，退出碼2。
+
+獨立 preview wrapper bundle ID 為 `local.rivet.login-ui-preview`，放於 feature `.build`，不 commit、不覆寫歷史 wrapper；此身分的 app 啟動即預設選 preview，`open` 不附 args 也不會誤開展示介面。一般 `RivetLoginDemo` 沒有 `--preview` 時仍啟動原展示 host／Controls。當前 wrapper 相對位置、build／差異測試與來源記於 [I02 證據](../../plan/rivet-login-ui-adoption/evidence/clean-preview-implementation.md)。
+
+這是本次驗收入口修正，不表示新的 Human 外觀接受。T02／T03／H01–H08 原證據保留；獨立 T04／R04 只補驗本入口差異，再回 HC01 最終接受，尚未 merge。
+
 ## E011 受控展示
 
 展示 host／Runtime／專屬測試維持 [E011](../../experiments/E011/README.md) 歸屬。E011 呼叫相同正式 View，由本地 `LoginDemoCopy` 提供模擬文字、假 phase 及事件處理；不呼叫真 VO／service。正式 library 無 demo mode。建立入口預設停用。

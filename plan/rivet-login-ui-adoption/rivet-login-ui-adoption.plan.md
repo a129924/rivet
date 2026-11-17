@@ -89,3 +89,18 @@ Human 已明確授權：本 topic 沒有重大問題時直接 commit→push→Dr
 - [需求](../../analysis/rivet-login-ui-adoption/requirements.md)
 - [技術規格](../../analysis/rivet-login-ui-adoption/technical-spec.md)
 - [執行帳本](rivet-login-ui-adoption.step.md)
+
+
+## I02 補充：乾淨原生預覽入口（2026-11-17）
+
+Human 在既有 UI scope 要求驗收正式 Login 外觀。本次僅新增 E011 app-local 的獨立乾淨 host，保留既有展示 host／Controls／LoginDemoCopy，不擴正式 library 或真登入能力，不重開架構或新增 gate。
+
+- Written：`experiments/E011/Sources/RivetLoginDemoRuntime/LoginPreviewConfiguration.swift`、`LoginPreviewHost.swift`；`experiments/E011/Tests/RivetLoginDemoRuntimeTests/LoginPreviewConfigurationTests.swift`；本 topic `evidence/clean-preview-implementation.md`。
+- Modify：既有 executable `experiments/E011/Sources/RivetLoginDemo/main.swift` 增加 `--preview` 分流；`Sources/Presentation/Login/RivetLoginView+Previews.swift` 只替換 footer／failure 展示文字；`docs/presentation/login-ui.md`、本 topic technical-spec／plan／step。
+- ReadOnly：Package.swift／Package.resolved、正式 View／content／component／intent 實作、既有 Demo host/model/copy、E011 README、T02／T03／H01–H08 歷史與凍結圖。Deleted：無。
+- CLI：同一 `RivetLoginDemo` executable；無 `--preview` 維持原展示入口。乾淨入口為 `--preview [--state <state>] [--appearance system|light|dark] [--text-size <13...21>]`，預設 welcome／system／13。state 為 welcome、pat、waiting、verifying-account、verifying-token、browser-failure、token-failure、completed；非有限／超範圍字級、未知／缺值／重複選項在建窗前拒絕，不靜默改成展示模式。
+- Host：單一原生主窗，直接組合 `RivetLoginView(content: .standard)`；不建立 Controls、overlay、debug labels、事件計數或測試選單。CLI 只指定啟動畫面／外觀／字級；重新啟動切換，沒有 timer 或自動完成。
+- Parent：重用既有 LoginDemoModel 的 fake event 處理，不呼認證服務／VO／儲存／session。初始 failure 由 preview configuration 提供中性可重試文字，不使用模擬 failureMessage。
+- `.standard` 不含 footer 或 failure message；host 明確提供中性 footer `Connect your GitHub account to Rivet.` 與 failure copy，不誤稱它們來自 `.standard`。不修改正式 content schema 或空 footer 行為。
+- 原生 wrapper：可在 feature `.build` 新增獨立 `RivetLoginPreview.app`，bundle ID `local.rivet.login-ui-preview`，複製同一正式 debug executable／Presentation resource bundle，不覆寫既有 wrapper，不 commit `.app`。此 bundle ID 在同一 executable 入口預設選擇 preview，即使 `open` 未附參數也不會誤開展示 host；外加 state／appearance／text-size 參數仍由相同 parser 處理。本實作階段只準備，不啟動或停止其他 app。
+- 差異驗證：配置／八種 phase 選擇、邊界參數拒絕、中性 copy 與 Demo copy 隔離、fake callbacks不自動推進，受影響 tests、正式 executable build、scoped format／lint／diff-check；不因預覽入口重跑不相關完整 suite，也不重產 lifecycle。獨立 Tester T04 驗證單窗／原生外觀／無展示文字及必要事件；R04 獨立審查後回 HC01，既有 T02/T03/H01–H08 結果保留。本次 preview 不宣稱 Human 已接受，HC01 仍 pending／no merge。

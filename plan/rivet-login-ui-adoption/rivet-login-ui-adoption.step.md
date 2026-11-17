@@ -4,9 +4,9 @@
 - Branch：`feat/rivet-login-ui-adoption`
 - 原查核 Base：`1f31b35604adb5bb36326e52f9d6dbcff0cac763`
 - 交付整合 Base：`origin/dev`／`ab77391b73291deb1ce3d96cef72f981aeb3104a`
-- 最後更新：2026-11-17，Reviewer，R03已完成T03補證／採用分類獨立審查，approved僅補證與既有Draft更新。
-- Current Phase：Human review；T03所列VoiceOver案例已由Human確認，R03 approved僅補證與既有Draft更新，最終視覺／UI接受仍pending。
-- Current Step：HC01，pending，owner=Human；R03 completed，補證文件可依既有授權更新Draft後停最終Human接受，不新增approval gate、不merge。
+- 最後更新：2026-11-17，Reviewer，R04 source/docs受限approved、無required fix；T04 native拒絕及既有T02/T03/H01–H08界線保留。
+- Current Phase：R04 source/docs交付可前進；native啟動停Human操作當下確認，最終視覺／UI接受仍pending。
+- Current Step：HC01，pending，owner=Human；已審I02 source/docs可依既有授權交付，native啟動須當下確認，T04 incomplete保留、不merge。
 - 上游：Planner 規劃準備 approved；Human 已接受對話方案與本 topic 執行授權。這些不替代 P02 的獨立 planning verdict。
 - 本帳本的 completed／pending 不是 approval；只依明示 verdict 路由。
 
@@ -25,11 +25,15 @@
 | D02 | completed | Implementer | D01後push本feature branch，建立target=dev之Draft PR，描述揭露Human／工具pending與限制 | feature branch 已push；[Draft PR #75](https://github.com/a129924/rivet/pull/75)，base=dev；Human checklist及native缺口已揭露，詳見evidence/delivery.md | Draft交付，未merge |
 | T03 | completed | Tester | 整理Human實際VoiceOver回報與fixture來源，保留無效嘗試及最終接受界線 | evidence/voiceover-human.md：H01–H08，正常流程與兩組同主窗切態已確認；第二組截圖衝突只改外部host後補驗；無音檔／精確時序，正式source零改 | 證據交接，不自審correctness |
 | R03 | completed | Reviewer | 獨立核對T03、採用分類及Human最終接受仍pending，明示verdict | evidence/voiceover-review.md：無required fix；正式來源與T02相同，H01–H08及無效嘗試界線清楚，LU-A03可列已採用限所列受測案例；TC06整體／Human最終接受仍pending | approved（僅T03補證／既有Draft更新） |
+| I02 | completed | Implementer | 依 Human 要求提供使用 .standard 的乾淨單窗原生 preview，與原展示host分開；完成差異測試及可用wrapper | evidence/clean-preview-implementation.md：15tests／3suites、正式build及scopedchecks通過；獨立.app已準備未launch，正式核心13檔bytes相同，native差異交T04 | 作者不自審；交Tester |
+| T04 | incomplete | Tester | 驗乾淨preview的單窗／正式copy／CLI／必要fake events，僅補差異並保留T02/T03 | evidence/clean-preview-testing.md：獨立15tests／3suites、product build、5files format／lint及diffcheck通過；核心13檔bytes同HEAD；CUA啟動被automatic review拒絕，native未驗／未留開 | 無correctness approval；交R04分類 |
+| R04 | completed | Reviewer | 獨立審查I02／T04與正式核心零差異、預覽／展示隔離 | evidence/clean-preview-review.md：18份hash相符、13核心bytes同a7a2fad，無required fix；准source/docs topic交付，native因自動審查拒絕須Human當下確認，不稱新preview已接受 | approved（僅source/docs；native待確認） |
 | HC01 | pending | Human | Draft交付後Human review；確認本次原生VoiceOver聲音與最終UI接受，必要時指定bounded修正 | Draft #75；T02及T03補驗可觀察native與Human聲音，TC06最終視覺／UI接受仍pending，舊topic接受不代替 | human-check |
 
 ## Blockers
 
 - 目前沒有已知的不可解除技術 blocker。
+- T04 native啟動被自動審查拒絕：exact clean preview app需Human操作當下確認；未繞過、未取得新窗口／PID。自動差異檢查已通過；R04准source/docs交付，native仍被action授權阻擋，HC01仍pending，不得換路徑重試。
 - P02 獨立 Plan-Reviewer 已明示 approved；I01 自驗交接完成，T01已取得有界結果但 native coverage incomplete；R01已approved僅Draft交付，不冒稱最終通過。
 - 舊查核基線 root swift test 的 FakePATSecurity 缺 delete 編譯失敗保留於T01歷史。上游修正後整合至 `ab77391`，root親跑361 tests／46 suites通過，正式Demo build通過，R01補充延續approved；未修改本topic認證來源。
 - 原T01 native窗口限制與未驗歷史保留。使用者重新授權後T02已補驗TC02／03及TC05所列48組呈現／AX、鍵盤與代表性視覺；T03再取得所列Human聲音／切態確認；TC06最終視覺／UI接受仍pending，不放行merge或最終接受。

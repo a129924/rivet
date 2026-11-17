@@ -7,7 +7,7 @@
     var body: some View {
       RivetLoginView(
         phase: phase,
-        footer: "UI demonstration · No requests or credential storage.",
+        footer: "Connect your GitHub account to Rivet.",
         bodyPointSize: bodyPointSize,
         onIntent: ignoreIntent
       )
@@ -23,7 +23,8 @@
   #Preview("Waiting") { LoginPreview(phase: .waitingForBrowser) }
   #Preview("Token failure") {
     LoginPreview(
-      phase: .failure(.init(message: "Simulated failure. Please try again.", origin: .token)))
+      phase: .failure(
+        .init(message: "The token could not be verified. Please try again.", origin: .token)))
   }
   #Preview("Increased contrast") { LoginPreview().environment(\._colorSchemeContrast, .increased) }
   #Preview("PAT · 21 pt") { LoginPreview(phase: .tokenEntry, bodyPointSize: 21) }
