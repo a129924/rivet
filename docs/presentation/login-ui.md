@@ -1,26 +1,66 @@
 # Rivet 登入 UI
 
-本元件屬 non-BC `RivetPresentation`。Parent 提供 `RivetLoginPhase`、footer、可選的 `bodyPointSize` 與 `RivetLoginIntent` callback；View 不建立 authentication、network、Keychain 或 BC dependency。這次提供 UI 與假流程，沒有正式 GitHub 登入整合。
+本元件屬 non-BC `RivetPresentation`，不依賴 `GitHubIntegration`。正式來源提供 SwiftUI 元件、呈現資料、局部 UI state 與 intents；認證、request 建構、儲存、session／clients 及產品 App 組裝留待後續。
 
-## 執行與操作
+## 組合與狀態所有權
 
-驗收展示 host、專用 Runtime 與專屬測試現集中於 [E011](../../experiments/E011/README.md)；root products／targets 維持。正式 `RivetPresentation` 元件、資源與正式測試保留原歸屬。可寫快取參數與獨立 wrapper 操作見 E011 說明；原 topic 來源／驗收紀錄不追改。
+唯一公開 View 是 `RivetLoginView`；internal 子元件不接收整個外層 model。
 
-在feature checkout以 `swift build --product RivetLoginDemo` 建置，再以既有驗收 `.app` wrapper啟動；wrapper使用同一debug執行檔與 `Rivet_RivetPresentation.bundle`。主視窗初始 content 780×500 pt，40／60 雙欄，可增大；操作區可垂直捲動。保持系統 titlebar、traffic lights、拖曳與原生輸入控制。
+| 元件 | 輸入與 callbacks | owned state |
+| --- | --- | --- |
+| RivetLoginView | parent phase／content／footer／bodyPointSize／canCreateToken；轉發 RivetLoginIntent | 穩定 40:60 布局，無認證流程 state |
+| LoginMethodSelection | 既有 welcome 文案；選 GitHub／PAT | 主操作的 keyboard／accessibility focus |
+| LoginOAuthSection | waiting／browser failure、呈現內容；Cancel／Retry／改用 PAT | 區段焦點與可取消 UI 進入工作 |
+| LoginPATForm | tokenEntry／token failure、文案與建立可用性；Back／Submit／Create | PAT 編輯、Show／Hide、欄位焦點 |
+| LoginStatusNotice | verifying／completed 內容 | heading focus、可取消宣告 |
 
-獨立Demo Controls提供System／Light／Dark、Demo text size 13／17／21 pt、七態、failure origin、模擬返回、完成結果與Reset。使用範例輸入即可；沒有 timer、外部連結或 credential storage。Connected 停留展示，不打開 PR；Cancel 回 Welcome；PAT failure 保留可重填表單。
+Parent 是 phase 唯一權威。Cancel／Escape、Retry 與 Submit 只發事件，不自行認證或推進 phase。PAT form 的 tokenEntry／token failure 保留同一 identity；送出取 trim 值後立即清除並隱藏，離開／消失／E011 Reset 同樣清除。內部空白不改，不驗 prefix。Show／Hide、字級／content 更新不清文字；建立入口不清編輯。
 
-PAT 僅在 View 本地記憶體編輯，外圍 whitespace trim、不驗 prefix。Show／Hide 保留文字並重設編輯 focus；送出、離開表單、Reset 清除並隱藏。Mock model 不保存輸入。沒有覆寫系統全域鍵盤、TCC、VoiceOver 或使用者設定。
+## 公開接線介面
 
-## 文字大小與狀態宣告
+```swift
+RivetLoginView(
+  phase: phase, footer: footer, bodyPointSize: 13,
+  content: .standard, canCreateToken: false,
+  onIntent: handleIntent
+)
+```
 
-`RivetLoginView(phase:footer:bodyPointSize:onIntent:)`的 `bodyPointSize: CGFloat = 13` 置於最後的callback前；省略字級的既有label呼叫與trailing closure仍可用。Finite輸入限制在13...21 pt，NaN或正負infinity使用13。右側heading、eyebrow、欄位、按鈕、說明、error與footer使用有效字級／13的同一比例；左側AX隱藏的品牌／diff裝飾維持固定設計。21 pt Preview使用同一入口，不用Dynamic Type或scaleEffect代替實際font。
+新增參數有預設值，原 label 呼叫與 trailing closure 仍可用。新增 enum case `createPersonalAccessToken`，下游 exhaustive switch 必須更新。僅在 canCreateToken=true 時發建立事件，View 不持 URL 或開 browser；停用 help／accessibility hint 由 content 提供。
 
-Demo的字級三選一直接傳入上述入口；更換字級不重建form identity、不清PAT或重設Show／Hide，Reset demonstration保留字級。這提供可重現的大字排版驗法，**macOS系統文字大小偏好整合尚未交付**。macOS的Dynamic Type環境值不會改變文字大小；原系統13／15點操作及舊ScaledMetric／Dynamic Type Preview不算本Demo的大字證據。使用者可在最小780×500 pt content逐一切換13／17／21 pt，確認表單、footer與操作能垂直捲動到達。
+`RivetLoginContent`／`RivetLoginStatusContent` 是 immutable、Equatable、Sendable 的 display-ready copy，具 public initializer。正式 `.standard` 無模擬／Demo Controls／example-only 文案。Connected 的標題／宣告為 `Sign-in completed.`，只表示本次登入完成，不表示 session、account payload、provider 或 clients 已建立，也不宣稱已保存憑證。Failure 沿用 parent 提供的 `RivetLoginFailure(message:origin:)`。
 
-狀態entry使用各自accessibility identity與可取消task，分序處理鍵盤focus、accessibility focus與局部announcement；每次await後確認task未取消且仍屬目前phase。Welcome為主按鈕、PAT為輸入、waiting為Cancel、browser failure為Retry，verifying／connected為對應heading；快速離開不應由舊工作拉回。這是針對HC-02時序候選的修正，不宣稱已證唯一root cause；VoiceOver真朗讀仍須新版Human補驗。
+## E011 受控展示
 
-等待授權時，既有 Cancel sign in 連結的 accessibility label 為 `Waiting for simulated authorization. Cancel sign in.`，讓 Welcome 與 browser failure Retry 兩個入口的 Cancel 焦點同時帶出等待狀態與取消動作。Waiting 的狀態由此焦點 label 提供，獨立 announcementRequested 僅用於驗證中、失敗與完成階段。兩個等待入口的朗讀、雙讀情況及 Cancel／Escape 操作交逐項 Human 補驗。
+展示 host／Runtime／專屬測試維持 [E011](../../experiments/E011/README.md) 歸屬。E011 呼叫相同正式 View，由本地 `LoginDemoCopy` 提供模擬文字、假 phase 及事件處理；不呼叫真 VO／service。正式 library 無 demo mode。建立入口預設停用。
+
+在 feature checkout 用 `swift build --product RivetLoginDemo` 建置，以 E011 既有 wrapper 操作。主窗最小 content 780×500 pt、40:60 雙欄、操作區垂直捲動，原生 titlebar／traffic lights／輸入控制保留。Controls 提供 Light／Dark、13／17／21 pt、七態、兩種 failure origin、模擬返回／完成與 Reset，不用 timer。
+
+## 字級與狀態宣告
+
+字級採既有 13...21 pt clamp，非有限值回 13；右側內容以同一比例調整，左側 AX 隱藏品牌維持設計。字級更新不重建 form。這是可重現的 UI 字級入口，不是已交付 macOS 系統文字大小偏好整合。
+
+焦點與宣告由責任元件管理。各 await 後檢查 task 取消與 active 視圖／呈現輸入，離開後不得拉回焦點或宣告過期狀態。Welcome 聚焦主操作，PAT 聚焦欄位，waiting 聚焦 Cancel，browser failure 聚焦 Retry，verifying／connected 聚焦 heading。Waiting 的焦點 label 同時帶等待狀態與取消動作；獨立 announcement 用於 verifying／failure／completed。新版 VoiceOver 聲音與最終 UI 接受仍待 Human。
+
+## 文件層的接線對應契約
+
+已核對既有實碼 `Sources/BoundedContexts/GitHubIntegration/Contracts/LoginAuthentication.swift` 與 `docs/architecture/github-dual-login-contract.md`。以下只記錄對應，不新增 production mapper／Adapter，不讓 E011 呼叫真 VO／service。
+
+| UI intent／phase 或 Outcome | 既有 VO／未來外層責任 | 限制 |
+| --- | --- | --- |
+| `.beginGitHubSignIn` | 未來建立 `LoginRequest.oauth`，呼 `authenticate(_:)` | request 不帶 OAuth 配置，配置屬 service 組裝 |
+| `.submitToken(String)` | 未來 `try PersonalAccessToken(rawValue:)` 後形成 `LoginRequest.pat(token)` | init 只 trim 外圍，空值 throws `PATInputError.empty`；本地接受不代表遠端有效 |
+| `.showTokenEntry`／`.backToWelcome` | parent 提供 `.tokenEntry`／`.welcome` | 純 UI 切換，沒有登入 request |
+| `.cancelSignIn` | 未來外層傳遞取消並等原工作 settled | 沒有 cancel request case，本次只有 callback |
+| `.retry` | 未來外層依原嘗試脈絡決定新工作 | intent 無 request payload，Outcome 不含原登入方式 |
+| `.createPersonalAccessToken` | 未來外層處理建立入口 | 不對應 LoginRequest，本次不開 browser |
+| `LoginOutcome.success` | 未來外層可提供 `.connected` | 無 payload，不建立或交付 account／session／provider／clients |
+| `.failure(.authenticationFailed)` | 未來外層可提供 `.failure(RivetLoginFailure)` | origin 從嘗試脈絡取得，message 由外層提供安全文案；Outcome 無原始 error／任意訊息，失敗不證明憑證無效 |
+| `.cancelled` | 未來外層依取消完成與 UI 脈絡更新 phase | 沒有唯一內建 UI phase 對應，View 不推測 |
+| `.waitingForBrowser`／`.verifyingAccount`／`.verifyingToken` | 未來外層依工作進度提供 | Outcome 無中間狀態，不能單憑最終 Outcome 推導 |
+
+既有 `LoginAuthenticating: Sendable` 唯一 requirement 為 `authenticate(_ request: LoginRequest) async -> LoginOutcome`，不拋錯；結果僅 success、failure(LoginFailure)、cancelled，LoginFailure 目前僅 authenticationFailed。取消義務由未來 conformer／外層遵守，不在本 topic 實作；既有 OAuth Scope 仍只接受具體 OAuth provider，不推論 PAT 可取得 Scope。
+
 
 ## 素材來源
 
@@ -40,8 +80,10 @@ Demo的字級三選一直接傳入上述入口；更換字級不重建form ident
 
 ## 驗證與限制
 
-HC-02（2026-11-04交接）記錄原binary的七類Human通過；仍有PAT verifying與Welcome／Retry進waiting的自動宣告、有效大字排版三缺口。失敗宣告首次state未定／重跑Human通過、背景送鍵限制及spinner旋轉觀察保留，不能改寫為新缺陷或新版pass。
+舊 UI topic 的 HC-01 已有 Human「通過，採用目前這版」接受紀錄；入口原有 pending 摘要落後於 [舊驗證末段](../../plan/rivet-login-ui/evidence/verification.md)。此接受僅支持其來源與案例，不回填新版重構結果。
 
-PC-03／PR-03後已實作上述局部字級與phase協調，完成新的字級／model行為測試；新版focus、三個真入口的聲音、13／17／21 pt原生排版及必要回歸交獨立Tester／Human，尚未全面通過。自動檢查與binary來源見[驗證紀錄](../../plan/rivet-login-ui/evidence/verification.md)，舊focused10／root284等成功不代表新版結果。Root strict lint保留未改experiments與原樣素材的非零findings，沒有宣稱全局通過。
+本 topic 的實作／測試證據見 [I01](../../plan/rivet-login-ui-adoption/evidence/implementation.md)，採用程度與方式見 [獨立採用紀錄](../feasibility-adoption.md)。目前已完成 helper／content／model 自測與 root Demo build；真正 SwiftUI 操作、focus／identity／callbacks 的獨立驗證及 Human 聲音／最終接受分列待驗，不能用 model tests 代替 native UI。
 
-[七態lifecycle](diagrams/rivet-login-ui/login-lifecycle.html)與[圖面build receipt](diagrams/rivet-login-ui/BUILD.md)保持凍結；本輪七態／intent graph不變，不重產圖。舊四張native PNG及本地PR Lens仍保留其source provenance，不能代替新版驗收。最後停HC-03逐項補驗與HC-01 Human採用，不自動merge或release。
+root `swift test` 被基線既有 `FakePATSecurity` 缺 `GitHubOAuthSecurityClient.delete` 編譯缺陷阻擋，相關檔案與 base bytes 相同；不改認證來源來取得綠燈。外部 focused manifest 直接引用本 feature 的正式 Presentation／E011 sources/tests，用相同 Swift6、macOS15、target names 與資源規則驗證，不等於 root suite 通過。
+
+[原七態 lifecycle](diagrams/rivet-login-ui/login-lifecycle.html) 保持凍結；本次 [後繼 lifecycle](diagrams/rivet-login-ui/login-lifecycle-v2-r1.html) 與 [BUILD 證據](diagrams/rivet-login-ui/BUILD.md) 記錄 UI events／parent-owned phase，文件層 VO 對應沒有畫成已接線 runtime。圖面視覺接受與產品 VoiceOver 接受是不同證據。

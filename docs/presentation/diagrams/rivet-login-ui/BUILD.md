@@ -43,3 +43,27 @@ Deterministic 修正分開處理：初稿缺 reserved main rail、failed 與 PAT
 - 四尺寸container、readability與captures全pass；scrollWidth／scrollHeight依序1440／900、1600／1000、1920／1080、2048／1320，均不超出viewport。
 - Implementer重新實看新版1440×900／2048×1320的light／dark四張sidecars：重送方向與label清楚，沒有clipping、opaque-node crossing、label遮擋，最大畫面可讀且無空白下帶。`visual_review: passed`。自動receipt `visualReview: pending`仍原樣保留。
 - 此為本輪Implementer自驗；等待獨立Tester核對新hash／圖證據，再由Reviewerclose。第2輪額度已用完，不繼續第三輪perceptual修改；如再有缺口交Dispatcher處理。
+
+
+## 元件化 topic：lifecycle v2-r1（2026-11-17）
+
+來源為 `rivet-login-ui-adoption` feature 工作區；正式 phase／intents 與 E011 fake parent。七態維持，新增建立 PAT 的條件 callback 自循環，不畫成 request／browser 或 phase 推進。Parent 提供等待／驗證進度與結果；connected 不代表 session。原 v1 JSON／HTML／收據不改。
+
+- 現行圖：[v2-r1 HTML](login-lifecycle-v2-r1.html)；[凍結規格](login-lifecycle-v2-r1.json)；[receipt 摘要](login-lifecycle-v2-r1.receipts.json)。
+- Specification SHA-256：`cbe8f9ddf635ca045a0605af215ff7f9b13fa44132be96c93c1e9890c5056980`；4216 bytes。
+- Artifact SHA-256：`03b51e535c45e125b72c3484ef085b36f8f0d36374fe8b9abeb2ae7d4490c340`；704284 bytes。
+- `validate`／`deliver` exit0：showcase 9/9、0 errors／0 warnings。規格和HTML final後不再修改或格式化。
+- 初稿 geometry 逐項診斷修正，錯誤收斂至0；沒有連兩輪不改善。初稿最終9/9但visual-check前三尺寸overflow，屬失敗嘗試，不冒稱圖面接受。
+- `correction_rounds: 1`：另建 r1 candidate，保留初稿exact bytes於外部topic scratch；收斂Y留白、移除與圖內標示／長期文件重複的卡片，不減字體、不手改HTML、不藏overflow。r1 validate／deliver／visual-check全exit0。
+- 四尺寸containment通過：1440×900、1600×1000、1920×1080、2048×1320，各 scrollWidth／scrollHeight 不超過 viewport；readability／captures通過。
+- `visual_review: passed`：Implementer已實看1440×900及2048×1320 Light／Dark四圖，文字／事件自循環／回復方向可讀，無遮擋／clipping／label刪除；最大畫面有足夠圖面高度，非淺條。這是圖面自驗，不是獨立review或Human產品接受。
+- [自動 visual-check](login-lifecycle-v2-r1.visual-check.json) 的 `visualReview: pending` 原樣保留，與上列人工檢視分開。
+- 作者繁中；固定 Viewer UI／HTML lang fallback English。無發布、preview server或provider呼叫。
+
+重現時以 `$ARCHIFY` 指安裝skill root，在feature worktree執行：
+
+```sh
+node "$ARCHIFY/bin/archify.mjs" validate lifecycle docs/presentation/diagrams/rivet-login-ui/login-lifecycle-v2-r1.json --quality showcase --json
+# 已凍結交付物如需重新deliver，必須選新輸出，不覆寫受信任bytes。
+node "$ARCHIFY/bin/archify.mjs" visual-check docs/presentation/diagrams/rivet-login-ui/login-lifecycle-v2-r1.html --repo-root . --json
+```
