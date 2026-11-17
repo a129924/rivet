@@ -10,7 +10,7 @@ Topic：`rivet-login-ui-adoption`。識別 LU-A01–LU-A06 為本輪補建，不
 - 原素材與 UI topic 只支持其特定版本、有限字級與原生案例；舊 Human 接受見 `plan/rivet-login-ui/evidence/verification.md:683–689`，不是本次二進位驗收。
 - 正式需求及鎖定決策見本 topic requirements／technical-spec；已授權受限 UI 實作與 Draft 交付。正式接入由 E011 消費 Presentation，無反向依賴。
 
-### 能力、依賴與目前程度
+### 初次實作查核的能力、依賴與當時程度（歷史）
 
 | 識別／能力 | 方式與理由 | 依賴及滿足方式 | 程度／實際接入與證據限制 |
 | --- | --- | --- | --- |
@@ -21,7 +21,7 @@ Topic：`rivet-login-ui-adoption`。識別 LU-A01–LU-A06 為本輪補建，不
 | LU-A05 E011 host／Controls／假流程 | 不採用到production；保留受控消費端 | E011維持既有targets，使用同一正式元件 | 已排除搬移；只調整host接線與copy，無library demo mode |
 | LU-A06 E013／E014 認證／診斷 | 不採用；不符合本次UI範圍 | 真request／service／async／storage／session不是本次必要依賴 | 已排除；原工具／來源未搬入、未修改，不把驗證成功當正式登入完成 |
 
-### 已完成、缺口與下一步
+### 初次已完成項目與當時缺口（歷史）
 
 正式元件與呈現資料已實作，E011 host 實際接入；32 個 focused tests／7 suites及正式 Demo build通過。測試只支持執行過的helper、content與model案例，不支持尚未執行的native互動。root suite受未改基線編譯缺陷阻擋，見本 topic I01 evidence；不宣稱root通過。
 
@@ -38,3 +38,17 @@ Topic：`rivet-login-ui-adoption`。識別 LU-A01–LU-A06 為本輪補建，不
 獨立 Tester 已完成有界驗證，focused32 tests／7 suites、Demo build／scoped checks與圖hash通過，但TC02／03／05 native未驗；R01及post-rebase補充皆approved僅Draft交付。原root基線編譯失敗由上游修正，整合後root361 tests／46 suites實際通過，不覆蓋舊失敗。
 
 LU-A02／03／04的native互動／時序及Human聲音／最終UI接受仍缺證據，維持部分採用；不把root全測通過當成native UI已驗。來源與接入關係不變，沒有新建登入VO或接認證／儲存／session。最新缺口改由Draft Human checklist續驗，詳見本topictesting／review／delivery evidence。
+
+### 原生補驗更新：2026-11-17
+
+本輪受測正式來源`83543b0`，原生互動證據見`plan/rivet-login-ui-adoption/evidence/native-ui.md`。以下為新增觀察，不改寫前述I01／T01及Draft交付當時的部分採用歷史；R02將獨立審查此分類。
+
+| 能力 | 本輪程度 | 新增接入／行為證據與剩餘限制 |
+| --- | --- | --- |
+| LU-A01 品牌／雙欄／七態／資源 | 已採用，限受測UI契約 | E011與公開元件fake consumer實際呈現；48組AX／呈現與代表性視覺／捲動證據；最終Human視覺接受另列 |
+| LU-A02 PAT編輯／字級 | 已採用，限受測UI契約 | 同identity切態、Show-Hide、字級／copy保留、trim／單次提交／立即清除、離開與Reset均由原生UI操作補證 |
+| LU-A03 焦點／宣告／快速離開 | 部分採用 | 可觀察鍵盤焦點與切態後不拉回已補證；VoiceOver聲音／焦點及宣告時序仍缺Human證據 |
+| LU-A04 正式文案／接線介面 | 已採用，限UI介面 | 正式預設與E011展示copy分離，fake parent原生事件計數補證七種intents／Create可用性；VO仍僅文件對應，沒有真認證接線 |
+| LU-A05／06 驗證host／認證診斷搬移 | 已排除，理由不變 | 外部fixture只作本次驗證，未搬進production，未新增VO／Adapter／儲存／session |
+
+採用程度不等於Human最終接受或產品登入交付；沒有用root測試數量代替本次native行為。

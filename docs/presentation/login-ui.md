@@ -82,8 +82,14 @@ RivetLoginView(
 
 舊 UI topic 的 HC-01 已有 Human「通過，採用目前這版」接受紀錄；入口原有 pending 摘要落後於 [舊驗證末段](../../plan/rivet-login-ui/evidence/verification.md)。此接受僅支持其來源與案例，不回填新版重構結果。
 
-本 topic 的實作／測試證據見 [I01](../../plan/rivet-login-ui-adoption/evidence/implementation.md)，採用程度與方式見 [獨立採用紀錄](../feasibility-adoption.md)。目前已完成 helper／content／model 自測與 root Demo build；真正 SwiftUI 操作、focus／identity／callbacks 的獨立驗證及 Human 聲音／最終接受分列待驗，不能用 model tests 代替 native UI。
+本 topic 的實作／測試證據見 [I01](../../plan/rivet-login-ui-adoption/evidence/implementation.md)，採用程度與方式見 [獨立採用紀錄](../feasibility-adoption.md)。初次I01／T01已完成helper／content／model自測與root Demo build，當時native操作未驗。後續原生補驗結果見本文件末節；Human聲音／最終接受仍分列pending，不能用model tests代替native UI。
 
 初次查核基線 `1f31b35` 的 root `swift test` 被既有 `FakePATSecurity` 缺 `GitHubOAuthSecurityClient.delete` 編譯缺陷阻擋，相關檔案與當時 base bytes 相同；原失敗歷史保留。上游修正後，本 feature 整合至 `ab77391`，root 實際執行 **361 tests／46 suites 通過**，正式 Demo build 也通過；本 topic 沒有修改認證來源。獨立 focused 32 tests／7 suites 證據仍只支持其 helper／content／model 範圍，不替代 native 互動。整合與 Draft 交付見 [D01／D02](../../plan/rivet-login-ui-adoption/evidence/delivery.md)。上游已有登入 runtime，UI 與其間的外層 Adapter 仍未接線。
 
 [原七態 lifecycle](diagrams/rivet-login-ui/login-lifecycle.html) 保持凍結；本次 [後繼 lifecycle](diagrams/rivet-login-ui/login-lifecycle-v2-r1.html) 與 [BUILD 證據](diagrams/rivet-login-ui/BUILD.md) 記錄 UI events／parent-owned phase，文件層 VO 對應沒有畫成已接線 runtime。圖面視覺接受與產品 VoiceOver 接受是不同證據。
+
+## 原生補驗：2026-11-17
+
+受測正式來源為`83543b0`，沒有修改Swift元件。使用者重送視窗存取後，E011與外部public-consumer假parent完成N01–N16：PAT identity／Show-Hide／字級與content保留、trim提交／立即清除、Back／離開／Reset、七種intent單次回呼。八種畫面變體×Light／Dark×13／17／21pt共48組原生呈現／AX已補驗；代表性21pt截圖與ScrollView操作可到達Submit／footer。
+
+詳見[原生補驗證據](../../plan/rivet-login-ui-adoption/evidence/native-ui.md)。原T01限制保留為歷史；VoiceOver實際聲音／焦點與離開後宣告時序、Human最終視覺／UI接受仍pending，原生heading不代替聽覺確認。R02獨立審查另記，不宣稱topic已由Human接受。
