@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "analysis/github-oauth-connection-orchestration/diagrams/reauthorization.lifecycle.v2.json",
+  "output": "analysis/github-oauth-connection-orchestration/diagrams/reauthorization.lifecycle.html",
+  "specification": {
+    "sha256": "713266820e4cf9eca8ff3f721c7015c75d186c23d06f068fa394c740a5c86c2d",
+    "bytes": 2721
+  },
+  "artifact": {
+    "sha256": "9f43df397611926a8e1a967bc1833e78c776826ae8af0ad20f3906e76cf93e55",
+    "bytes": 702797
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

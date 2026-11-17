@@ -1,0 +1,141 @@
+{
+  "schema": "floorplan/build-result@1",
+  "ok": true,
+  "check": false,
+  "errors": [],
+  "warnings": [],
+  "agent": "none",
+  "audience": "developers",
+  "blueprint": false,
+  "unattended": true,
+  "files": {
+    "total": 20,
+    "unassigned": 0,
+    "unassignedPercent": 0,
+    "include": [
+      "code"
+    ]
+  },
+  "notMapped": {
+    "byCategory": {
+      "data": 606,
+      "docs": 550,
+      "asset": 188,
+      "other": 87,
+      "config": 22,
+      "lock": 1
+    },
+    "ignored": 597
+  },
+  "unassignedByDirectory": [],
+  "nodes": [
+    {
+      "id": "formal",
+      "kind": "library",
+      "files": 12,
+      "loc": 904
+    },
+    {
+      "id": "verification",
+      "kind": "ui",
+      "files": 5,
+      "loc": 814
+    },
+    {
+      "id": "tests",
+      "kind": "test",
+      "files": 3,
+      "loc": 884
+    }
+  ],
+  "links": {
+    "total": 50,
+    "byKind": {
+      "import": 40,
+      "call": 10
+    }
+  },
+  "descriptions": {
+    "files": {
+      "described": 20,
+      "total": 20
+    },
+    "routes": {
+      "described": 0,
+      "total": 0
+    },
+    "modules": {
+      "withSummary": 7,
+      "total": 7,
+      "missing": []
+    },
+    "review": 0,
+    "complete": true
+  },
+  "plainLanguage": {
+    "checked": false,
+    "count": 0,
+    "items": []
+  },
+  "secretsHidden": [],
+  "partsToSplit": [],
+  "health": {
+    "kind": "health",
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "important": [],
+    "checked": [
+      {
+        "check": "endpoints",
+        "label": "Endpoint sign-in",
+        "checked": false,
+        "text": "not checked: no endpoints found, but experiments/E013/GitHubSignInVerification/tools/pkce_negative_probe.py looks like it runs a server (it calls .listen(8). Its endpoints may be set up in a way Floorplan doesn’t recognise yet, so nothing checked whether they need a login.",
+        "loud": true
+      },
+      {
+        "check": "supabase",
+        "label": "Supabase table rules",
+        "checked": false,
+        "text": "no Supabase found"
+      },
+      {
+        "check": "firebase",
+        "label": "Firebase rules",
+        "checked": false,
+        "text": "no rules files found"
+      },
+      {
+        "check": "stripe",
+        "label": "Stripe webhooks",
+        "checked": false,
+        "text": "no Stripe code found"
+      },
+      {
+        "check": "secrets",
+        "label": "Secrets in code",
+        "checked": true,
+        "text": "read 1189 files"
+      }
+    ]
+  },
+  "screens": 0,
+  "recentWork": {
+    "cards": 0,
+    "tasks": 0,
+    "file": true
+  },
+  "notes": {
+    "claudeLocalMd": "left alone (unattended mode writes only inside the map folder)",
+    "git": null
+  },
+  "wrote": [
+    "floorplan/.gitignore",
+    "floorplan/graph.json",
+    "floorplan/index.html",
+    "floorplan/query.mjs",
+    "floorplan/serve.mjs",
+    "floorplan/page-safety.mjs"
+  ],
+  "report": "\nASSIGNMENT  20 files (code), 0 unassigned (0.0%)\n  formal                          12 files    904 loc  [library]\n  verification                     5 files    814 loc  [ui]\n  tests                            3 files    884 loc  [test]\nNOT MAPPED  606 data · 550 docs · 188 asset · 87 other · 22 config · 1 lock · 597 left out by \"ignore\" (the map shows code files; to add a kind, list it in \"include\" in architecture.json, e.g. \"include\": [\"code\", \"docs\"])\nLINKS  50 (import 40, call 10)\nDESCRIPTIONS  files 20/20 · routes 0/0 · modules 7/7\nHEALTH  nothing found\n  what was checked:\n  ! Endpoint sign-in: not checked: no endpoints found, but experiments/E013/GitHubSignInVerification/tools/pkce_negative_probe.py looks like it runs a server (it calls .listen(8). Its endpoints may be set up in a way Floorplan doesn’t recognise yet, so nothing checked whether they need a login.\n  · Supabase table rules: no Supabase found\n  · Firebase rules: no rules files found\n  · Stripe webhooks: no Stripe code found\n  ✓ Secrets in code: read 1189 files\nRECENT WORK  none highlighted\nAGENT  none: made without an agent session, so the map's prompts don't name one\nCLAUDE.LOCAL.MD  left alone (unattended mode writes only inside the map folder)\nGIT  floorplan/ is kept out of git (it ignores itself)\n\n✓ wrote floorplan/index.html (2.1k KB) and graph.json"
+}

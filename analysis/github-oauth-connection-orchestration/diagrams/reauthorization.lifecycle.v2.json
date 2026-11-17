@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "重新授權候選生命週期｜尚未正式接入",
+    "viewBox": [
+      1080,
+      566
+    ],
+    "quality_profile": "showcase",
+    "animation": "none"
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "候選主流程：以既有正式 primitives 組合"
+    },
+    {
+      "id": "reauthorize-stop",
+      "label": "停止條件：不復活舊連線"
+    }
+  ],
+  "states": [
+    {
+      "id": "retire-old",
+      "type": "start",
+      "label": "退休舊 provider",
+      "sublabel": "signOut 永久 retired",
+      "lane": "main",
+      "col": 0,
+      "step": "01"
+    },
+    {
+      "id": "settle-save",
+      "type": "active",
+      "label": "等待保存收尾",
+      "sublabel": "已開始 save 先結束",
+      "lane": "main",
+      "col": 1,
+      "step": "02"
+    },
+    {
+      "id": "clear-done",
+      "type": "decision",
+      "label": "清除 credential",
+      "sublabel": "成功才可重新登入",
+      "lane": "main",
+      "col": 2,
+      "step": "03"
+    },
+    {
+      "id": "login-save",
+      "type": "active",
+      "label": "登入並完整保存",
+      "sublabel": "authenticate 等待收尾",
+      "lane": "main",
+      "col": 3,
+      "step": "04"
+    },
+    {
+      "id": "new-scope",
+      "type": "active",
+      "label": "新 provider／scope",
+      "sublabel": "prepare 成功才本地 ready",
+      "lane": "main",
+      "col": 4,
+      "step": "05"
+    },
+    {
+      "id": "stop-clear",
+      "type": "neutral",
+      "label": "清除失敗停止",
+      "sublabel": "不開始 authenticate",
+      "lane": "reauthorize-stop",
+      "col": 0,
+      "tag": "停止"
+    },
+    {
+      "id": "stop-login",
+      "type": "neutral",
+      "label": "取消或登入失敗",
+      "sublabel": "不還原舊值／不復活",
+      "lane": "reauthorize-stop",
+      "col": 1,
+      "tag": "停止"
+    },
+    {
+      "id": "stop-prepare",
+      "type": "neutral",
+      "label": "準備失敗或取消",
+      "sublabel": "不交付 ready scope",
+      "lane": "reauthorize-stop",
+      "col": 2,
+      "tag": "停止"
+    }
+  ],
+  "transitions": [
+    {
+      "id": "clear-stops",
+      "from": "clear-done",
+      "to": "stop-clear",
+      "label": "清除失敗",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "login-stops",
+      "from": "login-save",
+      "to": "stop-login",
+      "label": "取消／失敗",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "prepare-stops",
+      "from": "new-scope",
+      "to": "stop-prepare",
+      "label": "未準備完成",
+      "variant": "security",
+      "labelDy": 24
+    }
+  ]
+}
