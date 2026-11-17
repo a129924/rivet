@@ -49,7 +49,7 @@ App-local CLI 契約為 `--preview [--state <state>] [--appearance system|light|
 
 獨立 preview wrapper bundle ID 為 `local.rivet.login-ui-preview`，放於 feature `.build`，不 commit、不覆寫歷史 wrapper；此身分的 app 啟動即預設選 preview，`open` 不附 args 也不會誤開展示介面。一般 `RivetLoginDemo` 沒有 `--preview` 時仍啟動原展示 host／Controls。當前 wrapper 相對位置、build／差異測試與來源記於 [I02 證據](../../plan/rivet-login-ui-adoption/evidence/clean-preview-implementation.md)。
 
-這是本次驗收入口修正，不表示新的 Human 外觀接受。T02／T03／H01–H08 原證據保留；獨立 T04／R04 只補驗本入口差異，再回 HC01 最終接受，尚未 merge。
+這是本次驗收入口修正，不表示新的 Human 外觀接受。T02／T03／H01–H08 原證據保留；T04／R04當時的啟動拒絕保留為歷史。取得Human對同一binary的當下確認後，[T05原生補驗](../../plan/rivet-login-ui-adoption/evidence/clean-preview-native.md)已觀察正式Welcome／waiting／PAT／verifying-token、兩種failure與completed，含Dark21捲動及Light17代表。最後留開Light13 Welcome；新preview的verifying-account未另做native重驗，沒有重跑完整矩陣或VoiceOver。HC01最終Human正式文案與視覺／UI接受仍pending，尚未merge。
 
 ## E011 受控展示
 
