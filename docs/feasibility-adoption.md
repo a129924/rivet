@@ -28,3 +28,9 @@
 ### 歷次更新
 
 2026-11-17 首次記錄本 topic，依 source-audit 與 adoption-audit 建立方案；不覆寫其他 topic 或實驗歷史。圖面及製圖檢查見[執行帳本](../plan/github-oauth-connection-orchestration/github-oauth-connection-orchestration.step.md)。
+
+## OAuth 冷啟動連線還原正式採用
+
+Topic `github-oauth-startup-restore-runtime` 將既有configuration store、clientID-bound credential store、正式fetcher、provider與scope組裝為caller-owned入口；採用唯一provider、保存後發布、busy與取消settlement，不複製E014 App-local coordinator、UI、probe或驗證控制。
+
+[正式契約](architecture/github-oauth-startup-restore-runtime.md)與[受控證據](architecture/diagrams/github-oauth-startup-restore-runtime/BUILD.md)獨立於E014真人結果。Root375tests／consumer22tests通過；未做新OAuth／DPK、不宣稱產品UI或遠端認證完成，Human review pending。

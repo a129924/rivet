@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "lifecycle",
+  "specification": {
+    "sha256": "37bf5b9d9540f855ad1de2e53c88a84affc24459dc434c1ecc281f0d7499f3a5",
+    "bytes": 2372
+  },
+  "artifact": {
+    "sha256": "d0ea06d10f74540cd324e82b0d036c65f39169fdc07504de3fdb7b2f2b00cd60",
+    "bytes": 701562
+  },
+  "specificationPath": "restore-lifecycle-v3.json",
+  "artifactPath": "restore-lifecycle-v3.html"
+}
