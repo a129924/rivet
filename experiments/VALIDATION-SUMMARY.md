@@ -1,8 +1,30 @@
 # GitHub 連線驗證結果摘要
 
-基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；分列雙登入契約及本地登出／E016 的交付事實，不擴張其他實驗結果。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。
+基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；分列雙登入契約及本地登出／E016 的交付事實，不擴張其他實驗結果。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
+
+## PR #76：可行性／採用方案的證據與收尾（2026-11-17）
+
+[PR #76](https://github.com/a129924/rivet/pull/76) 於 `2026-11-17T08:52:59Z` merged／closed 至 `dev`。固定 merge `ddfa281a2e73a65a1fa995a268b416115e988b68` 的 parents 是 `ab77391b73291deb1ce3d96cef72f981aeb3104a`／最後 feature `2ac31dc85bd92f1892c34e656ab77900524a97fe`，tree 與 feature 相同；主成果 `a2d2bba`、後續交付 metadata `2ac31dc` 均保存於 merge。來源查核基準仍為 `ab77391`，merge／tag 不是新 runtime 或 live 執行版本。
+
+| 層級 | 已支持事實與限制 |
+| --- | --- |
+| 文件／原碼可行性 | 既有 configuration／store／factory／provider／scope／登入服務可支持有條件候選組裝；[source-audit](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/analysis/github-oauth-connection-orchestration/source-audit.md)區分事實、推論與缺口。正式 owner／世代交接、UI 接入與整條組合尚未實作，沒有新增 production／tests／package 變更。 |
+| 採用程度 | [audit](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/analysis/github-oauth-connection-orchestration/adoption-audit.md) A01–A03 部分採用（primitives 已有、目標整合未接）、A04 未採用、A05 明確排除、A06 E014 來源關係不確定。[方案](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/docs/feasibility-adoption.md)交付不等於正式已採用；沒有整包搬入 E014。 |
+| 閱讀既有測試 | 正式 signOut 測試定義含晚到 refresh／已開始 save 的兩 barrier；scope／login 定義支持有限判讀。PAT during-save barrier 不冒稱 OAuth-specific 親測。本輪不需新實驗，未建立新 E 編號，不把閱讀或 build 當假設成功。 |
+| 獨立驗證與審查 | Plan-Reviewer／成果 Reviewer approved、required fixes 無；[TE01](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/plan/github-oauth-connection-orchestration/evidence/verification.md)核對20 source SHA、37相對links及受限 diff，首輪 broken link 修正歷史保留。正常 hooks 全通過；首次缺 Biome 的環境問題以 frozen install 解除，未改依賴版本／lockfile。consumer contract 是 compile 檢查，不是完整 Swift runtime tests。 |
+| 圖面與程式導覽 | 兩份最終 v2 Archify 各9/9 showcase、0 composition errors／warnings，四尺寸 containment／readability與8張明暗截圖 SHA 符合；首版 visual 失敗保留。Floorplan 本機20檔、20/20描述、50links／10人工關係、0 dangling；僅限列明範圍，Swift解析不證明 async／actor／動態 binding 完整行為。routes0/0及範圍外 E013 server loud 提醒不當 endpoint／安全驗證。 |
+| 本機變更圖與導覽工具 | PR Lens pinned0.11.0 以實際 base `ab77391`→published head `2ac31dc` 的39檔 diff validate／render；6nodes／5edges／0 runtime flows，未上傳。Graphify0.9.73 無可用既有 graph，依規範以 targeted source reads，不新建圖。 |
+| 新 live／正式流程 | 未執行新 OAuth、真 DPK、Swift runtime suite 或新實驗；正式 orchestration／UI 未接通。E014 2026-10-21 受限 live、其他 topic 的儲存／登出證據與所有歷史狀態不回填。 |
+
+取消後新 credential 可能已保存，禁止當作 absent／自動 rollback；舊 provider 不復活。signOut 先退休、等待已開始 save／clear 成功後才登入，仍須排除其他程序／可寫 provider，且不能撤銷既送出的 request。這些是候選組裝依賴，不表示完整交接已測。初次 authenticate Outcome 不細分保存錯誤、OAuth-only 不擴 PAT 連線；現有 public initializer 的 PAT store 只是既有建構依賴。
+
+本輪查核任務及方案已交付，原實驗四狀態、各 topic Human 接受與正式採用程度分開。[原帳本](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/plan/github-oauth-connection-orchestration/github-oauth-connection-orchestration.step.md)的 Draft／HC01 pending 保留提交時點；PR merge 已是新事實，但沒有獨立圖面 Human 視覺確認，不因此外推其通過。
+
+Annotated tag `v0.1.68-github-oauth-connection-orchestration-feasibility` 的 local／remote object 同為 `b35f79646f8495e560c13454f67e0bfdefe1152b`，peeled commit 同為上述 merge；不是新 release 或後續文件維護 commit。原 `docs/github-oauth-connection-orchestration` local／remote／tracking branch 與 managed feature worktree 目錄／註冊已正常移除，fresh absence 均核對，未 force／prune。Ignored Floorplan 23檔已先原樣封存 Git 私有 archive 並逐檔核 SHA，未 track／push；其他 worktree／App／秘密／Apple 資產未清理。
+
+兩份索引由獨立 postmerge 文件 worktree 編輯並沿既有安全 fast-forward 慣例保存到 dev；此處不預填維護 branch／worktree 後續移除。這是索引與 Git lifecycle 更新，不新增實驗、runtime 或產品完成主張，也不改 E010／E001–E017 的原結果與預算。
 
 ## PR #74：登入 runtime 的交付、證據與 Git 收尾（2026-11-17）
 
