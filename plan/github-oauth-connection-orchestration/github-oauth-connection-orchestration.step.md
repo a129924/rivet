@@ -3,9 +3,9 @@
 - Topic：`github-oauth-connection-orchestration`
 - Base：`ab77391b73291deb1ce3d96cef72f981aeb3104a`
 - Branch：`docs/github-oauth-connection-orchestration`
-- Current phase：獨立成果審查 approved，待受限交付。
-- Current step：RV01 completed；next DL01 pending。
-- 最後更新：2026-11-17，Reviewer（RV01）。
+- Current phase：Human review；已建立 Draft PR，停止自動前進。
+- Current step：DL01 completed；next HC01 pending。
+- 最後更新：2026-11-17，Implementer（交付收據）。
 - [requirements](../../analysis/github-oauth-connection-orchestration/requirements.md)／[technical-spec](../../analysis/github-oauth-connection-orchestration/technical-spec.md)／[plan](github-oauth-connection-orchestration.plan.md)
 
 ## Steps
@@ -17,12 +17,12 @@
 | IM01 | completed | Implementer | PR01 approved 後完成 bounded 原碼證據／盤點／採用方案／Floorplan 現況及兩 Archify 圖；必要實驗依條件處理，維持 production zero diff。 | [IM01 交接](evidence/implementation.md)、source-audit／adoption-audit／採用方案、兩圖收據與本機 Floorplan 已交付；無新實驗或 production。 |
 | TE01 | completed | Tester | 依完成交接獨立核對 TC01–TC10，記實際檢查／親跑／skipped／限制及使用者內容無損。 | [TE01 獨立驗證](evidence/verification.md)：完成；首輪 broken link 由 Implementer 修正後閉合，來源／圖面／map 檢查通過；未執行 Swift runtime／live。 |
 | RV01 | completed | Reviewer | 獨立審查證據、圖面、需求追溯、範圍及驗證結果，明示 verdict／required fixes。 | [獨立成果審查](evidence/review.md)：approved，required fixes 無；僅限本題交付，不代表正式 orchestration／live／Human 接受。 |
-| DL01 | in-progress | Implementer | Staged convention／範圍檢查後，依 Human 已授權 direct topic commit／push／Draft PR；actual bounded diff 後完成必要本機 PR Lens 或記真實限制。 | 待 commit IDs／命令／Draft PR URL／publication evidence；不得 merge。 |
+| DL01 | completed | Implementer | Staged convention／範圍檢查後，依 Human 已授權 direct topic commit／push／Draft PR；actual bounded diff 後完成必要本機 PR Lens 或記真實限制。 | [DL01 交付收據](evidence/publication.md)：主 commit a2d2bba 已 push，Draft PR #76 建立，PR Lens 本機 validate/render 通過；metadata 更新另隨同 topic 保存，不 merge。 |
 | HC01 | pending | Human | 最終 topic／圖面／Draft PR review；確認結論限制及後續正式實作仍需獨立契約。 | 未接受；不得由 agent 宣告通過。 |
 
 ## Blockers
 
-目前沒有已確認不可解除 blocker；PR01 已獨立 approved，IM01 已交接 TE01。Source audit 不需新實驗；本機 Floorplan 新建與兩圖完成，待 TE01／RV01 獨立核對。重大 scope／contract 歧義或需超出 allowlist 時停止相關動作，不把未驗證標成功。
+沒有未解除 required fix；PR01／RV01 approved、TE01 completed，交付已建立 Draft PR #76。Source audit 不需新實驗；本機 Floorplan 與兩圖證據已獨立核對。HC01 與圖面 Human 接受 pending 是本輪停點。重大 scope／contract 歧義或需超出 allowlist 時停止相關動作，不把未驗證標成功。
 
 ## Human Check
 
