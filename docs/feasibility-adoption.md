@@ -52,3 +52,15 @@ LU-A02／03／04的native互動／時序及Human聲音／最終UI接受仍缺證
 | LU-A05／06 驗證host／認證診斷搬移 | 已排除，理由不變 | 外部fixture只作本次驗證，未搬進production，未新增VO／Adapter／儲存／session |
 
 採用程度不等於Human最終接受或產品登入交付；沒有用root測試數量代替本次native行為。
+
+### Human VoiceOver 補驗更新：2026-11-17
+
+正式來源`1d5f2a0`與T02的Swift元件相同；[T03](../plan/rivet-login-ui-adoption/evidence/voiceover-human.md)記錄Human實際聆聽的H01–H08及外部fixture雜訊。前述LU-A03部分採用保留為當時缺口，以下只新增本輪證據，不回填舊結果。
+
+| 能力 | 最新程度 | 行為依據與限制 |
+| --- | --- | --- |
+| LU-A03 焦點／宣告／快速離開 | 已採用，限所列受測UI案例 | 已有正式source／E011及公開consumer接入、T02鍵盤證據，本輪Human確認正常流程與同主窗Account→Welcome／Token→PAT；後者PAT焦點、直接輸入及無晚到舊語音有明示回報。不是所有race／OS語音佇列保證，最終視覺／UI接受仍pending。 |
+| LU-A01／02／04 | 已採用，原受限範圍不變 | 本輪無正式元件修改；聲音補證不擴成真VO／service／Adapter整合。 |
+| LU-A05／06 | 已排除，理由不變 | 展示／外部測試host僅作受控消費端，快捷鍵不進production；認證／儲存／session不在本topic。 |
+
+證據來源是Human對話回報，無音檔或精確時間量測；跨視窗Controls未驗及原`⌘⇧3／4`截圖衝突不算元件失敗，也不算通過。第二組只改外部host兩個快捷鍵為`⌘⇧7／8`後取得新確認，第一組與先前結果保留。採用方式及來源關係不變，本輪更新經[R03獨立審查](../plan/rivet-login-ui-adoption/evidence/voiceover-review.md)approved，僅限補證與既有Draft更新；不因checkbox或文件存在推定approval。

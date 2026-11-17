@@ -40,7 +40,7 @@ RivetLoginView(
 
 字級採既有 13...21 pt clamp，非有限值回 13；右側內容以同一比例調整，左側 AX 隱藏品牌維持設計。字級更新不重建 form。這是可重現的 UI 字級入口，不是已交付 macOS 系統文字大小偏好整合。
 
-焦點與宣告由責任元件管理。各 await 後檢查 task 取消與 active 視圖／呈現輸入，離開後不得拉回焦點或宣告過期狀態。Welcome 聚焦主操作，PAT 聚焦欄位，waiting 聚焦 Cancel，browser failure 聚焦 Retry，verifying／connected 聚焦 heading。Waiting 的焦點 label 同時帶等待狀態與取消動作；獨立 announcement 用於 verifying／failure／completed。新版 VoiceOver 聲音與最終 UI 接受仍待 Human。
+焦點與宣告由責任元件管理。各 await 後檢查 task 取消與 active 視圖／呈現輸入，離開後不得拉回焦點或宣告過期狀態。Welcome 聚焦主操作，PAT 聚焦欄位，waiting 聚焦 Cancel，browser failure 聚焦 Retry，verifying／connected 聚焦 heading。Waiting 的焦點 label 同時帶等待狀態與取消動作；獨立 announcement 用於 verifying／failure／completed。本輪 Human VoiceOver 受測案例已確認，範圍與限制見末節；最終視覺／UI 接受仍待 Human。
 
 ## 文件層的接線對應契約
 
@@ -82,7 +82,7 @@ RivetLoginView(
 
 舊 UI topic 的 HC-01 已有 Human「通過，採用目前這版」接受紀錄；入口原有 pending 摘要落後於 [舊驗證末段](../../plan/rivet-login-ui/evidence/verification.md)。此接受僅支持其來源與案例，不回填新版重構結果。
 
-本 topic 的實作／測試證據見 [I01](../../plan/rivet-login-ui-adoption/evidence/implementation.md)，採用程度與方式見 [獨立採用紀錄](../feasibility-adoption.md)。初次I01／T01已完成helper／content／model自測與root Demo build，當時native操作未驗。後續原生補驗結果見本文件末節；Human聲音／最終接受仍分列pending，不能用model tests代替native UI。
+本 topic 的實作／測試證據見 [I01](../../plan/rivet-login-ui-adoption/evidence/implementation.md)，採用程度與方式見 [獨立採用紀錄](../feasibility-adoption.md)。初次I01／T01已完成helper／content／model自測與root Demo build，當時native操作未驗。後續原生與Human聲音補驗結果見本文件末節；最終視覺／UI接受仍pending，不能用model tests代替native UI或Human聆聽。
 
 初次查核基線 `1f31b35` 的 root `swift test` 被既有 `FakePATSecurity` 缺 `GitHubOAuthSecurityClient.delete` 編譯缺陷阻擋，相關檔案與當時 base bytes 相同；原失敗歷史保留。上游修正後，本 feature 整合至 `ab77391`，root 實際執行 **361 tests／46 suites 通過**，正式 Demo build 也通過；本 topic 沒有修改認證來源。獨立 focused 32 tests／7 suites 證據仍只支持其 helper／content／model 範圍，不替代 native 互動。整合與 Draft 交付見 [D01／D02](../../plan/rivet-login-ui-adoption/evidence/delivery.md)。上游已有登入 runtime，UI 與其間的外層 Adapter 仍未接線。
 
@@ -92,4 +92,10 @@ RivetLoginView(
 
 受測正式來源為`83543b0`，沒有修改Swift元件。使用者重送視窗存取後，E011與外部public-consumer假parent完成N01–N16：PAT identity／Show-Hide／字級與content保留、trim提交／立即清除、Back／離開／Reset、七種intent單次回呼。八種畫面變體×Light／Dark×13／17／21pt共48組原生呈現／AX已補驗；代表性21pt截圖與ScrollView操作可到達Submit／footer。
 
-詳見[原生補驗證據](../../plan/rivet-login-ui-adoption/evidence/native-ui.md)。原T01限制保留為歷史；VoiceOver實際聲音／焦點與離開後宣告時序、Human最終視覺／UI接受仍pending，原生heading不代替聽覺確認。R02獨立審查另記，不宣稱topic已由Human接受。
+詳見[原生補驗證據](../../plan/rivet-login-ui-adoption/evidence/native-ui.md)。原T01限制與T02當時VoiceOver待驗保留為歷史；R02獨立審查另記。後續Human聽覺確認見下一節，原生heading本身不代替聽覺證據，不宣稱topic已由Human最終接受。
+
+## Human VoiceOver 補驗：2026-11-17
+
+正式來源`1d5f2a0`與T02的Swift元件相同。Human已確認Welcome／waiting／Escape、PAT欄位／Show-Hide／編輯／提交、PAT失敗／再次提交、模擬完成／未連接帳號，以及帳號驗證／browser failure／Retry。正常流程回報沒有重複、漏讀或過期語音。同主窗Account→Welcome正常；Token→PAT修正外部host的截圖衝突快捷鍵後，Human確認PAT朗讀／焦點／直接輸入及沒有晚到舊宣告。
+
+[Human聲音證據](../../plan/rivet-login-ui-adoption/evidence/voiceover-human.md)區分E011模擬copy與外部consumer正式copy，保留跨視窗Controls干擾及快捷鍵衝突的未驗歷史。結論限當次Human聆聽與所列操作，不外推所有OS語音佇列或race；正式元件、系統設定、認證與session均未改動。最終Human視覺／UI接受仍pending，TC06整體尚未完成，不merge。

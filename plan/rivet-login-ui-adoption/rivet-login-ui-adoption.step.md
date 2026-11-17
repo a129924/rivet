@@ -4,9 +4,9 @@
 - Branch：`feat/rivet-login-ui-adoption`
 - 原查核 Base：`1f31b35604adb5bb36326e52f9d6dbcff0cac763`
 - 交付整合 Base：`origin/dev`／`ab77391b73291deb1ce3d96cef72f981aeb3104a`
-- 最後更新：2026-11-17，Reviewer，R02已完成獨立證據／採用分類審查，approved僅補證與既有Draft更新。
-- Current Phase：Human review；T02可觀察原生互動已補驗，R02 approved僅本輪補證與Draft更新，VoiceOver與最終Human接受未完成。
-- Current Step：HC01，pending，owner=Human；R02 completed，文件補證可依既有授權更新Draft，不新增approval gate、不merge。
+- 最後更新：2026-11-17，Reviewer，R03已完成T03補證／採用分類獨立審查，approved僅補證與既有Draft更新。
+- Current Phase：Human review；T03所列VoiceOver案例已由Human確認，R03 approved僅補證與既有Draft更新，最終視覺／UI接受仍pending。
+- Current Step：HC01，pending，owner=Human；R03 completed，補證文件可依既有授權更新Draft後停最終Human接受，不新增approval gate、不merge。
 - 上游：Planner 規劃準備 approved；Human 已接受對話方案與本 topic 執行授權。這些不替代 P02 的獨立 planning verdict。
 - 本帳本的 completed／pending 不是 approval；只依明示 verdict 路由。
 
@@ -23,14 +23,16 @@
 | R01 | completed | Reviewer | 獨立檢查diff、範圍、行為、測試／圖與採用證據，分類required fix／重大問題及明示verdict | evidence/review.md：無 required fix；source／範圍／VO對應與圖面有界審查可Draft，root基線失敗與native TC02／03／05未驗須在PR揭露；不是最終UI接受 | approved（僅D01／D02 Draft） |
 | D01 | completed | Implementer | R01允許前進且無重大問題後，依git-commit-convention查staged diff與message，執行僅本topic commit | 實作 commit `d762f935ec2d4e220e7bc2135e6b80daa21bef3e`；staged topic 邊界／diff-check 與全部 hooks 通過；後續同 topic docs-only 交付紀錄不改程式 | 已依既有Human授權執行 |
 | D02 | completed | Implementer | D01後push本feature branch，建立target=dev之Draft PR，描述揭露Human／工具pending與限制 | feature branch 已push；[Draft PR #75](https://github.com/a129924/rivet/pull/75)，base=dev；Human checklist及native缺口已揭露，詳見evidence/delivery.md | Draft交付，未merge |
-| HC01 | pending | Human | Draft交付後Human review；確認本次原生VoiceOver聲音與最終UI接受，必要時指定bounded修正 | Draft #75；T02補驗可觀察native互動，TC06／VoiceOver宣告時序與最終Human接受pending，舊topic接受不代替 | human-check |
+| T03 | completed | Tester | 整理Human實際VoiceOver回報與fixture來源，保留無效嘗試及最終接受界線 | evidence/voiceover-human.md：H01–H08，正常流程與兩組同主窗切態已確認；第二組截圖衝突只改外部host後補驗；無音檔／精確時序，正式source零改 | 證據交接，不自審correctness |
+| R03 | completed | Reviewer | 獨立核對T03、採用分類及Human最終接受仍pending，明示verdict | evidence/voiceover-review.md：無required fix；正式來源與T02相同，H01–H08及無效嘗試界線清楚，LU-A03可列已採用限所列受測案例；TC06整體／Human最終接受仍pending | approved（僅T03補證／既有Draft更新） |
+| HC01 | pending | Human | Draft交付後Human review；確認本次原生VoiceOver聲音與最終UI接受，必要時指定bounded修正 | Draft #75；T02及T03補驗可觀察native與Human聲音，TC06最終視覺／UI接受仍pending，舊topic接受不代替 | human-check |
 
 ## Blockers
 
 - 目前沒有已知的不可解除技術 blocker。
 - P02 獨立 Plan-Reviewer 已明示 approved；I01 自驗交接完成，T01已取得有界結果但 native coverage incomplete；R01已approved僅Draft交付，不冒稱最終通過。
 - 舊查核基線 root swift test 的 FakePATSecurity 缺 delete 編譯失敗保留於T01歷史。上游修正後整合至 `ab77391`，root親跑361 tests／46 suites通過，正式Demo build通過，R01補充延續approved；未修改本topic認證來源。
-- 原T01 native窗口限制與未驗歷史保留。使用者重新授權後T02已補驗TC02／03及TC05所列48組呈現／AX、鍵盤與代表性視覺；VoiceOver聲音／宣告時序與TC06仍Human pending，不放行merge或最終接受。
+- 原T01 native窗口限制與未驗歷史保留。使用者重新授權後T02已補驗TC02／03及TC05所列48組呈現／AX、鍵盤與代表性視覺；T03再取得所列Human聲音／切態確認；TC06最終視覺／UI接受仍pending，不放行merge或最終接受。
 - 若發現scope擴到真request／service／認證async／儲存／session、locked contract衝突、required fix／重大問題或權限不足，停止依賴動作並回報對應角色／Human。
 - Graphify無可用graph可採source fallback；PR Lens不可用可採直接diff review。這些不自行新增mandatory gate。
 - Archify未通過則圖面接受維持未完成；不得將pending／skipped／非零宣稱pass。
@@ -41,8 +43,8 @@
 | --- | --- | --- | --- |
 | HC-SCOPE | Human | completed | 已選正式UI元件化，已鎖定本topic非真登入／非session，並接受完整方案 |
 | HC-DELIVERY | Human | completed | 已授權無重大問題直接本topic commit→push→Draft PR→Human review；未授權merge／tag／release／發布 |
-| HC-VOICEOVER | Human | pending | 本次原生VoiceOver聲音未確認；不阻擋已授權Draft，但不能稱新版UI接受或聲音通過 |
-| HC-FINAL | Human | pending | Draft #75已建立；T02可觀察native互動已補驗，VoiceOver及最終Human UI接受未完成，不merge |
+| HC-VOICEOVER | Human | completed | T03記錄本輪H01–H08實際聆聽確認；僅受測內容／焦點／切態，不代表所有時序或最終UI接受 |
+| HC-FINAL | Human | pending | Draft #75已建立；T02原生互動及T03所列Human VoiceOver已補驗，最終Human視覺／UI接受仍pending，不merge |
 
 ## 更新規則
 
