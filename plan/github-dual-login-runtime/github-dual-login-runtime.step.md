@@ -2,7 +2,7 @@
 
 最後更新：2026-11-17，交付組裝端（依獨立角色明示證據回寫）。Branch：`feat/github-dual-login-runtime`；base `1f31b35`。
 
-目前 phase：交付。Current step：R06，status=in_progress。Upstream verdict：approved（獨立 Reviewer `/root/runtime_reviewer`，R05，required fixes 0）；TC08 與 Human 接受仍 pending。
+目前 phase：human-check。Current step：R07，status=pending（HC01；同時等待R09 Draft PR與圖的Human review）。Upstream verdict：approved（獨立 Reviewer `/root/runtime_reviewer`，R05，required fixes 0）；不自行完成TC08或topic。
 
 ## Steps
 
@@ -13,7 +13,7 @@
 | R03 | completed | Implementer | 正式service／coordinator／probe／OAuth通道、測試及獨立入口完成 | 正式runtime／tests／獨立入口及docs完成；見[evidence](evidence/implementation.md)，獨立驗證見R04 |
 | R04 | completed | Tester | TC01–TC07及受影響檢查親跑，附命令／來源／結果 | root Tester 親跑358 tests／45 suites通過，format／strict lint／consumer／CLI build通過，見[驗證](evidence/verification.md) |
 | R05 | completed | Reviewer | 獨立審查產出、取消／提交與證據限制 | 獨立 Reviewer `/root/runtime_reviewer` approved，required fixes 0，見[審查](evidence/review.md) |
-| R06 | in_progress | Implementer | 長期docs／Archifysequence及localPRLens交付，依授權commit／push／DraftPR | Archify 9/9／四尺寸／Agent 視覺通過，見[圖證據](../../docs/architecture/diagrams/github-dual-login-runtime/BUILD.md)；local PR Lens／commit／push／Draft PR pending，不作 correctness approval |
+| R06 | completed | Implementer | 長期docs／Archifysequence及localPRLens交付，依授權commit／push／DraftPR | Archify與本機PR Lens已驗證；runtime commit `fa93773`已push，Draft [PR74](https://github.com/a129924/rivet/pull/74)已建立，見[交付](evidence/publication.md)；不作Human接受或live證據 |
 | R07 | pending | Tester | Human確認當次條件後執行TC08、分別記真OAuth／PAT與fresh讀回 | pending，Human停點；不挪用舊topic額度 |
 | R08 | pending | Reviewer | 獨立核對TC08來源／環境／實際結果 | pending；無結果不宣稱live通過 |
 | R09 | pending | Human | DraftPR review、圖視覺接受及topic最終接受 | pending，不自行標topic完成 |
