@@ -1,12 +1,14 @@
 # Login UI 元件化執行帳本
 
+> 現行契約：本文件末段「R3：2026-11-18 E011 凍結與驗收歸屬修訂」優先適用於本輪。前文原規劃及 I01／I02 授權、實作與驗收保留為其版本歷史；不得以本輪要求倒推原作業越權，也不得把舊驗收直接套給新 host。
+
 - Topic：`rivet-login-ui-adoption`
 - Branch：`feat/rivet-login-ui-adoption`
 - 原查核 Base：`1f31b35604adb5bb36326e52f9d6dbcff0cac763`
 - 交付整合 Base：`origin/dev`／`ab77391b73291deb1ce3d96cef72f981aeb3104a`
-- 最後更新：2026-11-17，Human明示接受「目前這版正式 Login UI／UX」；agent記錄HC01／HC-FINAL完成，僅同步文件。
-- Current Phase：本topic正式Login UI／UX Human接受完成；只做已授權文件收尾，真認證／儲存／session仍排除，未merge。
-- Current Step：HC01，completed，owner=Human；依明示接受完成TC06的最終Human部分，T01／T04歷史incomplete保留，不新增gate、不merge。
+- 最後更新：2026-11-18，Implementer完成I03受限實作／自驗交接；原Human接受與HC01／HC-FINAL completed保留，T06由獨立Tester記錄。
+- Current Phase：R3受限source交付；I03／T06完成，R06復審approved，新host/Canvas/native差異尚未驗。
+- Current Step：D03，in-progress，owner=Implementer；R06已明示復審approved／required fixes無，RF01／RF02 closed。並行T07 human-check待exact新binary當下確認；HC01 completed歷史保持，HC02 pending，不merge。
 - 上游：Planner 規劃準備 approved；Human 已接受對話方案與本 topic 執行授權。這些不替代 P02 的獨立 planning verdict。
 - 本帳本的 completed／pending 不是 approval；只依明示 verdict 路由。
 
@@ -61,3 +63,38 @@
 - [requirements](../../analysis/rivet-login-ui-adoption/requirements.md)
 - [technical-spec](../../analysis/rivet-login-ui-adoption/technical-spec.md)
 - [plan](rivet-login-ui-adoption.plan.md)
+
+
+## R3：2026-11-18 E011 凍結與驗收歸屬修訂
+
+Human新要求：E011凍結、正式tests／controlled#Preview優先、必要native驗收改歸tools/acceptance/login-ui；原I01/I02授權與HC01接受保留。Planner preflight=approved只表示資料足夠起草R3，並非P03獨立planning gate。
+
+| ID | status | owner role | 完成條件 | 驗證證據／目前結果 | verdict |
+| --- | --- | --- | --- | --- | --- |
+| PC03 | completed | Plan-Creator | 同topic四artifacts追加R3、保留歷史，列freeze六項／tool例外／controlledPreview／readonly／差異cases | 2026-11-18只改四規劃文件；沒有code/test/build/launch/commit | 作者不自審 |
+| P03 | completed | Plan-Reviewer | 獨立審R3 freeze／scope／新增toolpackage例外／公共API保留／source與新binaryHuman邊界，明示verdict | 獨立Plan-Reviewer對話已明示P03 approved，required fixes無（2026-11-18）；非作者自審 | approved |
+| I03 | completed | Implementer | P03approved後依R3六檔回復、controlledPreview／formaltests／最小tool與ownerdocs完成交接；新app僅build不launch | evidence/acceptance-ownership-implementation.md：六項freeze／controlledPreview／tool完成，正式9tests與tool8tests／build／scopedchecks通過，新app/source/hash已備未launch，core/rootreadonly保留 | 作者不自審；交T06 |
+| T06 | completed | Tester | 獨立驗R3-TC01–05及07，記actualsource/hashes/cache/gaps；不launch新app | evidence/acceptance-ownership-testing.md：獨立16tests（9formal＋7frozen）／tool8tests／兩product build／format-lint／freeze-core-history／28source及app tree資源hash完成；Canvas與native未驗 | 自動／source完成；交R06 |
+| R06 | completed | Reviewer | 獨立審I03/T06／freeze／corebytes／工具歸屬／source/docs及新app準備證據，無requiredfix才可提exactnative當下確認 | evidence/acceptance-ownership-review.md原needs-rework；RF01現況Reset文件及RF02先驗外部run已修，T06非法run無寫入與新版build複驗完成；目前source6c1d5266…／binary9219bd76…／app6be23f92…，詳I03差異附錄及Reviewer明示復審approved | 最新復審approved（source／tests／docs受限交付）；RF01／RF02 closed，required fixes無 |
+| T07 | pending | Tester | R06後且Human對exact新binary當下確認後補R3-TC06必要native，記同窗callback/focus/resources及Human聲音待驗 | 目前修後binary9219bd7656c55287ecb6ab1adc6d37f7f9b51e9b9217c15846cb27d8e0460b10已build，source6c1d5266c7f10f2340ed383604fd8a74b3ff7f00a0411c276bd9df86a195921d／app6be23f92067767340b21cd00644943f7ffe72adbba3872de320ab94762c59eb3已由T06核對；未取得當下確認、未launch，無新native結果 | pending |
+| R07 | pending | Reviewer | 獨立核對T07實際版本／界線／待驗，明示boundedreviewverdict | 尚未審查；不代替Human聲音或新host接受 | pending |
+| HC02 | pending | Human | 依實際新host受影響cases確認VoiceOver／必要差異UI，不重開未變core的舊HC01 | 原HC01completed保持；新host接受／受影響Humancases未驗 | human-check未到達 |
+| D03 | in-progress | Implementer | 無重大問題、依原授權完成本topiccommit/push/既有Draft更新，明列新native/Human限制，無merge | 原直接交付授權有效；R06復審approved後檢查單一topic staged diff，執行正常hooks／commit／push；既有Draft更新交主agent，T07／HC02 pending | source交付中；不merge |
+
+### 本輪 Blockers／Human Check
+
+- P03獨立Plan-Reviewer已approved（required fixes無）；I03作者實作／自驗交接完成，T06／R06與新host接受依獨立角色及Human實際結果，不代填pass。
+- Root Package.swift/Package.resolved/gitignore/settings唯讀；若工具確需改動，提出精確最小proposal並停止該相依動作，其他獨立工作可繼續。
+- E011凍結與formal.standard、無demo mode、HEAD重建舊demo語意不變四條件無法全滿足；採已明示安全範圍：E011只歷史引用、不作本輪正式驗收，無legacy/footer/bundle特判。不是未解除的實作假設。
+- 新binary需要原生工具當下確認：先build/R06，再交exactapp/SHA/source/cases。原4d4cf13...啟動許可與HC01接受不套新binary；未獲新確認只暫停native，不阻擋source/tests/docs獨立工作。
+- HC02只限本輪受影響HumanVoiceOver／host差異，不能重開或抹去HC01completed。Source/docs可依boundedreview與原授權更新Draft，不能稱新hostHuman接受或merge。
+- 本輪I03已code/test/build，未launch新app或Canvas；T06依獨立證據記錄，T07／HC02仍待新binary當下確認及差異補驗，不回填舊結果作新pass。原T01/T04incomplete／拒絕及後續Human解除歷史完整保留。
+
+### 六點最終交接欄位
+
+1. E011 freeze revision/tree、六項逐blob差異與結果。
+2. Formal／tool／history diff ownership及rootreadonly/corebytes。
+3. 正式tests／controlledPreview實際涵蓋與限制。
+4. Native必要性、最小host/menu/resources足跡與無service/DI依賴。
+5. 實跑source/binary/hash/results/gaps、當下確認及舊Human接受適用版本。
+6. 能力採用程度與產品認證/儲存/session整合分開；Draft狀態／無merge。

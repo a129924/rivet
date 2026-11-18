@@ -2,6 +2,18 @@
 
 本元件屬 non-BC `RivetPresentation`，不依賴 `GitHubIntegration`。正式來源提供 SwiftUI 元件、呈現資料、局部 UI state 與 intents；認證、request 建構、儲存、session／clients 及產品 App 組裝留待後續。
 
+## 現行驗收歸屬：R3（2026-11-18）
+
+正式 Login 核心／public API／content／children／helper／styles／artwork 不改。本輪 source 唯一正式區變更是 DEBUG 私有 `RivetLoginView+Previews.swift`：改用 @State controlled phase、13／17／21 pt、standard／controlled copy、建立可用性、form generation 與 last event kind/count。有限控制位於 wrapper 外，不混入正式登入主畫面；只有合法目前phase的callback才回寫。Submit不保存、檢視、hash或記錄payload。
+
+同一generation切換tokenEntry↔token failure、字級／copy／建立可用性不重建root；只有明確Reset更換generation並清receipt，保留目前呈現設定。原先fixedphase／ignoreIntent不是互動驗證。既有直接正式helper／content／initializer tests足夠，未新增鏡像test或正式hook；真Canvas連續操作尚未執行，不能用tool parent unit tests冒稱正式View事件。
+
+必要native差異由 [tools/acceptance/login-ui](../../tools/acceptance/login-ui/README.md) 的最小獨立SwiftPM package支撐。三個tool-local targets只透過path依賴root RivetPresentation product；自有configuration／parent／fixtures／NSWindow／Acceptance原生選單，不依賴E011／LoginDemoModel或GitHubIntegration，不copy View／VO。主窗預設.standard與中性footer／failure，無overlay或獨立Controls窗；有限phase／字級／copy／建立可用性／Reset／唯讀event receipt在Acceptance menu，沒有新快捷鍵、timer、Task或自動完成。
+
+新artifact是RivetLoginAcceptance.app／local.rivet.login-ui-acceptance，build/cache在外部scratch，實際resource bundle及source／binary／resource／app tree SHA由build-app腳本保存。Root Package.swift／Package.resolved／設定唯讀；工具有自己的lock且transitive Apollo cache需求如實列出。先source/build/test與獨立review，再提出exact新binary及必要案例取得當下確認；確認前不launch、不沿用舊preview許可。見 [I03實作證據](../../plan/rivet-login-ui-adoption/evidence/acceptance-ownership-implementation.md)。
+
+原HC01/source3c9baf3、preview42e99fa、binary4d4cf13...及H01–H08接受完整保留；新host／controlledPreview受影響案例仍待差異補驗與必要Human確認，不重開未變core的舊接受，也不把新host存在當產品認證／儲存／session接入。
+
 ## 組合與狀態所有權
 
 唯一公開 View 是 `RivetLoginView`；internal 子元件不接收整個外層 model。
@@ -14,7 +26,7 @@
 | LoginPATForm | tokenEntry／token failure、文案與建立可用性；Back／Submit／Create | PAT 編輯、Show／Hide、欄位焦點 |
 | LoginStatusNotice | verifying／completed 內容 | heading focus、可取消宣告 |
 
-Parent 是 phase 唯一權威。Cancel／Escape、Retry 與 Submit 只發事件，不自行認證或推進 phase。PAT form 的 tokenEntry／token failure 保留同一 identity；送出取 trim 值後立即清除並隱藏，離開／消失／E011 Reset 同樣清除。內部空白不改，不驗 prefix。Show／Hide、字級／content 更新不清文字；建立入口不清編輯。
+Parent 是 phase 唯一權威。Cancel／Escape、Retry 與 Submit 只發事件，不自行認證或推進 phase。PAT form 的 tokenEntry／token failure 保留同一 identity；送出取 trim 值後立即清除並隱藏，離開／消失同樣清除。現行 controlled Preview wrapper／acceptance parent 的明確 Reset 會更換 form generation，讓表單重建；新 consumer 的實際 rendered／native Reset 結果仍待差異驗證。內部空白不改，不驗 prefix。Show／Hide、字級／content 更新不清文字；建立入口不清編輯。
 
 ## 公開接線介面
 
@@ -30,7 +42,9 @@ RivetLoginView(
 
 `RivetLoginContent`／`RivetLoginStatusContent` 是 immutable、Equatable、Sendable 的 display-ready copy，具 public initializer。正式 `.standard` 無模擬／Demo Controls／example-only 文案。Connected 的標題／宣告為 `Sign-in completed.`，只表示本次登入完成，不表示 session、account payload、provider 或 clients 已建立，也不宣稱已保存憑證。Failure 沿用 parent 提供的 `RivetLoginFailure(message:origin:)`。
 
-## 乾淨原生預覽（I02）
+## 歷史：I02 乾淨原生預覽
+
+以下保留I02當時入口與受測版本的說明，並非目前HEAD操作入口。R3已定點移除E011 preview分流／host／tests，當前驗收改歸上節；歷史原貌僅由完整I02 revision或原受測binary支持。
 
 正式外觀預覽與下節受控展示是兩個獨立入口，使用同一 `RivetLoginView`；預覽固定傳入 `RivetLoginContent.standard`。Footer 與 failure message 不屬於 `.standard`，由預覽 host 提供中性正式文字：footer 為 `Connect your GitHub account to Rivet.`；兩種 failure 分別提示重試或檢查 token，不使用模擬錯誤文字。
 
@@ -51,11 +65,11 @@ App-local CLI 契約為 `--preview [--state <state>] [--appearance system|light|
 
 本次驗收入口修正維持既有UI範圍；Human接受決策與native補證分開記錄。T02／T03／H01–H08 原證據保留；T04／R04當時的啟動拒絕保留為歷史。取得Human對同一binary的當下確認後，[T05原生補驗](../../plan/rivet-login-ui-adoption/evidence/clean-preview-native.md)已觀察正式Welcome／waiting／PAT／verifying-token、兩種failure與completed，含Dark21捲動及Light17代表。最後留開Light13 Welcome；新preview的verifying-account未另做native重驗，沒有重跑完整矩陣或VoiceOver。後續Human已明示接受目前正式Login UI／UX，詳見末節；HC01完成，尚未merge。
 
-## E011 受控展示
+## E011 凍結歷史與語義限制
 
-展示 host／Runtime／專屬測試維持 [E011](../../experiments/E011/README.md) 歸屬。E011 呼叫相同正式 View，由本地 `LoginDemoCopy` 提供模擬文字、假 phase 及事件處理；不呼叫真 VO／service。正式 library 無 demo mode。建立入口預設停用。
+E011 source逐項恢復至d2332bfff25510a3f78c1fbc8b0d2d9cf953b223，對應tree b6a1e6e1196e64999af9591ec32f09211f1936c6。只恢復本PR改動的三個既有檔並移除三個新增preview檔，model／README及其餘內容不碰。原I01/I02當時核准修改的歷史保持，不倒推越權；E011不再作本輪正式驗收consumer。
 
-在 feature checkout 用 `swift build --product RivetLoginDemo` 建置，以 E011 既有 wrapper 操作。主窗最小 content 780×500 pt、40:60 雙欄、操作區垂直捲動，原生 titlebar／traffic lights／輸入控制保留。Controls 提供 Light／Dark、13／17／21 pt、七態、兩種 failure origin、模擬返回／完成與 Reset，不用 timer。
+Frozen host未傳content，仍可由目前initializer的預設參數編譯，但會使用現行產品.standard。source凍結／可編譯不代表HEAD重建後與舊模擬文案逐字或語意等效；不加formal demo mode、legacy default或footer／bundle特判。若需歷史外觀，只能用完整freeze revision或原binary，本輪不重播。
 
 ## 字級與狀態宣告
 
@@ -107,7 +121,7 @@ App-local CLI 契約為 `--preview [--state <state>] [--appearance system|light|
 
 初次查核基線 `1f31b35` 的 root `swift test` 被既有 `FakePATSecurity` 缺 `GitHubOAuthSecurityClient.delete` 編譯缺陷阻擋，相關檔案與當時 base bytes 相同；原失敗歷史保留。上游修正後，本 feature 整合至 `ab77391`，root 實際執行 **361 tests／46 suites 通過**，正式 Demo build 也通過；本 topic 沒有修改認證來源。獨立 focused 32 tests／7 suites 證據仍只支持其 helper／content／model 範圍，不替代 native 互動。整合與 Draft 交付見 [D01／D02](../../plan/rivet-login-ui-adoption/evidence/delivery.md)。上游已有登入 runtime，UI 與其間的外層 Adapter 仍未接線。
 
-[原七態 lifecycle](diagrams/rivet-login-ui/login-lifecycle.html) 保持凍結；本次 [後繼 lifecycle](diagrams/rivet-login-ui/login-lifecycle-v2-r1.html) 與 [BUILD 證據](diagrams/rivet-login-ui/BUILD.md) 記錄 UI events／parent-owned phase，文件層 VO 對應沒有畫成已接線 runtime。圖面視覺接受與產品 VoiceOver 接受是不同證據。
+[原七態 lifecycle](diagrams/rivet-login-ui/login-lifecycle.html) 保持凍結；本次 [後繼 lifecycle](diagrams/rivet-login-ui/login-lifecycle-v2-r1.html) 與 [BUILD 證據](diagrams/rivet-login-ui/BUILD.md) 記錄 UI events／parent-owned phase，文件層 VO 對應沒有畫成已接線 runtime。圖面視覺接受與產品 VoiceOver 接受是不同證據。R3只改驗收consumer歸屬，不改正式七態／intent語義；上述凍結圖及receipts不重產，圖的舊consumer與受測來源限制保留。
 
 ## 原生補驗：2026-11-17
 

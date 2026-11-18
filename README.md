@@ -29,9 +29,9 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 Reader fixture 驗收 host、Runtime、資源與專屬測試集中於 [E012](experiments/E012/README.md)，root target／正式 bridge 與 TS pipeline 保持。
 
-登入驗收展示的 host、Runtime 與專屬測試集中於 [E011](experiments/E011/README.md)，仍由 root package 既有 target 建置。這只修正歸屬，不撤回正式 UI 採用或改寫原 topic 驗收。
+登入歷史展示的 host、Runtime 與專屬測試保留在 [E011](experiments/E011/README.md)，本輪 source 凍結於 `d2332bf`，不再作目前正式 UI 驗收入口。正式 tests／controlled #Preview 與必要 [原生 acceptance tool](tools/acceptance/login-ui/README.md) 的歸屬分開；不撤回既有 UI 採用或改寫原 topic 驗收。
 
-登入 UI 已以 non-BC `RivetPresentation` 的公開 `RivetLoginView` 組合四個 internal 責任元件，提供 parent-owned phase／display-ready content、PAT 局部編輯與 intents；E011 以本地模擬內容消費同一組正式元件。既有 UI 版本有 Human 接受紀錄，本次元件化已補原生互動與呈現／AX矩陣，本輪Human VoiceOver案例已確認，且Human已接受目前這版正式Login UI／UX；沒有接認證服務、憑證儲存或 session。Focused 自測與正式 Demo build 證據、root 測試結果、原生驗證限制及後續 VO 接線邊界見 [登入 UI 說明](docs/presentation/login-ui.md)。
+登入 UI 已以 non-BC `RivetPresentation` 的公開 `RivetLoginView` 組合四個 internal 責任元件，提供 parent-owned phase／display-ready content、PAT 局部編輯與 intents。既有正式 Login UI／UX 的 Human 接受及原生／VoiceOver 證據依原來源保留；本輪從 E011 抽離驗收，改以直接正式 tests／controlled #Preview 優先，必要原生差異由獨立 `tools/acceptance/login-ui` 支撐。新 host 尚未取得新版 native／Human 接受，不宣稱接入認證、憑證儲存或 session。詳見 [登入 UI 說明](docs/presentation/login-ui.md)。
 
 `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
 

@@ -1,5 +1,7 @@
 # Login UI 元件化與選擇性採用計畫
 
+> 現行契約：本文件末段「R3：2026-11-18 E011 凍結與驗收歸屬修訂」優先適用於本輪。前文原規劃及 I01／I02 授權、實作與驗收保留為其版本歷史；不得以本輪要求倒推原作業越權，也不得把舊驗收直接套給新 host。
+
 - Topic：`rivet-login-ui-adoption`
 - 日期：2026-11-17
 - Branch：`feat/rivet-login-ui-adoption`
@@ -104,3 +106,66 @@ Human 在既有 UI scope 要求驗收正式 Login 外觀。本次僅新增 E011 
 - `.standard` 不含 footer 或 failure message；host 明確提供中性 footer `Connect your GitHub account to Rivet.` 與 failure copy，不誤稱它們來自 `.standard`。不修改正式 content schema 或空 footer 行為。
 - 原生 wrapper：可在 feature `.build` 新增獨立 `RivetLoginPreview.app`，bundle ID `local.rivet.login-ui-preview`，複製同一正式 debug executable／Presentation resource bundle，不覆寫既有 wrapper，不 commit `.app`。此 bundle ID 在同一 executable 入口預設選擇 preview，即使 `open` 未附參數也不會誤開展示 host；外加 state／appearance／text-size 參數仍由相同 parser 處理。本實作階段只準備，不啟動或停止其他 app。
 - 差異驗證：配置／八種 phase 選擇、邊界參數拒絕、中性 copy 與 Demo copy 隔離、fake callbacks不自動推進，受影響 tests、正式 executable build、scoped format／lint／diff-check；不因預覽入口重跑不相關完整 suite，也不重產 lifecycle。獨立 Tester T04 驗證單窗／原生外觀／無展示文字及必要事件；R04 獨立審查後回 HC01，既有 T02/T03/H01–H08 結果保留。本次 preview 不宣稱 Human 已接受，HC01 仍 pending／no merge。
+
+
+## R3：2026-11-18 E011 凍結與驗收歸屬修訂
+
+### 現行 Goal／Non-Goal／In-Scope／Out-Of-Scope
+
+Goal：保留正式Login既有能力與API，以正式tests／controlled#Preview優先、最小native tool補必要差異，從E011抽離本topic驗收依賴。In-Scope：六項E011定點回復／移除、DEBUG Preview wrapper、直接正式consumer tests、工具自有parent/config/host/fixtures/tests、必要owner文件與新證據。
+
+Non-Goal／Out-Of-Scope：正式core/API/child行為重寫、複製View／VO、E011增補、fake Service／DI、認證Task／timer／storage/session/nav、root target/package設定修改、舊證據刪改或merge。原plan及I01／I02授權歷史有效，不倒推越權；現行R3優先。
+
+### E011 freeze 與精確六項操作
+
+本輪起始HEAD=`44ddbeea6235e9b785b41a9f787c92f52aa85eaf`；current PR base/dev=`d2332bfff25510a3f78c1fbc8b0d2d9cf953b223`。7e5f4fd／1f31b35／ab77391／d233的E011 tree皆為`b6a1e6e1196e64999af9591ec32f09211f1936c6`，故pin d233有來源依據。起始HEAD E011 tree為`a1fd3793fecdccf52c192158939629b58ca7c685`。
+
+| 操作 | 路徑 | freeze blob／限制 |
+| --- | --- | --- |
+| Modify：逐檔回復 | experiments/E011/Sources/RivetLoginDemo/main.swift | 06fc0e261d862c4dcb5c463fbcecfc92124a9e45 |
+| Modify：逐檔回復 | experiments/E011/Sources/RivetLoginDemoRuntime/LoginDemoHost.swift | 0519ea65b0c922aa3525472460aa3a3c4040dc64 |
+| Modify：逐檔回復 | experiments/E011/Tests/RivetLoginDemoRuntimeTests/LoginDemoModelTests.swift | 87301e4e536143fca9add64a90b327b6a3d5c1c5 |
+| Deleted：僅本PR新增檔 | experiments/E011/Sources/RivetLoginDemoRuntime/LoginPreviewConfiguration.swift | 實用配置邏輯改歸新tool，不留E011相依 |
+| Deleted：僅本PR新增檔 | experiments/E011/Sources/RivetLoginDemoRuntime/LoginPreviewHost.swift | 新tool自有parent，不保留LoginDemoModel依賴 |
+| Deleted：僅本PR新增檔 | experiments/E011/Tests/RivetLoginDemoRuntimeTests/LoginPreviewConfigurationTests.swift | 新tool驗自己的config，勿把測試搬成formal行為證明 |
+
+逐項從指定base/blob回復，不整目錄overwrite。LoginDemoModel／E011 README等原未變項不碰；完成後git tree等freeze是驗證。未commit前以對指定base的逐路徑diff加E011未追蹤檔列舉檢查內容，commit後再核對commit:E011 tree；不可把尚未更新的HEAD tree冒稱working tree已凍結，也不為驗證改index或批量覆寫。Frozen host未傳content，語法預期相容但依.standard使用產品copy，不能稱HEAD重建舊demo語義等效；本輪只歷史引用，不重播，不加formalDemoMode／bundle/footer特判。
+
+### 本輪 ReadOnly／Written／Modify／Deleted allowlist
+
+| 標籤 | 確定範圍 |
+| --- | --- |
+| ReadOnly | 除上表六項回復外整個E011、尤其model／README；正式RivetLoginView.swift／content／presentation intents／四child／helpers/styles/artwork/resources；root Package.swift／Package.resolved／.gitignore及設定；GitHubIntegration／VO；舊topic與本topic既有evidence；凍結圖JSON/HTML/receipts |
+| Modify | 本四artifacts；Sources/Presentation/Login/RivetLoginView+Previews.swift；必要RivetLoginPresentationTests.swift／RivetLoginContentTests.swift；上表三restore路徑；docs/presentation/login-ui.md、docs/feasibility-adoption.md、README.md／docs/architecture/README.md的本topic現況／consumer文字 |
+| Written | Tests/RivetPresentationTests/RivetLoginConsumerTests.swift；下表工具package明列新檔；本topic evidence/acceptance-ownership-implementation.md、acceptance-ownership-testing.md、acceptance-ownership-review.md及native／Human後續差異證據（只有實際發生才建立） |
+| Deleted | 僅上表三個本PR新增的E011 preview/config/tests；不刪任何舊evidence或圖 |
+
+工具package僅在`tools/acceptance/login-ui/`：Package.swift、必要時自身Package.resolved、README.md、scripts/build-app.sh；Sources/RivetLoginAcceptance/main.swift；Sources/RivetLoginAcceptanceSupport/{LoginAcceptanceConfiguration.swift,LoginAcceptanceParent.swift,LoginAcceptanceHost.swift,LoginAcceptanceFixtures.swift}；Tests/RivetLoginAcceptanceSupportTests/{LoginAcceptanceConfigurationTests.swift,LoginAcceptanceParentTests.swift}。不新增其他產品target或服務抽象。
+
+原不新增package/target的文字保留作原契約歷史；這次例外只限獨立acceptance tool（tools6.0／Swift6／macOS15、Support＋executable＋tests），由Human新授權最小host支撐，須經獨立Plan-Reviewer。Root product/package/target不變，rootPackage blob應保持`af69162fa848074fe62c9a4fd8d4056e3e3c6102`。工具path dependency只取rootRivetPresentation product，不importE011／GitHubIntegration、不copy formalView/VO。
+
+### 實作與TestCase
+
+1. I03先完成六項E011回復及直接正式tests／private controlledPreview，再做最小native工具；無需root設定的工作先完成。若rootreadonly確需變更，停相依工作、提出具體最小proposal，不自行改lock或環境。
+2. ControlledPreview按technical-spec R3使用@State與有限onIntent回寫／eventkind-count，保留同formidentity的字級/content更新；原fixedphase/ignoreIntent不能當互動pass。
+3. Native理由限獨立NSWindow、resource、標準menu/ReturnEscape/focus/HumanVoiceOver。新tool自有parent/config/fixtures，乾淨.standard主畫面；有限控制在wrapper外／toolmenu，無獨立Controls視窗，無自訂截圖3/4/5/6快捷鍵。新binary只build準備，未取得當下確認不得launch。
+
+| TestCase | 本輪新增／差異接受條件 |
+| --- | --- |
+| R3-TC01 freeze/ownership | 六項結果逐blob吻合、E011整tree等freeze；model/README未改；rootmanifest/lock/settings與正式corebytes不變；不得整目錄restore |
+| R3-TC02 formal tests | 直接helper/content/consumer契約與test-privatefixture/spy，不importE011/GitHubIntegration、不重建VO或fakeService；自己呼spy不算View事件 |
+| R3-TC03 controlledPreview | 同root連續phase回寫、form tokenEntry↔tokenFailure、13/17/21字級/content更新保值、ShowHide、Reset清除；實際rendered觀察與parser/parentunit分開；未能運行Preview如實列gap |
+| R3-TC04 toolconfig/parent | 八啟動state、system/light/dark、有限13...21與錯誤參數拒絕；有限callbacks、eventkind/count且無token保存；無timer/task/service自動完成；tool自己的unit只證tool |
+| R3-TC05 build/resource | 工具獨立build/test、必要scopedformat/lint/diffcheck；newapp資源路徑／bundle載入／view圖示不冒用舊cache；記rootlock前後hash，tooltransitiveApollo解析/cache需求明列，無需無關root全suite重跑 |
+| R3-TC06 native差異 | 新app經當下確認後，驗單主窗／乾淨copy／stdmenu／ReturnEscape／實際callback及toolmenu同窗切態、字級/content/formidentity/focus/21ptscroll／代表性LightDark與新資源；每case記source/binary，必要Human聲音另停點 |
+| R3-TC07 history/capability | 保留HC01/source3c9baf3／preview42e99fa／binary4d4cf13...、I01/I02及T/R歷史；不把舊tests直接套新host，不把新tool完成當產品認證／session整合 |
+
+本輪只補受影響case，不重跑未改core的全部歷史矩陣。可針對root受影響正式測試而不因此重跑無關BC suites；若新改動或failure需擴大驗證，由Tester列原因。
+
+### 圖／工具／獨立review與交付
+
+既有v2-r1圖表達正式七態而未綁E011路徑，本輪無正式lifecycle變更，因此不改凍結圖、不產新圖，只在可寫UI文字標其舊consumer/受測版本與本輪ownership。若實際發現生命週期語義改變，再依既有Archify流程，不為搬位置重畫。Graphify／PRLens原pinned/bounded/local-only與fallback規則延續；PRLens如重作只能基於實際diff/SHAs，不編造map。
+
+P03獨立planning review approved後才I03。T06只先tests/Preview/build不launch，R06獨立審core/freeze/host/source及差異證據後，才可向Human提出exact新binary的必要native當下確認。確認前可完成獨立source/docs工作，舊4d4cf13...許可不可套新binary。T07只在確認後補native，交獨立R07；受影響HumanVoiceOver／新host接受仍是Human停點，原HC01保持completed。
+
+原topiccommit/push/Draft更新授權有效，依stageddiff語意及requiredfix狀態交付，PR#75保持Draft；不merge。六點交付回報：①freeze版本/tree與六項差異；②formal/tool diff ownership及rootreadonly未變；③tests/controlledPreview實際涵蓋；④native必要性與最小足跡；⑤實跑source/binary/hash/results/gaps與當下確認／舊接受界線；⑥能力採用完成程度與產品認證/session整合仍排除。缺證據保持pending，不寫成pass。

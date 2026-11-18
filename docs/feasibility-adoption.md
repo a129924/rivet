@@ -71,6 +71,14 @@ Human明確回覆「接受目前這版正式 Login UI／UX」，[HC01紀錄](../
 
 LU-A01／02／03／04維持「已採用，限既有所列UI契約／受測案例」，採用方式不變；本次只是Human接受，不增加未執行的native／VoiceOver結果或外推所有環境。LU-A05／06仍排除正式搬移；驗證host與乾淨預覽是分開的消費端，真認證／Adapter／儲存／session仍不在本topic。原來源與歷史限制不覆寫，PR仍Draft／未merge。
 
+### R3：2026-11-18 驗收 consumer／ownership 修訂
+
+- 正式LU-A01–04能力、來源關係及既有Human接受保持；本輪不改public API/content/child/helper或登入VO，也不拿舊結果直接填新host通過。原I01/I02當時授權、T/R歷史、H01–H08、HC01/source3c9baf3／preview42e99fa／binary4d4cf13...保留。
+- LU-A05現行方式為凍結歷史source：E011定點回復至d2332bf／tree b6a1e6e1196e64999af9591ec32f09211f1936c6，不再用作本輪正式驗收。Frozen host依現.standard可編譯不證明舊demo文案等效；歷史重現須完整freeze revision或舊binary，不新增formal demo mode或footer/bundle特判。
+- 驗收改由直接正式tests與DEBUG controlled#Preview優先；必要native工具位於tools/acceptance/login-ui，僅依賴RivetPresentation，自有有限parent/config/fixtures/window/menu，submit立即丟棄payload，只記kind/count。新tool是驗證素材，不是新產品能力或認證Adapter，不重新採用E011模型／服務。
+- I03先做source/build/test，工具單元測試只支持工具parent；真Canvas、same-window callbacks/focus/resources、新host及必要Human差異仍待獨立補驗。先獨立review，再提出exact新app/source/binary SHA取得當下確認，舊接受不授權新binary啟動。產品認證、儲存、session整合維持排除。
+- 目前實作與新驗收結果見本topic acceptance-ownership-implementation／testing／review；只有實際發生才記新證據，不覆寫前述歷史或其他OAuth registry段落。
+
 ## github-oauth-connection-orchestration — 2026-11-17
 
 ### 來源與目標

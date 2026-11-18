@@ -112,7 +112,6 @@ private struct LoginDemoRoot: View {
       phase: model.phase,
       footer: "UI demonstration · No GitHub requests or credential storage.",
       bodyPointSize: model.textSize.bodyPointSize,
-      content: LoginDemoCopy.content,
       onIntent: model.handle
     )
     .id(model.formIdentity)
@@ -204,34 +203,4 @@ private struct LoginDemoControls: View {
     }
     .padding(20).frame(width: 310, alignment: .leading)
   }
-}
-
-// Demonstration copy belongs to the host; the product component has no demo mode.
-enum LoginDemoCopy {
-  static let content = RivetLoginContent(
-    waitingDescription:
-      "This is a simulated browser handoff. Use the separate Demo Controls window to return.",
-    waitingStatus: "Waiting for simulated authorization…",
-    waitingNote: "This demonstration cannot connect to GitHub.",
-    waitingCancelAccessibilityLabel: "Waiting for simulated authorization. Cancel sign in.",
-    verifyingAccount: .init(
-      title: "Simulating account\nverification…", message: verificationNote,
-      announcement: "Simulating account verification."
-    ),
-    verifyingToken: .init(
-      title: "Simulating token\nverification…", message: verificationNote,
-      announcement: "Simulating token verification."
-    ),
-    connected: .init(
-      title: "You're connected.\nIn this simulation.",
-      message:
-        "The UI demonstration is complete. No GitHub account was connected. Use Demo Controls to reset or inspect another state.",
-      announcement: "Simulation complete. No account was connected."
-    ),
-    tokenFieldAccessibilityLabel: "Personal access token — example input only",
-    createTokenUnavailableMessage: "Unavailable in this UI demonstration. No browser will open."
-  )
-
-  private static let verificationNote =
-    "UI demonstration only. No request is sent and no credential is stored. Complete the simulation in Demo Controls."
 }

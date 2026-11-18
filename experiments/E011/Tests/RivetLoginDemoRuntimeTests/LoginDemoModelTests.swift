@@ -92,18 +92,6 @@ struct LoginDemoModelTests {
     #expect(model.shouldFail)
   }
 
-  @Test func demoHostOwnsSimulationCopyAndIgnoresTokenCreation() {
-    #expect(LoginDemoCopy.content.waitingDescription.contains("Demo Controls"))
-    #expect(LoginDemoCopy.content.connected.announcement.contains("Simulation"))
-    #expect(!RivetLoginContent.standard.waitingDescription.contains("Demo Controls"))
-    let model = LoginDemoModel()
-    model.handle(.showTokenEntry)
-    let identity = model.formIdentity
-    model.handle(.createPersonalAccessToken)
-    #expect(model.phase == .tokenEntry)
-    #expect(model.formIdentity == identity)
-  }
-
   @Test func resetRetainsTheSelectedTextSize() {
     let model = LoginDemoModel()
     #expect(model.textSize == .standard)
