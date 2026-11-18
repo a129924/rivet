@@ -22,3 +22,9 @@ Factory error -> fetcherCreation（取消優先）。Scope missingCredential -> 
 Architecture-canvas 描述責任；archify lifecycle；Floorplan 補 planned files／實作後 source navigation，不替代架構真相。Floorplan plan.json.source 使用本 technical-spec，endpoints=[]；不新增 docs/prd.md。只做 bounded topic＋直接依賴，原碼 scan 的 inventory 為全 repo，board／descriptions 用 ignore 限定；無法限定則回報限制。
 Floorplan 本機 ignored、不 commit、不執行 open/server/Ask/network；不修改 AGENTS、CLAUDE、根 gitignore、Git config 或索引。保留既有使用者內容。
 Graphify 缺圖時用 rg，不建圖；每次 CLI 必設 GRAPHIFY_NO_AUTO_REFRESH=1。PR Lens 使用實際 diff／commit IDs，固定本機 CLI，外部暫存輸出，不發布。
+
+## E018 live contract
+新實驗host直接連結此worktree public GitHubIntegration。新host採現有有效profile之AppID，同原signer，單一exact舊E014 keychain group／service；不修改既有Apple assets或舊App。AppID差異與自然refresh有無分別記錄。
+Controller前置source/signature/profile/unique-writer核對、exclusive first/fresh markers與actual-process hello/authorize握手。Wrappers pass-through，不為觀察多呼provider.snapshot或改expiry；six-field HMAC只作本機比較。每階段一次120秒；first機器結果與Human觀察／退出完成才fresh。所有錯誤停且不自清資料；只固定安全projection。
+
+完整readback oracle固定為GET/user完成後最後成功save的完整bundle；若無save則最後成功load。Prepare計數在ready交付時freeze，API階段計數另列，避免將401 recovery輪替歸入啟動prepare。Fresh最初load須比對first最後persisted digest，不拿初始或ready快照當最終oracle。

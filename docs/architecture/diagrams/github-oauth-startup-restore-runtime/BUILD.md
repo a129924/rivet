@@ -30,3 +30,6 @@ PR Lens 0.11.0 僅針對實際commit diff產本機暫存graph/SVG；不發布、
 
 ## Human boundary
 未做live OAuth／DPK／E014、產品UI或遠端權限驗收。Human最終topic與圖視覺接受待Draft PR review。
+
+## 圖的版本與後續 live
+以上圖與原受控證據屬2026-11-17 e31a75a交付；圖內「本次不執行live」指該原受控Mission。2026-11-18追加E018是獨立驗證host，沒有改變正式owner責任邊界，故不重繪或反改舊圖與收據。E018 first自然到期真refresh/save各1，fresh同完整credential／同帳號且refresh/save0，Human兩段各全程0；詳[本輪live證據](../../../../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)。

@@ -22,3 +22,6 @@
 
 ## 授權
 Human 已採納對話計畫並授權在獨立 feature worktree 實作、按 topic commit、push、開 Draft PR，最終由 Human review。不得在 dev worktree 實作。時間邊界為 2026-11-17 18:20 Asia/Taipei；若尚有 required fix 或證據缺口，Draft PR 如實標 pending，不冒稱完成。
+
+## 2026-11-18 Live 驗收追加授權
+Human明確要求開始原未執行的live OAuth／DPK。原實作範圍與歷史證據保持；新增E018正式入口有限first/fresh驗證，不啟舊實驗、不做新登入／清除／強制到期。只因原credential自然到期而必要的正式refresh／save在授權內。

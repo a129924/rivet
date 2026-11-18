@@ -34,3 +34,7 @@
 Topic `github-oauth-startup-restore-runtime` 將既有configuration store、clientID-bound credential store、正式fetcher、provider與scope組裝為caller-owned入口；採用唯一provider、保存後發布、busy與取消settlement，不複製E014 App-local coordinator、UI、probe或驗證控制。
 
 [正式契約](architecture/github-oauth-startup-restore-runtime.md)與[受控證據](architecture/diagrams/github-oauth-startup-restore-runtime/BUILD.md)獨立於E014真人結果。Root375tests／consumer22tests通過；未做新OAuth／DPK、不宣稱產品UI或遠端認證完成，Human review pending。
+
+### 2026-11-18：正式入口 E018 live 追加
+
+原e31a75a受控交付後，Human另行授權live。新E018直接連結正式restorer／stores／fetcher，沒有複製E014runtime或重開其額度；first自然到期真refresh/save各1，fresh同完整credential／同帳號且refresh/save0，兩段Human各全程0提示。實際新host AppID不同、現有profile授權exact舊group，不能回填舊App profile續期。資料保存不rollback、不cleanup；詳[獨立證據](../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)。

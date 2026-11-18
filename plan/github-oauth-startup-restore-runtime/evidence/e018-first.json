@@ -1,0 +1,36 @@
+{
+  "apiAuthenticated": true,
+  "binarySHA256": "8ff15af45b8cf45c5e975e4231fdc6ec1d7f20c00243630826703201db7f0823",
+  "completeReadback": true,
+  "configurationUnchanged": true,
+  "failureKind": "none",
+  "final": {
+    "configurationLoads": 1,
+    "credentialLoads": 1,
+    "refreshAccepted": 1,
+    "refreshAttempts": 1,
+    "saveAttempts": 1,
+    "saves": 1
+  },
+  "initiallyExpired": true,
+  "machineSHA256": "fc08beef5c22f156e6785a7cef5c9d44d5f428b7e920324f4696970e2fd4bc06",
+  "naturalRefreshObserved": true,
+  "outcome": "ready",
+  "passed": true,
+  "phase": "first",
+  "prepare": {
+    "configurationLoads": 1,
+    "credentialLoads": 1,
+    "refreshAccepted": 1,
+    "refreshAttempts": 1,
+    "saveAttempts": 1,
+    "saves": 1
+  },
+  "processTerminated": true,
+  "profileSHA256": "6e5978b96171d38238e9b0525049907ba72f20d85dca4642238e342370da08eb",
+  "promptObservation": "pending",
+  "sameAccount": null,
+  "sameCredential": null,
+  "schema": "e018.public.v1",
+  "sourceSHA256": "e94cb1450324708de61e3b89f35475c9314f3b8970caf71445fa71c93d94448b"
+}

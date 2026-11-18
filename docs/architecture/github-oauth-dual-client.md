@@ -216,4 +216,8 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 
 ## 正式 OAuth 啟動還原 owner
 
-[GitHubOAuthStartupRestorer](github-oauth-startup-restore-runtime.md) 新增 caller-owned 組裝入口，讀取既存設定並永久保留同一provider，每次單次prepare、不快取ready、不自動retry。Busy涵蓋取消收尾，已成功rotation不rollback；沿用本文既有provider／scope／401 policy。這不是登入、清除或跨程序協調。受控證據與未執行live分列，Human review pending。
+[GitHubOAuthStartupRestorer](github-oauth-startup-restore-runtime.md) 新增 caller-owned 組裝入口，讀取既存設定並永久保留同一provider，每次單次prepare、不快取ready、不自動retry。Busy涵蓋取消收尾，已成功rotation不rollback；沿用本文既有provider／scope／401 policy。這不是登入、清除或跨程序協調。原受控與後續E018 live證據分列，Human review pending。
+
+### 2026-11-18 E018 正式入口 live
+
+[正式啟動還原owner](github-oauth-startup-restore-runtime.md)已在新驗證host以public stores／fetcher與真DPK完成first自然到期真refresh／save各1及fresh讀回；API與同帳號均成功。兩段同source／binary／profile，Human全程各0提示。AppID不同於舊E014，故不作舊App profile延續性證據；無新登入、清除、policy變更或重跑舊harness。有限[證據與限制](../../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)獨立記錄；Human最終topic接受pending。

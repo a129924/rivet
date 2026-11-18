@@ -189,3 +189,7 @@ W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pen
 [`github-pat-dpk-storage`](E017/github-pat-dpk-storage/README.md) 專屬驗證 host 直接使用正式 PAT adapter；工具現由 E016 搬至 E017，E016 保留給 [PR #72](https://github.com/a129924/rivet/pull/72)。來源 `5465d3c`／run `39c22b57` 的原 E016 路徑 在指定有效簽章環境完成 A→fresh A→整筆 B→fresh B→真正同身分 clean/build→rebuilt fresh B→exact-owned cleanup／load=nil；六 runtime accepted、Human 各全程 0 提示，setup／rebuild 另各 0，獨立 P07 approved。圖與 topic Human 最終接受仍 pending；舊 unknown 原樣保留，與 E015 OAuth 歷史結果分開，不新增產品登入。
 
 本次只調整 PAT 工具歸屬；[移轉 mapping 與兩條證據鏈](../plan/github-pat-dpk-storage/evidence/e016-e017-relocation.md)保存原 commit links。既有真人結果與 evidence 的 E016 source keys／hash 不變，不表示 E017 新來源已完成 live 驗收。
+
+## E018 — 正式 OAuth 冷啟動還原 live（2026-11-18）
+
+[驗證host與界線](E018/README.md)直接使用正式GitHubOAuthStartupRestorer／stores／fetcher。First自然到期真refresh/save各1後ready，fresh新程序同完整credential／同帳號且refresh/save0；Human兩段全程各0提示。新host AppID不同於舊E014，未重跑舊App或profile延續性實驗。兩live slots用完，停止重試；[安全證據](../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)與Human最終接受分列。

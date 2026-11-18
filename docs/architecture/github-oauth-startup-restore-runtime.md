@@ -21,7 +21,7 @@ Task取消後仍等tracked work及原provider工作settled才解除busy；發布
 Caller不得建立第二個仍可寫入同credential的owner來繞過狀態；跨程序唯一writer不在保證範圍。
 
 ## Goal / Non-Goal / In-Scope / Out-Of-Scope
-Goal為既存連線正式還原；Non-Goal為產品登入與遠端權限保證。In-Scope含正式組裝、有限結果、取消／busy／明示重試及受控consumer；Out-Of-Scope含首次登入、重新授權、清除、PAT、多帳號、UI、跨程序、migration與live驗收。
+Goal為既存連線正式還原；Non-Goal為產品登入與遠端權限保證。In-Scope含正式組裝、有限結果、取消／busy／明示重試及受控consumer；Out-Of-Scope含首次登入、重新授權、清除、PAT、多帳號、UI、跨程序、migration；live原不在實作Mission，2026-11-18依Human追加授權另作E018驗證。
 
 ## ReadOnly / Written / Modify / Deleted
 既有production Sources／manifests為ReadOnly；Written為新增actor、outcome、root／consumer測試、topic artifacts與本長期說明／必要圖。Modify為既有四份導覽／採用文件及StaticIsolation expectedPaths的必要兩檔登記；Deleted無。Floorplan產物僅本機ignored，不commit。
@@ -29,4 +29,12 @@ Goal為既存連線正式還原；Non-Goal為產品登入與遠端權限保證�
 ## TestCase與證據
 TC01–TC11由17個owner tests、3個public consumer tests及既有scope／provider／clients回歸涵蓋；另含參數化情境。獨立Tester：root375tests、consumer22tests、strictformat、明確159Swift檔strictlint與diffcheck通過。原lint script的vendor build污染失敗與替代驗證分列，不改vendor或config。
 TC12 Floorplan先planned blueprint後原碼map，13files、0unassigned、13/13描述；只導航topic及直接依賴，非全repo／完整Swift語義圖。
-[責任canvas](diagrams/github-oauth-startup-restore-runtime/index.html)、[還原lifecycle](diagrams/github-oauth-startup-restore-runtime/restore-lifecycle-v3.html)與[驗證及限制](diagrams/github-oauth-startup-restore-runtime/BUILD.md)保留各自證據。Human最終review pending；未執行真人OAuth／DPK或E014，不繼承其live結論。
+[責任canvas](diagrams/github-oauth-startup-restore-runtime/index.html)、[還原lifecycle](diagrams/github-oauth-startup-restore-runtime/restore-lifecycle-v3.html)與[驗證及限制](diagrams/github-oauth-startup-restore-runtime/BUILD.md)保留各自證據。原受控實作及圖的Human最終review仍pending；後續E018結果另列，不繼承E014的live結論。
+
+## 2026-11-18：E018 有限 live 結果
+
+正式入口已在真DPK與GitHub.com上完成既存連線還原：first讀入已到期credential，prepare真refresh accepted1／完整save1後ready，配置保持、完整readback及GET/user成功；同signedbinary新process的fresh讀回first最後保存值、同帳號與ready，refresh0／save0。Human各段全程觀察0提示，獨立attestation綁原machine收據，不回填原unknown欄位。
+
+本輪使用既有有效profile與原certificate，但新host AppID不同於舊E014；只給被profile允許的exact舊group，未啟動或重簽舊App。結果不證明舊AppID的profile續期、其他環境或公開分發。日期HMAC為整毫秒canonical比較，不宣稱原JSON bytes相同。
+
+[本輪結果與安全收據](../../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)分列準備、離線、live、Human與獨立審查。first/fresh各1/1已用完，停止重試；未新登入、清除、強制到期或回滾rotation，正式Sources與root manifests不變。Human最終topic接受仍pending。
