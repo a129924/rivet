@@ -1,0 +1,224 @@
+import Foundation
+import GitHubIntegration
+import RivetHTTPClient
+import RivetPRInbox
+import RivetPRInboxGitHub
+import Testing
+
+@Suite("GitHub self-review inbox")
+struct GitHubSelfReviewSourceTests {
+  @Test
+  func facadeReturnsOnlyOpenItemsAuthoredByTheOAuthViewerInPageOrder() async throws {
+    let stub = RESTStub([
+      .success(.viewer),
+      .success(
+        try .page(
+          [
+            .init(number: 1),
+            .init(number: 2, author: "someone-else", requestedReviewers: [.init(login: "my-user")]),
+            .init(number: 3, state: "closed"),
+            .init(number: 4, state: "closed", merged: true),
+            .init(number: 5, author: nil),
+          ],
+          total: 7, link: nextLink)),
+      .success(
+        try .page(
+          [
+            .init(number: 6, author: "MY-USER", draft: true),
+            .init(number: 7, author: "fork-author"),
+          ],
+          total: 7)),
+    ])
+    let result = await inbox(stub).refresh()
+    #expect(
+      try result.get() == [
+        InboxItem(owner: "destination", repository: "rivet", number: 1, title: "PR 1"),
+        InboxItem(owner: "destination", repository: "rivet", number: 6, title: "PR 6"),
+      ])
+
+    let requests = await stub.requests
+    #expect(requests.map(\.url.value.path) == ["/user", "/search/issues", "/search/issues"])
+    let firstSearch = try #require(requests.dropFirst().first)
+    let query = URLComponents(url: firstSearch.url.value, resolvingAgainstBaseURL: false)?
+      .queryItems
+    #expect(
+      query == [
+        URLQueryItem(name: "q", value: "is:pr is:open author:my-user"),
+        URLQueryItem(name: "per_page", value: "100"),
+      ])
+    for request in requests {
+      #expect(request.method == .get)
+      #expect(request.url.value.host == "api.github.com")
+      #expect(request.headers.accept == "application/vnd.github+json")
+      #expect(request.headers.value(for: "X-GitHub-Api-Version") == "2026-03-10")
+      #expect(request.body == nil)
+    }
+  }
+
+  @Test
+  func completeEmptySearchIsSuccessful() async throws {
+    let stub = RESTStub([.success(.viewer), .success(try .page([], total: 0))])
+    #expect(try await inbox(stub).refresh().get().isEmpty)
+  }
+
+  @Test
+  func invalidViewerDoesNotSearch() async {
+    let stub = RESTStub([.success(.json(#"{"login":"bad author:other"}"#))])
+    #expect(await inbox(stub).refresh() == .failure(.unavailable))
+    #expect(await stub.requests.map(\.url.value.path) == ["/user"])
+  }
+
+  @Test
+  func laterPageFailureDiscardsEarlierCandidates() async throws {
+    let stub = RESTStub([
+      .success(.viewer),
+      .success(try .page([.init(number: 1)], total: 2, link: nextLink)),
+      .success(.json("{}", status: 403)),
+    ])
+    #expect(await inbox(stub).refresh() == .failure(.unavailable))
+    #expect(await stub.requests.count == 3)
+  }
+
+  @Test(arguments: [
+    #"<https://other.example/search/issues?q=is%3Apr+is%3Aopen+author%3Amy-user&per_page=100&page=2>; rel="next""#,
+    #"<https://api.github.com/search/issues?q=is%3Apr+is%3Aopen+author%3Asomeone-else&per_page=100&page=2>; rel="next""#,
+    #"<https://api.github.com/search/issues?q=is%3Apr+is%3Aopen+author%3Amy-user&per_page=100&page=1>; rel="next""#,
+  ])
+  func rejectsNextLinkOutsideTheOriginalSearch(_ link: String) async throws {
+    let stub = RESTStub([
+      .success(.viewer), .success(try .page([.init(number: 1)], total: 2, link: link)),
+    ])
+    #expect(await inbox(stub).refresh() == .failure(.unavailable))
+    #expect(await stub.requests.count == 2)
+  }
+
+  @Test
+  func incompleteUnreadableOrTruncatedPagesFail() async throws {
+    let pages: [HTTPResponse] = [
+      try .page([], total: 0, incomplete: true),
+      try .page([], total: 1_001),
+      try .page([.init(number: 1)], total: 2),
+      .json(#"{"total_count":1,"incomplete_results":false,"items":[{"number":1}]}"#),
+    ]
+    for page in pages {
+      let stub = RESTStub([.success(.viewer), .success(page)])
+      #expect(await inbox(stub).refresh() == .failure(.unavailable))
+      #expect(await stub.requests.count == 2)
+    }
+  }
+
+  @Test
+  func cancellationMapsToUnavailableWithoutResending() async {
+    let stub = RESTStub([.success(.viewer), .failure(.cancelled)])
+    #expect(await inbox(stub).refresh() == .failure(.unavailable))
+    #expect(await stub.requests.count == 2)
+  }
+
+  private func inbox(_ stub: RESTStub) -> PRInboxFacade {
+    PRInboxFacade(selfReviewSource: GitHubSelfReviewSource(rest: stub))
+  }
+}
+
+private let nextLink =
+  #"<https://api.github.com/search/issues?q=is%3Apr+is%3Aopen+author%3Amy-user&per_page=100&page=2>; rel="next""#
+
+private struct Item: Encodable {
+  struct User: Encodable {
+    let login: String
+  }
+
+  let repositoryURL = "https://api.github.com/repos/destination/rivet"
+  let number: Int
+  let title: String
+  let state: String
+  let draft: Bool
+  let user: User?
+  let requestedReviewers: [User]
+  let pullRequest: [String: String]
+
+  enum CodingKeys: String, CodingKey {
+    case repositoryURL = "repository_url"
+    case requestedReviewers = "requested_reviewers"
+    case pullRequest = "pull_request"
+    case number, title, state, draft, user
+  }
+
+  init(
+    number: Int, author: String? = "my-user", state: String = "open",
+    draft: Bool = false, merged: Bool = false, requestedReviewers: [User] = []
+  ) {
+    self.number = number
+    title = "PR \(number)"
+    self.state = state
+    self.draft = draft
+    user = author.map { User(login: $0) }
+    self.requestedReviewers = requestedReviewers
+    pullRequest = merged ? ["merged_at": "2026-11-18T00:00:00Z"] : [:]
+  }
+}
+
+private struct Page: Encodable {
+  let items: [Item]
+  let totalCount: Int
+  let incompleteResults: Bool
+
+  enum CodingKeys: String, CodingKey {
+    case items
+    case totalCount = "total_count"
+    case incompleteResults = "incomplete_results"
+  }
+}
+
+extension HTTPResponse {
+  fileprivate static var viewer: Self { .json(#"{"login":"my-user"}"#) }
+
+  fileprivate static func json(_ body: String, status: Int = 200) -> Self {
+    .init(statusCode: status, headers: [:], body: Data(body.utf8))
+  }
+
+  fileprivate static func page(
+    _ items: [Item], total: Int, link: String? = nil, incomplete: Bool = false
+  ) throws -> Self {
+    var headers = HTTPHeaders()
+    headers.link = link
+    let body = try JSONEncoder().encode(
+      Page(items: items, totalCount: total, incompleteResults: incomplete))
+    return .init(statusCode: 200, headers: headers, body: body)
+  }
+}
+
+private actor RESTStub: GitHubRestClient {
+  enum Error: Swift.Error {
+    case unexpectedRequest
+    case cancelled
+  }
+
+  private var responses: [Result<HTTPResponse, Error>]
+  private(set) var requests: [HTTPRequest] = []
+
+  init(_ responses: [Result<HTTPResponse, Error>]) {
+    self.responses = responses
+  }
+
+  func executeGet(_ request: HTTPRequest) async throws -> HTTPResponse {
+    requests.append(request)
+    guard !responses.isEmpty else { throw Error.unexpectedRequest }
+    switch responses.removeFirst() {
+    case .success(let response): return response
+    case .failure(.cancelled): throw CancellationError()
+    case .failure(.unexpectedRequest): throw Error.unexpectedRequest
+    }
+  }
+
+  func executePost(_ request: HTTPRequest) async throws -> HTTPResponse {
+    throw Error.unexpectedRequest
+  }
+
+  func executePut(_ request: HTTPRequest) async throws -> HTTPResponse {
+    throw Error.unexpectedRequest
+  }
+
+  func executePatch(_ request: HTTPRequest) async throws -> HTTPResponse {
+    throw Error.unexpectedRequest
+  }
+}

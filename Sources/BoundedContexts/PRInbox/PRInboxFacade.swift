@@ -2,7 +2,11 @@ public struct PRInboxFacade: Sendable {
   private let refreshInboxUseCase: RefreshInboxUseCase
 
   public init(source: any ReviewRequestSource) {
-    refreshInboxUseCase = RefreshInboxUseCase(source: source)
+    refreshInboxUseCase = .reviewRequests(source)
+  }
+
+  public init(selfReviewSource: any SelfReviewSource) {
+    refreshInboxUseCase = .selfReview(selfReviewSource)
   }
 
   public func refresh() async -> Outcome<[InboxItem], PRInboxFailure> {

@@ -9,11 +9,11 @@
 
 Rivet 是一個個人 GitHub PR 工作台。
 
-它的首版目標是集中查看目前等待使用者 review 的 GitHub.com open Pull Request，降低在 GitHub 網站、repository 與 PR 之間切換的成本，並成為日常挑選與開啟 PR 的優先入口。
+它的首版目標是集中查看目前登入帳號自己開啟的 GitHub.com open Pull Request，降低在 GitHub 網站、repository 與 PR 之間切換的成本，並成為日常挑選與開啟 PR 的優先入口。
 
 ## 成功標準
 
-連續兩週以上，使用者在挑選及開啟待 review PR 時優先使用 Rivet。
+連續兩週以上，使用者在挑選及開啟自查候選 PR 時優先使用 Rivet。
 
 ## 文件導覽
 
@@ -25,6 +25,8 @@ Rivet 是一個個人 GitHub PR 工作台。
 - [開發分支流程](docs/development-workflow.md)
 
 ## 目前狀態
+
+PR Inbox 已提供 `PRInboxFacade(selfReviewSource:)` 與唯讀 GitHub 來源，列出目前 OAuth 帳號自己開的 open PR，包含 Draft。受控驗證已涵蓋作者、狀態、分頁與失敗回傳，真實樣本驗證見 E020。 [PR Inbox 契約](docs/architecture/bounded-contexts/pr-inbox.md) · [E020](experiments/E020/README.md)
 
 `GitHubIntegration` 新增 [OAuth／PAT 雙登入契約](docs/architecture/github-dual-login-contract.md)：請求 VO、PAT 本地驗證、共同 async Protocol 與有限 Outcome；目前僅受控契約，不含正式登入服務、UI 接線或 session／clients 交接。
 
@@ -38,7 +40,7 @@ Reader fixture 驗收 host、Runtime、資源與專屬測試集中於 [E012](exp
 
 `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
 
-完整 REST endpoint 能力、各 BC adapters 與產品登入仍延後。初次 OAuth App 配置、一次性授權 session／code exchange 及獨立驗證 host 已由首次登入工作線交付；驗證入口不等於正式產品登入。詳見[初次登入與驗證工具契約](docs/architecture/github-first-sign-in.md)。合法 raw REST 與 Apollo partial／errors-only responses 保持；有限 technical errors 與 cancellation 不形成 shared BC failure contract。
+完整 REST endpoint 能力、其餘 BC adapters 與產品登入仍延後。初次 OAuth App 配置、一次性授權 session／code exchange 及獨立驗證 host 已由首次登入工作線交付；驗證入口不等於正式產品登入。詳見[初次登入與驗證工具契約](docs/architecture/github-first-sign-in.md)。合法 raw REST 與 Apollo partial／errors-only responses 保持；有限 technical errors 與 cancellation 不形成 shared BC failure contract。
 
 `GitHubOAuthDataProtectionStores` 已提供 caller-owned DPK configuration／完整 OAuth credential stores，使用 host 明確指定的 access group，支援 clientID 綁定、完整替換與有限錯誤；既有 provider／clients 契約維持。除 fake Security 與受控 provider 測試外，2026-11-05 已在指定簽章環境，以完整假憑證完成正式 adapter 的保存 A、程序結束後 fresh A、整筆替換 B、fresh B 及同身分真正重建後 fresh B；五個 runtime 均有人類全程觀察、0 次提示，經獨立驗證／審查通過。這不代表真 OAuth／產品登入、configuration item 的 live 驗收、所有環境或斷電 durability；本輪未清理，圖的 Human 視覺接受及 topic Human review 仍待確認。它與 E007／整套登入驗證為獨立工作線。詳見[OAuth 憑證儲存](docs/architecture/github-oauth-credential-persistence.md)。
 
