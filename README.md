@@ -29,9 +29,9 @@ Rivet 是一個個人 GitHub PR 工作台。
 
 Reader fixture 驗收 host、Runtime、資源與專屬測試集中於 [E012](experiments/E012/README.md)，root target／正式 bridge 與 TS pipeline 保持。
 
-登入驗收展示的 host、Runtime 與專屬測試集中於 [E011](experiments/E011/README.md)，仍由 root package 既有 target 建置。這只修正歸屬，不撤回正式 UI 採用或改寫原 topic 驗收。
+登入歷史展示的 host、Runtime 與專屬測試保留在 [E011](experiments/E011/README.md)，本輪 source 凍結於 `d2332bf`，不再作目前正式 UI 驗收入口。正式 tests／controlled #Preview 與必要 [原生 acceptance tool](tools/acceptance/login-ui/README.md) 的歸屬分開；不撤回既有 UI 採用或改寫原 topic 驗收。
 
-登入 UI topic 已新增 non-BC `RivetLoginView` 與獨立 `RivetLoginDemo` 假資料展示：七態、PAT 本地編輯、原生主窗與獨立控制窗；沒有連接正式 OAuth／PAT、GitHub API 或儲存。Focused 自我測試與 Demo build 通過；root284tests及 lifecycle 四尺寸containment自驗通過，原生完整驗收仍待獨立驗證，未宣稱正式產品登入已交付。詳見 [登入 UI 說明](docs/presentation/login-ui.md)。
+登入 UI 已以 non-BC `RivetPresentation` 的公開 `RivetLoginView` 組合四個 internal 責任元件，提供 parent-owned phase／display-ready content、PAT 局部編輯與 intents。既有正式 Login UI／UX 的 Human 接受及原生／VoiceOver 證據依原來源保留；本輪從 E011 抽離驗收，改以直接正式 tests／controlled #Preview 優先，必要原生差異由獨立 `tools/acceptance/login-ui` 支撐。本輪受測code9d14a3f／binary6a7867b5…已完成有限native F01–F06與Human聲音V01／V02補驗，Human於2026-11-18明確接受本輪驗收支援分離、封裝修正與差異補驗結果；Canvas仍未驗，不代表認證／Adapter／儲存／session／navigation或產品App接入，Draft維持、未merge。詳見 [登入 UI 說明](docs/presentation/login-ui.md)。
 
 `GitHubIntegration` 現公開 `GitHubRestClient` 八個 async requirements 與四個 default builders，以及 Apollo 2.1.2 `GitHubGraphQLServing` 的 SingleResponseFormat Query／Mutation 契約；concrete clients 與 transports 保持 internal。Caller composition root 建立並保留 `OAuthTokenProvider`，以 `GitHubClientScope.prepare(provider:)` 完成 restore、expiry-first refresh、accepted rotation persistence 與本地 Bearer 驗證後，一次取得 `rest`／`graphql`。Scope 強持有原 provider，支援多 request lifetime；它不是 UoW、singleton 或 DI container，不探測 resource API，也不保證後續遠端 authentication、request 或 repository permission 成功。每次 execution 仍取得 fresh snapshot；兩 client 共用 single-flight／version，僅 HTTP 401 回報實際 snapshot 並最多重送原工作一次。Prepare 失敗或取消不交付 scope；caller 保留原 provider，不自動重建或 retry prepare。
 
