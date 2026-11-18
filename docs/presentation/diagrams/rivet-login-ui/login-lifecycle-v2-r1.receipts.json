@@ -1,0 +1,42 @@
+{
+  "receiptKind": "Implementer summary of exact CLI receipts; raw receipts retained in external topic scratch",
+  "diagramType": "lifecycle",
+  "specification": {
+    "path": "docs/presentation/diagrams/rivet-login-ui/login-lifecycle-v2-r1.json",
+    "sha256": "cbe8f9ddf635ca045a0605af215ff7f9b13fa44132be96c93c1e9890c5056980",
+    "bytes": 4216
+  },
+  "artifact": {
+    "path": "docs/presentation/diagrams/rivet-login-ui/login-lifecycle-v2-r1.html",
+    "sha256": "03b51e535c45e125b72c3484ef085b36f8f0d36374fe8b9abeb2ae7d4490c340",
+    "bytes": 704284
+  },
+  "validateExitCode": 0,
+  "deliverExitCode": 0,
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  },
+  "visualCheckExitCode": 0,
+  "visualCheckStatus": "pass",
+  "automatedVisualReview": "pending",
+  "visualReview": "passed",
+  "visualReviewOwner": "Implementer screenshot inspection",
+  "correctionRounds": 1,
+  "inspectedScreenshots": [
+    "1440x900.light",
+    "1440x900.dark",
+    "2048x1320.light",
+    "2048x1320.dark"
+  ],
+  "initialAttempt": {
+    "specificationSha256": "7c317284f74f4538dc6b15cec3bc5ac4d87b4be2cb3d2ad3169f8517df0b6e14",
+    "artifactSha256": "3d7f784e00c2dbd9098e00b48366ca2154e294a93f4e4fa64fe2932f88bfbf5e",
+    "visualCheck": "failed: first 3 desktop sizes overflowed vertically; exact bytes retained in external topic scratch"
+  },
+  "note": "Passing r1 bytes are frozen. Automated visual-check receipt remains visualReview=pending. This does not establish Human VoiceOver or final UI acceptance."
+}

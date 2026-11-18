@@ -40,6 +40,7 @@ public enum RivetLoginIntent: Equatable, Sendable {
   case cancelSignIn
   case submitToken(String)
   case retry
+  case createPersonalAccessToken
 }
 
 /// Ephemeral editing state. No validation or credential storage takes place here.

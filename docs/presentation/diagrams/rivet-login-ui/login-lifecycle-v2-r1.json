@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Rivet 登入 UI：外層驅動的七態與事件",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      566
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "OAuth 呈現路徑"
+    },
+    {
+      "id": "token-ui",
+      "label": "PAT 本地表單"
+    },
+    {
+      "id": "recovery-ui",
+      "label": "失敗後的操作"
+    }
+  ],
+  "states": [
+    {
+      "id": "choose-method-v2",
+      "type": "start",
+      "label": "選擇登入方式",
+      "sublabel": "welcome",
+      "lane": "main",
+      "col": 0
+    },
+    {
+      "id": "browser-wait-v2",
+      "type": "waiting",
+      "label": "等待瀏覽器",
+      "sublabel": "waitingForBrowser",
+      "lane": "main",
+      "col": 1
+    },
+    {
+      "id": "account-check-v2",
+      "type": "active",
+      "label": "驗證帳號中",
+      "sublabel": "verifyingAccount",
+      "lane": "main",
+      "col": 2
+    },
+    {
+      "id": "attempt-done-v2",
+      "type": "success",
+      "label": "本次登入完成",
+      "sublabel": "connected · 不代表 session",
+      "lane": "main",
+      "col": 4
+    },
+    {
+      "id": "token-edit-v2",
+      "type": "active",
+      "label": "編輯 PAT",
+      "sublabel": "tokenEntry · 本地狀態",
+      "lane": "token-ui",
+      "col": 0,
+      "yOffset": -20
+    },
+    {
+      "id": "token-check-v2",
+      "type": "active",
+      "label": "驗證 PAT 中",
+      "sublabel": "verifyingToken",
+      "lane": "token-ui",
+      "col": 2,
+      "yOffset": -20
+    },
+    {
+      "id": "attempt-failed-v2",
+      "type": "failure",
+      "label": "顯示失敗",
+      "sublabel": "failure · 來源由外層提供",
+      "lane": "recovery-ui",
+      "col": 1,
+      "yOffset": 100
+    }
+  ],
+  "transitions": [
+    {
+      "id": "choose-token-v2",
+      "from": "choose-method-v2",
+      "to": "token-edit-v2",
+      "label": "選擇 PAT",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [
+        [
+          94,
+          230
+        ],
+        [
+          402,
+          230
+        ]
+      ]
+    },
+    {
+      "id": "submit-token-v2",
+      "from": "token-edit-v2",
+      "to": "token-check-v2",
+      "label": "送出非空字串",
+      "route": "straight"
+    },
+    {
+      "id": "token-complete-v2",
+      "from": "token-check-v2",
+      "to": "attempt-done-v2",
+      "label": "外層提供成功"
+    },
+    {
+      "id": "account-failed-v2",
+      "from": "account-check-v2",
+      "to": "attempt-failed-v2",
+      "label": "外層提供失敗",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "via": [
+        [
+          402,
+          52
+        ],
+        [
+          940,
+          52
+        ],
+        [
+          940,
+          500
+        ],
+        [
+          556,
+          500
+        ]
+      ]
+    },
+    {
+      "id": "token-failed-v2",
+      "from": "token-check-v2",
+      "to": "attempt-failed-v2",
+      "label": "外層提供失敗"
+    },
+    {
+      "id": "browser-retry-v2",
+      "from": "attempt-failed-v2",
+      "to": "browser-wait-v2",
+      "label": "browser：重試",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [
+        [
+          556,
+          480
+        ],
+        [
+          18,
+          480
+        ],
+        [
+          18,
+          90
+        ],
+        [
+          248,
+          90
+        ]
+      ]
+    },
+    {
+      "id": "token-retry-v2",
+      "from": "attempt-failed-v2",
+      "to": "token-check-v2",
+      "label": "token：重填後送出",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "via": [
+        [
+          780,
+          407
+        ],
+        [
+          780,
+          350
+        ],
+        [
+          710,
+          350
+        ]
+      ]
+    },
+    {
+      "id": "create-token-v2",
+      "from": "token-edit-v2",
+      "to": "token-edit-v2",
+      "label": "建立 PAT：僅回呼",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "via": [
+        [
+          402,
+          365
+        ],
+        [
+          300,
+          365
+        ],
+        [
+          300,
+          287
+        ]
+      ]
+    }
+  ]
+}

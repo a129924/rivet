@@ -272,3 +272,8 @@ Implementer只讀Tester explicit allowlist四份safe／Human檔、核對無秘�
 ### N06 獨立有限結果審查
 
 Reviewer已明示approved、無required finding：4份repo safe／Human bytes與私有allowlist SHA相同，Human正確綁兩段原machine；原生各1案passed／0skip、不同actual程序退出、完整credential／account continuity；actual source／host與test binaries／profile／context／artifact pins吻合且preflight分列。兩段未到期、refresh／save全0，沒有假稱真refresh coverage；正式Sources／舊tests／原5份evidence保持，兩failedpreflight及原pins不改。此為當次有限integration結果核准，不是產品E2E、所有環境或Human最終接受；兩slots已用盡，停止額外Live操作。N07仍交付中。
+
+### N07 交付 baseline 同步（獨立 bounded review approved）
+
+遠端dev新baseline `e7a4b84`為已接受的PR #75 Login UI採用，包含Presentation／驗收工具及文件。Feature以正常merge整合，三份共享導覽README／architecture README／feasibility-adoption均自動合併、無conflict；保留外部UI採用與本topic N有限hosted結果，不把UI Human接受當成產品E2E或OAuth證據。外部UI檔案保留遠端原blob，不手工改UI／測UI。
+完整受測source-manifest字典及SHA保持`7cd86cd4ef9603fdd890911c19adcf6b97180e244a616552612e7db399eae131`；外部差異與GitHubIntegration／HTTPClient／root manifests／hosted source及actualtarget依賴輸入交集為空。N06有限結果核准不重開，兩Live slots已耗盡，不重跑Live；獨立bounded Reviewer已明示approved、無required finding：72檔受測字典及SHA相同、protected source／evidence零差異、58個非共享外部blobs等於e7、三共享文件正確且無conflict markers。N07in-progress、H01／M06pending。本工作未寫dev worktree／branch；遠端追蹤ref以實際metadata讀回為準，不推論其更新者。
