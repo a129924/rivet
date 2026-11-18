@@ -1,7 +1,7 @@
 # 執行帳本
 
 ## Current phase
-人類審查交付；N04／N05 completed、N06獨立有限結果approved，N07 commit／push／Draft PR交付in-progress；H01／M06 Human最終接受pending。最後更新：2026-11-18 Asia/Taipei。
+人類審查交付；N04／N05 completed、N06獨立有限結果approved，N07 commit／push／Draft PR交付completed；H01／M06 Human最終接受pending。最後更新：2026-11-18 Asia/Taipei。
 兩段正常CLI機器結果皆passed／exit3待Human，各原生1案passed、不同actual程序且退出；fresh sameCredential／sameAccount通過。Human本輪first實答「0 次提示 全程觀看」、fresh新實答「全程觀看 / 0 次」，兩次正常attest皆exit0並各綁原machine SHA。兩段credential均未到期，refresh／save均0，本輪未涵蓋真refresh。First／fresh各1/1已用盡，停止額外phase／重試；舊失敗roots、machine／safe pending欄位與歷史保持。
 
 ## NR12 準備摘要（歷史）
@@ -134,7 +134,7 @@ M01 completed；M02 獨立 planning review approved；M03／M04 completed；M05 
 | N04 | completed | Tester | 本輪 Human ready 後 first 一次；機器結果及 actual process 退出；取得實際 Human 觀察並 SHA attest | 正常first機器passed／native1案passed／actual process退出；Human本輪「0 次提示 全程觀看」，正常attest exit0綁原machine SHA、first_ready=true；prepare／final refresh save0 |
 | N05 | completed | Tester | first machine passed／退出／Human 全程且 0 提示後，fresh 一次、新程序 continuity，再重新詢問並 attest | 唯一fresh機器passed／native1案passed／新程序退出、samecredential／account皆true；Human新實答「全程觀看 / 0 次」，正常attest exit0綁原fresh machine SHA；兩slots1/1用盡 |
 | N06 | completed | Reviewer | 獨立新結果／coverage／safe evidence／provenance／Human SHA／歷史不變審查 | 獨立Reviewer approved、無required finding；4份safe bytes／Human SHA、原生各1pass／0skip、退出／continuity、source／artifact／profile／context pins及coverage／歷史不變均吻合，僅本次有限結果 |
-| N07 | in-progress | Implementer | 依 N06 結果完成安全 evidence／必要長期結論、topic commit／push、更新既有 Draft PR #77 並交 Human review | 安全4檔exact-bytes與hosted-live.md已由N06有限結果審查approved；目前正常commit／push／Draft PR交付準備中，未宣稱完成；H01／M06仍pending |
+| N07 | completed | Implementer | 依 N06 結果完成安全 evidence／必要長期結論、topic commit／push、更新既有 Draft PR #77 並交 Human review | 安全4檔exact-bytes與hosted-live.md已由N06有限結果審查approved；f68c386正常topic commit及9fee6781正常baseline merge已push，既有PR #77讀回Open Draft、head／base吻合及mergeable；H01／M06仍pending |
 
 ### N Goal / Non-Goal / In-Scope / Out-Of-Scope
 
@@ -146,7 +146,7 @@ ReadOnly 為所有 source／tests／scripts／project／manifests、Apple 舊資
 
 ### N TestCase / Evidence
 
-TC-N01的Offline及資格檢查、原兩輪工具缺陷回歸／NR12新preflight分開保留；原N03／NR02 blocked不改成通過。N04／N05各執行正常CLI一次，native各1案passed、0skip，ready／API／完整readback／configuration保持，fresh同完整credential及帳號、不同actual程序且退出；兩段Human本輪重新實答全程、0提示，分別綁原machine SHA。TC-N03–TC-N06已有上游實際證據，N06獨立有限結果審查已明示approved；TC-N07尚待N07發布，Human最終接受仍pending。
+TC-N01的Offline及資格檢查、原兩輪工具缺陷回歸／NR12新preflight分開保留；原N03／NR02 blocked不改成通過。N04／N05各執行正常CLI一次，native各1案passed、0skip，ready／API／完整readback／configuration保持，fresh同完整credential及帳號、不同actual程序且退出；兩段Human本輪重新實答全程、0提示，分別綁原machine SHA。TC-N03–TC-N06已有上游實際證據，N06獨立有限結果審查已明示approved；TC-N07已完成N07發布與Draft PR讀回，Human最終接受仍pending。
 兩段credential有效未到期，prepare及final的refresh／save全0，沒有本輪真refresh或rotation-save coverage。兩slots各1/1已用盡，停止再run／preflight／sign／DPK／API；有效credential結果不沿用舊E018自然到期refresh覆蓋。4份safe／Human exact-bytes及[本輪有限結果](evidence/hosted-live.md)分列source／artifact／machine SHA；公開無rawtoken／secret／clientID／account／identity／profilePath／控制key／私有路徑，原machine／既有safe pending欄位不回填。原L／M／old5evidence／所有舊pins保持。
 
 ### N03 獨立 Tester 準備證據（2026-11-18）
@@ -160,7 +160,7 @@ TC-N01的Offline及資格檢查、原兩輪工具缺陷回歸／NR12新preflight
 
 ### N Blockers / Stop
 
-原N03／NR02 blocked歷史保持；兩個明示受限修正與NR12／NR13準備審查後，N04／N05已完成有限機器與Human結果。N06獨立有限結果審查approved、無required finding；現待N07交付及Human最終接受；兩phase額度各1/1已用盡，不再執行phase／preflight／簽章／DPK／API。缺任何必要資格、工具問題、runtime 失敗、timeout、非唯一 writer 或 Human gate 不滿足即停止，不能自動 retry 或暗修。正式 --live first 會先消耗 attempt，嚴禁用它作 preflight；unexpected hello 不 authorize。New root 不重設已耗 phase。
+原N03／NR02 blocked歷史保持；兩個明示受限修正與NR12／NR13準備審查後，N04／N05已完成有限機器與Human結果。N06獨立有限結果審查approved、無required finding；N07已交付，現待Human最終接受；兩phase額度各1/1已用盡，不再執行phase／preflight／簽章／DPK／API。缺任何必要資格、工具問題、runtime 失敗、timeout、非唯一 writer 或 Human gate 不滿足即停止，不能自動 retry 或暗修。正式 --live first 會先消耗 attempt，嚴禁用它作 preflight；unexpected hello 不 authorize。New root 不重設已耗 phase。
 
 ### N Human Check
 
@@ -168,7 +168,7 @@ Human 已授權 `human-2026-11-18-hosted-live-first-fresh` 的新 N 有限範圍
 
 ### N Verdict
 
-N01／N02 completed；原N03 blocked保留；NR13準備審查approved；N04／N05 completed；N06獨立有限結果approved、無required finding；N07 in-progress。核准只涵蓋本次已完成情境，不代替Human最終接受；舊M05／L不代替本輪結果。
+N01／N02 completed；原N03 blocked保留；NR13準備審查approved；N04／N05 completed；N06獨立有限結果approved、無required finding；N07 completed。核准只涵蓋本次已完成情境，不代替Human最終接受；舊M05／L不代替本輪結果。
 
 ## N-R：nested test bundle 簽章路徑受限修正
 
@@ -277,3 +277,10 @@ Reviewer已明示approved、無required finding：4份repo safe／Human bytes與
 
 遠端dev新baseline `e7a4b84`為已接受的PR #75 Login UI採用，包含Presentation／驗收工具及文件。Feature以正常merge整合，三份共享導覽README／architecture README／feasibility-adoption均自動合併、無conflict；保留外部UI採用與本topic N有限hosted結果，不把UI Human接受當成產品E2E或OAuth證據。外部UI檔案保留遠端原blob，不手工改UI／測UI。
 完整受測source-manifest字典及SHA保持`7cd86cd4ef9603fdd890911c19adcf6b97180e244a616552612e7db399eae131`；外部差異與GitHubIntegration／HTTPClient／root manifests／hosted source及actualtarget依賴輸入交集為空。N06有限結果核准不重開，兩Live slots已耗盡，不重跑Live；獨立bounded Reviewer已明示approved、無required finding：72檔受測字典及SHA相同、protected source／evidence零差異、58個非共享外部blobs等於e7、三共享文件正確且無conflict markers。N07in-progress、H01／M06pending。本工作未寫dev worktree／branch；遠端追蹤ref以實際metadata讀回為準，不推論其更新者。
+
+
+### N07 實際發布完成（2026-11-18）
+
+正式簽章工具修正與受審有限結果以 `f68c386614951222d39b3418fe44b9cdc93bd07b` 正常提交；外部登入UI採用基線以 `9fee6781ba02d2410c09b5aef7450b91433e277e` 正常merge提交，parents為f68c386及e7a4b842。兩次正常commit hooks全通過、未skip；正常push後遠端feature與9fee6781一致。
+
+既有 [Draft PR #77](https://github.com/a129924/rivet/pull/77) 已更新本輪有限結果、固定來源及safe evidence連結，讀回head為9fee6781、base為e7a4b842、Open Draft及mergeable均true，body吻合。N07 completed；本段後續僅以文件commit記錄已發生的交付事實，PR head將隨該commit前進。source-manifest 72檔及SHA仍為`7cd86cd4ef9603fdd890911c19adcf6b97180e244a616552612e7db399eae131`；未改正式runtime／受測工具／tests／project／evidence，未新增Live操作。H01／M06 Human最終topic review仍pending，未ready／merge。
