@@ -323,3 +323,15 @@ Annotated tag `v0.1.62-e010-dpk-profile-continuity-baseline` 的 local／remote 
 - **W1 受限基線**　一次 seed 保存假憑證 A，再以同一 binary 於新程序讀回原 A 一次，六欄全部相符。Human 在兩階段各全程觀察，提示各為 0 次。[W1 機器與 Human 證據索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)、[seed 安全索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/seed-review-candidate/index.json)。
 - **本輪決定**　W2（P0 自然到期後以 P1 讀回原 A）與 W3（Rebuilt）均未執行，完整 profile 週期未完成。依 Human 決定結束本輪，W2／W3 不再續行，也不啟用新的 recovery host。結案與後續復原評估的本機封存證據尚未發布。
 - **清理與交接**　結案清理未執行，清理及最小化均未完成，`recoveryRequired=true`。目前 A 是否仍在及完整殘留範圍均未確認。沿用既有最低限度復原交接，原 D 維持 **2026-11-20 15:22:03.379959（Asia/Taipei）**，整包留存未獲延長。[歷史 RP 受控停止索引](E010/evidence/retention-prune-validation-20261110T085343Z/final.index.safe.json)、[歷史 RT metadata 索引](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)。
+
+## PR #68 合併與 Git 收尾（2026-11-18）
+
+PR #68 於 2026-11-18 14:57:36（Asia/Taipei）合併至 `dev` 並關閉。實際合併提交為 `ed1825d4194ba329eb785b2f6192618e23d6475a`，最後來源提交為 `57a1b1753537fd49fcfbb19764f65768bdfdd1b5`，兩者的文件樹一致。[PR #68](https://github.com/a129924/rivet/pull/68)、[已發布的結案紀錄](https://github.com/a129924/rivet/blob/ed1825d4194ba329eb785b2f6192618e23d6475a/experiments/VALIDATION-SUMMARY.md)。
+
+Annotated tag `v0.1.69-e010-documentation-closeout` 已推送。本機與遠端的 tag object 均為 `a36075b5b2ae60018ee0211a8a9ef6e38f8152d3`，解參照後皆指向上述 PR #68 合併提交。原 W1 基線標籤 `v0.1.62-e010-dpk-profile-continuity-baseline` 仍指向 PR #67 合併提交 `a554a4fee772d3976d5ca2c9331865a604e901e2`。
+
+原 `docs/e010-postmerge-registry` 遠端分支已用最後來源提交做租約保護後刪除。本機分支與原 managed worktree 已正常移除，已核對本機、追蹤及遠端分支參照與原 worktree 的目錄及註冊均不存在。
+
+E010 依 Human 決定結束本輪。W1 受限基線為一次 seed 保存假憑證 A、一次以同一 binary 於新程序讀回 A，六欄相符，Human 在兩階段各全程觀察且提示各為 0 次。W2／W3 均未執行，完整 profile 週期未完成，本輪不再續行或啟用新的 recovery host。[W1 證據索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)。
+
+實驗結案清理未執行，清理及最小化仍未完成，`recoveryRequired=true`。目前 A 是否仍在及完整殘留範圍均未確認。沿用既有最低限度復原交接，原 D 為 **2026-11-20 15:22:03.379959（Asia/Taipei）**，整包留存期限未獲延長。
