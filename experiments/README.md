@@ -1,6 +1,24 @@
 # 實驗索引
 
-基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。
+基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
+
+## PR #77：OAuth 冷啟動還原、正式 hosted 驗收與清理（2026-11-18）
+
+[PR #77](https://github.com/a129924/rivet/pull/77) 已於 `2026-11-18T09:32:51Z` 合併至 `dev` 並關閉。固定 merge 為 `b9f969f05347e8c4227fb742205814bef95f7604`，parents 為 `0087cb404b652cb0565fe6482474e4b6b668e7ba`／最後 feature `cab8ba4fd9d0485b081828865abeacb815478172`。Merge 與 feature 的差異只在兩份實驗索引，保留上游結案更新；merge／tag 是來源保存點，不是新的 build 或 live 執行。
+
+**正式能力**：non-BC `GitHubIntegration` 的 caller-owned `GitHubOAuthStartupRestorer` 從既存 configuration／完整 credential 還原 scope，必要刷新及完整保存後才回本地 ready，區分未設定、未登入、需要登入、取消與技術失敗。重疊回 busy，取消等待原工作收尾，明示重試保留原 provider。沿用既有 stores／fetcher／provider／scope，不新增 BC 或改寫 refresh／401 policy。[正式契約](https://github.com/a129924/rivet/blob/b9f969f05347e8c4227fb742205814bef95f7604/docs/architecture/github-oauth-startup-restore-runtime.md)記錄邊界；產品啟動／UI 接線、重新授權、PAT 連線與跨程序協調仍未由本題交付。
+
+**驗收歸屬**：active `experiments/E018/` 已退役，現由[正式 hosted integration tests](https://github.com/a129924/rivet/blob/b9f969f05347e8c4227fb742205814bef95f7604/Tests/GitHubIntegrationHostedTests/README.md)提供 Offline／手動 Live schemes、薄 App host 與 Swift Testing bundle；依賴組裝、觀測及斷言在測試碼，使用唯一正式 runtime。Runner 的 nested bundle 路徑與 App-bound inside-out signing 已修正，保留 deep／strict verification；只簽 App 內副本，不動系統 SDK 或新增 Apple 資產。這是正式測試設施，不是新的實驗編號或產品 E2E。
+
+**分層證據**：原 M04 的 root 375 tests／46 suites、consumer 22／6 為該輪歷史；修後 N 的 27 mocks、完整 Offline 2 個原生正向與 2 個預期原生負向均符合預期。正式 hosted Live 的 first／fresh 各正常執行一次，各 1 passed／0 skipped，ready、GitHub API、完整 credential readback、configuration 保持及程序退出通過；fresh 與 first 為不同程序、同完整憑證與帳號。兩段 Human 各重新回報全程觀察、0 次提示，獨立 attestation 各綁原 machine SHA，原 machine／pending 欄位不回填。[N 有限結果與安全收據](https://github.com/a129924/rivet/blob/b9f969f05347e8c4227fb742205814bef95f7604/plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)
+
+兩段憑證當時均未到期，prepare／final refresh、save 全為 0；**本輪 hosted 未涵蓋真 refresh／rotation-save**。原 E018 `0debe0b` 的自然到期真 refresh／save 各 1 次與 fresh 結果保留為[獨立歷史](https://github.com/a129924/rivet/blob/b9f969f05347e8c4227fb742205814bef95f7604/plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)，不能挪為新設施 coverage。N actual source aggregate 為 `7cd86cd4ef9603fdd890911c19adcf6b97180e244a616552612e7db399eae131`，artifact 為 `bc78a4ab7c3bf85b7dbf179acef35e21bdff222e9148d6c55b0c4541da1afc9d`；工具修正收錄於 `f68c386`，preflight 與 actual phase 產物分開。兩次失敗準備與後續成功 inside-out preflight 原樣保留，未消耗或重設 Live phase；first／fresh 各 1/1 已用盡，不續行。
+
+獨立 NR13 準備與 N06 有限結果審查 approved、無 required finding；此結果限當次同機／GUI user、既有 certificate、當時有效 profile、exact group 與唯一 owner，不證明普遍權限、profile 續期、跨環境或斷電 durability。PR 合併不回填原 artifacts 的 Human／圖面 pending，也不把本地 ready 當普遍遠端成功。
+
+Annotated tag `v0.1.71-github-oauth-startup-restore-runtime` 已推送並讀回：local／remote object 均為 `49593cb67449ca8f84d587677345f4e5368320f3`，peeled 精確指向上述 merge；不指後續索引 commit，亦非 GitHub Release。原 `feat/github-oauth-startup-restore-runtime` remote／local／tracking refs、managed feature worktree 目錄與 registration 已正常刪除並核 absent；remote 用最後 head 的 expected-head lease 保護刪除，local 用 `git branch -d`，沒有強制移除或 prune。Ignored Floorplan 19 檔已逐檔 bytes／mode／SHA 相符封存在 Git 私有 archive，未 track／push；可重建 caches 隨原 worktree 移除，外部 App／signed artifacts／run records、DPK／Keychain／Apple 資產與其他工作線不動。
+
+兩索引以獨立 `docs/github-oauth-startup-restore-runtime-postmerge` 工作樹維護，沿既有慣例安全 fast-forward 保存至 remote dev，不在 dev 編輯；文件分支／工作樹須待安全交付與 fresh clean 後另行收尾，不預填成功。本次只整理 Git 與索引事實，未執行新的 hosted／OAuth／DPK 驗收或改寫原 evidence；正常文件提交 hooks 的 consumer contract 等檢查不當作新的 live 結果。
 
 ## PR #75：正式 Login UI 選擇性採用、驗收分離與清理（2026-11-18）
 

@@ -4,6 +4,25 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #77：正式 OAuth 冷啟動還原與 hosted 有限結果（2026-11-18）
+
+[PR #77](https://github.com/a129924/rivet/pull/77) 於 `2026-11-18T09:32:51Z` merged／closed 至 `dev`。Merge `b9f969f05347e8c4227fb742205814bef95f7604` 的 parents 是 `0087cb404b652cb0565fe6482474e4b6b668e7ba`／最後 feature `cab8ba4fd9d0485b081828865abeacb815478172`；與 feature 僅兩份實驗索引不同。Merge／tag 保存來源，不代表新 build 或新的 live 受測版本。
+
+| 證據層級 | 已支持事實與限制 |
+| --- | --- |
+| 正式 Sources | Caller-owned `GitHubOAuthStartupRestorer` 沿既有 stores／fetcher／provider／scope 還原既存 OAuth 連線，必要完整保存後才 ready；有限結果、busy、取消收尾與同 provider 重試由[正式契約](https://github.com/a129924/rivet/blob/b9f969f05347e8c4227fb742205814bef95f7604/docs/architecture/github-oauth-startup-restore-runtime.md)界定。不是新 BC，不含產品啟動／UI、重新授權或 PAT 連線。 |
+| 原受控驗證 | M04 root 375 tests／46 suites、consumer 22／6 是原輪次親跑紀錄。N 修正後 27 mocks、完整 Offline 的 first／fresh 各 1 原生正向與 assertion／throw 各 1 預期原生負向通過聚合判定；不能當作真 OAuth／DPK。 |
+| 原 E018 歷史 | Active E018 已退役。[原收據](https://github.com/a129924/rivet/blob/b9f969f05347e8c4227fb742205814bef95f7604/plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)保留 `0debe0b` 工具來源、first 自然到期真 refresh／save 各 1、fresh 同完整 credential／帳號與 Human 各全程 0 提示；舊 slots 已用盡。此結果不轉移到新設施。 |
+| 正式 hosted N live | [新設施](https://github.com/a129924/rivet/blob/b9f969f05347e8c4227fb742205814bef95f7604/Tests/GitHubIntegrationHostedTests/README.md)直接組裝唯一正式 runtime。First／fresh 各一次、各 1 passed／0 skipped、不同程序且退出，ready／API／完整 readback／configuration 保持通過；fresh 同完整 credential／帳號。兩段 Human 各獨立全程 0 提示、各綁原 machine SHA，沒有回填原 machine／pending 欄位。[N 結果與四份 safe／Human 收據](https://github.com/a129924/rivet/blob/b9f969f05347e8c4227fb742205814bef95f7604/plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)。 |
+| Coverage | 兩段當時均未到期，prepare／final refresh、save 全 0，**沒有本輪真 refresh／rotation-save coverage**；不強制到期、不登入／seed／clear、不新增 Apple 資產。本次不是產品 E2E，不保證普遍 repository 權限、其他環境、profile 續期或 durability。 |
+| 獨立審查與版本 | NR13 準備／N06 結果 approved、無 required finding。N source aggregate `7cd86cd4ef9603fdd890911c19adcf6b97180e244a616552612e7db399eae131`、actual artifact `bc78a4ab7c3bf85b7dbf179acef35e21bdff222e9148d6c55b0c4541da1afc9d`；`f68c386` 收錄同一工具修正。初回 nested path 與第二回 framework seal 的失敗準備保留；修後 inside-out preflight 與 actual phase 產物分列，未以新 root 重設額度。 |
+
+適用當次同機／GUI user、既有 certificate／有效 profile／exact group 及唯一 owner；first／fresh 各 1/1 已用盡，停止額外操作。既有 OAuth runtime／contracts、原五份 E018 evidence 與 Human 觀察保持；合併不將原 artifacts 的 Human／圖面 pending 改判通過。原 E014、E010 等實驗的結果、預算與限制仍依各自來源。
+
+語意 annotated tag `v0.1.71-github-oauth-startup-restore-runtime` 已建立／推送且讀回核符：local／remote object 同為 `49593cb67449ca8f84d587677345f4e5368320f3`，peeled 精確為上述 merge，不是新 live binary、後續索引 commit 或 GitHub Release。原 feature local／remote／tracking refs、managed worktree 目錄／registration 均已正常刪除並核 absent；expected-head lease 僅保護精確 remote 刪除，沒有 force removal／prune。Ignored Floorplan 19 檔先以原 bytes／mode／SHA 私有封存，未 track／push；外部私有 App、signed artifacts／run proofs、DPK／Keychain／Apple 資產未清理。
+
+兩份索引在獨立 postmerge 文件工作樹更新並沿既有 safe fast-forward 慣例保存至 remote dev，dev 不直接編輯；文件 branch／worktree 尚待安全交付後另行清理。本次未另跑 root Swift suite 或新增 native／OAuth／DPK 驗收；正常文件提交 hooks（含 consumer contract）不當新 live 結果，歷史 evidence 不反寫。
+
 ## PR #75：Login UI 能力與驗收支援的分層證據（2026-11-18）
 
 [PR #75](https://github.com/a129924/rivet/pull/75) 於 `2026-11-18T08:46:47Z` merged／closed 至 `dev`。Merge `e7a4b8422e524f59a7bfa1bb514838f2d829a8cb` 的 parents 是 `0a71be99759373606de9bd3994a30b2c5c3f40cb`／最後 feature `5167e4c454af9dbbba48a3b2be024d5b8528e088`；merge tree 與 feature 不同，保留上游兩份實驗索引更新。Merge／tag 是來源保存點，不能當作新的 build 或驗收版本。
