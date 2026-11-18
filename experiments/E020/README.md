@@ -26,7 +26,9 @@
 
 ## 是否成功
 
-真實驗證狀態為**未執行**，真實 E020 GitHub GET 為 0。受測 OAuth bundle 尚未於本機提供。
+本次瀏覽器 OAuth 真人驗收為**成功**。Human 確認可用 `a129924` 在 GitHub 開啟 [mlops-async#72](https://github.com/a129924/mlops-async/pull/72)。同一 OAuth 帳號下的 `PRInboxFacade.refresh()` 回傳該 PR，四欄吻合。
+
+先前手動輸入 bundle 的驗收狀態為未執行。CLI 在輸入階段回傳 `notExecuted` 並以 2 結束，當時 E020 GitHub GET 為 0。
 
 ## 結果與證據
 
@@ -34,6 +36,16 @@
 
 獨立 Tester 在 arm64 macOS 26.5.2 與 Swift 6.3.3 通過完整 Swift 測試 365 項與 E019 回歸 12 項。strict format 與 SwiftLint 通過。E020 CLI 建置通過，無控制終端僅輸出 `notExecuted`，exit 2，stderr 為空。獨立 Reviewer 核准 Draft 交付。
 
+先前手動輸入 bundle 的驗收使用 Draft PR #78 的 `9e4bd9b` 版本。主機從 `2026-11-18T09:17:18Z` 等候本機輸入，至 `2026-11-18T09:19:51Z` 收到 `{"status":"notExecuted"}`。執行檔 SHA-256 為 `04736702c13d9a542a5cd7705b21eeee5b6785725980407543a941fd3c23a354`。CLI 收據未指出哪個欄位未通過，無法由收據判定原因。公開 PR 資料在啟動前已確認 #72 仍為 open，作者是 `a129924`。
+
+依 Human 的後續指示，瀏覽器 OAuth 入口已在本機暫存建置。沿用 `9e4bd9b` 的 Rivet OAuth 授權流程、loopback callback 與既有 E020 Facade 驗收，同一程序內接收 OAuth 結果。無控制終端的受控檢查通過，回傳 `notExecuted` 並以 2 結束。此工作樹尚無可供入口使用的 Rivet OAuth App 設定。本機舊 Rivet.app 的 provisioning profile 已於 2026-10-27 到期。準備瀏覽器入口時，尚未發起 OAuth 授權或 E020 GitHub GET。
+
+### 瀏覽器 OAuth 真人驗收
+
+- 使用 Draft PR #78 的 `9e4bd9b` 來源。暫存入口以 `swift build --product pr-inbox-self-review-probe` 建置，執行檔 SHA-256 為 `9d2b788f1bee851fbabfa4a4c27187a496b5a74a45cf3fdf61343997f14810d0`。本機終端驗收從 `2026-11-18T09:40:20Z` 到 `2026-11-18T09:41:00Z`。
+- Human 在無回顯終端確認使用 `a129924` 開啟 #72，並在瀏覽器完成 Rivet 的 OAuth 授權。入口在同一程序將 OAuth 結果交給既有 E020 Facade 流程。授權前後均從 GitHub PR 詳情核對 #72 為 open，作者為 `a129924`，標題一致。 [PR #72](https://github.com/a129924/mlops-async/pull/72)
+- CLI 回傳 `sampleMatched`、exit 0、`accountMatched=true`、`fieldsMatch=true`、`getCount=2`、`queueCount=7`。兩個應用層 GET 分別為帳號核對與搜尋。Facade 回傳的 owner、repository、number、title 與正例一致。
+
 ## 結論與限制
 
-真實可行性仍待使用同一 OAuth 帳號取得樣本。自查候選包含符合作者及開啟條件的 Draft。自查完成狀態留待後續定義。
+真人驗收涵蓋本輪 `a129924` 帳號與 #72 這一筆正例。自查候選包含符合作者及開啟條件的 Draft。自查完成狀態留待後續定義。
