@@ -35,13 +35,13 @@ let package = Package(
     .target(
       name: "RivetPRReaderHarnessRuntime",
       dependencies: ["RivetPRReader", "RivetPRReaderWebViewBridge"],
-      path: "Sources/RivetPRReaderHarnessRuntime",
+      path: "experiments/E012/Sources/RivetPRReaderHarnessRuntime",
       resources: [.process("Resources")]
     ),
     .executableTarget(
       name: "RivetPRReaderHarness",
       dependencies: ["RivetPRReaderHarnessRuntime"],
-      path: "Sources/RivetPRReaderHarness"
+      path: "experiments/E012/Sources/RivetPRReaderHarness"
     ),
     .target(
       name: "GitHubIntegration",
@@ -61,16 +61,17 @@ let package = Package(
     .target(
       name: "RivetLoginDemoRuntime",
       dependencies: ["RivetPresentation"],
-      path: "Sources/RivetLoginDemoRuntime"
+      path: "experiments/E011/Sources/RivetLoginDemoRuntime"
     ),
     .executableTarget(
       name: "RivetLoginDemo",
       dependencies: ["RivetLoginDemoRuntime"],
-      path: "Sources/RivetLoginDemo"
+      path: "experiments/E011/Sources/RivetLoginDemo"
     ),
     .testTarget(
       name: "RivetLoginDemoRuntimeTests",
-      dependencies: ["RivetLoginDemoRuntime", "RivetPresentation"]
+      dependencies: ["RivetLoginDemoRuntime", "RivetPresentation"],
+      path: "experiments/E011/Tests/RivetLoginDemoRuntimeTests"
     ),
     .testTarget(
       name: "RivetPRInboxTests",
@@ -88,7 +89,7 @@ let package = Package(
     .testTarget(
       name: "RivetPRReaderHarnessRuntimeTests",
       dependencies: ["RivetPRReaderHarnessRuntime", "RivetPRReader", "RivetPRReaderWebViewBridge"],
-      path: "Tests/RivetPRReaderHarnessRuntimeTests"
+      path: "experiments/E012/Tests/RivetPRReaderHarnessRuntimeTests"
     ),
     .testTarget(
       name: "GitHubIntegrationTests",

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "analysis/github-oauth-connection-orchestration/diagrams/cold-start.sequence.v2.json",
+  "output": "analysis/github-oauth-connection-orchestration/diagrams/cold-start.sequence.html",
+  "specification": {
+    "sha256": "f054e1e0bbfa247819dbbbfd16540361c25b8309e5af59117c6dde6ed8e0ddab",
+    "bytes": 2586
+  },
+  "artifact": {
+    "sha256": "65d6805e831a68b5d799b5bfe5617547a0dd80bdb2d7c3137720c70362633f68",
+    "bytes": 700987
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

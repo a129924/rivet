@@ -356,33 +356,25 @@ struct StaticIsolationTests {
       "Contracts/CredentialTypes.swift", "Contracts/GitHubAccessTokenProvider.swift",
       "Contracts/GitHubOAuthCredentialBundle.swift",
       "Contracts/GitHubOAuthAppConfiguration.swift",
-      "Contracts/GitHubTokenStore.swift",
-      "Contracts/GitHubTokenProvider.swift",
-      "Contracts/OAuthCredentialStore.swift",
-      "Contracts/OAuthTokenFetcher.swift",
-      "Contracts/OAuthTokenRefreshError.swift",
-      "Contracts/TokenSnapshot.swift",
-      "GraphQL/GitHubGraphQLClient.swift",
-      "GraphQL/ApolloGraphQLClient.swift",
+      "Contracts/GitHubTokenStore.swift", "Contracts/GitHubTokenProvider.swift",
+      "Contracts/OAuthCredentialStore.swift", "Contracts/OAuthCredentialClearingStore.swift",
+      "Contracts/OAuthSignOutError.swift", "Contracts/OAuthTokenFetcher.swift",
+      "Contracts/OAuthTokenRefreshError.swift", "Contracts/TokenSnapshot.swift",
+      "Contracts/LoginAuthentication.swift",
+      "GraphQL/GitHubGraphQLClient.swift", "GraphQL/ApolloGraphQLClient.swift",
       "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
-      "GraphQL/GitHubGraphQLClientError.swift",
-      "GraphQL/GitHubGraphQLServing.swift",
-      "Composition/GitHubClientScope.swift",
-      "Composition/GitHubClientPreparationError.swift",
-      "OAuth/GitHubOAuthEndpoints.swift",
-      "OAuth/GitHubOAuth.swift",
-      "OAuth/GitHubOAuthAuthorizationSession.swift",
-      "OAuth/GitHubOAuthCodeExchanger.swift",
-      "OAuth/GitHubOAuthAuthorizationError.swift",
-      "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
-      "Providers/OAuthTokenProvider.swift",
-      "REST/GitHubHTTPClient.swift",
-      "REST/GitHubRestClient.swift",
-      "REST/GitHubHTTPClientError.swift",
+      "GraphQL/GitHubGraphQLClientError.swift", "GraphQL/GitHubGraphQLServing.swift",
+      "Composition/GitHubClientScope.swift", "Composition/GitHubClientPreparationError.swift",
+      "Login/GitHubLoginService.swift", "Login/GitHubLoginAccountProbe.swift",
+      "Login/GitHubLoginOAuthFlow.swift", "Login/GitHubLoginCallbackRelay.swift",
+      "OAuth/GitHubOAuthEndpoints.swift", "OAuth/GitHubOAuth.swift",
+      "OAuth/GitHubOAuthAuthorizationSession.swift", "OAuth/GitHubOAuthCodeExchanger.swift",
+      "OAuth/GitHubOAuthAuthorizationError.swift", "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
+      "Providers/OAuthTokenProvider.swift", "REST/GitHubHTTPClient.swift",
+      "REST/GitHubRestClient.swift", "REST/GitHubHTTPClientError.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
-      "Stores/InMemoryGitHubTokenStore.swift",
-      "Stores/KeychainTokenStore.swift",
-      "Stores/GitHubOAuthDataProtectionStores.swift",
+      "Stores/InMemoryGitHubTokenStore.swift", "Stores/KeychainTokenStore.swift",
+      "Stores/GitHubOAuthDataProtectionStores.swift", "Stores/GitHubPATDataProtectionStore.swift",
     ]
 
     let actualPaths = try sourcePaths(in: sourceDirectory)
@@ -411,7 +403,11 @@ struct StaticIsolationTests {
       if apolloFiles.contains(path) {
         forbiddenForFile.subtract(["Apollo", "ApolloAPI"])
       }
+      if path == "Login/GitHubLoginCallbackRelay.swift" {
+        forbiddenForFile.remove("Network")
+      }
       let httpClientFiles: Set = [
+        "Login/GitHubLoginAccountProbe.swift",
         "Composition/GitHubClientScope.swift",
         "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
         "OAuth/GitHubOAuthCodeExchanger.swift",
@@ -426,6 +422,7 @@ struct StaticIsolationTests {
 
       let securityFiles: Set = [
         "Stores/KeychainTokenStore.swift", "Stores/GitHubOAuthDataProtectionStores.swift",
+        "Stores/GitHubPATDataProtectionStore.swift",
       ]
       if securityFiles.contains(path) {
         #expect(imports == ["Foundation", "Security"])

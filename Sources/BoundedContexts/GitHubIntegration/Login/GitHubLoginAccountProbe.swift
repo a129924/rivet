@@ -1,0 +1,30 @@
+import Foundation
+import RivetHTTPClient
+
+struct GitHubLoginAccountProbe: Sendable {
+  let client: HTTPClient
+
+  init(client: HTTPClient = GitHubHTTPClient.makeHTTPClient()) { self.client = client }
+
+  func validate(token: String) async throws {
+    try Task.checkCancellation()
+    let request = HTTPRequest(
+      url: try HTTPURL(URL(string: "https://api.github.com/user")!), method: .get,
+      headers: [.accept: "application/vnd.github+json", .userAgent: "RivetLoginRuntime"])
+    let authorized = try BearerAuth(token: token).applying(to: request)
+    let response = try await client.execute(authorized)
+    try Task.checkCancellation()
+    guard response.statusCode == 200,
+      let identity = try? JSONDecoder().decode(Identity.self, from: response.body),
+      identity.id > 0,
+      !identity.login.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    else { throw Failure.invalidResponse }
+  }
+
+  private struct Identity: Decodable {
+    let id: Int
+    let login: String
+  }
+
+  private enum Failure: Error { case invalidResponse }
+}

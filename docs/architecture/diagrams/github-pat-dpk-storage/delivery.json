@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-pat-dpk-storage/storage-sequence.json",
+  "output": "docs/architecture/diagrams/github-pat-dpk-storage/storage-sequence.html",
+  "specification": {
+    "sha256": "3278d938d4a3956575f4042165d499cbd2c19c96add87eed48bc6f717ee78335",
+    "bytes": 2448
+  },
+  "artifact": {
+    "sha256": "183d7d8fb833337bfc8fdfca74bddb4ae162ba24f203fb304a129989cc958f10",
+    "bytes": 700143
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

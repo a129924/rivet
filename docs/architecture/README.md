@@ -1,5 +1,9 @@
 # Rivet 架構規範
 
+`GitHubIntegration` 新增 [OAuth／PAT 正式登入 runtime](github-dual-login-runtime.md)，共同入口先驗證帳號再保存，支援取消收尾及共享協調器重疊拒絕；產品 UI 接線與真 runtime 整合驗收仍 pending。
+
+`GitHubPATDataProtectionStore` 已提供單一 PAT 的正式 DPK 保存、讀回與完整替換。2026-11-16 在指定有效簽章環境，以正式 adapter 完成保存 A、fresh A、整筆 B、fresh B、真正同身分 clean/build、rebuilt fresh B 及 exact-owned cleanup／load=nil；六個 runtime 均 accepted，Human 各全程觀察 0 提示，setup／rebuild 另各 0。受測來源 `5465d3c`，獨立 P07 approved；圖的 Human 視覺與 topic 最終接受仍 pending，不代表產品登入或所有環境保證。詳見 [PAT 儲存契約](github-pat-dpk-storage.md)。
+
 登入 UI topic 已新增 non-BC `RivetLoginView` 與獨立 `RivetLoginDemo` 假資料展示：七態、PAT 本地編輯、原生主窗與獨立控制窗；沒有連接正式 OAuth／PAT、GitHub API 或儲存。Focused 自我測試與 Demo build 通過；root284tests及 lifecycle 四尺寸containment自驗通過，原生完整驗收仍待獨立驗證，未宣稱正式產品登入已交付。詳見 [登入 UI 說明](../presentation/login-ui.md)。
 
 本文件記錄未來實作必須遵守的架構不變量。Rivet 目前是 architecture baseline；PR Reader WebView diff 的 Facade／UseCase orchestration、Validator、Parser、Renderer internal concrete stages、fixture 驅動的 DOM Output 與 WKWebView host／live transport，以及 `RivetHTTPClient` 的最小 HTTP 介面切片已有實作；viewed-state persistence 仍未實作；Swift Reader-to-WebView bridge 與 callable TS adapter 已實作。Root Swift package 另包含 non-BC `RivetPresentation` target，已實作原生 SwiftUI `PullRequestRow` leaf、display-ready Presentation input、提供 parent-owned 單選、焦點、鍵盤選取和安全 Open PR intent 的 `PullRequestList`，以及接受 parent 文案和 filter Binding 的獨立 `InboxHeader`。Header 的三個 filter 是 Presentation 選項，不定義或執行 PR membership／filtering。該 target 不依賴任何 Bounded Context，也不包含 Domain／Application mapper；完整 Inbox 的首列 fallback、Reader 導覽與 app menu 尚未實作。除本文件已列明的受限實作外，不宣稱其他產品能力已完成。
@@ -74,9 +78,13 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 
 ### Fixture runtime 人工驗收
 
+驗收環境已集中於 [E012](../../experiments/E012/README.md)；正式 bridge／Core／TS pipeline 不搬移，root product不變。標準 sandbox 的build／tests、bundle與暫存wrapper入口見E012操作說明；原topic證據與凍結圖保持來源版本。
+
 在 macOS 於 repository 根目錄執行 `swift run RivetPRReaderHarness`。視窗標示「本地 fixture」；依序確認六種檔案狀態、四個 patch 與兩個 metadata-only 提示。點選第一檔「標記 Viewed」，待 Swift 發布新快照後確認按鈕顯示「已 Viewed · 取消」；再點選取消並確認恢復。這只驗證本地 fixture 的 runtime 往返，不涉及 GitHub 資料或跨啟動儲存。
 
 ## 文件導覽
+
+- [OAuth／PAT 雙登入契約](github-dual-login-contract.md)：既有 GitHubIntegration 的請求 VO、共同 Protocol、受控結果與取消語義；不含真登入或 session 組裝。
 
 - [GitHub PKCE missing-verifier 補證界線](github-pkce-missing-verifier-feasibility.md)：單次 missing 交換遭拒；provider 要求聲明一致，當次因果判讀分歧，主要假設仍無法判定。
 
@@ -102,7 +110,7 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 
 ## 正式 OAuth 能力與獨立驗證 App
 
-`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `apps/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
+`GitHubIntegration` 已交付正式初次 OAuth configuration／factories／session／code exchange／errors，沿用既有 credential、provider／scope／clients。獨立 `experiments/E013/GitHubSignInVerification` 收納配置與驗證 UI、loopback relay、coordinator、完整記憶體 store、`GitHubAccountProbe` 與 hosted tests；使用真 OAuth／API，結果只用於驗證。共用 `RivetPresentation` 不公開驗證 UI，既有 PR Inbox 保持原樣。正式 Rivet 產品登入 UI 尚未交付。
 
 2026-10-21，Human 在來源版本 `e941d88` 的獨立驗證 App 完成真實授權；agent 觀察實際 API 成功與同程序再次查詢成功。舊版 `e63eeb2` 證據另保留；現行 canvas v2 的人工互動已通過。2026-10-21 反向 PKCE missing／wrong 各執行一次，均 HTTP400 拒絕但原因 unknown，兩者結論皆無法判定；完整遠端 refresh／401 本輪不執行，持久化亦未因此驗證。詳見 [首次 OAuth 契約](github-first-sign-in.md)。
 
@@ -114,6 +122,6 @@ GitHubIntegration 已交付 internal `GitHubOAuthHTTPTokenFetcher`，以 generic
 
 ## GitHub 持續連線獨立驗證 App
 
-`github-persistent-connection` 的正式交付是 [`GitHubConnectionVerification`](../../apps/GitHubConnectionVerification/README.md) 驗證工具、可行性結果及限制。所有初次授權、DPK adapter、UI、coordinator、probe、受控clock／receipt與tests留在App-local；不新增BC或正式產品登入能力。production Sources／Tests／Package對topic前基準zero-diff，既有provider／scope／雙client／generic HTTP責任不變；不留新增正式停止API、共用UI或驗證依賴。
+`github-persistent-connection` 的正式交付是 [`GitHubConnectionVerification`](../../experiments/E014/GitHubConnectionVerification/README.md) 驗證工具、可行性結果及限制。所有初次授權、DPK adapter、UI、coordinator、probe、受控clock／receipt與tests留在App-local；不新增BC或正式產品登入能力。production Sources／Tests／Package對topic前基準zero-diff，既有provider／scope／雙client／generic HTTP責任不變；不留新增正式停止API、共用UI或驗證依賴。
 
 [新版責任canvas與流程圖](diagrams/github-persistent-connection/verification-host-v2/BUILD.md)反映驗證App單向使用既有public契約；provider在runtime經注入port呼叫App-localadapter，不形成production反向import。整個移除驗證App後production build／tests仍通過。[完整契約／結果界線](github-oauth-dual-client.md#獨立驗證-app-與可行性結果)連至本輪新host真人證據；舊production歸屬圖與原測量只作歷史保留。profile更新後讀回維持未驗證、Human已接受限制。

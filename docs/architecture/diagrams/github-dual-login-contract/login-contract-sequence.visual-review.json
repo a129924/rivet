@@ -1,0 +1,13 @@
+{
+  "visual_review": "passed",
+  "reviewer_role": "Implementer self-check; independent review pending",
+  "correction_rounds": 2,
+  "checked": [
+    "1440x900 light",
+    "1440x900 dark",
+    "2048x1320 light",
+    "2048x1320 dark"
+  ],
+  "conclusion": "已實際檢視四張截圖；標籤與箭線清晰、無遮擋，兩種主題均可讀，最大尺寸面板與必要結論卡完整呈現；自動 receipt 的 visualReview=pending 不被改寫。",
+  "limitations": "圖只描述受控契約；固定 Viewer UI 與 HTML lang fallback English。"
+}

@@ -1,6 +1,6 @@
 # GitHub OAuth 憑證儲存
 
-`GitHubOAuthDataProtectionStores` 是 non-BC GitHubIntegration 內的 DPK adapter。它只保存／還原，provider 繼續擁有 restore、expiry-first refresh、rotation persistence 與停止行為。與 E007、初次登入及整套 OAuth 驗證為獨立工作線；本 topic 的 signed validation host 只用於下述受限驗收。
+`GitHubOAuthDataProtectionStores` 是 non-BC GitHubIntegration 內的 DPK adapter。它提供保存／還原與精確 credential 清除，provider 繼續擁有 restore、expiry-first refresh、rotation persistence、退休及清除順序。與 E007、初次登入及整套 OAuth 驗證為獨立工作線；本 topic 的 signed validation host 只用於下述受限驗收。
 
 ## Caller composition
 
@@ -14,7 +14,7 @@ try await credentialStore.save(bundle)
 let provider = OAuthTokenProvider(store: credentialStore, fetcher: fetcher)
 ```
 
-`accessGroup` 必須由具有效 signing／entitlements 的 host 明確提供；空值與 wildcard 拒絕。Constructor 不呼叫 Security。重啟時完整 inspect 的 clientID 是既存身分依據；caller 必須另比較 configuration ID，不把不同 App 設定混用。本 adapter 不實作重新授權、清除或自動修復。
+`accessGroup` 必須由具有效 signing／entitlements 的 host 明確提供；空值與 wildcard 拒絕。Constructor 不呼叫 Security。重啟時完整 inspect 的 clientID 是既存身分依據；caller 必須另比較 configuration ID，不把不同 App 設定混用。本 adapter 不實作重新授權或自動修復；credential 清除與 provider 登出順序見下節。
 
 ## 保存與失敗
 
@@ -35,3 +35,13 @@ let provider = OAuthTokenProvider(store: credentialStore, fetcher: fetcher)
 本輪 live 只涵蓋 credential item，沒有因此驗證 configuration item、系統拒絕、crash／斷電 durability、跨程序 refresh 協調、真 OAuth／遠端 refresh／API／產品登入或其他 OS／公開發行／簽章環境。模擬 backend 的失敗一致性也不構成系統原子性或斷電證據。Cleanup（LC06）未做且本輪不授權；原資產、ownership proof、失敗／unknown 及已耗額度均保留。圖的 Human 視覺接受與 topic Human review（S08）仍 pending，不以技術審查或 Draft PR 代替。
 
 [保存與還原 sequence](diagrams/github-oauth-credential-persistence/storage-sequence.html)以繁中作者內容呈現；固定 Viewer UI／HTML lang 使用 English fallback。本圖是初始 adapter 交付的歷史 snapshot，補充保存與 provider 邊界，沒有描繪後續驗證 host／authority 流程。原圖 bytes 與技術 QA 沿用，Human 視覺接受仍 pending；本輪不重畫或重新認證此圖。
+
+## 本地 credential 清除
+
+`credentialStore(clientID:)` 現回傳 `OAuthCredentialClearingStore`。`clear()` 在相同 storage actor、無 suspension 的操作內驗證既有 clientID binding，並以完整 class／access group／service／credential account／DPK／synchronizable=false selector 刪除。不存在是冪等成功；identity mismatch、損壞 payload 及 Security 錯誤保留 item 並明確報錯。configuration 與相鄰 namespace 不變。caller 應透過 provider 的 `signOut()` 協調退休和 pending write，不可把單獨 clear 當作停止 refresh 的保證。
+
+正式 adapter 的清除契約與 fake Security／provider 競態測試已分列；原保存／替換真人證據不當作刪除證據。2026-11-16 的獨立 [E016 結果](../../plan/github-oauth-local-sign-out/evidence/e016-live.md)另在真 DPK 下完成：三項初始 absence、完整 synthetic seed/readback、正式 provider.signOut、同程序 credential absent，及新 exact process 只讀確認 credential absent／configuration／sentinel 完整保持。受測來源固定 `bb6752aa483a68043174723a6b3ff2653abe79ce`，不是後續文件 commit。
+
+兩段的實際程序歸屬與退出已驗，Human 每段全程觀察 class 為 zero，獨立 Reviewer approved 本次有限實驗。原 machine/public/private receipts 不覆寫；public 中原 Human unknown／false 由獨立 attestation 綁其 SHA 補充，不回填原欄位。結果只支持當次同機、GUI 使用者、同一既有 signer／有效 profile／exact group／frozen binary、synthetic 資料及唯一 writer；不推及其他 profile、真 OAuth、live refresh、UI、跨 writer 或 durability。晚到 refresh 仍依原受控測試。
+
+舊 ff672c7 的 first 無法判定、缺 exact process 證據與額度消耗維持；Human 新授權的 bb6752a first／fresh 也已使用完。configuration／sentinel 仍留在隔離 namespace，沒有 cleanup 或追加 Keychain 操作；Human 最終 topic review 仍 pending。

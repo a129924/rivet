@@ -15,7 +15,7 @@
     "check": "bun run format:check && bun run lint && bun run typecheck",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
-    "bundle:reader": "bun build src/runtime/webview-runtime.ts --target browser --format iife --outfile ../../Sources/RivetPRReaderHarnessRuntime/Resources/reader.js"
+    "bundle:reader": "bun build src/runtime/webview-runtime.ts --target browser --format iife --outfile ../../experiments/E012/Sources/RivetPRReaderHarnessRuntime/Resources/reader.js"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",

@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "PAT 的保存與新程序還原",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1020,
+      500
+    ]
+  },
+  "participants": [
+    {
+      "id": "caller",
+      "type": "external",
+      "label": "呼叫端",
+      "sublabel": "同一 store 實例"
+    },
+    {
+      "id": "pat-store",
+      "type": "backend",
+      "label": "PAT 儲存",
+      "sublabel": "單一 actor"
+    },
+    {
+      "id": "dpk",
+      "type": "security",
+      "label": "DPK",
+      "sublabel": "隔離項目"
+    },
+    {
+      "id": "fresh",
+      "type": "external",
+      "label": "新程序",
+      "sublabel": "明確存取身分"
+    }
+  ],
+  "messages": [
+    {
+      "id": "save",
+      "from": "caller",
+      "to": "pat-store",
+      "y": 170,
+      "label": "保存完整 PAT",
+      "variant": "emphasis"
+    },
+    {
+      "id": "inspect",
+      "from": "pat-store",
+      "to": "dpk",
+      "y": 205,
+      "label": "讀取並校驗既存項目",
+      "variant": "security"
+    },
+    {
+      "id": "checked",
+      "from": "dpk",
+      "to": "pat-store",
+      "y": 240,
+      "label": "缺值或完整資料才繼續",
+      "variant": "return"
+    },
+    {
+      "id": "replace",
+      "from": "pat-store",
+      "to": "dpk",
+      "y": 275,
+      "label": "完整替換；缺值才新增",
+      "variant": "emphasis"
+    },
+    {
+      "id": "committed",
+      "from": "pat-store",
+      "to": "caller",
+      "y": 310,
+      "label": "成功或有限錯誤",
+      "variant": "return"
+    },
+    {
+      "id": "restore",
+      "from": "fresh",
+      "to": "pat-store",
+      "y": 345,
+      "label": "以新實例讀取",
+      "variant": "default"
+    },
+    {
+      "id": "read",
+      "from": "pat-store",
+      "to": "dpk",
+      "y": 380,
+      "label": "精確 namespace 取回資料",
+      "variant": "security"
+    },
+    {
+      "id": "restored",
+      "from": "pat-store",
+      "to": "fresh",
+      "y": 415,
+      "label": "PAT、缺值或有限錯誤",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "失敗停止覆寫",
+      "items": [
+        "壞資料、拒絕、不可用不自動修復"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "本題驗收界線",
+      "items": [
+        "跨程序及重建的真人驗收仍 pending"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "sourceRevision": "ab77391b73291deb1ce3d96cef72f981aeb3104a",
+  "files": {
+    "Sources/BoundedContexts/GitHubIntegration/Contracts/GitHubOAuthAppConfiguration.swift": "570bfc17cc8d3c5d4701b47a74043c1294196c52cec95ff8c9831a9761b60e95",
+    "Sources/BoundedContexts/GitHubIntegration/Stores/GitHubOAuthDataProtectionStores.swift": "5464aa6927ce945f13d29ae3fe442244b7d06d47084a2c4ae205d61c608c728d",
+    "Sources/BoundedContexts/GitHubIntegration/Contracts/OAuthCredentialStore.swift": "e1e4eaacf6ed99c0fe9e375533159c44b4578403b9b6c1fad3dcac401e573ba7",
+    "Sources/BoundedContexts/GitHubIntegration/Contracts/OAuthCredentialClearingStore.swift": "1270a602bc1b43c93ff3c100416fbf37a5eeb75d776e9c6b5775e797309a4121",
+    "Sources/BoundedContexts/GitHubIntegration/Contracts/OAuthTokenFetcher.swift": "5bb12ebb981d4b60907622ea0b3122cf930852b44f6e4ffaa8ab5996b15af5da",
+    "Sources/BoundedContexts/GitHubIntegration/Contracts/OAuthSignOutError.swift": "a93d690e7db6e309b1db31305687c22ac4d7ff1a2d5a42fdda97ae699589d372",
+    "Sources/BoundedContexts/GitHubIntegration/Providers/OAuthTokenProvider.swift": "b0ea578d7d9359eafbbfaa11bcaf7a5bd72d34958dc18e039f6b64293eff51a6",
+    "Sources/BoundedContexts/GitHubIntegration/Composition/GitHubClientScope.swift": "ef725b89eece2464b4eda99b95aa246bf52d85b0b6fac0ffb7544ca666197a40",
+    "Sources/BoundedContexts/GitHubIntegration/Composition/GitHubClientPreparationError.swift": "0fd40d466e761731c782e8573a933e01aa8f08336de45080e74358d2ad2794bc",
+    "Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuth.swift": "6075c4b2127df0a73cd2bd6d9f1342345c19cc417b3e9b0215c82c0ee493ff40",
+    "Sources/BoundedContexts/GitHubIntegration/OAuth/GitHubOAuthHTTPTokenFetcher.swift": "e87448b18152a36d4ac4059e86f062f08ae2b19f910f3d03f54d54328e3ebfa9",
+    "Sources/BoundedContexts/GitHubIntegration/Login/GitHubLoginService.swift": "ebcc235531b278b00e80a6039556b2b62dd7c8958d3bf5d83597153430a7877c",
+    "experiments/E014/GitHubConnectionVerification/Sources/GitHubConnectionVerificationApp.swift": "12797a0bc7bbf9b5f03d0724937277b64dceeeb9444da97d5faec9b12d477d86",
+    "experiments/E014/GitHubConnectionVerification/Sources/GitHubConnectionCoordinator.swift": "3ab95f7484101a4c2c85654ec8b576453bdcfeee0f30609b37f330fa9b39653d",
+    "experiments/E014/GitHubConnectionVerification/Sources/GitHubOAuthDataProtectionStores.swift": "b2e55652df45e573c138a6acdf5495586dbec03268fbd4aad08a1558a565a282",
+    "experiments/E014/GitHubConnectionVerification/Sources/GitHubOAuth.swift": "cc237ef8da173d83694b762a89a64c69781a9650199cdb51cb2c64d1f4114e10",
+    "experiments/E014/GitHubConnectionVerification/Sources/VerificationLifecycleObservation.swift": "4fe4a6c7366bacfe3e18f5e0d28777851c454360441d8217a0938e43781aeb38",
+    "Tests/GitHubIntegrationTests/OAuthLocalSignOutTests.swift": "2ea1822d9dcf4b0d42a447a6c4c12fde25e785dee8db0f61fec19c12615e4fc0",
+    "Tests/GitHubIntegrationTests/GitHubClientScopeTests.swift": "c7ecf4bb0712e50a63ec2303a598649b80eb8e4e56a3e564bfc9f611ed232322",
+    "Tests/GitHubIntegrationTests/GitHubLoginServiceTests.swift": "06a02065bb038bfe7da22d7698604d6452c7d5f522d5b745a365712a7cc91c55"
+  }
+}

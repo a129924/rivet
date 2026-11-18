@@ -63,7 +63,7 @@ public struct GitHubOAuthDataProtectionStores: Sendable {
     try await storage.inspectCredential()
   }
 
-  public func credentialStore(clientID: String) -> any OAuthCredentialStore {
+  public func credentialStore(clientID: String) -> any OAuthCredentialClearingStore {
     BoundCredentialStore(storage: storage, clientID: clientID)
   }
 }
@@ -73,9 +73,14 @@ protocol GitHubOAuthSecurityClient: Sendable {
   func copyMatching(_ query: [CFString: Any]) -> (OSStatus, Data?)
   func update(_ query: [CFString: Any], attributes: [CFString: Any]) -> OSStatus
   func add(_ query: [CFString: Any]) -> OSStatus
+  func delete(_ query: [CFString: Any]) -> OSStatus
 }
 
 private struct LiveGitHubOAuthSecurityClient: GitHubOAuthSecurityClient {
+  func delete(_ query: [CFString: Any]) -> OSStatus {
+    SecItemDelete(query as CFDictionary)
+  }
+
   func copyMatching(_ query: [CFString: Any]) -> (OSStatus, Data?) {
     var result: CFTypeRef?
     let status = SecItemCopyMatching(query as CFDictionary, &result)
@@ -103,7 +108,11 @@ private struct ConfigurationStore: GitHubOAuthAppConfigurationStore {
   }
 }
 
-private struct BoundCredentialStore: OAuthCredentialStore {
+private struct BoundCredentialStore: OAuthCredentialClearingStore {
+  func clear() async throws(any Error & Sendable) {
+    try await storage.clearCredential(clientID: clientID)
+  }
+
   let storage: OAuthDataProtectionStorage
   let clientID: String
 
@@ -176,6 +185,12 @@ private actor OAuthDataProtectionStorage {
       throw .identityMismatch
     }
     try saveData(data, account: "credential")
+  }
+
+  func clearCredential(clientID: String) throws(StoreError) {
+    guard try loadCredential(clientID: clientID) != nil else { return }
+    let status = security.delete(query(account: "credential"))
+    if status != errSecItemNotFound { try requireSuccess(status) }
   }
 
   private func query(account: String) -> [CFString: Any] {

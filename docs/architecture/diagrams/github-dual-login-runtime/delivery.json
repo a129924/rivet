@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "sequence",
+  "input": "docs/architecture/diagrams/github-dual-login-runtime/runtime.sequence.json",
+  "output": "docs/architecture/diagrams/github-dual-login-runtime/runtime-sequence.html",
+  "specification": {
+    "sha256": "b03af9740d292ed9ccb417f490efe0555fafce4ac42a5afd3eb0b119948a5cad",
+    "bytes": 3397
+  },
+  "artifact": {
+    "sha256": "4f727a220346ca1ce5577ea6b0964af31b25dcfa59f2aa3a005934a23db7db8f",
+    "bytes": 703629
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

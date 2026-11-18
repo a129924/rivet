@@ -1,0 +1,152 @@
+{
+  "sourceManifest": {
+    "files": 20,
+    "mismatches": [],
+    "sourceRevision": "ab77391b73291deb1ce3d96cef72f981aeb3104a"
+  },
+  "markdownLinks": {
+    "documents": 11,
+    "localLinks": 37,
+    "failures": [],
+    "correctedSignOutLink": "../../docs/architecture/github-oauth-dual-client.md#本地登出",
+    "headingExists": true
+  },
+  "productionDiff": {
+    "exitCode": 0,
+    "paths": []
+  },
+  "untrackedAllowlist": {
+    "exitCode": 0,
+    "count": 35,
+    "outside": []
+  },
+  "archify": [
+    {
+      "name": "cold-start.sequence",
+      "exitCode": 0,
+      "ok": true,
+      "checks": 9,
+      "checksPassed": 9,
+      "compositionSummary": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "receiptHashesMatch": true,
+      "viewportCount": 4,
+      "containmentPass": true,
+      "readabilityPass": true,
+      "captures": 4,
+      "missingScreenshots": [],
+      "visualReview": "pending"
+    },
+    {
+      "name": "reauthorization.lifecycle",
+      "exitCode": 0,
+      "ok": true,
+      "checks": 9,
+      "checksPassed": 9,
+      "compositionSummary": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "receiptHashesMatch": true,
+      "viewportCount": 4,
+      "containmentPass": true,
+      "readabilityPass": true,
+      "captures": 4,
+      "missingScreenshots": [],
+      "visualReview": "pending"
+    }
+  ],
+  "floorplan": {
+    "mapFileCount": 20,
+    "scopeMismatch": [],
+    "missingPaths": [],
+    "missingDescriptions": [],
+    "danglingLinks": [],
+    "linkCount": 50,
+    "manualCallEdges": 10,
+    "priorBuildOk": true,
+    "priorBuildErrors": [],
+    "priorBuildWarnings": [],
+    "descriptions": {
+      "files": {
+        "described": 20,
+        "total": 20
+      },
+      "routes": {
+        "described": 0,
+        "total": 0
+      },
+      "modules": {
+        "withSummary": 7,
+        "total": 7,
+        "missing": []
+      },
+      "review": 0,
+      "complete": true
+    },
+    "currentMapHashesMatchProvenance": true,
+    "routes": 0,
+    "healthSummary": {
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "loudChecks": [
+      {
+        "check": "endpoints",
+        "label": "Endpoint sign-in",
+        "checked": false,
+        "text": "not checked: no endpoints found, but experiments/E013/GitHubSignInVerification/tools/pkce_negative_probe.py looks like it runs a server (it calls .listen(8). Its endpoints may be set up in a way Floorplan doesn’t recognise yet, so nothing checked whether they need a login.",
+        "loud": true
+      }
+    ],
+    "recentTasks": [],
+    "customFlowsExist": false
+  },
+  "absoluteLocalPaths": {
+    "failures": []
+  },
+  "status": "PASS",
+  "failures": [],
+  "history": [
+    {
+      "status": "NEEDS_REWORK",
+      "failures": [
+        {
+          "file": "analysis/github-oauth-connection-orchestration/source-audit.md",
+          "target": "../../docs/architecture/github-oauth-local-sign-out.md",
+          "ok": false,
+          "reason": "missing"
+        }
+      ],
+      "note": "首輪發現 source-audit 的 signOut 長期契約路徑不存在；由 Implementer 修正，Tester 未改實作。"
+    }
+  ],
+  "additionalChecks": {
+    "textWhitespaceFiles": 24,
+    "textWhitespaceFailures": [],
+    "floorplanIgnored": true,
+    "floorplanNoExternalScriptOrStyleRefs": true,
+    "finalSpecificationFiles": [
+      "analysis/github-oauth-connection-orchestration/diagrams/cold-start.sequence.v2.json",
+      "analysis/github-oauth-connection-orchestration/diagrams/reauthorization.lifecycle.v2.json"
+    ],
+    "frozenSpecificationNotes": "deliver 收據的 SHA 與保留的 v2 spec bytes 一致；工具私有交付暫存 snapshot 不另作永久檔案存在主張。",
+    "existingPATConstructorDependency": "已讀 public initializer 及 PAT store constructor：建構不操作 Security，OAuth execute 不呼 savePAT；不是 PAT 連線採用。"
+  },
+  "limitations": [
+    "本輪未執行 Swift build/tests、OAuth/DPK/live、完整 orchestration runtime 或新實驗。",
+    "Floorplan routes 0/0 是不適用；endpoint Health 未查且有範圍外 E013 server loud 提醒，不能當安全審查。",
+    "未重建 Floorplan 或重拍 Archify；獨立檢查當前 bytes、既有工具收據和截圖存在，避免更動原始交付 hash。",
+    "沒有製圖前 Git config snapshot，不能由本次檢查宣稱對歷史全程作 config 位元比對；現有 unattended 契約、tracked zero diff 與本次檢查前後保護檔相等分開記錄。",
+    "Archify HTML 帶可選 Google Fonts links；Floorplan 無外部 script/style refs。本 Tester 未啟 server/Ask/外部發布。",
+    "Graphify fallback 與 PR Lens DL01 deferred 不代表已 query/render。Human 與圖面接受仍 pending。"
+  ],
+  "protectedFilesDuringVerification": {
+    "count": 23,
+    "unchanged": true,
+    "scope": "20 source files + AGENTS/root ignore + current local Git config; only this Tester operation interval"
+  }
+}

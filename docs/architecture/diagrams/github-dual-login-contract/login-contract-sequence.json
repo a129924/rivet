@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "OAuth／PAT 受控登入契約",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1000,
+      480
+    ],
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "caller",
+      "type": "frontend",
+      "label": "登入呼叫端"
+    },
+    {
+      "id": "patvalue",
+      "type": "security",
+      "label": "PAT 本地值"
+    },
+    {
+      "id": "fake",
+      "type": "backend",
+      "label": "受控替身",
+      "sublabel": "LoginAuthenticating"
+    }
+  ],
+  "messages": [
+    {
+      "id": "pat-create",
+      "from": "caller",
+      "to": "patvalue",
+      "y": 170,
+      "label": "PAT：trim 並拒絕空值",
+      "variant": "security"
+    },
+    {
+      "id": "pat-result",
+      "from": "patvalue",
+      "to": "caller",
+      "y": 225,
+      "label": "合法值或 typed empty",
+      "variant": "return"
+    },
+    {
+      "id": "login-call",
+      "from": "caller",
+      "to": "fake",
+      "y": 285,
+      "label": "await authenticate(oauth／pat)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cancel-observe",
+      "from": "caller",
+      "to": "fake",
+      "y": 345,
+      "label": "取消時傳遞並等工作結束",
+      "variant": "dashed"
+    },
+    {
+      "id": "login-result",
+      "from": "fake",
+      "to": "caller",
+      "y": 385,
+      "label": "success／failure／cancelled",
+      "variant": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "共同入口",
+      "items": [
+        "OAuth 請求不帶配置；PAT 僅持有本地合法值。",
+        "空 PAT 在呼叫服務前被拒絕。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "結果與邊界",
+      "items": [
+        "取消在發布前檢查，觀察到取消則優先回 cancelled。",
+        "成功無 payload；沒有真登入、帳號或 session。"
+      ]
+    }
+  ]
+}
