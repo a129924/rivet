@@ -79,3 +79,7 @@ Coverage 使用內建工具，不加入第三方 coverage package。
 - 全部執行：`scripts/coverage.sh`。
 
 Swift coverage 只能在完整 Xcode 選取後執行；coverage 不放入 pre-commit。
+
+## GitHubIntegration hosted 整合測試
+
+正式設施位於 [Tests/GitHubIntegrationHostedTests](../Tests/GitHubIntegrationHostedTests/README.md)。使用 `python3 -B scripts/check-github-integration-hosted-tests.py --offline` 執行 driver 契約與原生 hosted fake first／fresh；root SwiftPM／consumer／hooks 保持，沒有自動新增 live 或 CI 操作。Live 為明確授權的手動介面；M輪只做離線與mock，後續N輪已取得[有限hosted Live結果](../plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)，兩段refresh／save皆0、不涵蓋真refresh，N06獨立有限結果審查approved、無required finding，Human最終接受pending。目錄是專案選擇，不是 Swift 規範；真 DPK 的執行 host 需有效 profile／signer／exact group。

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "OAuth 啟動還原生命週期",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      614
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "單一 owner 的一次需求"
+    },
+    {
+      "id": "cancel",
+      "label": "取消與重疊"
+    },
+    {
+      "id": "terminal",
+      "label": "本次回傳，不代表遠端認證"
+    }
+  ],
+  "states": [
+    {
+      "id": "accepted",
+      "type": "start",
+      "label": "接受還原",
+      "sublabel": "取得 busy ownership",
+      "lane": "main",
+      "col": 0
+    },
+    {
+      "id": "configured",
+      "type": "active",
+      "label": "組裝連線",
+      "sublabel": "只建立一個 provider",
+      "lane": "main",
+      "col": 1
+    },
+    {
+      "id": "preparing",
+      "type": "active",
+      "label": "準備 scope",
+      "sublabel": "必要刷新與完整保存",
+      "lane": "main",
+      "col": 2
+    },
+    {
+      "id": "settled",
+      "type": "decision",
+      "label": "原工作收尾",
+      "sublabel": "檢查取消與結果",
+      "lane": "main",
+      "col": 3
+    },
+    {
+      "id": "delivered",
+      "type": "decision",
+      "label": "發布前檢查",
+      "sublabel": "取消優先，不回舊 ready",
+      "lane": "main",
+      "col": 4
+    },
+    {
+      "id": "cancelling",
+      "type": "waiting",
+      "label": "取消需求",
+      "sublabel": "保留成功保存",
+      "lane": "cancel",
+      "col": 0
+    },
+    {
+      "id": "overlap",
+      "type": "neutral",
+      "label": "重疊回 busy",
+      "sublabel": "不建立替代 writer",
+      "lane": "cancel",
+      "col": 1
+    },
+    {
+      "id": "published",
+      "type": "neutral",
+      "label": "明確結果",
+      "sublabel": "ready／未完成／取消",
+      "lane": "terminal",
+      "col": 2,
+      "yOffset": -16
+    }
+  ],
+  "transitions": [
+    {
+      "id": "cancel-demand",
+      "from": "preparing",
+      "to": "cancelling",
+      "label": "Task 取消",
+      "labelDy": 24
+    },
+    {
+      "id": "cancel-settled",
+      "from": "cancelling",
+      "to": "settled",
+      "label": "等原工作完成"
+    },
+    {
+      "id": "publish-result",
+      "from": "delivered",
+      "to": "published",
+      "label": "回傳並解除 busy",
+      "labelDy": 24
+    }
+  ]
+}

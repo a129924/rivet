@@ -213,3 +213,15 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 結果只適用當次同機／同 GUI 使用者／既有 signer、有效 profile、exact group、frozen binary 與唯一 writer。它沒有重驗 live refresh，也不代表真 OAuth、產品 UI、其他 profile、跨 writer 或斷電 durability。舊 `ff672c7` first 的無法判定與已耗額度保留；新增序列的 first／fresh 也均已使用，沒有重試或 cleanup。原 public receipts 的 Human unknown 保留，後補獨立 attestation 綁其 SHA；configuration／sentinel 留存。後續文件 commit 不是受測來源，也不改寫已完成的歷史 run。
 
 [登出順序](diagrams/github-oauth-local-sign-out/sign-out.html) · [執行契約](../../plan/github-oauth-local-sign-out/github-oauth-local-sign-out.plan.md)
+
+## 正式 OAuth 啟動還原 owner
+
+[GitHubOAuthStartupRestorer](github-oauth-startup-restore-runtime.md) 新增 caller-owned 組裝入口，讀取既存設定並永久保留同一provider，每次單次prepare、不快取ready、不自動retry。Busy涵蓋取消收尾，已成功rotation不rollback；沿用本文既有provider／scope／401 policy。這不是登入、清除或跨程序協調。原受控與後續E018 live證據分列，Human review pending。
+
+### 2026-11-18 E018 正式入口 live
+
+[正式啟動還原owner](github-oauth-startup-restore-runtime.md)已在新驗證host以public stores／fetcher與真DPK完成first自然到期真refresh／save各1及fresh讀回；API與同帳號均成功。兩段同source／binary／profile，Human全程各0提示。AppID不同於舊E014，故不作舊App profile延續性證據；無新登入、清除、policy變更或重跑舊harness。有限[證據與限制](../../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)獨立記錄；Human最終topic接受pending。
+
+### 正式 hosted 冷啟動還原 N輪（2026-11-18）
+
+正式hosted測試設施直接使用唯一restorer／provider／scope，first／fresh各一次完成ready／API／完整readback與同帳號新程序continuity；Human各全程0提示。Credential兩段均有效，refresh／save全0，不新增refresh／401 policy或宣稱本輪真refresh覆蓋。[新安全結果與限制](../../plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)與原E018歷史分列；N06獨立有限結果審查approved、無required finding，Human最終接受pending，非產品E2E或普遍遠端權限保證。

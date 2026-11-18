@@ -237,3 +237,9 @@ Annotated tag `v0.1.69-e010-documentation-closeout` 已推送。本機與遠端�
 E010 依 Human 決定結束本輪。W1 受限基線為一次 seed 保存假憑證 A、一次以同一 binary 於新程序讀回 A，六欄相符，Human 在兩階段各全程觀察且提示各為 0 次。W2／W3 均未執行，完整 profile 週期未完成，本輪不再續行或啟用新的 recovery host。[W1 證據索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)。
 
 實驗結案清理未執行，清理及最小化仍未完成，`recoveryRequired=true`。目前 A 是否仍在及完整殘留範圍均未確認。沿用既有最低限度復原交接，原 D 為 **2026-11-20 15:22:03.379959（Asia/Taipei）**，整包留存期限未獲延長。
+
+## E018 — 正式 OAuth 冷啟動還原 live（2026-11-18）
+
+[歷史驗證host與界線](https://github.com/a129924/rivet/blob/0debe0b8c088e60500b4a1e4969000666e495c97/experiments/E018/README.md)直接使用正式GitHubOAuthStartupRestorer／stores／fetcher。First自然到期真refresh/save各1後ready，fresh新程序同完整credential／同帳號且refresh/save0；Human兩段全程各0提示。新host AppID不同於舊E014，未重跑舊App或profile延續性實驗。兩live slots用完，停止重試；[安全證據](../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)與Human最終接受分列。
+
+E018 active 工具已退役，後續測試設施見 [正式 hosted integration tests](../Tests/GitHubIntegrationHostedTests/README.md)。歷史結果與額度不轉移至新設施。

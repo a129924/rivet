@@ -113,3 +113,17 @@ Canvas仍未驗，Human接受提示已列gap，不填pass；不外推完整矩�
 ### 歷次更新
 
 2026-11-17 首次記錄本 topic，依 source-audit 與 adoption-audit 建立方案；不覆寫其他 topic 或實驗歷史。圖面及製圖檢查見[執行帳本](../plan/github-oauth-connection-orchestration/github-oauth-connection-orchestration.step.md)。
+
+## OAuth 冷啟動連線還原正式採用
+
+Topic `github-oauth-startup-restore-runtime` 將既有configuration store、clientID-bound credential store、正式fetcher、provider與scope組裝為caller-owned入口；採用唯一provider、保存後發布、busy與取消settlement，不複製E014 App-local coordinator、UI、probe或驗證控制。
+
+[正式契約](architecture/github-oauth-startup-restore-runtime.md)與[受控證據](architecture/diagrams/github-oauth-startup-restore-runtime/BUILD.md)獨立於E014真人結果。Root375tests／consumer22tests通過；未做新OAuth／DPK、不宣稱產品UI或遠端認證完成，Human review pending。
+
+### 2026-11-18：正式入口 E018 live 追加
+
+原e31a75a受控交付後，Human另行授權live。新E018直接連結正式restorer／stores／fetcher，沒有複製E014runtime或重開其額度；first自然到期真refresh/save各1，fresh同完整credential／同帳號且refresh/save0，兩段Human各全程0提示。實際新host AppID不同、現有profile授權exact舊group，不能回填舊App profile續期。資料保存不rollback、不cleanup；詳[獨立證據](../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)。
+
+### 2026-11-18：正式 hosted 設施 N輪有限Live
+
+Active E018退役後，正式hosted test bundle／runner沿用唯一正式還原實作，以新授權各完成first／fresh一次；ready、API、完整credential讀回及同帳號新程序continuity通過，Human本輪兩段各全程0提示。兩段未到期、refresh／save全0，不把舊E018的自然到期refresh結果挪為本輪coverage。工具nested／inside-out signing修正與原失敗preflight各留來源；[N輪結果與限制](../plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)已由N06獨立有限結果審查approved、無required finding，Human最終接受pending，不擴產品功能或普遍環境保證。

@@ -1,0 +1,42 @@
+{
+  "apiAuthenticated": true,
+  "artifactSHA256": "bc78a4ab7c3bf85b7dbf179acef35e21bdff222e9148d6c55b0c4541da1afc9d",
+  "completeReadback": true,
+  "configurationUnchanged": true,
+  "distinctActualProcesses": true,
+  "failureKind": "none",
+  "final": {
+    "configurationLoads": 1,
+    "credentialLoads": 1,
+    "refreshAccepted": 0,
+    "refreshAttempts": 0,
+    "saveAttempts": 0,
+    "saves": 0
+  },
+  "initiallyExpired": false,
+  "machineSHA256": "89fc51a9b65d122bac3b27226781ad887edc4f1d456f52b61caf66ff81998bf7",
+  "nativePassed": 1,
+  "nativeSkipped": 0,
+  "nativeTests": 1,
+  "naturalRefreshObserved": false,
+  "outcome": "ready",
+  "passed": true,
+  "phase": "fresh",
+  "phasePassed": true,
+  "prepare": {
+    "configurationLoads": 1,
+    "credentialLoads": 1,
+    "refreshAccepted": 0,
+    "refreshAttempts": 0,
+    "saveAttempts": 0,
+    "saves": 0
+  },
+  "processTerminated": true,
+  "profileSHA256": "6e5978b96171d38238e9b0525049907ba72f20d85dca4642238e342370da08eb",
+  "runIDHash": "2e6152f268a8b0af396a976503aae327396196b89f7b5adac0ad905a4d44bf86",
+  "sameAccount": true,
+  "sameCredential": true,
+  "schema": "github-integration.hosted-live-safe.v1",
+  "sourceSHA256": "7cd86cd4ef9603fdd890911c19adcf6b97180e244a616552612e7db399eae131",
+  "xcodeExitCode": 0
+}
