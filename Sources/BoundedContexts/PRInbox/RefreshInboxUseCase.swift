@@ -1,20 +1,27 @@
-struct RefreshInboxUseCase: Sendable {
-  let source: any ReviewRequestSource
+enum RefreshInboxUseCase: Sendable {
+  case reviewRequests(any ReviewRequestSource)
+  case selfReview(any SelfReviewSource)
 
   func execute() async -> Outcome<[InboxItem], PRInboxFailure> {
-    switch await source.fetchReviewRequestCandidates() {
-    case .success(let candidates):
-      .success(
+    switch self {
+    case .reviewRequests(let source):
+      await source.fetchReviewRequestCandidates().map { candidates in
         candidates.compactMap { candidate in
           guard candidate.isOpen, candidate.isDirectlyRequestedForCurrentUser else {
             return nil
           }
-
           return candidate.item
         }
-      )
-    case .failure(let failure):
-      .failure(failure)
+      }
+    case .selfReview(let source):
+      await source.fetchSelfReviewCandidates().map { candidates in
+        candidates.compactMap { candidate in
+          guard candidate.isOpen, candidate.isAuthoredByCurrentUser else {
+            return nil
+          }
+          return candidate.item
+        }
+      }
     }
   }
 }
