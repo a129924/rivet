@@ -1,8 +1,27 @@
 # GitHub 連線驗證結果摘要
 
-基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；分列雙登入契約及本地登出／E016 的交付事實，不擴張其他實驗結果。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。
+基礎結果彙整日期：2026-11-11；PR #69 合併／版本事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。原生登入 UI／Demo 與各輪 Human 採用、E010 原記錄時點狀態保持；分列雙登入契約及本地登出／E016 的交付事實，不擴張其他實驗結果。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
+
+## PR #75：Login UI 能力與驗收支援的分層證據（2026-11-18）
+
+[PR #75](https://github.com/a129924/rivet/pull/75) 於 `2026-11-18T08:46:47Z` merged／closed 至 `dev`。Merge `e7a4b8422e524f59a7bfa1bb514838f2d829a8cb` 的 parents 是 `0a71be99759373606de9bd3994a30b2c5c3f40cb`／最後 feature `5167e4c454af9dbbba48a3b2be024d5b8528e088`；merge tree 與 feature 不同，保留上游兩份實驗索引更新。Merge／tag 是來源保存點，不能當作新的 build 或驗收版本。
+
+| 證據層級 | 支持範圍與限制 |
+| --- | --- |
+| 正式 UI 能力 | `Sources/Presentation/Login/` 的公開 `RivetLoginView` 組合四個 internal 元件，重用 `.standard`；外層 phase／content、局部 PAT 編輯／Show-Hide／焦點與有限 intents 分責。Presentation 不依賴 GitHubIntegration，不建認證請求、不重建既有 Login VO。[長期契約](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/docs/presentation/login-ui.md)／[採用選擇與限制](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/docs/feasibility-adoption.md)。 |
+| 直接 tests／controlled Preview | root focused16 tests／4 suites 中正式9 tests／3 suites、凍結 Demo7 tests／1 suite；tool8 tests／2 suites只證 parent／configuration，兩 product builds及局部靜態檢查通過。`#Preview` wrapper接收intent／更新受控phase，但實際Canvas連續操作仍未驗，compiled／unit／原生host不代替它。[T06與修後差異](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-testing.md)。 |
+| 獨立原生差異 | 修後 code `9d14a3f6bf878a215de0d39d4fb05ec05970ec80`；source manifest SHA-256 `3e748de3a3b19225e1a03160d90318037a0be8430b13b911ec2e958b34bdd988`；binary `6a7867b568843e6146132c0d96b233f4f93c2f25a1d59e3b726313a4e642c0c1`；app tree `ccfbbd965a9a8b40e4b3df22562f7542d02b2dc28a93f9a3b4a6df2988877cae`。F01–F06包含fresh Light／Dark、暫時排除build fallback下資源實載、必要鍵盤／焦點／PAT互動／大字捲動；fallback已還原、app未改。只支持所列環境／代表案例。[原生紀錄](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-native.md)／[runtime收據](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-runtime-receipt.json)。 |
+| Human VoiceOver／接受 | V01返回Welcome讀到Continue、無晚到舊帳號驗證語音；V02返回PAT讀到區塊、可直接輸入、無晚到舊驗證語音。先前操作未完成／跨App焦點干擾仍保留，不當元件失敗或刪歷史。[Human聲音](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-voiceover-human.md)；[HC02](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-human-acceptance.md)明示「接受本輪驗收支援分離、封裝修正與差異補驗結果」，[獨立R07](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-native-review.md) approved／無required fixes。舊HC01／4d binary接受仍屬其原版本；不外推所有race、語音或完整矩陣。 |
+
+E011 是凍結歷史來源：基線 `d2332bfff25510a3f78c1fbc8b0d2d9cf953b223`、tree `b6a1e6e1196e64999af9591ec32f09211f1936c6`，本 PR 六項差異有界回復後，merge 對基線 E011 diff 為空。原plan允許修改的歷史及舊結論保留，未整目錄覆蓋或繼續維護它。Frozen consumer可編譯，但HEAD重建的現行正式預設文案不保證舊Demo模擬語意；歷史重現需完整舊revision／binary，沒有加正式demo mode。
+
+驗收先用直接正式tests／controlled Preview；獨立視窗、選單、鍵盤／焦點及Human語音需要的原生環境才由 [tools/acceptance/login-ui](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/tools/acceptance/login-ui/README.md) 組裝。同一份正式View由受控phase／content／onIntent驅動，工具自己的parent／config／fixtures不依賴E011，不複製View、不新增fake Service／DI，正式能力無反向依賴。乾淨正式文案與專用驗收選單分開。RF01／RF02 needs-rework與RF03封裝失敗／修正依原來源保留，不將修後通過倒填舊版。
+
+**本輪能力完成程度**：正式UI元件化與驗收支援分離已交付，HC01／HC02各按受測版本獲Human接受；Canvas未驗仍是明列限制。**產品整合狀態**：真認證、外層Adapter／非同步協調、憑證儲存、session、登入後導覽與完整產品App組裝不在本topic。既有 `PersonalAccessToken`／`LoginRequest`／`LoginOutcome` 的對應由未來外層接線；Outcome只有成功／失敗／取消，不能單獨代表所有UI phase，成功呈現不保證session。其他topic已交付runtime／stores也不代表本UI已接通。
+
+語意 annotated tag `v0.1.70-rivet-login-ui-adoption` 已推送並讀回，local／remote object=`054a9267fcedd730c8d56f9be1f6e272df726153`、peeled精確指向上述merge，不是後續索引commit或GitHub Release。原feature remote／local／tracking refs與managed worktree目錄／registration已正常刪除並核absent；remote expected-head lease僅保護精確刪除，無強制移除／prune。舊accepted Preview的3檔bytes／SHA／mode已核符封存Git私有archive、不track／push；新版外部App不動。兩索引由獨立 `docs/rivet-login-ui-adoption-postmerge` 工作樹編輯，dev只ff-only同步；文件安全提交推送後才清理該維護branch／worktree，不預填成功。本次僅整理事實，不重跑Swift／native／語音、不重寫舊證據、不吸收E010或其他工作線成果；[原feature清理與索引位置](README.md#pr-75正式-login-ui-選擇性採用驗收分離與清理2026-11-18)另列。
 
 ## PR #76：可行性／採用方案的證據與收尾（2026-11-17）
 
@@ -125,6 +144,7 @@ E015 的六個 focused case 由最終來源新建 CLI，使用 DEBUG、互斥 LA
 | [E017／PR #73 PAT 儲存](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/experiments/E017/github-pat-dpk-storage/README.md) | 原source5465／E016路徑真DPK、A／B跨程序、同身分真重建、owned cleanup／nil，六runtime Human各全程0；E017離線移轉另列。 | 不證新E017來源live、真PAT遠端有效性、renewal／rotation／分發／durability或HC04／HC05接受；舊unknown保持。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 2026-11-11 Human完成指定狀態朗讀、局部大字與focus／rapid案例，明確通過並採用。 | 假資料展示範圍，正式 backend／OAuth 與系統字級偏好整合屬後續能力。Human大字為21pt五畫面及17pt同PAT，15格矩陣沿用工具來源。 |
+| [PR #75 正式 Login UI 元件化](https://github.com/a129924/rivet/pull/75) | 正式組合元件、獨立驗收支援；6a binary的必要原生／Human語音差異通過並獲HC02接受。 | E011凍結；Canvas未驗；不證真認證、外層Adapter、儲存／session／產品接入或新merge build驗收。 |
 | [PR #71 OAuth／PAT 雙登入契約](https://github.com/a129924/rivet/pull/71) | 合併來源保存與既有受控契約／工具驗證，非新增 E。 | success 無帳號／session／clients；不證真登入、UI 接線、遠端有效性或新的 Human 視覺接受。 |
 
 ## E001–E007：已知結果與不能推論之處

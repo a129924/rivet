@@ -1,6 +1,24 @@
 # 實驗索引
 
-基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。
+基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。
+
+## PR #75：正式 Login UI 選擇性採用、驗收分離與清理（2026-11-18）
+
+[PR #75](https://github.com/a129924/rivet/pull/75) 已於 `2026-11-18T08:46:47Z` 合併至 `dev` 並關閉；merge 為 `e7a4b8422e524f59a7bfa1bb514838f2d829a8cb`，parents 為 `0a71be99759373606de9bd3994a30b2c5c3f40cb`／最後 feature head `5167e4c454af9dbbba48a3b2be024d5b8528e088`。Merge 與 feature tree 不同：保留上游兩份實驗索引更新；本節記錄保存來源，不冒稱 merge 是新受測 build。
+
+**本輪能力**：重用既有 `RivetLoginContent.standard` 與正式元件，將 `Sources/Presentation/Login/` 的 `RivetLoginView` 組合為四個 internal 職責元件；外層持有 phase／呈現文案，PAT 元件管理編輯、Show／Hide 與焦點，以有限 intents 回報互動。[正式契約](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/docs/presentation/login-ui.md)及[採用決策](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/docs/feasibility-adoption.md)記錄選擇性重用、調整與排除；不做 E011 的1:1搬移。`RivetPresentation` 不依賴 `GitHubIntegration`，不重建 Login VO。
+
+**驗收歸屬**：直接正式測試在 `Tests/RivetPresentationTests/`，controlled `#Preview` 由 wrapper 接收 intents／持有受控 phase。獨立視窗、選單、鍵盤／焦點與 Human VoiceOver 的必要環境由最小 [acceptance tool](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/tools/acceptance/login-ui/README.md) 提供，依賴同一份正式 `RivetPresentation`；自己的 parent／configuration／fixtures 不依賴 E011 `LoginDemoModel`，沒有複製正式 View 或為 fake 新增 Service／DI。乾淨畫面使用正式預設文案，控制項留在專用驗收選單。[實作與依賴證據](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-implementation.md)
+
+**E011 凍結**：指定基線 `d2332bfff25510a3f78c1fbc8b0d2d9cf953b223`，E011 tree=`b6a1e6e1196e64999af9591ec32f09211f1936c6`；本 PR 只對六項差異有界回復（三項恢復／三項 PR-added 刪除），merge 對該基線的 E011 diff 為空，未整目錄覆蓋。原 plan 曾納入 E011 的歷史與舊接受不改；它是歷史來源，停止承擔新版驗收。Frozen consumer 可建置，但以現行正式預設文案重建不保證歷史 Demo 模擬語意等效；歷史重現需完整凍結 revision 或舊 binary，未新增正式 demo mode。
+
+[自動驗證](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-testing.md)保留實際來源：root focused 16 tests／4 suites（正式9／凍結 Demo7）、tool8 tests／2 suites、兩個 product builds 與局部 format／lint／腳本／plist 檢查。修後 code `9d14a3f6bf878a215de0d39d4fb05ec05970ec80`、binary SHA-256 `6a7867b568843e6146132c0d96b233f4f93c2f25a1d59e3b726313a4e642c0c1` 完成 [F01–F06 原生差異](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-native.md)及 [V01／V02 Human 聲音](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-voiceover-human.md)。Human 已明示[接受本輪驗收支援分離、封裝修正與差異補驗結果](https://github.com/a129924/rivet/blob/e7a4b8422e524f59a7bfa1bb514838f2d829a8cb/plan/rivet-login-ui-adoption/evidence/acceptance-ownership-human-acceptance.md)，獨立 R07 approved／無 required fixes；舊 HC01／4d binary 接受依原版本保留。Canvas 仍未驗，不外推全矩陣、所有語音競態或分發環境。
+
+**產品整合**：本輪正式 UI 能力與上述有限接受完成；真登入 request 建構／外層 Adapter、認證服務接線、憑證儲存、session、導覽與完整產品 App 組裝不在本 topic。既有 `PersonalAccessToken`／`LoginRequest`／`LoginOutcome` 的對應依契約留待外層協調；有限 Outcome 不能單獨表示全部 phase，成功 UI 不代表已建立 session。PR 合併不將這些工作改為完成。
+
+Annotated tag `v0.1.70-rivet-login-ui-adoption` 已推送並讀回：local／remote object 同為 `054a9267fcedd730c8d56f9be1f6e272df726153`，peeled commit 精確為上述 merge，不指向後續索引 commit，亦非 GitHub Release。原 `feat/rivet-login-ui-adoption` 的 remote／local／tracking refs、managed worktree 目錄與 registration 已在 fresh clean／head／merge lineage／tag 核對後正常移除；遠端以 expected-head lease 保護刪除，本地以 `git branch -d`，無強制移除或 prune。舊 accepted Preview 的3檔已逐檔 bytes／SHA／mode 相符封存於 Git 私有 archive，未 track／push；可重建 build／node_modules 隨原工作樹移除，新版外部驗收 App 與其他工作線不操作。
+
+兩索引在獨立 `docs/rivet-login-ui-adoption-postmerge` 工作樹維護，沿既有 postmerge 慣例以安全 fast-forward 保存至 remote dev，dev 工作樹只同步、不編輯；文件 branch／worktree 只在兩檔安全提交推送、fresh clean 後才收尾，不預填其成功。本次不重跑 Swift／原生／VoiceOver，不改舊 artifacts／接受紀錄或其他實驗結果；提交檢查另依本次實際執行回報。
 
 ## PR #76：OAuth 啟動／重連可行性方案合併與清理（2026-11-17）
 
@@ -81,7 +99,7 @@ Annotated tag `v0.1.64-github-dual-login-contract` 已建立／推送並讀回�
 
 | 編號 | 用途與來源 | 狀態 |
 | --- | --- | --- |
-| [E011](E011/README.md) | `rivet-login-ui` 的 Login Demo、控制介面、專用 Runtime 與專屬測試；功能驗收展示，不是將原功能開發改寫為事前實驗 | B1 位置修正，搬移後驗證結果見 topic 帳本；正式 UI 與其既有採用／驗收保留。 |
+| [E011](E011/README.md) | `rivet-login-ui` 的歷史 Login Demo、控制介面、Runtime 與專屬測試；凍結於 `d2332bf`，不再承擔新版正式能力驗收 | PR #69 收納與舊 Human 採用依原版本保留；PR #75 驗收改用直接正式 tests／controlled Preview／獨立 acceptance tool，不改 E011 基線。 |
 | [E012](E012/README.md) | `pr-reader-webview-runtime-reading` 的fixture host／Runtime／資源／專屬測試，功能驗收展示 | B2位置修正；不重做原功能開發、不搬正式bridge／Core或TS pipeline；結果見topic帳本。 |
 | [E013](E013/GitHubSignInVerification/tools/README.md) | `github-first-sign-in` 首次登入驗證App與專用PKCE tools／fixture，可行性驗證環境 | B3完整接線與現行pin結果見topic帳本；歷史真人／PKCE證據保留，不提升產品能力。 |
 | [E014](E014/GitHubConnectionVerification/README.md) | `github-persistent-connection` 持續連線App／Runtime／專屬測試，可行性驗證環境 | B4集中；不改正式能力、簽章／儲存或歷史真人結果，離線搬移結果見topic帳本。 |
@@ -120,6 +138,7 @@ Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；loc
 | [GitHubConnectionVerification](E014/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 原生 Presentation 元件、假資料 Demo 與 Human 驗收 | 2026-11-11 指定聲音、大字與焦點案例通過，Human明確採用。正式 backend／OAuth 串接屬後續能力。 |
+| [PR #75 正式 Login UI 元件化](https://github.com/a129924/rivet/pull/75) | 選擇性採用、phase／intents 契約、局部互動與獨立驗收支援 | 已合併；HC01／HC02按各自版本接受，E011凍結、Canvas未驗；真認證／session／產品接線不在本題。 |
 | [PR #71 OAuth／PAT 雙登入契約](https://github.com/a129924/rivet/pull/71) | GitHubIntegration 的請求 VO、共同 Protocol 與受控結果 | 正式 non-BC 技術契約；success 無帳號／session／clients，未交付真登入，不新增 E 編號。 |
 
 結果的證據層級、主要缺口與決策限制另見 [驗證總覽](VALIDATION-SUMMARY.md)。本索引不授權執行任何 README 中的重現命令、新 OAuth、重試或秘密清理。
