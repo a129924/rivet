@@ -95,8 +95,9 @@ binary=bin_dir/'RivetLoginAcceptance'
 bundles=[p for p in bin_dir.glob('*_RivetPresentation.bundle') if p.is_dir()]
 if not binary.is_file() or len(bundles)!=1: raise SystemExit('Expected the actual executable and exactly one formal Presentation resource bundle')
 bundle=bundles[0]; app=run/'native/RivetLoginAcceptance.app'
-mac=app/'Contents/MacOS'; resources=app/'Contents/Resources';mac.mkdir(parents=True);resources.mkdir()
-shutil.copy2(binary,mac/binary.name);shutil.copytree(bundle,resources/bundle.name)
+mac=app/'Contents/MacOS'; packaged_bundle=app/bundle.name;mac.mkdir(parents=True)
+# SwiftPM's generated accessor first searches Bundle.main.bundleURL / bundle.name.
+shutil.copy2(binary,mac/binary.name);shutil.copytree(bundle,packaged_bundle)
 info={'CFBundleExecutable':'RivetLoginAcceptance','CFBundleIdentifier':'local.rivet.login-ui-acceptance','CFBundleName':'Rivet Login Acceptance','CFBundleDisplayName':'Rivet Login Acceptance','CFBundlePackageType':'APPL','CFBundleVersion':'1','CFBundleShortVersionString':'1.0','LSMinimumSystemVersion':'15.0','NSHighResolutionCapable':True,'NSPrincipalClass':'NSApplication'}
 (app/'Contents/Info.plist').write_bytes(plistlib.dumps(info))
 def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -104,7 +105,7 @@ assert sha(binary)==sha(mac/binary.name)
 resource_files=[]
 for path in sorted(bundle.rglob('*')):
     if path.is_file():
-        target=resources/bundle.name/path.relative_to(bundle);assert sha(path)==sha(target)
+        target=packaged_bundle/path.relative_to(bundle);assert sha(path)==sha(target)
         resource_files.append({'path':str(target.relative_to(app)),'sha256':sha(target),'bytes':target.stat().st_size})
 source_paths=[root/'Package.swift',root/'Package.resolved',tool/'Package.swift',tool/'Package.resolved',tool/'scripts/build-app.sh']
 source_paths+=sorted((root/'Sources/Presentation').rglob('*.swift'))

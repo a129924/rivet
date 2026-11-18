@@ -154,3 +154,35 @@ R06原needs-rework及RF01／RF02證據保持，不由作者改判。
 - `nativeLaunch: not-run`。初版5015e162…及其receipt保留歷史；本段才是目前修後provenance，不能以相同Swift套用任何舊binary接受。
 
 R06原verdict維持needs-rework，RF01／RF02修後差異已交獨立復審，尚無復審approved；新native／Canvas／HC02 pending，未commit／push／launch。
+
+
+## 8. R07 RF03 資源包裝差異（作者修正，待 source-only 復審）
+
+獨立 R07 明示 needs-rework，只有 RF03（P2）：初版9219bd76… artifact將bundle放在Contents/Resources，實際generated accessor卻先找app根目錄，再找絕對buildPath。T07圖示可見不能排除fallback；原T07結果INCOMPLETE與原R06approved均依各自來源保留，不改歷史證據。
+
+本輪只修tool script：將實際build輸出的同一正式bundle複製至app根目錄`Rivet_RivetPresentation.bundle`，符合accessor首選路徑；`resources`清單與`appEntries`從新位置產生，GitHubMark.pdf的預期相對位置為`Rivet_RivetPresentation.bundle/GitHubMark.pdf`。不copy至Contents/Resources，不改正式resource bytes、Swift／API／root manifest或E011；未增加Host控制或產品設定。Tool README同步說明主路徑與runtime限制。
+
+- 修後script SHA-256：`9a88a9b2d2b0a90a0e19c3bd3059d5cc28a538d644f0c3c337c9683cda1059c1`；舊source6c1d5266…／binary9219bd76…／app6be23f92…仍僅屬RF03前artifact，本節不把它們當成修後來源。新app、source／binary／resource與canonical app receipt交獨立Tester於全新外部run建置核對，尚未取得新版hash。
+- 作者只做`bash -n`與`git diff --check`，不重建／不重跑未變Swift的9formal、7frozen及8tool unit；不launch、不移動cache、不操作現有PID，不commit／push。
+- R07只交source-only差異復審，不由作者給approved。T07保持INCOMPLETE；Light、獨立資源fresh-process runtime、新host Human聲音與Canvas仍pending。下一個exact app／binary需新的操作當下確認；Light若使用既有CLI，需一併明示shell `open` 帶args方式，不繞過工具拒絕或提前執行。
+
+本輪source已穩定，交獨立Tester建置與R07復審；原HC01與所有歷史接受不回撤、不套用至新artifact。
+
+
+### RF03 修後目前 provenance（獨立 Tester 建置，source-only 復審 pending）
+
+獨立Tester於新外部run `$R3_RESOURCE_FIX_RUN`=`rivet-login-ui-adoption-r3-resource-fix` 親跑script，exit0；receipt=`$R3_RESOURCE_FIX_RUN/acceptance-build.json`，app=`$R3_RESOURCE_FIX_RUN/native/RivetLoginAcceptance.app`，ID=`local.rivet.login-ui-acceptance`。28項source及app每entry的bytes／mode／type／canonicaldigest皆吻合；與RF03前6c1d5266…的28source相比只有script不同，所有Swift不變，rootreadonly及resource SHA相同。
+
+- 目前source manifest SHA-256：`3e748de3a3b19225e1a03160d90318037a0be8430b13b911ec2e958b34bdd988`。
+- 目前binary SHA-256：`6a7867b568843e6146132c0d96b233f4f93c2f25a1d59e3b726313a4e642c0c1`；2554896 bytes。
+- 目前完整app tree SHA-256：`ccfbbd965a9a8b40e4b3df22562f7542d02b2dc28a93f9a3b4a6df2988877cae`。
+- `Rivet_RivetPresentation.bundle/GitHubMark.pdf`：1812 bytes，SHA-256=`37623a1d6bed743407256099357e4a5a93c278903932ae55307d1602fb87a3f1`。
+- appRoot bundle=true、舊Contents/Resources位置=false，generated accessor首選與新位置一致。純Foundation `Bundle(path:)` probe能取得該PDF；此證據是包裝／Foundation資源解析，並非GUI或app runtime已排除fallback。
+- 獨立Tester另記`bash -n`／diff-check0；raw proof別名為`rf03-build.log`、`rf03-artifact-check.json`、`rf03-foundation-probe.log`，由Tester保留外部provenance run，作者不改其證據。
+
+新app已build但`nativeLaunch: not-run`，未動fallback。原9219bd76…的啟動確認不套用新6a7867b5…；source-only復審待獨立R07，作者沒有改判approved。Fresh process受控排除該次buildPath fallback、Light的既有CLI shell open帶args方式及Human聲音，仍須新exact app／source／binary的操作當下確認後才補驗。T07 INCOMPLETE、HC02／Canvas pending，無launch／stage／commit／push。
+
+
+### RF03 受限交付路由
+
+獨立R07 source-only復審已明示approved、無新增source requiredfix，僅限artifact準備交付及提出exact新app當下確認；原needs-rework歷史與fresh-process排fallback的runtime條件保持。依Human原topic直接commit／push授權提交本輪七檔修正與證據，使用正常hooks，不launch／merge。Current T07 human-check等新6a7867b5…binary及Light shell open帶既有CLI args方式的明示確認；整體T07仍INCOMPLETE、HC02／Canvas pending。不以本段代填未完成的push或native結果，實際commit／push交回主agent核對。

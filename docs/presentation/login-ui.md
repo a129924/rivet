@@ -12,6 +12,8 @@
 
 新artifact是RivetLoginAcceptance.app／local.rivet.login-ui-acceptance，build/cache在外部scratch，實際resource bundle及source／binary／resource／app tree SHA由build-app腳本保存。Root Package.swift／Package.resolved／設定唯讀；工具有自己的lock且transitive Apollo cache需求如實列出。先source/build/test與獨立review，再提出exact新binary及必要案例取得當下確認；確認前不launch、不沿用舊preview許可。見 [I03實作證據](../../plan/rivet-login-ui-adoption/evidence/acceptance-ownership-implementation.md)。
 
+[T07原生差異初驗](../../plan/rivet-login-ui-adoption/evidence/acceptance-ownership-native.md)已在Human對exact9219bd76…binary確認後，觀察有限Dark13／17／21、phase與同窗事件／PAT identity／Reset／focus；結果仍為INCOMPLETE，Light與Human聲音未完成。[R07獨立審查](../../plan/rivet-login-ui-adoption/evidence/acceptance-ownership-native-review.md)發現圖示可見不能排除buildPath fallback；RF03已將同一正式bundle放到generated accessor首選的app根目錄。新6a7867b5…artifact已獨立build／包裝與Foundation解析核對，但fresh-process排除fallback的app runtime仍未驗，須新exactartifact當下確認；不套用9219版許可；R07 source-only復審已approved，僅限artifact準備與受限交付，不代表runtime／Human接受。
+
 原HC01/source3c9baf3、preview42e99fa、binary4d4cf13...及H01–H08接受完整保留；新host／controlledPreview受影響案例仍待差異補驗與必要Human確認，不重開未變core的舊接受，也不把新host存在當產品認證／儲存／session接入。
 
 ## 組合與狀態所有權

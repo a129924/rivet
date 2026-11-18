@@ -25,7 +25,7 @@ ACCEPTANCE_RUN="$EXTERNAL_TOPIC_RUN" \
 
 腳本核對 root lock pin，複製既有 cache 至外部 run，禁止 Git HTTP／HTTPS，使用標準 SwiftPM sandbox，不用 `--disable-sandbox`，不改 HOME／全域設定。工具有自己的 Package.resolved，pins 與 root 相同；新工具 originHash 不必等於 root。若沒有自身 lock，只以本機固定 cache 明確 resolve，再核對 pins，絕不更新 root lock。
 
-產物為 `$ACCEPTANCE_RUN/native/RivetLoginAcceptance.app`、ID `local.rivet.login-ui-acceptance`；它是新 identity，不能沿用舊 preview 的接受或啟動確認。腳本拒絕覆寫已存在的 app 產物，複製實際 build 所產生的 Presentation resource bundle，不假定歷史 wrapper 的位置。`acceptance-build.json` 記 source、binary、resource 清單與整個 app tree SHA；不含 token，nativeLaunch 保持 not-run。Root manifest／lock／gitignore 有前後 hash guard。
+產物為 `$ACCEPTANCE_RUN/native/RivetLoginAcceptance.app`、ID `local.rivet.login-ui-acceptance`；它是新 identity，不能沿用舊 preview 的接受或啟動確認。腳本拒絕覆寫已存在的 app 產物，將實際 build 所產生的同一 Presentation resource bundle 複製到 app 根目錄 `Rivet_RivetPresentation.bundle`，符合本工具 SwiftPM generated accessor 的 `Bundle.main.bundleURL` 首選位置；不是 `Contents/Resources`。Receipt 的 resources 相對路徑與整個 app tree 由實際新位置產生。包裝路徑／bytes 核對不等於已排除絕對 buildPath fallback 的 runtime 證據，後者需在新 exact artifact 當下確認後，以 fresh process 有界補驗。`acceptance-build.json` 記 source、binary、resource 清單與整個 app tree SHA；不含 token，nativeLaunch 保持 not-run。Root manifest／lock／gitignore 有前後 hash guard。
 
 腳本不 launch、不停止 app。新 binary 必須先經獨立 source review，提出 exact app／source／binary SHA 與有限案例並取得當下確認，才可做必要 native／Human 聲音差異驗證；不能把舊 HC01 直接填成此 app 已接受。
 
