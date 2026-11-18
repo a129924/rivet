@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "OAuth 冷啟動候選組裝｜尚未正式接入",
+    "viewBox": [
+      1080,
+      520
+    ],
+    "column_fit": "spread",
+    "quality_profile": "showcase",
+    "animation": "none"
+  },
+  "participants": [
+    {
+      "id": "startup-owner",
+      "type": "frontend",
+      "label": "候選組裝端",
+      "sublabel": "尚未正式實作"
+    },
+    {
+      "id": "config-store",
+      "type": "database",
+      "label": "設定與憑證",
+      "sublabel": "正式 bound store"
+    },
+    {
+      "id": "oauth-provider",
+      "type": "security",
+      "label": "OAuth provider",
+      "sublabel": "正式生命週期"
+    },
+    {
+      "id": "ready-scope",
+      "type": "backend",
+      "label": "Client scope",
+      "sublabel": "正式本地準備"
+    }
+  ],
+  "messages": [
+    {
+      "id": "load-config",
+      "from": "startup-owner",
+      "to": "config-store",
+      "label": "讀取 configuration",
+      "y": 160,
+      "variant": "default"
+    },
+    {
+      "id": "config-result",
+      "from": "config-store",
+      "to": "startup-owner",
+      "label": "設定／不存在／讀取失敗",
+      "y": 194,
+      "variant": "return"
+    },
+    {
+      "id": "construct-provider",
+      "from": "startup-owner",
+      "to": "oauth-provider",
+      "label": "bound store／fetcher 建立 provider",
+      "y": 228,
+      "variant": "emphasis"
+    },
+    {
+      "id": "prepare-scope",
+      "from": "startup-owner",
+      "to": "ready-scope",
+      "label": "prepare(provider:)",
+      "y": 262,
+      "variant": "emphasis"
+    },
+    {
+      "id": "obtain-snapshot",
+      "from": "ready-scope",
+      "to": "oauth-provider",
+      "label": "snapshot()",
+      "y": 296,
+      "variant": "default"
+    },
+    {
+      "id": "restore-and-save",
+      "from": "oauth-provider",
+      "to": "config-store",
+      "label": "還原；到期時刷新並保存",
+      "y": 330,
+      "variant": "security"
+    },
+    {
+      "id": "store-result",
+      "from": "config-store",
+      "to": "oauth-provider",
+      "label": "完整憑證或儲存錯誤",
+      "y": 364,
+      "variant": "return"
+    },
+    {
+      "id": "snapshot-result",
+      "from": "oauth-provider",
+      "to": "ready-scope",
+      "label": "snapshot 或生命週期錯誤",
+      "y": 398,
+      "variant": "return"
+    },
+    {
+      "id": "scope-result",
+      "from": "ready-scope",
+      "to": "startup-owner",
+      "label": "本地 ready／失敗／取消",
+      "y": 432,
+      "variant": "return"
+    }
+  ]
+}

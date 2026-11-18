@@ -1,6 +1,22 @@
 # 實驗索引
 
-基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。
+基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。
+
+## PR #76：OAuth 啟動／重連可行性方案合併與清理（2026-11-17）
+
+[PR #76](https://github.com/a129924/rivet/pull/76) 已於 `2026-11-17T08:52:59Z` 合併至 `dev` 並關閉；merge 為 `ddfa281a2e73a65a1fa995a268b416115e988b68`，parents 為 `ab77391b73291deb1ce3d96cef72f981aeb3104a`／最後 feature head `2ac31dc85bd92f1892c34e656ab77900524a97fe`。Merge tree 與最後 feature 相同；主成果 commit `a2d2bbaeed98c480d9bc92531c872430adc9c125` 之後的 `2ac31dc` 僅補交付收據。這是文件／圖面保存版本，不是新執行 build。
+
+交付為 OAuth-only 的[來源驗證](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/analysis/github-oauth-connection-orchestration/source-audit.md)、[能力盤點](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/analysis/github-oauth-connection-orchestration/adoption-audit.md)與[選擇性採用方案](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/docs/feasibility-adoption.md)，沒有新增 E 編號、正式 orchestration 或產品 UI 接入。A01–A03 為既有 primitives 已具備、上層接入仍缺的部分採用；A04 正式 owner 未採用、A05 驗證專屬構件排除、A06 源自 E014 的關係不確定。E014 同名 App-local adapter 不等於正式 adapter；不因名稱或合併推定採用。
+
+原碼支持有條件組合：冷啟動保留設定缺漏／credential absent／讀寫失敗差異；可重試暫時錯誤沿原 provider；重新授權須 signOut 永久退休、等待已開始保存並 clear 成功後才登入，完整成功後才新 provider／scope。取消後新 credential 可能已保存，不 rollback 或復活舊連線；唯一 owner／writer、世代結果過濾及完整組裝行為仍需後續契約與驗證。Scope ready 不表示遠端身份／權限成功，初次登入有限 Outcome 未變。
+
+獨立 Plan-Reviewer／Tester／Reviewer 已完成，required fixes 閉合；Tester 核對20份來源 SHA、37個相對 links、兩 v2 圖各9/9 showcase、四尺寸 containment／readability及8張明暗截圖。兩圖首版 containment 失敗與 v2 修正分開保留。[驗證](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/plan/github-oauth-connection-orchestration/evidence/verification.md)／[審查](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/plan/github-oauth-connection-orchestration/evidence/review.md)不等於 Swift runtime 或新 live 通過；本輪未新建實驗、未重跑完整 Swift runtime／OAuth／DPK。Commit hooks 均通過；首次缺 Biome 已依 frozen lockfile 補齊本地依賴，package／lockfile 未變。
+
+Floorplan 是本機 ignored 的20檔繁中現況地圖（正式12／E014 5／tests 3），不是 PR 追蹤檔或正式架構；描述20/20、50 links、10人工核對關係、0 dangling，routes0/0不代表 endpoint 驗證，Health 不作安全審查。PR Lens 0.11.0 對實際 base→`2ac31dc` 的39檔 diff 本機 validate／render，未上傳；Graphify 0.9.73 無既有 graph，採原碼 fallback、不建圖。[工具與交付限制](https://github.com/a129924/rivet/blob/ddfa281a2e73a65a1fa995a268b416115e988b68/plan/github-oauth-connection-orchestration/evidence/publication.md)保留原時點 Draft／HC01 pending；PR 現已合併另記於此，不將合併當圖面 Human 視覺接受或正式流程已接通。
+
+Annotated tag `v0.1.68-github-oauth-connection-orchestration-feasibility` 已推送並讀回：local／remote object 均為 `b35f79646f8495e560c13454f67e0bfdefe1152b`，peeled commit 精確為上述 merge；不是後續索引維護 commit、runtime pin 或 GitHub Release。原 feature branch `docs/github-oauth-connection-orchestration` 的 remote／local／tracking refs、managed worktree 目錄與 registration 已 fresh 核 absent，正常刪除、未 force／prune。本機 Floorplan 23檔已逐檔 bytes／SHA 相符封存在 Git 私有 archive，未 track／push；原工作樹內可重建的 node_modules 隨工作樹移除，未操作其他工作線、App／DPK／Keychain 或 Apple 資產。
+
+兩索引在獨立 `docs/github-oauth-connection-orchestration-postmerge` 工作樹維護，沿既有 postmerge 慣例以安全 fast-forward 保存至 remote dev；dev 工作樹只同步、不編輯。本段記錄原 feature 已完成清理，文件維護 branch／worktree 只在兩檔安全提交／推送後才收尾，不預填後續成功。其他實驗結果、來源、額度與 E010 各輪狀態原樣保留。
 
 ## PR #74：OAuth／PAT 正式登入 runtime 合併與清理（2026-11-17）
 

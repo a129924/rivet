@@ -1,0 +1,73 @@
+{
+  "note": "首版 showcase 通過但 desktop containment 失敗；原規格凍結，v2 壓縮空白及移除重複說明卡。v2 冷啟動首次 y 超出範圍，依診斷修為 160..432 後重驗。",
+  "attempts": [
+    {
+      "artifact": {
+        "path": "analysis/github-oauth-connection-orchestration/diagrams/cold-start.sequence.html",
+        "sha256": "511cb3abafe4e58dfeb655ed6d304fbc681c579288d07c3b5fb0edb113b7bfb9",
+        "bytes": 701692
+      },
+      "result": "containment-fail",
+      "viewports": [
+        {
+          "width": 1440,
+          "height": 900,
+          "scrollWidth": 1440,
+          "scrollHeight": 1388
+        },
+        {
+          "width": 1600,
+          "height": 1000,
+          "scrollWidth": 1600,
+          "scrollHeight": 1472
+        },
+        {
+          "width": 1920,
+          "height": 1080,
+          "scrollWidth": 1920,
+          "scrollHeight": 1472
+        },
+        {
+          "width": 2048,
+          "height": 1320,
+          "scrollWidth": 2048,
+          "scrollHeight": 1507
+        }
+      ]
+    },
+    {
+      "artifact": {
+        "path": "analysis/github-oauth-connection-orchestration/diagrams/reauthorization.lifecycle.html",
+        "sha256": "a0805344936be11064d8940105f75d14da2094c634e3fdcbf58707a631850add",
+        "bytes": 703463
+      },
+      "result": "containment-fail",
+      "viewports": [
+        {
+          "width": 1440,
+          "height": 900,
+          "scrollWidth": 1440,
+          "scrollHeight": 1188
+        },
+        {
+          "width": 1600,
+          "height": 1000,
+          "scrollWidth": 1600,
+          "scrollHeight": 1263
+        },
+        {
+          "width": 1920,
+          "height": 1080,
+          "scrollWidth": 1920,
+          "scrollHeight": 1263
+        },
+        {
+          "width": 2048,
+          "height": 1320,
+          "scrollWidth": 2048,
+          "scrollHeight": 1320
+        }
+      ]
+    }
+  ]
+}
