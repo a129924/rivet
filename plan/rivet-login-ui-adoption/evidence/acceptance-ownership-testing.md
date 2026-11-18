@@ -88,3 +88,11 @@ Raw logs、source baseline 與 build receipt 保留於 repository 外本輪 scra
 初版source00181908...／binary5015e162...／tree256256cb...保留作RF02前證據，不能用作目前啟動目標。不同外部scratch的debug binary有不同SHA，不以相同Swift就稱同binary；只會針對上列目前exactartifact提出當下確認。
 
 RF01現況文案已明確分開正式form離開／消失清除，以及受控Preview／acceptance parent Reset換generation；原E011／Human歷史未改。新Canvas／native互動／資源實載／Human聲音仍未執行，HC02pending。交R06只復審兩項requiredfix、此差異證據及目前provenance，不自行改判approved。
+
+## 提交後來源與交付核對
+
+2026-11-18，R06復審approved／RF01及RF02 closed後，Implementer以正常六項hooks完成source commit `5b256c5aa40aa209d2fd996b123ad233135c151a`並普通push；無skip、無hook改檔。提交後 HEAD 的E011 tree已是 `b6a1e6e1196e64999af9591ec32f09211f1936c6`，對base d2332bf的E011 diff為空，rootreadonly／正式核心／28source receipt核對維持。
+
+主agent以GitHub原始PR API核對遠端head5b256c5、base d2332bf、mergeable=true／state clean、Draft=true、merged=false，並透過connector更新既有PR75說明為目前ownership／結果／缺口。沒有改PR ready狀態、merge、forcepush、launch或回填新native結果。後續交付帳本同步只改文件，不改受測source；目前source／binary／app SHA仍以上節修後provenance為準。
+
+`current_step: T07 human-check（等exact新binary當下確認）`；D03 source／Draft交付完成，HC02／Canvas／新native仍pending；原HC01接受保持其版本。
