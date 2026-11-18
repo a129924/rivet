@@ -102,3 +102,7 @@ Human 已批准 Implement the plan，僅在 feature worktree 執行受限修訂�
 ### M Verdict
 
 M01 completed；M02 獨立 planning review approved；M03／M04 completed；M05 獨立 Reviewer approved，無 required finding；M06 pending。審查僅涵蓋本輪離線／mock、正式測試設施與退役界線，不等同 Human 接受、新設施 Live 通過或新增 Live 授權。
+
+### 交付同步：外部 dev 文件更新
+
+交付時遠端 dev 由 `d2332bf` 推進至 `0a71be9`，內容為 PR #68 的 E010 結案與 Git 收尾文件。Feature 以正常 merge 整合，僅處理 `experiments/README.md` 檔尾追加衝突，保留 dev E010 收尾與本 topic E018 歷史／正式測試指向；`experiments/VALIDATION-SUMMARY.md` 保持遠端原樣。程式來源與原測試證據不變，未重跑 full tests 或 Live；獨立 bounded Reviewer 已明示 approved、無 required finding：兩方 README 內容完整保留、summary 與遠端 bytes 一致，無 conflict markers，程式／測試／歷史 evidence 零差異。此核准僅涵蓋文件同步，不擴大原 M05 的實證範圍。未改 dev worktree／分支，M06／H01 pending。

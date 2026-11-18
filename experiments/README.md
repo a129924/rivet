@@ -190,6 +190,35 @@ W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pen
 
 本次只調整 PAT 工具歸屬；[移轉 mapping 與兩條證據鏈](../plan/github-pat-dpk-storage/evidence/e016-e017-relocation.md)保存原 commit links。既有真人結果與 evidence 的 E016 source keys／hash 不變，不表示 E017 新來源已完成 live 驗收。
 
+
+## PR #67：合併與受限 Git 收尾（2026-11-11）
+
+上方 E010 段落及其中「Ready／尚未 merged」保留為合併前查核快照。[PR #67](https://github.com/a129924/rivet/pull/67) 已合併並關閉，GitHub `mergedAt=2026-11-11T08:48:57Z`（台灣16:48:57）；actual merge 為 `a554a4fee772d3976d5ca2c9331865a604e901e2`，最後 feature head 為 `7fa4bfffc5989a351790dca6a1695758c906950c`。兩親 merge 保存相同 feature tree，只證明交付版本已納入 dev，不是新的實驗量測、完整週期通過或新的正式 adapter 採用。[Active 修正 6504801](https://github.com/a129924/rivet/commit/6504801b3b43a6ae937cbd898d9354d53ffc8543) 已交付 GUI recovery selection 來源與 Swift probe 參數檢查；兩個 review threads 均已回覆並 resolved，未解決數0。[新22-source manifest](E010/evidence/pr67-review-fixes-20261111/source-manifest.json)的 aggregate `d253834a…` 與[獨立 Tester 收據](E010/evidence/pr67-review-fixes-20261111/tester-validation.json)只歸屬 active 純修正；舊 W1 frozen source `b8c567…`／grant 未升級，未作 live migration，frozen recovery 是否觸發舊 bug 仍 unknown。
+
+W1 仍只支持一次 seed／一次 fresh 六欄相符、Human 各全程0提示的受限 baseline；W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pending。P0 expiry 為台灣 **2026-11-17 15:28:08**，原 D 為 **2026-11-20 15:22:03.379959**；原 A／namespace 不重設，期限不延長。RP cleanup 仍 blocked／delete=0；RT 的4602 retained metadata entries 不是 minimum 完成。Git 合併不改判 E001–E009、原失敗／unknown 或上述限制。
+
+Annotated tag `v0.1.62-e010-dpk-profile-continuity-baseline` 已正常建立、推送並核對 local／remote tag object `53f1efd44b4d4cdbf0b2ada8752620a2b667e8b5` 與 peeled commit，精確保存上述 merge；不是 GitHub Release 或後續文件版本。原 `chore/github-oauth-dpk-profile-continuity-feasibility` remote branch 已以 expected head `7fa4bff…` 的 server lease 正常刪除，並讀回不存在；dev 與 tag lineage 保留。Local branch／原 managed feature worktree 仍保留，因兩份 AQ local-only 診斷檔尚在、W2／W3 實際 physical path 依賴仍 unknown，未強制移除或搬檔；外部72檔 handoff archive 未改，亦未清理 App／Keychain／Apple 資產。
+
+## E010 本輪結案（2026-11-18）
+
+前述 E010 待執行與 PR #67 合併段落均為當時的歷史紀錄。PR #67 已合併，annotated tag `v0.1.62-e010-dpk-profile-continuity-baseline` 指向原合併版本 `a554a4fee772d3976d5ca2c9331865a604e901e2`，原始 W1 證據保留於該版本。
+
+- **W1 受限基線**　一次 seed 保存假憑證 A，再以同一 binary 於新程序讀回原 A 一次，六欄全部相符。Human 在兩階段各全程觀察，提示各為 0 次。[W1 機器與 Human 證據索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)、[seed 安全索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/seed-review-candidate/index.json)。
+- **本輪決定**　W2（P0 自然到期後以 P1 讀回原 A）與 W3（Rebuilt）均未執行，完整 profile 週期未完成。依 Human 決定結束本輪，W2／W3 不再續行，也不啟用新的 recovery host。結案與後續復原評估的本機封存證據尚未發布。
+- **清理與交接**　結案清理未執行，清理及最小化均未完成，`recoveryRequired=true`。目前 A 是否仍在及完整殘留範圍均未確認。沿用既有最低限度復原交接，原 D 維持 **2026-11-20 15:22:03.379959（Asia/Taipei）**，整包留存未獲延長。[歷史 RP 受控停止索引](E010/evidence/retention-prune-validation-20261110T085343Z/final.index.safe.json)、[歷史 RT metadata 索引](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)。
+
+## PR #68 合併與 Git 收尾（2026-11-18）
+
+PR #68 於 2026-11-18 14:57:36（Asia/Taipei）合併至 `dev` 並關閉。實際合併提交為 `ed1825d4194ba329eb785b2f6192618e23d6475a`，最後來源提交為 `57a1b1753537fd49fcfbb19764f65768bdfdd1b5`，兩者的文件樹一致。[PR #68](https://github.com/a129924/rivet/pull/68)、[已發布的結案紀錄](https://github.com/a129924/rivet/blob/ed1825d4194ba329eb785b2f6192618e23d6475a/experiments/VALIDATION-SUMMARY.md)。
+
+Annotated tag `v0.1.69-e010-documentation-closeout` 已推送。本機與遠端的 tag object 均為 `a36075b5b2ae60018ee0211a8a9ef6e38f8152d3`，解參照後皆指向上述 PR #68 合併提交。原 W1 基線標籤 `v0.1.62-e010-dpk-profile-continuity-baseline` 仍指向 PR #67 合併提交 `a554a4fee772d3976d5ca2c9331865a604e901e2`。
+
+原 `docs/e010-postmerge-registry` 遠端分支已用最後來源提交做租約保護後刪除。本機分支與原 managed worktree 已正常移除，已核對本機、追蹤及遠端分支參照與原 worktree 的目錄及註冊均不存在。
+
+E010 依 Human 決定結束本輪。W1 受限基線為一次 seed 保存假憑證 A、一次以同一 binary 於新程序讀回 A，六欄相符，Human 在兩階段各全程觀察且提示各為 0 次。W2／W3 均未執行，完整 profile 週期未完成，本輪不再續行或啟用新的 recovery host。[W1 證據索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)。
+
+實驗結案清理未執行，清理及最小化仍未完成，`recoveryRequired=true`。目前 A 是否仍在及完整殘留範圍均未確認。沿用既有最低限度復原交接，原 D 為 **2026-11-20 15:22:03.379959（Asia/Taipei）**，整包留存期限未獲延長。
+
 ## E018 — 正式 OAuth 冷啟動還原 live（2026-11-18）
 
 [歷史驗證host與界線](https://github.com/a129924/rivet/blob/0debe0b8c088e60500b4a1e4969000666e495c97/experiments/E018/README.md)直接使用正式GitHubOAuthStartupRestorer／stores／fetcher。First自然到期真refresh/save各1後ready，fresh新程序同完整credential／同帳號且refresh/save0；Human兩段全程各0提示。新host AppID不同於舊E014，未重跑舊App或profile延續性實驗。兩live slots用完，停止重試；[安全證據](../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)與Human最終接受分列。
