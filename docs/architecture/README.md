@@ -1,6 +1,6 @@
 # Rivet 架構規範
 
-`GitHubIntegration` 新增 caller-owned [OAuth 冷啟動連線還原](github-oauth-startup-restore-runtime.md)：既存設定與憑證經必要刷新及完整保存後交付本地 ready scope，支援 busy、取消收尾與同 provider 明示重試。2026-11-18 E018 已完成有限真 OAuth／DPK first自然到期refresh/save各1、fresh同完整憑證／同帳號且refresh/save0；Human兩段全程0提示。產品UI／重新登入未接線，Human最終review pending。 Active E018已退役；正式hosted測試設施提供離線與手動Live入口，新設施目前僅離線驗證，不承接舊live通過。
+`GitHubIntegration` 新增 caller-owned [OAuth 冷啟動連線還原](github-oauth-startup-restore-runtime.md)：既存設定與憑證經必要刷新及完整保存後交付本地 ready scope，支援 busy、取消收尾與同 provider 明示重試。2026-11-18 E018 已完成有限真 OAuth／DPK first自然到期refresh/save各1、fresh同完整憑證／同帳號且refresh/save0；Human兩段全程0提示。產品UI／重新登入未接線，Human最終review pending。 Active E018已退役；正式hosted測試設施提供離線與手動Live入口，新設施N輪已完成有限hosted first／fresh、API／完整讀回與同帳號新程序continuity，Human兩段各全程0提示；本輪refresh／save皆0，無真refresh覆蓋，N06獨立有限結果審查approved、無required finding，Human最終接受pending，與舊E018分列。
 
 
 `GitHubIntegration` 新增 [OAuth／PAT 正式登入 runtime](github-dual-login-runtime.md)，共同入口先驗證帳號再保存，支援取消收尾及共享協調器重疊拒絕；產品 UI 接線與真 runtime 整合驗收仍 pending。

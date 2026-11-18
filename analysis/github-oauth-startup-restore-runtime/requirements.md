@@ -65,3 +65,51 @@ Out-Of-Scope：新登入、seed／clear、強制到期、provider／refresh／40
 ### 歷史與授權邊界
 
 原 L first／fresh 各 1/1 已使用完。新的 run-root 不構成新的 live 授權或額度；本輪不得重新利用舊 context／markers。未來實際 Live 的 fixture 與簽章具體值為明確授權後的執行輸入，不由本輪實作者自行取得新登入、清除或發出授權。
+
+## N：正式 hosted 有限 Live 驗收
+
+Human 已明確授權使用既存 credential 與既存合格簽章，執行正式 hosted 設施的有限 first／fresh Live。此為 M 離線交付後的新受限階段，不重新開啟舊 E018；只在既有 feature worktree 執行，dev worktree 不修改。準備時 feature HEAD 為 `df801f6`，base dev 為 `0a71be9`，既有 PR #77 維持 Draft。既有 L／M 等歷史與 H01／M06 Human pending 保留。
+
+### N Goal / Non-Goal / In-Scope / Out-Of-Scope
+
+Goal：使用正式 hosted test bundle 與唯一正式還原 runtime，驗證既存連線 restore、交付 client 的 API、完整 credential readback 及 first→fresh 新程序連續性。
+In-Scope：先離線／環境核對與獨立純 build-only 簽章 preflight，再以新授權 context 執行 first／fresh 各最多一次；每段實際程序退出後取得 Human 全程觀察與實際提示次數，SHA 綁定原 receipt；獨立結果審查與必要安全證據交付。
+Non-Goal／Out-Of-Scope：初次登入／設定、seed／clear、強制到期、新 Apple 資產、舊 E018 重跑、產品 UI／產品 E2E、正式 OAuth runtime 或既有 contracts 的變更。不得因新 run-root 重設任何已使用額度，不自動重試任何 phase。
+
+### N Acceptance Criteria
+
+- NAC1：N02 獨立 planning approved 後，N03 先執行離線驗證及資產／程序資格核對；不得以正式 `--live --phase first` 作 preflight。
+- NAC2：獨立 preflight 只允許新 owner-only root 的 `root_control(root, 'live', ctx)` 與 `build(root, 'live', ctx)` 純建置／簽章／驗證／測試列舉；不 bind context、不執行 phase、不 authorize、不讀 fixture、不消耗 first／fresh。
+- NAC3：準備完成後由主 session 通知 Human，得到明確可全程觀察的回覆才可 first；先前其他輪次的回覆不代用。
+- NAC4：first／fresh 每段最多一次、無 automatic retry。First machine passed、actual process 退出，且本段 Human 全程觀察、實際提示 0 次並綁定原 receipt SHA 後，才可 fresh。
+- NAC5：每段後重新詢問是否全程觀察與實際 prompt count，不預設 0、不回填 machine placeholder；人工 attestation 獨立保存。
+- NAC6：fixture 是否存在／到期只能正式 first 讀 DPK 後得知；缺失停止，不 seed。有效 credential 未觸發真 refresh 時，如實記錄本輪未涵蓋真 refresh，不強制到期。
+- NAC7：新結果僅支持當次受限環境；原 E018／L／M 證據與人工觀察不改寫、不轉記。結果經獨立 Reviewer 後，按 topic commit／push、更新既有 Draft PR，再交 Human review。
+
+N 授權參照為 `human-2026-11-18-hosted-live-first-fresh`；context 記錄此既有授權，不能自行擴張到登入、清除、額外 phase 或修工具。任何缺合格 profile／group／hosted 資格、工具問題或 runtime 失敗，停止並回報，不暗修或藉改 context／root 重試。
+
+## N-R：nested test bundle 簽章路徑受限修正
+
+N03 已依契約停止並保留失敗：Offline 通過、純 Live build 成功，但 runner `sign_products` 錯將 test bundle 視為 Products/Live 下外置產物；此 project 實際將它置於 host 的 Contents/PlugIns。獨立 Reviewer 已明示 needs-rework；主 session 已向 Human 明報缺陷與最小範圍。本節在原 Implement 授權內列明 bounded fix，不是暗修或新增 Live 額度。
+
+### N-R Goal / Non-Goal / 受限例外
+
+Goal 僅為修正此 project 的 signing target：test bundle 使用 `GitHubIntegrationTestHost.app/Contents/PlugIns/GitHubIntegrationHostedTests.xctest`，先簽 nested test bundle，再簽 host；缺任一預期產物須 fail-closed。
+僅允許修改 `scripts/check-github-integration-hosted-tests.py` 的 `sign_products`，及 `Tests/GitHubIntegrationHostedTests/test_driver.py` 的純 mock／暫存 fixture TDD 回歸；其餘 tests／project／Swift 正式 Sources／manifests／contracts／CLI／context schema／phase budget／Apple 資產／舊收據仍 ReadOnly。不新增掃描或替代產物路徑，不藉此擴充一般 signing 系統。
+Non-Goal 為改 runtime／hosted cases、重建 credential、變更授權或以 first 探路。原 N03 blocked 與失敗 preflight root／safe proof 保留 immutable；修後 source 另凍結，不反寫舊 pins。
+
+### N-R Acceptance / phase 邊界
+
+先 N02r 獨立 planning review → bounded Implementer TDD → Tester 完整 Offline／新回歸及 helper-only 純建置 preflight → Reviewer 審查修後 source／pins。仍使用同一 N context 與私有 parent `TMPDIR/rivet-hosted-live-n-20261118-m2mhtqhu/`，不改 authorizationRef、fixture、budget；目前未 bind、無 journal、正式 run-root 不存在，first／fresh 各使用 0/1、剩餘各 1。
+修後只允許另一獨立純建置 root（`preflight-fixed`）固定修後 source；它不是 Live phase retry，不能 authorize／讀 DPK／呼 API。獨立 Reviewer 通過後，主 session 仍須通知並等本輪 Human ready 才正常 first。若再遇工具／環境失敗停止回報，不自動重試、擴修或換 context／root 重設額度。
+
+## N-R2：App 內嵌程式碼 inside-out signing 受限修正
+
+NR02 的第二次 blocked 已由獨立 Reviewer 分類 needs-rework：Live build 使用 CODE_SIGNING_ALLOWED=NO，framework 複製時排除 Modules 等 sealed files，但沿用 SDK CodeResources；原 SDK strict verify 通過、App 內複本失效。既有 sign_products 漏簽 App 內嵌 executable code，不是 profile／get-task-allow 已被證明無效。
+僅在原 facility Implement 授權內，允許同兩個 py 檔的最小例外：runner 的 sign_products／內部受限 discovery helper 對本次 App 內實際 executable frameworks／dylibs 及其巢狀 code 由內而外簽章；test_driver.py 以純 mock／temp fixture TDD 驗證。維持手動 pipeline，不重構 Xcode native sign-on-copy，不改 project／Swift／CLI／schema／budget／正式 runtime／contracts／profile／identity／group，不新增 Apple 資產。
+所有候選 resolve 後必須仍在本次 App 內，禁止誤簽 SDK；最內層先簽，再 test bundle，host 最後。全用同一既存 identity，只有 host 使用既定 DPK entitlements；純 resource bundle 不作 executable。任一內層簽章失敗立即停止；保留 deep strict verify，不刪 seal、不降格驗證、不用 codesign --deep --force。
+保留原 N03 root 與 NR02 preflight-fixed／safe proof immutable；同一 N context 未 bind、無 journal／attempt／authorize／hello／正式 run-root，first／fresh 各使用 0/1。新修後 preflight-insideout 僅一次純建置，不是 phase retry／額度重設。新回歸＋full Offline → helper-only preflight → 獨立修後 source／pins review → 主 session 等 Human ready 才 first；再失敗停止，不自行擴大。
+
+### N執行結果與待審邊界（2026-11-18）
+
+正式hosted first／fresh各一次取得ready／API／完整讀回及同帳號新程序continuity，兩段Human重新全程觀察各0提示、原SHA分別綁定。兩段credential未到期，prepare／final refresh與save皆0，無本輪真refresh／rotation-save coverage。兩phase各1/1已耗盡，停止額外操作。原工具缺陷與失敗preflight、受限修正與NR13準備審查、新機器／Human結果各留來源；[新安全結果](../../plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)已由N06獨立有限結果review approved、無required finding；N07交付中，不改source或原machine。H01／M06及Human最終接受pending。

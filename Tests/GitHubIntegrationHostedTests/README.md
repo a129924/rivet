@@ -12,7 +12,7 @@ python3 -B scripts/check-github-integration-hosted-tests.py --offline
 
 Xcode 測試斷言、實際案例數、程序退出與 provenance 共同決定結果。兩次命令本身不證明新程序；driver 核對實際 PID／starttime，固定 host、test bundle、依賴、`.xctestrun` 及來源。沒有 parallel、retry 或 repetition 旗標，並核對每段只有一個測試。正向 first／fresh 後，另以隔離 fake run 驗證 assertion 與 throw 各一案確實回報原生 failed；這兩個預期失敗不視為整輪失敗。
 
-## 手動 Live 介面（本輪未執行）
+## 手動 Live 介面（N輪有限結果已完成）
 
 只有已獲明確新授權且環境就緒才可使用，不能重用舊 E018 額度。Context 本身不構成授權，內容為 `schemaVersion:1`、唯一 `runID`（16–100個英數或連字號）、`authorizationRef`、`bundleID`、`signingIdentitySHA1`、`profilePath`、`profileSHA256`、`accessGroup`、`service`、`fixture:"existing"`、`budget:{"first":1,"fresh":1}`。Context 及 journal／run-root 必須為同 owner、無其他使用者讀寫權限；不得放 token／client secret。配置不得從舊驗證 App 猜測。
 
@@ -36,3 +36,9 @@ Exit 0=指定驗證完整通過，1=測試／程序／結果失敗，2=工具鏈
 ## Implementer 離線自驗（2026-11-18）
 
 最終來源完整入口通過：17 個 driver mock tests；正向 first／fresh 各1個原生案例通過、不同實際程序且均退出；兩個隔離負向程序分別由 assertion／throw 形成 `.xcresult` 1案 failed，runner 正確辨識預期失敗。Strict format／SwiftLint exit0。獨立 Tester 已親跑同一 Offline 流程、root375／46及consumer22／6回歸、strict checks與歷史完整性核對通過；獨立 Reviewer approved、無 required finding。Human最終接受仍pending，不宣稱 Live 或產品 E2E 通過。
+
+## N輪有限Live結果（2026-11-18）
+
+正式hosted first／fresh各執行一次，兩段原生1案passed、程序退出，ready／GET user／完整readback／configuration保持；fresh同完整credential與帳號。Human兩段重新實答全程觀察、0次提示，各綁原machine SHA。兩段credential未到期，prepare／final refresh與save皆0，不涵蓋真refresh或rotation-save；兩slots各1/1已用盡，停止額外執行。N06獨立有限結果審查approved、無required finding；Human最終接受pending。
+
+Nested bundle位置及App-bound inside-out signing修正已經27 mocks／完整Offline與獨立準備審查，原兩次失敗preflight／pins仍保留。原M離線驗證及E018結果屬各自來源，不被本輪改寫。詳見[本輪新證據與限制](../../plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)。

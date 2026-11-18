@@ -221,3 +221,7 @@ Mutation 沿用 request-local snapshot 與 401-only 最多一次 recovery；合�
 ### 2026-11-18 E018 正式入口 live
 
 [正式啟動還原owner](github-oauth-startup-restore-runtime.md)已在新驗證host以public stores／fetcher與真DPK完成first自然到期真refresh／save各1及fresh讀回；API與同帳號均成功。兩段同source／binary／profile，Human全程各0提示。AppID不同於舊E014，故不作舊App profile延續性證據；無新登入、清除、policy變更或重跑舊harness。有限[證據與限制](../../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)獨立記錄；Human最終topic接受pending。
+
+### 正式 hosted 冷啟動還原 N輪（2026-11-18）
+
+正式hosted測試設施直接使用唯一restorer／provider／scope，first／fresh各一次完成ready／API／完整readback與同帳號新程序continuity；Human各全程0提示。Credential兩段均有效，refresh／save全0，不新增refresh／401 policy或宣稱本輪真refresh覆蓋。[新安全結果與限制](../../plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)與原E018歷史分列；N06獨立有限結果審查approved、無required finding，Human最終接受pending，非產品E2E或普遍遠端權限保證。

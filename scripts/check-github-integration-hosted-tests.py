@@ -219,16 +219,94 @@ def build(root, mode, context=None):
     exclusive(root/'artifacts.json', {'sha256':artifact_manifest(root)})
 
 
+def is_native_executable(path):
+    # Apple Mach-O loader.h/fat.h: executable, dylib or loadable bundle, not MH_OBJECT resources.
+    # https://github.com/apple-oss-distributions/xnu/tree/main/EXTERNAL_HEADERS/mach-o
+    thin = {b'\xfe\xed\xfa\xce':'big', b'\xce\xfa\xed\xfe':'little',
+            b'\xfe\xed\xfa\xcf':'big', b'\xcf\xfa\xed\xfe':'little'}
+    fat = {b'\xca\xfe\xba\xbe':('big',4,20), b'\xbe\xba\xfe\xca':('little',4,20),
+           b'\xca\xfe\xba\xbf':('big',8,32), b'\xbf\xba\xfe\xca':('little',8,32)}
+    def runtime_header(header):
+        order = thin.get(header[:4])
+        minimum = 32 if header[:4] in {b'\xfe\xed\xfa\xcf',b'\xcf\xfa\xed\xfe'} else 28
+        return bool(order and len(header) >= minimum and int.from_bytes(header[12:16],order) in {2,6,8})
+    with path.open('rb') as binary:
+        header = binary.read(32)
+        if header[:4] in thin: return runtime_header(header)
+        if header[:4] not in fat: return False
+        order,width,stride = fat[header[:4]]
+        count = int.from_bytes(header[4:8],order)
+        length = path.stat().st_size
+        if not 1 <= count <= 32: return False
+        for index in range(count):
+            binary.seek(8+index*stride)
+            architecture = binary.read(stride)
+            if len(architecture) != stride: return False
+            offset = int.from_bytes(architecture[8:8+width],order)
+            size = int.from_bytes(architecture[8+width:8+2*width],order)
+            if offset < 8+count*stride or size < 28 or offset+size > length: return False
+            binary.seek(offset)
+            if not runtime_header(binary.read(32)): return False
+        return True
+
+
+def embedded_code_targets(app, test):
+    # TN2206: sign copied nested code inside out; never follow an alias out to an SDK.
+    # https://developer.apple.com/library/archive/technotes/tn2206/_index.html
+    require(not app.is_symlink(), 'embeddedCodeOutsideApp', 2)
+    boundary = app.resolve(strict=True)
+    def bounded(path):
+        resolved = path.resolve(strict=True)
+        require(resolved.is_relative_to(boundary), 'embeddedCodeOutsideApp', 2)
+        return resolved
+    directories,files = {boundary},set()
+    for folder,children,names in os.walk(app,followlinks=False):
+        for name in children+names:
+            resolved = bounded(Path(folder)/name)
+            if resolved.is_dir(): directories.add(resolved)
+            elif resolved.is_file(): files.add(resolved)
+    native = {path for path in files if is_native_executable(path)}
+    owners = {}
+    # Framework roots precede their Current/Versions aliases; one physical binary gets one owner.
+    for bundle in sorted(directories,key=lambda path:(len(path.parts),str(path))):
+        version = bundle.parent.name == 'Versions' and bundle.parent.parent.suffix == '.framework'
+        if bundle.suffix not in {'.app','.xctest','.framework','.bundle','.xpc','.appex','.plugin'} and not version:
+            continue
+        infos = [bundle/'Contents/Info.plist',bundle/'Resources/Info.plist',bundle/'Info.plist']
+        info = next((path for path in infos if path.is_file()),None)
+        if info is None: continue
+        value = plistlib.loads(bounded(info).read_bytes())
+        name = value.get('CFBundleExecutable')
+        if not name: continue  # Resource-only bundles do not become signing targets.
+        require(isinstance(name,str) and name not in {'.','..'} and Path(name).name == name,
+                'embeddedExecutableName',2)
+        candidates = [bundle/'Contents/MacOS'/name,bundle/name]
+        executable = next((path for path in candidates if path.is_file()),None)
+        require(executable is not None, 'embeddedExecutableMissing',2)
+        resolved = bounded(executable)
+        require(resolved in native, 'embeddedExecutableNotMachO',2)
+        owners.setdefault(resolved,bundle)
+    targets = set(owners.values()) | (native-set(owners))
+    targets -= {boundary,bounded(test)}
+    return sorted(targets,key=lambda path:(-len(path.parts),str(path)))
+
+
 def sign_products(root, context):
-    profile = live_assets(context)
     products = root/'DerivedData/Build/Products/Live'
-    app, test = products/(HOST+'.app'), products/(BUNDLE+'.xctest')
+    app = products/(HOST+'.app')
+    test = app/'Contents/PlugIns'/(BUNDLE+'.xctest')
+    require(app.is_dir() and test.is_dir(), 'signingProductsMissing', 2)
+    embedded = embedded_code_targets(app, test)
+    profile = live_assets(context)
     shutil.copyfile(context['profilePath'], app/'Contents/embedded.provisionprofile')
     team = profile['TeamIdentifier'][0]
     ent = {'com.apple.application-identifier':team+'.'+context['bundleID'],
            'com.apple.developer.team-identifier':team,'keychain-access-groups':[context['accessGroup']]}
     if profile.get('Entitlements',{}).get('get-task-allow'): ent['get-task-allow'] = True
     path=root/'signing.entitlements'; path.write_bytes(plistlib.dumps(ent)); path.chmod(0o600)
+    for index, code in enumerate(embedded):
+        command(['codesign','--force','--sign',context['signingIdentitySHA1'],'--timestamp=none',str(code)],
+                root/('sign-embedded-'+str(index)+'.log'))
     command(['codesign','--force','--sign',context['signingIdentitySHA1'],'--timestamp=none',str(test)], root/'sign-test.log')
     command(['codesign','--force','--sign',context['signingIdentitySHA1'],'--timestamp=none','--entitlements',str(path),str(app)], root/'sign-host.log')
     verify_signing(root, context)

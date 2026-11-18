@@ -42,3 +42,9 @@ TC12 Floorplan先planned blueprint後原碼map，13files、0unassigned、13/13�
 ## 正式 hosted integration 測試設施
 
 [正式測試設施](../../Tests/GitHubIntegrationHostedTests/README.md)取代 active E018 工具：薄 signed App host 僅供 lifecycle／權限，hosted Swift Testing bundle 組裝唯一正式 runtime 並作斷言；既有 fake／consumer 保持。Offline 為日常明確入口，真 DPK／OAuth 手動測試需另行授權，不從舊驗證 App 推導環境。這是測試設施，不是產品 handler 或新實驗；產品 E2E 待正式 App／啟動組裝交付。原 E018 來源以 `0debe0b` Git 歷史保留，所有有限 live 證據、SHA 與 Human 觀察不改寫，也不當作新設施通過。
+
+## 2026-11-18：正式 hosted N輪有限Live結果
+
+正式test bundle／runner以新授權各執行first／fresh一次，兩段ready、GET user、完整readback及configuration保持；fresh同完整credential／同帳號、實際新程序。兩段Human本輪全程觀察各0提示並各綁原machine SHA。Credential均未到期，prepare及final refresh／save全0，沒有本輪真refresh／rotation-save覆蓋。兩phase額度各1/1已用盡。
+
+此為當次同機／GUI user／既有certificate／有效profile／exact group／唯一writer下的有限整合結果，不是產品E2E、普遍repository權限、profile續期或durability保證。兩個工具缺陷與失敗preflight、舊E018／L／M證據保持；新source／artifact各自freeze，詳見[正式hosted結果與限制](../../plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)。N06獨立有限結果審查approved、無required finding；Human最終topic接受仍pending。
