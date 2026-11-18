@@ -88,3 +88,19 @@ T07整體仍INCOMPLETE；Light、新artifact runtime／resources、Canvas及新h
 沒有可由本證據定位的新元件缺陷或 required source fix；不要求新架構、全矩陣重測或重畫。Canvas 未驗、舊 HC01／H01–H08 與9219 N案例各保留原版本；HC02 的驗收支援分離／封裝修正／新 host 差異最終接受仍須 Human 明示。可依原授權據實更新 source／docs 交付與既有 Draft，不 merge。
 
 `current_step: R07 Human聲音證據 bounded approved`；`next_step: HC02 最終Human差異接受`；`status: COMPLETE`（本輪證據審查）；`verdict: approved`（聲音 attestation 紀錄）；`human_boundary: human-check`。
+
+## HC02 接受紀錄 close-review：2026-11-18
+
+**verdict: approved（本輪六檔 docs／evidence 接受紀錄）；required fixes: 無。HC02 為 completed／Human accepted，依 Human 明示，不是 Reviewer 代簽或推算所有條件通過。**
+
+核對 [HC02接受紀錄](acceptance-ownership-human-acceptance.md) 的原文「接受本輪驗收支援分離、封裝修正與差異補驗結果」與主流程交接的 Human 回覆一致。範圍只關閉 R3 驗收支援分離、RF03 封裝及 F01–F06／V01／V02 有界差異補驗的 Human 最終接受；不增加任何 test／build／native／聲音事實。
+
+六檔差異的現況摘要、HC02 帳本與新證據一致：受測 code `9d14a3f6bf878a215de0d39d4fb05ec05970ec80`、補驗證據 `196f42c8db1b4b3e219beb5f78cf09706e7c3fd6`；source manifest `3e748de3a3b19225e1a03160d90318037a0be8430b13b911ec2e958b34bdd988`、binary `6a7867b568843e6146132c0d96b233f4f93c2f25a1d59e3b726313a4e642c0c1`、app tree `ccfbbd965a9a8b40e4b3df22562f7542d02b2dc28a93f9a3b4a6df2988877cae` 與既有已核證據一致。Reviewer核對 HEAD／code commit 對應與必要引用存在，沒有重核全部 source／cache／圖或操作 GUI。
+
+長期現況已反映本輪有限 Human 接受，不再籠統聲稱新 host 未取得接受；原 HC01／4d binary、各階段 pending／invalid／needs-rework 及未完成嘗試依版本保留。Registry 自 OAuth topic heading 起內容與 HEAD 完全相同。工作區本輪只有六檔 docs／evidence：規劃需求／技術契約／plan scope 未重開，ledger 只更新接受與收尾狀態，沒有 source／readonly 變更。
+
+Canvas 仍未實際操作且保持未驗，不能將已揭露 gap 改為 pass；完整矩陣／race／其他分發環境不外推。真 auth、外層 Adapter、store、session、navigation 與產品 App 接入仍在範圍外。Draft／未 merge 界線保持，沒有 ready／tag／release 授權。
+
+接受紀錄 close-review 完成；可依既有授權進行本 topic docs commit／push／既有 Draft 更新，不 merge。此段僅關閉紀錄審查與已明示的 HC02 人類邊界，不宣稱 Canvas 或其他未驗事項完成。
+
+`current_step: HC02 accepted／close-review approved`；`next_step: docs交付收尾與既有Draft更新`；`status: COMPLETE`；`verdict: approved`（接受紀錄）；`HC02: completed by explicit Human acceptance`。

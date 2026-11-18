@@ -79,6 +79,12 @@ LU-A01／02／03／04維持「已採用，限既有所列UI契約／受測案例
 - I03先做source/build/test，工具單元測試只支持工具parent；真Canvas、same-window callbacks/focus/resources、新host及必要Human差異仍待獨立補驗。先獨立review，再提出exact新app/source/binary SHA取得當下確認，舊接受不授權新binary啟動。產品認證、儲存、session整合維持排除。
 - 目前實作與新驗收結果見本topic acceptance-ownership-implementation／testing／review；只有實際發生才記新證據，不覆寫前述歷史或其他OAuth registry段落。
 
+### R3 最終接受：2026-11-18
+
+Human明確回覆「接受本輪驗收支援分離、封裝修正與差異補驗結果」，[HC02接受紀錄](../plan/rivet-login-ui-adoption/evidence/acceptance-ownership-human-acceptance.md)對應受測code`9d14a3f`、交付證據`196f42c`、source manifest `3e748de3…`、binary `6a7867b5…`與app tree `ccfbbd96…`。F01–F06有限native／獨立資源runtime與V01／V02 Human聲音回報已有R07 bounded approved；LU-A01–04正式能力及LU-A05凍結歷史consumer／新tool的驗收歸屬依上述來源成立，沒有新增產品認證接入。前述R3待驗及舊E011授權是當時歷史，不倒改。
+
+Canvas仍未驗，Human接受提示已列gap，不填pass；不外推完整矩陣、所有race或其他SwiftPM／分發環境。真auth／Adapter／store／session／navigation／產品App仍排除，原HC01及所有歷史判定保持原版本。Draft維持、未merge；本次接受記錄沒有新tests／build／native結果。
+
 ## github-oauth-connection-orchestration — 2026-11-17
 
 ### 來源與目標
