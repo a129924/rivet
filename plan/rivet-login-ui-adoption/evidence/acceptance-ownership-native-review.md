@@ -55,3 +55,36 @@ Reviewer 只讀核對：app 根目錄 bundle 不存在，Contents/Resources bund
 T07整體仍INCOMPLETE；Light、新artifact runtime／resources、Canvas及新hostHuman聲音／HC02 pending。原Dark N01–N12與舊HC01各保留原version，不因source-only批准外推新native或Human接受。實際補驗後再交R07，不能將此附錄當最終runtime關閉。
 
 `current_step: R07 source-only approved`；`next_step: 受限交付與exact新artifact／工具方式當下確認；其後T07 runtime補證`；`status: COMPLETE`（本輪有界source-only復審）；`verdict: approved`（受限範圍）。
+
+## RF03 修後 runtime 有界復審：2026-11-18
+
+**verdict: approved（F01–F06 代理 runtime／來源證據範圍）；required fixes: 無。RF03 在本次受控環境的 source 與 fresh-process runtime 條件已完成，關閉此項。Human 最終接受仍為 human-check。** 原 needs-rework、source-only 復審及舊版結果保留，不回填改判。
+
+依據為 T07 的 F01–F06、[runtime receipt](acceptance-ownership-runtime-receipt.json) 與 external run 原始 machine receipt。Reviewer 獨立核對兩份 JSON，僅 fallback 路徑轉為 run-relative，其餘內容完全一致；沒有 PAT payload 或本機絕對路徑寫入此 receipt。新來源 HEAD 為 `9d14a3f6bf878a215de0d39d4fb05ec05970ec80`。
+
+- 紀錄表明舊 instance 退出並查無 process 後，精確、可逆移走該 run 的 non-symlink fallback；Light PID71178 與 Dark PID72574 是不同的 exact 新 binary process。Light 結束後才啟動 Dark，兩次 open exit0；fallback 在兩次啟動與圖示觀察期間均缺席。
+- Tester 直接 CUA 觀察 Light13／Dark13 Welcome 與 GitHub 圖示、有限鍵盤／PAT互動與 Light21 failure 底部操作。這與 appRoot 首選資源路徑及缺席的 build fallback 共同支持此次獨立資源 runtime 條件；並非 debugger 路徑 trace，也不外推其他 SwiftPM／分發環境。Reviewer 未操作 GUI、未親看未轉交的主對話圖片，不稱獨立視覺接受。
+- Reviewer 只讀重核28份 source bytes 符合 manifest `3e748de3a3b19225e1a03160d90318037a0be8430b13b911ec2e958b34bdd988`；binary SHA為 `6a7867b568843e6146132c0d96b233f4f93c2f25a1d59e3b726313a4e642c0c1`；整 app entries 的 bytes／mode／type 與 canonical tree `ccfbbd965a9a8b40e4b3df22562f7542d02b2dc28a93f9a3b4a6df2988877cae` 全符。沒有 rebuild 或 app 變更，root readonly 前後相同。
+- 核對 fallback 已還原為非 symlink 目錄、held 路徑不存在，PDF SHA仍為 `37623a1d6bed743407256099357e4a5a93c278903932ae55307d1602fb87a3f1`，與 packaged PDF／receipt 相同。可逆操作已收尾，不留下資源移位。
+
+此次 Human 已明示 exact 修正版、受控 fallback 排除／還原及 shell 標準 open 的 Light／Dark 工具方式；沒有操作先前被拒的 Terminal UI 或改系統設定。Reviewer 本輪未 launch／移動 fallback／重跑測試，也未改作者程式。
+
+範圍仍限 F01–F06；9219 的 N01–N12 保持原版本，不宣稱6a重跑完整矩陣。Human「我做不出來」是操作引導／驗證未完成，不能據此判元件 failure 或 pass；AX／直接輸入的代理觀察不等於 Human 聲音確認。HC02、聲音與 Canvas 仍 pending，原 HC01 接受保留原版本。
+
+可依既有授權據實更新 docs／既有 Draft；繼續由主流程引導 Human 聲音與最終接受並保留實際回覆，不能代替 Human 或 merge PR。無新增 source blocker、架構／consumer 測試或圖重產要求。
+
+`current_step: R07 runtime bounded approved`；`next_step: Human 聲音／HC02 驗證與據實交付更新`；`status: COMPLETE`（本輪有界審查）；`verdict: approved`（代理 runtime／來源證據）；`human_boundary: human-check`。
+
+## V01／V02 Human 聲音證據有界審查：2026-11-18
+
+**verdict: approved（Human 聲音 attestation 紀錄與界線）；required fixes: 無。HC02 最終差異接受仍為 human-check。** F01–F06／RF03 已核定結果不變，不以本輪 case 結果代簽 Human 最終接受。
+
+本輪只讀 [Human 聲音證據](acceptance-ownership-voiceover-human.md) 與 T07 末段，兩者對版本、方法、實際回報及限制一致。沿用先前已核 source HEAD `9d14a3f`、manifest `3e748de3…`、binary `6a7867b5…`、app tree `ccfbbd96…`；未重核28份 source／app、未操作 GUI 或重跑測試。沒有新 source 變更的主張與此次聲音驗證方法相容，不產生新 artifact 接受。
+
+- Human 明示已開旁白；最初「我做不出來」、重啟要求、單獨「有讀到」及跨 App 焦點干擾保留為未完成嘗試，不判 failure／pass，也不推定唯一干擾來源。
+- 無問答卡、Tester 切態後停止操作的最後回合，Human 普通訊息明示：V01 讀到 Continue with GitHub、沒有晚到帳號驗證語音；V02 讀到 PAT 區塊、可不點欄位直接輸入、沒有晚到舊驗證語音。可採為這兩次有界序列的 Human 聲音／直接輸入回報。
+- 紀錄未把 AX keyboard focus 當 VoiceOver cursor 或音訊 trace；沒有完整音檔／最後一句逐字稿、全部快速 race／漏讀矩陣保證，也未保存 Human 輸入。收尾回同 app 乾淨 Welcome 是 Tester 的 AX／畫面觀察，不是 Reviewer 再操作或 Human 最終接受。
+
+沒有可由本證據定位的新元件缺陷或 required source fix；不要求新架構、全矩陣重測或重畫。Canvas 未驗、舊 HC01／H01–H08 與9219 N案例各保留原版本；HC02 的驗收支援分離／封裝修正／新 host 差異最終接受仍須 Human 明示。可依原授權據實更新 source／docs 交付與既有 Draft，不 merge。
+
+`current_step: R07 Human聲音證據 bounded approved`；`next_step: HC02 最終Human差異接受`；`status: COMPLETE`（本輪證據審查）；`verdict: approved`（聲音 attestation 紀錄）；`human_boundary: human-check`。

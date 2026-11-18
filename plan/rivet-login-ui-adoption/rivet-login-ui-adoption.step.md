@@ -6,9 +6,9 @@
 - Branch：`feat/rivet-login-ui-adoption`
 - 原查核 Base：`1f31b35604adb5bb36326e52f9d6dbcff0cac763`
 - 交付整合 Base：`origin/dev`／`ab77391b73291deb1ce3d96cef72f981aeb3104a`
-- 最後更新：2026-11-18，R3 source commit5b256c5已正常push、六項hooks通過，既有Draft已更新；舊HC01保留，新T07／HC02待確認。
-- Current Phase：R3 RF03 source-only復審approved，依原授權受限交付；原source交付與R06 approved保留，T07 INCOMPLETE，沒有merge。
-- Current Step：T07 human-check，等exact新binary6a7867b5…的操作當下確認，並明示Light使用shell open帶既有CLI args的方式；R07 source-only已approved僅限artifact準備／受限交付。新app未確認／未launch，T07 INCOMPLETE，fresh-process排fallback／Light／HC02／Canvas pending。
+- 最後更新：2026-11-18，RF03 source commit9d14a3f已交付；T07必要代理native F01–F06完成、R07有界runtime approved；舊HC01保留，V01／V02聲音已Human確認並經R07有界approved，HC02最終Human接受pending。
+- Current Phase：R3必要代理native／RF03／LightDark補驗完成，R07有界runtime approved；V01／V02 Human聲音attestation紀錄已R07 approved，等待最終Human接受，Canvas未驗，沒有merge。
+- Current Step：HC02 human-check；等待本輪驗收支援分離／封裝修正／新host差異最終接受。T07 F01–F06及V01／V02聲音回覆紀錄已有獨立R07有界approved，無新增required fix；Canvas未驗，不merge。
 - 上游：Planner 規劃準備 approved；Human 已接受對話方案與本 topic 執行授權。這些不替代 P02 的獨立 planning verdict。
 - 本帳本的 completed／pending 不是 approval；只依明示 verdict 路由。
 
@@ -76,10 +76,10 @@ Human新要求：E011凍結、正式tests／controlled#Preview優先、必要nat
 | I03 | completed | Implementer | P03approved後依R3六檔回復、controlledPreview／formaltests／最小tool與ownerdocs完成交接；新app僅build不launch | evidence/acceptance-ownership-implementation.md：六項freeze／controlledPreview／tool完成，正式9tests與tool8tests／build／scopedchecks通過，新app/source/hash已備未launch，core/rootreadonly保留 | 作者不自審；交T06 |
 | T06 | completed | Tester | 獨立驗R3-TC01–05及07，記actualsource/hashes/cache/gaps；不launch新app | evidence/acceptance-ownership-testing.md：獨立16tests（9formal＋7frozen）／tool8tests／兩product build／format-lint／freeze-core-history／28source及app tree資源hash完成；Canvas與native未驗 | 自動／source完成；交R06 |
 | R06 | completed | Reviewer | 獨立審I03/T06／freeze／corebytes／工具歸屬／source/docs及新app準備證據，無requiredfix才可提exactnative當下確認 | evidence/acceptance-ownership-review.md原needs-rework；RF01現況Reset文件及RF02先驗外部run已修，T06非法run無寫入與新版build複驗完成；目前source6c1d5266…／binary9219bd76…／app6be23f92…，詳I03差異附錄及Reviewer明示復審approved | 最新復審approved（source／tests／docs受限交付）；RF01／RF02 closed，required fixes無 |
-| T07 | pending | Tester | R06後且Human對exact新binary當下確認後補R3-TC06必要native，記同窗callback/focus/resources及Human聲音待驗 | evidence/acceptance-ownership-native.md：Human明示確認後9219bd76…版本已做有限Dark原生操作；結果INCOMPLETE。R07發現RF03包裝路徑缺口，Light／獨立資源runtime／Human聲音未完成；修後新binary6a7867b5…已build未確認／未launch；Foundation probe不等於app runtime排除fallback | INCOMPLETE；非新host接受 |
-| R07 | pending | Reviewer | 獨立核對T07實際版本／界線／待驗，明示boundedreviewverdict | evidence/acceptance-ownership-native-review.md原needs-rework／RF03（P2）；script已修app根目錄bundle並同步README，I03附錄已記獨立新build及28source／app／bundle首選路徑／Foundation probe核對；source3e748de3…／binary6a7867b5…／appccfbbd96…，獨立Reviewer已明示source-only復審approved／無新增source requiredfix；原needs-rework保留，fresh-process排fallback條件未完成 | source-only approved（僅artifact準備交付）；最終runtime關閉pending |
-| HC02 | pending | Human | 依實際新host受影響cases確認VoiceOver／必要差異UI，不重開未變core的舊HC01 | 原HC01completed保持；新host接受／受影響Humancases未驗 | human-check未到達 |
-| D03 | completed | Implementer | 無重大問題、依原授權完成本topiccommit/push/既有Draft更新，明列新native/Human限制，無merge | source commit5b256c5aa40aa209d2fd996b123ad233135c151a，六項正常hooks Passed，普通push；主agent已透過GitHub connector更新既有Draft，遠端head核對5b256c5／base d2332bf／mergeable clean。其後2e00167帳本同步只改文件；本輪RF03經R07 source-only approved後按原授權做受限source／證據commit-push，不以self-SHA新增doccommit；T07／HC02 pending | 原source／Draft交付完成；RF03受限交付，非新host Human接受 |
+| T07 | completed | Tester | R06後且Human對exact新binary當下確認後補R3-TC06必要native，記同窗callback/focus/resources及Human聲音待驗 | evidence/acceptance-ownership-native.md及runtime-receipt.json：9219版N01–N12／原INCOMPLETE保持；新6a版F01–F06必要代理補驗完成，Light71178／Dark72574不同fresh process、fallback缺席期間圖示可見、已還原，app／binary hash不變。限受測cases；V01／V02普通訊息回覆記acceptance-ownership-voiceover-human.md，未保存Human輸入；Canvas未驗 | 必要代理native及聲音回報紀錄完成；非最終Human接受 |
+| R07 | completed | Reviewer | 獨立核對T07實際版本／界線／待驗，明示boundedreviewverdict | evidence/acceptance-ownership-native-review.md保留needs-rework及source-only歷史；最新明示runtime bounded approved、required fixes無，RF03此次受控環境source及fresh-process條件closed；source3e748de3…／binary6a7867b5…／appccfbbd96…保持；後續V01／V02聲音attestation紀錄與界線亦explicit approved、required fixes無 | approved（F01–F06代理runtime／來源與V01／V02聲音紀錄）；最終Human接受pending |
+| HC02 | pending | Human | 依實際新host受影響cases確認VoiceOver／必要差異UI，不重開未變core的舊HC01 | 原HC01completed保持；V01讀到Continue／無晚到帳號驗證語音，V02讀到PAT／不點欄位可直接輸入／無晚到舊驗證語音；保留未完成嘗試，R07已approved紀錄界線。等待本輪驗收支援分離／封裝修正／新host差異最終接受，Canvas未驗 | final human-check pending；不代填accepted |
+| D03 | completed | Implementer | 無重大問題、依原授權完成本topiccommit/push/既有Draft更新，明列新native/Human限制，無merge | source commit5b256c5aa40aa209d2fd996b123ad233135c151a，六項正常hooks Passed，普通push；主agent已透過GitHub connector更新既有Draft，遠端head核對5b256c5／base d2332bf／mergeable clean。其後2e00167帳本同步只改文件；RF03經R07 source-only approved後以9d14a3f正常hooks／普通push交付；T07必要代理補驗及R07有界runtime審查完成，HC02 pending | 原source／Draft交付完成；RF03受限交付，非新host Human接受 |
 
 ### 本輪 Blockers／Human Check
 
@@ -88,7 +88,7 @@ Human新要求：E011凍結、正式tests／controlled#Preview優先、必要nat
 - E011凍結與formal.standard、無demo mode、HEAD重建舊demo語意不變四條件無法全滿足；採已明示安全範圍：E011只歷史引用、不作本輪正式驗收，無legacy/footer/bundle特判。不是未解除的實作假設。
 - 新binary需要原生工具當下確認：先build/R06，再交exactapp/SHA/source/cases。原4d4cf13...啟動許可與HC01接受不套新binary；未獲新確認只暫停native，不阻擋source/tests/docs獨立工作。
 - HC02只限本輪受影響HumanVoiceOver／host差異，不能重開或抹去HC01completed。Source/docs可依boundedreview與原授權更新Draft，不能稱新hostHuman接受或merge。
-- 本輪I03原source已交付；T07在Human對9219bd76…確認後有限Dark補驗但INCOMPLETE，R07 RF03修後新artifact已由獨立Testerbuild及包裝核對，未確認／未launch；原9219permission不套新6a7867b5…。Light／獨立資源runtime／HC02／Canvas待驗，不回填舊結果作新pass。原T01/T04incomplete／拒絕及後續Human解除歷史完整保留。
+- 本輪I03原source已交付；9219版T07初驗INCOMPLETE歷史保持；Human另行明示exact6a版本及工具方式後，新artifact已完成F01–F06必要代理native／LightDark及fallback缺席圖示補證，fallback完整還原，R07有界runtime approved。V01／V02聲音已有Human普通訊息回報與R07有界紀錄approved；HC02最終接受及Canvas仍未完成，不回填舊結果作新pass。原T01/T04incomplete／拒絕及後續Human解除歷史完整保留。
 
 ### 六點最終交接欄位
 

@@ -1,6 +1,6 @@
 # T07：新版驗收 host 原生差異初驗
 
-> 前段保留binary9219…的原生初驗與RF03發現；本文末為修後6a7867… artifact的獨立封裝檢查。修後尚未launch，不能沿用初版native或啟動確認。
+> 前段保留9219…初驗與RF03來源修正歷史；目前狀態以末段「F01–F06：修後6a binary原生補驗」為準。Light／Dark與獨立資源已實測，Human聲音已於末段取得V01／V02回報；HC02最終差異接受與Canvas仍分列待驗。
 
 - 日期：2026-11-18；owner=Tester（主agent，非I03程式作者）。
 - 受測來源：source commit5b256c5，文件head2e00167ef178fc0275d2dbaf2d7d12e412b474c0；28項source receipt為6c1d5266c7f10f2340ed383604fd8a74b3ff7f00a0411c276bd9df86a195921d。
@@ -87,3 +87,46 @@ Implementer只修tool腳本的bundle目的位置與receipt路徑，正式Swift�
 4. Human只補新menu Account→Welcome與Token→PAT的最後朗讀／焦點／直接輸入／晚到舊語音；新host差異接受仍由Human明示，原HC01不重開。
 
 目前T07 coverage仍INCOMPLETE，RF03 source-only復審pending，HC02／Light／Canvas／新artifact native pending。Raw script與probe logs保留repository外scratch；沒有新app PID／AX／截圖／聲音或Human接受，沒有merge。
+
+## F01–F06：修後6a binary原生補驗（2026-11-18）
+
+Human本輪明確確認：啟動本修正版、fresh process、暫時排除並還原build fallback，以及使用標準shell open傳入既有Light／Dark參數、不改系統設定。這承接exact binary `6a7867b568843e6146132c0d96b233f4f93c2f25a1d59e3b726313a4e642c0c1`，不是沿用9219許可。
+
+啟動前重新核對binary與28項source符合3e748de3... receipt，source HEAD為9d14a3f6bf878a215de0d39d4fb05ec05970ec80。只以明示允許的shell標準open啟動，UI觀察與操作均用CUA；沒有再操作被拒的Terminal App、沒有改系統設定。
+
+### Fresh process與fallback排除／還原
+
+先辨識舊9219 instance並標準Quit。第一次Quit後再AX觀察仍得到舊版新PID70057，未把它誤認新6a；再次Quit後以唯讀process檢查確認沒有任何RivetLoginAcceptance process，才開始本輪fresh啟動。不使用open -n或廣泛kill、不停止其他app。
+
+僅針對本次external run、non-symlink且hash吻合的 `scratch/arm64-apple-macosx/debug/Rivet_RivetPresentation.bundle`，可逆rename為同parent下 `.bundle.t07-held`，不刪除、不覆寫、不碰source／global cache。啟動前與實際觀察時皆確認原fallback路徑不存在；app內root bundle保持原位置、原bytes。
+
+| Case | 實際結果 |
+| --- | --- |
+| F01 fresh Light13 | shell `open -a "$R3_RESOURCE_FIX_APP" --args --appearance light` exit0；PID71178為唯一exact新binary路徑、不同於舊PID。Fallback缺席時CUA直接觀察Light Welcome與GitHub圖示正常、主畫面乾淨、focus Continue；有AX及代表截圖 |
+| F02 Light鍵盤 | Return→waiting且focus Cancel；Escape→Welcome且focus Continue；實際點PAT入口→secure field focus |
+| F03 Light PAT | 輸入僅合成測試字；Show保值、Hide回secure；Return→Verifying token。Manual menu回PAT為secure空欄／Submit disabled；receipt最後submitToken、總Count4（本fresh流程之前為begin／cancel／showTokenEntry） |
+| F04 Light21代表畫面 | menu token failure與21pt；捲到底後直接AX／截圖可見錯誤、空secure field、預期disabled Submit及footer，沒有截斷底部操作；不外推所有字級／狀態組合 |
+| F05 fresh Dark13 | 先標準Quit Light、唯讀查無Acceptance process，再用同一exact app的 `--appearance dark` open exit0。PID72574唯一且與71178不同；fallback持續缺席時直接CUA觀察Dark Welcome與GitHub圖示正常，focus Continue，有AX及代表截圖 |
+| F06 還原與交接 | 觀察Dark後，核held PDF hash再rename還原fallback；原路徑存在、held不存在、PDF hash完全相同。完整app entries bytes／mode／type的canonical tree仍ccfbbd96...，binary SHA不變。最後Raise並核Dark13／Standard Welcome、focus Continue，交Human新menu聲音確認 |
+
+兩個fresh process均為reviewed新binary路徑；只有一個Acceptance process執行。Light正常結束後才啟動Dark，不用舊PID的已初始化Bundle.module作證。實際在fallback缺席時仍能由app首選bundle載入圖示，支持本次RF03獨立資源runtime條件；不外推所有SwiftPM版本／分發環境。沒有修改app／PDF或重新build。
+
+機器可讀紀錄為 [runtime receipt](acceptance-ownership-runtime-receipt.json)，記兩個PID、fallback缺席／還原與hash布林，沒有PAT內容。原external receipt及本次直接CUA AX／三張Light／Dark代表截圖仍在本輪來源；圖片未另存repo，Reviewer不能假稱已親看未轉交圖片。
+
+### 來源及接受限制
+
+- binary：`6a7867b568843e6146132c0d96b233f4f93c2f25a1d59e3b726313a4e642c0c1`；source manifest：`3e748de3a3b19225e1a03160d90318037a0be8430b13b911ec2e958b34bdd988`；app tree：`ccfbbd965a9a8b40e4b3df22562f7542d02b2dc28a93f9a3b4a6df2988877cae`。
+- 先前9219的N01–N12保持其版本；本次只補包裝／Light／代表Dark及受影響基本互動，不把未重跑的全部N項或48矩陣改寫成6a完整通過。正式Swift及資源bytes未改，沒有重跑無關unit／root suite。
+- RF03資源runtime與必要Light／Dark代理補驗已有上述實際結果，交R07獨立審查；不由Tester自批gate。未聲稱完整Canvas已操作。
+- 已將新menu Account→Welcome與Token→PAT兩組VoiceOver問題交Human：最後朗讀／焦點／晚到舊語音，PAT不點欄位直接輸入測試字。目前尚無本輪Human聲音回覆，不能以AX focus或發出問題當pass。
+- 原HC01正式UI接受及H01–H08保留原版本；HC02的新host差異／必要聲音與最終Human接受仍pending，PR仍Draft／未merge。
+
+`current_step: R07 修後runtime證據待獨立審查`；代理native差異F01–F06完成，Human／Canvas缺口分列，非Human接受。
+
+## Human聲音差異回報與最終畫面
+
+在同一6a binary、無source變更下，Human最後確認V01 Welcome有讀到Continue with GitHub／無晚到舊語音，V02 PAT區塊有讀到／可直接輸入／無晚到舊語音。此前不會操作、重新開始及跨App焦點干擾的未完成回合保留；改用無問答卡、Tester操作、Human自行回普通訊息的方法完成。
+
+完整原文、方法與限制見 [R3 Human聲音證據](acceptance-ownership-voiceover-human.md)，不能用代理AX或這兩組結果自動當最終Human接受。交接結束後已回到Dark13／Standard Welcome、focus Continue；CUA直接AX與畫面確認後送出completion summary。沒有讀取／保存Human測試輸入內容或呼叫認證。
+
+F01–F06之R07有界runtime已approved；本段V01／V02聲音證據待獨立核對。HC02最終差異接受仍pending，Canvas未驗，未merge。

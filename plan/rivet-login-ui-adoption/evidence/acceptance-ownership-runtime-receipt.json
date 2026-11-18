@@ -1,0 +1,30 @@
+{
+  "binarySHA256": "6a7867b568843e6146132c0d96b233f4f93c2f25a1d59e3b726313a4e642c0c1",
+  "resourceSHA256": "37623a1d6bed743407256099357e4a5a93c278903932ae55307d1602fb87a3f1",
+  "fallbackOriginal": "scratch/arm64-apple-macosx/debug/Rivet_RivetPresentation.bundle",
+  "fallbackHeld": "scratch/arm64-apple-macosx/debug/Rivet_RivetPresentation.bundle.t07-held",
+  "fallbackAbsentBeforeLaunch": true,
+  "fallbackRestored": true,
+  "appearance": "light",
+  "startedAt": "2026-11-18T07:48:55.653153+00:00",
+  "openExitCode": 0,
+  "lightProcess": {
+    "pid": 71178,
+    "exactNewPath": true
+  },
+  "fallbackAbsentDuringLightObservation": true,
+  "lightWelcomeAndGitHubMarkObserved": true,
+  "lightProcessTerminatedBeforeDark": true,
+  "darkOpenExitCode": 0,
+  "fallbackAbsentBeforeDarkLaunch": true,
+  "darkProcess": {
+    "pid": 72574,
+    "exactNewPath": true
+  },
+  "fallbackAbsentDuringDarkObservation": true,
+  "darkWelcomeAndGitHubMarkObserved": true,
+  "restoredResourceSHA256": "37623a1d6bed743407256099357e4a5a93c278903932ae55307d1602fb87a3f1",
+  "restoredAt": "2026-11-18T07:52:29.532693+00:00",
+  "appTreeSHAUnchanged": true,
+  "binarySHAUnchanged": true
+}
