@@ -209,3 +209,11 @@ W2 真自然到期／P1 讀回原 A、W3 Rebuilt、完整 S07/S08 與主假設�
 W1 seed／fresh 六欄相符、Human 各全程0提示的受限 baseline 結果保留；W2 真自然到期／P1 讀回原 A、W3 Rebuilt、完整 S07/S08／profile 週期及主假設仍 pending。P0 expiry 台灣 **2026-11-17 15:28:08** 與原 D **2026-11-20 15:22:03.379959** 不延長，原 A／namespace 不重設。RP cleanup blocked／delete=0；RT 僅記4602 retained metadata entries，minimumComplete=false。原 PR60／66 及其他實驗 rows／來源／成功、失敗與 unknown 保持各自證據界線。
 
 Annotated tag `v0.1.62-e010-dpk-profile-continuity-baseline` 的 local／remote object 均為 `53f1efd44b4d4cdbf0b2ada8752620a2b667e8b5`，peeled commit 均為上述 actual merge；不是 GitHub Release 或後續維護 commit。原 feature remote branch 已在 server expected head `7fa4bff…` lease 保護下正常刪除，並讀回不存在，dev 與 tag lineage 仍在。Local branch／原 managed feature worktree 因兩份 AQ local-only 檔案及 W2／W3 實際 physical path 依賴 unknown 而保留，未 force remove、未搬檔；外部72檔 archive、原 W1／history／安全證據／圖及 App／Keychain／Apple 資產均未藉此清理。Git 收尾的已完成部分不解除原實驗留存與後續驗收條件。
+
+## E010 本輪結案（2026-11-18）
+
+前述 E010 待執行與 PR #67 合併段落均為當時的歷史紀錄。PR #67 已合併，annotated tag `v0.1.62-e010-dpk-profile-continuity-baseline` 指向原合併版本 `a554a4fee772d3976d5ca2c9331865a604e901e2`，原始 W1 證據保留於該版本。
+
+- **W1 受限基線**　一次 seed 保存假憑證 A，再以同一 binary 於新程序讀回原 A 一次，六欄全部相符。Human 在兩階段各全程觀察，提示各為 0 次。[W1 機器與 Human 證據索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/baseline-review-candidate/index.json)、[seed 安全索引](E010/evidence/ng-validation/b90f5f16-d3c8-452f-af91-86b88d6dc64e/seed-review-candidate/index.json)。
+- **本輪決定**　W2（P0 自然到期後以 P1 讀回原 A）與 W3（Rebuilt）均未執行，完整 profile 週期未完成。依 Human 決定結束本輪，W2／W3 不再續行，也不啟用新的 recovery host。結案與後續復原評估的本機封存證據尚未發布。
+- **清理與交接**　結案清理未執行，清理及最小化均未完成，`recoveryRequired=true`。目前 A 是否仍在及完整殘留範圍均未確認。沿用既有最低限度復原交接，原 D 維持 **2026-11-20 15:22:03.379959（Asia/Taipei）**，整包留存未獲延長。[歷史 RP 受控停止索引](E010/evidence/retention-prune-validation-20261110T085343Z/final.index.safe.json)、[歷史 RT metadata 索引](E010/evidence/retention-scope-20261110T094256Z/index.safe.json)。
