@@ -192,4 +192,6 @@ W2 真自然到期／P1 讀回原 A、W3 Rebuilt 與完整 profile 週期仍 pen
 
 ## E018 — 正式 OAuth 冷啟動還原 live（2026-11-18）
 
-[驗證host與界線](E018/README.md)直接使用正式GitHubOAuthStartupRestorer／stores／fetcher。First自然到期真refresh/save各1後ready，fresh新程序同完整credential／同帳號且refresh/save0；Human兩段全程各0提示。新host AppID不同於舊E014，未重跑舊App或profile延續性實驗。兩live slots用完，停止重試；[安全證據](../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)與Human最終接受分列。
+[歷史驗證host與界線](https://github.com/a129924/rivet/blob/0debe0b8c088e60500b4a1e4969000666e495c97/experiments/E018/README.md)直接使用正式GitHubOAuthStartupRestorer／stores／fetcher。First自然到期真refresh/save各1後ready，fresh新程序同完整credential／同帳號且refresh/save0；Human兩段全程各0提示。新host AppID不同於舊E014，未重跑舊App或profile延續性實驗。兩live slots用完，停止重試；[安全證據](../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)與Human最終接受分列。
+
+E018 active 工具已退役，後續測試設施見 [正式 hosted integration tests](../Tests/GitHubIntegrationHostedTests/README.md)。歷史結果與額度不轉移至新設施。

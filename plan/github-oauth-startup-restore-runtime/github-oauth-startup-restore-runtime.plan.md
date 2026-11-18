@@ -50,3 +50,56 @@ Live前先獨立planning review、工具offline驗證及獨立code review；cont
 L Written補充：plan/github-oauth-startup-restore-runtime/evidence/e018-*.json與e018-live.md保存固定safe projection及Human attestation；不含raw資料或私有路徑。
 
 L Modify補充：experiments/README.md只追加E018索引；既有圖BUILD.md僅追加原圖版本與E018證據指向，不反改舊圖或收據。
+
+## M：正式 hosted integration 測試設施修訂
+
+本節追加目前受限執行契約，不取代原 P／I／T／R／L 歷史；Human 已明示 Implement the plan。維持同一 topic、branch 與 Draft PR #77，僅在既有 feature worktree 實作。M01–M06 順序及獨立角色依本 step ledger。新 Live 入口可實作，本輪僅 Offline／mock 驗證，不執行 Live build／簽章／DPK／OAuth，不建立新 live context。
+
+### Goal / Non-Goal / In-Scope / Out-Of-Scope
+
+| 欄位 | 目前修訂契約 |
+| --- | --- |
+| Goal | 必要驗證能力進入有原生斷言、明確命令及結果的正式 hosted integration 設施。 |
+| Non-Goal | 不交付正式產品 App／UI E2E，不重新證明舊 live 結果。 |
+| In-Scope | 兩 targets、Offline／Live configurations 與 shared schemes、測試組裝／觀測／斷言、跨程序 Offline smoke、手動 Live 介面、E018 退役及必要文件。 |
+| Out-Of-Scope | 新登入、seed／clear、強制到期、修改 provider／refresh／401 policy、新 Apple 資產、產品接線、本輪新增 live 操作。 |
+| ReadOnly | 正式 Sources／public APIs、root／packages／consumer manifests、既有 SwiftPM 受控／consumer 測試、其餘實驗、AGENTS／skills／設定、原 evidence bytes／SHA／Human 觀察與私有歷史資料。 |
+| Written | Tests/GitHubIntegrationHostedTests/ 內正式 project、薄 host、hosted test bundle、test support、driver 受控測試；scripts/check-github-integration-hosted-tests.py。不另鎖 Host／Tests／TestSupport 子目錄。 |
+| Modify | 原四份 topic artifacts、docs/toolchain.md、README.md、experiments/README.md、docs/architecture/README.md、docs/architecture/github-oauth-startup-restore-runtime.md、docs/architecture/github-oauth-dual-client.md、docs/feasibility-adoption.md 及本 topic 原圖 BUILD.md；限目前設施、測試命令、退役導覽與歷史來源／實證限制，不改舊圖及收據。 |
+| Deleted | 移植必要能力後，刪除 active experiments/E018/ 全部九個 tracked files；不刪私有 App、Keychain 或歷史證據。 |
+| TestCase | TC-H01–TC-H07。 |
+
+保留 E018 成本較低，但缺 Test Action、與舊環境耦合，且 JSON passed:false 不保證非零 exit。正式 targets 增加少量 Xcode 設定，換取探索、框架斷言與 xcresult；採 Human 最新決策，不新增 E。官方能力／慣例／本案命名之區分依 requirements M 節，targets／CLI／private context／phase 與結果契約依 technical-spec M 節。
+
+```diff
+- experiments/E018/                         # active 工具退役
++ Tests/GitHubIntegrationHostedTests/
++   GitHubIntegrationHostedTests.xcodeproj
++   …                                      # 薄 host、test bundle、support、driver tests
++ scripts/check-github-integration-hosted-tests.py
+= plan/github-oauth-startup-restore-runtime/evidence/
+                                           # 原 bytes／SHA／Human 觀察保持
+= 正式 GitHubIntegration runtime            # 沿用，不複製
+```
+
+### TestCase
+
+| ID | 驗收與證據 |
+| --- | --- |
+| TC-H01 | 既有 root／consumer 回歸保持，正式 runtime／manifests 零差異。 |
+| TC-H02 | Offline 只用 fake，Security／網路呼叫 0。 |
+| TC-H03 | first／fresh 各一次，不同實際 PID／starttime、前程序退出，相同 host／test bundle／依賴／設定 provenance。 |
+| TC-H04 | 斷言、throw、timeout、零案例、錯選或缺結果不綠燈；mock 驗證 exit 0／1／2／3。 |
+| TC-H05 | prepare／API 計數分離、API 後最後保存 oracle、完整六欄比較移入 support，diagnostics 不含秘密。 |
+| TC-H06 | active E018 路徑與依賴消失；原 evidence bytes／SHA／人工觀察不變；舊來源以 0debe0b Git 引用追溯。 |
+| TC-H07 | mock 驗證手動 Live 資格、exclusive 額度、first→Human→fresh、原 receipt SHA 綁定與禁止 retry；不真正執行 Live。 |
+
+Offline canonical 命令為 `python3 -B scripts/check-github-integration-hosted-tests.py --offline`，涵蓋 driver 受控測試及 hosted first／fresh smoke。既有 root swift test／consumer、Swift format／strict SwiftLint 及必要 diff 檢查作回歸；不能把目錄搬入 Tests 當作已接入 SwiftPM。新設施本輪只可記錄離線／mock 驗證結果，manual Live 尚未實證；不以舊 live 通過代替。
+
+### 歷史 / Stop conditions
+
+- 原 safe receipts、Human attestation、machine／source／binary／profile SHA 與舊版本結果原樣保存；歷史工具使用 0debe0b Git 引用，不把舊 pins 更新為新設施 pins。
+- 舊 first／fresh 各 1/1 已用完；新 run-root 不構成新預算或授權，禁止匯入舊 context／markers 重用。
+- 本輪不產生或執行新的 live context，不重新簽章／啟動舊 App，不登入／seed／clear／force expiry。
+- 若必須修改正式 contract、產品組裝、新登入、清除或新增 live 才能完成，停止並回報 Scope Gap，不默認擴入。
+- 原圖、Floorplan／Graphify／PR Lens 邊界維持；本輪文字 filetree／calltree 為計畫呈現，不新增未驗證 SVG／HTML 或發布義務。

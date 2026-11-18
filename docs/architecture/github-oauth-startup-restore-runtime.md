@@ -38,3 +38,7 @@ TC12 Floorplan先planned blueprint後原碼map，13files、0unassigned、13/13�
 本輪使用既有有效profile與原certificate，但新host AppID不同於舊E014；只給被profile允許的exact舊group，未啟動或重簽舊App。結果不證明舊AppID的profile續期、其他環境或公開分發。日期HMAC為整毫秒canonical比較，不宣稱原JSON bytes相同。
 
 [本輪結果與安全收據](../../plan/github-oauth-startup-restore-runtime/evidence/e018-live.md)分列準備、離線、live、Human與獨立審查。first/fresh各1/1已用完，停止重試；未新登入、清除、強制到期或回滾rotation，正式Sources與root manifests不變。Human最終topic接受仍pending。
+
+## 正式 hosted integration 測試設施
+
+[正式測試設施](../../Tests/GitHubIntegrationHostedTests/README.md)取代 active E018 工具：薄 signed App host 僅供 lifecycle／權限，hosted Swift Testing bundle 組裝唯一正式 runtime 並作斷言；既有 fake／consumer 保持。Offline 為日常明確入口，真 DPK／OAuth 手動測試需另行授權，不從舊驗證 App 推導環境。這是測試設施，不是產品 handler 或新實驗；產品 E2E 待正式 App／啟動組裝交付。原 E018 來源以 `0debe0b` Git 歷史保留，所有有限 live 證據、SHA 與 Human 觀察不改寫，也不當作新設施通過。
