@@ -4,6 +4,20 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #78 PR Inbox 自查候選與 E020 真人結果（2026-11-23）
+
+[PR #78](https://github.com/a129924/rivet/pull/78) 已於 `2026-11-23T06:47:33Z` 合併至 `dev` 並關閉。合併提交為 `6ac0ae02b63db99e4f0a8cb0ee65edeb6f399559`，最後 feature 提交 `bd01556` 收錄 E020 真人驗收紀錄。
+
+| 證據 | 結果 |
+| --- | --- |
+| 正式自查來源 | `GET /user` 確認 OAuth 帳號後，以 `is:pr is:open author:<login>` 查詢。既有 Facade 依作者及開啟狀態篩選，包含自己開的 open Draft。受控驗證通過 365 項 Swift 測試及 12 項 E019 回歸測試。 [PR Inbox 契約](../docs/architecture/bounded-contexts/pr-inbox.md) |
+| E019 直接指派 | 保留既有受控結果。真人查詢未執行。 [E019 原紀錄](E019/README.md) |
+| E020 瀏覽器 OAuth 真人驗收 | 以 `9e4bd9b` 的來源在本機完成登入及單筆驗收。Human 確認可用 `a129924` 在 GitHub 開啟 mlops-async#72。Facade 回傳該 PR，owner、repository、number、title 四欄一致。CLI 回報 `sampleMatched`、exit 0、`getCount=2`、`queueCount=7`。 [E020 驗收紀錄](E020/README.md) · [正例 PR](https://github.com/a129924/mlops-async/pull/72) |
+
+真人驗收涵蓋當次帳號與該筆正例。自查完成狀態仍待定義。上述受控及真人證據均沿用原受測版本。
+
+Annotated tag `v0.1.72-pr-inbox-self-review-candidates` 已推送並讀回，指向上述合併提交。原 feature worktree 的 Floorplan 已私下封存並核對 73 檔。原本機分支、遠端分支、追蹤 ref、worktree 目錄及 Git 註冊均已核對移除。
+
 ## PR #77：正式 OAuth 冷啟動還原與 hosted 有限結果（2026-11-18）
 
 [PR #77](https://github.com/a129924/rivet/pull/77) 於 `2026-11-18T09:32:51Z` merged／closed 至 `dev`。Merge `b9f969f05347e8c4227fb742205814bef95f7604` 的 parents 是 `0087cb404b652cb0565fe6482474e4b6b668e7ba`／最後 feature `cab8ba4fd9d0485b081828865abeacb815478172`；與 feature 僅兩份實驗索引不同。Merge／tag 保存來源，不代表新 build 或新的 live 受測版本。
@@ -161,6 +175,8 @@ E015 的六個 focused case 由最終來源新建 CLI，使用 DEBUG、互斥 LA
 | [E010](E010/README.md) | 新 W1 seed／fresh 六欄相符、Human 各全程0提示；原遷移／controlled-stop 歷史保留。 | W2 真自然到期／P1、W3 Rebuilt／完整週期、minimum 完成或新的正式 adapter 採用；RP delete=0，RT 僅 metadata。 |
 | [E016／PR #72 本地登出](E016/README.md) | bb6752a 真DPK／synthetic first／fresh成功，兩exact processes退出及Human各complete zero，受控refresh競態另列。 | 不證真OAuth／UI／其他profile／crosswriter／durability；舊indeterminate、兩組已耗額度及configuration／sentinel殘留保持。 |
 | [E017／PR #73 PAT 儲存](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/experiments/E017/github-pat-dpk-storage/README.md) | 原source5465／E016路徑真DPK、A／B跨程序、同身分真重建、owned cleanup／nil，六runtime Human各全程0；E017離線移轉另列。 | 不證新E017來源live、真PAT遠端有效性、renewal／rotation／分發／durability或HC04／HC05接受；舊unknown保持。 |
+| [E019](E019/README.md) | 直接指派查詢的 12 項受控測試通過。 | 真人查詢未執行。 |
+| [E020](E020/README.md) | OAuth 真人驗收通過。mlops-async#72 四欄吻合，2 個唯讀 GET。 | 證據限當次帳號與單筆正例，自查完成狀態待定義。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 2026-11-11 Human完成指定狀態朗讀、局部大字與focus／rapid案例，明確通過並採用。 | 假資料展示範圍，正式 backend／OAuth 與系統字級偏好整合屬後續能力。Human大字為21pt五畫面及17pt同PAT，15格矩陣沿用工具來源。 |
 | [PR #75 正式 Login UI 元件化](https://github.com/a129924/rivet/pull/75) | 正式組合元件、獨立驗收支援；6a binary的必要原生／Human語音差異通過並獲HC02接受。 | E011凍結；Canvas未驗；不證真認證、外層Adapter、儲存／session／產品接入或新merge build驗收。 |
