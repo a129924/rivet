@@ -10,7 +10,7 @@
 
 OAuth 使用既有正式 session／exchange，選擇性採用 E013 loopback／browser 機制的新正式元件，不import實驗。Listener限127.0.0.1動態port與固定callback path；startup10秒、授權300秒，無效callback繼續等待，失敗不保存。Browser opener在MainActor並先檢查取消。
 
-兩路以候選token直接執行HTTPS GitHub.com `/user`，套用既有Bearer純轉換、Accept與RivetLoginRuntime User-Agent；HTTP redirects由既有redirect blocker拒絕。僅200、正整數id與非空白login為有效帳號。沒有scope.prepare、restore、refresh或401 retry；identity不保存、不交付。
+兩路以候選 token 直接執行與 Inbox 共用的 `GitHubAuthenticatedUserEndpoint.shared`（HTTPS GitHub.com `GET /user`），套用既有Bearer純轉換、Accept與RivetLoginRuntime User-Agent；HTTP redirects由既有redirect blocker拒絕。僅200、正整數id與非空白login為有效帳號。沒有scope.prepare、restore、refresh或401 retry；identity不保存、不交付。
 
 驗證後才保存OAuth完整bundle或PAT，另一store不動，不記active-mode、不遷移legacy。`.success`為無payload標記，代表驗證與save完成；所有階段錯誤映射有限failure，不回傳原始error或敏感資料。
 

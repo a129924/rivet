@@ -375,6 +375,7 @@ struct StaticIsolationTests {
       "OAuth/GitHubOAuthAuthorizationError.swift", "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift", "REST/GitHubHTTPClient.swift",
       "REST/GitHubRestClient.swift", "REST/GitHubHTTPClientError.swift",
+      "REST/Endpoints/GitHubAuthenticatedUserEndpoint.swift", "REST/GitHubRESTDestination.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift", "Stores/KeychainTokenStore.swift",
       "Stores/GitHubOAuthDataProtectionStores.swift", "Stores/GitHubPATDataProtectionStore.swift",
@@ -389,12 +390,7 @@ struct StaticIsolationTests {
       let imports = try importedModuleRoots(in: source)
 
       let forbiddenImports: Set = [
-        "RivetHTTPClient",
-        "Keychain",
-        "Network",
-        "FoundationNetworking",
-        "Apollo",
-        "ApolloAPI",
+        "RivetHTTPClient", "Keychain", "Network", "FoundationNetworking", "Apollo", "ApolloAPI",
       ]
       let apolloFiles: Set = [
         "GraphQL/GitHubGraphQLServing.swift",
@@ -417,6 +413,8 @@ struct StaticIsolationTests {
         "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
         "REST/GitHubHTTPClient.swift",
         "REST/GitHubRestClient.swift",
+        "REST/Endpoints/GitHubAuthenticatedUserEndpoint.swift",
+        "REST/GitHubRESTDestination.swift",
       ]
       if httpClientFiles.contains(path) {
         forbiddenForFile.remove("RivetHTTPClient")

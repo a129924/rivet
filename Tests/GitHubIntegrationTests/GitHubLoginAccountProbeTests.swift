@@ -12,6 +12,7 @@ struct GitHubLoginAccountProbeTests {
       token: "fixture")
     let requests = await transport.requests
     #expect(requests.count == 1)
+    #expect(requests.first?.httpMethod == "GET")
     #expect(requests.first?.url?.absoluteString == "https://api.github.com/user")
     #expect(requests.first?.value(forHTTPHeaderField: "Authorization") == "Bearer fixture")
     #expect(requests.first?.value(forHTTPHeaderField: "User-Agent") == "RivetLoginRuntime")

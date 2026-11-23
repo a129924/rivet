@@ -8,8 +8,9 @@ struct GitHubLoginAccountProbe: Sendable {
 
   func validate(token: String) async throws {
     try Task.checkCancellation()
+    let endpoint = GitHubAuthenticatedUserEndpoint.shared
     let request = HTTPRequest(
-      url: try HTTPURL(URL(string: "https://api.github.com/user")!), method: .get,
+      url: try endpoint.makeURL(), method: endpoint.method,
       headers: [.accept: "application/vnd.github+json", .userAgent: "RivetLoginRuntime"])
     let authorized = try BearerAuth(token: token).applying(to: request)
     let response = try await client.execute(authorized)

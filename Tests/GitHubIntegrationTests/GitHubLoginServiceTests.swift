@@ -1,10 +1,42 @@
 import Foundation
+import RivetHTTPClient
 import Testing
 
 @testable import GitHubIntegration
 
 @Suite("Dual login runtime")
 struct GitHubLoginServiceTests {
+  @Test(arguments: [false, true])
+  func candidateBearerReachesAccountProbeBeforeSaving(_ oauth: Bool) async throws {
+    let credential = Self.bundle()
+    let pat = try PersonalAccessToken(rawValue: "candidate-pat")
+    let transport = LoginProbeTransport(status: 200, body: #"{"id":1,"login":"octocat"}"#)
+    let probe = GitHubLoginAccountProbe(client: HTTPClient(transport: transport))
+    let saved = LoginTrace()
+    let service = GitHubLoginService(
+      coordinator: GitHubLoginCoordinator(),
+      dependencies: .init(
+        authorize: { credential },
+        validate: { try await probe.validate(token: $0) },
+        saveOAuth: { _ in
+          #expect(await transport.requests.count == 1)
+          await saved.append("oauth")
+        },
+        savePAT: { _ in
+          #expect(await transport.requests.count == 1)
+          await saved.append("pat")
+        }))
+    #expect(await service.authenticate(oauth ? .oauth : .pat(pat)) == .success)
+    let requests = await transport.requests
+    #expect(requests.count == 1)
+    #expect(requests.first?.httpMethod == "GET")
+    #expect(requests.first?.url?.absoluteString == "https://api.github.com/user")
+    #expect(
+      requests.first?.value(forHTTPHeaderField: "Authorization")
+        == (oauth ? "Bearer oauth-access" : "Bearer candidate-pat"))
+    #expect(await saved.values == [oauth ? "oauth" : "pat"])
+  }
+
   @Test func patValidatesBeforeSaving() async throws {
     let trace = LoginTrace()
     let service = GitHubLoginService(

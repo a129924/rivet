@@ -21,7 +21,7 @@ struct OAuthLocalSignOutTests {
     try await provider.signOut()
     await #expect(throws: GitHubHTTPClientError.authenticationRequired) {
       try await scope.rest.get(
-        url: HTTPURL(URL(string: "https://api.github.com/user")!), headers: [:], body: nil)
+        url: GitHubAuthenticatedUserEndpoint.shared.makeURL(), headers: [:], body: nil)
     }
     await #expect(throws: GitHubGraphQLClientError.authenticationRequired) {
       try await scope.graphql.fetch(query: ProbeQuery(value: "retained"))
@@ -46,7 +46,7 @@ struct OAuthLocalSignOutTests {
     }
     let rest = Task {
       try await scope.rest.get(
-        url: HTTPURL(URL(string: "https://api.github.com/user")!), headers: [:], body: nil)
+        url: GitHubAuthenticatedUserEndpoint.shared.makeURL(), headers: [:], body: nil)
     }
     let graph = Task { try await scope.graphql.fetch(query: ProbeQuery(value: "late401")) }
     await restGate.arrived()

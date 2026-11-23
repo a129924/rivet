@@ -10,7 +10,7 @@ struct GitHubHTTPTransportTests {
   func productionSessionRejectsRedirectToAnotherDestination() throws {
     let session = GitHubHTTPClient.makeSession()
     let delegate = try #require(session.delegate as? GitHubHTTPRedirectBlocker)
-    let source = try #require(URL(string: "https://api.github.com/user"))
+    let source = try GitHubAuthenticatedUserEndpoint.shared.makeURL().value
     let destination = try #require(URL(string: "https://not-github.example/collect"))
     let response = try #require(
       HTTPURLResponse(
@@ -37,8 +37,8 @@ struct GitHubHTTPTransportTests {
     let configuration = URLSessionConfiguration.ephemeral
     configuration.protocolClasses = [RawRedirectURLProtocol.self]
     let client = GitHubHTTPClient.makeHTTPClient(configuration: configuration)
-    let original = HTTPRequest(
-      url: try HTTPURL(URL(string: "https://api.github.com/user")!), method: .get)
+    let endpoint = GitHubAuthenticatedUserEndpoint.shared
+    let original = HTTPRequest(url: try endpoint.makeURL(), method: endpoint.method)
     let authenticated = try BearerAuth(token: "local-test-token").applying(to: original)
     let response = try await client.execute(authenticated)
     #expect(response.statusCode == 302)

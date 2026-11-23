@@ -97,17 +97,20 @@ struct GitHubHTTPClientTests {
     "http://api.github.com/user", "https://github.com/user",
     "https://api.github.com.evil.example/user", "https://evil@api.github.com/user",
     "https://api.github.com:444/user", "https://api.github.com/user#fragment",
+    "https://user:password@api.github.com/user",
   ])
   func invalidDestinationFailsBeforeCredentialAcquisition(_ address: String) async throws {
     let store = GraphQLCredentialStore()
+    let fetcher = GraphQLTokenFetcher()
     let transport = RESTProbeTransport(statuses: [200])
-    let provider = OAuthTokenProvider(store: store, fetcher: GraphQLTokenFetcher())
+    let provider = OAuthTokenProvider(store: store, fetcher: fetcher)
     let client = GitHubHTTPClient(provider: provider, httpClient: HTTPClient(transport: transport))
     let request = HTTPRequest(url: try HTTPURL(URL(string: address)!), method: .get)
     await #expect(throws: GitHubHTTPClientError.invalidRequest) {
       try await client.executeGet(request)
     }
     #expect(await store.loads == 0)
+    #expect(await fetcher.calls == 0)
     #expect(await transport.requests.isEmpty)
   }
 

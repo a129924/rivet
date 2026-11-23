@@ -20,8 +20,8 @@
 - 完整空佇列是成功結果。
 - PR Inbox 透過自己擁有的 Port 取得資料；它不直接依賴 PR Reader。
 - 對 Presentation 提供穩定的 Inbox Facade；Presentation Session 可在重新整理後保留目前選取狀態。
-- Inbox 自有 `RivetPRInboxGitHub` 基礎設施 target 持有 GitHub adapter、endpoint、媒體類型、分頁、DTO 與 failure mapping。它接收既有 GitHub REST client，先讀取 OAuth 登入帳號，再搜尋自己開的 open PR。 [API 規格](../../github-api/rest-inbox-discovery.md)
-- non-BC `GitHubIntegration` 提供既有 GitHub REST、GraphQL client 與認證支援。只有 Inbox 基礎設施 target 依賴 GitHub 特定介面。DTO 與技術錯誤在跨過 Port 前轉為 Inbox 語意。
+- Inbox 自有 `RivetPRInboxGitHub` 基礎設施 target 持有 GitHub adapter、自查搜尋 endpoint、媒體類型、分頁、DTO 與 failure mapping。它接收既有 GitHub REST client，先以共用帳號 Endpoint 讀取 OAuth 登入帳號，再以本次搜尋 Endpoint 搜尋自己開的 open PR。同一搜尋實例提供首請求與 next Link 的路徑和查詢條件。 [API 規格](../../github-api/rest-inbox-discovery.md)
+- non-BC `GitHubIntegration` 提供共用帳號 Endpoint、REST 目的地規則，以及既有 REST、GraphQL client 與認證支援。只有 Inbox 基礎設施 target 依賴 GitHub 特定介面。DTO 與技術錯誤在跨過 Port 前轉為 Inbox 語意。
 - caller 持有 `GitHubClientScope` 所需的 OAuth provider。Inbox 基礎設施只接收 REST client，憑證生命週期由 `GitHubIntegration` 與 caller 管理。
 
 ## Failure Contract

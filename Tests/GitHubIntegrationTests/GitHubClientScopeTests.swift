@@ -248,7 +248,8 @@ private func prepared(
 }
 
 private func scopeRequest() throws -> HTTPRequest {
-  HTTPRequest(url: try HTTPURL(URL(string: "https://api.github.com/user")!), method: .get)
+  let endpoint = GitHubAuthenticatedUserEndpoint.shared
+  return HTTPRequest(url: try endpoint.makeURL(), method: endpoint.method)
 }
 
 private func scopeCredential(
