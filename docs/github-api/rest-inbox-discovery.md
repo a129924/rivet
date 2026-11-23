@@ -1,6 +1,6 @@
 # REST Inbox Discovery
 
-最後官方校驗：2026-09-03。
+自查查詢官方校驗日期為 2026-11-18。
 
 ## Repository Pull Request List
 
@@ -16,13 +16,17 @@
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)、[GitHub REST OpenAPI `pull-request-simple` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`draft` 未列於 `required`；`head.repo` 為 nullable） |
 
-此 endpoint 適合 repository 範圍瀏覽，不決定「等待我 review」的 Inbox membership。
+此 endpoint 適合單一 repository 範圍瀏覽。
 
-## Cross-Repository Review Requests
+## 跨 repository 自查候選
+
+使用同一 OAuth REST client 呼叫 `GET /user` 取得登入名稱，再執行 `GET /search/issues`，查詢為 `q=is:pr is:open author:<login>`。每頁最多 100 筆，依同一查詢的 Link 讀到完整尾頁，搜尋上限為 1,000 筆。從 PR 的 `user.login` 與 `state` 驗證作者及開啟狀態，空集合為成功。若回應有 `incomplete_results` 或任一頁失敗，整次更新回傳 `.unavailable`。Private repository 仍須由 OAuth credential 擁有對應權限。 [GitHub 作者查詢](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests#search-by-author) · [REST Search](https://docs.github.com/en/rest/search/search#search-issues-and-pull-requests)
+
+## 跨 repository 直接審閱指派（E019）
 
 | 項目 | 定義 |
 | --- | --- |
-| 狀態 | MVP 唯讀 |
+| 狀態 | E019 歷史驗證範圍 |
 | Operation | `GET /search/issues` |
 | 必要 query | `q=is:pr is:open user-review-requested:@me` |
 | 用途 | 尋找直接要求目前使用者 review 的 open PR。 |
@@ -32,7 +36,7 @@
 | 認證／權限 | 此 catalog 固定使用代表目前使用者的 `@me`，因此必須以有效 token 呼叫；查詢 private resources 時 token 另須具有 repository access。多資源查詢只回傳 token 可存取的資源。 |
 | 官方來源 | [Search issues and pull requests](https://docs.github.com/en/rest/search/search#search-issues-and-pull-requests)、[REST pagination](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api)、[search access errors](https://docs.github.com/en/rest/search/search#access-errors-or-missing-search-results)、[GitHub REST OpenAPI `issue-search-result-item` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`user` 為 nullable） |
 
-`review-requested:USERNAME` 用於指定使用者；`user-review-requested:@me` 是「直接要求我 review」的明確 qualifier。team review request 不是本 MVP Inbox 的既定 membership 規則。
+`review-requested:USERNAME` 用於指定使用者；`user-review-requested:@me` 是「直接要求我 review」的明確 qualifier。E019 驗證範圍為直接指派。
 
 ## Sources
 

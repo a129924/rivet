@@ -2,9 +2,11 @@
 
 ## 責任
 
-定義目前明確要求使用者 review 的 GitHub.com open Pull Request，並提供列表、排序與重新整理所需的語意資料。
+提供目前登入帳號自己開的 GitHub.com open PR，供單人開發者在合併前挑選自查。符合條件的 open Draft 也在清單內。
 
-- `RivetPRInbox` root library target 使用 `Sources/BoundedContexts/PRInbox/`，只提供 target-local `Outcome`、Inbox identity、review-request candidate、`ReviewRequestSource` Port 與 refresh-only Facade；尚未實作外部 GitHub Adapter。
+- `RivetPRInbox` 提供 Inbox 值、`SelfReviewSource`、`SelfReviewCandidate` 與既有 refresh-only Facade。組裝端可用 `PRInboxFacade(selfReviewSource:)` 交付自查入口。
+- 原直接指派 Port 與 Facade initializer 仍支援既有 caller 與 E019 重現。 [E019 紀錄](../../../experiments/E019/README.md)
+
 ## 非責任
 
 - 不讀取單一 PR 的完整背景、討論、checks、檔案或 diff。
@@ -14,17 +16,17 @@
 
 ## 核心概念與互動
 
-- 核心集合是「open 且明確要求目前使用者 review」的 PR；具體排序策略留待正式產品 topic 分析後定義。
-- 空佇列是成功結果，不是 failure。
+- 自查候選只包含目前帳號開啟且仍為 open 的 PR。保留來源順序，自查完成狀態與產品排序策略留待後續定義。
+- 完整空佇列是成功結果。
 - PR Inbox 透過自己擁有的 Port 取得資料；它不直接依賴 PR Reader。
 - 對 Presentation 提供穩定的 Inbox Facade；Presentation Session 可在重新整理後保留目前選取狀態。
-- 未來若需 GitHub 資料，僅 PR Inbox 自己的 Infra 可擁有 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping；它不與 PR Reader 或其他 BC 共用 adapter。
-- 已實作的 non-BC `GitHubIntegration` 目前提供既有同步 access-token store/provider contract，以及沒有 conformer 的 public、`Sendable` async `GitHubAccessTokenProvider` token-acquisition contract；後者不處理 PAT／OAuth lifecycle、request、transport、401 recovery 或 retry。未來只有此 Infra 可依賴其 deferred raw transport、authentication、共通 request headers／API version、pagination、rate-limit、retry、GitHub error technical classification 與 shared configuration。它不依賴任何 BC。GitHub DTO translation、technical classification 到 Inbox failure contract 的 mapping 與 Inbox business meaning 仍只留在此 Infra；它們不會進入 Core、UseCase 或 Port，且不形成 shared BC failure contract。
-- `GitHubIntegration` 已交付的 `OAuthTokenProvider` actor 與 `OAuthCredentialStore`／`OAuthTokenFetcher` ports 僅提供 shared credential lifecycle；Inbox 不持有其 credential bundle 或 provider failure，也不由此取得 HTTP、401 或 retry policy。OAuth adapters 與 Inbox client integration 仍為 deferred。
+- Inbox 自有 `RivetPRInboxGitHub` 基礎設施 target 持有 GitHub adapter、endpoint、媒體類型、分頁、DTO 與 failure mapping。它接收既有 GitHub REST client，先讀取 OAuth 登入帳號，再搜尋自己開的 open PR。 [API 規格](../../github-api/rest-inbox-discovery.md)
+- non-BC `GitHubIntegration` 提供既有 GitHub REST、GraphQL client 與認證支援。只有 Inbox 基礎設施 target 依賴 GitHub 特定介面。DTO 與技術錯誤在跨過 Port 前轉為 Inbox 語意。
+- caller 持有 `GitHubClientScope` 所需的 OAuth provider。Inbox 基礎設施只接收 REST client，憑證生命週期由 `GitHubIntegration` 與 caller 管理。
 
 ## Failure Contract
 
-`GitHubIntegration` 已提供 internal-only GraphQL Query／Mutation foundation；它不是 Inbox 可直接呼叫的跨 target capability。Inbox 的 GitHub adapter、operation、DTO、failure mapping 與 client integration 仍延後，Core／UseCase／Port 的既有隔離不變。
+完整空集合為成功。認證、傳輸、DTO 或分頁失敗在跨越 Port 前映射為 `.unavailable`，包含任一頁失敗或搜尋未回傳完整結果。
 
 PR Inbox 只對外表達自身語意，例如待審閱佇列暫時不可取得；其 local Infra GitHub adapter 不得將 GitHub DTO、HTTP status、token 或技術層 failure 洩漏至 Inbox core Port，跨越 Port 前必須映射為 Inbox failure contract。
 

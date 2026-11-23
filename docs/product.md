@@ -2,20 +2,21 @@
 
 ## Goal
 
-集中查看目前等待使用者 review 的 GitHub Pull Requests，降低在 GitHub 網站、repository 與 PR 間切換的成本。
+集中查看目前登入帳號自己開的 open GitHub Pull Requests，降低在 GitHub 網站、repository 與 PR 間切換的成本。
 
 Rivet 的角色是個人 GitHub PR 工作台，不是 GitHub 或 Graphite 的完整替代品。
 
 ## Success Criteria
 
-連續兩週以上，使用者挑選及開啟待 review PR 時優先使用 Rivet。
+連續兩週以上，使用者挑選及開啟自查候選 PR 時優先使用 Rivet。
 
 ## In-Scope
 
 - 個人使用情境。
 - GitHub.com。
 - 單一使用者。
-- 核心集合為「目前等待使用者 review 的 open PR」。
+- 核心集合為目前登入帳號自己開的 open PR，包含符合條件的 Draft。
+- 清單提供合併前的自查候選。自查完成狀態留待後續定義。
 
 ## Out-Of-Scope
 

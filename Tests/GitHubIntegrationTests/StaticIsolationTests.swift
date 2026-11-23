@@ -13,7 +13,7 @@ struct StaticIsolationTests {
       Set(products.keys) == [
         "GitHubIntegration", "RivetPRInbox", "RivetPRReader", "RivetPRReaderWebViewBridge",
         "RivetPRReaderHarnessRuntime", "RivetPRReaderHarness", "RivetPresentation",
-        "RivetLoginDemo",
+        "RivetLoginDemo", "RivetPRInboxGitHub",
       ])
     #expect(
       Set(targets.keys) == [
@@ -22,6 +22,7 @@ struct StaticIsolationTests {
         "RivetPRReaderWebViewBridgeTests", "RivetPRReaderHarnessRuntime",
         "RivetPRReaderHarnessRuntimeTests", "RivetPRReaderHarness", "RivetPresentationTests",
         "RivetLoginDemo", "RivetLoginDemoRuntime", "RivetLoginDemoRuntimeTests",
+        "RivetPRInboxGitHub", "RivetPRInboxGitHubTests",
       ])
     let bridgeName = "RivetPRReaderWebViewBridge"
     #expect(targetNames(in: try #require(products[bridgeName])) == [bridgeName])
