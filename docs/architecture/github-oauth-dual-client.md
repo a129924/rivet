@@ -36,6 +36,7 @@ Facade（layer 外的 application composition root）
 - `OAuthTokenProvider` 是唯一 lifecycle owner：記憶體 credential、restore、expiry-first refresh、accepted rotation persistence、version 與 single-flight。remote rotation accepted 後的 persistence failure 使 provider 永久 unavailable；它不持有、不接收、不重送 `HTTPRequest` 或 Apollo operation。
 - `TokenSnapshot` 是 public immutable、`Equatable`、`Sendable` client input，只包含 access token 與 version；`hasSameVersion(as:)` 只比較 version。refresh token 與完整 bundle 不會暴露給 client。
 - 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration。另已交付的 async `GitHubAccessTokenProvider` 只表示 token acquisition；新的 OAuth provider 不 conform 或 bridge 它，也不實作 request、transport、401 classification 或 retry。
+- GitHub.com REST client 在取得 token snapshot 前核對 method 與共用目的地。目的地允許 HTTPS、`api.github.com`、省略 port 或使用 443，拒絕帳密與 fragment。共用帳號 Endpoint、Inbox 搜尋 Endpoint 組裝及 Inbox 的 next Link 與 `repository_url` 共用這份技術規則。
 - internal REST client 由 Scope 注入共享 `OAuthTokenProvider`，production 自建拒絕 redirect 的 bare HTTP executor，並保有自己的原 `HTTPRequest`；GraphQL client 保有自己的 Apollo operation。兩者只共用 provider instance，不互相呼叫，GraphQL 亦不經 REST route。
 
 ## Token Lifecycle

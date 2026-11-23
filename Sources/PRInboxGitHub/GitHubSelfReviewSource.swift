@@ -4,7 +4,6 @@ import RivetHTTPClient
 import RivetPRInbox
 
 public struct GitHubSelfReviewSource: SelfReviewSource {
-  private static let pageSize = 100
   private static let pageLimit = 10
   private static let headers = HTTPHeaders([
     "Accept": "application/vnd.github+json",
@@ -20,10 +19,7 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
 
   public func fetchSelfReviewCandidates() async -> Outcome<[SelfReviewCandidate], PRInboxFailure> {
     do {
-      guard let viewerURL = URL(string: "https://api.github.com/user") else {
-        return .failure(.unavailable)
-      }
-      let response = try await get(viewerURL)
+      let response = try await get(GitHubAuthenticatedUserEndpoint.shared.makeURL())
       let viewer = try response.json(Viewer.self, decoder: JSONDecoder())
       guard Self.isSearchableLogin(viewer.login) else { return .failure(.unavailable) }
       return .success(try await search(viewerLogin: viewer.login))
@@ -33,8 +29,8 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
   }
 
   private func search(viewerLogin: String) async throws -> [SelfReviewCandidate] {
-    let query = "is:pr is:open author:\(viewerLogin)"
-    var url = try Self.searchURL(query: query)
+    let endpoint = GitHubSelfReviewSearchEndpoint(author: viewerLogin)
+    var url = try endpoint.makeURL()
     var candidates: [SelfReviewCandidate] = []
     var total: Int?
 
@@ -42,14 +38,15 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
       let response = try await get(url)
       let payload = try response.json(SearchPage.self, decoder: JSONDecoder())
       guard !payload.incomplete,
-        (0...(Self.pageLimit * Self.pageSize)).contains(payload.total),
-        payload.items.count <= Self.pageSize,
+        (0...(Self.pageLimit * endpoint.pageSize)).contains(payload.total),
+        payload.items.count <= endpoint.pageSize,
         total == nil || total == payload.total
       else { throw PRInboxFailure.unavailable }
 
       total = payload.total
       candidates += try payload.items.map { try $0.candidate(for: viewerLogin) }
-      guard let next = try Self.nextURL(in: response.headers.link, query: query, page: page) else {
+      guard let next = try Self.nextURL(in: response.headers.link, endpoint: endpoint, page: page)
+      else {
         guard candidates.count == payload.total else { throw PRInboxFailure.unavailable }
         return candidates
       }
@@ -59,9 +56,9 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
     throw PRInboxFailure.unavailable
   }
 
-  private func get(_ url: URL) async throws -> HTTPResponse {
+  private func get(_ url: HTTPURL) async throws -> HTTPResponse {
     try Task.checkCancellation()
-    let response = try await rest.get(url: HTTPURL(url), headers: Self.headers, body: nil)
+    let response = try await rest.get(url: url, headers: Self.headers, body: nil)
     try Task.checkCancellation()
     guard response.statusCode == 200 else { throw PRInboxFailure.unavailable }
     return response
@@ -75,22 +72,11 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
       }
   }
 
-  private static func searchURL(query: String) throws -> URL {
-    var components = URLComponents()
-    components.scheme = "https"
-    components.host = "api.github.com"
-    components.path = "/search/issues"
-    components.queryItems = [
-      URLQueryItem(name: "q", value: query),
-      URLQueryItem(name: "per_page", value: String(pageSize)),
-    ]
-    guard let url = components.url else { throw PRInboxFailure.unavailable }
-    return url
-  }
-
-  private static func nextURL(in link: String?, query: String, page: Int) throws -> URL? {
+  private static func nextURL(
+    in link: String?, endpoint: GitHubSelfReviewSearchEndpoint, page: Int
+  ) throws -> HTTPURL? {
     guard let link else { return nil }
-    var next: URL?
+    var next: HTTPURL?
     for part in link.split(separator: ",", omittingEmptySubsequences: false) {
       let entry = part.trimmingCharacters(in: .whitespaces)
       guard entry.first == "<", let end = entry.firstIndex(of: ">") else {
@@ -102,22 +88,18 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
       let destination = String(entry[entry.index(after: entry.startIndex)..<end])
       guard next == nil, page < pageLimit,
         var components = URLComponents(string: destination),
-        isGitHubAPI(components), components.percentEncodedPath == "/search/issues",
+        GitHubRESTDestination.isAllowed(components), components.percentEncodedPath == endpoint.path,
         let url = components.url
       else { throw PRInboxFailure.unavailable }
 
       // GitHub encodes spaces in some paging links as plus signs.
       components.percentEncodedQuery = components.percentEncodedQuery?.replacingOccurrences(
         of: "+", with: "%20")
-      let expected = [
-        URLQueryItem(name: "q", value: query),
-        URLQueryItem(name: "per_page", value: String(pageSize)),
-        URLQueryItem(name: "page", value: String(page + 1)),
-      ]
+      let expected = endpoint.queryItems + [URLQueryItem(name: "page", value: String(page + 1))]
       guard let items = components.queryItems, items.count == expected.count,
         expected.allSatisfy(items.contains)
       else { throw PRInboxFailure.unavailable }
-      next = url
+      next = try HTTPURL(url)
     }
     return next
   }
@@ -137,13 +119,6 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
     }
     return relation
   }
-}
-
-private func isGitHubAPI(_ components: URLComponents) -> Bool {
-  components.scheme?.lowercased() == "https"
-    && components.host?.lowercased() == "api.github.com"
-    && (components.port == nil || components.port == 443)
-    && components.user == nil && components.password == nil && components.fragment == nil
 }
 
 private struct Viewer: Decodable, Sendable {
@@ -183,7 +158,7 @@ private struct SearchItem: Decodable, Sendable {
   func candidate(for viewerLogin: String) throws -> SelfReviewCandidate {
     guard number > 0, !title.isEmpty,
       let repository = URLComponents(string: repositoryURL),
-      isGitHubAPI(repository), repository.query == nil
+      GitHubRESTDestination.isAllowed(repository), repository.query == nil
     else { throw PRInboxFailure.unavailable }
 
     let path = repository.path.split(separator: "/", omittingEmptySubsequences: false)

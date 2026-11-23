@@ -7,8 +7,13 @@ import Testing
 
 @Suite("GitHub self-review inbox")
 struct GitHubSelfReviewSourceTests {
-  @Test
-  func facadeReturnsOnlyOpenItemsAuthoredByTheOAuthViewerInPageOrder() async throws {
+  @Test(arguments: [
+    "https://api.github.com/search/issues?q=is%3Apr+is%3Aopen+author%3Amy-user&per_page=100&page=2",
+    "https://api.github.com:443/search/issues?page=2&per_page=100&q=is:pr%20is:open%20author:my-user",
+  ])
+  func facadeReturnsOnlyOpenItemsAuthoredByTheOAuthViewerInPageOrder(
+    _ nextAddress: String
+  ) async throws {
     let stub = RESTStub([
       .success(.viewer),
       .success(
@@ -20,7 +25,7 @@ struct GitHubSelfReviewSourceTests {
             .init(number: 4, state: "closed", merged: true),
             .init(number: 5, author: nil),
           ],
-          total: 7, link: nextLink)),
+          total: 7, link: "<\(nextAddress)>; rel=\"next\"")),
       .success(
         try .page(
           [
@@ -38,6 +43,7 @@ struct GitHubSelfReviewSourceTests {
 
     let requests = await stub.requests
     #expect(requests.map(\.url.value.path) == ["/user", "/search/issues", "/search/issues"])
+    #expect(requests.last?.url.value.absoluteString == nextAddress)
     let firstSearch = try #require(requests.dropFirst().first)
     let query = URLComponents(url: firstSearch.url.value, resolvingAgainstBaseURL: false)?
       .queryItems
@@ -83,6 +89,9 @@ struct GitHubSelfReviewSourceTests {
     #"<https://other.example/search/issues?q=is%3Apr+is%3Aopen+author%3Amy-user&per_page=100&page=2>; rel="next""#,
     #"<https://api.github.com/search/issues?q=is%3Apr+is%3Aopen+author%3Asomeone-else&per_page=100&page=2>; rel="next""#,
     #"<https://api.github.com/search/issues?q=is%3Apr+is%3Aopen+author%3Amy-user&per_page=100&page=1>; rel="next""#,
+    #"<https://api.github.com/%73earch/issues?q=is:pr%20is:open%20author:my-user&per_page=100&page=2>; rel="next""#,
+    #"<https://api.github.com/search/issues?q=is:pr%20is:open%20author:my-user&per_page=100&page=3>; rel="next""#,
+    #"<https://api.github.com/search/issues?q=is:pr%20is:open%20author:my-user&per_page=100&page=2&page=2>; rel="next""#,
   ])
   func rejectsNextLinkOutsideTheOriginalSearch(_ link: String) async throws {
     let stub = RESTStub([
@@ -200,14 +209,18 @@ private actor RESTStub: GitHubRestClient {
     self.responses = responses
   }
 
-  func executeGet(_ request: HTTPRequest) async throws -> HTTPResponse {
-    requests.append(request)
+  func get(url: HTTPURL, headers: HTTPHeaders, body: Data?) async throws -> HTTPResponse {
+    requests.append(HTTPRequest(url: url, method: .get, headers: headers, body: body))
     guard !responses.isEmpty else { throw Error.unexpectedRequest }
     switch responses.removeFirst() {
     case .success(let response): return response
     case .failure(.cancelled): throw CancellationError()
     case .failure(.unexpectedRequest): throw Error.unexpectedRequest
     }
+  }
+
+  func executeGet(_ request: HTTPRequest) async throws -> HTTPResponse {
+    throw Error.unexpectedRequest
   }
 
   func executePost(_ request: HTTPRequest) async throws -> HTTPResponse {

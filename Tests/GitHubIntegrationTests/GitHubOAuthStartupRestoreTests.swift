@@ -313,8 +313,8 @@ struct GitHubOAuthStartupRestoreTests {
       Issue.record("Expected ready")
       return
     }
-    let request = HTTPRequest(
-      url: try HTTPURL(URL(string: "https://api.github.com/user")!), method: .get)
+    let endpoint = GitHubAuthenticatedUserEndpoint.shared
+    let request = HTTPRequest(url: try endpoint.makeURL(), method: endpoint.method)
     _ = try? await scope.rest.executeGet(request)
     #expect(await transport.calls == 1)
     #expect(await fetcher.calls == 1)

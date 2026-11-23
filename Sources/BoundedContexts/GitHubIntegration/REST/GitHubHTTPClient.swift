@@ -78,14 +78,9 @@ internal final class GitHubHTTPClient: GitHubRestClient {
   }
 
   private static func isAllowed(_ request: HTTPRequest) -> Bool {
-    guard let parts = URLComponents(url: request.url.value, resolvingAgainstBaseURL: false),
-      parts.scheme?.lowercased() == "https",
-      parts.host?.lowercased() == "api.github.com",
-      parts.user == nil, parts.password == nil,
-      parts.fragment == nil,
-      parts.port == nil || parts.port == 443
+    guard let parts = URLComponents(url: request.url.value, resolvingAgainstBaseURL: false)
     else { return false }
-    return true
+    return GitHubRESTDestination.isAllowed(parts)
   }
 
   private func atAsyncBoundary<Value: Sendable>(
