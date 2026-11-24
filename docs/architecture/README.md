@@ -44,7 +44,7 @@ Swift bridge snapshot → DiffSnapshotAdapter.receiveSnapshot → DiffFacade.pre
 - 每個 Bounded Context 擁有自己的 failure contract；不得洩漏、重用或混入其他 Bounded Context 的 failure contract。
 - `InfraUnknownError` 用於各 BC Adapter 無法安全分類外部 failure 時的 local normalization。
 - `InfraUnknownError` 應在該 BC 的 Adapter 邊界產生或正規化；其他層只能傳遞，或補充自身語意。`GitHubIntegration` 的外部錯誤技術分類由 consuming BC 的 local Infra 映射為該 BC 自有的 failure contract。
-- `GitHubIntegration` 的 internal `GitHubResponseClassifier` 解釋已被操作拒絕的 GitHub REST `HTTPResponse`，回傳技術分類 `GitHubAPIFailure`。Endpoint／Operation 持有成功狀態契約，REST client 持有請求執行與 401 復原。Phase A 已用合成回應獨立驗證，production 呼叫與跨模組 Adapter 接線留待後續。
+- `GitHubIntegration` 的 `GitHubResponseClassifier` 解釋已被操作拒絕的 GitHub REST `HTTPResponse`，回傳技術分類 `GitHubAPIFailure`。兩者具有 Swift `package` 可見性。PR Inbox 的 GitHub Adapter 只接受 HTTP 200，並在帳號查詢與搜尋分頁的共用路徑將遭拒回應交給分類器，再將所有技術分類映射為 Inbox 的 `.unavailable`。Endpoint／Operation 持有成功狀態契約，REST client 持有請求執行與 401 復原。分類及接線已用合成回應與離線回歸測試驗證。
 - 純資料轉換與保證不失敗的 private helper，未來不強制使用 `Outcome`。
 
 ## 已確認的 Bounded Context Map
