@@ -60,7 +60,13 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
     try Task.checkCancellation()
     let response = try await rest.get(url: url, headers: Self.headers, body: nil)
     try Task.checkCancellation()
-    guard response.statusCode == 200 else { throw PRInboxFailure.unavailable }
+    guard response.statusCode == 200 else {
+      switch GitHubResponseClassifier().classifyFailure(response) {
+      case .unauthorized, .forbidden, .unclassifiedForbidden, .notFound,
+        .rateLimited, .serverError, .unexpectedStatus:
+        throw PRInboxFailure.unavailable
+      }
+    }
     return response
   }
 

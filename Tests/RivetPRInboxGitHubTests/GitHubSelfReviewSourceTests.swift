@@ -74,6 +74,25 @@ struct GitHubSelfReviewSourceTests {
     #expect(await stub.requests.map(\.url.value.path) == ["/user"])
   }
 
+  @Test(arguments: [401, 404, 429, 503, 201, 302])
+  func rejectedAccountResponseStopsBeforeSearch(_ status: Int) async {
+    let stub = RESTStub([.success(.json(#"{"login":"my-user"}"#, status: status))])
+    #expect(await inbox(stub).refresh() == .failure(.unavailable))
+    #expect(await stub.requests.map(\.url.value.path) == ["/user"])
+  }
+
+  @Test(arguments: [
+    HTTPResponse.json(#"{"message":"Resource not accessible by integration"}"#, status: 403),
+    HTTPResponse.json(#"{"message":"You have exceeded a secondary rate limit"}"#, status: 403),
+    HTTPResponse.json("{}", status: 403, headers: HTTPHeaders(["X-RateLimit-Remaining": "0"])),
+    HTTPResponse.json("{}", status: 403),
+  ])
+  func forbiddenSearchResponseIsUnavailableWithoutResending(_ response: HTTPResponse) async {
+    let stub = RESTStub([.success(.viewer), .success(response)])
+    #expect(await inbox(stub).refresh() == .failure(.unavailable))
+    #expect(await stub.requests.map(\.url.value.path) == ["/user", "/search/issues"])
+  }
+
   @Test
   func laterPageFailureDiscardsEarlierCandidates() async throws {
     let stub = RESTStub([
@@ -82,7 +101,8 @@ struct GitHubSelfReviewSourceTests {
       .success(.json("{}", status: 403)),
     ])
     #expect(await inbox(stub).refresh() == .failure(.unavailable))
-    #expect(await stub.requests.count == 3)
+    #expect(
+      await stub.requests.map(\.url.value.path) == ["/user", "/search/issues", "/search/issues"])
   }
 
   @Test(arguments: [
@@ -116,9 +136,21 @@ struct GitHubSelfReviewSourceTests {
     }
   }
 
+  @Test(arguments: [
+    GitHubHTTPClientError.authenticationRequired,
+    .invalidRequest,
+    .executionFailed,
+    .credentialLifecycle(stage: .refresh),
+  ])
+  func requestExecutionFailureIsUnavailableWithoutResending(_ error: GitHubHTTPClientError) async {
+    let stub = RESTStub([.success(.viewer), .failure(error)])
+    #expect(await inbox(stub).refresh() == .failure(.unavailable))
+    #expect(await stub.requests.map(\.url.value.path) == ["/user", "/search/issues"])
+  }
+
   @Test
   func cancellationMapsToUnavailableWithoutResending() async {
-    let stub = RESTStub([.success(.viewer), .failure(.cancelled)])
+    let stub = RESTStub([.success(.viewer), .failure(CancellationError())])
     #expect(await inbox(stub).refresh() == .failure(.unavailable))
     #expect(await stub.requests.count == 2)
   }
@@ -181,8 +213,10 @@ private struct Page: Encodable {
 extension HTTPResponse {
   fileprivate static var viewer: Self { .json(#"{"login":"my-user"}"#) }
 
-  fileprivate static func json(_ body: String, status: Int = 200) -> Self {
-    .init(statusCode: status, headers: [:], body: Data(body.utf8))
+  fileprivate static func json(
+    _ body: String, status: Int = 200, headers: HTTPHeaders = [:]
+  ) -> Self {
+    .init(statusCode: status, headers: headers, body: Data(body.utf8))
   }
 
   fileprivate static func page(
@@ -199,24 +233,19 @@ extension HTTPResponse {
 private actor RESTStub: GitHubRestClient {
   enum Error: Swift.Error {
     case unexpectedRequest
-    case cancelled
   }
 
-  private var responses: [Result<HTTPResponse, Error>]
+  private var responses: [Result<HTTPResponse, any Swift.Error>]
   private(set) var requests: [HTTPRequest] = []
 
-  init(_ responses: [Result<HTTPResponse, Error>]) {
+  init(_ responses: [Result<HTTPResponse, any Swift.Error>]) {
     self.responses = responses
   }
 
   func get(url: HTTPURL, headers: HTTPHeaders, body: Data?) async throws -> HTTPResponse {
     requests.append(HTTPRequest(url: url, method: .get, headers: headers, body: body))
     guard !responses.isEmpty else { throw Error.unexpectedRequest }
-    switch responses.removeFirst() {
-    case .success(let response): return response
-    case .failure(.cancelled): throw CancellationError()
-    case .failure(.unexpectedRequest): throw Error.unexpectedRequest
-    }
+    return try responses.removeFirst().get()
   }
 
   func executeGet(_ request: HTTPRequest) async throws -> HTTPResponse {

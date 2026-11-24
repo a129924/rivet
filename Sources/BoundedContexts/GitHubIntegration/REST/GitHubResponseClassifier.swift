@@ -1,7 +1,7 @@
 import Foundation
 import RivetHTTPClient
 
-internal enum GitHubAPIFailure: Error, Sendable, Equatable {
+package enum GitHubAPIFailure: Error, Sendable, Equatable {
   case unauthorized
   case forbidden
   case unclassifiedForbidden
@@ -11,8 +11,10 @@ internal enum GitHubAPIFailure: Error, Sendable, Equatable {
   case unexpectedStatus(statusCode: Int)
 }
 
-internal struct GitHubResponseClassifier: Sendable {
-  func classifyFailure(_ response: HTTPResponse) -> GitHubAPIFailure {
+package struct GitHubResponseClassifier: Sendable {
+  package init() {}
+
+  package func classifyFailure(_ response: HTTPResponse) -> GitHubAPIFailure {
     switch response.statusCode {
     case 401: .unauthorized
     case 403: classifyForbidden(response)
