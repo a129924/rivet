@@ -44,7 +44,7 @@ internal struct GitHubOAuthCodeExchanger: Sendable {
     do {
       response = try await httpClient.post(
         url: HTTPURL(GitHubOAuthEndpoints.tokenURL),
-        headers: [.accept: "application/json", .contentType: "application/x-www-form-urlencoded"],
+        headers: HeadersProvider.oauthToken.headers,
         body: Data(body.utf8))
     } catch {
       if Task.isCancelled { throw GitHubOAuthAuthorizationError.cancelled }

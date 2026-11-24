@@ -3,15 +3,22 @@ import RivetHTTPClient
 
 struct GitHubLoginAccountProbe: Sendable {
   let client: HTTPClient
+  private let headersFactory: GitHubHeadersFactory
 
-  init(client: HTTPClient = GitHubHTTPClient.makeHTTPClient()) { self.client = client }
+  init(
+    client: HTTPClient = GitHubHTTPClient.makeHTTPClient(),
+    headersFactory: GitHubHeadersFactory = .standard
+  ) {
+    self.client = client
+    self.headersFactory = headersFactory
+  }
 
   func validate(token: String) async throws {
     try Task.checkCancellation()
     let endpoint = GitHubAuthenticatedUserEndpoint.shared
     let request = HTTPRequest(
       url: try endpoint.makeURL(), method: endpoint.method,
-      headers: [.accept: "application/vnd.github+json", .userAgent: "RivetLoginRuntime"])
+      headers: try headersFactory.make(requirements: [.loginRuntimeREST]))
     let authorized = try BearerAuth(token: token).applying(to: request)
     let response = try await client.execute(authorized)
     try Task.checkCancellation()

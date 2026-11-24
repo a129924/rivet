@@ -42,6 +42,11 @@ struct GitHubOAuthCodeExchangerTests {
     let request = try #require(await transport.requests.first)
     #expect(request.url?.absoluteString == "https://github.com/login/oauth/access_token")
     #expect(request.httpMethod == "POST")
+    #expect(request.value(forHTTPHeaderField: "Accept") == "application/json")
+    #expect(
+      request.value(forHTTPHeaderField: "Content-Type") == "application/x-www-form-urlencoded")
+    #expect(request.value(forHTTPHeaderField: "Authorization") == nil)
+    #expect(request.value(forHTTPHeaderField: "X-GitHub-Api-Version") == nil)
     let body = String(data: try #require(request.httpBody), encoding: .utf8) ?? ""
     #expect(body.contains("client_secret=secret%20%2B%26"))
     #expect(body.contains("code_verifier=verifier%20%2B%26"))

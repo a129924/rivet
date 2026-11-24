@@ -5,16 +5,17 @@ import RivetPRInbox
 
 public struct GitHubSelfReviewSource: SelfReviewSource {
   private static let pageLimit = 10
-  private static let headers = HTTPHeaders([
-    "Accept": "application/vnd.github+json",
-    "User-Agent": "Rivet",
-    "X-GitHub-Api-Version": "2026-03-10",
-  ])
 
   private let rest: any GitHubRestClient
+  private let headersFactory: GitHubHeadersFactory
 
   public init(rest: any GitHubRestClient) {
+    self.init(rest: rest, headersFactory: .standard)
+  }
+
+  package init(rest: any GitHubRestClient, headersFactory: GitHubHeadersFactory) {
     self.rest = rest
+    self.headersFactory = headersFactory
   }
 
   public func fetchSelfReviewCandidates() async -> Outcome<[SelfReviewCandidate], PRInboxFailure> {
@@ -58,7 +59,8 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
 
   private func get(_ url: HTTPURL) async throws -> HTTPResponse {
     try Task.checkCancellation()
-    let response = try await rest.get(url: url, headers: Self.headers, body: nil)
+    let headers = try headersFactory.make(requirements: [.standardREST])
+    let response = try await rest.get(url: url, headers: headers, body: nil)
     try Task.checkCancellation()
     guard response.statusCode == 200 else {
       switch GitHubResponseClassifier().classifyFailure(response) {

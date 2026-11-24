@@ -16,6 +16,25 @@ struct GitHubLoginAccountProbeTests {
     #expect(requests.first?.url?.absoluteString == "https://api.github.com/user")
     #expect(requests.first?.value(forHTTPHeaderField: "Authorization") == "Bearer fixture")
     #expect(requests.first?.value(forHTTPHeaderField: "User-Agent") == "RivetLoginRuntime")
+    #expect(requests.first?.value(forHTTPHeaderField: "Accept") == "application/vnd.github+json")
+    #expect(requests.first?.value(forHTTPHeaderField: "X-GitHub-Api-Version") == nil)
+  }
+
+  @Test func usesInjectedLoginHeadersBeforeApplyingBearer() async throws {
+    let configuration = try GitHubHeadersConfiguration(
+      restAccept: "application/json", standardUserAgent: "Inbox Fixture",
+      loginUserAgent: "Login Fixture", apiVersion: "2040-01-01")
+    let transport = LoginProbeTransport(status: 200, body: #"{"id":1,"login":"octocat"}"#)
+    let probe = GitHubLoginAccountProbe(
+      client: HTTPClient(transport: transport),
+      headersFactory: GitHubHeadersFactory(configuration: configuration))
+
+    try await probe.validate(token: "fixture")
+    let request = try #require(await transport.requests.first)
+    #expect(request.value(forHTTPHeaderField: "Accept") == "application/json")
+    #expect(request.value(forHTTPHeaderField: "User-Agent") == "Login Fixture")
+    #expect(request.value(forHTTPHeaderField: "X-GitHub-Api-Version") == nil)
+    #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer fixture")
   }
 
   @Test(arguments: [

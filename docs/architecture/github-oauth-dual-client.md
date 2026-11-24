@@ -85,6 +85,14 @@ OAuth technical failure 不跨越成 shared BC failure contract；未來由 cons
 
 初次 OAuth sign-in、authorization code + PKCE 與 callback 的交付與驗收歸屬初次登入的獨立 topic；logout／revoke 與 multi-account 仍另待規劃。本文件 supersede `github-integration-auth-boundary` 的 PAT-only、REST-only authorizer 方向；該歷史 topic 僅保留 traceability，沒有被改寫或刪除。
 
+## 固定請求標頭
+
+套件內的 `GitHubHeadersFactory` 接受 REST 能力清單。Inbox 帳號查詢與搜尋分頁使用 `.standardREST`，送出 `Accept: application/vnd.github+json`、`User-Agent: Rivet` 和 `X-GitHub-Api-Version: 2026-03-10`。登入探查使用 `.loginRuntimeREST`，使用相同 `Accept` 與 `User-Agent: RivetLoginRuntime`，且省略 API 版本欄位。兩個組合共用不可變設定，各自取得固定標頭的值。
+
+空清單選標準 REST。相同需求重複出現時視為一次。互斥的兩種需求回傳 `conflictingRESTRequirements`。呼叫端只傳入已定義的需求，Factory 回傳的標頭可由呼叫端複製調整。呼叫端在既有授權流程以 `BearerAuth` 套入 token。
+
+OAuth 交換和刷新共用 `HeadersProvider.oauthToken`，送出 `Accept: application/json` 與 `Content-Type: application/x-www-form-urlencoded`。條件式請求、特殊 representation 和全域自動標頭政策保留至有使用需求時。
+
 ## Configuration 與授權入口的整合契約
 
 `GitHubOAuthAppConfiguration` 由儲存 topic 提供 public immutable clientID／clientSecret、完整 configuration store port 與 `throws(GitHubOAuthAppConfigurationError)` initializer。空字串拋 `invalidConfiguration`；其他字串（包括全空白／換行）原樣保存、不 trim；description／debugDescription／reflection 維持脫敏。2026-11-10 整合明確採此契約，取代 dev 原直接 initializer 的 `GitHubOAuthAuthorizationError.clientConfiguration`，所以直接呼叫端的錯誤型別有變更。
