@@ -35,7 +35,7 @@
 ## GitHub REST 背景讀取
 
 - 套件內的 `RivetPRReaderGitHub` target 接收已認證的 `GitHubRestClient` 和 `ReaderPullRequestID`。Reader Infra 驗證識別後向 `api.github.com` 取得指定 PR 的 JSON 詳情，將 `200` 投影為 `ReaderBackground`。描述或作者缺席保留缺值。
-- Reader Infra 選用共用 `.standardREST` 標頭，並以 `get` 委派請求。REST client 負責執行與 `401` 復原。Reader 依限流標頭辨識 `403`，其餘非 `200` 由共用技術分類器解讀，再映射為 Reader failure。
+- Reader Infra 選用共用 `.standardREST` 標頭，並以 `get` 委派請求。REST client 負責執行與 `401` 復原。Reader 與 Inbox 將所有非 `200` 回應交給同一個 `GitHubResponseClassifier`。Reader Infra 將共用技術分類映射為 `PRReaderFailure`，權限拒絕及原因未明的 `403` 回 `.notReadable`，限流回 `.unavailable`。
 - 此入口供後續快照組裝使用。`PRContentSource` 的完整快照由後續來源負責。
 
 ## WebView Diff Rendering Boundary

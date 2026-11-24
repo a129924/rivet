@@ -95,15 +95,15 @@ struct GitHubPullRequestBackgroundSourceTests {
   }
 
   @Test(arguments: [
-    ForbiddenCase(["rEtRy-aFtEr": " 10 "], "not JSON", .unavailable),
+    ForbiddenCase(["rEtRy-aFtEr": " 10 "], "not JSON", .notReadable),
     ForbiddenCase(
-      [:], #"{"message":"You have exceeded a secondary rate limit."}"#, .notReadable),
+      [:], #"{"message":"You have exceeded a secondary rate limit."}"#, .unavailable),
     ForbiddenCase(
       ["x-RATElimit-remaining": " 0 "],
-      #"{"message":"Resource not accessible by integration."}"#, .unavailable),
+      #"{"message":"Resource not accessible by integration."}"#, .notReadable),
     ForbiddenCase(["Retry-After": " \t ", "X-RateLimit-Remaining": "1"], "not JSON", .notReadable),
   ])
-  func usesOnlyTheReaderHeadersRuleForForbidden(_ fixture: ForbiddenCase) async {
+  func mapsSharedClassificationForForbidden(_ fixture: ForbiddenCase) async {
     let client = RESTStub(
       .success(response(fixture.body, status: 403, headers: HTTPHeaders(fixture.headers))))
     let source = GitHubPullRequestBackgroundSource(client: client)

@@ -1,6 +1,6 @@
 # PR Reader GitHub PR 詳情端點步驟
 
-最後更新 2026-11-24。基線 `dev` `386af9e`，執行分支 `feat/pr-reader-github-pr-detail-endpoint`。目前 phase 為交付，當前步驟 P06。獨立規劃與成果審查均已核准。
+最後更新 2026-11-24。基線 `dev` `386af9e`，執行分支 `feat/pr-reader-github-pr-detail-endpoint`。首版的獨立規劃與成果審查均已核准。Draft PR #84 的 Human Review 回修已完成驗證，當前步驟為 P09。
 
 | ID | Status | Owner | 完成條件 | 驗證證據 |
 | --- | --- | --- | --- | --- |
@@ -9,14 +9,18 @@
 | P03 | completed | Implementer | 完成端點、adapter、測試、target 接線及 BC 能力回寫 | 測試先因新型別尚未實作而編譯失敗，實作後 14 項 focused 測試通過。回修後兩個取消競爭案例與 locked target graph 通過。 |
 | P04 | completed | Tester | 獨立驗證 TC01–TC04 及計畫列出的 Swift 與 diff 檢查 | 最終 SwiftPM 415 項、54 組通過。Swift 格式、專案 SwiftLint 188 檔零違規、diff check 均 exit 0。全樹 SwiftLint exit 2 的 511 項逐一符合 `386af9e` 基線，新增零項。 |
 | P05 | approved | Reviewer | 獨立審查實作、測試證據、文件及範圍 | 取消優先順序與新增 target 的精確依賴兩項必修已回修，獨立複審核准 11 檔，無重大問題。 |
-| P06 | in-progress | Implementer | 核對 staged diff 後依條件提交、推送及開 Draft PR | 建議訊息 `feat(pr-reader): 讀取 GitHub PR 背景`。commit、遠端讀回、Draft PR 及依實際差異產出的 PR Lens 結果見交付回報。 |
-| P07 | pending | Human | 審閱 Draft PR 與交付證據 | 待使用者審閱。 |
+| P06 | completed | Implementer | 提交首版、推送並開 Draft PR | `babf949` 已推送至 [Draft PR #84](https://github.com/a129924/rivet/pull/84)。 |
+| P07 | completed | Human | 審閱首版並決定非 `200` 回應的技術分類規則 | Reader 與 PR #81 的 Inbox 共用分類器，Reader Infra 負責映射 `PRReaderFailure`。 |
+| P08 | completed | Implementer | 落實 P07，更新 `403` 測試與文件並重驗 | 三個更新案例在首版實作皆失敗。改用共用分類後，Reader、Inbox 與分類器共 69 項測試、10 組通過。Swift 格式、專案 SwiftLint 188 檔零違規、diff check 均 exit 0。 |
+| P09 | pending | Human | 審閱 Draft PR #84 的回修 | 待使用者審閱。 |
 
 ## Blockers
 
 目前無已知須由 Human 先決定的 blocker。
 
 ## 本機工具證據
+
+以下證據對應 Draft PR #84 首版 `babf949`。
 
 - Show Me 以對話版呼叫樹呈現端點、標頭來源、REST 委派和回應映射。
 - Graphify 0.9.73 以 `GRAPHIFY_NO_AUTO_REFRESH=1` 執行。feature worktree 缺既有圖，依計畫以限域原碼查證。

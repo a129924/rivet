@@ -50,13 +50,6 @@ package struct GitHubPullRequestBackgroundSource: Sendable {
   }
 
   private static func failure(for response: HTTPResponse) -> PRReaderFailure {
-    if response.statusCode == 403 {
-      let remaining = response.headers.value(for: "X-RateLimit-Remaining")?
-        .trimmingCharacters(in: .whitespacesAndNewlines)
-      let retryAfter = response.headers.retryAfter?.trimmingCharacters(in: .whitespacesAndNewlines)
-      return remaining == "0" || retryAfter?.isEmpty == false ? .unavailable : .notReadable
-    }
-
     switch GitHubResponseClassifier().classifyFailure(response) {
     case .unauthorized, .notFound, .forbidden, .unclassifiedForbidden:
       return .notReadable
