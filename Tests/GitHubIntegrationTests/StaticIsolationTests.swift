@@ -9,42 +9,42 @@ struct StaticIsolationTests {
     let package = try packageDescription()
     let products = try namedItems(in: package, named: "products")
     let targets = try namedItems(in: package, named: "targets")
+    let reader = "RivetPRReader"
+    let bridge = "RivetPRReaderWebViewBridge"
+    let readerGitHub = "RivetPRReaderGitHub"
+    let gitHub = "GitHubIntegration"
+    let direct: [String: (path: String, dependencies: [String])] = [
+      bridge: ("PRReaderWebViewBridge", [reader]),
+      gitHub: ("BoundedContexts/GitHubIntegration", ["Apollo", "ApolloAPI", "RivetHTTPClient"]),
+      readerGitHub: (
+        "BoundedContexts/PRReader/Infra/GitHub/REST", [reader, gitHub, "RivetHTTPClient"]
+      ),
+    ]
     #expect(
       Set(products.keys) == [
-        "GitHubIntegration", "RivetPRInbox", "RivetPRReader", "RivetPRReaderWebViewBridge",
-        "RivetPRReaderHarnessRuntime", "RivetPRReaderHarness", "RivetPresentation",
-        "RivetLoginDemo", "RivetPRInboxGitHub",
+        gitHub, "RivetPRInbox", reader, bridge, "RivetPRReaderHarnessRuntime",
+        "RivetPRReaderHarness", "RivetPresentation", "RivetLoginDemo", "RivetPRInboxGitHub",
       ])
-    #expect(
-      Set(targets.keys) == [
-        "GitHubIntegration", "GitHubIntegrationTests", "RivetPRInbox", "RivetPRInboxTests",
-        "RivetPRReader", "RivetPRReaderTests", "RivetPRReaderWebViewBridge", "RivetPresentation",
-        "RivetPRReaderWebViewBridgeTests", "RivetPRReaderHarnessRuntime",
-        "RivetPRReaderHarnessRuntimeTests", "RivetPRReaderHarness", "RivetPresentationTests",
-        "RivetLoginDemo", "RivetLoginDemoRuntime", "RivetLoginDemoRuntimeTests",
-        "RivetPRInboxGitHub", "RivetPRInboxGitHubTests",
-      ])
-    let bridgeName = "RivetPRReaderWebViewBridge"
-    #expect(targetNames(in: try #require(products[bridgeName])) == [bridgeName])
-    let bridgeTarget = try #require(targets[bridgeName])
-    #expect(bridgeTarget["path"] as? String == "Sources/PRReaderWebViewBridge")
-    #expect(dependencyNames(in: bridgeTarget) == ["RivetPRReader"])
-    let bridgeTests = try #require(targets["RivetPRReaderWebViewBridgeTests"])
-    #expect(Set(dependencyNames(in: bridgeTests)) == ["RivetPRReader", bridgeName])
+    for name in [bridge, gitHub] {
+      #expect(targetNames(in: try #require(products[name])) == [name])
+    }
+    let others: Set = [
+      "RivetPRInbox", "RivetPRInboxTests", "RivetPRInboxGitHub", "RivetPRInboxGitHubTests",
+      reader, "\(reader)Tests", "RivetPresentation", "RivetPresentationTests",
+      "RivetPRReaderHarnessRuntime", "RivetPRReaderHarnessRuntimeTests", "RivetPRReaderHarness",
+      "RivetLoginDemo", "RivetLoginDemoRuntime", "RivetLoginDemoRuntimeTests",
+    ]
+    #expect(Set(targets.keys) == others.union(direct.keys.flatMap { [$0, "\($0)Tests"] }))
+    for (name, (path, deps)) in direct {
+      let target = try #require(targets[name])
+      #expect(target["type"] as? String == "regular", "\(name)")
+      #expect(target["path"] as? String == "Sources/\(path)", "\(name)")
+      #expect(dependencyNames(in: target).sorted() == deps.sorted(), "\(name)")
+      let tests = try #require(targets["\(name)Tests"])
+      #expect(tests["type"] as? String == "test", "\(name)Tests")
+      #expect(dependencyNames(in: tests).sorted() == ([name] + deps).sorted(), "\(name)Tests")
+    }
     #expect(dependencyNames(in: try #require(targets["RivetPresentation"])).isEmpty)
-    let integrationProduct = try #require(products["GitHubIntegration"])
-    #expect(targetNames(in: integrationProduct) == ["GitHubIntegration"])
-    let integrationTarget = try #require(targets["GitHubIntegration"])
-    #expect(integrationTarget["type"] as? String == "regular")
-    #expect(integrationTarget["path"] as? String == "Sources/BoundedContexts/GitHubIntegration")
-    #expect(
-      Set(dependencyNames(in: integrationTarget)) == ["Apollo", "ApolloAPI", "RivetHTTPClient"])
-    let integrationTests = try #require(targets["GitHubIntegrationTests"])
-    #expect(integrationTests["type"] as? String == "test")
-    #expect(
-      Set(dependencyNames(in: integrationTests)) == [
-        "GitHubIntegration", "Apollo", "ApolloAPI", "RivetHTTPClient",
-      ])
   }
   @Test
   func dependencyExtractionRecognizesAllPackageDescriptionDependencyForms() {
