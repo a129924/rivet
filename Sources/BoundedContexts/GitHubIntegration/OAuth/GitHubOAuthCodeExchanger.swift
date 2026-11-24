@@ -43,7 +43,7 @@ internal struct GitHubOAuthCodeExchanger: Sendable {
     let response: HTTPResponse
     do {
       response = try await httpClient.post(
-        url: HTTPURL(GitHubOAuthEndpoints.tokenURL),
+        url: HTTPURL(GitHubOAuthEndpoint.token.url),
         headers: HeadersProvider.oauthToken.headers,
         body: Data(body.utf8))
     } catch {
