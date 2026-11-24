@@ -15,3 +15,9 @@
 - **E022** 以受控 REST 替身交付相同成功回應。caller 已取消時，正式 Inbox Facade 回 `.unavailable`，兩組均只有帳號與搜尋兩次請求。 [E022 證據](../../experiments/E022/README.md#結果與證據)
 
 現有證據限於記錄的環境及邊界。產品狀態提交、同步解碼中途取消、真 GitHub、HTTP/2 或其他連線策略仍無本輪直接證據。後續契約取捨及待確認事項見 [審查建議](../../analysis/cancellation-trace-contract-review/technical-spec.md#d01-契約比較與建議)。
+
+## E023 上層提交與清理
+
+E023 以隔離 SwiftPM host 及合成來源驗證單一 `@MainActor` owner 的提交與清理。當 owner 取代或撤銷請求，過期成功／失敗即失去提交與清理資格。同一 PR 以新 generation 取代時，即使舊 Task 未取消也被拒絕。仍為當前的 Task 已取消時，owner 丟棄結果並只清理自己的 slot。晚到結果保留新 Task handle 與 loading，有效 `.unavailable` 正常提交。 [E023 證據](../../experiments/E023/README.md#結果與證據)
+
+這支持既有 nonthrowing Outcome 搭配 caller-owned generation 與同步提交的方案。正式 Presentation Session 接線、UI 行為與真實來源的取消時序仍待產品整合驗證。
