@@ -1,9 +1,10 @@
 import Foundation
-import GitHubIntegration
 import RivetHTTPClient
 import RivetPRInbox
 import RivetPRInboxGitHub
 import Testing
+
+@testable import GitHubIntegration
 
 @Suite("GitHub self-review inbox")
 struct GitHubSelfReviewSourceTests {
@@ -56,8 +57,28 @@ struct GitHubSelfReviewSourceTests {
       #expect(request.method == .get)
       #expect(request.url.value.host == "api.github.com")
       #expect(request.headers.accept == "application/vnd.github+json")
+      #expect(request.headers.userAgent == "Rivet")
       #expect(request.headers.value(for: "X-GitHub-Api-Version") == "2026-03-10")
       #expect(request.body == nil)
+    }
+  }
+
+  @Test
+  func usesInjectedHeadersForAccountAndSearch() async throws {
+    let configuration = try GitHubHeadersConfiguration(
+      restAccept: "application/json", standardUserAgent: "Inbox Fixture",
+      loginUserAgent: "Login Fixture", apiVersion: "2040-01-01")
+    let stub = RESTStub([.success(.viewer), .success(try .page([], total: 0))])
+    let source = GitHubSelfReviewSource(
+      rest: stub, headersFactory: GitHubHeadersFactory(configuration: configuration))
+
+    #expect(try await source.fetchSelfReviewCandidates().get().isEmpty)
+    let requests = await stub.requests
+    #expect(requests.map(\.url.value.path) == ["/user", "/search/issues"])
+    for request in requests {
+      #expect(request.headers.accept == "application/json")
+      #expect(request.headers.userAgent == "Inbox Fixture")
+      #expect(request.headers.value(for: "X-GitHub-Api-Version") == "2040-01-01")
     }
   }
 

@@ -21,6 +21,8 @@ struct GitHubOAuthHTTPTokenFetcherTests {
     #expect(request.value(forHTTPHeaderField: "Accept") == "application/json")
     #expect(
       request.value(forHTTPHeaderField: "Content-Type") == "application/x-www-form-urlencoded")
+    #expect(request.value(forHTTPHeaderField: "Authorization") == nil)
+    #expect(request.value(forHTTPHeaderField: "X-GitHub-Api-Version") == nil)
     let expectedBody = [
       "client_id=id%20%2B%26%3D%E5%AD%97", "client_secret=secret%20%2B%26%3D",
       "grant_type=refresh_token", "refresh_token=old%20%2B%26%3D%E5%AD%97",

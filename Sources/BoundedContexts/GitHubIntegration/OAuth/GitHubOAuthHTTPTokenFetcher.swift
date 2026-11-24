@@ -72,7 +72,7 @@ struct GitHubOAuthHTTPTokenFetcher: OAuthTokenFetcher {
     do {
       response = try await httpClient.post(
         url: url,
-        headers: [.accept: "application/json", .contentType: "application/x-www-form-urlencoded"],
+        headers: HeadersProvider.oauthToken.headers,
         body: Data(encodedFields.joined(separator: "&").utf8))
     } catch {
       if case .cancelled = error { throw .cancelled(stage: .afterRequestStarted) }
