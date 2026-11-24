@@ -19,18 +19,24 @@
 - 對 Presentation 提供穩定的 Reader Facade。
 - 透過自己擁有的 PR Content Source Port 取得資料；不直接依賴 PR Inbox。
 - Presentation 可用目前選取的 PR 向 Reader 請求閱讀快照。
-- 未來若需 GitHub 資料，僅 PR Reader 自己的 Infra 可擁有 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping；現有 GraphQL SDL 僅是未驗證的 candidate／暫存 asset，本文件不將它定義為正式 BC-local ownership，也不據此搬移 schema、指定 target 或改變任何 API／實作。
-- non-BC `GitHubIntegration` 已實作為 shared GitHub-specific integration module，目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及沒有 conformer 的 public、`Sendable` async `GitHubAccessTokenProvider` token-acquisition contract；後者不處理 PAT／OAuth lifecycle、request、transport、401 recovery 或 retry。另已交付 public、process-local、non-persistent 的 `InMemoryGitHubTokenStore`，僅在單一 store instance 的生命週期保存一個 token，以及 public `KeychainTokenStore`：後者以 legacy macOS Keychain 為目前使用者保存單一 GitHub access token，並可跨 process 讀回；兩者均不實作 authorization。另已交付 `OAuthTokenProvider` actor 與 `OAuthCredentialStore`／`OAuthTokenFetcher` ports；它只交付 `TokenSnapshot(accessToken, version)`，不將 credential bundle 或 provider failure 帶入 Reader。authorizer、GitHub REST／GraphQL raw transport、共通 request headers／API version、pagination、rate-limit、retry、GitHub error technical classification、shared configuration、OAuth adapters 與 client integration 仍為 deferred。只有此 Infra 可依賴 `GitHubIntegration` 與上述 deferred capability；`GitHubIntegration` 不依賴任何 BC。GitHub DTO／GraphQL node translation、technical classification 到 Reader failure contract 的 mapping 與 Reader business meaning 仍只留在此 Infra；它們不會進入 Core、UseCase 或 Port，且不形成 shared BC failure contract。
+- PR Reader 自己的 Infra 擁有 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping；現有 GraphQL SDL 僅是未驗證的 candidate／暫存 asset，本文件不將它定義為正式 BC-local ownership，也不據此搬移 schema、指定 target 或改變任何 API／實作。
+- non-BC `GitHubIntegration` 已實作為 shared GitHub-specific integration module，目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及沒有 conformer 的 public、`Sendable` async `GitHubAccessTokenProvider` token-acquisition contract；後者不處理 PAT／OAuth lifecycle、request、transport、401 recovery 或 retry。另已交付 public、process-local、non-persistent 的 `InMemoryGitHubTokenStore`，僅在單一 store instance 的生命週期保存一個 token，以及 public `KeychainTokenStore`：後者以 legacy macOS Keychain 為目前使用者保存單一 GitHub access token，並可跨 process 讀回；兩者均不實作 authorization。另已交付 `OAuthTokenProvider` actor 與 `OAuthCredentialStore`／`OAuthTokenFetcher` ports；它只交付 `TokenSnapshot(accessToken, version)`，不將 credential bundle 或 provider failure 帶入 Reader。Reader Infra 可採用 `GitHubIntegration` 的 REST client、固定標頭組合與技術回應分類；`GitHubIntegration` 不依賴任何 BC。GitHub DTO／GraphQL node translation、technical classification 到 Reader failure contract 的 mapping 與 Reader business meaning 仍只留在此 Infra；它們不會進入 Core、UseCase 或 Port，且不形成 shared BC failure contract。
 
 ## Core Content Source Contract
 
-`GitHubIntegration` 已提供 internal-only GraphQL Query／Mutation foundation；跨 target GraphQL 使用及 Reader adapter 仍延後。候選 SDL 不屬於Query／Mutation 或測試來源，Reader Core／UseCase／Port 不新增 Apollo、OAuth 或 transport 依賴。
+`GitHubIntegration` 已提供 internal-only GraphQL Query／Mutation foundation；Reader 的 GraphQL 接線仍延後。候選 SDL 不屬於Query／Mutation 或測試來源，Reader Core／UseCase／Port 不新增 Apollo、OAuth 或 transport 依賴。
 
 - `PRContentSource` 是 Reader-owned、`Sendable` 的 Domain Port；它以 `ReaderPullRequestID(owner, repository, number)` 非同步回傳 target-local `Outcome<PRContentSnapshot, PRReaderFailure>`。
 - `PRContentSnapshot` 保留背景、有序 conversation、reviews、inline threads、files，以及可缺的 review decision 與 check rollup。成功 producer 必須回傳與 request 相同的 PR identity、同一 snapshot 內唯一的 `ReaderFileReference`，並保留來源檔案順序；Core 不另設 validator。
 - 檔案變更語意包含 added、removed、modified、renamed、copied 與 type changed。每檔保留 path、可缺 previous path、增刪計數與可缺 patch；缺 patch 的 metadata-only 檔案仍是合法成功內容。Core snapshot 沒有頂層 unified diff。
 - check rollup 缺席與存在但 checks 為空是不同狀態；run 與 commit status 保留各自的 Reader 語意與來源順序。Core 不含 check ID 或 URL。
 - Core 不含 WebView 的 `snapshotId`、snapshot-local `fileId` 或 `viewed`；兩側 identity 映射、viewed 來源與事件回查由獨立的 `RivetPRReaderWebViewBridge` presentation integration target 處理，Core 不依賴它。
+
+## GitHub REST 背景讀取
+
+- 套件內的 `RivetPRReaderGitHub` target 接收已認證的 `GitHubRestClient` 和 `ReaderPullRequestID`。Reader Infra 驗證識別後向 `api.github.com` 取得指定 PR 的 JSON 詳情，將 `200` 投影為 `ReaderBackground`。描述或作者缺席保留缺值。
+- Reader Infra 選用共用 `.standardREST` 標頭，並以 `get` 委派請求。REST client 負責執行與 `401` 復原。Reader 依限流標頭辨識 `403`，其餘非 `200` 由共用技術分類器解讀，再映射為 Reader failure。
+- 此入口供後續快照組裝使用。`PRContentSource` 的完整快照由後續來源負責。
 
 ## WebView Diff Rendering Boundary
 
@@ -43,7 +49,7 @@
 
 ## Failure Contract
 
-PR Reader Core 以 `.notReadable` 表達 PR 無法閱讀或無權存取，以 `.unavailable` 表達內容暫時不可取得；`.contentNotRepresentable` 表達未來 mapper 無法將必要集合元素或必要資料保真映入完整 Core 模型。合法的 optional review decision、check rollup、author、conclusion 或 patch 缺席不屬於 `.contentNotRepresentable`。Reader local Infra GitHub adapter 不得將 GitHub DTO、HTTP status、token 或技術層 failure 洩漏至 Reader core Port，跨越 Port 前必須映射為 Reader failure contract。
+PR Reader Core 以 `.notReadable` 表達 PR 無法閱讀或無權存取，以 `.unavailable` 表達內容暫時不可取得；`.contentNotRepresentable` 表達來源無法將必要集合元素或必要資料保真映入完整 Core 模型。合法的 optional review decision、check rollup、author、conclusion 或 patch 缺席不屬於 `.contentNotRepresentable`。Reader local Infra GitHub adapter 不得將 GitHub DTO、HTTP status、token 或技術層 failure 洩漏至 Reader core Port，跨越 Port 前必須映射為 Reader failure contract。
 
 ## 延後能力
 
