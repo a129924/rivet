@@ -375,6 +375,7 @@ struct StaticIsolationTests {
       "OAuth/GitHubOAuthAuthorizationError.swift", "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift", "REST/GitHubHTTPClient.swift",
       "REST/GitHubRestClient.swift", "REST/GitHubHTTPClientError.swift",
+      "REST/GitHubResponseClassifier.swift",
       "REST/Endpoints/GitHubAuthenticatedUserEndpoint.swift", "REST/GitHubRESTDestination.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift", "Stores/KeychainTokenStore.swift",
@@ -413,6 +414,7 @@ struct StaticIsolationTests {
         "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
         "REST/GitHubHTTPClient.swift",
         "REST/GitHubRestClient.swift",
+        "REST/GitHubResponseClassifier.swift",
         "REST/Endpoints/GitHubAuthenticatedUserEndpoint.swift",
         "REST/GitHubRESTDestination.swift",
       ]
