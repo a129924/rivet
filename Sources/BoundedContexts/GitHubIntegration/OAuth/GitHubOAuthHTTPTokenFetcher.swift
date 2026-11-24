@@ -63,7 +63,7 @@ struct GitHubOAuthHTTPTokenFetcher: OAuthTokenFetcher {
     }
     let url: HTTPURL
     do {
-      url = try HTTPURL(GitHubOAuthEndpoints.tokenURL)
+      url = try HTTPURL(GitHubOAuthEndpoint.token.url)
     } catch {
       throw .knownTechnicalFailure
     }

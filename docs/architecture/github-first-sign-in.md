@@ -6,6 +6,8 @@
 
 GitHubIntegration 保持 non-BC。正式能力為 `GitHubOAuthAppConfiguration`、`GitHubOAuth.makeTokenFetcher(configuration:)`、`makeAuthorizationSession(configuration:redirectURI:)`、`GitHubOAuthAuthorizationSession`、internal `GitHubOAuthCodeExchanger` 與 `GitHubOAuthAuthorizationError`。Session 封裝 state／verifier／單次 callback claim，驗證 loopback URI、state、單值 code/error，採 S256／offline_access。無效 callback 不消耗有效等待；取消、到期或重複結果不發布連線。初次交換無自動重送，完整六欄依同一 receivedAt 建立既有 bundle。
 
+固定 GitHub.com OAuth 目的地由 BC 外的 GitHubIntegration 持有。授權 session 從授權 Endpoint 實例取得瀏覽器導覽的基底 URL，code exchange 與 refresh 共用 token Endpoint 實例。三個呼叫點沿用各自的請求組裝與結果處理。
+
 驗證 App 擁有 `GitHubConnectionView`／`GitHubConnectionPresentation`、coordinator／dependencies、loopback relay、完整記憶體 store、caller-owned provider／scope、`GitHubAccountProbe`／Identity／Error 及 hosted tests。兩個 UI 型別只在 App module 內部使用，不再由共用 RivetPresentation 公開；PR Inbox Presentation 不改。日後刪除整個驗證 App，不需修改或刪除 GitHubIntegration 正式 OAuth 能力。沒有新共用 module、CurrentUserReader 或帳號業務抽象。
 
 Relay 僅綁 127.0.0.1 動態 port，限制 headers／connections／讀取時間。Coordinator 追蹤單一 operation，取消後等實際工作 settled；prepare 重試保留原 provider，再次查詢使用原 scope。既有 credential／refresh／rotation／single-flight／401 recovery 及 BC 邊界不變。

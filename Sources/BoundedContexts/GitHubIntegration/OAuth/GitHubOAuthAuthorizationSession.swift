@@ -38,7 +38,7 @@ public actor GitHubOAuthAuthorizationSession: CustomReflectable {
       .replacingOccurrences(of: "+", with: "-").replacingOccurrences(of: "/", with: "_")
       .replacingOccurrences(of: "=", with: "")
     var url = URLComponents(
-      url: GitHubOAuthEndpoints.authorizationURL, resolvingAgainstBaseURL: false)!
+      url: GitHubOAuthEndpoint.authorization.url, resolvingAgainstBaseURL: false)!
     url.queryItems = [
       .init(name: "client_id", value: configuration.clientID),
       .init(name: "redirect_uri", value: redirectURI.absoluteString),

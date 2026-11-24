@@ -8,7 +8,7 @@ struct GitHubOAuthEndpointsTests {
   @Test
   func authorizationURLIsTheFixedGitHubOAuthEndpoint() {
     assertGitHubOAuthURL(
-      GitHubOAuthEndpoints.authorizationURL,
+      GitHubOAuthEndpoint.authorization.url,
       equals: "https://github.com/login/oauth/authorize",
       path: "/login/oauth/authorize"
     )
@@ -17,7 +17,7 @@ struct GitHubOAuthEndpointsTests {
   @Test
   func tokenURLIsTheFixedGitHubOAuthEndpoint() {
     assertGitHubOAuthURL(
-      GitHubOAuthEndpoints.tokenURL,
+      GitHubOAuthEndpoint.token.url,
       equals: "https://github.com/login/oauth/access_token",
       path: "/login/oauth/access_token"
     )

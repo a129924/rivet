@@ -1,4 +1,3 @@
-import CryptoKit
 import Foundation
 import Testing
 
@@ -9,18 +8,19 @@ struct GitHubOAuthAuthorizationSessionTests {
   @Test func authorizationUsesS256AndOnlyOfflineAccess() async throws {
     let session = try makeSession()
     #expect(Mirror(reflecting: session).children.isEmpty)
-    let parts = try #require(
+    var parts = try #require(
       URLComponents(url: session.authorizationURL, resolvingAgainstBaseURL: false))
-    let fields = Dictionary(
-      uniqueKeysWithValues: (parts.queryItems ?? []).map { ($0.name, $0.value ?? "") })
-    #expect(fields["scope"] == "offline_access")
-    #expect(fields["code_challenge_method"] == "S256")
-    #expect(fields["state"] == "fixture-state")
-    #expect(fields["client_secret"] == nil)
-    let challenge = Data(SHA256.hash(data: Data("fixture-verifier".utf8))).base64EncodedString()
-      .replacingOccurrences(of: "+", with: "-").replacingOccurrences(of: "/", with: "_")
-      .replacingOccurrences(of: "=", with: "")
-    #expect(fields["code_challenge"] == challenge)
+    #expect(
+      parts.queryItems == [
+        .init(name: "client_id", value: "fixture-id"),
+        .init(name: "redirect_uri", value: "http://127.0.0.1:49152/oauth/callback"),
+        .init(name: "scope", value: "offline_access"),
+        .init(name: "state", value: "fixture-state"),
+        .init(name: "code_challenge", value: "8Dw_rXYDuMBDOofOjlxvMNEALsULmI6c47hS_o9Dkqg"),
+        .init(name: "code_challenge_method", value: "S256"),
+      ])
+    parts.query = nil
+    #expect(parts.url?.absoluteString == "https://github.com/login/oauth/authorize")
   }
 
   @Test func invalidCallbacksDoNotClaimButValidCompletesOnce() async throws {
@@ -38,6 +38,7 @@ struct GitHubOAuthAuthorizationSessionTests {
           callbackURL: URL(string: "http://127.0.0.1:49152/oauth/callback?" + query)!)
       }
     }
+    #expect(await counter.count == 0)
     let credential = try await session.complete(callbackURL: callback())
     #expect(credential.accessToken.rawValue == "fixture-access")
     await #expect(throws: GitHubOAuthAuthorizationError.alreadyCompleted) {
