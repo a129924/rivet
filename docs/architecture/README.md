@@ -90,6 +90,8 @@ PR Reader 的 WebView diff rendering 中，Facade／UseCase orchestration 已有
 
 ## 文件導覽
 
+- [Swift 取消基線](swift-cancellation-baseline.md) 記錄 PR Inbox、Reader Port、共享 OAuth 工作與 Transport 的取消邊界。
+
 - [OAuth／PAT 雙登入契約](github-dual-login-contract.md)：既有 GitHubIntegration 的請求 VO、共同 Protocol、受控結果與取消語義；不含真登入或 session 組裝。
 
 - [GitHub PKCE missing-verifier 補證界線](github-pkce-missing-verifier-feasibility.md)：單次 missing 交換遭拒；provider 要求聲明一致，當次因果判讀分歧，主要假設仍無法判定。
