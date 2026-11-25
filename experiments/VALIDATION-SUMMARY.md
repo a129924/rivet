@@ -4,6 +4,19 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #99 PR Reader 行內審閱留言端點與離線驗收
+
+PR #99 於 `2026-11-25T10:01:44Z` 合併至 `dev` 並關閉，共變更 7 個檔案。合併提交 `64d0ce9f70c2abaeca7e2ec7204aab9a92add419` 與離線受測的 feature 提交 `680853ab989842e4b64a8070f492388c5e8e1917` 的 Git tree 相同。 [PR #99](https://github.com/a129924/rivet/pull/99) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.92-pr-reader-github-inline-review-comments-endpoint/plan/pr-reader-github-inline-review-comments-endpoint/pr-reader-github-inline-review-comments-endpoint.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 端點契約 | 核對 `GET /repos/{owner}/{repo}/pulls/{number}/comments`、同一 PR 的首頁和第 2 頁 URL、頁碼 31 與 `Int.max`、固定 `per_page=100`，以及無效 PR 識別或非正數頁碼的拋錯。 |
+| 獨立驗收 | Reader GitHub 套件 101 項測試、10 組全數通過，含 5 項新端點測試。Swift 格式、217 檔 SwiftLint 零違規、差異空白檢查及提交鉤子均通過。獨立成果審查核准，無必修項。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR base 與 head 驗證並渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸與明暗目視檢查。Show Me 呼叫樹與實作相符。Floorplan 涵蓋 586 個程式檔並標記 1 張本題卡片。Graphify 缺可追溯的既有圖，已用原碼核對。 |
+| 驗收界線 | 本輪以離線測試驗證同步 URL 建構。HTTP 執行、續頁讀取與留言映射由後續 Adapter 交付。 |
+
+Annotated tag `v0.1.92-pr-reader-github-inline-review-comments-endpoint` 的本機與遠端解析均指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。停止該 worktree 的 Floorplan 預覽後，私下封存 68 個 Floorplan、13 個端點驗證與 Archify、5 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-99-pr-reader-行內審閱留言端點與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.92-pr-reader-github-inline-review-comments-endpoint)
+
 ## PR #78 PR Inbox 自查候選與 E020 真人結果（2026-11-23）
 
 [PR #78](https://github.com/a129924/rivet/pull/78) 已於 `2026-11-23T06:47:33Z` 合併至 `dev` 並關閉。合併提交為 `6ac0ae02b63db99e4f0a8cb0ee65edeb6f399559`，最後 feature 提交 `bd01556` 收錄 E020 真人驗收紀錄。
