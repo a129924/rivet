@@ -38,6 +38,10 @@
 - Reader Infra 選用共用 `.standardREST` 標頭，並以 `get` 委派請求。REST client 負責執行與 `401` 復原。Reader 與 Inbox 將所有非 `200` 回應交給同一個 `GitHubResponseClassifier`。Reader Infra 將共用技術分類映射為 `PRReaderFailure`，權限拒絕及原因未明的 `403` 回 `.notReadable`，限流回 `.unavailable`。
 - 此入口供後續快照組裝使用。`PRContentSource` 的完整快照由後續來源負責。
 
+## GitHub REST 一般討論留言端點
+
+Reader Infra 的 `GitHubConversationCommentsEndpoint` 驗證 PR 識別與正數頁碼，為 `GET /repos/{owner}/{repo}/issues/{n}/comments` 建立 GitHub.com URL。`page` 預設為 `1`，`per_page` 固定為 `100`。HTTP 執行與留言組裝由後續 Adapter 負責。 [GitHub 留言端點](https://docs.github.com/en/rest/issues/comments#list-issue-comments)
+
 ## WebView Diff Rendering Boundary
 
 - Swift 對 WebView 提供完整且有序的 `DiffSnapshot`；它帶有 `pullRequestId`、`snapshotId` 與 `readonly DiffViewModel[] files`，每個檔案包含 snapshot-local `fileId`、檔案變更 metadata、可選 patch、增刪計數與 viewed 狀態。
