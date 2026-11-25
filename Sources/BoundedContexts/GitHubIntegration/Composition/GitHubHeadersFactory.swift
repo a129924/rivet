@@ -3,6 +3,7 @@ import RivetHTTPClient
 package enum GitHubHeaderRequirement: Hashable, Sendable {
   case standardREST
   case loginRuntimeREST
+  case pullRequestUnifiedDiffREST
 }
 
 package struct GitHubHeadersFactory: Sendable {
@@ -14,6 +15,7 @@ package struct GitHubHeadersFactory: Sendable {
 
   private let standardREST: HeadersProvider
   private let login: HeadersProvider
+  private let pullRequestUnifiedDiff: HeadersProvider
 
   init(configuration: GitHubHeadersConfiguration) {
     let defaults = HeadersProvider.makeRESTDefaults(configuration: configuration)
@@ -23,6 +25,7 @@ package struct GitHubHeadersFactory: Sendable {
   private init(standardREST: HeadersProvider, login: HeadersProvider) {
     self.standardREST = standardREST
     self.login = login
+    self.pullRequestUnifiedDiff = standardREST.makePullRequestUnifiedDiffREST()
   }
 
   package func make(
@@ -30,6 +33,10 @@ package struct GitHubHeadersFactory: Sendable {
   ) throws(CompositionError) -> HTTPHeaders {
     let unique = Set(requirements)
     guard unique.count <= 1 else { throw .conflictingRESTRequirements }
-    return unique.contains(.loginRuntimeREST) ? login.headers : standardREST.headers
+    switch unique.first {
+    case .none, .standardREST: return standardREST.headers
+    case .loginRuntimeREST: return login.headers
+    case .pullRequestUnifiedDiffREST: return pullRequestUnifiedDiff.headers
+    }
   }
 }

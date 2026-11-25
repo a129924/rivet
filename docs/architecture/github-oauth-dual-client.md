@@ -87,13 +87,15 @@ OAuth technical failure 不跨越成 shared BC failure contract；未來由 cons
 
 ## 固定請求標頭
 
-套件內的 `GitHubHeadersFactory` 接受 REST 能力清單。Inbox 帳號查詢、搜尋分頁與 Reader 背景讀取使用 `.standardREST`，送出 `Accept: application/vnd.github+json`、`User-Agent: Rivet` 和 `X-GitHub-Api-Version: 2026-03-10`。登入探查使用 `.loginRuntimeREST`，使用相同 `Accept` 與 `User-Agent: RivetLoginRuntime`，且省略 API 版本欄位。兩個組合共用不可變設定，各自取得固定標頭的值。
+套件內的 `GitHubHeadersFactory` 接受 REST 能力清單。Inbox 帳號查詢、搜尋分頁與 Reader 背景讀取使用 `.standardREST`，送出 `Accept: application/vnd.github+json`、`User-Agent: Rivet` 和 `X-GitHub-Api-Version: 2026-03-10`。登入探查使用 `.loginRuntimeREST`，使用相同 `Accept` 與 `User-Agent: RivetLoginRuntime`，且省略 API 版本欄位。各組合共用不可變設定，並傳回各自的固定標頭值。
 
 Repository PR 清單 `GET /repos/{owner}/{repo}/pulls` 使用標準 JSON 時可沿用 `.standardREST`。 [GitHub List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)
 
-空清單選標準 REST。相同需求重複出現時視為一次。互斥的兩種需求回傳 `conflictingRESTRequirements`。呼叫端只傳入已定義的需求，Factory 回傳的標頭可由呼叫端複製調整。呼叫端在既有授權流程以 `BearerAuth` 套入 token。
+Reader 的 raw unified diff 來源以 `.pullRequestUnifiedDiffREST` 讀取 `GET /repos/{owner}/{repo}/pulls/{pull_number}`。這組固定標頭沿用標準 REST 的 User-Agent 與 API 版本，並將 Accept 設為 `application/vnd.github.diff`。 [GitHub Get a pull request](https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request)
 
-OAuth 交換和刷新共用 `HeadersProvider.oauthToken`，送出 `Accept: application/json` 與 `Content-Type: application/x-www-form-urlencoded`。條件式請求、特殊 representation 和全域自動標頭政策保留至有使用需求時。
+空清單選標準 REST。相同需求重複出現時視為一次。同時指定兩種以上不同需求回傳 `conflictingRESTRequirements`。呼叫端只傳入已定義的需求，Factory 回傳的標頭可由呼叫端複製調整。呼叫端在既有授權流程以 `BearerAuth` 套入 token。
+
+OAuth 交換和刷新共用 `HeadersProvider.oauthToken`，送出 `Accept: application/json` 與 `Content-Type: application/x-www-form-urlencoded`。條件式請求、其餘特殊 representation 和全域自動標頭政策保留至有使用需求時。
 
 ## Configuration 與授權入口的整合契約
 

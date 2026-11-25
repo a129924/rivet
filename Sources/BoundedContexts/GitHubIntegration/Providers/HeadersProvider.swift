@@ -14,6 +14,12 @@ package final class HeadersProvider: Sendable {
     self.headers = headers
   }
 
+  func makePullRequestUnifiedDiffREST() -> HeadersProvider {
+    var diffHeaders = headers
+    diffHeaders.accept = "application/vnd.github.diff"
+    return HeadersProvider(headers: diffHeaders)
+  }
+
   static func makeRESTDefaults(configuration: GitHubHeadersConfiguration) -> (
     standardREST: HeadersProvider, login: HeadersProvider
   ) {

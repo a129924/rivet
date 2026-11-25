@@ -23,6 +23,18 @@ struct GitHubHeadersFactoryTests {
     #expect(login.authorization == nil)
   }
 
+  @Test func diffSelectsOneAcceptAndKeepsTheStandardRESTMetadata() throws {
+    let factory = GitHubHeadersFactory.standard
+    let diff = try factory.make(requirements: [.pullRequestUnifiedDiffREST])
+
+    #expect(
+      diff.values == [
+        "accept": "application/vnd.github.diff",
+        "user-agent": "Rivet",
+        "x-github-api-version": "2026-03-10",
+      ])
+  }
+
   @Test func repeatedRequirementsSelectTheSameHeaders() throws {
     let factory = GitHubHeadersFactory.standard
 
@@ -32,6 +44,9 @@ struct GitHubHeadersFactoryTests {
     #expect(
       try factory.make(requirements: [.loginRuntimeREST, .loginRuntimeREST])
         == factory.make(requirements: [.loginRuntimeREST]))
+    #expect(
+      try factory.make(requirements: [.pullRequestUnifiedDiffREST, .pullRequestUnifiedDiffREST])
+        == factory.make(requirements: [.pullRequestUnifiedDiffREST]))
   }
 
   @Test(
@@ -39,6 +54,11 @@ struct GitHubHeadersFactoryTests {
       [.standardREST, .loginRuntimeREST],
       [.loginRuntimeREST, .standardREST],
       [.standardREST, .standardREST, .loginRuntimeREST],
+      [.standardREST, .pullRequestUnifiedDiffREST],
+      [.pullRequestUnifiedDiffREST, .standardREST],
+      [.loginRuntimeREST, .pullRequestUnifiedDiffREST],
+      [.pullRequestUnifiedDiffREST, .loginRuntimeREST],
+      [.standardREST, .loginRuntimeREST, .pullRequestUnifiedDiffREST],
     ] as [[GitHubHeaderRequirement]])
   func conflictingRequirementsFailRegardlessOfOrder(_ requirements: [GitHubHeaderRequirement]) {
     #expect(throws: GitHubHeadersFactory.CompositionError.conflictingRESTRequirements) {
@@ -66,6 +86,12 @@ struct GitHubHeadersFactoryTests {
     #expect(login.accept == "application/json")
     #expect(login.userAgent == "Rivet Login Fixture")
     #expect(login.value(for: "X-GitHub-Api-Version") == nil)
+
+    let diff = try factory.make(requirements: [.pullRequestUnifiedDiffREST])
+    #expect(diff.accept == "application/vnd.github.diff")
+    #expect(diff.userAgent == "Rivet Fixture")
+    #expect(diff.value(for: "X-GitHub-Api-Version") == "2040-01-01")
+    #expect(diff.authorization == nil)
   }
 
   @Test(arguments: ["", " \t", "value\rnext", "value\nnext", "value\r\nnext"])
