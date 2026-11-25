@@ -69,6 +69,10 @@ HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Rea
 - 成功回傳完整、有序的 `ReaderReview` 清單，保留 ID、原始正文、可用作者及個別審閱狀態。合法缺少作者、提交時間或 commit ID 時保留紀錄，完整空清單回成功。
 - 無效起始識別、Reviews 請求的認證或存取拒絕及資源不存在回 `.notReadable`。限流、傳輸、續頁或詳情查核失敗及取消回 `.unavailable`。必要資料或狀態無法保真時回 `.contentNotRepresentable`。任一失敗都捨棄已累積的紀錄，取消優先於晚到的回應。
 
+## GitHub REST 行內審閱留言端點
+
+- `RivetPRReaderGitHub` 的內部 `GitHubInlineReviewCommentsEndpoint` 接收 `ReaderPullRequestID`，驗證正數頁碼與 PR 識別，再同步建構 GitHub.com 的 GET `/repos/{owner}/{repo}/pulls/{number}/comments` URL。省略頁碼時使用第 1 頁，每頁固定請求 100 筆。無效輸入拋出驗證錯誤。實際讀取由後續 Adapter 交付。 [GitHub 行內審閱留言端點](https://docs.github.com/en/rest/pulls/comments#list-review-comments-on-a-pull-request)
+
 ## WebView Diff Rendering Boundary
 
 - Swift 對 WebView 提供完整且有序的 `DiffSnapshot`；它帶有 `pullRequestId`、`snapshotId` 與 `readonly DiffViewModel[] files`，每個檔案包含 snapshot-local `fileId`、檔案變更 metadata、可選 patch、增刪計數與 viewed 狀態。
