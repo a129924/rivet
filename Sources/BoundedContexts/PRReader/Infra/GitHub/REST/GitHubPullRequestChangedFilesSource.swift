@@ -108,12 +108,10 @@ package struct GitHubPullRequestChangedFilesSource: Sendable {
 
     let response = try await get(url)
     guard
-      let detail = try? response.json(PullRequestRepositoryIdentity.self, decoder: JSONDecoder()),
-      detail.number == id.number, detail.base.repo.id == candidateID,
-      detail.base.repo.fullName.utf8.allSatisfy({ $0 < 128 }),
-      detail.base.repo.fullName.lowercased() == "\(id.owner)/\(id.repository)".lowercased()
+      let repositoryID = GitHubPullRequestRepositoryIdentity.verifiedRepositoryID(
+        in: response, for: id, matching: candidateID)
     else { throw .unavailable }
-    return detail.base.repo.id
+    return repositoryID
   }
 }
 
@@ -163,25 +161,6 @@ private struct ChangedFile: Decodable, Sendable {
       additions: additions,
       deletions: deletions,
       patch: patch)
-  }
-}
-
-private struct PullRequestRepositoryIdentity: Decodable, Sendable {
-  let number: Int
-  let base: Base
-
-  struct Base: Decodable, Sendable {
-    let repo: PullRequestBaseRepository
-  }
-}
-
-private struct PullRequestBaseRepository: Decodable, Sendable {
-  let id: Int
-  let fullName: String
-
-  enum CodingKeys: String, CodingKey {
-    case id
-    case fullName = "full_name"
   }
 }
 

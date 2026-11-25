@@ -50,9 +50,11 @@
 
 HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Reader Infra 沿用背景讀取的技術分類與失敗映射。權限拒絕或無效識別回 `.notReadable`，`406`、限流、執行失敗或取消回 `.unavailable`。取消優先於晚到的回應或 client 失敗。 [Rivet API Catalog](../../github-api/rest-pr-reader.md#unified-diff)
 
-## GitHub REST 一般討論留言端點
+## GitHub REST 一般討論留言讀取
 
-Reader Infra 的 `GitHubConversationCommentsEndpoint` 驗證 PR 識別與正數頁碼，為 `GET /repos/{owner}/{repo}/issues/{n}/comments` 建立 GitHub.com URL。`page` 預設為 `1`，`per_page` 固定為 `100`。HTTP 執行與留言組裝由後續 Adapter 負責。 [GitHub 留言端點](https://docs.github.com/en/rest/issues/comments#list-issue-comments)
+- 套件內 `GitHubConversationCommentsSource.fetchConversationComments(for:)` 使用已認證的 REST client 與已確認的 PR 識別，透過 `GitHubConversationCommentsEndpoint` 讀取指定 PR 的一般留言。請求從第 1 頁開始，每頁請求 100 筆。成功結果保留來源頁次、頁內順序、留言 ID、原始 Markdown 與可用作者。合法缺作者仍保留留言，完整空清單回成功。此入口可供後續快照組裝。 [GitHub 留言端點](https://docs.github.com/en/rest/issues/comments#list-issue-comments)
+- Reader Infra 驗證 `Link` 的續頁仍屬原 PR，再重建具名請求。首次遇到有效數字 repository ID 續頁時，讀取原 PR 詳情，以與 Changed Files 共用的解碼及身分核對確認 PR 編號、repo 名稱與 ID。已確認 ID 只在本次讀取內重用。各頁可能反映讀取期間不同時間點。 [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api#using-link-headers)
+- 留言請求的認證或存取拒絕、找不到或已移除的資源及無效起始識別回 `.notReadable`。取消、限流、傳輸、續頁或 PR 詳情查核失敗回 `.unavailable`。必要留言資料無法保真映入 Reader 模型時回 `.contentNotRepresentable`。整次讀取只交付完整清單或單一失敗。
 
 ## WebView Diff Rendering Boundary
 

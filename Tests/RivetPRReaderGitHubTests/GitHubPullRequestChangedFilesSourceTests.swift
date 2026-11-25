@@ -328,7 +328,6 @@ struct GitHubPullRequestChangedFilesSourceTests {
       (
         [.success(aliasStart), .failure(GitHubHTTPClientError.authenticationRequired)], .notReadable
       ),
-      ([.success(aliasStart), .success(response("{}", status: 404))], .notReadable),
       ([.success(start), .failure(URLError(.timedOut))], .unavailable),
     ] {
       let client = ChangedFilesRESTStub(responses)
@@ -337,6 +336,25 @@ struct GitHubPullRequestChangedFilesSourceTests {
       #expect(result == .failure(expected))
       #expect(await client.requests.count == responses.count)
     }
+  }
+
+  @Test(arguments: [401, 403, 404])
+  func retainsUnreadableDetailsResponseForChangedFiles(_ status: Int) async {
+    let link = "<\(numericURL(page: 2))>; rel=next"
+    let client = ChangedFilesRESTStub([
+      .success(page(1, link: link)),
+      .success(response("{}", status: status)),
+    ])
+
+    let result = await GitHubPullRequestChangedFilesSource(client: client).fetchChangedFiles(
+      for: id)
+
+    #expect(result == .failure(.notReadable))
+    let requests = await client.requests
+    #expect(
+      requests.map(\.url.value.absoluteString) == [
+        filesURL(page: 1), "https://api.github.com/repos/Owner/Repo/pulls/42",
+      ])
   }
 
   @Test
