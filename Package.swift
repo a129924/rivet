@@ -34,6 +34,14 @@ let package = Package(
       path: "Sources/PRInboxGitHub"
     ),
     .target(
+      name: "RivetRepositoryPullRequestsGitHub",
+      dependencies: [
+        "GitHubIntegration",
+        .product(name: "RivetHTTPClient", package: "RivetHTTPClient"),
+      ],
+      path: "Sources/RivetRepositoryPullRequestsGitHub"
+    ),
+    .target(
       name: "RivetPRReader",
       path: "Sources/BoundedContexts/PRReader/Core"
     ),
@@ -102,6 +110,14 @@ let package = Package(
         "GitHubIntegration",
         "RivetPRInbox",
         "RivetPRInboxGitHub",
+        .product(name: "RivetHTTPClient", package: "RivetHTTPClient"),
+      ]
+    ),
+    .testTarget(
+      name: "RivetRepositoryPullRequestsGitHubTests",
+      dependencies: [
+        "RivetRepositoryPullRequestsGitHub",
+        "GitHubIntegration",
         .product(name: "RivetHTTPClient", package: "RivetHTTPClient"),
       ]
     ),
