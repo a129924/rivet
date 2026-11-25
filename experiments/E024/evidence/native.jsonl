@@ -1,0 +1,34 @@
+{"action": "focus", "openCount": 0, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/core#42"}
+{"action": "focus", "focus": "verification", "openCount": 0, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/core#42"}
+{"action": "focus", "focus": "list", "openCount": 0, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/core#42"}
+{"action": "selection", "focus": "list", "openCount": 0, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/ui#43"}
+{"action": "selection", "focus": "list", "openCount": 0, "openDelta": 0, "previousSelection": "sample/ui#43", "scenario": "content", "selection": "sample/core#42"}
+{"action": "openIntent", "focus": "list", "openCount": 1, "openDelta": 1, "openID": "sample/core#42", "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/core#42", "target": "sample/core#42"}
+{"action": "selection", "focus": "list", "openCount": 1, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/ui#42"}
+{"action": "openIntent", "focus": "list", "openCount": 2, "openDelta": 1, "openID": "sample/ui#42", "previousSelection": "sample/ui#42", "scenario": "content", "selection": "sample/ui#42", "target": "sample/ui#42"}
+{"action": "scenario", "focus": "list", "openCount": 2, "openDelta": 0, "previousSelection": "sample/ui#42", "requestedFocus": "list", "scenario": "reordered", "selection": "sample/ui#42"}
+{"action": "scenario", "focus": "list", "openCount": 2, "openDelta": 0, "previousSelection": "sample/ui#42", "requestedFocus": "list", "scenario": "readableError", "selection": "sample/ui#42"}
+{"action": "scenario", "focus": "list", "openCount": 2, "openDelta": 0, "previousSelection": "sample/ui#42", "requestedFocus": "list", "scenario": "readableOffline", "selection": "sample/ui#42"}
+{"action": "scenario", "focus": "list", "openCount": 2, "openDelta": 0, "previousSelection": "sample/ui#42", "requestedFocus": "list", "scenario": "unknownOpen", "selection": "sample/ui#42"}
+{"action": "scenario", "focus": "list", "openCount": 2, "openDelta": 0, "previousSelection": "sample/ui#42", "requestedFocus": "list", "scenario": "removedB", "selection": "sample/core#42"}
+{"action": "injectedOpen", "focus": "list", "openCount": 2, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "removedB", "selection": "sample/core#42", "target": "sample/ui#42"}
+{"action": "openIntent", "focus": "list", "openCount": 3, "openDelta": 1, "openID": "sample/core#42", "previousSelection": "sample/core#42", "scenario": "removedB", "selection": "sample/core#42", "target": "sample/core#42"}
+{"action": "focus", "focus": "verification", "openCount": 3, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "removedB", "selection": "sample/core#42"}
+{"action": "scenario", "focus": "verification", "openCount": 3, "openDelta": 0, "previousSelection": "sample/core#42", "requestedFocus": "verification", "scenario": "loading"}
+{"action": "scenario", "focus": "verification", "openCount": 3, "openDelta": 0, "requestedFocus": "heading", "scenario": "empty"}
+{"action": "focus", "focus": "heading", "openCount": 3, "openDelta": 0, "scenario": "empty"}
+{"action": "scenario", "focus": "heading", "openCount": 3, "openDelta": 0, "requestedFocus": "heading", "scenario": "unreadableError"}
+{"action": "scenario", "focus": "heading", "openCount": 3, "openDelta": 0, "requestedFocus": "heading", "scenario": "offline"}
+{"action": "scenario", "focus": "heading", "openCount": 3, "openDelta": 0, "requestedFocus": "list", "scenario": "content", "selection": "sample/core#42"}
+{"action": "focus", "openCount": 3, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/core#42"}
+{"action": "focus", "focus": "list", "openCount": 3, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/core#42"}
+{"action": "selection", "focus": "list", "openCount": 3, "openDelta": 0, "previousSelection": "sample/core#42", "scenario": "content", "selection": "sample/ui#43"}
+{"action": "selection", "focus": "list", "openCount": 3, "openDelta": 0, "previousSelection": "sample/ui#43", "scenario": "content", "selection": "sample/ui#42"}
+{"action": "selection", "focus": "list", "openCount": 3, "openDelta": 0, "previousSelection": "sample/ui#42", "scenario": "content", "selection": "sample/ui#43"}
+{"action": "scenario", "focus": "list", "openCount": 3, "openDelta": 0, "previousSelection": "sample/ui#43", "requestedFocus": "heading", "scenario": "loading"}
+{"action": "focus", "openCount": 3, "openDelta": 0, "scenario": "loading"}
+{"action": "focus", "focus": "heading", "openCount": 3, "openDelta": 0, "scenario": "loading"}
+{"action": "scenario", "focus": "heading", "openCount": 3, "openDelta": 0, "requestedFocus": "heading", "scenario": "missingAvailability"}
+{"action": "scenario", "focus": "heading", "openCount": 3, "openDelta": 0, "requestedFocus": "list", "scenario": "content", "selection": "sample/ui#43"}
+{"action": "focus", "openCount": 3, "openDelta": 0, "previousSelection": "sample/ui#43", "scenario": "content", "selection": "sample/ui#43"}
+{"action": "focus", "focus": "list", "openCount": 3, "openDelta": 0, "previousSelection": "sample/ui#43", "scenario": "content", "selection": "sample/ui#43"}
