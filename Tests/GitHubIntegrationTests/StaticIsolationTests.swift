@@ -11,12 +11,13 @@ struct StaticIsolationTests {
     let targets = try namedItems(in: package, named: "targets")
     let reader = "RivetPRReader"
     let bridge = "RivetPRReaderWebViewBridge"
-    let readerGitHub = "RivetPRReaderGitHub"
     let gitHub = "GitHubIntegration"
+    let repositoryPullRequests = "RivetRepositoryPullRequestsGitHub"
     let direct: [String: (path: String, dependencies: [String])] = [
       bridge: ("PRReaderWebViewBridge", [reader]),
       gitHub: ("BoundedContexts/GitHubIntegration", ["Apollo", "ApolloAPI", "RivetHTTPClient"]),
-      readerGitHub: (
+      repositoryPullRequests: (repositoryPullRequests, [gitHub, "RivetHTTPClient"]),
+      "RivetPRReaderGitHub": (
         "BoundedContexts/PRReader/Infra/GitHub/REST", [reader, gitHub, "RivetHTTPClient"]
       ),
     ]

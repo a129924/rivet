@@ -16,7 +16,7 @@
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)、[GitHub REST OpenAPI `pull-request-simple` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`draft` 未列於 `required`；`head.repo` 為 nullable） |
 
-此 endpoint 適合單一 repository 範圍瀏覽。
+此 endpoint 適合單一 repository 範圍瀏覽。套件內的 `RivetRepositoryPullRequestsGitHub` 提供 `GitHubRepositoryOpenPullRequestsEndpoint`，驗證路徑組件及正整數頁碼，並建立固定 `state=open`、`per_page=100` 與預設 `page=1` 的 GET 目的地。正式呼叫、Link 分頁與清單映射由後續 Adapter 交付。
 
 ## 跨 repository 自查候選
 
