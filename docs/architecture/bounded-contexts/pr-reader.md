@@ -38,6 +38,12 @@
 - Reader Infra 選用共用 `.standardREST` 標頭，並以 `get` 委派請求。REST client 負責執行與 `401` 復原。Reader 與 Inbox 將所有非 `200` 回應交給同一個 `GitHubResponseClassifier`。Reader Infra 將共用技術分類映射為 `PRReaderFailure`，權限拒絕及原因未明的 `403` 回 `.notReadable`，限流回 `.unavailable`。
 - 此入口供後續快照組裝使用。`PRContentSource` 的完整快照由後續來源負責。
 
+## GitHub REST raw unified diff
+
+套件內的 `GitHubPullRequestUnifiedDiffSource.fetchUnifiedDiff(for:)` 接收 `ReaderPullRequestID`，透過已授權的 `GitHubRestClient` 讀取該 PR 的整份 diff。Reader Infra 沿用背景讀取的 PR 詳情 GET 路徑，選擇 `.pullRequestUnifiedDiffREST` 取得 `Accept: application/vnd.github.diff`。
+
+HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Reader Infra 沿用背景讀取的技術分類與失敗映射。權限拒絕或無效識別回 `.notReadable`，`406`、限流、執行失敗或取消回 `.unavailable`。取消優先於晚到的回應或 client 失敗。 [Rivet API Catalog](../../github-api/rest-pr-reader.md#unified-diff)
+
 ## GitHub REST 一般討論留言端點
 
 Reader Infra 的 `GitHubConversationCommentsEndpoint` 驗證 PR 識別與正數頁碼，為 `GET /repos/{owner}/{repo}/issues/{n}/comments` 建立 GitHub.com URL。`page` 預設為 `1`，`per_page` 固定為 `100`。HTTP 執行與留言組裝由後續 Adapter 負責。 [GitHub 留言端點](https://docs.github.com/en/rest/issues/comments#list-issue-comments)
