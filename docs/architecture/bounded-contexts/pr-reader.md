@@ -62,9 +62,12 @@ HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Rea
 - Reader Infra 驗證 `Link` 的續頁仍屬原 PR，再重建具名請求。首次遇到有效數字 repository ID 續頁時，讀取原 PR 詳情，以與 Changed Files 共用的解碼及身分核對確認 PR 編號、repo 名稱與 ID。已確認 ID 只在本次讀取內重用。各頁可能反映讀取期間不同時間點。 [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api#using-link-headers)
 - 留言請求的認證或存取拒絕、找不到或已移除的資源及無效起始識別回 `.notReadable`。取消、限流、傳輸、續頁或 PR 詳情查核失敗回 `.unavailable`。必要留言資料無法保真映入 Reader 模型時回 `.contentNotRepresentable`。整次讀取只交付完整清單或單一失敗。
 
-## GitHub REST 審閱紀錄端點
+## GitHub REST 審閱紀錄讀取
 
-Reader Infra 的 `GitHubPullRequestReviewsEndpoint` 驗證 PR 識別與正數頁碼，為 `GET /repos/{owner}/{repo}/pulls/{number}/reviews` 建立 GitHub.com URL。`page` 預設為 `1`，`per_page` 固定為 `100`。HTTP 執行、分頁讀取及審閱紀錄組裝由後續 Adapter 負責。 [GitHub 審閱紀錄端點](https://docs.github.com/en/rest/pulls/reviews#list-reviews-for-a-pull-request)
+- 套件內 GitHub 來源 `GitHubPullRequestReviewsSource` 的 `fetchReviews(for:)` 接收 `ReaderPullRequestID`，以已認證的 REST client、GET 與 `.standardREST` 讀取指定 PR 的審閱紀錄。`GitHubPullRequestReviewsEndpoint` 驗證 PR 識別與頁碼，自第 1 頁起建構 GitHub.com 的 `/repos/{owner}/{repo}/pulls/{number}/reviews` 請求，每頁請求 100 筆。 [GitHub 審閱紀錄端點](https://docs.github.com/en/rest/pulls/reviews#list-reviews-for-a-pull-request)
+- Reader Infra 驗證 `Link` 的續頁仍屬原 PR，再重建具名請求。首次遇到有效的數字 repository ID 續頁時，讀取原 PR 詳情並核對 PR 編號、repo 名稱與 ID。已確認 ID 限本次讀取重用。完整性依 GitHub 在本次讀取提供的分頁序列，各頁可能反映不同時間點。 [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api#using-link-headers)
+- 成功回傳完整、有序的 `ReaderReview` 清單，保留 ID、原始正文、可用作者及個別審閱狀態。合法缺少作者、提交時間或 commit ID 時保留紀錄，完整空清單回成功。
+- 無效起始識別、Reviews 請求的認證或存取拒絕及資源不存在回 `.notReadable`。限流、傳輸、續頁或詳情查核失敗及取消回 `.unavailable`。必要資料或狀態無法保真時回 `.contentNotRepresentable`。任一失敗都捨棄已累積的紀錄，取消優先於晚到的回應。
 
 ## WebView Diff Rendering Boundary
 
