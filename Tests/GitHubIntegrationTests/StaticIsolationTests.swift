@@ -17,6 +17,11 @@ struct StaticIsolationTests {
       bridge: ("PRReaderWebViewBridge", [reader]),
       gitHub: ("BoundedContexts/GitHubIntegration", ["Apollo", "ApolloAPI", "RivetHTTPClient"]),
       repositoryPullRequests: (repositoryPullRequests, [gitHub, "RivetHTTPClient"]),
+      "RivetPRReaderPresentation": ("RivetPRReaderPresentation", [reader]),
+      "RivetPRReaderComposition": (
+        "RivetPRReaderComposition",
+        ["RivetPRReaderPresentation", reader, "RivetPRReaderGitHub", gitHub]
+      ),
       "RivetPRReaderGitHub": (
         "BoundedContexts/PRReader/Infra/GitHub/REST", [reader, gitHub, "RivetHTTPClient"]
       ),
@@ -26,9 +31,8 @@ struct StaticIsolationTests {
         gitHub, "RivetPRInbox", reader, bridge, "RivetPRReaderHarnessRuntime",
         "RivetPRReaderHarness", "RivetPresentation", "RivetLoginDemo", "RivetPRInboxGitHub",
       ])
-    for name in [bridge, gitHub] {
-      #expect(targetNames(in: try #require(products[name])) == [name])
-    }
+    #expect(targetNames(in: try #require(products[bridge])) == [bridge])
+    #expect(targetNames(in: try #require(products[gitHub])) == [gitHub])
     let others: Set = [
       "RivetPRInbox", "RivetPRInboxTests", "RivetPRInboxGitHub", "RivetPRInboxGitHubTests",
       reader, "\(reader)Tests", "RivetPresentation", "RivetPresentationTests",
@@ -43,7 +47,10 @@ struct StaticIsolationTests {
       #expect(dependencyNames(in: target).sorted() == deps.sorted(), "\(name)")
       let tests = try #require(targets["\(name)Tests"])
       #expect(tests["type"] as? String == "test", "\(name)Tests")
-      #expect(dependencyNames(in: tests).sorted() == ([name] + deps).sorted(), "\(name)Tests")
+      let testDependencies =
+        name == "RivetPRReaderComposition"
+        ? [name, "RivetPRReaderPresentation", reader, gitHub, "RivetHTTPClient"] : [name] + deps
+      #expect(dependencyNames(in: tests).sorted() == testDependencies.sorted(), "\(name)Tests")
     }
     #expect(dependencyNames(in: try #require(targets["RivetPresentation"])).isEmpty)
   }
@@ -62,7 +69,6 @@ struct StaticIsolationTests {
         == ["ByNameDependency", "TargetDependency", "ProductDependency"]
     )
   }
-
   @Test
   func importRootExtractionRecognizesAttributesAndScopedImports() throws {
     let source = """
@@ -77,7 +83,6 @@ struct StaticIsolationTests {
         == ["Foundation", "Security", "ApolloAPI", "RivetHTTPClient"]
     )
   }
-
   @Test
   func importRootExtractionRecognizesAccessLevelImports() throws {
     let source = """
@@ -93,21 +98,18 @@ struct StaticIsolationTests {
         == ["Security", "Keychain", "ApolloAPI", "RivetHTTPClient", "Foundation"]
     )
   }
-
   @Test
   func importRootExtractionRecognizesFormFeedTrivia() throws {
     let source = "import\u{000C}Security"
 
     #expect(try importedModuleRoots(in: source) == ["Security"])
   }
-
   @Test
   func importRootExtractionRecognizesVerticalTabTrivia() throws {
     let source = "import\u{000B}Security"
 
     #expect(try importedModuleRoots(in: source) == ["Security"])
   }
-
   @Test
   func importRootExtractionRecognizesNonBreakingSpaceTrivia() throws {
     let source = "import\u{00A0}Security"
@@ -142,7 +144,6 @@ struct StaticIsolationTests {
       try !importedModuleRoots(in: source).isDisjoint(with: forbiddenImports)
     )
   }
-
   @Test
   func importRootExtractionRecognizesMultilineBalancedAttributeArguments() throws {
     let source = """
@@ -159,7 +160,6 @@ struct StaticIsolationTests {
         == ["Security", "ApolloAPI"]
     )
   }
-
   @Test
   func importRootExtractionRecognizesAdjacentLegalAttributes() throws {
     let source = "@_spi(Foo)@preconcurrency import Security"
