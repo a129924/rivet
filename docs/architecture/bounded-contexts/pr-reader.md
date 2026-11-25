@@ -56,6 +56,10 @@ HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Rea
 - Reader Infra 驗證 `Link` 的續頁仍屬原 PR，再重建具名請求。首次遇到有效數字 repository ID 續頁時，讀取原 PR 詳情，以與 Changed Files 共用的解碼及身分核對確認 PR 編號、repo 名稱與 ID。已確認 ID 只在本次讀取內重用。各頁可能反映讀取期間不同時間點。 [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api#using-link-headers)
 - 留言請求的認證或存取拒絕、找不到或已移除的資源及無效起始識別回 `.notReadable`。取消、限流、傳輸、續頁或 PR 詳情查核失敗回 `.unavailable`。必要留言資料無法保真映入 Reader 模型時回 `.contentNotRepresentable`。整次讀取只交付完整清單或單一失敗。
 
+## GitHub REST 審閱紀錄端點
+
+Reader Infra 的 `GitHubPullRequestReviewsEndpoint` 驗證 PR 識別與正數頁碼，為 `GET /repos/{owner}/{repo}/pulls/{number}/reviews` 建立 GitHub.com URL。`page` 預設為 `1`，`per_page` 固定為 `100`。HTTP 執行、分頁讀取及審閱紀錄組裝由後續 Adapter 負責。 [GitHub 審閱紀錄端點](https://docs.github.com/en/rest/pulls/reviews#list-reviews-for-a-pull-request)
+
 ## WebView Diff Rendering Boundary
 
 - Swift 對 WebView 提供完整且有序的 `DiffSnapshot`；它帶有 `pullRequestId`、`snapshotId` 與 `readonly DiffViewModel[] files`，每個檔案包含 snapshot-local `fileId`、檔案變更 metadata、可選 patch、增刪計數與 viewed 狀態。
