@@ -44,6 +44,10 @@
 - 續頁必須能核對到原 PR，實際請求由 Changed Files 端點重建。首次收到有效的數字 repository ID 續頁時，用原 PR 詳情核對其歸屬。當次讀取以 GitHub 提供的分頁序列為準。無法確認完整性或達 3,000 檔時回 `.unavailable`。
 - Reader Infra 將認證與存取拒絕映為 `.notReadable`，將限流、傳輸、取消與分頁失敗映為 `.unavailable`。必要資料、狀態或檔案識別無法保真表達時回 `.contentNotRepresentable`。任一失敗只回 Reader failure。
 
+## GitHub REST 一般討論留言端點
+
+Reader Infra 的 `GitHubConversationCommentsEndpoint` 驗證 PR 識別與正數頁碼，為 `GET /repos/{owner}/{repo}/issues/{n}/comments` 建立 GitHub.com URL。`page` 預設為 `1`，`per_page` 固定為 `100`。HTTP 執行與留言組裝由後續 Adapter 負責。 [GitHub 留言端點](https://docs.github.com/en/rest/issues/comments#list-issue-comments)
+
 ## WebView Diff Rendering Boundary
 
 - Swift 對 WebView 提供完整且有序的 `DiffSnapshot`；它帶有 `pullRequestId`、`snapshotId` 與 `readonly DiffViewModel[] files`，每個檔案包含 snapshot-local `fileId`、檔案變更 metadata、可選 patch、增刪計數與 viewed 狀態。
