@@ -3,7 +3,7 @@ import RivetHTTPClient
 package final class HeadersProvider: Sendable {
   private static let builtInREST = makeRESTDefaults(configuration: .rivet)
 
-  static let inboxREST = builtInREST.inbox
+  static let standardREST = builtInREST.standardREST
   static let loginAccountREST = builtInREST.login
   static let oauthToken = HeadersProvider(
     headers: [.accept: "application/json", .contentType: "application/x-www-form-urlencoded"])
@@ -15,9 +15,9 @@ package final class HeadersProvider: Sendable {
   }
 
   static func makeRESTDefaults(configuration: GitHubHeadersConfiguration) -> (
-    inbox: HeadersProvider, login: HeadersProvider
+    standardREST: HeadersProvider, login: HeadersProvider
   ) {
-    let inbox = HeadersProvider(
+    let standardREST = HeadersProvider(
       headers: [
         .accept: configuration.restAccept,
         .userAgent: configuration.standardUserAgent,
@@ -25,6 +25,6 @@ package final class HeadersProvider: Sendable {
       ])
     let login = HeadersProvider(
       headers: [.accept: configuration.restAccept, .userAgent: configuration.loginUserAgent])
-    return (inbox, login)
+    return (standardREST, login)
   }
 }
