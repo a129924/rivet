@@ -16,7 +16,9 @@
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（read）；只取 public resource 時可不認證。 |
 | 官方來源 | [List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)、[GitHub REST OpenAPI `pull-request-simple` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`draft` 未列於 `required`；`head.repo` 為 nullable） |
 
-此 endpoint 適合單一 repository 範圍瀏覽。套件內的 `RivetRepositoryPullRequestsGitHub` 提供 `GitHubRepositoryOpenPullRequestsEndpoint`，驗證路徑組件及正整數頁碼，並建立固定 `state=open`、`per_page=100` 與預設 `page=1` 的 GET 目的地。正式呼叫、Link 分頁與清單映射由後續 Adapter 交付。
+此 endpoint 適合單一 repository 範圍瀏覽。套件內的 `RivetRepositoryPullRequestsGitHub` 提供 `GitHubRepositoryOpenPullRequestsQuery`，接受已配置的 `GitHubRestClient`、owner 與 repository。既有 `GitHubRepositoryOpenPullRequestsEndpoint` 驗證識別，並為每頁建立固定 `state=open` 與 `per_page=100` 的 GET。查詢使用 `.standardREST`，每頁只接受 HTTP `200`，沿著有效的 `Link` 讀到尾頁。
+
+下一頁須延續同一 repository 與查詢條件，頁碼須恰為當前頁加一。數字 repository 路徑須符合本次頁面已證明的 `base.repo.id` 和 `base.repo.full_name`。通過驗證後由原 Endpoint 建立下一頁請求。成功結果依 GitHub 的原始順序回傳 PR 編號與標題，包含 Draft 和其他作者的 PR。零筆為成功空陣列。無效識別、請求失敗、內容無效、無法安全分頁或取消均回傳整次查詢的失敗分類。產品瀏覽仍屬後續唯讀能力。
 
 ## 跨 repository 自查候選
 
