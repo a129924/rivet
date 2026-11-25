@@ -10,18 +10,18 @@ package struct GitHubHeadersFactory: Sendable {
     case conflictingRESTRequirements
   }
 
-  package static let standard = Self(inbox: .inboxREST, login: .loginAccountREST)
+  package static let standard = Self(standardREST: .standardREST, login: .loginAccountREST)
 
-  private let inbox: HeadersProvider
+  private let standardREST: HeadersProvider
   private let login: HeadersProvider
 
   init(configuration: GitHubHeadersConfiguration) {
     let defaults = HeadersProvider.makeRESTDefaults(configuration: configuration)
-    self.init(inbox: defaults.inbox, login: defaults.login)
+    self.init(standardREST: defaults.standardREST, login: defaults.login)
   }
 
-  private init(inbox: HeadersProvider, login: HeadersProvider) {
-    self.inbox = inbox
+  private init(standardREST: HeadersProvider, login: HeadersProvider) {
+    self.standardREST = standardREST
     self.login = login
   }
 
@@ -30,6 +30,6 @@ package struct GitHubHeadersFactory: Sendable {
   ) throws(CompositionError) -> HTTPHeaders {
     let unique = Set(requirements)
     guard unique.count <= 1 else { throw .conflictingRESTRequirements }
-    return unique.contains(.loginRuntimeREST) ? login.headers : inbox.headers
+    return unique.contains(.loginRuntimeREST) ? login.headers : standardREST.headers
   }
 }

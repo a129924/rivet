@@ -87,7 +87,9 @@ OAuth technical failure 不跨越成 shared BC failure contract；未來由 cons
 
 ## 固定請求標頭
 
-套件內的 `GitHubHeadersFactory` 接受 REST 能力清單。Inbox 帳號查詢與搜尋分頁使用 `.standardREST`，送出 `Accept: application/vnd.github+json`、`User-Agent: Rivet` 和 `X-GitHub-Api-Version: 2026-03-10`。登入探查使用 `.loginRuntimeREST`，使用相同 `Accept` 與 `User-Agent: RivetLoginRuntime`，且省略 API 版本欄位。兩個組合共用不可變設定，各自取得固定標頭的值。
+套件內的 `GitHubHeadersFactory` 接受 REST 能力清單。Inbox 帳號查詢、搜尋分頁與 Reader 背景讀取使用 `.standardREST`，送出 `Accept: application/vnd.github+json`、`User-Agent: Rivet` 和 `X-GitHub-Api-Version: 2026-03-10`。登入探查使用 `.loginRuntimeREST`，使用相同 `Accept` 與 `User-Agent: RivetLoginRuntime`，且省略 API 版本欄位。兩個組合共用不可變設定，各自取得固定標頭的值。
+
+Repository PR 清單 `GET /repos/{owner}/{repo}/pulls` 使用標準 JSON 時可沿用 `.standardREST`。 [GitHub List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)
 
 空清單選標準 REST。相同需求重複出現時視為一次。互斥的兩種需求回傳 `conflictingRESTRequirements`。呼叫端只傳入已定義的需求，Factory 回傳的標頭可由呼叫端複製調整。呼叫端在既有授權流程以 `BearerAuth` 套入 token。
 
