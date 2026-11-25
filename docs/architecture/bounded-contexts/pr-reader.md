@@ -38,6 +38,12 @@
 - Reader Infra 選用共用 `.standardREST` 標頭，並以 `get` 委派請求。REST client 負責執行與 `401` 復原。Reader 與 Inbox 將所有非 `200` 回應交給同一個 `GitHubResponseClassifier`。Reader Infra 將共用技術分類映射為 `PRReaderFailure`，權限拒絕及原因未明的 `403` 回 `.notReadable`，限流回 `.unavailable`。
 - 此入口供後續快照組裝使用。`PRContentSource` 的完整快照由後續來源負責。
 
+## GitHub REST 變更檔案讀取
+
+- `RivetPRReaderGitHub` 的套件內 `GitHubPullRequestChangedFilesSource` 接收已認證的 REST client 與指定 PR 識別，回傳有序、識別唯一的 `ReaderFile` 清單。檔案識別採來源路徑，保留逐檔增刪數、可取得的原路徑與 patch。合法空清單為成功。此入口供後續快照組裝使用。
+- 續頁必須能核對到原 PR，實際請求由 Changed Files 端點重建。首次收到有效的數字 repository ID 續頁時，用原 PR 詳情核對其歸屬。當次讀取以 GitHub 提供的分頁序列為準。無法確認完整性或達 3,000 檔時回 `.unavailable`。
+- Reader Infra 將認證與存取拒絕映為 `.notReadable`，將限流、傳輸、取消與分頁失敗映為 `.unavailable`。必要資料、狀態或檔案識別無法保真表達時回 `.contentNotRepresentable`。任一失敗只回 Reader failure。
+
 ## WebView Diff Rendering Boundary
 
 - Swift 對 WebView 提供完整且有序的 `DiffSnapshot`；它帶有 `pullRequestId`、`snapshotId` 與 `readonly DiffViewModel[] files`，每個檔案包含 snapshot-local `fileId`、檔案變更 metadata、可選 patch、增刪計數與 viewed 狀態。
