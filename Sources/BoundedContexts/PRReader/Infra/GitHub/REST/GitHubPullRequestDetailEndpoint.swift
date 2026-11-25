@@ -11,12 +11,15 @@ struct GitHubPullRequestDetailEndpoint {
   let id: ReaderPullRequestID
 
   func makeURL() throws -> HTTPURL {
+    try Self.validateIdentity(id)
+    return try GitHubRESTDestination.makeURL(
+      path: "/repos/\(id.owner)/\(id.repository)/pulls/\(id.number)")
+  }
+
+  static func validateIdentity(_ id: ReaderPullRequestID) throws {
     guard Self.isPathComponent(id.owner), Self.isPathComponent(id.repository), id.number > 0 else {
       throw ValidationError.invalidIdentity
     }
-
-    return try GitHubRESTDestination.makeURL(
-      path: "/repos/\(id.owner)/\(id.repository)/pulls/\(id.number)")
   }
 
   private static func isPathComponent(_ value: String) -> Bool {
