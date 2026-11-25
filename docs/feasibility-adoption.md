@@ -127,3 +127,19 @@ Topic `github-oauth-startup-restore-runtime` 將既有configuration store、clie
 ### 2026-11-18：正式 hosted 設施 N輪有限Live
 
 Active E018退役後，正式hosted test bundle／runner沿用唯一正式還原實作，以新授權各完成first／fresh一次；ready、API、完整credential讀回及同帳號新程序continuity通過，Human本輪兩段各全程0提示。兩段未到期、refresh／save全0，不把舊E018的自然到期refresh結果挪為本輪coverage。工具nested／inside-out signing修正與原失敗preflight各留來源；[N輪結果與限制](../plan/github-oauth-startup-restore-runtime/evidence/hosted-live.md)已由N06獨立有限結果審查approved、無required finding，Human最終接受pending，不擴產品功能或普遍環境保證。
+
+## PR Reader 背景工作階段正式採用
+
+Topic `pr-reader-background-session-production-adoption`。2026-11-25 查核起始 `dev` `b0ad6974`，最終受測基線為合併 PR #94 後的 `587f7bb91fbe9f056cf72214a9992a1325ffce72` 加本 topic working diff。Swift、manifest 及兩個測試 target 的路徑與檔案雜湊清單 SHA-256 為 `bbdc7b7781feacae555b601d66453e91543de61a9bde8999c86ca10b2257d538`。
+
+| 能力 | 採用方式與正式證據 |
+| --- | --- |
+| Swift 取消基線 | 沿用 PR #83 的 E021 本機 HTTP/1.1 與 E022 受控 Inbox REST 證據，以及相容的正式 Transport／REST／OAuth 與 nonthrowing Outcome。 |
+| 請求所有權、身份、取消、提交與清理 | 已採用於正式元件。依 PR #86／E023 的有限單一 owner 實驗，於 Reader Presentation 重寫，使用原 Task、唯一請求 token 及同步 MainActor 提交。P03、P04、P07、P10、P12、P15–P17 與 self-cancel 對照涵蓋過期結果、取消、永久失效、弱持有及 slot 清理。 |
+| Reader 背景接入 | 已採用於正式元件。重用 PR #84 的 Reader GitHub adapter，新增 Reader-owned `PRBackgroundSource` 與 Facade。正式 `makePRReaderBackgroundSession(rest:)` 由組裝測試直接消費，僅以受控 REST 代替遠端呼叫。已查選定 PR 的請求、資料投影、失敗映射、晚到回應及重開。 |
+| 同 PR 選取和刷新 | 已採用於正式元件。本輪新增的顯示政策由 P01–P02、P05–P09、P11、P13–P14 驗收。同步 Observation 回呼可使 Session 失效，本輪另以紅綠回歸測試驗證先提交資料與當前 Task，再通知觀察者。 |
+| 實驗專屬程式 | 已排除。E023 `RequestStateOwner`、harness、trace 與控制開關保存在原實驗。 |
+
+獨立 Tester 最終驗證全過，517 個測試、64 個 suites，含 P01–P17、原 Task 自取消、同步觀察回呼、組裝和 Reader／Inbox／GitHub 回歸。SwiftLint 210 檔零違規，格式、差異空白及架構圖驗證通過。舊基線完整重跑前曾出現一次既有 OAuth 登出案例的時序失敗，該案單獨重跑與後續兩次完整驗證均通過。原實驗歷史及各自證據範圍保留。
+
+本輪完成套件內背景元件與其正式組裝。產品 App Owner、導覽、完整閱讀快照及真 GitHub 驗收列為後續。詳見[執行帳本](../plan/pr-reader-background-session-production-adoption/pr-reader-background-session-production-adoption.step.md)。

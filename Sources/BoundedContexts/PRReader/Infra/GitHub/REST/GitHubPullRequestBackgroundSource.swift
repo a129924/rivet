@@ -3,7 +3,7 @@ import GitHubIntegration
 import RivetHTTPClient
 import RivetPRReader
 
-package struct GitHubPullRequestBackgroundSource: Sendable {
+package struct GitHubPullRequestBackgroundSource: PRBackgroundSource {
   private static var headers: HTTPHeaders {
     get throws {
       try GitHubHeadersFactory.standard.make(requirements: [.standardREST])

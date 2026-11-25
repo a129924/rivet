@@ -15,7 +15,7 @@
 
 ## 核心概念與互動
 
-- 第一個切片以一份完整閱讀快照供應資料；大型 PR 的延遲載入是後續獨立決策。
+- 背景切片可單獨供應選取 PR 的背景資料。完整閱讀快照仍由完整內容來源契約定義，組裝及大型 PR 延遲載入另行決定。
 - 對 Presentation 提供穩定的 Reader Facade。
 - 透過自己擁有的 PR Content Source Port 取得資料；不直接依賴 PR Inbox。
 - Presentation 可用目前選取的 PR 向 Reader 請求閱讀快照。
@@ -36,7 +36,13 @@
 
 - 套件內的 `RivetPRReaderGitHub` target 接收已認證的 `GitHubRestClient` 和 `ReaderPullRequestID`。Reader Infra 驗證識別後向 `api.github.com` 取得指定 PR 的 JSON 詳情，將 `200` 投影為 `ReaderBackground`。描述或作者缺席保留缺值。
 - Reader Infra 選用共用 `.standardREST` 標頭，並以 `get` 委派請求。REST client 負責執行與 `401` 復原。Reader 與 Inbox 將所有非 `200` 回應交給同一個 `GitHubResponseClassifier`。Reader Infra 將共用技術分類映射為 `PRReaderFailure`，權限拒絕及原因未明的 `403` 回 `.notReadable`，限流回 `.unavailable`。
-- 此入口供後續快照組裝使用。`PRContentSource` 的完整快照由後續來源負責。
+- 背景 adapter 實作 Reader Core 的 `PRBackgroundSource`，由 `PRReaderBackgroundFacade` 透過單次讀取 UseCase 消費。完整快照仍由 `PRContentSource` 定義。
+
+### 背景資料呈現工作階段
+
+- 套件內組裝入口 `makePRReaderBackgroundSession(rest:)` 使用 caller 提供的已就緒 REST client，組合 Reader adapter、Facade 與新 Session。組裝層持有技術依賴，`RivetPRReaderPresentation` 僅依賴 Reader Core。正式元件整合由受控 REST 驗收，產品 App Owner 與導覽接入另行交付。
+- `PRReaderBackgroundSession` 在 MainActor 管理選取、顯示狀態與當前 Task。切換 PR 清除上一筆背景，同 PR 重新選取維持狀態。顯式刷新保留最後一次成功值，刷新失敗顯示錯誤並保留資料。
+- Session 先撤銷過期請求的提交資格再取消 Task。有效結果依當前請求識別、選取及原 Task 取消旗標，在同一同步區段提交並清理。狀態及當前 Task 更新後才通知觀察者，讓同步回呼可安全操作 Session。呼叫端離開時使 Session 永久失效，重開時組裝新實例。
 
 ## GitHub REST 變更檔案讀取
 

@@ -55,6 +55,21 @@ let package = Package(
       path: "Sources/BoundedContexts/PRReader/Infra/GitHub/REST"
     ),
     .target(
+      name: "RivetPRReaderPresentation",
+      dependencies: ["RivetPRReader"],
+      path: "Sources/RivetPRReaderPresentation"
+    ),
+    .target(
+      name: "RivetPRReaderComposition",
+      dependencies: [
+        "RivetPRReaderPresentation",
+        "RivetPRReader",
+        "RivetPRReaderGitHub",
+        "GitHubIntegration",
+      ],
+      path: "Sources/RivetPRReaderComposition"
+    ),
+    .target(
       name: "RivetPRReaderWebViewBridge",
       dependencies: ["RivetPRReader"],
       path: "Sources/PRReaderWebViewBridge"
@@ -129,6 +144,20 @@ let package = Package(
       name: "RivetPRReaderGitHubTests",
       dependencies: [
         "RivetPRReaderGitHub",
+        "RivetPRReader",
+        "GitHubIntegration",
+        .product(name: "RivetHTTPClient", package: "RivetHTTPClient"),
+      ]
+    ),
+    .testTarget(
+      name: "RivetPRReaderPresentationTests",
+      dependencies: ["RivetPRReaderPresentation", "RivetPRReader"]
+    ),
+    .testTarget(
+      name: "RivetPRReaderCompositionTests",
+      dependencies: [
+        "RivetPRReaderComposition",
+        "RivetPRReaderPresentation",
         "RivetPRReader",
         "GitHubIntegration",
         .product(name: "RivetHTTPClient", package: "RivetHTTPClient"),
