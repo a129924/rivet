@@ -98,6 +98,12 @@ HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Rea
 - 套件內 `GitHubPullRequestReviewMergeStateSource.fetchReviewMergeState(for:)` 透過既有 `GitHubGraphQLServing` 讀取指定 PR。同一筆回應提供審閱結論、合併衝突判定、詳細合併狀態、Draft 標記及目前 head OID。顯式缺值與兩種已知 `UNKNOWN` 原樣保留，Draft 直接採用 `isDraft`。 [GitHub PullRequest](https://docs.github.com/en/graphql/reference/pulls#pullrequest)
 - Reader Infra 核對 repository 全名、PR 編號與所屬 repository ID。可確認的定位缺席或拒絕回 `.notReadable`，歸屬不符、回應不完整或取消回 `.unavailable`，無法保真表示的已解碼必要值回 `.contentNotRepresentable`。入口交付來源狀態，合併許可由後續產品契約決定。
 
+## GitHub GraphQL Files Viewed 讀取
+
+- 套件內 `GitHubPullRequestFilesViewedSource.fetchFilesViewed(for:)` 透過既有 `GitHubGraphQLServing` 讀取指定 PR 的變更檔案，保留來源順序、原始路徑、變更類型、增刪數及目前 GitHub 帳號的逐檔閱讀狀態。三態包含未檢視、已檢視與上次檢視後有新變更，結果可獨立供 Reader 呼叫端使用。 [GitHub 變更檔案](https://docs.github.com/en/graphql/reference/pulls#pullrequestchangedfile) · [GitHub FileViewedState](https://docs.github.com/en/graphql/reference/pulls#fileviewedstate)
+- Reader Infra 逐頁核對 repository、PR、head、游標與總數，依檔案路徑的原始 UTF-8 位元組判重。回應確認零筆時交付成功空清單。完整性以本次核對通過的分頁為準，各頁可能反映不同時間的閱讀狀態。 [GitHub GraphQL 分頁](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)
+- 可確認的 PR 定位缺席、存取拒絕或認證失敗回 `.notReadable`。取消、傳輸或分頁完整性無法確認回 `.unavailable`。已解碼的必要檔案資料無法保真表達時回 `.contentNotRepresentable`。任一失敗即捨棄已累積的檔案。
+
 ## GraphQL schema 再生成
 
 Reader Infra 的 `GraphQL/Schema.graphqls` 是 2026-11-26 取得的 GitHub.com 官方公開快照，SHA-256 為 `a70103efc655a6b81afa69cdbce8b27d90d8202270b19ea54130e95c650047b7`。使用已解析的 Apollo iOS 2.1.2 checkout 內的 CLI，可在暫存目錄離線重生並比對。 [GitHub 公開 schema](https://docs.github.com/en/graphql/overview/public-schema)
@@ -108,7 +114,7 @@ codegen_tmp=$(mktemp -d)
 tar -xzf .build/checkouts/apollo-ios/CLI/apollo-ios-cli.tar.gz -C "$codegen_tmp"
 cp "$graphql/Schema.graphqls" "$graphql/ReviewThreads.graphql" \
   "$graphql/PullRequestChecks.graphql" "$graphql/PullRequestReviewMergeState.graphql" \
-  "$graphql/apollo-codegen-config.json" "$codegen_tmp"
+  "$graphql/PullRequestFilesViewed.graphql" "$graphql/apollo-codegen-config.json" "$codegen_tmp"
 (cd "$codegen_tmp" && ./apollo-ios-cli generate --path apollo-codegen-config.json)
 python3 - "$codegen_tmp/Generated" <<'PYTHON'
 from pathlib import Path

@@ -1,0 +1,23 @@
+query PullRequestFilesViewed($owner: String!, $name: String!, $number: Int!, $after: String) {
+  repository(owner: $owner, name: $name) {
+    id
+    nameWithOwner
+    pullRequest(number: $number) {
+      id
+      number
+      repository { id }
+      headRefOid
+      files(first: 100, after: $after) {
+        totalCount
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          path
+          changeType
+          additions
+          deletions
+          viewerViewedState
+        }
+      }
+    }
+  }
+}

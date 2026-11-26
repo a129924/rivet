@@ -228,6 +228,8 @@ extension ReaderGitHubGraphQL {
       "ProjectV2Workflow": ReaderGitHubGraphQL.Objects.ProjectV2Workflow,
       "PublicKey": ReaderGitHubGraphQL.Objects.PublicKey,
       "PullRequest": ReaderGitHubGraphQL.Objects.PullRequest,
+      "PullRequestChangedFile": ReaderGitHubGraphQL.Objects.PullRequestChangedFile,
+      "PullRequestChangedFileConnection": ReaderGitHubGraphQL.Objects.PullRequestChangedFileConnection,
       "PullRequestCommit": ReaderGitHubGraphQL.Objects.PullRequestCommit,
       "PullRequestCommitCommentThread": ReaderGitHubGraphQL.Objects.PullRequestCommitCommentThread,
       "PullRequestReview": ReaderGitHubGraphQL.Objects.PullRequestReview,

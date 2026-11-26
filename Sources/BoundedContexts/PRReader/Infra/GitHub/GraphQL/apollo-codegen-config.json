@@ -2,7 +2,12 @@
   "schemaNamespace": "ReaderGitHubGraphQL",
   "input": {
     "schemaSearchPaths": ["Schema.graphqls"],
-    "operationSearchPaths": ["ReviewThreads.graphql", "PullRequestChecks.graphql", "PullRequestReviewMergeState.graphql"]
+    "operationSearchPaths": [
+      "ReviewThreads.graphql",
+      "PullRequestChecks.graphql",
+      "PullRequestReviewMergeState.graphql",
+      "PullRequestFilesViewed.graphql"
+    ]
   },
   "output": {
     "schemaTypes": {
