@@ -69,9 +69,12 @@ HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Rea
 - 成功回傳完整、有序的 `ReaderReview` 清單，保留 ID、原始正文、可用作者及個別審閱狀態。合法缺少作者、提交時間或 commit ID 時保留紀錄，完整空清單回成功。
 - 無效起始識別、Reviews 請求的認證或存取拒絕及資源不存在回 `.notReadable`。限流、傳輸、續頁或詳情查核失敗及取消回 `.unavailable`。必要資料或狀態無法保真時回 `.contentNotRepresentable`。任一失敗都捨棄已累積的紀錄，取消優先於晚到的回應。
 
-## GitHub REST 行內審閱留言端點
+## GitHub REST 行內審閱留言讀取
 
-- `RivetPRReaderGitHub` 的內部 `GitHubInlineReviewCommentsEndpoint` 接收 `ReaderPullRequestID`，驗證正數頁碼與 PR 識別，再同步建構 GitHub.com 的 GET `/repos/{owner}/{repo}/pulls/{number}/comments` URL。省略頁碼時使用第 1 頁，每頁固定請求 100 筆。無效輸入拋出驗證錯誤。實際讀取由後續 Adapter 交付。 [GitHub 行內審閱留言端點](https://docs.github.com/en/rest/pulls/comments#list-review-comments-on-a-pull-request)
+- 套件內的 `GitHubInlineReviewCommentsSource.fetchInlineReviewComments(for:)` 接收 `ReaderPullRequestID`，透過已認證的 REST client 及 `.standardREST` 讀取指定 PR 的完整行內留言。 `GitHubInlineReviewCommentsEndpoint` 驗證 PR 識別與正數頁碼，建構 GitHub.com 的 GET `/repos/{owner}/{repo}/pulls/{number}/comments`，從第 1 頁起、每頁 100 筆。 [GitHub 行內審閱留言端點](https://docs.github.com/en/rest/pulls/comments#list-review-comments-on-a-pull-request)
+- Reader Infra 核對 `Link` 的目的地、PR 歸屬與頁碼，再以原 PR 識別重建續頁。首次遇到數字儲存庫形式的 `next` 或 `last` 時，透過原 PR 詳情核對 PR 編號、儲存庫名稱與 ID。已確認 ID 限本次讀取重用。完整性以當次 GitHub 提供的分頁序列為準。 [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api#using-link-headers)
+- 成功結果保留頁次、頁內原序、留言 ID、node ID、原始 Markdown、路徑及可用定位與回覆關係。選填欄位合法缺席時保留留言與缺值。完整空清單回成功。
+- 無效 PR 識別、留言讀取存取拒絕或資源不存在回 `.notReadable`。限流、傳輸、續頁或詳情查核失敗與取消回 `.unavailable`。留言資料無法保真表達時回 `.contentNotRepresentable`。任一失敗即捨棄全部累積留言，取消優先於晚到回應。
 
 ## WebView Diff Rendering Boundary
 

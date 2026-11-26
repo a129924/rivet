@@ -6,11 +6,13 @@ struct GitHubPullRequestPageLinks {
   enum Route {
     case conversationComments
     case reviews
+    case inlineReviewComments
 
     fileprivate func pathSuffix(for number: Int) -> [String] {
       switch self {
       case .conversationComments: ["issues", String(number), "comments"]
       case .reviews: ["pulls", String(number), "reviews"]
+      case .inlineReviewComments: ["pulls", String(number), "comments"]
       }
     }
   }
