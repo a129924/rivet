@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #106 PR Reader Files Viewed 讀取與清理
+
+PR #106 於 `2026-11-26T09:01:29Z` 合併至 `dev` 並關閉。合併提交為 `fa3329bfe78be069633d8e08a74ecc4389ab386c`，帶入的 patch 與離線受測的 feature 提交 `d1873abb0479266f725544238718068013cda9c6` 一致。 [PR #106](https://github.com/a129924/rivet/pull/106)
+
+`GitHubPullRequestFilesViewedSource.fetchFilesViewed(for:)` 逐頁核對 PR 歸屬、head、總數與游標，依來源順序交付變更檔案及該 GitHub 帳號的逐檔閱讀三態。任一頁失敗時捨棄已累積結果。獨立離線驗收通過 505 項測試，含 11 項 Files Viewed 測試。 [Reader 契約](https://github.com/a129924/rivet/blob/v0.1.99-pr-reader-github-files-viewed-source/docs/architecture/bounded-contexts/pr-reader.md#github-graphql-files-viewed-讀取) · [驗證摘要](VALIDATION-SUMMARY.md#pr-106-pr-reader-files-viewed-離線驗收)
+
+Annotated tag `v0.1.99-pr-reader-github-files-viewed-source` 已推送並讀回，指向合併提交。已核對本機、遠端與遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前私下封存並逐檔核對 108 個本機審閱與驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.99-pr-reader-github-files-viewed-source)
+
 ## PR #105 PR Reader 整體審閱與合併狀態讀取與清理
 
 PR #105 於 `2026-11-26T08:12:46Z` 合併至 `dev` 並關閉。合併提交為 `41fdb0e30e2ecc4edc68e4ac944ace32ffe2592d`，帶入的 patch 與離線受測 feature 提交 `bbb14a40bd05e3509aebf15927b02889647e87d3` 一致。 [PR #105](https://github.com/a129924/rivet/pull/105)

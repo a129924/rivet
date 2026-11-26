@@ -4,6 +4,20 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #106 PR Reader Files Viewed 離線驗收
+
+PR #106 於 `2026-11-26T09:01:29Z` 合併至 `dev` 並關閉，共帶入 17 個檔案的變更。合併提交為 `fa3329bfe78be069633d8e08a74ecc4389ab386c`，受測 feature 提交為 `d1873abb0479266f725544238718068013cda9c6`。兩者的本題變更以 stable patch ID 核對一致，值為 `ae1cf22c8f845a94ccc6f57024ed718120204ef5`。 [PR #106](https://github.com/a129924/rivet/pull/106) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.99-pr-reader-github-files-viewed-source/plan/pr-reader-github-files-viewed-source/pr-reader-github-files-viewed-source.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 讀取契約 | 保留來源順序、原始檔案路徑、變更類型、增刪數與 `UNVIEWED`、`VIEWED`、`DISMISSED`。逐頁核對 repository、PR、head、游標與總數，區分成功空清單與無法完成的讀取。取消或任一頁失敗時只回傳單一 Reader failure。 |
+| 獨立驗收 | FV01–FV04 通過。505 項 Swift 測試、54 個 suites 通過，含 11 項 Files Viewed 測試。嚴格 Swift 格式、603 檔 SwiftLint、差異檢查與 pre-commit hooks 通過，獨立規劃及成果審查均核准。 |
+| 產碼 | 固定 GitHub.com SDL 與 Apollo 2.1.2 的基線及本題離線重生皆逐檔一致。新增五個產碼檔與兩筆型別註冊，保留 Checks、兩個 Review Threads operations 與 Review Merge State 查詢。 |
+| 本機審閱 | PR Lens 0.11.0 以 PR 實際差異基線及 head 驗證兩張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸及最小與最大尺寸的亮暗目視檢查。Show Me 呼叫樹記於帳本。Floorplan 涵蓋 608 個程式檔與 62 個模組，標示本題三張卡片，未涵蓋端點登入檢查。Graphify 查無相符既有圖，採原碼核對。 |
+| 驗收界線 | 驗收使用受控 GraphQL 回應與 Apollo 解碼。清理階段核對合併內容及 Git 狀態，沿用上述離線測試證據。 |
+
+Annotated tag `v0.1.99-pr-reader-github-files-viewed-source` 已推送並讀回。本機與遠端的 tag 物件皆為 `4f842bd7a2b0185a5bfc90c4e64df4e1a75e0bb4`，解參照後指向合併提交。已核對本機、遠端及遠端追蹤分支、feature worktree 目錄與 Git 註冊均已移除。移除前私下封存 108 個本機檔案，逐檔核對 SHA-256、大小及權限模式。 [實驗索引](README.md#pr-106-pr-reader-files-viewed-讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.99-pr-reader-github-files-viewed-source)
+
 ## PR #105 PR Reader 整體審閱與合併狀態離線驗收
 
 PR #105 於 `2026-11-26T08:12:46Z` 合併至 `dev` 並關閉，共帶入 15 個檔案的變更。合併提交為 `41fdb0e30e2ecc4edc68e4ac944ace32ffe2592d`，受測 feature 提交為 `bbb14a40bd05e3509aebf15927b02889647e87d3`。本題 patch 的 stable patch ID 一致。 [PR #105](https://github.com/a129924/rivet/pull/105) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.98-pr-reader-github-review-merge-state-source/plan/pr-reader-github-review-merge-state-source/pr-reader-github-review-merge-state-source.step.md)
