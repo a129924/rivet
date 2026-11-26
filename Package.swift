@@ -58,6 +58,7 @@ let package = Package(
       exclude: [
         "GraphQL/Schema.graphqls",
         "GraphQL/ReviewThreads.graphql",
+        "GraphQL/PullRequestChecks.graphql",
         "GraphQL/apollo-codegen-config.json",
       ]
     ),
