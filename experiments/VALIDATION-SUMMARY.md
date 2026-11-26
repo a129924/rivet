@@ -4,6 +4,20 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #105 PR Reader 整體審閱與合併狀態離線驗收
+
+PR #105 於 `2026-11-26T08:12:46Z` 合併至 `dev` 並關閉，共帶入 15 個檔案的變更。合併提交為 `41fdb0e30e2ecc4edc68e4ac944ace32ffe2592d`，受測 feature 提交為 `bbb14a40bd05e3509aebf15927b02889647e87d3`。本題 patch 的 stable patch ID 一致。 [PR #105](https://github.com/a129924/rivet/pull/105) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.98-pr-reader-github-review-merge-state-source/plan/pr-reader-github-review-merge-state-source/pr-reader-github-review-merge-state-source.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 讀取契約 | 單一 GraphQL 查詢回傳同一 PR 的審閱結論、合併衝突判定、詳細合併狀態、Draft 標記與 head OID。套件入口核對 repository 全名、PR 編號及所屬 repository ID，保留顯式缺值與兩種已知 `UNKNOWN`，不完整或取消的回應回單一 Reader failure。 |
+| 獨立驗收 | RM01–RM04 通過。離線回歸 485 項測試、52 個 suites 通過，含 9 項本題測試及 Checks、`reviewThreads` 回歸。嚴格 Swift 格式、590 檔 SwiftLint、差異檢查與 pre-commit hooks 通過，獨立規劃及成果審查均核准。 |
+| 產碼 | 固定 GitHub.com SDL 與 Apollo 2.1.2 的基線及 feature 離線重生均逐檔一致。新增一個 query 和三個 enum 產碼。 |
+| 本機審閱 | PR Lens 0.11.0 依 PR 實際 base 和 head 驗證並產出 SVG。Archify 通過 showcase 9/9、四個桌面尺寸及最小與最大尺寸的亮暗目視檢查。Floorplan 覆蓋 599 個程式檔及 62 個模組，標示本題三張卡片。Graphify 缺可追溯的既有圖，採原碼核對。 |
+| 驗收界線 | 使用受控回應與 Apollo 解碼進行離線驗收。真實 GitHub.com 請求、快照組裝與 UI 接線留待後續驗證。 |
+
+Annotated tag `v0.1.98-pr-reader-github-review-merge-state-source` 已推送並讀回。本機與遠端的 tag 物件均為 `a529a9b7ff75dd4078130320512873abbbd1ffab`，解參照後指向合併提交。本機、遠端及遠端追蹤分支、feature worktree 目錄與 Git 註冊均已驗證移除。停止 Floorplan 預覽後，私下封存 99 個本機檔案，逐檔核對 SHA-256、大小及權限模式。 [實驗索引](README.md#pr-105-pr-reader-整體審閱與合併狀態讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.98-pr-reader-github-review-merge-state-source)
+
 ## PR #101 Rivet 視覺語言採用與整合驗收
 
 PR #101 於 `2026-11-26T07:51:34Z` 合併至 `dev` 並關閉。合併提交為 `e53214ed9327174c316724c4b8ba28e227526d4f`，最後 feature head 為 `2fde547722e6a4197fe755a05c76a5ce177e81de`。HC-05 審閱的 `144c20f` 交付共用四色及 branch glyph 和 Login 接線，最後 feature 提交只補結案帳本。 [PR #101](https://github.com/a129924/rivet/pull/101) · [結案帳本](https://github.com/a129924/rivet/blob/v0.1.97-rivet-design-language-adoption/plan/rivet-design-language-adoption/rivet-design-language-adoption.step.md) · [驗證證據](https://github.com/a129924/rivet/blob/v0.1.97-rivet-design-language-adoption/plan/rivet-design-language-adoption/evidence/cd-verification.md)
