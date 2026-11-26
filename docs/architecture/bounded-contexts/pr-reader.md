@@ -87,6 +87,11 @@ HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Rea
 - 套件內 `GitHubPullRequestChecksSource.fetchChecks(for:)` 透過既有 `GitHubGraphQLServing` 讀取指定 PR head 的整體狀態與有序 Checks。已定位的首頁若無 rollup，回傳成功缺值。存在的 rollup 可帶空明細。保留 check run 的名稱、狀態及可缺席的結論，也保留 commit status 的 context 與狀態。 [GitHub StatusCheckRollup](https://docs.github.com/en/graphql/reference/commits#statuscheckrollup)
 - Reader Infra 每頁核對 repository、PR、head、rollup 身分、整體狀態與總數。續頁按游標前進，保留來源順序且驗證 Node ID 唯一及最後筆數。空續頁、分頁無法完整驗證、Checks 欄位拒絕或取消回 `.unavailable`。可確認的 PR 定位缺席或拒絕回 `.notReadable`，已解碼但無法保真映射的必要內容回 `.contentNotRepresentable`。任一失敗即捨棄已累積明細。
 
+## GitHub GraphQL 審閱與合併狀態讀取
+
+- 套件內 `GitHubPullRequestReviewMergeStateSource.fetchReviewMergeState(for:)` 透過既有 `GitHubGraphQLServing` 讀取指定 PR。同一筆回應提供審閱結論、合併衝突判定、詳細合併狀態、Draft 標記及目前 head OID。顯式缺值與兩種已知 `UNKNOWN` 原樣保留，Draft 直接採用 `isDraft`。 [GitHub PullRequest](https://docs.github.com/en/graphql/reference/pulls#pullrequest)
+- Reader Infra 核對 repository 全名、PR 編號與所屬 repository ID。可確認的定位缺席或拒絕回 `.notReadable`，歸屬不符、回應不完整或取消回 `.unavailable`，無法保真表示的已解碼必要值回 `.contentNotRepresentable`。入口交付來源狀態，合併許可由後續產品契約決定。
+
 ## GraphQL schema 再生成
 
 Reader Infra 的 `GraphQL/Schema.graphqls` 是 2026-11-26 取得的 GitHub.com 官方公開快照，SHA-256 為 `a70103efc655a6b81afa69cdbce8b27d90d8202270b19ea54130e95c650047b7`。使用已解析的 Apollo iOS 2.1.2 checkout 內的 CLI，可在暫存目錄離線重生並比對。 [GitHub 公開 schema](https://docs.github.com/en/graphql/overview/public-schema)
@@ -96,7 +101,8 @@ graphql=Sources/BoundedContexts/PRReader/Infra/GitHub/GraphQL
 codegen_tmp=$(mktemp -d)
 tar -xzf .build/checkouts/apollo-ios/CLI/apollo-ios-cli.tar.gz -C "$codegen_tmp"
 cp "$graphql/Schema.graphqls" "$graphql/ReviewThreads.graphql" \
-  "$graphql/PullRequestChecks.graphql" "$graphql/apollo-codegen-config.json" "$codegen_tmp"
+  "$graphql/PullRequestChecks.graphql" "$graphql/PullRequestReviewMergeState.graphql" \
+  "$graphql/apollo-codegen-config.json" "$codegen_tmp"
 (cd "$codegen_tmp" && ./apollo-ios-cli generate --path apollo-codegen-config.json)
 python3 - "$codegen_tmp/Generated" <<'PYTHON'
 from pathlib import Path

@@ -1,0 +1,15 @@
+query PullRequestReviewMergeState($owner: String!, $name: String!, $number: Int!) {
+  repository(owner: $owner, name: $name) {
+    id
+    nameWithOwner
+    pullRequest(number: $number) {
+      number
+      repository { id }
+      reviewDecision
+      mergeable
+      mergeStateStatus
+      isDraft
+      headRefOid
+    }
+  }
+}
