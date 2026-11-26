@@ -1,8 +1,7 @@
 import Foundation
+import GitHubIntegration
 import RivetHTTPClient
 import Testing
-
-@testable import GitHubIntegration
 
 struct GitHubUnreadNotificationsSourceTests {
   @Test
@@ -167,6 +166,11 @@ struct GitHubUnreadNotificationsSourceTests {
       body: "[\(notificationJSON())]", link: notificationLink(page: 2, relation: "next"))
     let failedPages: [(Result<HTTPResponse, HTTPClientError>, GitHubUnreadNotificationsFailure)] = [
       (.success(notificationResponse(status: 503)), .incompletePagination),
+      (
+        .success(
+          notificationResponse(status: 302, headers: ["Location": "https://other.example/"])),
+        .incompletePagination
+      ),
       (.failure(.networkFailure(URLError(.timedOut))), .incompletePagination),
       (.success(notificationResponse(status: 401)), .accessDenied),
       (.success(notificationResponse(body: "{}")), .invalidData),

@@ -5,7 +5,7 @@
 ## Endpoint、Source 與 PageLinks
 
 - `internal GitHubUnreadNotificationsEndpoint` 持有 GET、精確路徑 `/notifications`、`all=false`、`per_page=50` 和成功狀態 `200`。`makeURL(page: Int = 1) throws -> HTTPURL` 沿用 `GitHubRESTDestination.makeURL`。首頁省略 `page`，續頁明列大於 1 的頁碼。零或負頁碼在建構 URL 前拒絕。
-- `GitHubUnreadNotificationsSource` 透過 `package` initializer 建立，套件入口為 `list(using: PersonalAccessToken?) async -> GitHubUnreadNotificationsOutcome`。Source 為每一頁呼叫 Endpoint，套用 `.standardREST` 的 Accept、User-Agent 和 API version，以及同一 PAT 的 `BearerAuth`。正式傳輸採用 `GitHubHTTPClient.makeHTTPClient()`，拒絕所有 HTTP 轉址。測試用 `internal` initializer 注入 `HTTPClient`。
+- `GitHubUnreadNotificationsSource` 由組裝端透過 `package init(client: HTTPClient)` 注入 client，套件入口為 `list(using: PersonalAccessToken?) async -> GitHubUnreadNotificationsOutcome`。Source 為每一頁呼叫 Endpoint，套用 `.standardREST` 的 Accept、User-Agent 和 API version，以及同一 PAT 的 `BearerAuth`。注入的傳輸須保留原始 HTTP 轉址回應並拒絕自動跟隨。正式組裝使用 `GitHubRESTTransport.makeClient()`。Source 將 3xx 交給既有失敗映射。
 - PageLinks 依 Endpoint 的路徑及查詢常數驗證 `Link`，交回可信的下一頁頁碼或確認終頁。只接受 `https://api.github.com`、省略 port 或明列 `443`、精確 percent-encoded 路徑 `/notifications`、無 userinfo 或 fragment 的分頁目的地。Source 向 Endpoint 建構續頁 URL 後才套用 Bearer。
 - 驗證 `Link` 語法及 `next`／`last` 關係，拒絕不明確的分頁關係及分頁用 `anchor`。分頁查詢只接受 `page`、`all`、`per_page`，拒絕重複、空值及未知參數。`next` 的正整數 `page` 必須等於目前頁碼加一。`all` 與 `per_page` 可省略，提供時必須分別等於 `false`、`50`。沒有 `next` 且無同頁 `last` 矛盾時確認終頁。提供 `last` 時，其頁碼須位於 `next` 或之後。若無 `next`，`last` 須是目前頁碼。`is_done` 全程省略。 [GitHub 通知 API](https://docs.github.com/en/rest/activity/notifications#list-notifications-for-the-authenticated-user) · [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api)
 

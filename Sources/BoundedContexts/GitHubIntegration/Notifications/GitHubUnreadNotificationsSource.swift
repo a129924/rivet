@@ -4,11 +4,9 @@ import RivetHTTPClient
 package struct GitHubUnreadNotificationsSource: Sendable {
   private let client: HTTPClient
 
-  package init() {
-    self.init(client: GitHubHTTPClient.makeHTTPClient())
-  }
-
-  init(client: HTTPClient) {
+  /// The composition root supplies a client whose transport returns the original redirect
+  /// response without following it. Use `GitHubRESTTransport.makeClient()` in production.
+  package init(client: HTTPClient) {
     self.client = client
   }
 
