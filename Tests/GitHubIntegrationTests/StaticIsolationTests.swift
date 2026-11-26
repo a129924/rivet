@@ -384,7 +384,7 @@ struct StaticIsolationTests {
     ]
 
     let actualPaths = try sourcePaths(in: sourceDirectory)
-    #expect(actualPaths == expectedPaths)
+    #expect(actualPaths == expectedPaths.union(Self.notificationSourcePaths))
 
     for path in actualPaths {
       let sourceFile = sourceDirectory.appendingPathComponent(path)
@@ -419,7 +419,7 @@ struct StaticIsolationTests {
         "REST/Endpoints/GitHubAuthenticatedUserEndpoint.swift",
         "REST/GitHubRESTDestination.swift",
       ]
-      if httpClientFiles.contains(path) {
+      if httpClientFiles.contains(path) || Self.notificationHTTPClientPaths.contains(path) {
         forbiddenForFile.remove("RivetHTTPClient")
       }
       #expect(imports.isDisjoint(with: forbiddenForFile))

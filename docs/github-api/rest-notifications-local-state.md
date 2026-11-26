@@ -1,13 +1,17 @@
 # REST Notifications & Local State
 
-最後官方校驗：2026-09-03。
+通知清單最後官方校驗為 2026-11-26。其餘條目的校驗日期為 2026-09-03。
 
 ## GitHub Notification Threads
 
 | Operation | 狀態 | 用途／重要欄位 | 認證／權限 | 官方來源 |
 | --- | --- | --- | --- | --- |
-| `GET /notifications` | 後續唯讀 | 正常回應為 `200 OK` 與 notification thread list；query 為 `all`、`participating`、`since`、`before`、`page`、`per_page`（最多 50），依 response `Link` header 的 next URL 取得下一頁。`all` 省略時預設為 `false`，只顯示未讀 notification；是否要求包含已讀 notification 留給後續產品 topic 決定。重要欄位為 `id`、`unread`、`updated_at`、`last_read_at`（nullable）、`subject`、`repository`。conditional polling 時保存 response `Last-Modified`，下次以完全相同的值傳入 `If-Modified-Since`；無新通知可得 `304 Not Modified`。依 response `X-Poll-Interval`（秒）決定最短 polling 間隔。 | 僅 classic PAT，且需 `notifications` 或 `repo` scope；若還要從相關 endpoint 取得 issue 或 commit，需 `repo` scope。不支援 GitHub App user token、GitHub App installation token 或 fine-grained PAT。 | [List notifications for the authenticated user](https://docs.github.com/en/rest/activity/notifications#list-notifications-for-the-authenticated-user)、[GitHub REST OpenAPI `notification-thread` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json) |
+| `GET /notifications` | 後續唯讀，已提供套件內按需讀取 | 正常回應為 `200 OK` 與 notification thread list。官方 query 包含 `all`、`is_done`、`participating`、`since`、`before`、`page` 與 `per_page`（最多 50）。`all` 預設為 `false`，`is_done` 省略時涵蓋所有完成狀態。依 `Link` 的 `next` 讀取下一頁。重要欄位為 `id`、`unread`、`updated_at`、`last_read_at`（nullable）、`subject` 與 `repository`。 | 僅 classic PAT，需 `notifications` 或 `repo` scope。存取相關 issue 或 commit endpoint 時需 `repo` scope。 | [List notifications for the authenticated user](https://docs.github.com/en/rest/activity/notifications#list-notifications-for-the-authenticated-user)、[GitHub REST OpenAPI `notification-thread` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json) |
 | `PATCH /notifications/threads/{thread_id}` | 後續寫入 | 將指定 notification thread 標為已讀；成功回應為 `205 Reset Content`，無 response body。 | 僅 classic PAT，且需 `notifications` 或 `repo` scope；若還要從相關 endpoint 取得 issue 或 commit，需 `repo` scope。不支援 GitHub App user token、GitHub App installation token 或 fine-grained PAT。 | [Mark a thread as read](https://docs.github.com/en/rest/activity/notifications#mark-a-thread-as-read) |
+
+Rivet 套件內由 `GitHubIntegration` 的 `GitHubUnreadNotificationsSource.list(using:)` 提供按需讀取。呼叫端傳入 classic PAT。每次以 `all=false&per_page=50` 開始，逐頁驗證 `Link` 的目的地、查詢與連續頁碼，使用相同 PAT 與標準 REST 標頭，終頁確認後一次交付原順序的完整清單。結果可區分存取拒絕、來源無法使用、分頁未完成、資料無法映射與取消。該能力屬產品 MVP 之外。
+
+條件式輪詢屬後續工作。GitHub 提供 `Last-Modified`、`If-Modified-Since`、`304 Not Modified` 與以秒為單位的 `X-Poll-Interval`。 GitHub App user／installation token 與 fine-grained PAT 不適用於通知清單。
 
 Notification thread 的 read state 與「某一個 review comment 是否已在 Rivet 看過」不同，不可互相替代。
 
