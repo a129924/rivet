@@ -82,6 +82,12 @@ HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Rea
 - 外層查詢同時取得每個 thread 的首批留言。Reader 以 thread node ID 讀取各自續頁，完成當頁留言後才讀下一個外層頁。兩層各自核對歸屬、原序與游標進展。完整性以本次可核對的分頁序列為準。 [GitHub GraphQL 分頁](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)
 - 可確認的 PR 缺席或存取拒絕回 `.notReadable`。限流、裸 `403`、傳輸、取消及無法確認完整的回應回 `.unavailable`。已解碼的必要欄位或元素無法保真時回 `.contentNotRepresentable`。失敗會捨棄全部累積結果。
 
+## GitHub 行內審閱留言來源選擇
+
+- 套件內 `GitHubInlineReviewContentSource.fetchInlineReviewContent(for:)` 以同一 `ReaderPullRequestID` 優先讀取完整 GraphQL 審閱 threads。成功包含完整空清單。`.notReadable` 與 `.contentNotRepresentable` 原樣返回。只有 GraphQL 回 `.unavailable` 且呼叫端尚未取消時才改讀 REST。
+- `ReaderInlineReviewContent` 的 `.graphQLThreads` 保留分組、各層原序及 resolved／outdated，`.restComments` 保留平面留言、頁次及原序，thread 狀態缺席。整次交付一個來源的完整結果或單一失敗。REST 失敗原樣返回，GraphQL 未完成的資料不納入 REST 結果。
+- 入口在 GraphQL 前及兩個來源返回後觀察取消。取消回 `.unavailable`，尚未啟動 REST 時停止切換，並捨棄晚到結果。此入口提供行內留言區塊供後續快照組裝使用。
+
 ## GitHub GraphQL Checks 讀取
 
 - 套件內 `GitHubPullRequestChecksSource.fetchChecks(for:)` 透過既有 `GitHubGraphQLServing` 讀取指定 PR head 的整體狀態與有序 Checks。已定位的首頁若無 rollup，回傳成功缺值。存在的 rollup 可帶空明細。保留 check run 的名稱、狀態及可缺席的結論，也保留 commit status 的 context 與狀態。 [GitHub StatusCheckRollup](https://docs.github.com/en/graphql/reference/commits#statuscheckrollup)
