@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #104 PR Reader 行內留言來源選擇與清理
+
+PR #104 於 `2026-11-26T07:39:37Z` 合併至 `dev` 並關閉。合併提交 `f556a65f64ed9fef0b0958d82d6e83d4efd30844` 與離線受測的 feature 提交 `04b553673eb671da26ba4a08b7f2b12fbb8a466f` 的 Git tree 相同。 [PR #104](https://github.com/a129924/rivet/pull/104)
+
+`GitHubInlineReviewContentSource.fetchInlineReviewContent(for:)` 優先讀取指定 PR 的完整 GraphQL 審閱對話。只有 GraphQL 回 `.unavailable` 且呼叫端尚未取消時，才從 REST 讀取同一 PR 的完整平面留言。兩種來源各自保留原序，一次交付單一完整結果或單一 Reader 失敗。獨立離線回歸通過 171 項測試，含 9 項新入口測試。 [Reader 契約](https://github.com/a129924/rivet/blob/v0.1.96-pr-reader-github-inline-review-source-selection/docs/architecture/bounded-contexts/pr-reader.md#github-行內審閱留言來源選擇) · [驗證摘要](VALIDATION-SUMMARY.md#pr-104-pr-reader-行內留言來源選擇與離線驗收)
+
+語意 annotated tag `v0.1.96-pr-reader-github-inline-review-source-selection` 已推送並讀回，指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前停止該工作樹的 Floorplan 預覽，並私下封存及逐檔核對 126 個本機審閱與驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.96-pr-reader-github-inline-review-source-selection)
+
 ## PR #99 PR Reader 行內審閱留言端點與清理
 
 PR #99 於 `2026-11-25T10:01:44Z` 合併至 `dev` 並關閉。合併提交 `64d0ce9f70c2abaeca7e2ec7204aab9a92add419` 與受測 feature 提交 `680853ab989842e4b64a8070f492388c5e8e1917` 的 Git tree 相同。 [PR #99](https://github.com/a129924/rivet/pull/99)

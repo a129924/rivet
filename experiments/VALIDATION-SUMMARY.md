@@ -4,6 +4,19 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #104 PR Reader 行內留言來源選擇與離線驗收
+
+PR #104 於 `2026-11-26T07:39:37Z` 合併至 `dev` 並關閉，共變更 7 個檔案。合併提交 `f556a65f64ed9fef0b0958d82d6e83d4efd30844` 與受測的 feature 提交 `04b553673eb671da26ba4a08b7f2b12fbb8a466f` 的 Git tree 相同。 [PR #104](https://github.com/a129924/rivet/pull/104) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.96-pr-reader-github-inline-review-source-selection/plan/pr-reader-github-inline-review-source-selection/pr-reader-github-inline-review-source-selection.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 讀取契約 | GraphQL 完整結果優先，完整空清單也算成功。只有 GraphQL 回 `.unavailable` 且 Task 尚未取消時才改讀同一 PR 的 REST。驗收確認兩種來源原序、REST 平面留言與 thread 狀態缺席、來源重疊、後頁失敗及取消後捨棄晚到結果。 |
+| 獨立驗收 | IS01–IS06 通過。Reader SwiftPM 回歸 171 項測試、16 組通過，含 9 項新測試。嚴格 Swift 格式、585 檔 SwiftLint 零違規、差異檢查及提交鉤子均通過。獨立規劃與成果審查均核准。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR base 與 head 驗證並渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸與亮暗目視檢查。Show Me 呼叫樹與受控請求一致。Floorplan 涵蓋 956 個程式檔，標示 2 張本題卡片。Graphify 無可追溯的既有圖，採原碼核對。 |
+| 驗收界線 | 使用受控 GraphQL 和 REST 回應進行離線驗收。實際 GitHub.com API 呼叫、完整快照組裝及產品接線留待後續驗證。清理階段沿用上述受測版本及證據。 |
+
+語意 annotated tag `v0.1.96-pr-reader-github-inline-review-source-selection` 已推送並讀回。本機與遠端的 tag 物件均為 `ffdad58e9d604fad764431e3a020e0ea207c748a`，解參照後皆指向合併提交。已核對本機、遠端及遠端追蹤分支、feature worktree 目錄和 Git 註冊均已移除。停止該工作樹的 Floorplan 預覽後，私下封存 126 個本機檔案，並逐檔核對 SHA-256、大小及權限模式。 [實驗索引](README.md#pr-104-pr-reader-行內留言來源選擇與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.96-pr-reader-github-inline-review-source-selection)
+
 ## PR #99 PR Reader 行內審閱留言端點與離線驗收
 
 PR #99 於 `2026-11-25T10:01:44Z` 合併至 `dev` 並關閉，共變更 7 個檔案。合併提交 `64d0ce9f70c2abaeca7e2ec7204aab9a92add419` 與離線受測的 feature 提交 `680853ab989842e4b64a8070f492388c5e8e1917` 的 Git tree 相同。 [PR #99](https://github.com/a129924/rivet/pull/99) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.92-pr-reader-github-inline-review-comments-endpoint/plan/pr-reader-github-inline-review-comments-endpoint/pr-reader-github-inline-review-comments-endpoint.step.md)
