@@ -1,36 +1,32 @@
 # Rivet Design Language Adoption — Technical Spec
 
-## 鎖定的執行條件
+## 採用的能力
 
-Phase A／B 使用獨立 feature worktree 的 `feat/rivet-design-language-adoption`，基線 `2764e64a77732902693b7890b346b2f3fa3f487d`。只將候選預覽放入 topic evidence。單檔使用 SwiftUI／AppKit 及合成資料，和產品 targets、packages、網路及業務狀態隔離。正式 A／B 寫入清單見執行契約。
+C 提取與 D 接線交付為同一項 bounded capability。兩個 internal 型別留在現有 SwiftPM `RivetPresentation` target，使用 SwiftUI。Login 是唯一正式 consumer。
 
-Phase A 基線取自現行 Login 原生 acceptance tool，以及 pinned Inbox Header／List 的指定 Xcode `#Preview`。受控 Login DEBUG preview 輔助查核 fixture。Login tool 維持既有 build、source review、精確 App／來源／binary SHA 和當下確認規則。真實登入及任何認證輸入皆在驗證範圍外。
-
-## 視覺候選邊界
-
-| 現有 Login 角色 | Dark | Light | 工作用途 |
+| `RivetPalette` 角色 | Light sRGB | Dark sRGB | 語意 |
 |---|---|---|---|
-| Background | `#161C26` | `#FCFDFF` | 評估工作區外層表面 |
-| Primary | `#F4F6FA` | `#192533` | 評估非控制項主文字 |
-| Secondary | `#9AA9B9` | `#647386` | 評估非控制項次文字 |
-| Border | `#323C49` | `#E1E7EE` | Login footer／PAT 邊框 |
-| Surface | `#222C39` | `#F1F4F8` | Login 狀態圖示底色 |
-| Field | `#19232E` | `#FFFFFF` | Login 欄位 |
-| Button | `#F3F6FA` | `#252B33` | Login 按鈕 |
-| Button label | `#19212C` | `#FFFFFF` | Login 按鈕文字 |
+| `background` | `#FCFDFF` | `#161C26` | 非控制項視窗或工作區的外層底色 |
+| `primary` | `#192533` | `#F4F6FA` | 非控制項的主要文字 |
+| `secondary` | `#647386` | `#9AA9B9` | 非控制項的說明或次要文字 |
+| `surface` | `#F1F4F8` | `#222C39` | 外層底色上的內層表面。Login 用於既有狀態圖示底 |
 
-候選的外層表面與非控制項文字可使用前三組色值。Workspace 表面及分隔線各以目前用法與實際畫面評估。保持 System accent、List selected／inactive、原生文字前景、disabled、focus ring、鍵盤與 VoiceOver 規則。以原生 segmented Picker 展示 fixture 選項，操作僅更新局部顯示選擇，不改列集合。
+- `RivetPalette` 為 internal struct，提供 internal `init(dark: Bool)`、四個 `Color` 屬性與單一 internal `static func color(sRGB: UInt32) -> Color`。sRGB 轉換沿用 `RivetLoginArtwork.swift` 既有 8-bit RGB 位元拆解、除以 255 與 opacity 1。
+- `RivetLoginPalette` 在原檔提供相同內部用法，將四色交給 `RivetPalette`。Login fileprivate `Color(hex:)` 可委派同一轉換。Border `#E1E7EE/#323C49`、Field `#FFFFFF/#19232E`、Button `#252B33/#F3F6FA`、Button label `#FFFFFF/#19212C` 均保留在 Login，順序為 Light／Dark。按壓、停用與對比規則繼續留在既有 styles／元件。
+- `RivetBrandMark` 為 internal SwiftUI glyph-only View，提供 internal `init(size: CGFloat, foreground: Color)`。直接搬移既有 Canvas 的 24-unit 座標、三個圓、連線與 Bézier 控制點、`1.7 × scale` 描邊和 round cap。由 Login 以 22 pt、`#CBE7FF` 調用，保留 36 pt tile、背景與框線、RIVET wordmark、品牌面板、Diff artwork 及外層 `.accessibilityHidden(true)`。
+- BrandMark 只負責繪製。與文字並列時 caller 可標為裝飾。單獨承擔辨識或操作時，caller 提供恰當名稱及語意。22 pt symbol-only 可行性來自 Phase B；使用位置由未來 feature 決定。
 
-沿用既有 branch glyph Canvas 幾何，盤點 36 × 36 pt tile、22 × 22 pt glyph 及 `#CBE7FF` 描邊，評估在淺底與 compact 呈現的可讀性。Login 深色 tile、wordmark 排版、Diff artwork、文案與裝飾及整區無障礙隱藏規則仍由 Login 負責。Typography／Spacing 先記下語意和用法，繼續各自擁有 Login 13–21 pt、40:60 版面與 Inbox 單行尾截斷、620／480／340 pt 降階。
+## 表面與原生互動
 
-## 預覽與證據
+新 Visual Design Contract 記錄 Light／Dark 共用角色及表面層級、Variant B 的整體方向、native control 邊界和 feature-only 責任。Surface 與 Border 的個別視覺貢獻仍未驗，Border 留在 Login。Typography／Spacing 僅說明適用情境及密度，不建立共用 scale。保留 system appearance、List、selection、accent、focus ring、disabled、VoiceOver 與 keyboard semantics。
 
-候選可選 `--view samples|inbox`、`--appearance light|dark`、`--width 760|420`，寬度為內容區 pt。預覽用可取得原生焦點的 macOS 視窗，展示明暗 palette、表面、文字層級、間距和品牌，並以相同合成資料比較標準／窄版。使用原生 List、Picker、disabled 例和系統列內前景。將焦點實際移到另一應用程式視窗再切回，系統設定測後還原。
+`RivetLoginView`、`LoginStyles`、公開 models 及 previews 皆使用原有介面。40:60、13–21 pt scaling、parent-owned phase／intent、局部 PAT 編輯、focus、狀態宣告及原生 controls 不跨入新的 internal 能力。Appearance 選擇維持現有 caller 所有權。
 
-證據記錄來源 revision、工具／macOS 版本、截圖配置、逐格索引、操作結果及缺口。保留兩張標註比較圖在 topic evidence，原始個別截圖、binary 和 build/cache 放在 checkout 外。正式 Swift 不引用預覽。
+## 驗證設計
 
-## C／D 的後續邊界
+- 新增一個 Swift Testing 表格測試，覆蓋兩個 appearance × 四角色。以 `NSColor` 轉為 sRGB 比對各色通道與 alpha，或使用等價的 sRGB 數值解析。比較精度需辨識一個 RGB byte 的差異，並直接驗證target 內共用能力提供的真實色值。
+- 以前測凍結的八張影像作比較。用同機、同 780 × 500 pt 窗內容、同 fixture、standard copy、appearance、字級及可比較渲染，逐一擷取 after。記錄可變的 progress frame、游標、焦點及 rendering scale 等條件，只將已辨識的擷取差異與實際畫面偏移分開說明。
+- Login 原生操作使用獨立 acceptance package、合成資料及中性 copy。啟動新 artifact 前獨立審查來源、資源與精確 App／binary，取得當下 Human 確認。依受測型態記錄實際操作或真實未驗。AX tree 與截圖不能證明 VoiceOver 實際朗讀。
+- 精確寫入範圍、身份與試例由執行契約鎖定。產品 runtime、二進位與原始 screenshots 不列為 repo 寫入。A／B 採用證據保留原始 SHA。
 
-以 Human 採用的語意和實際 consumer 建立最小 internal 能力。依賴只朝 SwiftUI／AppKit 和 Presentation 資源。保持 sRGB、glyph 幾何、登入狀態、焦點及 interface 等效，候選方法和檔案須經同 topic amendment 才成為正式 Swift 執行契約。
-
-[需求](requirements.md) · [執行契約及後續 Swift admission](../../plan/rivet-design-language-adoption/rivet-design-language-adoption.plan.md)
+[需求](requirements.md) · [執行契約及測試](../../plan/rivet-design-language-adoption/rivet-design-language-adoption.plan.md) · [Login 驗收工具](../../tools/acceptance/login-ui/README.md)
