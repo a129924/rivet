@@ -1,0 +1,34 @@
+query PullRequestChecks($owner: String!, $name: String!, $number: Int!, $after: String) {
+  repository(owner: $owner, name: $name) {
+    id
+    nameWithOwner
+    pullRequest(number: $number) {
+      id
+      number
+      repository { id }
+      headRefOid
+      statusCheckRollup {
+        id
+        state
+        contexts(first: 100, after: $after) {
+          totalCount
+          pageInfo { hasNextPage endCursor }
+          nodes {
+            __typename
+            ... on CheckRun {
+              id
+              name
+              status
+              conclusion
+            }
+            ... on StatusContext {
+              id
+              context
+              state
+            }
+          }
+        }
+      }
+    }
+  }
+}

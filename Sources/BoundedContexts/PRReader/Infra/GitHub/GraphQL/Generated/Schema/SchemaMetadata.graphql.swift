@@ -298,6 +298,7 @@ extension ReaderGitHubGraphQL {
       "SponsorshipNewsletter": ReaderGitHubGraphQL.Objects.SponsorshipNewsletter,
       "Status": ReaderGitHubGraphQL.Objects.Status,
       "StatusCheckRollup": ReaderGitHubGraphQL.Objects.StatusCheckRollup,
+      "StatusCheckRollupContextConnection": ReaderGitHubGraphQL.Objects.StatusCheckRollupContextConnection,
       "StatusContext": ReaderGitHubGraphQL.Objects.StatusContext,
       "SubIssueAddedEvent": ReaderGitHubGraphQL.Objects.SubIssueAddedEvent,
       "SubIssueRemovedEvent": ReaderGitHubGraphQL.Objects.SubIssueRemovedEvent,
