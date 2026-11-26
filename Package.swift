@@ -50,9 +50,16 @@ let package = Package(
       dependencies: [
         "RivetPRReader",
         "GitHubIntegration",
+        .product(name: "Apollo", package: "apollo-ios"),
+        .product(name: "ApolloAPI", package: "apollo-ios"),
         .product(name: "RivetHTTPClient", package: "RivetHTTPClient"),
       ],
-      path: "Sources/BoundedContexts/PRReader/Infra/GitHub/REST"
+      path: "Sources/BoundedContexts/PRReader/Infra/GitHub",
+      exclude: [
+        "GraphQL/Schema.graphqls",
+        "GraphQL/ReviewThreads.graphql",
+        "GraphQL/apollo-codegen-config.json",
+      ]
     ),
     .target(
       name: "RivetPRReaderPresentation",
@@ -146,6 +153,8 @@ let package = Package(
         "RivetPRReaderGitHub",
         "RivetPRReader",
         "GitHubIntegration",
+        .product(name: "Apollo", package: "apollo-ios"),
+        .product(name: "ApolloAPI", package: "apollo-ios"),
         .product(name: "RivetHTTPClient", package: "RivetHTTPClient"),
       ]
     ),
