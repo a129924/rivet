@@ -59,6 +59,7 @@ let package = Package(
         "GraphQL/Schema.graphqls",
         "GraphQL/ReviewThreads.graphql",
         "GraphQL/PullRequestChecks.graphql",
+        "GraphQL/PullRequestReviewMergeState.graphql",
         "GraphQL/apollo-codegen-config.json",
       ]
     ),
