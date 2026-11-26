@@ -2,11 +2,14 @@ import SwiftUI
 
 struct RivetLoginPalette {
   let dark: Bool
-  var background: Color { Color(hex: dark ? 0x161C26 : 0xFCFDFF) }
-  var primary: Color { Color(hex: dark ? 0xF4F6FA : 0x192533) }
-  var secondary: Color { Color(hex: dark ? 0x9AA9B9 : 0x647386) }
+
+  private var shared: RivetPalette { RivetPalette(dark: dark) }
+
+  var background: Color { shared.background }
+  var primary: Color { shared.primary }
+  var secondary: Color { shared.secondary }
   var border: Color { Color(hex: dark ? 0x323C49 : 0xE1E7EE) }
-  var surface: Color { Color(hex: dark ? 0x222C39 : 0xF1F4F8) }
+  var surface: Color { shared.surface }
   var field: Color { Color(hex: dark ? 0x19232E : 0xFFFFFF) }
   var button: Color { Color(hex: dark ? 0xF3F6FA : 0x252B33) }
   var buttonLabel: Color { Color(hex: dark ? 0x19212C : 0xFFFFFF) }
@@ -14,10 +17,7 @@ struct RivetLoginPalette {
 
 extension Color {
   fileprivate init(hex: UInt32) {
-    self.init(
-      .sRGB, red: Double((hex >> 16) & 255) / 255,
-      green: Double((hex >> 8) & 255) / 255, blue: Double(hex & 255) / 255, opacity: 1
-    )
+    self = RivetPalette.color(sRGB: hex)
   }
 }
 
@@ -78,29 +78,7 @@ struct RivetLoginBrand: View {
       RoundedRectangle(cornerRadius: 10)
         .fill(.white.opacity(0.08))
         .overlay(RoundedRectangle(cornerRadius: 10).stroke(.white.opacity(0.24), lineWidth: 1))
-      Canvas { context, size in
-        let scale = size.width / 24
-        var path = Path()
-        for center in [CGPoint(x: 6, y: 4), CGPoint(x: 6, y: 20), CGPoint(x: 18, y: 6)] {
-          path.addEllipse(
-            in: CGRect(
-              x: (center.x - 2) * scale, y: (center.y - 2) * scale, width: 4 * scale,
-              height: 4 * scale))
-        }
-        path.move(to: CGPoint(x: 6 * scale, y: 6 * scale))
-        path.addLine(to: CGPoint(x: 6 * scale, y: 18 * scale))
-        path.move(to: CGPoint(x: 18 * scale, y: 8 * scale))
-        path.addCurve(
-          to: CGPoint(x: 12 * scale, y: 14 * scale),
-          control1: CGPoint(x: 18 * scale, y: 11.3 * scale),
-          control2: CGPoint(x: 15.3 * scale, y: 14 * scale)
-        )
-        path.addLine(to: CGPoint(x: 6 * scale, y: 14 * scale))
-        context.stroke(
-          path, with: .color(Color(hex: 0xCBE7FF)),
-          style: StrokeStyle(lineWidth: 1.7 * scale, lineCap: .round))
-      }
-      .frame(width: 22, height: 22)
+      RivetBrandMark(size: 22, foreground: Color(hex: 0xCBE7FF))
     }
     .frame(width: 36, height: 36)
   }

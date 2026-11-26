@@ -1,0 +1,20 @@
+{
+  "schemaNamespace": "ReaderGitHubGraphQL",
+  "input": {
+    "schemaSearchPaths": ["Schema.graphqls"],
+    "operationSearchPaths": ["ReviewThreads.graphql", "PullRequestChecks.graphql", "PullRequestReviewMergeState.graphql"]
+  },
+  "output": {
+    "schemaTypes": {
+      "path": "./Generated",
+      "moduleType": {
+        "embeddedInTarget": {
+          "name": "RivetPRReaderGitHub",
+          "accessModifier": "internal"
+        }
+      }
+    },
+    "operations": { "inSchemaModule": {} },
+    "testMocks": { "none": {} }
+  }
+}

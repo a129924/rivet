@@ -4,6 +4,45 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #101 Rivet 視覺語言採用與整合驗收
+
+PR #101 於 `2026-11-26T07:51:34Z` 合併至 `dev` 並關閉。合併提交為 `e53214ed9327174c316724c4b8ba28e227526d4f`，最後 feature head 為 `2fde547722e6a4197fe755a05c76a5ce177e81de`。HC-05 審閱的 `144c20f` 交付共用四色及 branch glyph 和 Login 接線，最後 feature 提交只補結案帳本。 [PR #101](https://github.com/a129924/rivet/pull/101) · [結案帳本](https://github.com/a129924/rivet/blob/v0.1.97-rivet-design-language-adoption/plan/rivet-design-language-adoption/rivet-design-language-adoption.step.md) · [驗證證據](https://github.com/a129924/rivet/blob/v0.1.97-rivet-design-language-adoption/plan/rivet-design-language-adoption/evidence/cd-verification.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 視覺與原生操作 | 八組同 fixture、明暗、字級與尺寸的 Login 前後圖中，七組像素一致。Waiting 的 1,288 個差異像素限於轉圈動畫。以合成輸入驗證 PAT 編輯、顯隱、原生焦點、Retry／Escape、捲動與 disabled；Increase Contrast 檢查亦通過。Human 回報三組 VoiceOver 實聽通過，獨立 CD04 核准。 |
+| 隔離整合 | 以 `f556a65` 整合已採用來源。Presentation Debug／Release、套件隔離與 root 589 項測試／72 suites 通過。實際合併當時的 `dev` 為 `5127b5d`，與包含結案帳本的預測合併樹相比，差異只有兩份實驗索引；產品來源、測試、套件與 Presentation 契約一致。 |
+| 審閱資料 | PR Lens 驗證並渲染 Ready head `2fde547` 的本機變更圖。五個核准 Swift 檔案的 Graphify AST 摘要與該 head 核對一致。 |
+| 驗收界線 | SwiftPM bundle fallback 未獨立隔離。Variant B 的七項原生缺口留給未來 PR Inbox topic，正式 Inbox 仍待自有 Plan Amendment 與獨立 Plan Review。 |
+
+語意 annotated tag `v0.1.97-rivet-design-language-adoption` 已推送並讀回。本機與遠端的 tag 物件均為 `35b61bdec426c18f222bd4c107a01dace5193e69`，解參照後指向合併提交。本機、遠端、遠端追蹤分支及 feature worktree 的目錄與 Git 註冊均已移除。 [實驗索引](README.md#pr-101-rivet-視覺語言採用與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.97-rivet-design-language-adoption)
+
+## PR #104 PR Reader 行內留言來源選擇與離線驗收
+
+PR #104 於 `2026-11-26T07:39:37Z` 合併至 `dev` 並關閉，共變更 7 個檔案。合併提交 `f556a65f64ed9fef0b0958d82d6e83d4efd30844` 與受測的 feature 提交 `04b553673eb671da26ba4a08b7f2b12fbb8a466f` 的 Git tree 相同。 [PR #104](https://github.com/a129924/rivet/pull/104) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.96-pr-reader-github-inline-review-source-selection/plan/pr-reader-github-inline-review-source-selection/pr-reader-github-inline-review-source-selection.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 讀取契約 | GraphQL 完整結果優先，完整空清單也算成功。只有 GraphQL 回 `.unavailable` 且 Task 尚未取消時才改讀同一 PR 的 REST。驗收確認兩種來源原序、REST 平面留言與 thread 狀態缺席、來源重疊、後頁失敗及取消後捨棄晚到結果。 |
+| 獨立驗收 | IS01–IS06 通過。Reader SwiftPM 回歸 171 項測試、16 組通過，含 9 項新測試。嚴格 Swift 格式、585 檔 SwiftLint 零違規、差異檢查及提交鉤子均通過。獨立規劃與成果審查均核准。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR base 與 head 驗證並渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸與亮暗目視檢查。Show Me 呼叫樹與受控請求一致。Floorplan 涵蓋 956 個程式檔，標示 2 張本題卡片。Graphify 無可追溯的既有圖，採原碼核對。 |
+| 驗收界線 | 使用受控 GraphQL 和 REST 回應進行離線驗收。實際 GitHub.com API 呼叫、完整快照組裝及產品接線留待後續驗證。清理階段沿用上述受測版本及證據。 |
+
+語意 annotated tag `v0.1.96-pr-reader-github-inline-review-source-selection` 已推送並讀回。本機與遠端的 tag 物件均為 `ffdad58e9d604fad764431e3a020e0ea207c748a`，解參照後皆指向合併提交。已核對本機、遠端及遠端追蹤分支、feature worktree 目錄和 Git 註冊均已移除。停止該工作樹的 Floorplan 預覽後，私下封存 126 個本機檔案，並逐檔核對 SHA-256、大小及權限模式。 [實驗索引](README.md#pr-104-pr-reader-行內留言來源選擇與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.96-pr-reader-github-inline-review-source-selection)
+
+## PR #99 PR Reader 行內審閱留言端點與離線驗收
+
+PR #99 於 `2026-11-25T10:01:44Z` 合併至 `dev` 並關閉，共變更 7 個檔案。合併提交 `64d0ce9f70c2abaeca7e2ec7204aab9a92add419` 與離線受測的 feature 提交 `680853ab989842e4b64a8070f492388c5e8e1917` 的 Git tree 相同。 [PR #99](https://github.com/a129924/rivet/pull/99) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.92-pr-reader-github-inline-review-comments-endpoint/plan/pr-reader-github-inline-review-comments-endpoint/pr-reader-github-inline-review-comments-endpoint.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 端點契約 | 核對 `GET /repos/{owner}/{repo}/pulls/{number}/comments`、同一 PR 的首頁和第 2 頁 URL、頁碼 31 與 `Int.max`、固定 `per_page=100`，以及無效 PR 識別或非正數頁碼的拋錯。 |
+| 獨立驗收 | Reader GitHub 套件 101 項測試、10 組全數通過，含 5 項新端點測試。Swift 格式、217 檔 SwiftLint 零違規、差異空白檢查及提交鉤子均通過。獨立成果審查核准，無必修項。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR base 與 head 驗證並渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸與明暗目視檢查。Show Me 呼叫樹與實作相符。Floorplan 涵蓋 586 個程式檔並標記 1 張本題卡片。Graphify 缺可追溯的既有圖，已用原碼核對。 |
+| 驗收界線 | 本輪以離線測試驗證同步 URL 建構。HTTP 執行、續頁讀取與留言映射由後續 Adapter 交付。 |
+
+Annotated tag `v0.1.92-pr-reader-github-inline-review-comments-endpoint` 的本機與遠端解析均指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。停止該 worktree 的 Floorplan 預覽後，私下封存 68 個 Floorplan、13 個端點驗證與 Archify、5 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-99-pr-reader-行內審閱留言端點與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.92-pr-reader-github-inline-review-comments-endpoint)
+
 ## PR #78 PR Inbox 自查候選與 E020 真人結果（2026-11-23）
 
 [PR #78](https://github.com/a129924/rivet/pull/78) 已於 `2026-11-23T06:47:33Z` 合併至 `dev` 並關閉。合併提交為 `6ac0ae02b63db99e4f0a8cb0ee65edeb6f399559`，最後 feature 提交 `bd01556` 收錄 E020 真人驗收紀錄。

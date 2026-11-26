@@ -4,7 +4,7 @@
 
 提供閱讀單一 Pull Request 所需的背景、一般討論、review 摘要、inline comment、checks、檔案與逐檔可選 diff patch。
 
-- Core 已實作於 `RivetPRReader` library target；target 僅編譯 `Sources/BoundedContexts/PRReader/Core/`，不納入 Reader Infra 或候選 GraphQL SDL。
+- Core 已實作於 `RivetPRReader` library target；target 僅編譯 `Sources/BoundedContexts/PRReader/Core/`，Reader Infra 與 GraphQL 產碼由套件內的 `RivetPRReaderGitHub` target 承載。
 
 ## 非責任
 
@@ -19,12 +19,12 @@
 - 對 Presentation 提供穩定的 Reader Facade。
 - 透過自己擁有的 PR Content Source Port 取得資料；不直接依賴 PR Inbox。
 - Presentation 可用目前選取的 PR 向 Reader 請求閱讀快照。
-- PR Reader 自己的 Infra 擁有 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO 與 failure mapping；現有 GraphQL SDL 僅是未驗證的 candidate／暫存 asset，本文件不將它定義為正式 BC-local ownership，也不據此搬移 schema、指定 target 或改變任何 API／實作。
+- PR Reader 的 Infra 擁有 GitHub adapter、operation／endpoint、endpoint-specific media type、DTO、failure mapping 與本 context 的 GraphQL 產碼輸入。
 - non-BC `GitHubIntegration` 已實作為 shared GitHub-specific integration module，目前提供既有可注入、同步、typed-throws 的 access-token store/provider contract，以及沒有 conformer 的 public、`Sendable` async `GitHubAccessTokenProvider` token-acquisition contract；後者不處理 PAT／OAuth lifecycle、request、transport、401 recovery 或 retry。另已交付 public、process-local、non-persistent 的 `InMemoryGitHubTokenStore`，僅在單一 store instance 的生命週期保存一個 token，以及 public `KeychainTokenStore`：後者以 legacy macOS Keychain 為目前使用者保存單一 GitHub access token，並可跨 process 讀回；兩者均不實作 authorization。另已交付 `OAuthTokenProvider` actor 與 `OAuthCredentialStore`／`OAuthTokenFetcher` ports；它只交付 `TokenSnapshot(accessToken, version)`，不將 credential bundle 或 provider failure 帶入 Reader。Reader Infra 可採用 `GitHubIntegration` 的 REST client、固定標頭組合與技術回應分類；`GitHubIntegration` 不依賴任何 BC。GitHub DTO／GraphQL node translation、technical classification 到 Reader failure contract 的 mapping 與 Reader business meaning 仍只留在此 Infra；它們不會進入 Core、UseCase 或 Port，且不形成 shared BC failure contract。
 
 ## Core Content Source Contract
 
-`GitHubIntegration` 已提供 internal-only GraphQL Query／Mutation foundation；Reader 的 GraphQL 接線仍延後。候選 SDL 不屬於Query／Mutation 或測試來源，Reader Core／UseCase／Port 不新增 Apollo、OAuth 或 transport 依賴。
+Reader Core、UseCase 與 Port 只使用 Reader 型別。GitHub REST 與 GraphQL 轉換位於 Reader Infra，對完整快照的來源選擇及組裝由後續 topic 決定。
 
 - `PRContentSource` 是 Reader-owned、`Sendable` 的 Domain Port；它以 `ReaderPullRequestID(owner, repository, number)` 非同步回傳 target-local `Outcome<PRContentSnapshot, PRReaderFailure>`。
 - `PRContentSnapshot` 保留背景、有序 conversation、reviews、inline threads、files，以及可缺的 review decision 與 check rollup。成功 producer 必須回傳與 request 相同的 PR identity、同一 snapshot 內唯一的 `ReaderFileReference`，並保留來源檔案順序；Core 不另設 validator。
@@ -61,6 +61,69 @@ HTTP `200` 交付 `Outcome<Data, PRReaderFailure>` 的原始 response body。Rea
 - 套件內 `GitHubConversationCommentsSource.fetchConversationComments(for:)` 使用已認證的 REST client 與已確認的 PR 識別，透過 `GitHubConversationCommentsEndpoint` 讀取指定 PR 的一般留言。請求從第 1 頁開始，每頁請求 100 筆。成功結果保留來源頁次、頁內順序、留言 ID、原始 Markdown 與可用作者。合法缺作者仍保留留言，完整空清單回成功。此入口可供後續快照組裝。 [GitHub 留言端點](https://docs.github.com/en/rest/issues/comments#list-issue-comments)
 - Reader Infra 驗證 `Link` 的續頁仍屬原 PR，再重建具名請求。首次遇到有效數字 repository ID 續頁時，讀取原 PR 詳情，以與 Changed Files 共用的解碼及身分核對確認 PR 編號、repo 名稱與 ID。已確認 ID 只在本次讀取內重用。各頁可能反映讀取期間不同時間點。 [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api#using-link-headers)
 - 留言請求的認證或存取拒絕、找不到或已移除的資源及無效起始識別回 `.notReadable`。取消、限流、傳輸、續頁或 PR 詳情查核失敗回 `.unavailable`。必要留言資料無法保真映入 Reader 模型時回 `.contentNotRepresentable`。整次讀取只交付完整清單或單一失敗。
+
+## GitHub REST 審閱紀錄讀取
+
+- 套件內 GitHub 來源 `GitHubPullRequestReviewsSource` 的 `fetchReviews(for:)` 接收 `ReaderPullRequestID`，以已認證的 REST client、GET 與 `.standardREST` 讀取指定 PR 的審閱紀錄。`GitHubPullRequestReviewsEndpoint` 驗證 PR 識別與頁碼，自第 1 頁起建構 GitHub.com 的 `/repos/{owner}/{repo}/pulls/{number}/reviews` 請求，每頁請求 100 筆。 [GitHub 審閱紀錄端點](https://docs.github.com/en/rest/pulls/reviews#list-reviews-for-a-pull-request)
+- Reader Infra 驗證 `Link` 的續頁仍屬原 PR，再重建具名請求。首次遇到有效的數字 repository ID 續頁時，讀取原 PR 詳情並核對 PR 編號、repo 名稱與 ID。已確認 ID 限本次讀取重用。完整性依 GitHub 在本次讀取提供的分頁序列，各頁可能反映不同時間點。 [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api#using-link-headers)
+- 成功回傳完整、有序的 `ReaderReview` 清單，保留 ID、原始正文、可用作者及個別審閱狀態。合法缺少作者、提交時間或 commit ID 時保留紀錄，完整空清單回成功。
+- 無效起始識別、Reviews 請求的認證或存取拒絕及資源不存在回 `.notReadable`。限流、傳輸、續頁或詳情查核失敗及取消回 `.unavailable`。必要資料或狀態無法保真時回 `.contentNotRepresentable`。任一失敗都捨棄已累積的紀錄，取消優先於晚到的回應。
+
+## GitHub REST 行內審閱留言讀取
+
+- 套件內的 `GitHubInlineReviewCommentsSource.fetchInlineReviewComments(for:)` 接收 `ReaderPullRequestID`，透過已認證的 REST client 及 `.standardREST` 讀取指定 PR 的完整行內留言。 `GitHubInlineReviewCommentsEndpoint` 驗證 PR 識別與正數頁碼，建構 GitHub.com 的 GET `/repos/{owner}/{repo}/pulls/{number}/comments`，從第 1 頁起、每頁 100 筆。 [GitHub 行內審閱留言端點](https://docs.github.com/en/rest/pulls/comments#list-review-comments-on-a-pull-request)
+- Reader Infra 核對 `Link` 的目的地、PR 歸屬與頁碼，再以原 PR 識別重建續頁。首次遇到數字儲存庫形式的 `next` 或 `last` 時，透過原 PR 詳情核對 PR 編號、儲存庫名稱與 ID。已確認 ID 限本次讀取重用。完整性以當次 GitHub 提供的分頁序列為準。 [GitHub REST 分頁](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api#using-link-headers)
+- 成功結果保留頁次、頁內原序、留言 ID、node ID、原始 Markdown、路徑及可用定位與回覆關係。選填欄位合法缺席時保留留言與缺值。完整空清單回成功。
+- 無效 PR 識別、留言讀取存取拒絕或資源不存在回 `.notReadable`。限流、傳輸、續頁或詳情查核失敗與取消回 `.unavailable`。留言資料無法保真表達時回 `.contentNotRepresentable`。任一失敗即捨棄全部累積留言，取消優先於晚到回應。
+
+## GitHub GraphQL 審閱對話讀取
+
+- 套件內 `GitHubReviewThreadsSource.fetchReviewThreads(for:)` 使用已就緒的 `GitHubGraphQLServing` 讀取指定 PR 的審閱對話。保留 thread 原序、各 thread 的有序留言、路徑、目標與可選行號、resolved／outdated 狀態、原始 Markdown、可選作者與回覆 ID。合法缺值保留原樣，完整空清單為成功。 [GitHub Review Thread](https://docs.github.com/en/graphql/reference/pulls#pullrequestreviewthread)
+- 外層查詢同時取得每個 thread 的首批留言。Reader 以 thread node ID 讀取各自續頁，完成當頁留言後才讀下一個外層頁。兩層各自核對歸屬、原序與游標進展。完整性以本次可核對的分頁序列為準。 [GitHub GraphQL 分頁](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)
+- 可確認的 PR 缺席或存取拒絕回 `.notReadable`。限流、裸 `403`、傳輸、取消及無法確認完整的回應回 `.unavailable`。已解碼的必要欄位或元素無法保真時回 `.contentNotRepresentable`。失敗會捨棄全部累積結果。
+
+## GitHub 行內審閱留言來源選擇
+
+- 套件內 `GitHubInlineReviewContentSource.fetchInlineReviewContent(for:)` 以同一 `ReaderPullRequestID` 優先讀取完整 GraphQL 審閱 threads。成功包含完整空清單。`.notReadable` 與 `.contentNotRepresentable` 原樣返回。只有 GraphQL 回 `.unavailable` 且呼叫端尚未取消時才改讀 REST。
+- `ReaderInlineReviewContent` 的 `.graphQLThreads` 保留分組、各層原序及 resolved／outdated，`.restComments` 保留平面留言、頁次及原序，thread 狀態缺席。整次交付一個來源的完整結果或單一失敗。REST 失敗原樣返回，GraphQL 未完成的資料不納入 REST 結果。
+- 入口在 GraphQL 前及兩個來源返回後觀察取消。取消回 `.unavailable`，尚未啟動 REST 時停止切換，並捨棄晚到結果。此入口提供行內留言區塊供後續快照組裝使用。
+
+## GitHub GraphQL Checks 讀取
+
+- 套件內 `GitHubPullRequestChecksSource.fetchChecks(for:)` 透過既有 `GitHubGraphQLServing` 讀取指定 PR head 的整體狀態與有序 Checks。已定位的首頁若無 rollup，回傳成功缺值。存在的 rollup 可帶空明細。保留 check run 的名稱、狀態及可缺席的結論，也保留 commit status 的 context 與狀態。 [GitHub StatusCheckRollup](https://docs.github.com/en/graphql/reference/commits#statuscheckrollup)
+- Reader Infra 每頁核對 repository、PR、head、rollup 身分、整體狀態與總數。續頁按游標前進，保留來源順序且驗證 Node ID 唯一及最後筆數。空續頁、分頁無法完整驗證、Checks 欄位拒絕或取消回 `.unavailable`。可確認的 PR 定位缺席或拒絕回 `.notReadable`，已解碼但無法保真映射的必要內容回 `.contentNotRepresentable`。任一失敗即捨棄已累積明細。
+
+## GitHub GraphQL 審閱與合併狀態讀取
+
+- 套件內 `GitHubPullRequestReviewMergeStateSource.fetchReviewMergeState(for:)` 透過既有 `GitHubGraphQLServing` 讀取指定 PR。同一筆回應提供審閱結論、合併衝突判定、詳細合併狀態、Draft 標記及目前 head OID。顯式缺值與兩種已知 `UNKNOWN` 原樣保留，Draft 直接採用 `isDraft`。 [GitHub PullRequest](https://docs.github.com/en/graphql/reference/pulls#pullrequest)
+- Reader Infra 核對 repository 全名、PR 編號與所屬 repository ID。可確認的定位缺席或拒絕回 `.notReadable`，歸屬不符、回應不完整或取消回 `.unavailable`，無法保真表示的已解碼必要值回 `.contentNotRepresentable`。入口交付來源狀態，合併許可由後續產品契約決定。
+
+## GraphQL schema 再生成
+
+Reader Infra 的 `GraphQL/Schema.graphqls` 是 2026-11-26 取得的 GitHub.com 官方公開快照，SHA-256 為 `a70103efc655a6b81afa69cdbce8b27d90d8202270b19ea54130e95c650047b7`。使用已解析的 Apollo iOS 2.1.2 checkout 內的 CLI，可在暫存目錄離線重生並比對。 [GitHub 公開 schema](https://docs.github.com/en/graphql/overview/public-schema)
+
+```sh
+graphql=Sources/BoundedContexts/PRReader/Infra/GitHub/GraphQL
+codegen_tmp=$(mktemp -d)
+tar -xzf .build/checkouts/apollo-ios/CLI/apollo-ios-cli.tar.gz -C "$codegen_tmp"
+cp "$graphql/Schema.graphqls" "$graphql/ReviewThreads.graphql" \
+  "$graphql/PullRequestChecks.graphql" "$graphql/PullRequestReviewMergeState.graphql" \
+  "$graphql/apollo-codegen-config.json" "$codegen_tmp"
+(cd "$codegen_tmp" && ./apollo-ios-cli generate --path apollo-codegen-config.json)
+python3 - "$codegen_tmp/Generated" <<'PYTHON'
+from pathlib import Path
+import sys
+
+header = (
+    b"// swift-format-ignore-file\n"
+    b"// swiftlint:disable:next blanket_disable_command\n"
+    b"// swiftlint:disable all\n"
+)
+for file in Path(sys.argv[1]).rglob("*.swift"):
+    file.write_bytes(header + file.read_bytes().rstrip(b"\n") + b"\n")
+PYTHON
+diff -ru "$graphql/Generated" "$codegen_tmp/Generated"
+```
 
 ## WebView Diff Rendering Boundary
 
