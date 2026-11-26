@@ -8,7 +8,8 @@ private enum VisualDesignPreview {
     guard let configuration = PreviewConfiguration(arguments: CommandLine.arguments.dropFirst())
     else {
       let usage =
-        "Usage: RivetDesignLanguagePreview --view samples|inbox --appearance light|dark --width 760|420\n"
+        "Usage: RivetDesignLanguagePreview --view samples|inbox|workspace "
+        + "--appearance light|dark --width 760|420 [--surface native|unified]\n"
       FileHandle.standardError.write(Data(usage.utf8))
       exit(64)
     }
@@ -26,6 +27,7 @@ private struct PreviewConfiguration {
   enum Page: String {
     case samples
     case inbox
+    case workspace
   }
 
   enum Appearance: String {
@@ -35,14 +37,20 @@ private struct PreviewConfiguration {
     var appKit: NSAppearance.Name { self == .dark ? .darkAqua : .aqua }
   }
 
+  enum Surface: String {
+    case native
+    case unified
+  }
+
   let page: Page
+  let surface: Surface?
   let appearance: Appearance
   let width: CGFloat
 
   init?(arguments: ArraySlice<String>) {
     var arguments = arguments
     var options: [String: String] = [:]
-    let flags = ["--view", "--appearance", "--width"]
+    let flags = ["--view", "--appearance", "--width", "--surface"]
     while let flag = arguments.popFirst() {
       guard flags.contains(flag), options[flag] == nil, let value = arguments.popFirst() else {
         return nil
@@ -55,7 +63,13 @@ private struct PreviewConfiguration {
       let width = options["--width"], ["760", "420"].contains(width)
     else { return nil }
 
+    let surface = options["--surface"].flatMap(Surface.init(rawValue:))
+    guard
+      page == .workspace ? surface != nil && width == "760" : options["--surface"] == nil
+    else { return nil }
+
     self.page = page
+    self.surface = surface
     self.appearance = appearance
     self.width = width == "760" ? 760 : 420
   }
@@ -82,15 +96,18 @@ private final class PreviewWindow: NSObject, NSApplicationDelegate {
     NSApp.mainMenu = menuBar
 
     let content = PreviewSurface(configuration: configuration)
+    let sidebarWidth: CGFloat =
+      configuration.page == .workspace ? WorkspaceCandidate.sidebarWidth : 0
     let window = NSWindow(
-      contentRect: CGRect(x: 0, y: 0, width: configuration.width, height: 560),
+      contentRect: CGRect(x: 0, y: 0, width: configuration.width + sidebarWidth, height: 560),
       styleMask: [.titled, .closable, .miniaturizable],
       backing: .buffered,
       defer: false)
     // AppKit owns the window's appearance and activation. SwiftUI keeps all fixture state.
     window.appearance = NSAppearance(named: configuration.appearance.appKit)
-    window.title =
+    let title =
       "Rivet Design Preview · \(configuration.page.rawValue) · \(configuration.appearance.rawValue)"
+    window.title = configuration.surface.map { "\(title) · \($0.rawValue)" } ?? title
     window.contentView = NSHostingView(rootView: content)
     window.center()
     self.window = window
@@ -107,6 +124,8 @@ private struct PreviewPalette {
   var background: Color { Color(sRGB: appearance == .dark ? 0x161C26 : 0xFCFDFF) }
   var primary: Color { Color(sRGB: appearance == .dark ? 0xF4F6FA : 0x192533) }
   var secondary: Color { Color(sRGB: appearance == .dark ? 0x9AA9B9 : 0x647386) }
+  var testedSurface: Color { Color(sRGB: appearance == .dark ? 0x222C39 : 0xF1F4F8) }
+  var testedBorder: Color { Color(sRGB: appearance == .dark ? 0x323C49 : 0xE1E7EE) }
 }
 
 extension Color {
@@ -122,11 +141,18 @@ private struct PreviewSurface: View {
 
   var body: some View {
     let palette = PreviewPalette(appearance: configuration.appearance)
+    if let surface = configuration.surface {
+      WorkspaceCandidate(palette: palette, contentWidth: configuration.width, surface: surface)
+    } else {
+      standalone(palette: palette)
+    }
+  }
+
+  private func standalone(palette: PreviewPalette) -> some View {
     Group {
-      switch configuration.page {
-      case .samples:
+      if configuration.page == .samples {
         DesignSamples(palette: palette)
-      case .inbox:
+      } else {
         InboxCandidate(palette: palette, width: configuration.width)
       }
     }
@@ -201,11 +227,21 @@ private struct DesignSamples: View {
 
         VStack(alignment: .leading, spacing: 8) {
           Text("Brand mark").font(.headline).foregroundStyle(palette.primary)
-          HStack(spacing: 16) {
-            BrandGlyph(size: 22, color: palette.primary)
-            BrandGlyph(size: 16, color: palette.primary)
-            Text("22 pt and 16 pt").font(.caption).foregroundStyle(palette.secondary)
+          HStack(alignment: .top, spacing: 24) {
+            VStack(alignment: .leading, spacing: 8) {
+              Label {
+                Text("Rivet").font(.headline)
+              } icon: {
+                BrandGlyph(size: 16, color: palette.primary)
+              }
+              Text("Compact workspace · 16 pt").font(.caption).foregroundStyle(palette.secondary)
+            }
+            VStack(alignment: .leading, spacing: 8) {
+              BrandGlyph(size: 22, color: palette.primary)
+              Text("Symbol only · 22 pt").font(.caption).foregroundStyle(palette.secondary)
+            }
           }
+          .foregroundStyle(palette.primary)
         }
       }
     }
@@ -221,6 +257,52 @@ private struct DesignSamples: View {
       Text(name).font(.caption).foregroundStyle(palette.primary)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
+  }
+}
+
+private struct WorkspaceCandidate: View {
+  static let sidebarWidth: CGFloat = 174
+
+  let palette: PreviewPalette
+  let contentWidth: CGFloat
+  let surface: PreviewConfiguration.Surface
+
+  var body: some View {
+    HStack(spacing: 0) {
+      VStack(alignment: .leading, spacing: 14) {
+        Label {
+          Text("Rivet").font(.headline)
+        } icon: {
+          BrandGlyph(size: 16, color: palette.primary)
+        }
+        Label("Inbox", systemImage: "tray")
+          .font(.body.weight(.medium))
+        Divider()
+        Text("Repositories")
+          .font(.caption.weight(.semibold))
+          .foregroundStyle(.secondary)
+          .accessibilityAddTraits(.isHeader)
+        Label("rivet", systemImage: "folder")
+          .foregroundStyle(.secondary)
+        Spacer()
+      }
+      .padding(16)
+      .frame(width: Self.sidebarWidth - 1, alignment: .leading)
+      .background(.regularMaterial)
+      .accessibilityElement(children: .contain)
+      .accessibilityLabel("Sidebar")
+
+      if surface == .unified {
+        Rectangle().fill(palette.testedBorder).frame(width: 1)
+      } else {
+        Divider()
+      }
+
+      InboxCandidate(palette: palette, width: contentWidth, surface: surface)
+        .padding(24)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    .background(palette.background)
   }
 }
 
@@ -258,47 +340,83 @@ private struct InboxCandidate: View {
 
   let palette: PreviewPalette
   let width: CGFloat
+  var surface: PreviewConfiguration.Surface?
 
   var body: some View {
     VStack(alignment: .leading, spacing: 16) {
-      VStack(alignment: .leading, spacing: 6) {
-        HStack(spacing: 8) {
-          BrandGlyph(size: 16, color: palette.primary)
-          Text("PR Inbox").font(.title2.weight(.semibold)).foregroundStyle(palette.primary)
+      if surface == nil {
+        VStack(alignment: .leading, spacing: 16) {
+          heading(includesGlyph: true)
+          filterPicker
         }
-        Text("Pull requests waiting for your attention.")
-          .font(.subheadline)
-          .foregroundStyle(palette.secondary)
-      }
-
-      Picker("Review filter", selection: $filter) {
-        ForEach(Filter.allCases) { filter in
-          Text(filter.rawValue).tag(filter)
+      } else {
+        HStack(alignment: .center, spacing: 16) {
+          heading(includesGlyph: false)
+            .frame(maxWidth: .infinity, alignment: .leading)
+          filterPicker.fixedSize(horizontal: true, vertical: false)
         }
       }
-      .labelsHidden()
-      .pickerStyle(.segmented)
 
-      Divider()
-
-      List(rows, selection: $selection) { row in
-        HStack(spacing: 12) {
-          VStack(alignment: .leading, spacing: 4) {
-            Text(row.title).font(.headline).lineLimit(1).truncationMode(.tail)
-            Text("\(row.repository) #\(row.id)").font(.caption).foregroundStyle(.secondary)
+      if surface == .unified {
+        Rectangle().fill(palette.testedBorder).frame(height: 1)
+        list
+          .scrollContentBackground(.hidden)
+          .background(palette.testedSurface, in: RoundedRectangle(cornerRadius: 8))
+          .overlay {
+            RoundedRectangle(cornerRadius: 8)
+              .strokeBorder(palette.testedBorder)
+              .allowsHitTesting(false)
+              .accessibilityHidden(true)
           }
-          if width == 760 {
-            Spacer(minLength: 8)
-            Text(row.updated).font(.caption).foregroundStyle(.secondary)
-          }
-        }
-        .padding(.vertical, 6)
-        .tag(row.id)
+      } else {
+        Divider()
+        list
       }
-      .listStyle(.inset)
-      .accessibilityLabel("Pull requests")
 
       Button("Open pull request") {}.disabled(true)
     }
+  }
+
+  private func heading(includesGlyph: Bool) -> some View {
+    VStack(alignment: .leading, spacing: 6) {
+      HStack(spacing: 8) {
+        if includesGlyph {
+          BrandGlyph(size: 16, color: palette.primary)
+        }
+        Text("PR Inbox").font(.title2.weight(.semibold)).foregroundStyle(palette.primary)
+      }
+      Text("Pull requests waiting for your attention.")
+        .font(.subheadline)
+        .foregroundStyle(palette.secondary)
+    }
+  }
+
+  private var filterPicker: some View {
+    Picker("Review filter", selection: $filter) {
+      ForEach(Filter.allCases) { filter in
+        Text(filter.rawValue).tag(filter)
+      }
+    }
+    .labelsHidden()
+    .pickerStyle(.segmented)
+  }
+
+  private var list: some View {
+    List(rows, selection: $selection) { row in
+      HStack(spacing: 12) {
+        VStack(alignment: .leading, spacing: 4) {
+          Text(row.title).font(.headline).lineLimit(1).truncationMode(.tail)
+          Text("\(row.repository) #\(row.id)").font(.caption).foregroundStyle(.secondary)
+        }
+        if width == 760 {
+          Spacer(minLength: 8)
+          Text(row.updated).font(.caption).foregroundStyle(.secondary)
+        }
+      }
+      .padding(.vertical, 6)
+      .tag(row.id)
+    }
+    .listStyle(.inset)
+    .accessibilityLabel("Pull requests")
   }
 }

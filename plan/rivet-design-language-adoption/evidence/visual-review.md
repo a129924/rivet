@@ -1,81 +1,81 @@
 # Design Language 視覺審閱
 
-- Baseline 為 dev 2764e64a77732902693b7890b346b2f3fa3f487d。環境為 macOS 26.5.2（25F84）、Xcode 26.6（17F113）、Swift 6.3.3。
-- 本輪審閱對象是 A／B 的候選。Phase C／D 的採用內容、Swift 路徑與 Login 前後等效測試，依 Human 採用結果修訂。
-- I1 的 E024 是 9610830 上的獨立驗證。容器背景、測試紀錄區、fixture 狀態與尚待補證的 I1-08 各自保留原有來源。 [I1 Draft PR #97](https://github.com/a129924/rivet/pull/97)
+環境為 macOS 26.5.2（25F84）、Xcode 26.6（17F113）及 Swift 6.3.3。正式畫面基線為 dev 2764e64a77732902693b7890b346b2f3fa3f487d。Phase A 盤點與責任分離已被接受。Phase B 依 HC-02「調整 — Minor」完成一輪視覺修整，待 Human 採用決策。
 
-## Login 色值盤點
+## 工作區表面比較
 
-| 角色 | Light | Dark | 基線用途與候選處置 |
+[Login 與 Inbox A／B 的明暗比較](design-language-candidate.png) · [完整八張 Login 基線](login-baseline.png)
+
+| 比較條件 | 共同設定 | Variant A · 原生內容表面 | Variant B · Rivet 內容表面 |
 |---|---|---|---|
-| Background | #FCFDFF | #161C26 | Login 內容背景，候選用作控制項外的工作區背景 |
-| Primary | #192533 | #F4F6FA | Login 內容主要文字，候選用於工作區標題及品牌 glyph |
-| Secondary | #647386 | #9AA9B9 | Login 說明、連結與輔助文字，候選用於工作區說明 |
-| Border | #E1E7EE | #323C49 | Footer 與 PAT 欄位邊界，先保留 Login 責任 |
-| Surface | #F1F4F8 | #222C39 | Login 狀態圖示底色，先保留 Login 責任 |
-| Field | #FFFFFF | #19232E | PAT 欄位，保留 Login 責任 |
-| Button | #252B33 | #F3F6FA | Login 主要按鈕底色，保留按壓、停用與 Increase Contrast 行為 |
-| Button label | #FFFFFF | #19212C | Login 主要按鈕文字，保留 Login 責任 |
+| Workspace | 174 pt 視覺側欄、760 pt 內容區、左側標題與右側原生 Picker。外層沿用 Login-derived Background | List 使用原生內容底與原生區隔線 | List 置於 Rivet-derived Surface。面板輪廓、側欄邊界與 Header 分隔使用候選 Border |
+| Dark | 同一組合成 PR（#72、#68、#61、#46），初始選列 #72，Picker 為 Needs Review | 中性深灰面板有清楚的區隔，與 Login 深藍灰相比呈兩種色調 | #222C39 讓內容區延續藍灰色階，#323C49 勾勒面板邊界。選列仍清楚可辨 |
+| Light | 同一組資料、布局、初始選列與控制項狀態 | 原生白色內容底與接近白色的外層分界較弱 | #F1F4F8 提供淺灰藍分層，#E1E7EE 有低對比輪廓。列文字保留系統前景 |
 
-八組值以 sRGB 從 RivetLoginArtwork.swift 的 RivetLoginPalette 核對。文字角色以 LoginStyles.swift 與 RivetLoginView.swift 的實際使用位置追溯。既有 branch mark 使用 36 pt tile、22 pt glyph、#CBE7FF 描邊。候選完整沿用 glyph 的三個圓、直線與曲線控制點，在 Light／Dark 表面比較 22／16 pt 與主要前景色。Login 的深色 tile、wordmark、插畫、裝飾和無障礙隱藏語意維持原有歸屬。
+建議在 HC-02 優先審閱 B 的 **Surface** 與 **Border**。Dark 的色調延續最明顯。Light 的分層也可見，差異主要來自低對比輪廓。這組圖只比較 Surface 與 Border 一起套用的結果，各自的跨畫面價值仍待決定。List 內部列分隔線由系統繪製。B 只隱藏捲動區底色並提供面板底與外框，使用與 A 相同的原生 List、Picker、列結構、選取 Binding 及系統前景。側欄以靜態文字呈現 Inbox 與 rivet repository 的脈絡，沒有導覽行為。
 
-Login 的 heading、eyebrow、說明與按鈕使用依 13–21 pt 字級設定縮放的系統字體。40:60 採 Login 版面規則。Inbox Header 使用 title2／subheadline，Row 採 headline／subheadline／caption 與單行尾截斷，依 620／480／340 pt 降階。候選用標題、列標題及 metadata 比較工作區的密度，16／24 pt 分別示範元件內距與區塊間距。數值供審閱，字級、降階與 spacing 各由畫面持有。
+## 比較圖索引
 
-## 比較圖
-
-[Design Language 與 Inbox 基線](design-language-candidate.png)
-
-| 格 | 畫面 | 來源 |
+| 格 | 內容 | 來源 |
 |---|---|---|
-| 1–3 | Samples Light、Inbox Light 760／420 pt | 單檔候選原生視窗 |
-| 4–6 | Samples Dark、Inbox Dark 760／420 pt | 單檔候選原生視窗 |
-| 7、9 | InboxHeader Light／Dark | Xcode Canvas、RivetPresentation scheme、Standard · Needs Review |
-| 8、10 | PullRequestList Light／Dark | Xcode Canvas、RivetPresentation scheme、Six PRs and Open probes |
+| 1–3 | Login Welcome Light 17 pt、Inbox A Light、Inbox B Light | HC-01 的 Login 原生基線與這輪 workspace 候選 |
+| 4–6 | Login Welcome Dark 17 pt、Inbox A Dark、Inbox B Dark | 同上 |
+| 7–9 | 既有 Login tile、glyph、RIVET wordmark，並列 Light／Dark 的 16 pt compact 與 22 pt symbol-only | 第 7 格為第 4 格的原始畫面節錄。第 8、9 格為這輪 Samples |
+| 10–11 | 保留的 420 pt Inbox 候選，Light／Dark | 原窄版布局，長標題仍為單行尾截斷 |
+| 12–15 | InboxHeader 與 PullRequestList，各 Light／Dark | Xcode Canvas、RivetPresentation scheme、Standard · Needs Review 與 Six PRs and Open probes |
 
-候選的背景與標題帶入 Login 的冷灰藍色階，List 內容表面保留系統色，分隔線、選取與 Picker 隨原生外觀。420 pt 的長標題保留單行並出現尾端省略，metadata 仍可閱讀。Canvas 中 Header 的 filter 文字與 List 的 Open probes／紀錄區由各自的 preview wrapper 提供，產品元件使用其內的標題、控制項及列內容。
+既有 Login 的 36 pt tile、22 pt glyph、描邊 #CBE7FF、wordmark 與品牌面板維持原有組合。Workspace 以相同 glyph 幾何配上側欄既有的 Rivet 文字，symbol-only 展示獨立 glyph。當 glyph 與文字並列時，候選將 glyph 視為裝飾。未來若 symbol-only 獨自承擔識別或操作，應依使用情境提供可及性名稱。Canvas 中的 filter 文字、Open probes 與事件區是預覽容器證據。E024 的獨立容器與 I1-08 缺口沿用原記錄。 [I1 Draft PR #97](https://github.com/a129924/rivet/pull/97)
 
-重現候選的編譯方式見執行契約。從 checkout 根目錄編譯後，用下列參數啟動視窗：
+## 提取決策矩陣
 
-    "$preview_run/RivetDesignLanguagePreview" --view inbox --appearance dark --width 760
-
-樣本切換為 samples，明暗使用 light 或 dark，Inbox 寬度使用 760 或 420。重現 Canvas 時選擇 RivetPresentation scheme，以 Device Settings 的 Color Scheme 覆寫切換明暗，分別匯出兩個指定的 preview。預設 Rivet-Package scheme 曾選到 RivetLoginDemo 並要求 ENABLE_DEBUG_DYLIB。指定 Presentation scheme 後，四張圖均成功匯出。
-
-## 驗收結果
-
-| ID | 結果 | 證據 |
+| 分類 | 項目 | 建議與界線 |
 |---|---|---|
-| DL-01 | 通過 | 八組 sRGB 與既有責任可追溯，兩個指定 Preview 共四張 Canvas 匯出。 |
-| DL-02 | 待 HC-01 | 現行獨立 Login 驗收 App 已建置。AB02 獨立來源審查比對 28 筆輸入 SHA、6 筆 bundle entries 與實際連結輸入。新 App 尚待本次精確啟動確認，login-baseline.png 待擷取。 |
-| DL-03 | 通過 | 六張候選視窗擷取，同一 Swift 檔編譯。Light／Dark 及 760／420 pt 結果見比較圖。 |
-| DL-04 | 部分覆蓋 | 選取在列焦點時使用原生 accent，焦點移到 Picker 時轉灰且保持選列。實機 accent 多色 → 綠色時，Picker 與 selected row 同步改用綠色。Increase Contrast 開啟時控制邊線及選取文字可辨識，Open pull request 保持 AX disabled。Reduce Motion 開啟時方向鍵選取正常。設定已還原多色，兩項輔助使用設定皆還原為 off。切至另一應用程式並返回後仍保留選列，跨應用程式時 window key 狀態沒有獨立證據，該項保留未驗。 |
-| DL-05 | 部分覆蓋 | Tab 進入 Picker，下一次 Tab 進 List，Down 改選至第二列，Shift-Tab 返回 Picker。AX 觀察到列名、選取與停用語意。VoiceOver 實際朗讀待 Human，AX 觀察不支持聆聽判定。 |
-| DL-06 | 通過 | 獨立 Tester 的 xcrun swiftc、swift format lint --strict 與 swiftlint lint --strict --no-cache 皆 exit 0。七種無效參數於建窗前 exit 64 並輸出 usage。otool 僅系統 dylib。寫入各為 A／B 精確路徑，正式 Presentation 與 root package 零差異。 |
+| **Shared Swift implementation** | Background #FCFDFF／#161C26、Primary #192533／#F4F6FA、Secondary #647386／#9AA9B9，順序為 Light／Dark。既有 branch glyph 幾何 | 優先供 C／D amendment 評估的最小候選。Login 有直接用途，保留 sRGB、幾何與既有外觀。實際提取範圍待 HC-02 及正式計畫審查 |
+| **Documentation-only convention** | Onboarding／Workspace 的文字層級與密度、spacing、表面層級、圖示搭配與原生 controls 邊界 | 保留系統字體及 List、selection、accent、Picker、焦點與可及性語意。16／24 pt 僅為候選樣本，無全域 scale |
+| **Feature-specific styling** | Login 的 Surface 狀態圖示底、Border footer／PAT、Field #FFFFFF／#19232E、Button #252B33／#F3F6FA、Button label #FFFFFF／#19212C、按壓／停用／對比、40:60、13–21 pt 縮放、tile、wordmark、完整 artwork。Inbox 自有窄列政策 | 比較及責任盤點源自現行用法。候選維持 420 pt 原樣及單行尾截斷。正式 Inbox 的 620／480／340 pt 降階留在該畫面 |
+| **Deferred decision** | Workspace 是否採 B、Surface #F1F4F8／#222C39、Border #E1E7EE／#323C49 是否具獨立共用語意、symbol-only 的實際採用點 | B 提供明暗視覺依據，Surface 與 Border 分別由 Human 判斷。現階段只在隔離 fixture 使用。實際採用及可及性情境須貫穿 C／D 驗收 |
 
-候選 Swift SHA-256 為 2919c75558c203b89cd8bc87f3d5db648d1eaf8b252689d1a40ee80dad11a324。比較圖 SHA-256 為 4be80bc5b9515268b07ed094a4327b05e38a1908747fda17cabbc67e1b37180b。
+## 驗收及剩餘原生證據
 
-### DL-02 的精確 artifact 與擷取矩陣
+| 項目 | 結果 |
+|---|---|
+| DL-01 | 八組 Login 色值與既有責任已盤點。兩個指定 Inbox Preview 的四張 Canvas 基線隨比較圖保留。 |
+| DL-02／HC-01 | 八個限定 Login 狀態已用同一份審查通過的 App 分別啟動並擷取。780 × 500 pt 內容視窗、standard copy、同機、逐次獨立程序，擷取後全部關閉。 [八張基線](login-baseline.png) |
+| DL-03／修整 | 以相同 fixtures 與初始狀態擷取 A／B × Light／Dark。兩組品牌樣本及既有 420 pt 窄版已核對。 |
+| DL-04 | B Dark 實測 List 有焦點時以預設系統 accent 顯示藍色選列，返回 Picker 後保留同一選列。首輪候選曾實測綠色 accent、Increase Contrast、Reduce Motion 與設定還原。修整後 B 的非預設 accent、Increase Contrast、Reduce Motion，以及跨 App 切換時的原生 key window 狀態仍未重驗。 |
+| DL-05 | B Dark 實測 Tab 進入 Picker、再次 Tab 進 List、Down 選到 #68、Shift-Tab 返回 Picker，Open pull request 仍為 AX disabled。AX 樹顯示列名與選取。VoiceOver 實際朗讀、B Light 的鍵盤與可及性仍待驗。 |
+| DL-06 | 單檔 Swift 6 編譯、strict Swift format／SwiftLint 及九組無效參數通過。Workspace 的額外 CLI 選項與暫存 binary 只供 A／B。 |
 
-- App bundle 名稱為 RivetLoginAcceptance.app，ID 為 local.rivet.login-ui-acceptance。
-- Source manifest SHA-256 為 006b7d017956fcf6b7a92f68ab56d3cff1b68dbdd3fdcb4b687eb4d99610249c。
-- Binary SHA-256 為 338a4688fa210fc3939dd1c24b9c137b704f4856c2b2d1f0c1fd0842ffd189cc。
-- App tree SHA-256 為 6115cff9a9ce9cab33d7a4ffb3d686b06836e115f27446e20ac62118d4401628。
+Login 截圖是靜態基線，PAT 與 token failure 的長內容在初始 viewport 底端以外仍有內容。本輪截圖只核對該 viewport，尚無捲動、焦點或互動等效證據。正式 Swift 接線的 Login 前後比較保留至 C／D。
 
-以 780 × 500 pt、standard copy、同一 binary、同一台機器分別啟動。每組參數每次僅留下單一測試程序。
+### Login baseline 來源
 
-| --state | --appearance | --text-size |
-|---|---|---|
-| welcome | light | 17 |
-| welcome | dark | 17 |
-| pat | light | 17 |
-| waiting | dark | 17 |
-| browser-failure | light | 21 |
-| token-failure | light | 21 |
-| welcome | light | 13 |
-| welcome | light | 21 |
+App 為 RivetLoginAcceptance.app，bundle ID 為 local.rivet.login-ui-acceptance。審查核對 28 筆來源及 6 筆 bundle entries。Source manifest SHA-256 為 006b7d017956fcf6b7a92f68ab56d3cff1b68dbdd3fdcb4b687eb4d99610249c，binary SHA-256 為 338a4688fa210fc3939dd1c24b9c137b704f4856c2b2d1f0c1fd0842ffd189cc，App tree SHA-256 為 6115cff9a9ce9cab33d7a4ffb3d686b06836e115f27446e20ac62118d4401628。
 
-## Human 採用項目
+| 格 | --state | --appearance | --text-size |
+|---|---|---|---|
+| 1 | welcome | light | 17 |
+| 2 | welcome | dark | 17 |
+| 3 | pat | light | 17 |
+| 4 | waiting | dark | 17 |
+| 5 | browser-failure | light | 21 |
+| 6 | token-failure | light | 21 |
+| 7 | welcome | light | 13 |
+| 8 | welcome | light | 21 |
 
-1. 審閱背景及主次前景在工作區的辨識和閱讀效果，決定可共用的角色與明暗值。
-2. 審閱品牌 glyph 在淺／深表面及 16／22 pt 的呈現，確認哪些使用保留系統可及性語意。
-3. 確認原生 List／Picker、選取、視窗失焦和 contrast 的邊界，以及 typography／spacing 採文件規範的做法。
-4. Login 基線擷取、跨應用程式 key window 與 VoiceOver 實聽的缺口，按各自原生證據補齊或在採用決定中標記限制。
+### 重現 Workspace 候選
+
+在 feature checkout 根目錄執行，binary 留在 checkout 外：
+
+    preview_run="$(mktemp -d)"
+    xcrun swiftc -swift-version 6 -parse-as-library -g \
+      plan/rivet-design-language-adoption/evidence/VisualDesignPreview.swift \
+      -o "$preview_run/RivetDesignLanguagePreview"
+    "$preview_run/RivetDesignLanguagePreview" --view workspace --appearance dark --width 760 --surface native
+    "$preview_run/RivetDesignLanguagePreview" --view workspace --appearance dark --width 760 --surface unified
+
+Light 使用 --appearance light。樣本使用 --view samples --width 760。窄版使用 --view inbox --width 420，兩者省略 --surface。
+
+## HC-02 Human Review
+
+這一輪交付後停在 HC-02。待 Human 判斷 Workspace 表面方向、Surface 與 Border 的共用價值、glyph 使用方式與剩餘原生證據。確認最終 Design Language 後，才依採用結果形成 C／D amendment 並送正式 Plan Review。
