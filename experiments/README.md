@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #101 Rivet 視覺語言採用與清理
+
+PR #101 於 `2026-11-26T07:51:34Z` 合併至 `dev` 並關閉，合併提交為 `e53214ed9327174c316724c4b8ba28e227526d4f`。HC-02 採用 Variant B 視覺方向。HC-05 最終採用共用四色、既有 branch glyph 與 Login 接線。Login 是本次唯一正式使用端。Typography／Spacing 採文件規範，Border 色值與 symbol-only 的正式位置維持待決。 [PR #101](https://github.com/a129924/rivet/pull/101) · [Visual Design Contract](https://github.com/a129924/rivet/blob/v0.1.97-rivet-design-language-adoption/docs/presentation/visual-design-contract.md)
+
+八組 Login 前後圖有七組像素一致，Waiting 的差異限進度轉圈。Human 回報三組 VoiceOver 實聽通過。隔離整合版通過 589 項測試。SwiftPM bundle fallback 未獨立隔離，Variant B 的七項原生驗證缺口移交未來 PR Inbox topic。 [驗證摘要](VALIDATION-SUMMARY.md#pr-101-rivet-視覺語言採用與整合驗收)
+
+Annotated tag `v0.1.97-rivet-design-language-adoption` 已推送並讀回，指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.97-rivet-design-language-adoption) · [結案帳本](https://github.com/a129924/rivet/blob/v0.1.97-rivet-design-language-adoption/plan/rivet-design-language-adoption/rivet-design-language-adoption.step.md)
+
 ## PR #104 PR Reader 行內留言來源選擇與清理
 
 PR #104 於 `2026-11-26T07:39:37Z` 合併至 `dev` 並關閉。合併提交 `f556a65f64ed9fef0b0958d82d6e83d4efd30844` 與離線受測的 feature 提交 `04b553673eb671da26ba4a08b7f2b12fbb8a466f` 的 Git tree 相同。 [PR #104](https://github.com/a129924/rivet/pull/104)
