@@ -1,0 +1,51 @@
+query ReviewThreads($owner: String!, $name: String!, $number: Int!, $after: String) {
+  repository(owner: $owner, name: $name) {
+    id
+    nameWithOwner
+    pullRequest(number: $number) {
+      id
+      number
+      repository { id }
+      reviewThreads(first: 50, after: $after) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          path
+          subjectType
+          line
+          startLine
+          originalLine
+          originalStartLine
+          isResolved
+          isOutdated
+          pullRequest { id }
+          comments(first: 20) {
+            pageInfo { hasNextPage endCursor }
+            nodes { ...ReviewThreadCommentFields }
+          }
+        }
+      }
+    }
+  }
+}
+
+query ReviewThreadComments($threadID: ID!, $after: String!) {
+  node(id: $threadID) {
+    ... on PullRequestReviewThread {
+      id
+      pullRequest { id }
+      comments(first: 20, after: $after) {
+        pageInfo { hasNextPage endCursor }
+        nodes { ...ReviewThreadCommentFields }
+      }
+    }
+  }
+}
+
+fragment ReviewThreadCommentFields on PullRequestReviewComment {
+  id
+  body
+  author { login }
+  replyTo { id }
+  pullRequest { id }
+}

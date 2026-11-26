@@ -23,7 +23,8 @@ struct StaticIsolationTests {
         ["RivetPRReaderPresentation", reader, "RivetPRReaderGitHub", gitHub]
       ),
       "RivetPRReaderGitHub": (
-        "BoundedContexts/PRReader/Infra/GitHub/REST", [reader, gitHub, "RivetHTTPClient"]
+        "BoundedContexts/PRReader/Infra/GitHub",
+        [reader, gitHub, "Apollo", "ApolloAPI", "RivetHTTPClient"]
       ),
     ]
     #expect(
@@ -482,7 +483,6 @@ extension StaticIsolationTests {
       encoding: .utf8)
     #expect(fetcherSource.contains("async throws(OAuthTokenRefreshError)"))
     #expect(!fetcherSource.contains("throws(any Error"))
-
   }
 }
 
