@@ -6,6 +6,7 @@ package enum GitHubAPIFailure: Error, Sendable, Equatable {
   case forbidden
   case unclassifiedForbidden
   case notFound
+  case unprocessableContent
   case rateLimited
   case serverError(statusCode: Int)
   case unexpectedStatus(statusCode: Int)
@@ -19,6 +20,7 @@ package struct GitHubResponseClassifier: Sendable {
     case 401: .unauthorized
     case 403: classifyForbidden(response)
     case 404: .notFound
+    case 422: .unprocessableContent
     case 429: .rateLimited
     case 500...599: .serverError(statusCode: response.statusCode)
     default: .unexpectedStatus(statusCode: response.statusCode)

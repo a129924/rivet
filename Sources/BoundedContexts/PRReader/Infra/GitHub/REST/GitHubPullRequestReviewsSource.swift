@@ -79,7 +79,7 @@ package struct GitHubPullRequestReviewsSource: Sendable {
     switch GitHubResponseClassifier().classifyFailure(response) {
     case .unauthorized, .notFound, .forbidden, .unclassifiedForbidden:
       throw .notReadable
-    case .rateLimited, .serverError, .unexpectedStatus:
+    case .unprocessableContent, .rateLimited, .serverError, .unexpectedStatus:
       throw .unavailable
     }
   }

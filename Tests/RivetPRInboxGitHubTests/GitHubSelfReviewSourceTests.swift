@@ -95,7 +95,7 @@ struct GitHubSelfReviewSourceTests {
     #expect(await stub.requests.map(\.url.value.path) == ["/user"])
   }
 
-  @Test(arguments: [401, 404, 429, 503, 201, 302])
+  @Test(arguments: [401, 404, 422, 429, 503, 201, 302])
   func rejectedAccountResponseStopsBeforeSearch(_ status: Int) async {
     let stub = RESTStub([.success(.json(#"{"login":"my-user"}"#, status: status))])
     #expect(await inbox(stub).refresh() == .failure(.unavailable))

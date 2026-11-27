@@ -74,7 +74,7 @@ struct GitHubPullRequestUnifiedDiffSourceTests {
     #expect(await client.requests.count == 1)
   }
 
-  @Test(arguments: [201, 304, 406, 429, 503])
+  @Test(arguments: [201, 304, 406, 422, 429, 503])
   func mapsUnavailableStatus(_ status: Int) async {
     let client = UnifiedDiffRESTStub(.success(response(status: status)))
     let source = GitHubPullRequestUnifiedDiffSource(client: client)

@@ -17,6 +17,7 @@ struct StaticIsolationTests {
       bridge: ("PRReaderWebViewBridge", [reader]),
       gitHub: ("BoundedContexts/GitHubIntegration", ["Apollo", "ApolloAPI", "RivetHTTPClient"]),
       repositoryPullRequests: (repositoryPullRequests, [gitHub, "RivetHTTPClient"]),
+      "RivetPRReviewGitHub": ("RivetPRReviewGitHub", [gitHub, "RivetHTTPClient"]),
       "RivetPRReaderPresentation": ("RivetPRReaderPresentation", [reader]),
       "RivetPRReaderComposition": (
         "RivetPRReaderComposition",
@@ -78,7 +79,6 @@ struct StaticIsolationTests {
       @preconcurrency import struct ApolloAPI.Selection
       @_exported import class RivetHTTPClient.HTTPClient
       """
-
     #expect(
       try importedModuleRoots(in: source)
         == ["Foundation", "Security", "ApolloAPI", "RivetHTTPClient"]

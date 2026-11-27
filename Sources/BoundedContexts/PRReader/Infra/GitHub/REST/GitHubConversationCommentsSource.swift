@@ -84,7 +84,7 @@ package struct GitHubConversationCommentsSource: Sendable {
     case .unauthorized, .notFound, .forbidden, .unclassifiedForbidden,
       .unexpectedStatus(statusCode: 410):
       throw .notReadable
-    case .rateLimited, .serverError, .unexpectedStatus:
+    case .unprocessableContent, .rateLimited, .serverError, .unexpectedStatus:
       throw .unavailable
     }
   }

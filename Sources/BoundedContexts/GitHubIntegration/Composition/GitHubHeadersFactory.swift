@@ -2,6 +2,7 @@ import RivetHTTPClient
 
 package enum GitHubHeaderRequirement: Hashable, Sendable {
   case standardREST
+  case standardRESTWithJSONBody
   case loginRuntimeREST
   case pullRequestUnifiedDiffREST
 }
@@ -14,6 +15,7 @@ package struct GitHubHeadersFactory: Sendable {
   package static let standard = Self(standardREST: .standardREST, login: .loginAccountREST)
 
   private let standardREST: HeadersProvider
+  private let standardRESTWithJSONBody: HeadersProvider
   private let login: HeadersProvider
   private let pullRequestUnifiedDiff: HeadersProvider
 
@@ -24,6 +26,7 @@ package struct GitHubHeadersFactory: Sendable {
 
   private init(standardREST: HeadersProvider, login: HeadersProvider) {
     self.standardREST = standardREST
+    self.standardRESTWithJSONBody = standardREST.makeStandardRESTWithJSONBody()
     self.login = login
     self.pullRequestUnifiedDiff = standardREST.makePullRequestUnifiedDiffREST()
   }
@@ -35,6 +38,7 @@ package struct GitHubHeadersFactory: Sendable {
     guard unique.count <= 1 else { throw .conflictingRESTRequirements }
     switch unique.first {
     case .none, .standardREST: return standardREST.headers
+    case .standardRESTWithJSONBody: return standardRESTWithJSONBody.headers
     case .loginRuntimeREST: return login.headers
     case .pullRequestUnifiedDiffREST: return pullRequestUnifiedDiff.headers
     }
