@@ -30,7 +30,7 @@ internal final class GitHubHTTPClient: GitHubRestClient {
   ) -> URLSession {
     URLSession(
       configuration: configuration,
-      delegate: GitHubHTTPRedirectBlocker(),
+      delegate: GitHubHTTPRedirectDelegate(policy: DefaultGitHubRESTRedirectPolicy()),
       delegateQueue: nil)
   }
 
@@ -143,15 +143,5 @@ internal final class GitHubHTTPClient: GitHubRestClient {
     case .refresh: return .credentialLifecycle(stage: .refresh)
     case .persist: return .credentialLifecycle(stage: .persist)
     }
-  }
-}
-
-internal final class GitHubHTTPRedirectBlocker: NSObject, URLSessionTaskDelegate, Sendable {
-  func urlSession(
-    _ session: URLSession, task: URLSessionTask,
-    willPerformHTTPRedirection response: HTTPURLResponse,
-    newRequest request: URLRequest, completionHandler: @escaping @Sendable (URLRequest?) -> Void
-  ) {
-    completionHandler(nil)
   }
 }
