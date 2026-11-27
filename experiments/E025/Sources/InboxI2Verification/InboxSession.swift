@@ -1,11 +1,14 @@
 import Observation
 import RivetPRInbox
+import RivetPresentation
 
 struct InboxRow: Identifiable, Equatable {
   struct Identity: Hashable {
     let owner: String
     let repository: String
     let number: Int
+
+    var presentationID: PullRequestRowPresentation.ID { "\(owner)/\(repository)#\(number)" }
   }
 
   let id: Identity
@@ -18,6 +21,15 @@ struct InboxRow: Identifiable, Equatable {
 
   var repositoryLabel: String { "\(id.owner)/\(id.repository)" }
   var numberLabel: String { "#\(id.number)" }
+
+  var presentation: PullRequestRowPresentation {
+    PullRequestRowPresentation(
+      id: id.presentationID,
+      title: title,
+      repositoryLabel: repositoryLabel,
+      numberLabel: numberLabel
+    )
+  }
 }
 
 enum InboxLoadResult: Sendable {
@@ -35,7 +47,7 @@ enum LivePrecondition: String, Sendable {
 
 @MainActor @Observable
 final class InboxSession {
-  enum Status: Equatable {
+  enum Status: Hashable {
     case initial, loading, ready, empty, unavailable, stale
     case liveNotRun(LivePrecondition)
   }
@@ -49,9 +61,15 @@ final class InboxSession {
 
   private(set) var snapshot = Snapshot()
 
-  func select(_ id: InboxRow.Identity?) {
-    guard let id, snapshot.rows.contains(where: { $0.id == id }) else { return }
-    snapshot.selection = id
+  var presentationSelection: PullRequestRowPresentation.ID? {
+    snapshot.selection?.presentationID
+  }
+
+  func select(presentationID: PullRequestRowPresentation.ID?) {
+    guard let presentationID,
+      let row = snapshot.rows.first(where: { $0.id.presentationID == presentationID })
+    else { return }
+    snapshot.selection = row.id
   }
 
   func refresh(

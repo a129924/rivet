@@ -28,11 +28,38 @@ public struct PullRequestRowPresentation: Identifiable, Hashable, Sendable {
     self.secondaryMetadataLabels = secondaryMetadataLabels
   }
 
+  /// Use this initializer when the caller lacks an author or relative time label.
+  public init(
+    id: String,
+    title: String,
+    repositoryLabel: String,
+    numberLabel: String,
+    authorLabel: String? = nil,
+    relativeTimeLabel: String? = nil,
+    contextLabel: String? = nil,
+    secondaryMetadataLabels: [String] = []
+  ) {
+    self.init(
+      id: id,
+      title: title,
+      repositoryLabel: repositoryLabel,
+      numberLabel: numberLabel,
+      authorLabel: authorLabel ?? "",
+      relativeTimeLabel: relativeTimeLabel ?? "",
+      contextLabel: contextLabel,
+      secondaryMetadataLabels: secondaryMetadataLabels
+    )
+  }
+
+  var authorTimeText: String {
+    [authorLabel, relativeTimeLabel].filter { !$0.isEmpty }.joined(separator: " · ")
+  }
+
   var accessibilityLabelText: String {
     [
       title,
       "\(repositoryLabel) \(numberLabel)",
-      authorLabel,
+      authorLabel.isEmpty ? nil : authorLabel,
       contextLabel,
     ]
     .compactMap { $0 }
@@ -40,7 +67,7 @@ public struct PullRequestRowPresentation: Identifiable, Hashable, Sendable {
   }
 
   var accessibilityValueText: String {
-    ([relativeTimeLabel] + secondaryMetadataLabels)
+    ([relativeTimeLabel].filter { !$0.isEmpty } + secondaryMetadataLabels)
       .joined(separator: ", ")
   }
 }

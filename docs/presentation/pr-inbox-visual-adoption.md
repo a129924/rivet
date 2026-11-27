@@ -25,3 +25,7 @@ E024 的獨立 macOS 驗證 App 使用合成清單，完成 I1-01～07 回歸及
 - **真人驗收（I2-07）**。使用同一 OAuth App 重新登入後，獨立從 GitHub PR 詳情確認一筆樣本仍為 open，且作者與 E025 登入帳號一致。940 pt 原生清單的 owner、repo、編號與標題均相符。 [E025 真人驗收紀錄](../../experiments/E025/evidence/i2-07-live.md) · [I2 步驟帳本](../../plan/pr-inbox-i2-verification/pr-inbox-i2-verification.step.md)
 
 正式 App 接線、Reader 與 repository 導覽、資料篩選與復原策略另行驗證。
+
+### I2 正式元件接入
+
+E025 的受控與真人入口共用正式 `PullRequestList`、`PullRequestRow` 與 `InboxListStatus`。四欄清單省略缺席的作者與時間，狀態元件呈現載入、成功零筆、首次讀取失敗及舊資料提示。呼叫端仍持有選取、焦點、查詢與 OAuth 工作階段，依最後一份完整結果決定可讀列。採用後的驗收以受控原生回歸為準，真人上屏沿用原 I2-07 證據。 [採用後驗收](../../experiments/E025/evidence/native-list-adoption.md)

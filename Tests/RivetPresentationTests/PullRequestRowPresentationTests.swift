@@ -93,6 +93,48 @@ struct PullRequestRowPresentationTests {
     #expect(presentation.accessibilityValueText == "1d")
   }
 
+  @Test(arguments: [
+    ("Alex", "2h", "題目, sample/core #42, Alex", "2h, 待確認", "Alex · 2h"),
+    ("Alex", "", "題目, sample/core #42, Alex", "待確認", "Alex"),
+    ("", "2h", "題目, sample/core #42", "2h, 待確認", "2h"),
+    ("", "", "題目, sample/core #42", "待確認", ""),
+  ])
+  func authorAndTimeOmitMissingSeparators(
+    author: String,
+    time: String,
+    label: String,
+    value: String,
+    authorTime: String
+  ) {
+    let presentation = PullRequestRowPresentation(
+      id: "sample/core#42",
+      title: "題目",
+      repositoryLabel: "sample/core",
+      numberLabel: "#42",
+      authorLabel: author,
+      relativeTimeLabel: time,
+      secondaryMetadataLabels: ["待確認"]
+    )
+
+    #expect(presentation.accessibilityLabelText == label)
+    #expect(presentation.accessibilityValueText == value)
+    #expect(presentation.authorTimeText == authorTime)
+  }
+
+  @Test
+  func acceptsOnlyTheFourRequiredFields() {
+    let presentation = PullRequestRowPresentation(
+      id: "sample/core#42",
+      title: "題目",
+      repositoryLabel: "sample/core",
+      numberLabel: "#42"
+    )
+
+    #expect(presentation.accessibilityLabelText == "題目, sample/core #42")
+    #expect(presentation.accessibilityValueText.isEmpty)
+    #expect(presentation.authorTimeText.isEmpty)
+  }
+
   @Test
   func previewFixturesHaveUniqueIdentitiesAndAreDeterministic() {
     let expected: [PullRequestRowPresentation] = [
