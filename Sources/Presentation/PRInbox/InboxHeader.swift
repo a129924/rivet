@@ -57,13 +57,29 @@ public struct InboxHeaderPresentation: Equatable, Sendable {
 public struct InboxHeader: View {
   private let presentation: InboxHeaderPresentation
   @Binding var selectedFilter: InboxHeaderFilter
+  private let palette: RivetPalette?
+  private let isFilterEnabled: Bool
 
   public init(
     presentation: InboxHeaderPresentation,
     selectedFilter: Binding<InboxHeaderFilter>
   ) {
+    self.init(
+      presentation: presentation, selectedFilter: selectedFilter,
+      palette: nil, isFilterEnabled: true
+    )
+  }
+
+  init(
+    presentation: InboxHeaderPresentation,
+    selectedFilter: Binding<InboxHeaderFilter>,
+    palette: RivetPalette?,
+    isFilterEnabled: Bool
+  ) {
     self.presentation = presentation
     self._selectedFilter = selectedFilter
+    self.palette = palette
+    self.isFilterEnabled = isFilterEnabled
   }
 
   public var body: some View {
@@ -95,12 +111,17 @@ public struct InboxHeader: View {
     VStack(alignment: .leading, spacing: 3) {
       Text(verbatim: presentation.title)
         .font(.title2.weight(.semibold))
-        .foregroundStyle(.primary)
+        .foregroundStyle(
+          palette.map { AnyShapeStyle($0.primary) } ?? AnyShapeStyle(HierarchicalShapeStyle.primary)
+        )
         .accessibilityAddTraits(.isHeader)
 
       Text(verbatim: presentation.subtitle)
         .font(.subheadline)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(
+          palette.map { AnyShapeStyle($0.secondary) }
+            ?? AnyShapeStyle(HierarchicalShapeStyle.secondary)
+        )
         .lineLimit(1)
         .truncationMode(.tail)
     }
@@ -113,6 +134,7 @@ public struct InboxHeader: View {
       }
     }
     .pickerStyle(.segmented)
+    .disabled(!isFilterEnabled)
     .labelsHidden()
     .accessibilityLabel("Inbox filter")
   }

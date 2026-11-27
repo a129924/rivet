@@ -1,4 +1,5 @@
 import Accessibility
+import AppKit
 import Foundation
 import RivetPresentation
 import SwiftUI
@@ -7,6 +8,9 @@ struct InboxWindow: View {
   @Binding var command: InboxCommand?
   @State private var session = InboxSession(trace: writeTrace)
   @State private var appearance: ColorScheme?
+  @State private var selectedFilter: InboxHeaderFilter = .all
+  @State private var isFilterEnabled = false
+  @State private var showsLongTitle = false
   @State private var focusRequest = FocusRequest(target: .list)
   @FocusState private var listFocused: Bool
   @FocusState private var otherFocus: InboxFocus?
@@ -20,43 +24,25 @@ struct InboxWindow: View {
   private var focus: InboxFocus? { listFocused ? .list : otherFocus }
 
   var body: some View {
-    HStack(spacing: 0) {
+    InboxWorkspace(
+      header: InboxHeaderPresentation(
+        title: "PR Inbox", subtitle: "挑選你開啟、待自查的 Pull Request"
+      ),
+      selectedFilter: $selectedFilter,
+      isFilterEnabled: isFilterEnabled
+    ) {
       sidebar
-      Divider()
-      VStack(spacing: 0) {
-        InboxHeader(
-          presentation: InboxHeaderPresentation(
-            title: "PR Inbox", subtitle: "挑選你開啟、待自查的 Pull Request"
-          ),
-          selectedFilter: .constant(.all)
-        )
-        .disabled(true)
-        Divider()
-        if let status = session.status {
-          statusView(status)
-          if !session.rows.isEmpty { Divider() }
-        }
-        if session.rows.isEmpty {
-          Spacer(minLength: 0)
-            .frame(maxWidth: .infinity)
-        } else {
-          PullRequestList(
-            items: session.rows,
-            selection: Binding(
-              get: { session.selection },
-              set: { session.select($0, focus: focus) }
-            ),
-            focus: $listFocused,
-            canOpen: session.canOpen,
-            onOpen: { session.open($0, focus: focus) }
-          )
-        }
-        Divider()
-        verification
-      }
+    } content: {
+      content
+    } footer: {
+      verification
     }
-    .frame(minWidth: 720, minHeight: 390)
-    .background(Color(nsColor: .windowBackgroundColor))
+    .frame(minWidth: 420, minHeight: 390)
+    .onGeometryChange(for: CGFloat.self) {
+      $0.size.width
+    } action: { width in
+      Self.writeEvidence(LayoutSample(region: "workspace", widthPoints: width))
+    }
     .background(
       InboxBoundaryKeys { edge in
         guard listFocused else { return false }
@@ -81,27 +67,55 @@ struct InboxWindow: View {
   }
 
   private var sidebar: some View {
-    VStack(alignment: .leading, spacing: 14) {
-      Text("Rivet")
-        .font(.headline)
+    VStack(alignment: .leading, spacing: 4) {
       Label("Inbox", systemImage: "tray")
         .font(.body.weight(.medium))
-      Divider()
       Text("Repositories")
         .font(.caption.weight(.semibold))
-        .foregroundStyle(.secondary)
         .accessibilityAddTraits(.isHeader)
-      ForEach(["sample/core", "sample/ui"], id: \.self) { repository in
-        Label(repository, systemImage: "folder")
-          .foregroundStyle(.secondary)
-      }
-      Spacer()
+      Text("sample/core · sample/ui")
+        .font(.caption)
     }
-    .padding(16)
-    .frame(width: 174, alignment: .leading)
-    .background(.regularMaterial)
-    .accessibilityElement(children: .contain)
-    .accessibilityLabel("側欄")
+  }
+
+  private var content: some View {
+    VStack(spacing: 0) {
+      if let status = session.status {
+        statusView(status)
+        if !session.rows.isEmpty { Divider() }
+      }
+      if !session.rows.isEmpty {
+        PullRequestList(
+          items: session.rows.map(displayRow),
+          selection: Binding(
+            get: { session.selection },
+            set: { session.select($0, focus: focus) }
+          ),
+          focus: $listFocused,
+          canOpen: session.canOpen,
+          onOpen: { session.open($0, focus: focus) }
+        )
+        .onGeometryChange(for: CGFloat.self) {
+          $0.size.width
+        } action: { width in
+          Self.writeEvidence(LayoutSample(region: "list", widthPoints: width))
+        }
+      }
+    }
+  }
+
+  private func displayRow(_ row: PullRequestRowPresentation) -> PullRequestRowPresentation {
+    guard showsLongTitle, row.id == InboxFixture.rowB.id else { return row }
+    return PullRequestRowPresentation(
+      id: row.id,
+      title: "整理工作台的鍵盤操作，保留各個原生控制項的焦點、選取與可及性",
+      repositoryLabel: row.repositoryLabel,
+      numberLabel: row.numberLabel,
+      authorLabel: row.authorLabel,
+      relativeTimeLabel: row.relativeTimeLabel,
+      contextLabel: row.contextLabel,
+      secondaryMetadataLabels: row.secondaryMetadataLabels
+    )
   }
 
   private func statusView(_ status: InboxStatus) -> some View {
@@ -174,11 +188,29 @@ struct InboxWindow: View {
       }
     case .appearance(let appearance):
       self.appearance = appearance
+    case .togglePicker:
+      isFilterEnabled.toggle()
+    case .toggleLongTitle:
+      showsLongTitle.toggle()
+    case .width(let width):
+      if let window = NSApp.keyWindow, let contentSize = window.contentView?.frame.size {
+        window.setContentSize(NSSize(width: width, height: contentSize.height))
+      }
     }
   }
 
+  private struct LayoutSample: Encodable {
+    let action = "layout"
+    let region: String
+    let widthPoints: CGFloat
+  }
+
   private static func writeTrace(_ trace: InboxTrace) {
-    guard var line = try? JSONEncoder().encode(trace) else { return }
+    writeEvidence(trace)
+  }
+
+  private static func writeEvidence(_ evidence: some Encodable) {
+    guard var line = try? JSONEncoder().encode(evidence) else { return }
     line.append(0x0A)
     FileHandle.standardOutput.write(line)
   }

@@ -56,3 +56,11 @@ open --stdout "$INBOX_I1_RUN/native.jsonl" \
 ## 結論與限制
 
 現有公開元件加上 E024 的 Session 與局部鍵盤接線，在這個獨立視窗和固定合成資料中支持已觀察的原生操作。正式 Presentation 原始碼及根套件保持為此實驗的唯讀依賴。I1 採用判斷等待剩餘的人類驗收。真實 GitHub 資料、Reader 或正式產品導覽另行驗證。
+
+## A1 · Variant B 驗收
+
+A1 使用正式 `InboxWorkspace` 容器及既有原生 List／Picker。按上文命令建置並啟動 App。驗證情境選單增加「切換驗收用 Picker」、「切換長標題」及「內容寬度」的 420／940 pt 選項。Picker 預設停用。啟用只練習原生鍵盤和強調色，固定的 PR 資料及順序保持原樣。原 A／B／C 資料與舊 E024 證據仍可重現。
+
+[Variant B 驗收紀錄](evidence/variant-b-native.md) · [原生 trace](evidence/variant-b-native.jsonl) · [明暗與窄版截圖索引](evidence/variant-b-screens.png)
+
+真人驗收時，先在完整視窗選 B，切到另一個 App，觀察 Inbox 非作用中時的選列，再切回確認 B。VoiceOver 請核對 compact 品牌、完整選列標題、repository／PR 編號和選取狀態，並以情境選單逐一確認載入、空、錯誤及離線的焦點和實際朗讀。Picker 啟用與停用各確認一次。
