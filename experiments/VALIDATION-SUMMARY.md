@@ -4,6 +4,19 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #111 GitHub REST 預設重新導向政策離線驗收
+
+PR #111 於 `2026-11-27T08:09:45Z` 合併至 `dev` 並關閉，共帶入 9 檔變更。合併提交 `2990163ad4ce3252228c1f01c088fe05263723c8` 與受測提交 `54e1a3b4453576ff17b710d66f2a80c61f51719d` 的 Git tree 均為 `923feabc1787942ab724859fc32fa55629cd8ad7`。 [PR #111](https://github.com/a129924/rivet/pull/111) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.105-github-rest-redirect-policy/plan/github-rest-redirect-policy/github-rest-redirect-policy.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 政策與接線 | 分別驗證預設政策拒絕同主機與跨主機的轉址、delegate 依判定回呼一次，以及 production session factory 確實接上預設拒絕政策。 |
+| 302 與 401 回歸 | 離線 fixture 確認 302 狀態碼、`Location` 和回應內容原樣保留，原 URL 僅發送一次且 OAuth 不觸發 refresh。401 復原仍最多重送一次。 |
+| 最終離線驗收 | `swift test --filter GitHubIntegrationTests` 通過 342 項測試與 39 個 suite。Swift format、SwiftLint、差異檢查與提交 hooks 均通過，獨立 Reviewer 核准。清理沿用受測提交的結果。 |
+| 本機審閱 | PR Lens 以實際 PR 差異驗證並渲染一張 SVG。Archify 通過 9 項 showcase 檢查及四種桌面尺寸檢核。Graphify 無既有 AST 圖，已用原始碼核對接線。 |
+
+本機與遠端的 annotated tag `v0.1.105-github-rest-redirect-policy` 物件均為 `deda2362647176234490eec80ee5a98cda4b1f6b`，解參照後指向合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已確認移除。 [實驗索引](README.md#pr-111-github-rest-預設重新導向政策與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.105-github-rest-redirect-policy)
+
 ## PR #109 GitHub 單筆通知已讀離線驗收
 
 [PR #109](https://github.com/a129924/rivet/pull/109) 於 `2026-11-27T06:57:40Z` 合併至 `dev` 並關閉，共帶入 9 個檔案的變更。合併提交為 `31b2dc311db10b02e799f210edbea69c19046c54`，最終受測提交為 `abae635a35907bbf449e14d7c0fe95a2be05d5a9`。從合併提交的第一個 parent 核對本題差異，stable patch ID 與受測差異相同，均為 `8d382609f2ba63fa99d8e158ee501b06406cd9a1`。 [API Catalog](../docs/github-api/rest-notifications-local-state.md#github-notification-threads) · [執行帳本](../plan/github-notification-mark-as-read/github-notification-mark-as-read.step.md)
