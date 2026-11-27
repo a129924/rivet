@@ -1,0 +1,19 @@
+windowWidthPt=940
+ AXWindow | inbox | PR Inbox · I2 驗證
+  AXGroup
+   AXGroup | 側欄
+    AXStaticText | Rivet
+    AXStaticText | Inbox
+   AXHeading | PR Inbox
+   AXRadioGroup | Inbox filter, Inbox filter
+    AXRadioButton | Needs Review
+    AXRadioButton | Mentioned
+    AXRadioButton | All
+   AXStaticText | 挑選你開啟、待自查的 Pull Request
+   AXHeading | i2-status | 真人驗收未執行。此 App 未配置既有 OAuth 工作階段。
+   AXButton | i2-refresh | 重新整理
+  AXButton
+  AXButton
+   AXGroup
+  AXButton
+  AXStaticText | PR Inbox · I2 驗證

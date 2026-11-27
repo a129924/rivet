@@ -1,0 +1,21 @@
+windowWidthPt=940
+ AXWindow | inbox | PR Inbox · I2 驗證
+  AXGroup
+   AXGroup | 側欄
+    AXStaticText | Rivet
+    AXStaticText | Inbox
+   AXHeading | PR Inbox
+   AXRadioGroup | Inbox filter, Inbox filter
+    AXRadioButton | Needs Review
+    AXRadioButton | Mentioned
+    AXRadioButton | All
+   AXStaticText | 挑選你開啟、待自查的 Pull Request
+   AXHeading | i2-status | 目前沒有待自查的 Pull Request
+   AXStaticText | 受控情境
+   AXPopUpButton | i2-fixture | 空清單
+   AXButton | i2-refresh | 重新整理
+  AXButton
+  AXButton
+   AXGroup
+  AXButton
+  AXStaticText | PR Inbox · I2 驗證

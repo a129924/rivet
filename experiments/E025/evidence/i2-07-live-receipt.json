@@ -1,0 +1,54 @@
+{
+  "testCase": "I2-07",
+  "capturedAt": "2026-11-27T13:47:07+08:00",
+  "gitBase": "0623246ae36da158c4d858e9290087b28e9ae9db",
+  "sourceManifestSHA256": "88cf3d5820ad0787a1e08c4d5ab890132fdf287aaca30b3e754acfeca1e8802b",
+  "signing": {
+    "same_explicit_app_id": true,
+    "same_team": true,
+    "same_exact_private_group": true,
+    "same_original_signing_leaf": true,
+    "profile_allows_this_mac": true,
+    "codesign_strict": true,
+    "old_profile_sha256": "f8bc28109f7df3933ec3f20772d7d7afe73e7a155d6519e80c6d4b53c57d8802",
+    "renewed_profile_sha256": "f5c59a550b84170a51ac960834df9d87951ac1f6f8bec8af4df0dbb2a6e2b0a6",
+    "renewed_profile_expires_utc": "2026-12-04T05:37:43+00:00",
+    "controlled_binary_sha256": "1f3770deb47b18f822781790f9b5464c9dbcc20034ca97bb867df9285fcb2356",
+    "signed_binary_sha256": "210095f1d7ba82bea062c6c0afa381a45c1d402142bfba13f4ee06bfe3dcf66e"
+  },
+  "verifiedNativeBinary": {
+    "same_explicit_app_id": true,
+    "same_team": true,
+    "same_private_group": true,
+    "same_signing_leaf": true,
+    "e025_isolated_oauth_namespace": true,
+    "codesign_strict": true,
+    "signed_binary_sha256": "8400c23c915e54841580ba56ab7b8553706dd01454dba776e5cc4dea1ef58310",
+    "profile_sha256": "f5c59a550b84170a51ac960834df9d87951ac1f6f8bec8af4df0dbb2a6e2b0a6"
+  },
+  "initialRestore": "failed",
+  "loginWithStoredAppCredentials": "incorrect_client_credentials",
+  "loginWithVerifiedAppCredentials": "oauthSaved",
+  "loginVerifiedOriginalGitHubAccount": true,
+  "independentGitHubCheck": {
+    "url": "https://github.com/a129924/mlops-async/pull/72",
+    "state": "open",
+    "authorMatches": true
+  },
+  "native": {
+    "nativeWindowWidthPt": 940,
+    "numberMatches": true,
+    "originalSignedWindow": true,
+    "ownerMatches": true,
+    "privateWindowCapture": true,
+    "repositoryMatches": true,
+    "status": "matched",
+    "titleMatches": true,
+    "viewerMatchesAuthor": true
+  },
+  "screenshotSHA256": "f5a4f6a4ecfa9300f31cbdf51b06187e4954319c09ffb43ad3566f4b94ac92a8",
+  "localScreenshotOCR": {
+    "repositoryAndNumberVisible": true,
+    "titleVisible": true
+  }
+}
