@@ -25,7 +25,7 @@
 | Review threads、resolved 與 outdated | MVP 唯讀 | [GraphQL PR State](graphql-pr-state.md) |
 | Approve、request changes、resolve/unresolve、merge | 後續寫入 | [REST Discussion & Reviews](rest-discussion-reviews.md)、[GraphQL Write Actions](graphql-write-actions.md) |
 | Mergeable、merge state、review decision | MVP 唯讀 | [GraphQL PR State](graphql-pr-state.md) |
-| GitHub notification thread 讀取 | 後續唯讀 | [REST Notifications & Local State](rest-notifications-local-state.md) |
+| GitHub notification thread 讀取 | 後續唯讀，已提供套件內按需讀取 | [REST Notifications & Local State](rest-notifications-local-state.md) |
 | 將 GitHub notification thread 標為已讀 | 後續寫入 | [REST Notifications & Local State](rest-notifications-local-state.md) |
 | App 內的 comment-level last-seen | 可選本機狀態 | [REST Notifications & Local State](rest-notifications-local-state.md) |
 

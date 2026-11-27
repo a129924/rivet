@@ -36,7 +36,7 @@ struct GitHubHTTPTransportTests {
     defer { RawRedirectURLProtocol.reset() }
     let configuration = URLSessionConfiguration.ephemeral
     configuration.protocolClasses = [RawRedirectURLProtocol.self]
-    let client = GitHubHTTPClient.makeHTTPClient(configuration: configuration)
+    let client = GitHubRESTTransport.makeClient(configuration: configuration)
     let endpoint = GitHubAuthenticatedUserEndpoint.shared
     let original = HTTPRequest(url: try endpoint.makeURL(), method: endpoint.method)
     let authenticated = try BearerAuth(token: "local-test-token").applying(to: original)

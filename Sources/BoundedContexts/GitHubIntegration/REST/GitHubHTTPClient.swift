@@ -1,6 +1,15 @@
 import Foundation
 import RivetHTTPClient
 
+package enum GitHubRESTTransport {
+  /// Creates a bare REST client that returns redirect responses without following them.
+  package static func makeClient(
+    configuration: URLSessionConfiguration = .ephemeral
+  ) -> HTTPClient {
+    GitHubHTTPClient.makeHTTPClient(configuration: configuration)
+  }
+}
+
 internal final class GitHubHTTPClient: GitHubRestClient {
   private let provider: OAuthTokenProvider
   private let httpClient: HTTPClient
