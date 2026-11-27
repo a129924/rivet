@@ -377,6 +377,8 @@ struct StaticIsolationTests {
       "Providers/OAuthTokenProvider.swift", "Providers/HeadersProvider.swift",
       "REST/GitHubHTTPClient.swift", "REST/GitHubRestClient.swift",
       "REST/GitHubHTTPClientError.swift", "REST/GitHubResponseClassifier.swift",
+      "Notifications/GitHubNotificationMarkAsReadEndpoint.swift",
+      "Notifications/GitHubNotificationReadMarker.swift",
       "REST/Endpoints/GitHubAuthenticatedUserEndpoint.swift", "REST/GitHubRESTDestination.swift",
       "Providers/TokenStoreGitHubTokenProvider.swift",
       "Stores/InMemoryGitHubTokenStore.swift", "Stores/KeychainTokenStore.swift",
@@ -408,16 +410,14 @@ struct StaticIsolationTests {
         forbiddenForFile.remove("Network")
       }
       let httpClientFiles: Set = [
-        "Login/GitHubLoginAccountProbe.swift",
-        "Composition/GitHubClientScope.swift", "Composition/GitHubHeadersFactory.swift",
-        "Providers/HeadersProvider.swift", "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
-        "OAuth/GitHubOAuthCodeExchanger.swift",
-        "GraphQL/GitHubGraphQLHTTPInterceptor.swift",
-        "REST/GitHubHTTPClient.swift",
-        "REST/GitHubRestClient.swift",
-        "REST/GitHubResponseClassifier.swift",
-        "REST/Endpoints/GitHubAuthenticatedUserEndpoint.swift",
-        "REST/GitHubRESTDestination.swift",
+        "Login/GitHubLoginAccountProbe.swift", "Composition/GitHubClientScope.swift",
+        "Composition/GitHubHeadersFactory.swift", "Providers/HeadersProvider.swift",
+        "OAuth/GitHubOAuthHTTPTokenFetcher.swift", "OAuth/GitHubOAuthCodeExchanger.swift",
+        "GraphQL/GitHubGraphQLHTTPInterceptor.swift", "REST/GitHubHTTPClient.swift",
+        "REST/GitHubRestClient.swift", "REST/GitHubResponseClassifier.swift",
+        "REST/Endpoints/GitHubAuthenticatedUserEndpoint.swift", "REST/GitHubRESTDestination.swift",
+        "Notifications/GitHubNotificationMarkAsReadEndpoint.swift",
+        "Notifications/GitHubNotificationReadMarker.swift",
       ]
       if httpClientFiles.contains(path) || Self.notificationHTTPClientPaths.contains(path) {
         forbiddenForFile.remove("RivetHTTPClient")
