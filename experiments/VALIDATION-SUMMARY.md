@@ -4,6 +4,19 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #112 GitHub PR 單檔已讀寫入離線驗收
+
+PR #112 於 `2026-11-27T08:50:04Z` 合併至 `dev` 並關閉。第一個 parent 到合併提交 `25b23c449ff6f1d9d27e5176e393a545885dcc78` 的 stable patch ID 與受測 feature 提交 `4e63077b4b1ac6fad90173bf7d3d7f028396cfc3` 的差異一致，均為 `e3d9a11a1c5ebf15d4529147a689c67490a4ee76`。 [PR #112](https://github.com/a129924/rivet/pull/112) · [執行帳本](../plan/github-pr-file-viewed-write/github-pr-file-viewed-write.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| FV01–FV03 操作與結果 | 受控 client 核對標記、取消、原始 UTF-8 路徑、精確 PR 收據、結構化拒絕、傳輸中斷與取消。無效輸入或進入 `perform` 前取消為零次 client 呼叫。只有可核對的 GitHub 收據才能確認操作已接受。逐檔三態另由既有讀取取得。 |
+| FV04 離線回歸 | 511 項 SwiftPM 測試與 56 個 suite 通過，涵蓋 6 項新測試、GraphQL 認證復原、既有 Reader 讀取與套件隔離。Apollo iOS 2.1.2 依固定 schema 重生 350 份 Swift 產碼，逐檔一致。SwiftFormat、SwiftLint 971 檔零違規、差異檢查與提交 hooks 通過，獨立 Reviewer 核准。 |
+| 本機審閱 | PR Lens 驗證並渲染一張 SVG。Archify 通過 showcase 9/9 和四種桌面尺寸驗證，最小及最大尺寸的明暗截圖已目視核對。Floorplan 完成本機預覽。Graphify 缺少對應版本的圖，改以原始碼核對。 |
+| 驗收界線 | 使用受控 client，真人遠端 mutation 未執行。清理時核對合併差異與 Git 狀態，沿用受測 feature 提交的離線證據。 |
+
+本機與遠端的 annotated tag `v0.1.106-github-pr-file-viewed-write` 物件均為 `96f47a093330a43d6094ac82bbcca0a0d1a9cdc2`，解參照後指向合併提交。已確認本機分支、遠端分支、遠端追蹤 ref、feature worktree 目錄及 Git 註冊均已移除。移除前私下封存 105 個檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-112-github-pr-單檔已讀寫入與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.106-github-pr-file-viewed-write)
+
 ## PR #111 GitHub REST 預設重新導向政策離線驗收
 
 PR #111 於 `2026-11-27T08:09:45Z` 合併至 `dev` 並關閉，共帶入 9 檔變更。合併提交 `2990163ad4ce3252228c1f01c088fe05263723c8` 與受測提交 `54e1a3b4453576ff17b710d66f2a80c61f51719d` 的 Git tree 均為 `923feabc1787942ab724859fc32fa55629cd8ad7`。 [PR #111](https://github.com/a129924/rivet/pull/111) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.105-github-rest-redirect-policy/plan/github-rest-redirect-policy/github-rest-redirect-policy.step.md)

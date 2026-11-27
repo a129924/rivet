@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #112 GitHub PR 單檔已讀寫入與清理
+
+PR #112 於 `2026-11-27T08:50:04Z` 合併至 `dev` 並關閉。合併提交 `25b23c449ff6f1d9d27e5176e393a545885dcc78` 帶入的差異與受測提交 `4e63077b4b1ac6fad90173bf7d3d7f028396cfc3` 的 stable patch ID 一致。 [PR #112](https://github.com/a129924/rivet/pull/112)
+
+套件內 `RivetPRWriteGitHub` 可為指定 PR 的單一檔案標記或取消已讀，保留呼叫端提供的原始路徑。回傳同一 PR 的有效收據時確認 GitHub 已接受，證據不足時回報待核對。離線驗收通過 511 項測試與 350 份 Apollo 產碼逐檔比對。 [寫入契約](../docs/architecture/github-pr-graphql-writes.md) · [驗證摘要](VALIDATION-SUMMARY.md#pr-112-github-pr-單檔已讀寫入離線驗收)
+
+Annotated tag `v0.1.106-github-pr-file-viewed-write` 已推送並讀回，指向合併提交。已確認本機分支、遠端分支、遠端追蹤 ref、feature worktree 目錄及 Git 註冊均已移除。移除前私下封存並逐檔核對 105 個本機審閱與驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.106-github-pr-file-viewed-write)
+
 ## PR #111 GitHub REST 預設重新導向政策與清理
 
 PR #111 於 `2026-11-27T08:09:45Z` 合併至 `dev` 並關閉。合併提交 `2990163ad4ce3252228c1f01c088fe05263723c8` 與受測 feature 提交 `54e1a3b4453576ff17b710d66f2a80c61f51719d` 的 Git tree 相同。 [PR #111](https://github.com/a129924/rivet/pull/111)
