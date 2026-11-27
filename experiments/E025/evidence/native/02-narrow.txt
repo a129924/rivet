@@ -1,0 +1,33 @@
+windowWidthPt=420
+ AXWindow | inbox | PR Inbox · I2 驗證
+  AXGroup
+   AXGroup | 側欄
+    AXStaticText | Rivet
+    AXStaticText | Inbox
+   AXHeading | PR Inbox
+   AXStaticText | 挑選你開啟、待自查的 Pull Request
+   AXRadioGroup | Inbox filter, Inbox filter
+    AXRadioButton | Needs Review
+    AXRadioButton | Mentioned
+    AXRadioButton | All
+   AXScrollArea
+    AXOutline | i2-list
+     AXRow [selected]
+      AXCell [selected]
+       AXUnknown | i2-row-sample/core-42 | 整理 Inbox 重新整理狀態, sample/core #42
+     AXRow
+      AXCell
+       AXUnknown | i2-row-sample/ui-42 | 保留原生清單選取, sample/ui #42
+     AXRow
+      AXCell
+       AXUnknown | i2-row-sample/runtime-17 | 整理啟動時的連線還原, sample/runtime #17
+     AXColumn | ListColumn
+   AXStaticText | 受控情境
+   AXPopUpButton | i2-fixture | 候選清單
+   AXButton | i2-refresh | 重新整理
+  AXButton
+  AXButton
+   AXGroup
+    AXGroup
+  AXButton
+  AXStaticText | PR Inbox · I2 驗證
