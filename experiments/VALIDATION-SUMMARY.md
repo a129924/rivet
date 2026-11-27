@@ -4,6 +4,19 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #97 E024 Inbox Variant B 整合驗收
+
+[PR #97](https://github.com/a129924/rivet/pull/97) 於 `2026-11-27T03:10:50Z` 合併至 `dev` 並關閉。以 `dev` `a559f7a` 和已審閱的 head `e35daa0` 預先整合，受測 Git tree `ef67c5cd06f82937bb383a574d2ab48f24d42a62` 與合併提交 `3fcb1c8e5f9f38a47264026895d586c8846b5c6d` 的 tree 一致。 [執行帳本](../plan/pr-inbox-i1-verification/pr-inbox-i1-verification.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| I1 原生回歸 | E024 的合成清單通過 I1-01～07。依完整 PR 識別保留或回退選取，核對鍵盤、載入、空清單、錯誤、離線及安全 Open 的事件次數。 |
+| A1 原生驗收 | Light 鍵盤、非預設系統強調色、Increase Contrast、Reduce Motion、跨 App 作用中／非作用中、真人 VoiceOver 及 420 pt 明暗版均通過。Human 確認採用，獨立成果複審 `approved`，必要修正 0。 |
+| 自動化與整合 | Feature 階段根套件 599 項與 E024 7 項測試通過。最終合併樹根套件 610 項／75 個 suites、E024 7 項／1 個 suite 通過。 |
+| 採用界線 | 正式採用涵蓋 `InboxWorkspace`、Variant B 視覺及已記錄的原生範圍。Fixture Session、診斷及 Home／End 補救留在 E024。正式 App 命令路由、側欄顯隱及 repository 導覽另案驗證。 |
+
+本機與遠端的 annotated tag `v0.1.100-pr-inbox-variant-b-adoption` 皆指向合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。 [實驗索引](README.md#pr-97-e024-inbox-variant-b-採用與清理) · [E024 原生驗收](E024/evidence/variant-b-native.md) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.100-pr-inbox-variant-b-adoption)
+
 ## PR #106 PR Reader Files Viewed 離線驗收
 
 PR #106 於 `2026-11-26T09:01:29Z` 合併至 `dev` 並關閉，共帶入 17 個檔案的變更。合併提交為 `fa3329bfe78be069633d8e08a74ecc4389ab386c`，受測 feature 提交為 `d1873abb0479266f725544238718068013cda9c6`。兩者的本題變更以 stable patch ID 核對一致，值為 `ae1cf22c8f845a94ccc6f57024ed718120204ef5`。 [PR #106](https://github.com/a129924/rivet/pull/106) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.99-pr-reader-github-files-viewed-source/plan/pr-reader-github-files-viewed-source/pr-reader-github-files-viewed-source.step.md)
@@ -244,6 +257,7 @@ E015 的六個 focused case 由最終來源新建 CLI，使用 DEBUG、互斥 LA
 | [E017／PR #73 PAT 儲存](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/experiments/E017/github-pat-dpk-storage/README.md) | 原source5465／E016路徑真DPK、A／B跨程序、同身分真重建、owned cleanup／nil，六runtime Human各全程0；E017離線移轉另列。 | 不證新E017來源live、真PAT遠端有效性、renewal／rotation／分發／durability或HC04／HC05接受；舊unknown保持。 |
 | [E019](E019/README.md) | 直接指派查詢的 12 項受控測試通過。 | 真人查詢未執行。 |
 | [E020](E020/README.md) | OAuth 真人驗收通過。mlops-async#72 四欄吻合，2 個唯讀 GET。 | 證據限當次帳號與單筆正例，自查完成狀態待定義。 |
+| [E024](E024/evidence/variant-b-native.md) | I1-01～07 和 A1 七項原生驗收通過，含真人 VoiceOver 與跨 App 截圖。整合 610 項根套件及 7 項 E024 測試通過。 | 證據來自隔離的合成清單。正式 App 命令、側欄和資料接線另案驗證。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 2026-11-11 Human完成指定狀態朗讀、局部大字與focus／rapid案例，明確通過並採用。 | 假資料展示範圍，正式 backend／OAuth 與系統字級偏好整合屬後續能力。Human大字為21pt五畫面及17pt同PAT，15格矩陣沿用工具來源。 |
 | [PR #75 正式 Login UI 元件化](https://github.com/a129924/rivet/pull/75) | 正式組合元件、獨立驗收支援；6a binary的必要原生／Human語音差異通過並獲HC02接受。 | E011凍結；Canvas未驗；不證真認證、外層Adapter、儲存／session／產品接入或新merge build驗收。 |

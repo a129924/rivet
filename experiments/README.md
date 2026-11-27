@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #97 E024 Inbox Variant B 採用與清理
+
+[PR #97](https://github.com/a129924/rivet/pull/97) 於 `2026-11-27T03:10:50Z` 合併至 `dev` 並關閉。合併提交為 `3fcb1c8e5f9f38a47264026895d586c8846b5c6d`，Human 審閱的提交為 `e35daa03c7b33951d5702366958e12890d052953`。
+
+採用 `InboxWorkspace` 的 Variant B 視覺，重用 Rivet 色彩與品牌，並保留 macOS 原生清單和 Picker。E024 用合成資料完成 I1 回歸與 A1 七項原生驗收。最終整合根套件 610 項、E024 7 項測試通過。正式 App 的鍵盤路由與側欄導覽另案驗證。 [正式採用文件](../docs/presentation/pr-inbox-visual-adoption.md) · [驗證摘要](VALIDATION-SUMMARY.md#pr-97-e024-inbox-variant-b-整合驗收)
+
+Annotated tag `v0.1.100-pr-inbox-variant-b-adoption` 已推送並讀回，指向合併提交。已確認本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.100-pr-inbox-variant-b-adoption)
+
 ## PR #106 PR Reader Files Viewed 讀取與清理
 
 PR #106 於 `2026-11-26T09:01:29Z` 合併至 `dev` 並關閉。合併提交為 `fa3329bfe78be069633d8e08a74ecc4389ab386c`，帶入的 patch 與離線受測的 feature 提交 `d1873abb0479266f725544238718068013cda9c6` 一致。 [PR #106](https://github.com/a129924/rivet/pull/106)
@@ -205,6 +213,7 @@ Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；loc
 | [E017／PR #73 PAT 儲存](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/experiments/E017/github-pat-dpk-storage/README.md) | 正式 PAT adapter 的獨立儲存驗收host | source5465原E016路徑真DPK六runtime accepted／Human各全程0；現E017只做離線改號驗證，不冒稱新live pass，HC04／HC05 pending。 |
 | [E019](E019/README.md) | GitHub 直接指派審閱查詢 | 12 項受控測試通過，真人查詢未執行。 |
 | [E020](E020/README.md) | 目前 OAuth 帳號的 PR 自查候選 | 真人驗收通過，正例 mlops-async#72 四欄吻合。 |
+| [E024](E024/README.md) | PR Inbox 原生互動與 Variant B 視覺採用 | PR #97 已合併。I1 回歸及 A1 七項原生驗收通過，採用範圍為 Inbox 工作區。 |
 | [GitHubConnectionVerification](E014/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 原生 Presentation 元件、假資料 Demo 與 Human 驗收 | 2026-11-11 指定聲音、大字與焦點案例通過，Human明確採用。正式 backend／OAuth 串接屬後續能力。 |
