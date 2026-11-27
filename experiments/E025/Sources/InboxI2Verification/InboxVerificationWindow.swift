@@ -1,3 +1,4 @@
+import Accessibility
 import RivetPresentation
 import SwiftUI
 
@@ -8,6 +9,15 @@ struct InboxVerificationWindow: View {
   @State private var fixture: InboxFixture
   @State private var refreshID = 0
   @State private var pageRelease: AsyncStream<Void>.Continuation?
+  @State private var hasShownList = false
+  @FocusState private var listFocused: Bool
+  @FocusState private var otherFocus: FocusTarget?
+  @AccessibilityFocusState(for: .voiceOver) private var spokenStatus: InboxSession.Status?
+
+  private enum FocusTarget: Hashable {
+    case status(InboxSession.Status)
+    case fixture, releasePage, refresh
+  }
 
   init(mode: InboxVerificationMode) {
     self.mode = mode
@@ -24,13 +34,13 @@ struct InboxVerificationWindow: View {
       Label("Inbox", systemImage: "tray")
     } content: {
       VStack(spacing: 0) {
-        if let message = statusMessage {
-          Text(message)
-            .font(.headline)
-            .accessibilityAddTraits(.isHeader)
-            .accessibilityIdentifier("i2-status")
+        statusContent
+        if pageRelease != nil {
+          Text("已到第二頁，等待驗證")
+            .font(.caption)
+            .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(12)
+            .padding(.horizontal, 12)
         }
         if !session.snapshot.rows.isEmpty {
           inboxList
@@ -40,35 +50,45 @@ struct InboxVerificationWindow: View {
       footer
     }
     .task(id: refreshID) { await refresh() }
+    .task(id: session.snapshot.status) {
+      await Task.yield()
+      guard !Task.isCancelled else { return }
+      updateFocus()
+    }
   }
 
   private var inboxList: some View {
-    List(
+    PullRequestList(
+      items: session.snapshot.rows.map(\.presentation),
       selection: Binding(
-        get: { session.snapshot.selection },
-        set: { session.select($0) })
-    ) {
-      ForEach(session.snapshot.rows) { row in
-        VStack(alignment: .leading, spacing: 3) {
-          Text(verbatim: row.title)
-            .font(.headline)
-            .lineLimit(1)
-          Text(verbatim: "\(row.repositoryLabel) \(row.numberLabel)")
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-            .lineLimit(1)
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(
-          Text(verbatim: "\(row.title), \(row.repositoryLabel) \(row.numberLabel)")
-        )
-        .accessibilityIdentifier("i2-row-\(row.repositoryLabel)-\(row.id.number)")
-        .padding(.vertical, 4)
-        .tag(row.id)
-      }
-    }
+        get: { session.presentationSelection },
+        set: { session.select(presentationID: $0) }),
+      focus: $listFocused,
+      canOpen: { _ in false },
+      onOpen: { _ in }
+    )
     .listStyle(.plain)
     .accessibilityIdentifier("i2-list")
+  }
+
+  @ViewBuilder private var statusContent: some View {
+    if let displayStatus {
+      InboxListStatus(state: displayStatus)
+        .focusable()
+        .focused($otherFocus, equals: .status(session.snapshot.status))
+        .accessibilityFocused($spokenStatus, equals: session.snapshot.status)
+        .accessibilityIdentifier("i2-status")
+    } else if case .liveNotRun(let reason) = session.snapshot.status {
+      Text(liveStatusMessage(reason))
+        .font(.headline)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .focusable()
+        .focused($otherFocus, equals: .status(session.snapshot.status))
+        .accessibilityFocused($spokenStatus, equals: session.snapshot.status)
+        .accessibilityAddTraits(.isHeader)
+        .accessibilityIdentifier("i2-status")
+    }
   }
 
   private var footer: some View {
@@ -82,6 +102,7 @@ struct InboxVerificationWindow: View {
         }
         .pickerStyle(.menu)
         .disabled(session.snapshot.status == .loading)
+        .focused($otherFocus, equals: .fixture)
         .accessibilityIdentifier("i2-fixture")
       case .live:
         if let viewer = session.snapshot.viewer {
@@ -92,32 +113,83 @@ struct InboxVerificationWindow: View {
       Spacer()
       if let pageRelease {
         Button("讓第二頁失敗") { pageRelease.finish() }
+          .focused($otherFocus, equals: .releasePage)
           .accessibilityIdentifier("i2-release-page")
       }
       Button("重新整理") { refreshID += 1 }
         .keyboardShortcut("r")
         .disabled(session.snapshot.status == .loading)
+        .focused($otherFocus, equals: .refresh)
         .accessibilityIdentifier("i2-refresh")
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 9)
   }
 
-  private var statusMessage: String? {
+  private var displayStatus: InboxListStatus.State? {
     switch session.snapshot.status {
-    case .initial, .ready: nil
-    case .loading:
-      pageRelease == nil ? "正在取得 Pull Request…" : "已到第二頁，等待驗證"
-    case .empty: "目前沒有待自查的 Pull Request"
-    case .unavailable: "無法取得 Pull Request"
-    case .stale: "更新失敗。清單可能不是最新的。"
-    case .liveNotRun(let reason):
-      switch reason {
-      case .missingConfiguration: "真人驗收未執行。此 App 未配置既有 OAuth 工作階段。"
-      case .notSignedIn: "真人驗收未執行。找不到既有 OAuth 工作階段。"
-      case .authenticationRequired: "真人驗收未執行。既有 OAuth 工作階段已無法使用。"
-      case .restoreFailed: "真人驗收未執行。無法還原既有 OAuth 工作階段。"
+    case .initial, .ready, .liveNotRun: nil
+    case .loading: .loading
+    case .empty: .empty
+    case .unavailable: .unavailable
+    case .stale: .stale
+    }
+  }
+
+  private func updateFocus() {
+    switch session.snapshot.status {
+    case .initial:
+      break
+    case .loading, .stale:
+      if listFocused || hasValidStatusTransitionFocus {
+        announceStatus()
+      } else {
+        focusStatus()
       }
+    case .ready:
+      if !listFocused, !hasShownList || otherFocus == nil || statusHasFocus {
+        otherFocus = nil
+        spokenStatus = nil
+        listFocused = true
+      }
+      hasShownList = true
+    case .empty, .unavailable, .liveNotRun:
+      focusStatus()
+    }
+  }
+
+  private var statusHasFocus: Bool {
+    if case .status = otherFocus { return true }
+    return false
+  }
+
+  private var hasValidStatusTransitionFocus: Bool {
+    switch otherFocus {
+    case .status(let status): status == session.snapshot.status
+    case .fixture, .refresh: session.snapshot.status != .loading
+    case .releasePage: session.snapshot.status == .loading && pageRelease != nil
+    case nil: false
+    }
+  }
+
+  private func announceStatus() {
+    if let displayStatus {
+      AccessibilityNotification.Announcement(displayStatus.title).post()
+    }
+  }
+
+  private func focusStatus() {
+    listFocused = false
+    otherFocus = .status(session.snapshot.status)
+    spokenStatus = session.snapshot.status
+  }
+
+  private func liveStatusMessage(_ reason: LivePrecondition) -> String {
+    switch reason {
+    case .missingConfiguration: "真人驗收未執行。此 App 未配置既有 OAuth 工作階段。"
+    case .notSignedIn: "真人驗收未執行。找不到既有 OAuth 工作階段。"
+    case .authenticationRequired: "真人驗收未執行。既有 OAuth 工作階段已無法使用。"
+    case .restoreFailed: "真人驗收未執行。無法還原既有 OAuth 工作階段。"
     }
   }
 

@@ -12,7 +12,7 @@ struct InboxSessionTests {
     let third = InboxItem(owner: "sample", repository: "runtime", number: 17, title: "還原")
     let renamed = InboxItem(owner: "sample", repository: "ui", number: 42, title: "保留選取")
     await session.refresh { .success([core, uiPullRequest, third]) }
-    session.select(InboxRow(uiPullRequest).id)
+    session.select(presentationID: InboxRow(uiPullRequest).id.presentationID)
     await session.refresh { .success([core, third, renamed]) }
     #expect(session.snapshot.rows.last == InboxRow(renamed))
     #expect(session.snapshot.selection == InboxRow(uiPullRequest).id)
@@ -38,15 +38,20 @@ extension InboxSessionTests {
   @Test func realFixtureReorderAndRemovalKeepTheFullIdentity() async {
     let session = InboxSession()
     await refresh(session, .candidates)
-    let first = session.snapshot.rows.first?.id
-    let selected = session.snapshot.rows.dropFirst().first?.id
-    session.select(selected)
+    #expect(
+      session.snapshot.rows.map(\.presentation.id) == [
+        "sample/core#42", "sample/ui#42", "sample/runtime#17",
+      ])
+    session.select(presentationID: "sample/ui#42")
     await refresh(session, .reordered)
-    #expect(session.snapshot.rows.last?.id == selected)
-    #expect(session.snapshot.selection == selected)
+    #expect(session.snapshot.rows.last?.presentation.id == "sample/ui#42")
+    #expect(session.presentationSelection == "sample/ui#42")
     #expect(session.snapshot.rows.last?.title == "重新整理後保留原生清單選取")
     await refresh(session, .removed)
-    #expect(session.snapshot.selection == first)
+    session.select(presentationID: "sample/ui#42")
+    #expect(session.presentationSelection == "sample/core#42")
+    await refresh(session, .empty)
+    #expect(session.presentationSelection == nil)
   }
 
   @Test(arguments: [false, true])
@@ -63,7 +68,7 @@ extension InboxSessionTests {
   func failureUsesOnlyTheLastCompleteSnapshot(hadRows: Bool) async {
     let session = InboxSession()
     if hadRows { await refresh(session, .candidates) }
-    session.select(session.snapshot.rows.dropFirst().first?.id)
+    session.select(presentationID: session.snapshot.rows.dropFirst().first?.id.presentationID)
     let before = session.snapshot
     await refresh(session, .failure)
     #expect(session.snapshot.status == (hadRows ? .stale : .unavailable))
@@ -75,7 +80,7 @@ extension InboxSessionTests {
   func secondPageWaitAndFailureNeverPublishFirstPageRows(hadRows: Bool) async {
     let session = InboxSession()
     if hadRows { await refresh(session, .candidates) }
-    session.select(session.snapshot.rows.dropFirst().first?.id)
+    session.select(presentationID: session.snapshot.rows.dropFirst().first?.id.presentationID)
     let before = session.snapshot
     let arrived = AsyncStream<Bool>.makeStream()
     let release = AsyncStream<Void>.makeStream()

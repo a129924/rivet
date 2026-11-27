@@ -136,7 +136,8 @@ private struct PullRequestRowCandidate: View {
   }
 
   private var content: some View {
-    VStack(alignment: .leading, spacing: 3) {
+    let authorTime = presentation.authorTimeText
+    return VStack(alignment: .leading, spacing: 3) {
       Text(presentation.title)
         .font(.headline)
         .foregroundStyle(.primary)
@@ -162,8 +163,8 @@ private struct PullRequestRowCandidate: View {
 
         Spacer(minLength: 8)
 
-        if tier.showsAuthorTime {
-          Text("\(presentation.authorLabel) · \(presentation.relativeTimeLabel)")
+        if tier.showsAuthorTime, !authorTime.isEmpty {
+          Text(verbatim: authorTime)
             .font(.caption)
             .foregroundStyle(.secondary)
             .lineLimit(1)

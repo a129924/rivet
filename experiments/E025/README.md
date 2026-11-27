@@ -1,6 +1,6 @@
 # E025 · PR Inbox I2 原生驗證
 
-這個 macOS App 使用已採用的 Variant B `InboxWorkspace`。其 SwiftUI 原生清單由驗證 App 提供四欄與選取狀態，查詢共用正式 `GitHubSelfReviewSource` 和 `PRInboxFacade.refresh()`。 [執行計畫](../../plan/pr-inbox-i2-verification/pr-inbox-i2-verification.plan.md)
+這個 macOS App 使用 Variant B `InboxWorkspace`、正式 `PullRequestList`／`PullRequestRow` 與 `InboxListStatus`。驗證 App 提供四欄資料，持有選取與焦點，並透過正式 `GitHubSelfReviewSource` 和 `PRInboxFacade.refresh()` 取得完整結果。 [採用計畫](../../plan/pr-inbox-native-list-adoption/pr-inbox-native-list-adoption.plan.md)
 
 ## 受控驗收
 
@@ -25,6 +25,10 @@ open "$app"
 
 以畫面底部的 OAuth 帳號與 GitHub PR 詳情獨立比對作者與 open 狀態，再核對原生列的 owner、repo、number、title。若使用私人樣本，原始畫面留本機。 [既有 OAuth 還原契約](../../docs/architecture/github-oauth-startup-restore-runtime.md)
 
-## 本輪結果
+## 原 I2 驗收
 
 I2-01～06 受控原生驗收通過。更新 profile 並以同一 OAuth App 完成登入後，I2-07 真人原生上屏亦通過。 [受控驗收](evidence/acceptance.md) · [真人驗收](evidence/i2-07-live.md)
+
+## 正式元件採用驗收
+
+採用後回歸以受控 E025 App 和既有 E024 原生入口執行。另跑 `swift test --filter RivetPresentationTests` 涵蓋正式 Row 與 List。 [採用後驗收](evidence/native-list-adoption.md)
