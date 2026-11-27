@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #110 E025 PR Inbox I2 原生驗收與清理
+
+[PR #110](https://github.com/a129924/rivet/pull/110) 於 `2026-11-27T06:50:39Z` 合併至 `dev` 並關閉。合併提交 `b14be5f1b341dc783cb5b07ba031a6c0d1ece622` 的 Git tree 與 I2-V03 受測整合候選一致。
+
+E025 在獨立 macOS App 沿用 Variant B `InboxWorkspace`，完成 I2-01～06 受控原生驗收與 I2-07 真人 PR 上屏。使用者已接受原生驗收及最新 `dev` 整合回歸。 [E025 報告](E025/README.md) · [驗證摘要](VALIDATION-SUMMARY.md#pr-110-e025-pr-inbox-i2-整合驗收) · [I2 步驟帳本](../plan/pr-inbox-i2-verification/pr-inbox-i2-verification.step.md)
+
+Annotated tag `v0.1.103-pr-inbox-i2-verification` 已推送並讀回，指向合併提交。已確認本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.103-pr-inbox-i2-verification)
+
 ## PR #108 GitHub PR 整體 Review 送出與清理
 
 [PR #108](https://github.com/a129924/rivet/pull/108) 於 `2026-11-27T05:33:33Z` 合併至 `dev` 並關閉。合併提交 `4f88e8799dc69c8a86a68a70033dab56044c015e` 的本題差異與受測提交 `ad7f74a28091a37a2db5837407300ad8e11b24f7` 的 stable patch ID 一致。
@@ -230,6 +238,7 @@ Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；loc
 | [E019](E019/README.md) | GitHub 直接指派審閱查詢 | 12 項受控測試通過，真人查詢未執行。 |
 | [E020](E020/README.md) | 目前 OAuth 帳號的 PR 自查候選 | 真人驗收通過，正例 mlops-async#72 四欄吻合。 |
 | [E024](E024/README.md) | PR Inbox 原生互動與 Variant B 視覺採用 | PR #97 已合併。I1 回歸及 A1 七項原生驗收通過，採用範圍為 Inbox 工作區。 |
+| [E025](E025/README.md) | PR Inbox I2 原生自查清單 | PR #110 已合併。I2-01～07 原生驗收及 I2-V03 最新 `dev` 整合回歸通過。 |
 | [GitHubConnectionVerification](E014/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 原生 Presentation 元件、假資料 Demo 與 Human 驗收 | 2026-11-11 指定聲音、大字與焦點案例通過，Human明確採用。正式 backend／OAuth 串接屬後續能力。 |

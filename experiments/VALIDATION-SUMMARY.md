@@ -4,6 +4,19 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #110 E025 PR Inbox I2 整合驗收
+
+[PR #110](https://github.com/a129924/rivet/pull/110) 於 `2026-11-27T06:50:39Z` 合併至 `dev` 並關閉。合併提交 `b14be5f1b341dc783cb5b07ba031a6c0d1ece622` 的 parent 為 `4261f9c55faf5ce0194906fcea45fb47de5b2574` 與 `03d77f683b3776dfdf5f9eaf842b55d018bdecf8`，和 I2-V03 受測候選 `eac67cf1a132139f3417af020d5496dc0192402a` 相同。Git tree 均為 `c06ff983ae651ea20726091229eec89830bfbc94`。 [I2 步驟帳本](../plan/pr-inbox-i2-verification/pr-inbox-i2-verification.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| I2-01～06 受控原生驗收 | 合格 Draft 入列。重排與改名保留選取，原列移除時回到首列。完整空清單、首次失敗、更新失敗及後續分頁失敗皆符合預期。420 pt 與 940 pt 的原生清單完成四欄核對。 [受控驗收及原生截圖](E025/evidence/acceptance.md) |
+| I2-07 真人原生上屏 | 更新 provisioning profile 後以同一 OAuth App 重新登入。獨立確認樣本仍為 open 且由登入帳號建立，原生列的 owner、repo、編號、標題四欄均相符。證據限當次連線與一筆樣本。 [真人驗收](E025/evidence/i2-07-live.md) · [機器收據](E025/evidence/i2-07-live-receipt.json) |
+| I2-V03 合併前回歸 | E025 7 項測試（展開 10 案）、Inbox 回歸 21 項（展開 39 案）、App 組裝、根套件 640 項／79 個 suites 皆通過。`git diff --check` 及六項 pre-commit 檢查通過。使用者接受整合回歸結果。 |
+| 採用範圍 | E025 隔離驗證 App、Variant B 共用查詢與原生呈現證據。正式 Inbox 與登入接線留待後續 topic。 [PR Inbox 視覺採用文件](../docs/presentation/pr-inbox-visual-adoption.md) |
+
+本機與遠端的 annotated tag `v0.1.103-pr-inbox-i2-verification` 均解參照至合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已驗證移除。 [實驗索引](README.md#pr-110-e025-pr-inbox-i2-原生驗收與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.103-pr-inbox-i2-verification)
+
 ## PR #108 GitHub PR 整體 Review 送出離線驗收
 
 [PR #108](https://github.com/a129924/rivet/pull/108) 於 `2026-11-27T05:33:33Z` 合併至 `dev` 並關閉，共帶入 27 個檔案的變更。合併提交為 `4f88e8799dc69c8a86a68a70033dab56044c015e`，最終受測提交為 `ad7f74a28091a37a2db5837407300ad8e11b24f7`。兩者的本題差異以 stable patch ID 核對一致，值為 `d83a838fc95212ff4de115a41b3580fe72486586`。 [API Catalog](https://github.com/a129924/rivet/blob/v0.1.102-github-pull-request-review-submission/docs/github-api/rest-discussion-reviews.md#submit-review) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.102-github-pull-request-review-submission/plan/github-pull-request-review-submission/github-pull-request-review-submission.step.md)
@@ -285,6 +298,7 @@ E015 的六個 focused case 由最終來源新建 CLI，使用 DEBUG、互斥 LA
 | [E019](E019/README.md) | 直接指派查詢的 12 項受控測試通過。 | 真人查詢未執行。 |
 | [E020](E020/README.md) | OAuth 真人驗收通過。mlops-async#72 四欄吻合，2 個唯讀 GET。 | 證據限當次帳號與單筆正例，自查完成狀態待定義。 |
 | [E024](E024/evidence/variant-b-native.md) | I1-01～07 和 A1 七項原生驗收通過，含真人 VoiceOver 與跨 App 截圖。整合 610 項根套件及 7 項 E024 測試通過。 | 證據來自隔離的合成清單。正式 App 命令、側欄和資料接線另案驗證。 |
+| [E025](E025/README.md) | I2-01～07 均通過。以受控資料驗證合格 Draft，並核對一筆真人 open PR 的四欄。最新 `dev` 整合回歸通過。 | 證據範圍為獨立驗證 App 及當次 OAuth 連線。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 2026-11-11 Human完成指定狀態朗讀、局部大字與focus／rapid案例，明確通過並採用。 | 假資料展示範圍，正式 backend／OAuth 與系統字級偏好整合屬後續能力。Human大字為21pt五畫面及17pt同PAT，15格矩陣沿用工具來源。 |
 | [PR #75 正式 Login UI 元件化](https://github.com/a129924/rivet/pull/75) | 正式組合元件、獨立驗收支援；6a binary的必要原生／Human語音差異通過並獲HC02接受。 | E011凍結；Canvas未驗；不證真認證、外層Adapter、儲存／session／產品接入或新merge build驗收。 |
