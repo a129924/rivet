@@ -376,6 +376,7 @@ struct StaticIsolationTests {
       "OAuth/GitHubOAuthAuthorizationError.swift", "OAuth/GitHubOAuthHTTPTokenFetcher.swift",
       "Providers/OAuthTokenProvider.swift", "Providers/HeadersProvider.swift",
       "REST/GitHubHTTPClient.swift", "REST/GitHubRestClient.swift",
+      "REST/GitHubHTTPRedirectDelegate.swift",
       "REST/GitHubHTTPClientError.swift", "REST/GitHubResponseClassifier.swift",
       "Notifications/GitHubNotificationMarkAsReadEndpoint.swift",
       "Notifications/GitHubNotificationReadMarker.swift",
@@ -384,7 +385,6 @@ struct StaticIsolationTests {
       "Stores/InMemoryGitHubTokenStore.swift", "Stores/KeychainTokenStore.swift",
       "Stores/GitHubOAuthDataProtectionStores.swift", "Stores/GitHubPATDataProtectionStore.swift",
     ]
-
     let actualPaths = try sourcePaths(in: sourceDirectory)
     #expect(actualPaths == expectedPaths.union(Self.notificationSourcePaths))
 

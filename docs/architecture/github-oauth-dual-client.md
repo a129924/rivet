@@ -38,6 +38,7 @@ Facade（layer 外的 application composition root）
 - 本 topic 不取代目前 public `GitHubTokenProvider`／`GitHubTokenStore` 的 access-token contract，也不定義 adapter、supersession 或 migration。另已交付的 async `GitHubAccessTokenProvider` 只表示 token acquisition；新的 OAuth provider 不 conform 或 bridge 它，也不實作 request、transport、401 classification 或 retry。
 - GitHub.com REST client 在取得 token snapshot 前核對 method 與共用目的地。目的地允許 HTTPS、`api.github.com`、省略 port 或使用 443，拒絕帳密與 fragment。共用帳號 Endpoint、Inbox 搜尋 Endpoint 組裝及 Inbox 的 next Link 與 `repository_url` 共用這份技術規則。
 - internal REST client 由 Scope 注入共享 `OAuthTokenProvider`，production 自建拒絕 redirect 的 bare HTTP executor，並保有自己的原 `HTTPRequest`；GraphQL client 保有自己的 Apollo operation。兩者只共用 provider instance，不互相呼叫，GraphQL 亦不經 REST route。
+- GitHub REST 的 `makeSession(configuration:)` 注入 `DefaultGitHubRESTRedirectPolicy`，對 URLSession 提出的重新導向一律拒絕。`GitHubHTTPRedirectDelegate` 將政策判定轉成 Foundation completion handler 的擬送請求或 `nil`，每次呼叫一次。首次回應為 302 時，REST transport 回傳原始狀態、`Location` 與 body，應用層只發送原請求一次。OAuth REST 仍僅在 401 觸發認證復原，最多重送原請求一次。
 
 ## Token Lifecycle
 
