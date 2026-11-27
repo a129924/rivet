@@ -18,6 +18,7 @@ struct StaticIsolationTests {
       gitHub: ("BoundedContexts/GitHubIntegration", ["Apollo", "ApolloAPI", "RivetHTTPClient"]),
       repositoryPullRequests: (repositoryPullRequests, [gitHub, "RivetHTTPClient"]),
       "RivetPRReviewGitHub": ("RivetPRReviewGitHub", [gitHub, "RivetHTTPClient"]),
+      "RivetPRWriteGitHub": ("RivetPRWriteGitHub", [gitHub, "Apollo", "ApolloAPI"]),
       "RivetPRReaderPresentation": ("RivetPRReaderPresentation", [reader]),
       "RivetPRReaderComposition": (
         "RivetPRReaderComposition",
@@ -495,7 +496,6 @@ private func packageDescription() throws -> [String: Any] {
   let scratchDirectory = FileManager.default.temporaryDirectory
     .appendingPathComponent("rivet-package-graph-\(UUID().uuidString)")
   defer { try? FileManager.default.removeItem(at: scratchDirectory) }
-
   let process = Process()
   process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
   process.arguments = [

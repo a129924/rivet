@@ -1,0 +1,40 @@
+// swift-format-ignore-file
+// swiftlint:disable:next blanket_disable_command
+// swiftlint:disable all
+// @generated
+// This file was automatically generated and should not be edited.
+
+import ApolloAPI
+
+extension PRWriteGitHubGraphQL.Interfaces {
+  /// Represents a type that can be retrieved by a URL.
+  nonisolated static let UniformResourceLocatable = ApolloAPI.Interface(
+    name: "UniformResourceLocatable",
+    keyFields: nil,
+    implementingObjects: [
+      "Bot",
+      "CheckRun",
+      "ClosedEvent",
+      "Commit",
+      "ConvertToDraftEvent",
+      "CrossReferencedEvent",
+      "Gist",
+      "Issue",
+      "Mannequin",
+      "MergedEvent",
+      "Milestone",
+      "Organization",
+      "PullRequest",
+      "PullRequestCommit",
+      "ReadyForReviewEvent",
+      "Release",
+      "Repository",
+      "RepositoryTopic",
+      "ReviewDismissedEvent",
+      "User",
+      "Workflow",
+      "WorkflowRun",
+      "WorkflowRunFile"
+    ]
+  )
+}

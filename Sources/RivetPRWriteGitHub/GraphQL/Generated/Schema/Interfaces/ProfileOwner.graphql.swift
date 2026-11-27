@@ -1,0 +1,19 @@
+// swift-format-ignore-file
+// swiftlint:disable:next blanket_disable_command
+// swiftlint:disable all
+// @generated
+// This file was automatically generated and should not be edited.
+
+import ApolloAPI
+
+extension PRWriteGitHubGraphQL.Interfaces {
+  /// Represents any entity on GitHub that has a profile page.
+  nonisolated static let ProfileOwner = ApolloAPI.Interface(
+    name: "ProfileOwner",
+    keyFields: nil,
+    implementingObjects: [
+      "Organization",
+      "User"
+    ]
+  )
+}
