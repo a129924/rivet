@@ -8,15 +8,20 @@
 | --- | --- |
 | Goal | 送出指定 PR 和 commit 的整體 Review，回報接受、拒絕或待核對結果。 |
 | Non-Goal | 完整審閱工作流及遠端結果自動核對。 |
-| In-Scope | 套件內 target、Review Endpoint、送出 Source、REST 請求與結果、受控測試、依賴驗證、API Catalog 和本機檢閱證據。 |
+| In-Scope | 套件內 target、Review Endpoint、送出 Source、REST 請求與結果、JSON 標頭 preset、422 技術分類及既有消費端相容映射、受控測試、依賴驗證、API Catalog 和本機檢閱證據。 |
 | Out-Of-Scope | 逐行留言、PENDING、編輯、撤回、合併、產品 UI、PAT 寫入組裝、資料遷移、共用 REST 或 Reader 契約修改、真人遠端驗收。 |
-| ReadOnly | 其餘 tracked 路徑，包含共用 REST client、PR Reader 與主工作樹的兩項 experiments 索引修改。 |
+| ReadOnly | 其餘 tracked 路徑，包含共用 REST client 執行程式、PR Reader Core 與主工作樹的兩項 experiments 索引修改。 |
 | Written | `analysis/github-pull-request-review-submission/requirements.md`<br>`analysis/github-pull-request-review-submission/technical-spec.md`<br>`plan/github-pull-request-review-submission/github-pull-request-review-submission.plan.md`<br>`plan/github-pull-request-review-submission/github-pull-request-review-submission.step.md`<br>`Sources/RivetPRReviewGitHub/GitHubCreatePullRequestReviewEndpoint.swift`<br>`Sources/RivetPRReviewGitHub/GitHubPullRequestReviewSubmissionSource.swift`<br>`Tests/RivetPRReviewGitHubTests/CreatePullRequestReviewEndpointTests.swift`<br>`Tests/RivetPRReviewGitHubTests/PullRequestReviewSubmissionSourceTests.swift` |
 | Deleted | 無。 |
-| Modify | `Package.swift`<br>`Tests/GitHubIntegrationTests/StaticIsolationTests.swift`<br>`docs/github-api/rest-discussion-reviews.md` |
+| Modify | `Package.swift`<br>`Tests/GitHubIntegrationTests/StaticIsolationTests.swift`<br>`docs/github-api/rest-discussion-reviews.md`<br>PR #108 第二次修正的範圍見下方。 |
 | TestCase | TC01 三種動作與 wire request。TC02 Endpoint 拒絕無效目標，Source 無效輸入與預先取消零呼叫。TC03 收據、拒絕、認證與結果待核對。TC04 401 重送上限。TC05 套件隔離及靜態檢查。 |
 
 執行新 target、`GitHubRestClientTests`、`StaticIsolationTests`、Swift 格式、lint 與 `git diff --check`。檢查每次 adapter 操作呼叫 REST client 零或一次，並保留 adapter 實際取得的 200。依驗證結果更新 API Catalog。
+
+## PR #108 第二次修正
+
+- 修改 `GitHubIntegration` 的 HeadersProvider、Factory 與回應分類器。Reader 六個 REST 來源與 Inbox 的 exhaustive switch 加入 422 分類，維持各自原有結果。
+- 修改 Review Endpoint 與 Source，並在既有測試檔驗證 JSON preset、成功狀態、拒絕與待核對，以及舊消費端的 422 結果。長期標頭契約記錄於 `docs/architecture/github-oauth-dual-client.md`。
 
 ## 本機檢閱證據
 

@@ -9,6 +9,7 @@ struct CreatePullRequestReviewEndpointTests {
       owner: "An-Owner", repository: "rivet.repo_name", pullNumber: 42)
     let url = try endpoint.makeURL()
     #expect(endpoint.method == .post)
+    #expect(GitHubCreatePullRequestReviewEndpoint.successStatusCode == 200)
     #expect(
       url.value.absoluteString
         == "https://api.github.com/repos/An-Owner/rivet.repo_name/pulls/42/reviews")

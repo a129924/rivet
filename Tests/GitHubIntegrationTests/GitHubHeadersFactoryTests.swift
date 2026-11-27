@@ -23,6 +23,25 @@ struct GitHubHeadersFactoryTests {
     #expect(login.authorization == nil)
   }
 
+  @Test func jsonBodyAddsOnlyContentTypeToDefaultOrConfiguredRESTHeaders() throws {
+    let configuration = try GitHubHeadersConfiguration(
+      restAccept: "application/json", standardUserAgent: "Rivet Fixture",
+      loginUserAgent: "Rivet Login Fixture", apiVersion: "2040-01-01")
+    for factory in [
+      GitHubHeadersFactory.standard, GitHubHeadersFactory(configuration: configuration),
+    ] {
+      let standard = try factory.make(requirements: [.standardREST])
+      var expected = standard
+      expected.contentType = "application/json"
+
+      let jsonBody = try factory.make(requirements: [.standardRESTWithJSONBody])
+      #expect(jsonBody == expected)
+      #expect(standard.contentType == nil)
+      #expect(try factory.make(requirements: [.standardREST]) == standard)
+      #expect(try factory.make(requirements: []) == standard)
+    }
+  }
+
   @Test func diffSelectsOneAcceptAndKeepsTheStandardRESTMetadata() throws {
     let factory = GitHubHeadersFactory.standard
     let diff = try factory.make(requirements: [.pullRequestUnifiedDiffREST])
@@ -54,6 +73,10 @@ struct GitHubHeadersFactoryTests {
       [.standardREST, .loginRuntimeREST],
       [.loginRuntimeREST, .standardREST],
       [.standardREST, .standardREST, .loginRuntimeREST],
+      [.standardREST, .standardRESTWithJSONBody],
+      [.standardRESTWithJSONBody, .standardREST],
+      [.standardRESTWithJSONBody, .loginRuntimeREST],
+      [.standardRESTWithJSONBody, .pullRequestUnifiedDiffREST],
       [.standardREST, .pullRequestUnifiedDiffREST],
       [.pullRequestUnifiedDiffREST, .standardREST],
       [.loginRuntimeREST, .pullRequestUnifiedDiffREST],

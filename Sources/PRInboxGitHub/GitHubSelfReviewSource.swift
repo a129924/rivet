@@ -65,7 +65,7 @@ public struct GitHubSelfReviewSource: SelfReviewSource {
     guard response.statusCode == 200 else {
       switch GitHubResponseClassifier().classifyFailure(response) {
       case .unauthorized, .forbidden, .unclassifiedForbidden, .notFound,
-        .rateLimited, .serverError, .unexpectedStatus:
+        .unprocessableContent, .rateLimited, .serverError, .unexpectedStatus:
         throw PRInboxFailure.unavailable
       }
     }

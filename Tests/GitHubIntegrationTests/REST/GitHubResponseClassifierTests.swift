@@ -15,7 +15,7 @@ private let statusCases: [(Int, GitHubAPIFailure)] = [
   (200, .unexpectedStatus(statusCode: 200)),
   (204, .unexpectedStatus(statusCode: 204)),
   (304, .unexpectedStatus(statusCode: 304)),
-  (422, .unexpectedStatus(statusCode: 422)),
+  (422, .unprocessableContent),
 ]
 
 @Suite("GitHub REST response classification")

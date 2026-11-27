@@ -91,6 +91,8 @@ OAuth technical failure 不跨越成 shared BC failure contract；未來由 cons
 
 Repository PR 清單 `GET /repos/{owner}/{repo}/pulls` 使用標準 JSON 時可沿用 `.standardREST`。 [GitHub List pull requests](https://docs.github.com/en/rest/pulls/pulls#list-pull-requests)
 
+整體 Review 送出宣告 `.standardRESTWithJSONBody`。HeadersProvider 從標準 REST 設定衍生這組標頭，只增加 `Content-Type: application/json`。
+
 Reader 的 raw unified diff 來源以 `.pullRequestUnifiedDiffREST` 讀取 `GET /repos/{owner}/{repo}/pulls/{pull_number}`。這組固定標頭沿用標準 REST 的 User-Agent 與 API 版本，並將 Accept 設為 `application/vnd.github.diff`。 [GitHub Get a pull request](https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request)
 
 空清單選標準 REST。相同需求重複出現時視為一次。同時指定兩種以上不同需求回傳 `conflictingRESTRequirements`。呼叫端只傳入已定義的需求，Factory 回傳的標頭可由呼叫端複製調整。呼叫端在既有授權流程以 `BearerAuth` 套入 token。

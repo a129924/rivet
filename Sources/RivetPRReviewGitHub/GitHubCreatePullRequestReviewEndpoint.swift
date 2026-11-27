@@ -6,6 +6,8 @@ package struct GitHubCreatePullRequestReviewEndpoint: Sendable {
     case invalidInput
   }
 
+  package static let successStatusCode = 200
+
   package let method: HTTPMethod = .post
   private let owner: String
   private let repository: String

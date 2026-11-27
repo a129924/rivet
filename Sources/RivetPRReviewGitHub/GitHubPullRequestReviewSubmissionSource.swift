@@ -89,25 +89,26 @@ package struct GitHubPullRequestReviewSubmissionSource: Sendable {
     let endpoint = GitHubCreatePullRequestReviewEndpoint(
       owner: input.owner, repository: input.repository, pullNumber: input.pullNumber)
     let url = try endpoint.makeURL()
-    var headers = try GitHubHeadersFactory.standard.make(requirements: [.standardREST])
-    headers.contentType = "application/json"
+    let headers = try GitHubHeadersFactory.standard.make(requirements: [.standardRESTWithJSONBody])
     let body = try JSONEncoder().encode(
       ReviewPayload(event: input.action.rawValue, commitID: input.commitSHA, body: input.body))
     return HTTPRequest(url: url, method: endpoint.method, headers: headers, body: body)
   }
 
   private static func outcome(for response: HTTPResponse, action: Action) -> Outcome {
-    switch response.statusCode {
-    case 200:
-      guard let receipt = try? response.json(Receipt.self, decoder: JSONDecoder()),
-        receipt.id > 0, receipt.state == action.expectedState
-      else { return .acceptedWithoutReceipt }
-      return .accepted(receipt)
-    case 401, 403, 404, 422, 429:
-      return .rejected(statusCode: response.statusCode)
-    default:
-      return .needsReconciliation
+    guard response.statusCode == GitHubCreatePullRequestReviewEndpoint.successStatusCode else {
+      switch GitHubResponseClassifier().classifyFailure(response) {
+      case .unauthorized, .forbidden, .unclassifiedForbidden, .notFound,
+        .unprocessableContent, .rateLimited:
+        return .rejected(statusCode: response.statusCode)
+      case .serverError, .unexpectedStatus:
+        return .needsReconciliation
+      }
     }
+    guard let receipt = try? response.json(Receipt.self, decoder: JSONDecoder()),
+      receipt.id > 0, receipt.state == action.expectedState
+    else { return .acceptedWithoutReceipt }
+    return .accepted(receipt)
   }
 
   private static func isValid(_ input: Request) -> Bool {

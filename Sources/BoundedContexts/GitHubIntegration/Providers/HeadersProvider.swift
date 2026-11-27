@@ -14,6 +14,12 @@ package final class HeadersProvider: Sendable {
     self.headers = headers
   }
 
+  func makeStandardRESTWithJSONBody() -> HeadersProvider {
+    var jsonHeaders = headers
+    jsonHeaders.contentType = "application/json"
+    return HeadersProvider(headers: jsonHeaders)
+  }
+
   func makePullRequestUnifiedDiffREST() -> HeadersProvider {
     var diffHeaders = headers
     diffHeaders.accept = "application/vnd.github.diff"

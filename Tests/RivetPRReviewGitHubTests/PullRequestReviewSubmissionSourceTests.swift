@@ -36,8 +36,9 @@ struct PullRequestReviewSubmissionSourceTests {
     #expect(
       request.url.value.absoluteString
         == "https://api.github.com/repos/Owner/rivet.repo/pulls/42/reviews")
-    var expectedHeaders = standardHeaders
-    expectedHeaders.contentType = "application/json"
+    let expectedHeaders = try GitHubHeadersFactory.standard.make(requirements: [
+      .standardRESTWithJSONBody
+    ])
     #expect(request.headers == expectedHeaders)
     #expect(
       try GitHubHeadersFactory.standard.make(requirements: [.standardREST]) == standardHeaders)
@@ -99,7 +100,18 @@ struct PullRequestReviewSubmissionSourceTests {
     #expect(await rest.requests.count == 1)
   }
 
-  @Test(arguments: [201, 302, 408, 500, 503])
+  @Test(arguments: [
+    #"{"message":"Resource not accessible by integration."}"#,
+    #"{"message":"You have exceeded a secondary rate limit."}"#,
+    "malformed body",
+  ])
+  func preservesForbiddenStatusAcrossClassifierResults(_ body: String) async {
+    let rest = ReviewRESTStub(.success(response(403, body: body)))
+    #expect(await Submission(rest: rest).submit(input()) == .rejected(statusCode: 403))
+    #expect(await rest.requests.count == 1)
+  }
+
+  @Test(arguments: [201, 204, 302, 408, 499, 500, 503, 599, 600])
   func unexpectedResponseNeedsReconciliation(_ status: Int) async {
     let rest = ReviewRESTStub(.success(response(status)))
     #expect(await Submission(rest: rest).submit(input()) == .needsReconciliation)

@@ -15,6 +15,10 @@
 
 2026-11-27 依使用者確認拆分 GitHub Review Endpoint 與送出 Source。新增獨立 Endpoint 測試，並重驗 Source 的請求專用 Content-Type、取消邊界與現有 client 的 401 復原上限。Endpoint 測試先因型別尚未建立而編譯失敗。實作後，相關 6 個 suites 共 77 項測試通過，Swift 格式、SwiftLint 607 檔零違規與 diff 檢查通過。
 
+## PR #108 第二次修正
+
+使用者確認加入 `.standardRESTWithJSONBody`、將成功狀態 200 置於 Endpoint，並把非成功 HTTP 回應交共用分類器。422 的新技術分類保留既有 Reader 與 Inbox 結果。測試先因缺少 preset 等型別成員而編譯失敗。實作後，15 個 suites 共 199 項測試通過，包含 200 無收據、取消、401 復原、明確拒絕及 5xx／未知狀態。Swift 格式、SwiftLint 607 檔零違規與 diff 檢查通過。
+
 ## 初次交付的本機檢閱證據
 
 - Archify showcase 9/9、零錯誤及警告，四尺寸 containment 和明暗主題目視通過。Viewer 採英文。HTML SHA-256 為 `c2b21d342cdcc95ff2ab11d1e8ca44b455a0b403962605355fbd2675fe8410eb`。

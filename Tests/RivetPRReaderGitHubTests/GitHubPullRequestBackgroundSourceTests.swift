@@ -86,7 +86,7 @@ struct GitHubPullRequestBackgroundSourceTests {
     #expect(await source.fetchBackground(for: id) == .failure(.notReadable))
   }
 
-  @Test(arguments: [304, 429, 503])
+  @Test(arguments: [304, 422, 429, 503])
   func mapsUnavailableStatus(_ status: Int) async {
     let client = RESTStub(.success(response("not JSON", status: status)))
     let source = GitHubPullRequestBackgroundSource(client: client)

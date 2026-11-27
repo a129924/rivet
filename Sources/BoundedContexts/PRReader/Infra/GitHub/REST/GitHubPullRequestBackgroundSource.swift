@@ -53,7 +53,7 @@ package struct GitHubPullRequestBackgroundSource: PRBackgroundSource {
     switch GitHubResponseClassifier().classifyFailure(response) {
     case .unauthorized, .notFound, .forbidden, .unclassifiedForbidden:
       return .notReadable
-    case .rateLimited, .serverError, .unexpectedStatus:
+    case .unprocessableContent, .rateLimited, .serverError, .unexpectedStatus:
       return .unavailable
     }
   }

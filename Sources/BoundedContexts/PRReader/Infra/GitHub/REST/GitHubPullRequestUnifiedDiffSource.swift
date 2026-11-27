@@ -39,7 +39,7 @@ package struct GitHubPullRequestUnifiedDiffSource: Sendable {
       switch GitHubResponseClassifier().classifyFailure(response) {
       case .unauthorized, .notFound, .forbidden, .unclassifiedForbidden:
         return .failure(.notReadable)
-      case .rateLimited, .serverError, .unexpectedStatus:
+      case .unprocessableContent, .rateLimited, .serverError, .unexpectedStatus:
         return .failure(.unavailable)
       }
     }
