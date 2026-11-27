@@ -8,10 +8,10 @@
 
 | Operation | 重要輸入 | 成功結果 | 認證／權限 | 狀態 | 官方來源 |
 | --- | --- | --- | --- | --- | --- |
-| `markFileAsViewed` | `pullRequestId`、`path` | mutation field `markFileAsViewed` 為 nullable；其 `MarkFileAsViewedPayload.pullRequest` 亦為 nullable 的更新後 PR。 | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/payload](https://docs.github.com/en/graphql/reference/pulls#markfileasviewed)、[input](https://docs.github.com/en/graphql/reference/pulls#markfileasviewedinput)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
-| `unmarkFileAsViewed` | `pullRequestId`、`path` | mutation field `unmarkFileAsViewed` 為 nullable；其 `UnmarkFileAsViewedPayload.pullRequest` 亦為 nullable 的更新後 PR。 | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 | 後續寫入 | [mutation/payload](https://docs.github.com/en/graphql/reference/pulls#unmarkfileasviewed)、[input](https://docs.github.com/en/graphql/reference/pulls#unmarkfileasviewedinput)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
+| `markFileAsViewed` | `pullRequestId`、`path` | mutation field `markFileAsViewed` 為 nullable；其 `MarkFileAsViewedPayload.pullRequest` 亦為 nullable 的更新後 PR。 | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 | 套件內入口 | [mutation/payload](https://docs.github.com/en/graphql/reference/pulls#markfileasviewed)、[input](https://docs.github.com/en/graphql/reference/pulls#markfileasviewedinput)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
+| `unmarkFileAsViewed` | `pullRequestId`、`path` | mutation field `unmarkFileAsViewed` 為 nullable；其 `UnmarkFileAsViewedPayload.pullRequest` 亦為 nullable 的更新後 PR。 | GitHub 要求有效 token 且可存取目標 repository；reference 未列出 operation-specific fine-grained permission。 | 套件內入口 | [mutation/payload](https://docs.github.com/en/graphql/reference/pulls#unmarkfileasviewed)、[input](https://docs.github.com/en/graphql/reference/pulls#unmarkfileasviewedinput)、[transport/auth](https://docs.github.com/en/graphql/guides/introduction-to-graphql#discovering-the-graphql-api) |
 
-這兩個 mutation 操作 GitHub API 的 pull request file viewed state；本 catalog 不宣稱 GitHub 網頁的同步行為。
+套件內提供單檔標記與取消入口。呼叫端提供已核對的 PR node ID 和檔案原始路徑。同一 PR 的收據確認 GitHub 接受本次操作，當下逐檔狀態可由既有讀取取得。回應缺少可驗證收據或明確拒絕時，交付結果待核對。 [套件契約](../architecture/github-pr-graphql-writes.md)
 
 ## Review Thread Resolution
 

@@ -1,0 +1,78 @@
+// swift-format-ignore-file
+// swiftlint:disable:next blanket_disable_command
+// swiftlint:disable all
+// @generated
+// This file was automatically generated and should not be edited.
+
+import ApolloAPI
+
+extension PRWriteGitHubGraphQL.Interfaces {
+  /// Metadata for an audit entry with action org.*
+  nonisolated static let OrganizationAuditEntryData = ApolloAPI.Interface(
+    name: "OrganizationAuditEntryData",
+    keyFields: nil,
+    implementingObjects: [
+      "MembersCanDeleteReposClearAuditEntry",
+      "MembersCanDeleteReposDisableAuditEntry",
+      "MembersCanDeleteReposEnableAuditEntry",
+      "OauthApplicationCreateAuditEntry",
+      "OrgAddBillingManagerAuditEntry",
+      "OrgAddMemberAuditEntry",
+      "OrgBlockUserAuditEntry",
+      "OrgConfigDisableCollaboratorsOnlyAuditEntry",
+      "OrgConfigEnableCollaboratorsOnlyAuditEntry",
+      "OrgCreateAuditEntry",
+      "OrgDisableOauthAppRestrictionsAuditEntry",
+      "OrgDisableSamlAuditEntry",
+      "OrgDisableTwoFactorRequirementAuditEntry",
+      "OrgEnableOauthAppRestrictionsAuditEntry",
+      "OrgEnableSamlAuditEntry",
+      "OrgEnableTwoFactorRequirementAuditEntry",
+      "OrgInviteMemberAuditEntry",
+      "OrgInviteToBusinessAuditEntry",
+      "OrgOauthAppAccessApprovedAuditEntry",
+      "OrgOauthAppAccessBlockedAuditEntry",
+      "OrgOauthAppAccessDeniedAuditEntry",
+      "OrgOauthAppAccessRequestedAuditEntry",
+      "OrgOauthAppAccessUnblockedAuditEntry",
+      "OrgRemoveBillingManagerAuditEntry",
+      "OrgRemoveMemberAuditEntry",
+      "OrgRemoveOutsideCollaboratorAuditEntry",
+      "OrgRestoreMemberAuditEntry",
+      "OrgRestoreMemberMembershipOrganizationAuditEntryData",
+      "OrgUnblockUserAuditEntry",
+      "OrgUpdateDefaultRepositoryPermissionAuditEntry",
+      "OrgUpdateMemberAuditEntry",
+      "OrgUpdateMemberRepositoryCreationPermissionAuditEntry",
+      "OrgUpdateMemberRepositoryInvitationPermissionAuditEntry",
+      "PrivateRepositoryForkingDisableAuditEntry",
+      "PrivateRepositoryForkingEnableAuditEntry",
+      "RepoAccessAuditEntry",
+      "RepoAddMemberAuditEntry",
+      "RepoAddTopicAuditEntry",
+      "RepoArchivedAuditEntry",
+      "RepoChangeMergeSettingAuditEntry",
+      "RepoConfigDisableAnonymousGitAccessAuditEntry",
+      "RepoConfigDisableCollaboratorsOnlyAuditEntry",
+      "RepoConfigDisableContributorsOnlyAuditEntry",
+      "RepoConfigDisableSockpuppetDisallowedAuditEntry",
+      "RepoConfigEnableAnonymousGitAccessAuditEntry",
+      "RepoConfigEnableCollaboratorsOnlyAuditEntry",
+      "RepoConfigEnableContributorsOnlyAuditEntry",
+      "RepoConfigEnableSockpuppetDisallowedAuditEntry",
+      "RepoConfigLockAnonymousGitAccessAuditEntry",
+      "RepoConfigUnlockAnonymousGitAccessAuditEntry",
+      "RepoCreateAuditEntry",
+      "RepoDestroyAuditEntry",
+      "RepoRemoveMemberAuditEntry",
+      "RepoRemoveTopicAuditEntry",
+      "RepositoryVisibilityChangeDisableAuditEntry",
+      "RepositoryVisibilityChangeEnableAuditEntry",
+      "TeamAddMemberAuditEntry",
+      "TeamAddRepositoryAuditEntry",
+      "TeamChangeParentTeamAuditEntry",
+      "TeamRemoveMemberAuditEntry",
+      "TeamRemoveRepositoryAuditEntry"
+    ]
+  )
+}

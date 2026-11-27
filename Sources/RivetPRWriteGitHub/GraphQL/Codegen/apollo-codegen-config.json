@@ -1,0 +1,28 @@
+{
+  "schemaNamespace": "PRWriteGitHubGraphQL",
+  "input": {
+    "schemaSearchPaths": [
+      "Schema.graphqls"
+    ],
+    "operationSearchPaths": [
+      "PullRequestFileViewedWrite.graphql"
+    ]
+  },
+  "output": {
+    "schemaTypes": {
+      "path": "../Generated",
+      "moduleType": {
+        "embeddedInTarget": {
+          "name": "RivetPRWriteGitHub",
+          "accessModifier": "internal"
+        }
+      }
+    },
+    "operations": {
+      "inSchemaModule": {}
+    },
+    "testMocks": {
+      "none": {}
+    }
+  }
+}

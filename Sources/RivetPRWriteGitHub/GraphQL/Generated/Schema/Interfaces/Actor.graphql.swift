@@ -1,0 +1,22 @@
+// swift-format-ignore-file
+// swiftlint:disable:next blanket_disable_command
+// swiftlint:disable all
+// @generated
+// This file was automatically generated and should not be edited.
+
+import ApolloAPI
+
+extension PRWriteGitHubGraphQL.Interfaces {
+  /// Represents an object which can take actions on GitHub. Typically a User or Bot.
+  nonisolated static let Actor = ApolloAPI.Interface(
+    name: "Actor",
+    keyFields: nil,
+    implementingObjects: [
+      "Bot",
+      "EnterpriseUserAccount",
+      "Mannequin",
+      "Organization",
+      "User"
+    ]
+  )
+}

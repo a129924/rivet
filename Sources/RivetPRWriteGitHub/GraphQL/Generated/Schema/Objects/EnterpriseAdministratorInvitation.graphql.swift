@@ -1,0 +1,16 @@
+// swift-format-ignore-file
+// swiftlint:disable:next blanket_disable_command
+// swiftlint:disable all
+// @generated
+// This file was automatically generated and should not be edited.
+
+import ApolloAPI
+
+extension PRWriteGitHubGraphQL.Objects {
+  /// An invitation for a user to become an owner or billing manager of an enterprise.
+  nonisolated static let EnterpriseAdministratorInvitation = ApolloAPI.Object(
+    typename: "EnterpriseAdministratorInvitation",
+    implementedInterfaces: [PRWriteGitHubGraphQL.Interfaces.Node.self],
+    keyFields: nil
+  )
+}
