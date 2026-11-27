@@ -15,11 +15,9 @@ package struct GitHubNotificationReadMarker: Sendable {
 
   private let httpClient: HTTPClient
 
-  package init() {
-    self.init(httpClient: GitHubHTTPClient.makeHTTPClient())
-  }
-
-  internal init(httpClient: HTTPClient) {
+  /// The caller supplies a client that does not follow redirects.
+  /// Use `GitHubRESTTransport.makeClient()` in production.
+  package init(httpClient: HTTPClient) {
     self.httpClient = httpClient
   }
 

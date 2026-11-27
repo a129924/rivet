@@ -18,7 +18,7 @@ Topic 為 `github-notification-mark-as-read`。依 `$git-branch-naming` 和 Rive
 
 ## 實作與產品驗收
 
-1. 遵循技術規格，在既有 target 內建立 internal endpoint 與 package adapter。Adapter 以 endpoint 的 method 和固定 URL 組裝既有標頭與 Bearer，再進入 raw client。於同一測試檔涵蓋 endpoint 和套件入口。
+1. 遵循技術規格，在既有 target 內建立 internal endpoint 與 package adapter。Adapter 以 endpoint 的 method 和固定 URL 組裝既有標頭與 Bearer，再進入呼叫端以 `package init(httpClient:)` 注入的 raw client。Human Review 確認正式組裝使用 `GitHubRESTTransport.makeClient()`，測試注入受控 transport。於同一測試檔涵蓋 endpoint 和套件入口。
 2. Tester 獨立核對產品。驗收通過後，Implementer 回寫 API Catalog 的指定項目，Tester 核對回寫及最終差異，再交獨立 Reviewer。
 3. Reviewer 依實際差異與證據審查。納入已暫存、未暫存及允許的未追蹤檔，按九欄核對。
 

@@ -13,7 +13,7 @@ Rivet 套件內由 `GitHubIntegration` 的 `GitHubUnreadNotificationsSource.list
 
 條件式輪詢屬後續工作。GitHub 提供 `Last-Modified`、`If-Modified-Since`、`304 Not Modified` 與以秒為單位的 `X-Poll-Interval`。 GitHub App user／installation token 與 fine-grained PAT 不適用於通知清單。
 
-Rivet 套件內由 `GitHubIntegration` 的 `GitHubNotificationReadMarker.markAsRead(threadID:using:)` 提供單筆寫入。呼叫端傳入同一帳號的 thread ID 與 classic PAT。寫入入口先驗證 ID，再向固定 GitHub API 目的地提交一次無 body 的 PATCH。 `205` 確認寫入，`304` 回報未修改。缺少伺服器確認時，呼叫端收到待核對結果。轉址及自動重送均停用。此契約已用受控離線測試驗證。
+Rivet 套件內由 `GitHubIntegration` 的 `GitHubNotificationReadMarker.markAsRead(threadID:using:)` 提供單筆寫入。組裝端以 `init(httpClient:)` 注入 client，正式組裝採用 `GitHubRESTTransport.makeClient()`，保留原始轉址回應並拒絕自動跟隨。呼叫端傳入同一帳號的 thread ID 與 classic PAT。寫入入口先驗證 ID，再向固定 GitHub API 目的地提交一次無 body 的 PATCH。 `205` 確認寫入，`304` 回報未修改。缺少伺服器確認時，呼叫端收到待核對結果。轉址及自動重送均停用。此契約已用受控離線測試驗證。
 
 Notification thread 的 read state 與「某一個 review comment 是否已在 Rivet 看過」不同，不可互相替代。
 

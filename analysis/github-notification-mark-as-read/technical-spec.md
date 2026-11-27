@@ -4,7 +4,7 @@
 
 - `internal GitHubNotificationMarkAsReadEndpoint` 代表單筆寫入目的地。採 throwing `init(threadID:)`、`method` 回傳 `.patch`、throwing `makeURL()`。ID 限全為 ASCII 數字且至少有一個非零數字的原始 `String`。保留前導零與可長於 Swift `Int` 的字串。用 `GitHubRESTDestination.makeURL(path:)` 組成 `https://api.github.com/notifications/threads/{thread_id}`，query 為空。無效 ID 在建立 endpoint 時回報。
 - `package GitHubNotificationReadMarker.markAsRead(threadID:using:)` 接受 `String` 與非 optional `PersonalAccessToken`，以 `async` 回傳操作專屬的 `Sendable` 結果。Adapter 先取得 endpoint 的固定目的地，沿用 `GitHubHeadersFactory.standard` 的 `.standardREST` 準備無 body 的請求，再以 `BearerAuth` 加入憑證。PAT 類型、scope 與帳號歸屬由呼叫端提供且由 GitHub 裁決。
-- 正式預設採 `GitHubHTTPClient.makeHTTPClient()` 提供的 raw `HTTPClient`，由既有 URLSession delegate 阻擋轉址。以 internal 注入點支援受控測試。每次有效呼叫只進入 raw request execution 一次，自動讀回、OAuth 401 recovery 與自動重送次數為零。單次指應用層 transport 提交。 [GitHub 單筆已讀 API](https://docs.github.com/en/rest/activity/notifications#mark-a-thread-as-read)
+- 呼叫端以 `package init(httpClient:)` 明確注入 raw `HTTPClient`。正式組裝採 `GitHubRESTTransport.makeClient()`，由既有 URLSession delegate 阻擋轉址。離線測試使用同一建構子注入受控 transport。每次有效呼叫只進入 raw request execution 一次，自動讀回、OAuth 401 recovery 與自動重送次數為零。單次指應用層 transport 提交。 [GitHub 單筆已讀 API](https://docs.github.com/en/rest/activity/notifications#mark-a-thread-as-read)
 
 ## 結果與中斷
 

@@ -1,6 +1,6 @@
 # 將單一 GitHub 通知標記為已讀步驟帳本
 
-最後更新 2026-11-27。Phase 為交付，當前步驟 NR-S06。分支 `feat/github-notification-mark-as-read`，基線 `a559f7a69f2fda6d25c6e50298905f777cd831b4`。發布前驗收基線快轉至 `4261f9c55faf5ce0194906fcea45fb47de5b2574`。
+最後更新 2026-11-27。Phase 為 Human Review，當前步驟 NR-S07。分支 `feat/github-notification-mark-as-read`，基線 `a559f7a69f2fda6d25c6e50298905f777cd831b4`。發布前驗收基線快轉至 `4261f9c55faf5ce0194906fcea45fb47de5b2574`。
 
 | ID | 狀態 | 角色 | 完成條件 | 驗證證據 |
 | --- | --- | --- | --- | --- |
@@ -9,8 +9,8 @@
 | NR-S03 | completed | Implementer | 依契約完成兩份 Swift 來源與測試，留下本機輔助證據 | 已新增兩份 Swift 來源及同一份測試。Focused red exit 1，因兩個型別尚未實作。Green exit 0，11 項通過。 |
 | NR-S04 | completed | Tester | 獨立執行 NR01–NR04。產品驗收後由 Implementer 回寫 Catalog，Tester 再核對最終差異及本機證據 | 獨立 Tester 確認 NR01–NR03 通過。最終 PR 基線獨立回歸 340 項、39 suites 全過。Format、SwiftLint 619 檔零違規及差異檢核 exit 0。Catalog 已回寫，Tester 確認僅單筆 PATCH、既有讀取段落保留，最終九檔範圍通過。 |
 | NR-S05 | approved | Reviewer | 依 Tester 證據核對九欄、實際差異與產品驗收 | 獨立 Reviewer 明示 approved，無必修項。 |
-| NR-S06 | in-progress | Implementer | 依條件式授權完成單一 topic commit、push、Draft PR 與讀回 | 單一 topic，訊息為 `feat(github-integration): 支援將單筆 GitHub 通知標為已讀`。Commit SHA、Draft PR 與 PR Lens 收據在提交後記於本機交付證據。 |
-| NR-S07 | pending | Human | 接手 Draft PR 審閱 | 待 Draft PR 建立及讀回。 |
+| NR-S06 | completed | Implementer | 依條件式授權完成單一 topic commit、push、Draft PR 與讀回 | 單一 topic，訊息為 `feat(github-integration): 支援將單筆 GitHub 通知標為已讀`。已推送初次交付 `f82d09c`，GitHub 已讀回 [Draft PR #109](https://github.com/a129924/rivet/pull/109)。 |
+| NR-S07 | in-progress | Human | 審閱 Draft PR #109 | Human 已確認建構子注入調整。修正已在 feature worktree 完成並驗證。 |
 
 ## Blockers
 
@@ -22,7 +22,7 @@
 - Archify 本機 sequence 在同一證據目錄的 `archify/`，showcase 9/9、錯誤及警告均為零，四種尺寸的自動檢核通過，已檢視最小和最大尺寸亮暗截圖。Viewer 為英文。
 - Graphify 0.9.73。預設位置沒有對應的本機圖，依計畫用 `rg` 與原碼核對直接依賴，證據為 `graphify-navigation.txt`。
 - Floorplan 副本已更新，本案三份 Swift 卡片均有說明，Recent work 標記兩份產品碼。以最新基線刷新後再核對三個本案卡片。本機已開啟 HTML 預覽，全圖既有說明缺口另列。
-- PR Lens 0.11.0 待提交後以實際 base/head 產出本機變更圖，保留驗證、渲染及 manifest 證據。
+- PR Lens 0.11.0 針對 Draft PR #109 初次提交 `f82d09c` 驗證並本機渲染兩張 SVG，收據位於本案證據目錄。
 - `$show-me` 依兩份新 Swift 來源與 focused 測試核對。
 
 ```text
@@ -36,6 +36,12 @@ GitHubNotificationReadMarker.markAsRead(threadID:using:)
       205 → 確認已讀
       其他回應或中斷 → 依契約映射
 ```
+
+## Human Review 調整
+
+Human 確認 `GitHubNotificationReadMarker` 一律使用 `package init(httpClient:)`。正式組裝由呼叫端以 `GitHubRESTTransport.makeClient()` 建立拒絕轉址的 client，再注入。受控測試使用同一建構子。
+
+同套件編譯探針確認一般 `import GitHubIntegration` 可注入正式 client，無參數呼叫會因缺少 `httpClient` 編譯失敗。340 項 GitHubIntegration 測試、Swift format、SwiftLint 及差異檢查全過。本機證據見本案 ignored 目錄的 `injection-review/`。Human 授權測試通過後提交及推送至 Draft PR #109。本輪提交後的 GitHub 讀回收據置於同一證據目錄。
 
 ## Human Check
 
