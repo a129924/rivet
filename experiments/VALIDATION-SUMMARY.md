@@ -4,6 +4,20 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #108 GitHub PR 整體 Review 送出離線驗收
+
+[PR #108](https://github.com/a129924/rivet/pull/108) 於 `2026-11-27T05:33:33Z` 合併至 `dev` 並關閉，共帶入 27 個檔案的變更。合併提交為 `4f88e8799dc69c8a86a68a70033dab56044c015e`，最終受測提交為 `ad7f74a28091a37a2db5837407300ad8e11b24f7`。兩者的本題差異以 stable patch ID 核對一致，值為 `d83a838fc95212ff4de115a41b3580fe72486586`。 [API Catalog](https://github.com/a129924/rivet/blob/v0.1.102-github-pull-request-review-submission/docs/github-api/rest-discussion-reviews.md#submit-review) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.102-github-pull-request-review-submission/plan/github-pull-request-review-submission/github-pull-request-review-submission.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 送出契約 | Endpoint 驗證 PR 目標並組裝 POST。Source 驗證已審閱的 SHA 與正文，透過 `.standardRESTWithJSONBody` 送出請求。收到 200 即保留接受結果，能讀取有效 ID 與狀態時附上收據。 |
+| 失敗與復原 | 共用分類器將 422 分為 `.unprocessableContent`，Review 送出映射為明確拒絕，既有 Reader 與 Inbox 的結果維持原樣。5xx、未知狀態及送出後只收到取消錯誤時須核對。既有 OAuth REST client 只在明確 401 後最多重送一次。 |
+| 最終離線回歸 | 199 項 Swift 測試、15 個 suites 全數通過。測試涵蓋標頭 preset 隔離、請求與收據、拒絕、取消、401 復原、既有 422 消費端及 SwiftPM 依賴。Swift 格式、SwiftLint 607 檔零違規、diff 檢查與提交 hooks 皆通過。 |
+| 本機審閱 | 初次交付的 PR Lens 對應提交 `656b0e8`。同輪 Archify 通過 showcase 9/9、四種桌面尺寸及目視核對，Floorplan 已完成本機預覽。Graphify 缺少既有圖，依原始碼核對。 |
+| 驗收界線 | 使用受控 REST 回應，未執行真人遠端 Review 送出。清理階段核對合併差異與 Git 狀態，沿用已記錄的離線測試結果。 |
+
+本機與遠端的 annotated tag `v0.1.102-github-pull-request-review-submission` 物件均為 `cd47e66368c47acd5386b2e75dbd1f7c22bed2bc`，解參照後指向合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已確認移除。移除前封存 104 個本機檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-108-github-pr-整體-review-送出與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.102-github-pull-request-review-submission)
+
 ## PR #107 GitHub 未讀通知離線驗收
 
 [PR #107](https://github.com/a129924/rivet/pull/107) 於 `2026-11-27T03:24:35Z` 合併至 `dev` 並關閉，共變更 16 個檔案。合併提交為 `b0cf9b8b6e795fe37319cb123964418dad60ce30`，受測提交為 `68e1456f6558a6f7b177e55a461fa56ea967e2df`。兩者以本題差異核對的 stable patch ID 均為 `d64a7d05e758054162f4da1b49d28f73e495fb8e`。 [通知來源契約](../docs/github-api/rest-notifications-local-state.md#github-notification-threads)

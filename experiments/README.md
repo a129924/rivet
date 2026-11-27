@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #108 GitHub PR 整體 Review 送出與清理
+
+[PR #108](https://github.com/a129924/rivet/pull/108) 於 `2026-11-27T05:33:33Z` 合併至 `dev` 並關閉。合併提交 `4f88e8799dc69c8a86a68a70033dab56044c015e` 的本題差異與受測提交 `ad7f74a28091a37a2db5837407300ad8e11b24f7` 的 stable patch ID 一致。
+
+`RivetPRReviewGitHub` 提供套件內的整體 Review 送出入口，支援對指定 PR 和 commit 送出核准、要求修改或留言，並區分接受、明確拒絕與結果待核對。最終受控回歸通過 199 項測試與 15 個 suites。 [API Catalog](https://github.com/a129924/rivet/blob/v0.1.102-github-pull-request-review-submission/docs/github-api/rest-discussion-reviews.md#submit-review) · [驗證摘要](VALIDATION-SUMMARY.md#pr-108-github-pr-整體-review-送出離線驗收)
+
+Annotated tag `v0.1.102-github-pull-request-review-submission` 已推送並讀回，指向合併提交。已確認本機、遠端與遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前封存 104 個本機審閱與驗證檔案，逐檔核對 SHA-256、大小與權限模式。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.102-github-pull-request-review-submission)
+
 ## PR #107 GitHub 未讀通知讀取與清理
 
 [PR #107](https://github.com/a129924/rivet/pull/107) 於 `2026-11-27T03:24:35Z` 合併至 `dev` 並關閉。合併提交 `b0cf9b8b6e795fe37319cb123964418dad60ce30` 帶入的本題差異與受測提交 `68e1456f6558a6f7b177e55a461fa56ea967e2df` 的 stable patch ID 一致。
