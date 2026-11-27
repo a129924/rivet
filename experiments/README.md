@@ -90,6 +90,30 @@ PR #104 於 `2026-11-26T07:39:37Z` 合併至 `dev` 並關閉。合併提交 `f55
 
 語意 annotated tag `v0.1.96-pr-reader-github-inline-review-source-selection` 已推送並讀回，指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前停止該工作樹的 Floorplan 預覽，並私下封存及逐檔核對 126 個本機審閱與驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.96-pr-reader-github-inline-review-source-selection)
 
+## PR #103 PR Reader GraphQL Checks 讀取與清理
+
+PR #103 於 `2026-11-26T06:47:51Z` 合併至 `dev` 並關閉。合併提交 `10610d0be88c1d2bce37d5418fa5bae3171f8526` 與離線受測的 feature 提交 `b3590b8eeaf9e5331f652d330aa6a06e82c38d5c` 的 Git tree 相同。 [PR #103](https://github.com/a129924/rivet/pull/103)
+
+`GitHubPullRequestChecksSource.fetchChecks(for:)` 讀取指定 PR head 的整體狀態及兩種 Checks 明細。逐頁核對歸屬、狀態、筆數與游標，依來源順序交付完整結果，並區分 rollup 缺席、空明細與失敗。獨立離線回歸重跑通過 476 項測試。 [Reader 契約](https://github.com/a129924/rivet/blob/v0.1.95-pr-reader-github-checks-source/docs/architecture/bounded-contexts/pr-reader.md#github-graphql-checks-讀取) · [驗證摘要](VALIDATION-SUMMARY.md#pr-103-pr-reader-graphql-checks-讀取與離線驗收)
+
+Annotated tag `v0.1.95-pr-reader-github-checks-source` 已推送並讀回，指向合併提交。已核對本機、遠端、遠端追蹤分支與 feature worktree 的目錄和 Git 註冊均已移除。移除前已停止本題 Floorplan 預覽，並私下封存及逐檔核對 102 個本機審閱與驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.95-pr-reader-github-checks-source)
+
+## PR #102 PR Reader GraphQL 審閱對話讀取與清理
+
+PR #102 於 `2026-11-26T04:01:40Z` 合併至 `dev` 並關閉。合併提交 `97e3db851348d2dc0305fc371aa792ce84b257ae` 與離線受測的 feature 提交 `7316f3b140b89a8d44e426362c2fc480c25f089b` 的 Git tree 相同。 [PR #102](https://github.com/a129924/rivet/pull/102)
+
+`GitHubReviewThreadsSource.fetchReviewThreads(for:)` 讀取指定 PR 的完整審閱對話，保留 thread 與留言的原序、歸屬、狀態、路徑與可用定位資料，以及原始 Markdown、可用作者與回覆 ID。任一層分頁失敗或取消時只交付單一 Reader failure。獨立離線驗收通過 466 項測試。 [Reader 契約](https://github.com/a129924/rivet/blob/v0.1.94-pr-reader-github-review-threads-source/docs/architecture/bounded-contexts/pr-reader.md#github-graphql-審閱對話讀取) · [驗證摘要](VALIDATION-SUMMARY.md#pr-102-pr-reader-graphql-審閱對話讀取與離線驗收)
+
+Annotated tag `v0.1.94-pr-reader-github-review-threads-source` 已推送並讀回，指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前已停止該工作樹的 Floorplan 預覽，並私下封存及逐檔核對 121 個審閱與驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.94-pr-reader-github-review-threads-source)
+
+## PR #100 PR Reader 行內審閱留言讀取與清理
+
+PR #100 於 `2026-11-26T02:47:14Z` 合併至 `dev` 並關閉。合併提交 `1fcdb2c274e2d0fde5c88e4225e20942650167c3` 與受測 feature 提交 `9cd2ff8ff6e7bbe7920c8fee934a3231f2a2b4dd` 的 Git tree 相同。 [PR #100](https://github.com/a129924/rivet/pull/100)
+
+`GitHubInlineReviewCommentsSource.fetchInlineReviewComments(for:)` 讀取指定 PR 的完整行內留言，保留來源順序、原始 Markdown 及可用定位和回覆資料。續頁須屬同一 PR，首次遇到數字儲存庫識別時用原 PR 詳情核對。任一頁失敗或取消只回單一 Reader failure。獨立離線驗收通過 117 項測試。 [Reader 契約](https://github.com/a129924/rivet/blob/v0.1.93-pr-reader-github-inline-review-comments-source/docs/architecture/bounded-contexts/pr-reader.md#github-rest-行內審閱留言讀取) · [驗證摘要](VALIDATION-SUMMARY.md#pr-100-pr-reader-行內審閱留言讀取與離線驗收)
+
+Annotated tag `v0.1.93-pr-reader-github-inline-review-comments-source` 已推送並讀回，指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前停止該 worktree 的 Floorplan 預覽，並私下封存及逐檔核對 84 個本機審閱檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.93-pr-reader-github-inline-review-comments-source)
+
 ## PR #99 PR Reader 行內審閱留言端點與清理
 
 PR #99 於 `2026-11-25T10:01:44Z` 合併至 `dev` 並關閉。合併提交 `64d0ce9f70c2abaeca7e2ec7204aab9a92add419` 與受測 feature 提交 `680853ab989842e4b64a8070f492388c5e8e1917` 的 Git tree 相同。 [PR #99](https://github.com/a129924/rivet/pull/99)
@@ -97,6 +121,158 @@ PR #99 於 `2026-11-25T10:01:44Z` 合併至 `dev` 並關閉。合併提交 `64d0
 `GitHubInlineReviewCommentsEndpoint` 驗證 PR 識別與正數頁碼，為指定 PR 建構行內審閱留言的 GET URL。預設第 1 頁，每頁固定 100 筆。獨立離線驗收通過 101 項測試。實際 HTTP 讀取由後續 Adapter 交付。 [Reader 契約](https://github.com/a129924/rivet/blob/v0.1.92-pr-reader-github-inline-review-comments-endpoint/docs/architecture/bounded-contexts/pr-reader.md#github-rest-行內審閱留言端點) · [驗證摘要](VALIDATION-SUMMARY.md#pr-99-pr-reader-行內審閱留言端點與離線驗收)
 
 Annotated tag `v0.1.92-pr-reader-github-inline-review-comments-endpoint` 已推送並讀回，指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前停止該 worktree 的 Floorplan 預覽，並私下封存與逐檔核對 86 個本機審閱及驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.92-pr-reader-github-inline-review-comments-endpoint)
+
+## PR #98 PR Reader 審閱紀錄讀取與清理
+
+PR #98 於 `2026-11-25T09:23:42Z` 合併至 `dev` 並關閉。合併提交 `c9c9f17a0d7732574d25a652ce088c65dcefea06` 與受測 feature 提交 `7cd2df446fb6e30fcc630c3d34dda852b42ea7bf` 的 Git tree 相同。 [PR #98](https://github.com/a129924/rivet/pull/98)
+
+`GitHubPullRequestReviewsSource.fetchReviews(for:)` 讀取指定 PR 的完整審閱紀錄，依 GitHub 回傳順序保留識別、原始正文、可取得的作者及五種審閱狀態。續頁先核對歸屬，首次有效的數字續頁用原 PR 詳情查核，再重建具名網址。任一頁失敗或取消時只交付單一 Reader failure。獨立受控驗收通過 96 項測試。 [Reader 契約](https://github.com/a129924/rivet/blob/v0.1.91-pr-reader-github-reviews-source/docs/architecture/bounded-contexts/pr-reader.md#github-rest-審閱紀錄讀取) · [驗證摘要](VALIDATION-SUMMARY.md#pr-98-pr-reader-審閱紀錄讀取與離線驗收)
+
+Annotated tag `v0.1.91-pr-reader-github-reviews-source` 已推送並讀回，指向合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已核對移除。移除前已停止該工作樹的 Floorplan 預覽，並私下封存及逐檔核對 130 個本機審閱檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.91-pr-reader-github-reviews-source)
+
+## PR #96 PR Reader 審閱紀錄端點與清理
+
+PR #96 於 `2026-11-25T08:27:52Z` 合併至 `dev` 並關閉。合併提交為 `38f65400958d39db4fd3e803f71402b8745c6174`，端點、測試與四份規劃文件和受測 feature 提交 `8ac50fc2b8c805406affeae0c4e08260f28e2ea7` 一致。 [PR #96](https://github.com/a129924/rivet/pull/96)
+
+PR Reader Infra 可依指定 PR 與頁碼同步建立審閱紀錄的 GET URL，預設第 1 頁，每頁請求 100 筆。獨立驗收通過 79 項測試。HTTP 執行、分頁讀取與審閱紀錄組裝由後續 Adapter 負責。 [Reader 契約](https://github.com/a129924/rivet/blob/v0.1.90-pr-reader-github-reviews-endpoint/docs/architecture/bounded-contexts/pr-reader.md#github-rest-審閱紀錄端點) · [驗證摘要](VALIDATION-SUMMARY.md#pr-96-pr-reader-審閱紀錄端點與離線驗收)
+
+Annotated tag `v0.1.90-pr-reader-github-reviews-endpoint` 已推送並讀回，指向合併提交。已核對本機分支、遠端分支、遠端追蹤 ref，以及 feature worktree 目錄與 Git 註冊均已移除。移除前停止該 worktree 的 Floorplan 預覽，並私下封存及核對 107 個審閱與驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.90-pr-reader-github-reviews-endpoint)
+
+## PR #95 PR Reader 背景工作階段正式採用
+
+PR #95 於 `2026-11-25T08:20:24Z` 合併至 `dev` 並關閉。合併提交 `e0cab03a3567488d59dcd4c29b2ae8994bc3e7e6` 與受測的 feature 提交 `4b455b709c260151499c9e65b2340f031a58c9d6` 的 Git tree 相同。 [PR #95](https://github.com/a129924/rivet/pull/95)
+
+`PRReaderBackgroundSession` 的套件內組裝重用既有 GitHub 背景來源。同一 PR 刷新保留最近一次成功資料，切換 PR 時清除前一筆資料，只有當前有效請求可提交。獨立 SwiftPM 驗證通過 517 項測試。 [Reader 契約](../docs/architecture/bounded-contexts/pr-reader.md#背景資料呈現工作階段) · [驗證摘要](VALIDATION-SUMMARY.md#pr-95-pr-reader-背景工作階段正式採用與離線驗收)
+
+Annotated tag `v0.1.89-pr-reader-background-session-production-adoption` 已推送並讀回，指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前私下封存並核對 Floorplan 副本及驗證紀錄。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.89-pr-reader-background-session-production-adoption)
+
+## PR #94 PR Reader 一般討論留言讀取與清理
+
+PR #94 於 `2026-11-25T07:55:39Z` 合併至 `dev` 並關閉。合併提交 `587f7bb91fbe9f056cf72214a9992a1325ffce72` 與受測 feature 提交 `0db610d3e665bbee457c6c2cc57740883d1b772e` 的 Git tree 相同。 [PR #94](https://github.com/a129924/rivet/pull/94)
+
+`GitHubConversationCommentsSource` 讀取指定提案的完整一般討論，保留頁次、頁內順序、留言 ID、原始 Markdown 與可用作者。首次遇到有效的數字續頁時查原 PR 詳情一次，確認身分後以原 PR 的具名網址續讀。驗收以受控 REST 回應進行，74 項測試通過。 [Reader 契約](../docs/architecture/bounded-contexts/pr-reader.md#github-rest-一般討論留言讀取) · [驗證摘要](VALIDATION-SUMMARY.md#pr-94-pr-reader-一般討論留言讀取與離線驗收)
+
+Annotated tag `v0.1.88-pr-reader-github-conversation-comments-source` 已推送，本機與遠端均確認指向合併提交。本機、遠端及遠端追蹤分支已刪除，feature worktree 的目錄與 Git 註冊均已移除。移除前已停止該 worktree 的 Floorplan 預覽，並私下封存 112 個審閱與驗證檔案。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.88-pr-reader-github-conversation-comments-source)
+
+## PR #93 PR Reader 原始 unified diff 與清理
+
+PR #93 於 `2026-11-25T07:19:40Z` 合併至 `dev` 並關閉。合併提交 `b0ad6974a33cc53112083eefad60504462593d66` 與最後受測的 feature 提交 `5890961f7ae216f77f9f90165c7ccaacdf5454fc` 的 Git tree 相同。 [PR #93](https://github.com/a129924/rivet/pull/93)
+
+`GitHubPullRequestUnifiedDiffSource` 沿用單一 PR 詳情 GET，使用 `Accept: application/vnd.github.diff` 取得整份差異。成功時原樣交付回應的位元組，權限拒絕、`406` 及取消依 Reader 契約回傳失敗。解決文件衝突後，94 項受控回歸測試通過。 [Reader 契約](../docs/architecture/bounded-contexts/pr-reader.md#github-rest-raw-unified-diff) · [驗證摘要](VALIDATION-SUMMARY.md#pr-93-pr-reader-原始-unified-diff-與離線驗收)
+
+Annotated tag `v0.1.87-pr-reader-github-raw-unified-diff` 已推送並讀回，指向合併提交。已核對本機、遠端與遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前已停止該 worktree 的 Floorplan 預覽，並私下封存 99 個審閱檔案，逐檔核對 SHA-256、大小及權限模式。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.87-pr-reader-github-raw-unified-diff)
+
+## PR #92 PR Reader 變更檔案讀取與清理
+
+PR #92 於 `2026-11-25T07:10:22Z` 合併至 `dev` 並關閉。合併提交 `4f3d84570fe822655c32b434628cb32f8e9142ed` 與受測 feature 提交 `70605ad4e3cfed6138bb0b63ac0b2818b2d178c2` 的 Git tree 相同。 [PR #92](https://github.com/a129924/rivet/pull/92)
+
+`GitHubPullRequestChangedFilesSource` 透過已認證的 REST client 讀取指定 PR 的檔案頁，保留來源順序、檔案識別、增刪數及可取得的原路徑與 patch。續頁須核對歸屬，達 3,000 檔或無法完成讀取時回傳單一 Reader failure。合併衝突解決後，61 項受控測試通過。 [Reader 契約](../docs/architecture/bounded-contexts/pr-reader.md#github-rest-變更檔案讀取) · [驗證摘要](VALIDATION-SUMMARY.md#pr-92-pr-reader-變更檔案讀取與離線驗收)
+
+Annotated tag `v0.1.86-pr-reader-github-changed-files-source` 已推送並讀回，指向合併提交。已核對本機、遠端與遠端追蹤分支皆已刪除，feature worktree 的目錄及 Git 註冊亦已移除。移除前私下封存 99 個審閱與驗證檔案，逐檔核對 SHA-256、大小及權限模式。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.86-pr-reader-github-changed-files-source)
+
+## PR #90 Repository open PR 清單查詢與清理
+
+PR #90 於 `2026-11-25T06:30:31Z` 合併至 `dev` 並關閉。合併提交 `40d605998020fa9e6e57d01e1850d831114780d6` 的七個 topic 檔案與受測 feature 提交 `0a9ce1c2cebc12d535a34674157822a167710498` 一致。 [PR #90](https://github.com/a129924/rivet/pull/90)
+
+`GitHubRepositoryOpenPullRequestsQuery` 透過既有 REST client 讀取指定 repository 的 open PR，驗證 Link 後由原 Endpoint 重建下一頁。尾頁才一次交付原順序的編號與標題，任一頁失敗或取消都回傳整次失敗。離線回歸通過 438 項。 [API Catalog](../docs/github-api/rest-inbox-discovery.md#repository-pull-request-list) · [驗證摘要](VALIDATION-SUMMARY.md#pr-90-repository-open-pr-清單查詢與離線驗收)
+
+Annotated tag `v0.1.85-github-repository-open-pull-requests-adapter` 已推送並讀回，指向合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已核對移除。移除前已停止該 worktree 的 Floorplan 預覽，並私下封存 105 個產物，逐檔核對 SHA-256、大小與權限模式。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.85-github-repository-open-pull-requests-adapter)
+
+## PR #91 PR Reader 一般討論留言端點與清理
+
+PR #91 於 `2026-11-25T06:23:53Z` 合併至 `dev` 並關閉。合併提交 `612b97ed2ec1344b6bc39eb3b69ff7e245a83742` 與受測 feature 提交 `eee6a980e7e0e54a649a3f313f6e4dacbe73b86d` 的 Git tree 相同。 [PR #91](https://github.com/a129924/rivet/pull/91)
+
+PR Reader Infra 依同一筆 PR 識別建立一般討論留言的 GET 網址，預設第 1 頁，每頁請求 100 筆。端點沿用詳情的識別驗證，離線測試 25 項通過。HTTP 呼叫與留言讀取由後續 Adapter 負責。 [當時的 Reader 契約](https://github.com/a129924/rivet/blob/v0.1.84-pr-reader-github-conversation-comments-endpoint/docs/architecture/bounded-contexts/pr-reader.md#github-rest-一般討論留言端點) · [驗證摘要](VALIDATION-SUMMARY.md#pr-91-pr-reader-一般討論留言端點與離線驗收)
+
+Annotated tag `v0.1.84-pr-reader-github-conversation-comments-endpoint` 已推送並讀回，指向合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已核對移除。移除前停止 Floorplan 預覽，並私下封存 99 個本機驗證與審閱檔案，逐檔核對 SHA-256、大小及權限模式。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.84-pr-reader-github-conversation-comments-endpoint)
+
+## PR #89 PR Reader 變更檔案端點與清理（2026-11-25）
+
+PR #89 於 `2026-11-25T03:52:31Z` 合併至 `dev` 並關閉。合併提交 `d8e2ffed24c64da728cfb394da8d5a521b03642d` 與受測 feature 提交 `1397dcc94d9951240017082e4769eba2997fa687` 的 Git tree 相同。 [PR #89](https://github.com/a129924/rivet/pull/89)
+
+PR Reader Infra 的端點實例固定持有同一 PR 識別，每次接收頁碼並組裝 Changed Files GET URL。預設第 1 頁，每頁固定 100 檔，識別驗證沿用 #84。定向離線測試 20 項通過。 [驗證摘要](VALIDATION-SUMMARY.md#pr-89-pr-reader-變更檔案端點與離線驗收)
+
+Annotated tag `v0.1.83-pr-reader-github-changed-files-endpoint` 已推送並讀回，指向合併提交。feature 的本機、遠端及追蹤 ref，以及 worktree 目錄與 Git 註冊均已核對移除。移除前停止 Floorplan 預覽，並私下封存 102 個審閱與驗證檔案，逐檔核對 SHA-256、大小及權限模式。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.83-pr-reader-github-changed-files-endpoint)
+
+## PR #88 Repository open PR Endpoint 與清理（2026-11-25）
+
+PR #88 於 `2026-11-25T03:08:35Z` 合併至 `dev` 並關閉。合併提交 `47e4b45983df38ee9a5e2784cf7aceb25a75b2f9` 的九個 topic 檔案與受測 feature 提交 `605186e1e0f778104a2758fb5052cf4b6f3b37e8` 一致。 [PR #88](https://github.com/a129924/rivet/pull/88)
+
+套件內的 `GitHubRepositoryOpenPullRequestsEndpoint` 驗證 owner、repository 和頁碼，產生固定 `state=open`、`per_page=100` 與指定頁碼的 GET 網址。離線回歸通過 420 項。正式查詢、Link 分頁及清單映射由後續 Adapter 交付。 [API Catalog](../docs/github-api/rest-inbox-discovery.md#repository-pull-request-list) · [驗證摘要](VALIDATION-SUMMARY.md#pr-88-repository-open-pr-endpoint-與離線驗收)
+
+Annotated tag `v0.1.82-github-repository-open-pull-requests-endpoint` 已推送並讀回，指向合併提交。已核對 feature 的本機、遠端及追蹤分支，以及 worktree 目錄與 Git 註冊均已移除。移除前已停止 Floorplan 預覽，並私下封存 83 個審閱產物，逐檔核對 SHA-256、大小與權限模式。
+
+## PR #87 GitHub 標準 REST 標頭命名與清理（2026-11-25）
+
+PR #87 於 `2026-11-25T02:59:17Z` 合併至 `dev` 並關閉。合併提交 `1e8af39ac826d5512e670a2eb3a9b9c4a3f0afaf` 的七個 topic 檔案與受測 feature 提交 `2fb84408de956d2f9e5c2c6bac6fbd70f9a2990e` 一致。 [PR #87](https://github.com/a129924/rivet/pull/87)
+
+Provider 與 Factory 的共用標頭命名對齊 `standardREST`。Inbox 與 Reader 沿用現有呼叫介面，Repository PR 清單採標準 JSON 時可使用同一組合。基線與 feature 的離線驗收各通過 60 項測試、7 個 suites。 [固定請求標頭](../docs/architecture/github-oauth-dual-client.md#固定請求標頭) · [驗證摘要](VALIDATION-SUMMARY.md#pr-87-github-標準-rest-標頭命名與離線驗收)
+
+Annotated tag `v0.1.81-github-standard-rest-header-naming` 已推送並讀回，指向合併提交。已核對 `refactor/github-standard-rest-header-naming` 的本機、遠端及追蹤 ref，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前私下封存 106 個審閱及驗證檔案，逐檔核對 SHA-256、大小與模式。
+
+## PR #86／E023 非同步請求提交守門與清理（2026-11-25）
+
+[PR #86](https://github.com/a129924/rivet/pull/86) 已於 `2026-11-25T02:56:26Z` 合併至 `dev` 並關閉。合併提交 `3919313c57b448fee71ce64d1d105f473f5693ca` 的 topic 檔案與 feature 提交 `a57db2eb5704d7382e12cf2e14d9fb35565215d6` 一致。
+
+E023 以隔離 SwiftPM 套件驗證單一 `@MainActor` 狀態擁有者，17 個離線案例通過。未取消的過期請求無法提交。已取消但仍為當前的請求會丟棄結果並清理自身狀態。晚到的結果保留新請求的 loading 與 Task handle。 [E023 原始報告](E023/README.md) · [驗證摘要](VALIDATION-SUMMARY.md#pr-86e023-非同步請求提交守門的離線驗證)
+
+Annotated tag `v0.1.80-async-request-lifecycle-commit-guard` 已推送並讀回，指向合併提交。已核對 `chore/async-request-lifecycle-commit-guard` 的本機、遠端與追蹤 ref，以及 feature worktree 的目錄和 Git 註冊均已移除。移除前已私下封存 103 個審閱與驗證檔案，逐檔核對 SHA-256、大小與模式。
+
+## PR #85 GitHub OAuth 固定端點實例化與清理（2026-11-24）
+
+[PR #85](https://github.com/a129924/rivet/pull/85) 已於 `2026-11-24T10:16:14Z` 合併至 `dev` 並關閉。合併提交 `7a283f8dbf1f6c1d84e5b1013c8f7663c5abb500` 與最後受測的 feature 提交 `43e90d93a0783aed96db8e164c0e2cf864d00bed` 檔案內容相同。
+
+授權 session 使用固定的授權 Endpoint，code exchange 與 refresh 共用固定的 token Endpoint。三處沿用既有 HTTP 方法、標頭、表單及錯誤與取消行為。獨立離線驗證共 89 項測試、10 個 suites 通過。 [OAuth 責任與契約](../docs/architecture/github-first-sign-in.md#責任與契約) · [離線驗收](VALIDATION-SUMMARY.md#pr-85-github-oauth-固定端點實例化與離線驗收2026-11-24)
+
+Annotated tag `v0.1.79-github-oauth-endpoint-instances` 已推送並讀回，指向合併提交。已核對 `refactor/github-oauth-endpoint-instances` 的本機、遠端及追蹤 ref，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前已停止本機預覽，並私下封存及逐檔核對 83 個審閱產物。
+
+## PR #84 PR Reader 背景讀取與清理（2026-11-24）
+
+[PR #84](https://github.com/a129924/rivet/pull/84) 已於 `2026-11-24T08:53:22Z` 合併至 `dev` 並關閉。合併提交 `c3894545d3ed58b20206152dfaa12d050e803b46` 的 11 個本題變更檔案與受測 feature 提交 `621dff06d6f786066b09c77e3d408be21cd83573` 相同。
+
+PR Reader Infra 透過已認證的 GitHub REST client 讀取單一 PR 的標題、描述與作者。所有非 `200` 回應使用與 Inbox 相同的技術分類器，Reader 再映射為自己的失敗結果。Human Review 回修後，Reader、Inbox 和共用分類器的 69 項離線測試通過。 [Reader 契約](../docs/architecture/bounded-contexts/pr-reader.md#github-rest-背景讀取) · [離線驗收](VALIDATION-SUMMARY.md#pr-84-pr-reader-背景讀取與離線驗收2026-11-24)
+
+Annotated tag `v0.1.78-pr-reader-github-pr-detail-endpoint` 已推送並讀回，指向合併提交。`feat/pr-reader-github-pr-detail-endpoint` 的本機、遠端與追蹤 ref，以及 feature worktree 的目錄和 Git 註冊均已核對移除。移除前已停止本機預覽，並私下封存及逐檔核對 123 個審閱與驗證檔案。
+
+## PR #83 Swift 取消契約基線與清理（2026-11-24）
+
+[PR #83](https://github.com/a129924/rivet/pull/83) 已於 `2026-11-24T08:49:56Z` 合併至 `dev` 並關閉。合併提交 `24e3025e10d1c94c8ab0d45a213cc08e2bef4815` 與受測 feature 提交 `21d6e02145ced69dfebf2c98bbfd6cb62bdcc2f9` 的檔案內容相同。
+
+本輪交付 Inbox、Reader Port、共享 OAuth 與 HTTP Transport 的取消契約審查。E021 測得本機 HTTP/1.1 client 取消及 peer EOF。E022 測得取消後交付合成成功回應，Inbox 回 `.unavailable`，請求維持兩次。兩案各執行一組配對，正式 Swift 與公開介面沿用既有版本。 [架構基線](../docs/architecture/swift-cancellation-baseline.md) · [驗證摘要](VALIDATION-SUMMARY.md#pr-83-swift-取消契約基線與離線實測2026-11-24)
+
+Annotated tag `v0.1.77-swift-cancellation-baseline` 已推送並讀回，指向合併提交。`chore/cancellation-trace-contract-review` 的本機、遠端與追蹤 ref，以及 feature worktree 目錄與 Git 註冊均已核對移除。移除前已私下封存 78 個 Floorplan、4 個 PR Lens 和 9 個 Archify 檔案，並逐檔核對 SHA-256、大小與檔案模式。
+
+## PR #82 GitHub 固定請求標頭與清理（2026-11-24）
+
+[PR #82](https://github.com/a129924/rivet/pull/82) 已於 `2026-11-24T07:09:11Z` 合併至 `dev` 並關閉。合併提交 `386af9e5cc1e47d3b19c946631ea9a5aacd49c98` 與受測 feature 提交 `45895c0deba763234278d08371fd7661de213668` 的檔案內容相同。
+
+`GitHubHeadersFactory` 為 Inbox 和登入探查選用各自的固定 REST 標頭。OAuth 交換與刷新共用第三組。四處請求沿用既有標頭值與授權流程。 [架構契約](../docs/architecture/github-oauth-dual-client.md#固定請求標頭) · [離線驗收](VALIDATION-SUMMARY.md#pr-82-github-固定請求標頭與離線驗收2026-11-24)
+
+Annotated tag `v0.1.76-github-request-headers-provider` 已推送並讀回，指向合併提交。已核對 `feat/github-request-headers-provider` 的本機、遠端及追蹤 ref，以及 feature worktree 目錄與 Git 註冊均已移除。移除前停止 feature 預覽，並私下封存及核對 92 個審閱圖面檔案。
+
+## PR #81 PR Inbox 採用 REST 回應分類器與清理（2026-11-24）
+
+[PR #81](https://github.com/a129924/rivet/pull/81) 已於 `2026-11-24T06:36:58Z` 合併至 `dev` 並關閉。合併提交 `b3e54281ba1a635e1fcb4c31d13d7f4424effebf` 與受測 feature 提交 `8aa8dfea70072cb81c4637e7a60773ca929ee9e2` 的檔案內容相同。
+
+PR Inbox 的帳號查詢與搜尋分頁現在共用 Phase A 的分類器。同一 Swift package 內的 Inbox Adapter 在非 200 回應上呼叫分類器，並將七種分類映射為既有的 `.unavailable`。成功回應、分頁、401 復原和取消沿用既有契約。 [架構說明](../docs/architecture/README.md#outcome-與-failure-contract) · [離線驗收](VALIDATION-SUMMARY.md#pr-81-pr-inbox-採用-rest-回應分類器與離線驗收2026-11-24)
+
+Annotated tag `v0.1.75-github-rest-response-classifier-adoption` 已推送並讀回，指向合併提交。本機分支、遠端分支與遠端追蹤 ref，以及 feature worktree 的目錄與 Git 註冊均已核對移除。移除前停止本機預覽，並封存 66 個 Floorplan 檔案，逐檔核對 SHA-256、大小與檔案模式。
+
+## PR #80 GitHub REST 回應分類與清理（2026-11-24）
+
+[PR #80](https://github.com/a129924/rivet/pull/80) 已於 `2026-11-24T05:55:00Z` 合併至 `dev` 並關閉。合併提交為 `909c20c7982fe990b50896e857467ea85acdc773`，檔案內容與受測 feature 提交 `75b29942fe73611f3457bc5e688319ecfee47f17` 相同。
+
+Phase A 在 `GitHubIntegration` 加入內部 REST 回應分類器。它解讀 Endpoint／Operation 已拒絕的回應，區分明示權限拒絕、限流及原因未明的 403。此合併點以合成回應驗證分類器，後續由 PR #81 接入 PR Inbox 的正式 Adapter。 [架構說明](../docs/architecture/README.md#outcome-與-failure-contract) · [離線驗收](VALIDATION-SUMMARY.md#pr-80-github-rest-回應分類與離線驗收2026-11-24)
+
+Annotated tag `v0.1.74-github-rest-response-classification` 已推送並讀回，指向上述合併提交。已核對 `feat/github-rest-response-classification` 的本機、遠端和追蹤 refs，以及 feature worktree 目錄與 Git 註冊均已移除。移除前已私下封存 66 個 Floorplan 檔案並逐檔核對 SHA-256、大小與檔案模式。
+
+## PR #79 PR Inbox 自查 REST Endpoint 與清理（2026-11-23）
+
+[PR #79](https://github.com/a129924/rivet/pull/79) 已於 `2026-11-23T09:36:20Z` 合併至 `dev` 並關閉。正式合併提交為 `4955cffee2eb9a0098e266b9a30ef42e1ffcd865`，最後 feature 提交為 `37868762df9f0942a6e91412748c78f5106d5240`，兩者的檔案內容相同。
+
+登入與 Inbox 共用 `GitHubAuthenticatedUserEndpoint`。Inbox 每次重新整理建立一個 `GitHubSelfReviewSearchEndpoint`，供首請求及分頁驗證使用。REST client 在取 token 前套用共用的 GitHub 目的地驗證。此輪以離線測試驗收，E020 真人結果保留在原受測版本。 [PR Inbox 契約](../docs/architecture/bounded-contexts/pr-inbox.md) · [驗證結果](VALIDATION-SUMMARY.md#pr-79-pr-inbox-自查-rest-endpoint-與離線驗收2026-11-23)
+
+Annotated tag `v0.1.73-pr-inbox-rest-endpoints` 已推送並讀回，指向上述合併提交。`refactor/pr-inbox-rest-endpoints` 的本機、遠端與追蹤 refs，以及 feature worktree 目錄和 Git 註冊均已核對移除。原 worktree 的 86 個 Floorplan 檔案已私下封存，並逐檔核對內容與模式。
 
 ## PR #78 PR Inbox 自查候選、E020 真人驗收與清理（2026-11-23）
 
@@ -261,6 +437,9 @@ Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；loc
 | [E017／PR #73 PAT 儲存](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/experiments/E017/github-pat-dpk-storage/README.md) | 正式 PAT adapter 的獨立儲存驗收host | source5465原E016路徑真DPK六runtime accepted／Human各全程0；現E017只做離線改號驗證，不冒稱新live pass，HC04／HC05 pending。 |
 | [E019](E019/README.md) | GitHub 直接指派審閱查詢 | 12 項受控測試通過，真人查詢未執行。 |
 | [E020](E020/README.md) | 目前 OAuth 帳號的 PR 自查候選 | 真人驗收通過，正例 mlops-async#72 四欄吻合。 |
+| [E021](E021/README.md) | Foundation 本機 HTTP/1.1 請求進行中取消 | 一組配對成功。取消回報保留 `NSURLErrorDomain/-999`，peer 在回應或清理前觀察到 EOF。 |
+| [E022](E022/README.md) | Inbox 在 caller 取消後收到成功回應 | 一組配對成功。受控 REST 交付有效回應後，Facade 回 `.unavailable`，兩組各有兩次請求。 |
+| [E023](E023/README.md) | 非同步請求的生命週期與提交清理 | 隔離 host 的 17 案通過，晚到結果保留目前請求的 loading 與 Task handle。 |
 | [E024](E024/README.md) | PR Inbox 原生互動與 Variant B 視覺採用 | PR #97 已合併。I1 回歸及 A1 七項原生驗收通過，採用範圍為 Inbox 工作區。 |
 | [E025](E025/README.md) | PR Inbox I2 原生自查清單 | PR #110 已合併。I2-01～07 原生驗收及 I2-V03 最新 `dev` 整合回歸通過。 |
 | [GitHubConnectionVerification](E014/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |

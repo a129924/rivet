@@ -151,6 +151,47 @@ PR #104 於 `2026-11-26T07:39:37Z` 合併至 `dev` 並關閉，共變更 7 個�
 
 語意 annotated tag `v0.1.96-pr-reader-github-inline-review-source-selection` 已推送並讀回。本機與遠端的 tag 物件均為 `ffdad58e9d604fad764431e3a020e0ea207c748a`，解參照後皆指向合併提交。已核對本機、遠端及遠端追蹤分支、feature worktree 目錄和 Git 註冊均已移除。停止該工作樹的 Floorplan 預覽後，私下封存 126 個本機檔案，並逐檔核對 SHA-256、大小及權限模式。 [實驗索引](README.md#pr-104-pr-reader-行內留言來源選擇與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.96-pr-reader-github-inline-review-source-selection)
 
+## PR #103 PR Reader GraphQL Checks 讀取與離線驗收
+
+PR #103 於 `2026-11-26T06:47:51Z` 合併至 `dev` 並關閉，共變更 18 個檔案。合併提交 `10610d0be88c1d2bce37d5418fa5bae3171f8526` 與受測的 feature 提交 `b3590b8eeaf9e5331f652d330aa6a06e82c38d5c` 的 Git tree 相同。 [PR #103](https://github.com/a129924/rivet/pull/103) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.95-pr-reader-github-checks-source/plan/pr-reader-github-checks-source/pr-reader-github-checks-source.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 讀取契約 | 套件入口交付指定 PR head 的整體狀態和原序 `CheckRun`／`StatusContext`。驗證合法缺席、空明細、續頁一致性、重複 ID、畸形回應及取消。任一頁失敗即捨棄累積明細。 |
+| 獨立驗收 | CK01–CK04 通過。獨立重跑 476 項測試、51 組全數通過，含 10 項 Checks 測試。首輪既有 OAuth 登出時序測試出現兩個斷言失敗，Checks 測試全過，同一版本重跑全過。嚴格 Swift 格式、583 檔 SwiftLint、差異檢查及提交 hooks 通過。獨立規劃與成果審查均核准。 |
+| 產碼 | 沿用原 GitHub.com SDL 與 Apollo 2.1.2。`ReviewThreads.graphql` 和 `PullRequestChecks.graphql` 在乾淨暫存輸出一併離線重生，與提交產碼逐檔一致。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR base／head 驗證及渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸與亮暗目視檢查。Show Me 核對呼叫順序。Floorplan 涵蓋 595 個程式檔及本題三張 Recent work 卡。Graphify 查無可追溯的既有圖，採原碼核對。 |
+| 驗收界線 | 本輪以受控回應和 Apollo 解碼進行離線驗收。實際 GitHub.com Checks API、快照組裝及 UI 接線留待後續驗證。 |
+
+Annotated tag `v0.1.95-pr-reader-github-checks-source` 已推送並讀回。本機與遠端 tag 物件同為 `ff10646dd75abef83198cc8ba6d518bc0cbdde61`，解參照後皆指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。停止本題 Floorplan 預覽後，私下封存 102 個本機檔案，並逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-103-pr-reader-graphql-checks-讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.95-pr-reader-github-checks-source)
+
+## PR #102 PR Reader GraphQL 審閱對話讀取與離線驗收
+
+PR #102 於 `2026-11-26T04:01:40Z` 合併至 `dev` 並關閉，共變更 365 個檔案，包含 352 個生成 Swift 檔。合併提交 `97e3db851348d2dc0305fc371aa792ce84b257ae` 與受測的 feature 提交 `7316f3b140b89a8d44e426362c2fc480c25f089b` 的 Git tree 相同。 [PR #102](https://github.com/a129924/rivet/pull/102) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.94-pr-reader-github-review-threads-source/plan/pr-reader-github-review-threads-source/pr-reader-github-review-threads-source.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 讀取契約 | 套件內入口依序讀完 threads 與各自的留言。驗證外層與各 thread 的游標、PR 與 thread 歸屬、狀態與欄位保真、完整空清單，以及任一層失敗或取消時捨棄累積內容。 |
+| 獨立驗收 | RT01–RT04 通過。指定 SwiftPM 回歸 466 項測試、50 組全數通過，含 9 項新測試。嚴格 Swift 格式、574 檔 SwiftLint 零違規、差異空白檢查與所有提交 hooks 通過。獨立規劃及成果審查均核准。 |
+| 產碼 | 官方 GitHub.com SDL 的 SHA-256 為 `a70103efc655a6b81afa69cdbce8b27d90d8202270b19ea54130e95c650047b7`。Apollo CLI 2.1.2 離線重生 352 個 Swift 檔，逐位元組比對一致。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR base 與 head 驗證並渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸及亮暗目視檢查。Show Me 呼叫樹與實作一致。Floorplan 涵蓋 592 個程式檔，標示本題 4 張變更卡。Graphify 缺可追溯的既有圖，已用原碼核對。 |
+| 驗收界線 | 使用受控回應與 Apollo 解碼進行離線驗收。實際 GitHub.com API 呼叫、來源選擇、快照組裝及 UI 接線不在本輪驗收。 |
+
+Annotated tag `v0.1.94-pr-reader-github-review-threads-source` 已推送並讀回。本機與遠端 tag 物件同為 `25072a0cfb1cb048f366d2ae815edcc18ac23b5c`，解參照後皆指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 目錄與 Git 註冊均已移除。停止該工作樹的 Floorplan 預覽後，私下封存 84 個 Floorplan、24 個本題證據、5 個 PR Lens 與 8 個驗證檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-102-pr-reader-graphql-審閱對話讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.94-pr-reader-github-review-threads-source)
+
+## PR #100 PR Reader 行內審閱留言讀取與離線驗收
+
+PR #100 於 `2026-11-26T02:47:14Z` 合併至 `dev` 並關閉，共變更 8 個檔案。合併提交 `1fcdb2c274e2d0fde5c88e4225e20942650167c3` 與離線受測的 feature 提交 `9cd2ff8ff6e7bbe7920c8fee934a3231f2a2b4dd` 的 Git tree 相同。 [PR #100](https://github.com/a129924/rivet/pull/100) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.93-pr-reader-github-inline-review-comments-source/plan/pr-reader-github-inline-review-comments-source/pr-reader-github-inline-review-comments-source.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 讀取契約 | 取得同一 PR 的完整行內留言清單，保留來源頁次、頁內順序、精確 ID、node ID、Markdown、路徑及可用定位與回覆資料。合法缺值保留，空清單回成功。數字形式的 `next` 或 `last` 以原 PR 詳情核對歸屬，續頁 URL 以原 PR 識別重建。 |
+| 獨立驗收 | Reader GitHub 套件 117 項測試、11 組全數通過，含 16 項新測試。涵蓋續頁歸屬、後頁失敗、取消、跨 target 存取和相鄰來源回歸。Swift 嚴格格式、219 檔 SwiftLint 零違規、差異空白檢查及提交鉤子均通過。獨立規劃及成果審查均核准。 |
+| 本機審閱 | PR Lens 0.11.0 依 PR 實際 base 與 head 驗證並產出一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸與明暗目視。Show Me 呼叫樹與實作相符。Floorplan 涵蓋 588 個程式檔，標記 2 張變更卡片。Graphify 缺少可追溯的既有圖，已用原碼核對。 |
+| 驗收界線 | 採用受控離線 REST 回應。GraphQL threads、快照組裝及 UI 接線屬後續工項。 |
+
+Annotated tag `v0.1.93-pr-reader-github-inline-review-comments-source` 已推送並讀回。本機與遠端的 tag 物件同為 `12017c0e3d2dd937add5b0ad159b51c4161e5135`，解參照後皆指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 目錄與 Git 註冊均已移除。停止該 worktree 的 Floorplan 預覽後，私下封存 68 個 Floorplan、11 個 Archify 和 5 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-100-pr-reader-行內審閱留言讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.93-pr-reader-github-inline-review-comments-source)
+
 ## PR #99 PR Reader 行內審閱留言端點與離線驗收
 
 PR #99 於 `2026-11-25T10:01:44Z` 合併至 `dev` 並關閉，共變更 7 個檔案。合併提交 `64d0ce9f70c2abaeca7e2ec7204aab9a92add419` 與離線受測的 feature 提交 `680853ab989842e4b64a8070f492388c5e8e1917` 的 Git tree 相同。 [PR #99](https://github.com/a129924/rivet/pull/99) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.92-pr-reader-github-inline-review-comments-endpoint/plan/pr-reader-github-inline-review-comments-endpoint/pr-reader-github-inline-review-comments-endpoint.step.md)
@@ -163,6 +204,259 @@ PR #99 於 `2026-11-25T10:01:44Z` 合併至 `dev` 並關閉，共變更 7 個檔
 | 驗收界線 | 本輪以離線測試驗證同步 URL 建構。HTTP 執行、續頁讀取與留言映射由後續 Adapter 交付。 |
 
 Annotated tag `v0.1.92-pr-reader-github-inline-review-comments-endpoint` 的本機與遠端解析均指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。停止該 worktree 的 Floorplan 預覽後，私下封存 68 個 Floorplan、13 個端點驗證與 Archify、5 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-99-pr-reader-行內審閱留言端點與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.92-pr-reader-github-inline-review-comments-endpoint)
+
+## PR #98 PR Reader 審閱紀錄讀取與離線驗收
+
+PR #98 於 `2026-11-25T09:23:42Z` 合併至 `dev` 並關閉，共變更 9 個檔案。合併提交 `c9c9f17a0d7732574d25a652ce088c65dcefea06` 與離線受測的 feature 提交 `7cd2df446fb6e30fcc630c3d34dda852b42ea7bf` 的 Git tree 相同。 [PR #98](https://github.com/a129924/rivet/pull/98) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.91-pr-reader-github-reviews-source/plan/pr-reader-github-reviews-source/pr-reader-github-reviews-source.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 審閱紀錄 | 受控 REST 驗收覆蓋完整空清單、來源順序、精確 ID、原始 Markdown、五種審閱狀態與合法缺值。 |
+| 分頁及失敗 | 驗證具名及數字續頁、原 PR 歸屬查核、重建具名請求及失敗映射。任一頁失敗或取消時捨棄累積紀錄，取消優先於晚到的回應。 |
+| 獨立驗收 | Reader REST 96 項測試、9 組全數通過，含 17 項新增測試及一般留言與 Changed Files 回歸。Swift 格式、215 檔 SwiftLint 零違規、差異空白檢查及提交 hooks 均通過。獨立成果審查核准，無必修項。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR base／head 驗證並渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸及明暗目視檢查。Show Me 呼叫樹與實作一致。Floorplan 預覽標示 3 張變更卡。Graphify 缺可追溯的圖，已用原碼核對。 |
+| 驗收界線 | 本輪以受控 REST 回應驗證套件內讀取入口。數字 repository 續頁採 GitHub 通用分頁形式與 Reader 既有先例。 |
+
+Annotated tag `v0.1.91-pr-reader-github-reviews-source` 的本機與遠端解析均指向合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已核對移除。停止該工作樹的 Floorplan 預覽後，私下封存 84 個 Floorplan、33 個 Archify 與原碼查核、13 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-98-pr-reader-審閱紀錄讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.91-pr-reader-github-reviews-source)
+
+## PR #96 PR Reader 審閱紀錄端點與離線驗收
+
+PR #96 於 `2026-11-25T08:27:52Z` 合併至 `dev` 並關閉，共變更 7 個檔案。獨立離線驗收對應 feature 提交 `8ac50fc2b8c805406affeae0c4e08260f28e2ea7`。合併提交 `38f65400958d39db4fd3e803f71402b8745c6174` 保留該提交的端點、測試及四份規劃文件，並保留 #95 的背景工作階段契約。 [PR #96](https://github.com/a129924/rivet/pull/96) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.90-pr-reader-github-reviews-endpoint/plan/pr-reader-github-reviews-endpoint/pr-reader-github-reviews-endpoint.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 端點契約 | 核對 GET、同一 PR 的首頁和續頁 URL、極大正數頁碼、固定 `per_page=100`，以及無效 PR 識別或頁碼時的拋錯。 |
+| 獨立驗收 | Reader REST 79 項測試、8 組全數通過。Swift 格式、205 檔 SwiftLint 零違規、差異空白檢查及提交 hooks 通過。獨立成果審查核准。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR 差異驗證並渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸及明暗目視檢查。Floorplan 標記端點和測試兩張卡片。Graphify 缺對應版本的圖，採原碼核對，Show Me 呼叫樹與實作一致。 |
+| 驗收界線 | 本輪驗收同步 URL 建構。HTTP 執行、真 GitHub 回應、續頁讀取與結果映射屬後續 Adapter topic。 |
+
+Annotated tag `v0.1.90-pr-reader-github-reviews-endpoint` 的本機與遠端解析均指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。停止該 worktree 的 Floorplan 預覽後，私下封存 82 個 Floorplan、18 個本機驗證與 Archify、7 個 PR Lens 檔案，逐檔核對 SHA-256、大小及權限模式。 [實驗索引](README.md#pr-96-pr-reader-審閱紀錄端點與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.90-pr-reader-github-reviews-endpoint)
+
+## PR #95 PR Reader 背景工作階段正式採用與離線驗收
+
+2026-11-25 的獨立驗證以 `dev` 基線 `587f7bb91fbe9f056cf72214a9992a1325ffce72` 加上本 topic 變更執行，對應 feature 提交 `4b455b709c260151499c9e65b2340f031a58c9d6`。PR #95 於 `2026-11-25T08:20:24Z` 合併至 `dev` 並關閉，合併提交 `e0cab03a3567488d59dcd4c29b2ae8994bc3e7e6` 與上述受測提交的 Git tree 相同。PR 共變更 18 個檔案。 [PR #95](https://github.com/a129924/rivet/pull/95) · [執行帳本](../plan/pr-reader-background-session-production-adoption/pr-reader-background-session-production-adoption.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| Session 生命週期 | P01–P17 覆蓋首次載入、切換 PR、刷新保留資料、取消、永久失效，以及過期結果與 Task 清理。同步 Observation 回呼觸發失效的回歸測試，修正前可重現錯誤，修正後通過。 |
+| 正式組裝 | 使用正式 Session、Facade 與 GitHub 背景 adapter，透過受控 REST 驗證背景轉換、失敗映射、晚到回應及重開的新實例。 |
+| 獨立驗收 | 517 項測試、64 組通過，SwiftLint 210 檔零違規，Swift 格式、差異檢查、架構圖與 Git hooks 通過。較早基線的一次既有 OAuth 登出測試失敗，單獨及後續完整重跑通過。 |
+| 本機審閱 | PR Lens 0.11.0 依受測提交的實際差異驗證並渲染一張 SVG。Archify 通過 showcase 9/9、四種桌面尺寸及明暗目視檢查。Floorplan 已開啟本機預覽。Graphify 缺對應版本的圖，已用原始碼與 manifest 核對。 |
+| 驗收範圍 | 正式套件內組裝已驗證。產品 App Owner、Reader 導覽、完整快照與真 GitHub 驗收列為後續。 |
+
+E023 保留原有隔離實驗證據。 [E023 報告](E023/README.md) · [正式採用紀錄](../docs/feasibility-adoption.md#pr-reader-背景工作階段正式採用)
+
+Annotated tag `v0.1.89-pr-reader-background-session-production-adoption` 的本機與遠端解析均指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前私下封存 88 個 Floorplan 檔案及 21 個驗證紀錄，並記錄既有 PR Lens 與 Archify 產物的 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-95-pr-reader-背景工作階段正式採用) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.89-pr-reader-background-session-production-adoption)
+
+## PR #94 PR Reader 一般討論留言讀取與離線驗收
+
+PR #94 於 `2026-11-25T07:55:39Z` 合併至 `dev` 並關閉。合併提交 `587f7bb91fbe9f056cf72214a9992a1325ffce72` 與 74 項受控測試對應的 feature 提交 `0db610d3e665bbee457c6c2cc57740883d1b772e` 的 Git tree 相同。PR 共變更 10 個檔案。 [PR #94](https://github.com/a129924/rivet/pull/94) · [執行帳本](../plan/pr-reader-github-conversation-comments-source/pr-reader-github-conversation-comments-source.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 留言讀取與分頁 | 受控測試覆蓋完整空清單、原始 Markdown、缺少作者、精確 ID、具名及數字續頁，以及中途失敗時僅回傳單一 Reader failure。 |
+| 詳情查核 | 首次有效數字續頁用原 PR 的詳情核對編號、儲存庫名稱與 ID，確認後在同一次讀取內重用。詳情的 `401`、非限流 `403` 或 `404` 在留言讀取回 `.unavailable`，在 Changed Files 回既有的 `.notReadable`。兩者均停止續頁。 |
+| 獨立驗收 | 74 項測試、7 組通過。Swift 格式、203 檔 SwiftLint 零違規、差異空白檢查及提交 hooks 通過。獨立成果審查核准。 |
+| 本機審閱 | PR Lens 0.11.0 以實際 topic 差異驗證並產出一張 SVG。Archify 通過 showcase 9/9、四個桌面尺寸與代表性明暗畫面的目視檢查。Floorplan 已開啟本機預覽。Graphify 缺對應版本的圖，已用 `rg` 與原碼核對。 |
+| 驗收界線 | 本輪以受控 REST 回應驗證。尚未採樣 GitHub 線上留言回應的 `Link` 形狀。 |
+
+Annotated tag `v0.1.88-pr-reader-github-conversation-comments-source` 的本機與遠端解析均指向合併提交。已核對本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。停止該 worktree 的 Floorplan 預覽後，私下封存 84 個 Floorplan、8 個 Archify、5 個 PR Lens 與 15 個驗證紀錄檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-94-pr-reader-一般討論留言讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.88-pr-reader-github-conversation-comments-source)
+
+## PR #93 PR Reader 原始 unified diff 與離線驗收
+
+PR #93 於 `2026-11-25T07:19:40Z` 合併至 `dev` 並關閉。合併提交 `b0ad6974a33cc53112083eefad60504462593d66` 與最後受測的 feature 提交 `5890961f7ae216f77f9f90165c7ccaacdf5454fc` 的 Git tree 相同，PR 共變更 11 檔。 [PR #93](https://github.com/a129924/rivet/pull/93) · [執行帳本](../plan/pr-reader-github-raw-unified-diff/pr-reader-github-raw-unified-diff.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 標頭與套件內讀取 | Adapter 接線前，7 項標頭測試通過。同一 PR 詳情 GET 的 diff 與背景 JSON 各使用唯一的 `Accept`。受控回應覆蓋位元組保真、空內容、非 UTF-8、`406`、權限拒絕、限流及取消。 |
+| 離線驗收 | Topic 提交 `c23cdcb` 的獨立驗證通過 58 項、7 組。保留兩段 Reader 文件並解決合併衝突後，`5890961` 的 Reader、標頭、REST client 與 Repository PR 查詢回歸通過 94 項、10 組。Swift 格式、SwiftLint、差異檢查與提交 hooks 通過。 |
+| 本機審閱 | PR Lens 0.11.0 依 `5890961` 的實際 PR 差異重建並核對兩張 SVG。Archify 通過 showcase 9/9、四個桌面尺寸及明暗目視檢查。Floorplan 曾在本機開啟，Recent work 標出三張卡。Graphify 缺相符的圖，以原碼核對，Show Me 呼叫樹與實作相符。 |
+| 驗收界線 | 本輪以受控 REST 回應驗證套件內入口。真實 GitHub 回應、整份 diff 的解析與 UI 呈現屬後續驗收範圍。 |
+
+Annotated tag `v0.1.87-pr-reader-github-raw-unified-diff` 的本機與遠端解析均指向合併提交。已核對本機、遠端與遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。停止該工作樹的預覽後，私下封存 82 個 Floorplan、10 個 Archify 及 7 個 PR Lens 檔案，逐檔核對 SHA-256、大小及權限模式。 [實驗索引](README.md#pr-93-pr-reader-原始-unified-diff-與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.87-pr-reader-github-raw-unified-diff)
+
+## PR #92 PR Reader 變更檔案讀取與離線驗收
+
+PR #92 於 `2026-11-25T07:10:22Z` 合併至 `dev` 並關閉。合併提交 `4f3d84570fe822655c32b434628cb32f8e9142ed` 與最後受測的 feature 提交 `70605ad4e3cfed6138bb0b63ac0b2818b2d178c2` 的 Git tree 相同，topic 變更共七檔。 [PR #92](https://github.com/a129924/rivet/pull/92) · [執行帳本](../plan/pr-reader-github-changed-files-source/pr-reader-github-changed-files-source.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 套件內讀取 | 受控 REST 回應覆蓋空清單、跨頁順序、原路徑與 patch 缺值、名稱及數字 repository ID 續頁、2,999／3,000 檔邊界、取消及 Reader failure 映射。 |
+| 離線驗收 | Topic 提交 `49ad4e7` 的獨立 Reader GitHub 驗收通過 40 項、4 組。解決與 `dev` 的文件衝突後，`70605ad` 的 Reader GitHub 與 Repository open PR 合併回歸通過 61 項、7 組。格式、SwiftLint、差異檢查與提交 hooks 通過。 |
+| 本機審閱 | PR Lens 0.11.0 依原 topic 提交差異驗證並渲染 SVG。Archify 通過 showcase 9/9、四種桌面尺寸及明暗目視檢查。Floorplan 本機開啟，Recent work 標記兩張卡。Graphify 缺對應基線的圖，以原碼核對。 |
+| 驗收界線 | 名稱與數字 ID 兩種續頁路徑採受控回應驗證。實際 Changed Files 線上回傳的 `Link` 格式尚未驗證。 |
+
+Annotated tag `v0.1.86-pr-reader-github-changed-files-source` 在本機與遠端皆解析至合併提交。已核對本機、遠端和遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前私下封存 79 個 Floorplan、9 個 Archify、7 個 PR Lens 及 4 個驗證紀錄，逐檔核對 SHA-256、大小及權限模式。 [實驗索引](README.md#pr-92-pr-reader-變更檔案讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.86-pr-reader-github-changed-files-source)
+
+## PR #90 Repository open PR 清單查詢與離線驗收
+
+PR #90 於 `2026-11-25T06:30:31Z` 合併至 `dev` 並關閉。合併提交 `40d605998020fa9e6e57d01e1850d831114780d6` 與受測 feature 提交 `0a9ce1c2cebc12d535a34674157822a167710498` 的七個 topic 檔案一致。 [PR #90](https://github.com/a129924/rivet/pull/90) · [執行帳本](../plan/github-repository-open-pull-requests-adapter/github-repository-open-pull-requests-adapter.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 套件內查詢 | 受控回應覆蓋空清單、跨頁順序、Draft 與其他作者、數字 repository 路徑的身分證明，以及無效 Link、後頁失敗與取消。續頁請求由同一個 Endpoint 重建，依既有 REST client 送出。 |
+| 獨立離線驗收 | Swift 6.3.3 下，聚焦測試 16 項、隔離測試 48 項、回歸測試 438 項通過。回歸依計畫略過 `KeychainTokenStoreTests`。Swift 格式、SwiftLint（194 檔、零違規）、差異檢查與完整提交 hooks 通過。獨立規劃與成果審查核准。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR 差異驗證並產出 SVG。Archify 通過 showcase 9/9、四個桌面尺寸與明暗目視檢查。Floorplan 本機預覽通過，Recent work 標示兩張卡。Graphify 缺可用圖，採原始碼核對。 |
+| 驗收界線 | 受控回應驗證套件內查詢。真實 GitHub 分頁與產品瀏覽接線未納入本輪驗收。 |
+
+Annotated tag `v0.1.85-github-repository-open-pull-requests-adapter` 在本機與遠端皆解析至合併提交。本機、遠端及遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已核對移除。停止該 worktree 的預覽後，私下封存 86 個 Floorplan 檔案、13 個驗證檔案及 6 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-90-repository-open-pr-清單查詢與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.85-github-repository-open-pull-requests-adapter)
+
+## PR #91 PR Reader 一般討論留言端點與離線驗收
+
+PR #91 於 `2026-11-25T06:23:53Z` 合併至 `dev` 並關閉。合併提交 `612b97ed2ec1344b6bc39eb3b69ff7e245a83742` 與受測 feature 提交 `eee6a980e7e0e54a649a3f313f6e4dacbe73b86d` 的 Git tree 相同，本題變更共八檔。 [PR #91](https://github.com/a129924/rivet/pull/91) · [執行帳本](../plan/pr-reader-github-conversation-comments-endpoint/pr-reader-github-conversation-comments-endpoint.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 端點定向測試 | 同一 `GitHubConversationCommentsEndpoint` 實例組出指定 PR 的 `GET /repos/{owner}/{repo}/issues/{n}/comments` 網址，驗證第 1、2、31 頁與 `Int.max`、固定 `per_page=100`、不合法識別及非正頁碼。 |
+| 獨立離線驗收 | `swift test --filter RivetPRReaderGitHubTests` 通過 25 項、4 組，涵蓋一般留言、詳情、Changed Files 與背景讀取。Swift 格式、SwiftLint（194 檔、零違規）、差異檢查與完整提交 hooks 通過。獨立規劃與成果審查核准。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 PR 差異驗證並產出 SVG。Archify 通過 showcase 9/9、四種桌面尺寸與亮暗目視檢查。Floorplan 覆蓋 563 檔，Recent work 標示兩張卡。Graphify 缺可用圖，採原碼核對，Show Me 呼叫樹與實作相符。 |
+| 驗收界線 | 本輪驗收同步 URL 組裝。正式 REST 呼叫、標頭、Link 續頁、repository ID 查核與留言映射屬後續 Adapter。 |
+
+Annotated tag `v0.1.84-pr-reader-github-conversation-comments-endpoint` 在本機與遠端皆解析至合併提交。本機、遠端和追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已核對移除。停止本機預覽後，私下封存 82 個 Floorplan、11 個驗證證據（含 Archify 與 TDD 紀錄）及 6 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-91-pr-reader-一般討論留言端點與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.84-pr-reader-github-conversation-comments-endpoint)
+
+## PR #89 PR Reader 變更檔案端點與離線驗收
+
+PR #89 於 `2026-11-25T03:52:31Z` 合併至 `dev` 並關閉。合併提交 `d8e2ffed24c64da728cfb394da8d5a521b03642d` 與受測 feature 提交 `1397dcc94d9951240017082e4769eba2997fa687` 的 Git tree 相同，包含六個 topic 新增檔案。 [PR #89](https://github.com/a129924/rivet/pull/89) · [執行帳本](../plan/pr-reader-github-changed-files-endpoint/pr-reader-github-changed-files-endpoint.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 端點定向測試 | 同一個 `GitHubPullRequestChangedFilesEndpoint` 實例產生預設第 1 頁與顯式第 2 頁。PR 路徑一致，兩頁皆帶 `per_page=100`。另驗證頁碼 `31` 與 `Int.max`、#84 的無效 PR 識別及非正頁碼。 |
+| 獨立離線驗收 | `swift test --filter RivetPRReaderGitHubTests` 通過 20 項、3 組，涵蓋新端點和 #84 回歸。Swift 格式、SwiftLint（192 檔、零違規）、差異檢查及提交 hooks 通過。獨立規劃與成果審查核准。 |
+| 本機審閱 | PR Lens 0.11.0 依實際提交差異驗證並產出一張 SVG。Archify 通過 showcase 9/9 與四種桌面尺寸檢查。Floorplan 涵蓋 561 個程式檔，標記本題兩張卡片。Graphify 缺同版圖，採原碼核對。 |
+| 驗收界線 | 本輪驗收同步 URL 組裝。正式 REST 呼叫、Link 續頁與變更檔案清單映射留待後續切片。 |
+
+Annotated tag `v0.1.83-pr-reader-github-changed-files-endpoint` 在本機與遠端皆解析至合併提交。feature 的本機、遠端與追蹤 ref，以及 worktree 目錄與 Git 註冊均已核對移除。停止本機預覽後，私下封存 82 個 Floorplan、15 個測試與交付證據（含 Archify）及 5 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.83-pr-reader-github-changed-files-endpoint)
+
+## PR #88 Repository open PR Endpoint 與離線驗收
+
+PR #88 於 `2026-11-25T03:08:35Z` 合併至 `dev` 並關閉。合併提交 `47e4b45983df38ee9a5e2784cf7aceb25a75b2f9` 與受測 feature 提交 `605186e1e0f778104a2758fb5052cf4b6f3b37e8` 的九個 topic 檔案一致。 [PR #88](https://github.com/a129924/rivet/pull/88) · [執行帳本](../plan/github-repository-open-pull-requests-endpoint/github-repository-open-pull-requests-endpoint.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| Endpoint 定向測試 | 3 項通過。核對 GET、固定 HTTPS 目的地、`state=open`、每頁 100 筆、預設及指定頁碼，並拒絕不安全的路徑組件和非正整數頁碼。 |
+| 隔離與回歸 | 定向隔離測試 48 項通過。`swift test --skip KeychainTokenStoreTests` 的離線回歸 420 項通過。Swift 格式、差異檢查與提交 hooks 通過，SwiftLint 掃描 190 個檔案且零違規。獨立成果審查核准。 |
+| 驗證界線 | 驗收涵蓋本機 URL 組裝與 SwiftPM 依賴。正式 REST 呼叫、完整 Link 分頁與清單映射由後續 Adapter 驗收。 |
+
+Annotated tag `v0.1.82-github-repository-open-pull-requests-endpoint` 在本機與遠端皆解析至合併提交。已確認 feature 的本機、遠端與追蹤分支，以及 worktree 目錄與 Git 註冊均已移除。移除前停止本機預覽，並私下封存 68 個 Floorplan、11 個 Archify 與 4 個 PR Lens 檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md)
+
+## PR #87 GitHub 標準 REST 標頭命名與離線驗收
+
+PR #87 於 `2026-11-25T02:59:17Z` 合併至 `dev` 並關閉。合併提交 `1e8af39ac826d5512e670a2eb3a9b9c4a3f0afaf` 的七個 topic 檔案與受測 feature 提交 `2fb84408de956d2f9e5c2c6bac6fbd70f9a2990e` 一致。 [PR #87](https://github.com/a129924/rivet/pull/87) · [執行帳本](../plan/github-standard-rest-header-naming/github-standard-rest-header-naming.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 獨立離線驗證 | Apple Swift 6.3.3 下，以相同 SwiftPM filter 測試乾淨基線 `7a283f8` 與 feature，各通過 60 項測試、7 個 suites，通過清單一致。 |
+| 標頭與錯誤 | 涵蓋 Inbox 與 Reader 的標準標頭、Factory 的空清單、重複需求、替代設定及互斥錯誤，也涵蓋登入探查與 OAuth token 交換及刷新。 |
+| 成果與驗證界線 | 兩個 Swift 檔的嚴格格式、差異檢查與提交 hooks 通過，獨立 Reviewer 核准。驗收使用既有離線測試與替身。Repository PR 清單 Endpoint 屬另一個 topic。 |
+
+本機與遠端的 annotated tag `v0.1.81-github-standard-rest-header-naming` 皆解析至合併提交。已核對 feature 的本機、遠端與追蹤 ref，以及 worktree 目錄及 Git 註冊均已移除。移除前私下封存 81 個 Floorplan、11 個 Archify、5 個 PR Lens 及 9 個驗證與交付檔案，逐檔核對 SHA-256、大小與模式。 [實驗索引](README.md)
+
+## PR #86／E023 非同步請求提交守門的離線驗證
+
+[PR #86](https://github.com/a129924/rivet/pull/86) 已於 `2026-11-25T02:56:26Z` 合併至 `dev` 並關閉。合併提交 `3919313c57b448fee71ce64d1d105f473f5693ca` 的 topic 檔案與 feature 提交 `a57db2eb5704d7382e12cf2e14d9fb35565215d6` 一致。
+
+2026-11-24，獨立 Tester 在 arm64 macOS 26.5.2／Apple Swift 6.3.3 執行一輪。`swift test` 與 CLI 均 exit 0，17 案全部通過，原始軌跡包含 167 個事件與 351 項通過的檢查。獨立成果審查核准。 [E023 原始報告](E023/README.md) · [JSONL](E023/evidence/trace.jsonl)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 身分與取消對照 | 同一 PR 的舊 generation 在取消旗標為 `false` 時仍被拒。仍為當前但已取消的請求丟棄成功結果，只清理自己的狀態。 |
+| 狀態與清理 | 同步 `@MainActor` 方法完成檢查、寫入與清理。六種完成排列都只接受最後啟動的請求，晚到結果保留新請求的 loading 與實際 handle，有效 `.unavailable` 正常提交。 |
+| 驗證界線 | 證據適用於隔離 host 與合成來源。正式 Presentation Session 接線、產品 UI 與真實來源的取消時序仍待整合驗證。 |
+
+本機與遠端的 annotated tag `v0.1.80-async-request-lifecycle-commit-guard` 皆指向合併提交。已核對 feature 的本機、遠端及追蹤 ref，以及 worktree 目錄與 Git 註冊均已移除。私下封存 81 個 Floorplan、6 個 PR Lens、11 個 Archify 及 5 個測試證據檔案，逐檔核對 SHA-256、大小與模式。 [實驗索引](README.md)
+
+## PR #85 GitHub OAuth 固定端點實例化與離線驗收（2026-11-24）
+
+[PR #85](https://github.com/a129924/rivet/pull/85) 已於 `2026-11-24T10:16:14Z` 合併至 `dev` 並關閉。合併提交 `7a283f8dbf1f6c1d84e5b1013c8f7663c5abb500` 與最後受測的 feature 提交 `43e90d93a0783aed96db8e164c0e2cf864d00bed` 具有相同的 Git tree。 [執行帳本](../plan/github-oauth-endpoint-instances/github-oauth-endpoint-instances.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 正式接線 | 授權 session 從授權 Endpoint 取得瀏覽器 GET 的基底 URL。Code exchange 與 refresh 從同一個 token Endpoint 取得 POST 目的地，各自組裝表單並沿用共用標頭。 |
+| 受控離線驗收 | 獨立執行 TC1–TC5，共 89 項測試、10 個 suites 通過。涵蓋六個授權 query 欄位、五欄交換表單、四欄刷新表單、callback 驗證、拒絕與取消分類，以及傳輸次數。瀏覽器交接使用 loopback，token 請求使用測試 transport。 |
+| 品質檢查 | Swift 格式、SwiftLint（188 檔零違規）、diff 檢查及 commit hooks 均通過。獨立成果審查核准。 |
+| 本機審閱 | Archify 通過 showcase 9/9 及四種桌面尺寸檢查，Floorplan 標示本題四張卡片，PR Lens 依實際 PR 差異驗證並產出一張 SVG。Graphify 缺少對應版本的圖，以限定原始碼搜尋核對三處接線。 |
+
+本機及遠端的 annotated tag `v0.1.79-github-oauth-endpoint-instances` 皆指向上述合併提交。已核對 feature 本機分支、遠端分支、追蹤 ref、worktree 目錄及 Git 註冊均已移除。清理前私下封存 67 個 Floorplan、11 個 Archify 與 5 個 PR Lens 檔案，逐檔核對 SHA-256、大小與模式。 [實驗索引](README.md)
+
+## PR #84 PR Reader 背景讀取與離線驗收（2026-11-24）
+
+[PR #84](https://github.com/a129924/rivet/pull/84) 已於 `2026-11-24T08:53:22Z` 合併至 `dev` 並關閉。合併提交 `c3894545d3ed58b20206152dfaa12d050e803b46` 的 11 個本題變更檔案與最後受測 feature 提交 `621dff06d6f786066b09c77e3d408be21cd83573` 相同。 [執行帳本](../plan/pr-reader-github-pr-detail-endpoint/pr-reader-github-pr-detail-endpoint.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 正式接線 | Reader 驗證 PR 識別後，以已認證的 REST client 讀取詳情，將 `200` 轉成背景資料。所有非 `200` 回應由 Reader 與 Inbox 共用的分類器解讀，再由 Reader 映射為 `PRReaderFailure`。 [Reader 契約](../docs/architecture/bounded-contexts/pr-reader.md#github-rest-背景讀取) |
+| Human Review 回修 | `403` 只有 `Retry-After` 回 `.notReadable`，可辨識的次級限流訊息回 `.unavailable`，明確權限拒絕搭配剩餘額度 `0` 回 `.notReadable`。Reader、Inbox 與分類器共 69 項測試、10 組通過。 |
+| 品質檢查 | 回修版本的 Swift 格式、專案範圍 SwiftLint（188 檔零違規）、diff 檢查與 commit hooks 均通過。首版 `babf949` 的 415 項 SwiftPM 測試屬首版的離線結果。 |
+| 驗收範圍 | 本輪使用受控離線回應。完整閱讀快照組裝與真人 GitHub 驗收留待後續。 |
+
+本機和遠端的 annotated tag `v0.1.78-pr-reader-github-pr-detail-endpoint` 均解析至合併提交。原分支的本機、遠端與追蹤 ref，以及 feature worktree 目錄與 Git 註冊均已核對移除。私人封存包含 76 個 Floorplan、41 個驗證紀錄及圖面檔案（含 Archify）和 6 個 PR Lens 檔案，逐檔核對 SHA-256、大小與模式。 [實驗索引](README.md)
+
+## PR #83 Swift 取消契約基線與離線實測（2026-11-24）
+
+[PR #83](https://github.com/a129924/rivet/pull/83) 已於 `2026-11-24T08:49:56Z` 合併至 `dev` 並關閉。合併提交 `24e3025e10d1c94c8ab0d45a213cc08e2bef4815` 與受測 feature 提交 `21d6e02145ced69dfebf2c98bbfd6cb62bdcc2f9` 的檔案內容相同。 [執行帳本](../plan/cancellation-trace-contract-review/cancellation-trace-contract-review.step.md) · [架構基線](../docs/architecture/swift-cancellation-baseline.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 既有離線測試與審查 | 根套件指定 110 項與 HTTP Transport 6 項均通過。Pre-commit hooks 全數通過，獨立計畫與成果審查均核准，必要修正 0。 [八種情境](../analysis/cancellation-trace-contract-review/technical-spec.md#b01-八種情境的證據) |
+| E021 本機 HTTP/1.1 | arm64 macOS 26.5.2／Swift 6.3.3 的一組配對成功。對照取得 HTTP 200。取消組保留 `NSURLErrorDomain/-999`，peer 在送出回應或清理前觀察到 EOF。 [原始證據](E021/README.md) |
+| E022 Inbox 晚到回應 | 一組配對成功。對照取得預期候選，取消組由受控 REST 交付同一成功回應，Facade 回 `.unavailable`。兩組的請求順序都是 `/user`、`/search/issues`。 [原始證據](E022/README.md) |
+| 決策界線 | 建議保留 nonthrowing `Outcome`，在產品接線時確認 Task 擁有者與結果提交的防護。真 GitHub、HTTP/2、跨環境 transport、同步解碼中途取消與產品狀態提交仍未驗證。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 base／head 產出經驗證的 SVG。Archify 通過 9 項 showcase 檢查與四種桌面尺寸檢查。Floorplan 涵蓋 547 個程式檔並標記 3 張本題變更卡片。Graphify 缺同版索引，使用原始碼核對。 |
+
+本機及遠端的 annotated tag `v0.1.77-swift-cancellation-baseline` 解參照後均指向合併提交。原分支的本機、遠端及追蹤 ref，以及 feature worktree 目錄與 Git 註冊均已核對移除。私下封存的 78 個 Floorplan、4 個 PR Lens 和 9 個 Archify 檔案已逐檔核對。 [實驗索引](README.md)
+
+## PR #82 GitHub 固定請求標頭與離線驗收（2026-11-24）
+
+[PR #82](https://github.com/a129924/rivet/pull/82) 已於 `2026-11-24T07:09:11Z` 合併至 `dev` 並關閉。合併提交 `386af9e5cc1e47d3b19c946631ea9a5aacd49c98` 與受測 feature 提交 `45895c0deba763234278d08371fd7661de213668` 的檔案內容相同。 [執行帳本](../plan/github-request-headers-provider/github-request-headers-provider.step.md)
+
+| 證據 | 結果 |
+| --- | --- |
+| 正式接線 | Inbox 的帳號查詢與搜尋分頁、登入探查各自選用固定 REST 組合。OAuth 交換與刷新共用一組。Factory 對互斥需求回傳 typed error，Bearer 由既有授權流程套用。 |
+| 獨立離線驗證 | SwiftPM 選定測試 119 項、12 suites 全數通過。涵蓋 Factory、替代設定、四處請求標頭、REST、GraphQL 授權、登入服務及靜態隔離。 |
+| 品質檢查與審查 | Swift 嚴格格式、專案 SwiftLint（184 個檔案零違規）、topic SwiftLint、diff 檢查及 pre-commit hooks 通過。獨立規劃審查及成果審查均核准。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 base 和 head 驗證並產出 SVG。Archify 通過 9 項 showcase 檢查、四種桌面尺寸及目視核對。Floorplan 涵蓋 542 個程式檔並標出 7 張變更卡片。Graphify 缺少既有索引，採原始碼與 diff 核對。 |
+| 驗收範圍 | 本輪使用受控離線請求。真人結果歸原受測版本。ETag conditional 與特殊 representation 保留至有實際呼叫端時處理。 |
+
+Annotated tag `v0.1.76-github-request-headers-provider` 在本機與遠端均指向合併提交。已核對原分支的本機、遠端及追蹤 ref，以及 feature worktree 的目錄和 Git 註冊均已移除。私下封存的 77 個 Floorplan、4 個 PR Lens 和 11 個 Archify 檔案均已逐檔核對 SHA-256、大小與檔案模式。 [實驗索引](README.md)
+
+## PR #81 PR Inbox 採用 REST 回應分類器與離線驗收（2026-11-24）
+
+[PR #81](https://github.com/a129924/rivet/pull/81) 已於 `2026-11-24T06:36:58Z` 合併至 `dev` 並關閉。合併提交 `b3e54281ba1a635e1fcb4c31d13d7f4424effebf` 與受測 feature 提交 `8aa8dfea70072cb81c4637e7a60773ca929ee9e2` 的檔案內容相同。 [執行帳本](../plan/github-rest-response-classifier-adoption/github-rest-response-classifier-adoption.step.md)
+
+| 證據 | 結果 |
+| --- | --- |
+| 正式接線 | PR Inbox 的帳號查詢與搜尋分頁共用非 200 拒絕分支。分類器以 Swift `package` 可見性供 Inbox target 使用，七種分類皆映射為 `.unavailable`。HTTP 200 解碼、分頁失敗捨棄部分結果、取消和 REST client 的 401 復原均沿用既有契約。 |
+| 獨立離線驗證 | Focused 33 項／3 suites、根套件 400 項／52 suites、consumer 22 項／6 suites 全數通過。Swift format、專案 SwiftLint（180 檔零違規）、diff 檢查及 pre-commit hooks 通過。獨立規劃及成果審查均核准。 |
+| 本機審閱 | PR Lens 0.11.0 依實際 base／head 驗證及產出 SVG。Archify 通過 9 項 showcase 檢查，四種桌面尺寸通過 containment，並完成目視檢查。Floorplan 涵蓋 538 個程式檔並標記 2 張變更卡片。Graphify 缺少既有索引，採原始碼與 diff 核對。 |
+| 真人驗收 | 本輪使用受控離線回應。E020 瀏覽器 OAuth 真人結果歸原受測版本。 [E020 驗收紀錄](E020/README.md) |
+
+本機與遠端的 annotated tag `v0.1.75-github-rest-response-classifier-adoption` 物件均為 `ae739d71d02c505260238c9824aa8009b60358f2`，解參照後指向上述合併提交。已核對原本機、遠端與追蹤 ref，以及 worktree 目錄和 Git 註冊均已移除。私下封存的 66 個 Floorplan 檔案已逐檔核對。 [實驗索引](README.md)
+
+## PR #80 GitHub REST 回應分類與離線驗收（2026-11-24）
+
+[PR #80](https://github.com/a129924/rivet/pull/80) 已於 `2026-11-24T05:55:00Z` 合併至 `dev` 並關閉。合併提交 `909c20c7982fe990b50896e857467ea85acdc773` 與受測 feature `75b29942fe73611f3457bc5e688319ecfee47f17` 的檔案內容相同。 [執行帳本](../plan/github-rest-response-classification/github-rest-response-classification.step.md)
+
+| 證據 | 結果 |
+| --- | --- |
+| 分類契約 | 8 項單元測試的 52 組合成回應全數通過，涵蓋狀態碼與 403 證據優先序。Phase A 尚無 production caller，既有 REST 401 復原、業務映射與公開契約沿用。 |
+| 離線回歸 | 既有 REST／Inbox 基線 22 項通過。獨立完整重跑 397 項、consumer 契約 22 項通過。首次完整測試的既有 OAuth 登出時序斷言失敗，單獨及完整重跑皆通過。本輪使用離線替身與合成回應。 |
+| 品質檢查 | Strict format、專案正式 SwiftLint、diff 檢查及 pre-commit 通過。全目錄 strict SwiftLint 的 511 項問題位於 62 個未修改的歷史檔案。 |
+| 本機圖表 | PR Lens 0.11.0 依 PR 實際 base／head 驗證並產生 SVG。Archify 通過 9 項 showcase 檢查及 4 種桌面尺寸檢查。Floorplan 涵蓋 538 個程式檔的說明，標記本 topic 的 2 個檔案。Graphify 無既有圖，採 diff 與原始碼核對。 |
+
+本機與遠端的 annotated tag `v0.1.74-github-rest-response-classification` 物件均為 `eeb629c4a5ec8d5152860c7a75816091360a5841`，解參照後指向上述合併提交。已驗證原本機分支、遠端分支、追蹤 ref、worktree 目錄及 Git 註冊均不存在。66 個 Floorplan 檔案已在移除前私下封存並核對。 [實驗索引](README.md)
+
+## PR #79 PR Inbox 自查 REST Endpoint 與離線驗收（2026-11-23）
+
+[PR #79](https://github.com/a129924/rivet/pull/79) 已於 `2026-11-23T09:36:20Z` 合併至 `dev` 並關閉。合併提交為 `4955cffee2eb9a0098e266b9a30ef42e1ffcd865`，最後 feature 與離線受測提交為 `37868762df9f0942a6e91412748c78f5106d5240`。已核對合併提交與受測提交的檔案內容相同。 [執行帳本](../plan/pr-inbox-rest-endpoints/pr-inbox-rest-endpoints.step.md)
+
+| 證據 | 結果 |
+| --- | --- |
+| Endpoint 契約 | 兩支具名型別分別有獨立契約測試。登入依原流程以候選 token 驗證帳號後保存，Inbox 沿用既有 REST 入口並以同一搜尋實例核對分頁。REST client 在取 token 前拒絕不符規則的目的地。 |
+| 離線驗收 | 獨立 Tester 驗證 Swift 381 項及公開 consumer 22 項通過。Strict format、專案範圍 SwiftLint、`git diff --check` 與 pre-commit hooks 通過。全目錄 SwiftLint 的 511 筆與基線 `b7dac7e` 逐項相同。規劃與程式均通過獨立審查。 |
+| 本機圖表與導覽 | PR Lens 0.11.0 依實際 Draft PR 差異通過驗證並產生 SVG。Graphify 0.9.73 缺可用索引，採限域原碼查找。Floorplan 顯示 536/536 檔案描述與 6 張 Recent work 卡片，已在本機展示。Archify 通過 9/9 結構檢查，四種桌面尺寸中三種仍需垂直捲動。 |
+| 真人驗收 | 本輪採離線驗收。E020 的瀏覽器 OAuth 真人結果仍歸原受測版本。 [E020 驗收紀錄](E020/README.md) |
+
+Annotated tag `v0.1.73-pr-inbox-rest-endpoints` 已推送並讀回，指向正式合併提交。原 feature 本機、遠端及追蹤分支，連同 worktree 目錄與註冊均已核對移除。移除前已私下封存並核對 86 個 Floorplan 檔案。 [實驗索引](README.md)
 
 ## PR #78 PR Inbox 自查候選與 E020 真人結果（2026-11-23）
 
@@ -337,6 +631,9 @@ E015 的六個 focused case 由最終來源新建 CLI，使用 DEBUG、互斥 LA
 | [E017／PR #73 PAT 儲存](https://github.com/a129924/rivet/blob/cd76cd3faa192134b77b1c1816bbef2c184ede7b/experiments/E017/github-pat-dpk-storage/README.md) | 原source5465／E016路徑真DPK、A／B跨程序、同身分真重建、owned cleanup／nil，六runtime Human各全程0；E017離線移轉另列。 | 不證新E017來源live、真PAT遠端有效性、renewal／rotation／分發／durability或HC04／HC05接受；舊unknown保持。 |
 | [E019](E019/README.md) | 直接指派查詢的 12 項受控測試通過。 | 真人查詢未執行。 |
 | [E020](E020/README.md) | OAuth 真人驗收通過。mlops-async#72 四欄吻合，2 個唯讀 GET。 | 證據限當次帳號與單筆正例，自查完成狀態待定義。 |
+| [E021](E021/README.md) | 一組本機 HTTP/1.1 配對成功。取消保留 `NSURLErrorDomain/-999`，peer 於清理前觀察到 EOF。 | 真 GitHub、HTTP/2、其他環境或其他連線策略。 |
+| [E022](E022/README.md) | 一組受控 REST 配對成功。晚到成功回應在 caller 已取消時得到 `.unavailable`，兩組各有兩次請求。 | 同步解碼中途取消、真實 transport 或產品狀態提交。 |
+| [E023](E023/README.md) | 17 案通過。過期身分與取消旗標可各自阻止提交，晚到結果保留當前請求的 loading 與 handle。 | 證據限單一 `@MainActor` owner 與合成來源。產品接線和真實來源時序待整合驗證。 |
 | [E024](E024/evidence/variant-b-native.md) | I1-01～07 和 A1 七項原生驗收通過，含真人 VoiceOver 與跨 App 截圖。整合 610 項根套件及 7 項 E024 測試通過。 | 證據來自隔離的合成清單。正式 App 命令、側欄和資料接線另案驗證。 |
 | [E025](E025/README.md) | I2-01～07 均通過。以受控資料驗證合格 Draft，並核對一筆真人 open PR 的四欄。最新 `dev` 整合回歸通過。 | 證據範圍為獨立驗證 App 及當次 OAuth 連線。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 2026-11-05 正式 adapter／完整假六欄的真 DPK、跨程序 A／B、整筆替換及同身分真重建通過；五 runtime Human 全程0提示。 | 不是新 E 編號；不證真 OAuth／遠端 refresh／API、configuration item live、profile 更新、普遍環境、LC06 或完整產品驗收。 |
