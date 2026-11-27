@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #107 GitHub 未讀通知讀取與清理
+
+[PR #107](https://github.com/a129924/rivet/pull/107) 於 `2026-11-27T03:24:35Z` 合併至 `dev` 並關閉。合併提交 `b0cf9b8b6e795fe37319cb123964418dad60ce30` 帶入的本題差異與受測提交 `68e1456f6558a6f7b177e55a461fa56ea967e2df` 的 stable patch ID 一致。
+
+`GitHubUnreadNotificationsSource` 透過組裝端注入的 client，使用呼叫端提供的 classic PAT 逐頁讀取未讀通知。確認終頁後依 GitHub 原順序交付完整清單，任一頁失敗時回傳對應分類。正式組裝的傳輸保留原始 3xx 回應並拒絕自動跟隨。最終離線回歸通過 328 項測試與 38 個 suites。 [驗證摘要](VALIDATION-SUMMARY.md#pr-107-github-未讀通知離線驗收)
+
+Annotated tag `v0.1.101-github-unread-notifications-source` 已推送並讀回，指向合併提交。本機、遠端與遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已確認移除。移除前私下封存 123 個本機審閱與驗證檔案，逐檔核對 SHA-256、大小與權限模式。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.101-github-unread-notifications-source)
+
 ## PR #97 E024 Inbox Variant B 採用與清理
 
 [PR #97](https://github.com/a129924/rivet/pull/97) 於 `2026-11-27T03:10:50Z` 合併至 `dev` 並關閉。合併提交為 `3fcb1c8e5f9f38a47264026895d586c8846b5c6d`，Human 審閱的提交為 `e35daa03c7b33951d5702366958e12890d052953`。

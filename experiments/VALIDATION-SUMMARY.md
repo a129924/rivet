@@ -4,6 +4,19 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #107 GitHub 未讀通知離線驗收
+
+[PR #107](https://github.com/a129924/rivet/pull/107) 於 `2026-11-27T03:24:35Z` 合併至 `dev` 並關閉，共變更 16 個檔案。合併提交為 `b0cf9b8b6e795fe37319cb123964418dad60ce30`，受測提交為 `68e1456f6558a6f7b177e55a461fa56ea967e2df`。兩者以本題差異核對的 stable patch ID 均為 `d64a7d05e758054162f4da1b49d28f73e495fb8e`。 [通知來源契約](../docs/github-api/rest-notifications-local-state.md#github-notification-threads)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 讀取契約 | 組裝端以 `init(client:)` 注入 client。每頁以同一 classic PAT 請求，核對續頁目的地、查詢與連續頁碼。完整清單保留來源順序與未讀原值。正式傳輸交回原始 3xx 並拒絕自動跟隨，Source 依既有規則分類首頁與續頁的失敗。 |
+| 最終離線驗收 | 在 `68e1456` 執行 `GitHubIntegrationTests`，328 項測試、38 個 suites 全數通過。驗證涵蓋分頁、缺值、權限、取消、注入入口與 302。獨立成果審查核准，commit hooks 全數通過。 |
+| 本機審閱 | Archify、PR Lens 與 Floorplan 保存注入修訂前的審閱證據，PR Lens 的 head 為 `344ca69`。Graphify 查無相符既有圖，採原碼核對。 |
+| 驗收範圍 | 使用合成 PAT 與受控 REST 回應，真實 PAT 驗證未執行。清理階段核對 Git 差異與狀態，沿用已記錄的離線驗收結果。 |
+
+Annotated tag `v0.1.101-github-unread-notifications-source` 已推送並讀回，本機與遠端 tag 物件均為 `3867b8b2150d380e73a99f11fe930cb2b25ddcdc`，解參照後指向合併提交。本機、遠端及遠端追蹤分支，連同 feature worktree 目錄與 Git 註冊，均已確認移除。移除前私下封存 123 個本機檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-107-github-未讀通知讀取與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.101-github-unread-notifications-source)
+
 ## PR #97 E024 Inbox Variant B 整合驗收
 
 [PR #97](https://github.com/a129924/rivet/pull/97) 於 `2026-11-27T03:10:50Z` 合併至 `dev` 並關閉。以 `dev` `a559f7a` 和已審閱的 head `e35daa0` 預先整合，受測 Git tree `ef67c5cd06f82937bb383a574d2ab48f24d42a62` 與合併提交 `3fcb1c8e5f9f38a47264026895d586c8846b5c6d` 的 tree 一致。 [執行帳本](../plan/pr-inbox-i1-verification/pr-inbox-i1-verification.step.md)
