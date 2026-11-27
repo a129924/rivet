@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #113 原生 Inbox 清單採用與清理
+
+PR #113 於 `2026-11-27T16:57:09+08:00` 合併至 `dev` 並關閉。合併提交 `72a6cd306f0b337eb873c7a1dcaa8b04dcc9bf26` 與最終受測整合候選的 Git tree 一致。 [PR #113](https://github.com/a129924/rivet/pull/113)
+
+E025 改用正式 `PullRequestList`、`PullRequestRow` 與 `InboxListStatus`。使用者完成四種欄位組合的 VoiceOver 實聽，最新 `dev` 的 E025、Presentation 與根套件回歸均通過。驗收範圍為 E025 與正式呈現元件，真人上屏沿用 PR #110 的 I2-07。 [正式採用驗收](E025/evidence/native-list-adoption.md) · [驗證摘要](VALIDATION-SUMMARY.md#pr-113-原生-inbox-清單採用驗收)
+
+Annotated tag `v0.1.107-pr-inbox-native-list-adoption` 已推送並讀回，指向合併提交。已確認本機功能分支、遠端分支、遠端追蹤 ref、feature worktree 目錄及 Git 註冊均已移除。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.107-pr-inbox-native-list-adoption)
+
 ## PR #112 GitHub PR 單檔已讀寫入與清理
 
 PR #112 於 `2026-11-27T08:50:04Z` 合併至 `dev` 並關閉。合併提交 `25b23c449ff6f1d9d27e5176e393a545885dcc78` 帶入的差異與受測提交 `4e63077b4b1ac6fad90173bf7d3d7f028396cfc3` 的 stable patch ID 一致。 [PR #112](https://github.com/a129924/rivet/pull/112)
@@ -441,7 +449,7 @@ Annotated tag `v0.1.63-verification-artifact-ownership` 已建立並推送；loc
 | [E022](E022/README.md) | Inbox 在 caller 取消後收到成功回應 | 一組配對成功。受控 REST 交付有效回應後，Facade 回 `.unavailable`，兩組各有兩次請求。 |
 | [E023](E023/README.md) | 非同步請求的生命週期與提交清理 | 隔離 host 的 17 案通過，晚到結果保留目前請求的 loading 與 Task handle。 |
 | [E024](E024/README.md) | PR Inbox 原生互動與 Variant B 視覺採用 | PR #97 已合併。I1 回歸及 A1 七項原生驗收通過，採用範圍為 Inbox 工作區。 |
-| [E025](E025/README.md) | PR Inbox I2 原生自查清單 | PR #110 已合併。I2-01～07 原生驗收及 I2-V03 最新 `dev` 整合回歸通過。 |
+| [E025](E025/README.md) | PR Inbox I2 原生自查清單 | PR #110 完成 I2-01～07 原生驗收。PR #113 完成正式清單採用、四列 VoiceOver 實聽與最新 `dev` 整合回歸。 |
 | [GitHubConnectionVerification](E014/GitHubConnectionVerification/README.md) | 獨立驗證 App 的登入、保存、重啟、重建、受控到期真刷新、輪替後讀回與 API | PR #62 的受限可行性結果；真 GitHub／儲存、fake-only 測試與受控觸發分開，不等正式產品登入。 |
 | [PR #60 正式 OAuth 憑證儲存](https://github.com/a129924/rivet/pull/60) | 正式 adapter 的完整假 bundle 保存、跨程序、整筆替換與同身分真正重建 | 2026-11-05 指定環境真 DPK 受限通過；五 runtime Human 全程0提示，獨立審查核准；不代表真 OAuth／遠端 refresh／API 或完整產品登入。 |
 | [PR #66 原生登入 UI／Demo](https://github.com/a129924/rivet/pull/66) | 原生 Presentation 元件、假資料 Demo 與 Human 驗收 | 2026-11-11 指定聲音、大字與焦點案例通過，Human明確採用。正式 backend／OAuth 串接屬後續能力。 |
