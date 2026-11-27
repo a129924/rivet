@@ -4,6 +4,20 @@
 
 來源基準為 [PR #62](https://github.com/a129924/rivet/pull/62) 於 2026-10-21T06:56:54Z 的合併點 `aa16de91b560027325419b7bc904d831851c9fcb`。E001–E007 與持續連線段落保留該來源；另於下節補已合併 PR #61 的固定來源 `14d0832f042720889993d769b4cbfb720078e6b1`，並補 PR #63 的合併點 `fccaf2b6e38bcd38eaef1f09aecb2dd6068efed4`。本次於 2026-11-03 整合 `613a505025774b3841ab73b4ed3b8774be38274a` 內已合併 PR #65／E008 的後續事實。本次保留 PR #60 的固定來源，另納入已合併 PR #66 的原生 UI／Demo 及 Human 明示採用結果。[導覽](README.md)列出各來源入口。
 
+## PR #109 GitHub 單筆通知已讀離線驗收
+
+[PR #109](https://github.com/a129924/rivet/pull/109) 於 `2026-11-27T06:57:40Z` 合併至 `dev` 並關閉，共帶入 9 個檔案的變更。合併提交為 `31b2dc311db10b02e799f210edbea69c19046c54`，最終受測提交為 `abae635a35907bbf449e14d7c0fe95a2be05d5a9`。從合併提交的第一個 parent 核對本題差異，stable patch ID 與受測差異相同，均為 `8d382609f2ba63fa99d8e158ee501b06406cd9a1`。 [API Catalog](../docs/github-api/rest-notifications-local-state.md#github-notification-threads) · [執行帳本](../plan/github-notification-mark-as-read/github-notification-mark-as-read.step.md)
+
+| 證據 | 結果與適用條件 |
+| --- | --- |
+| 單筆寫入契約 | Endpoint 驗證 thread ID、保留合法長 ID 原字串，並組出固定 HTTPS PATCH URL。組裝端透過 `init(httpClient:)` 注入 client。正式組裝使用 `GitHubRESTTransport.makeClient()` 阻擋轉址，呼叫端提供同一帳號的 classic PAT。 |
+| 結果與取消 | 205 確認寫入，304 回報未修改。可區分存取遭拒、限流及結果待核對。無效輸入或提交前取消時零提交。提交後缺少確認時保留待核對結果，自動重送為零。 |
+| 最終離線驗收 | 340 項 Swift 測試與 39 個 suites 全數通過。另以同套件編譯探針確認可注入正式 client，無參數建構會編譯失敗。Swift format、SwiftLint 619 檔零違規、差異檢查及提交 hooks 皆通過。 |
+| 本機審閱 | PR Lens 以初次交付 `f82d09c` 驗證並渲染兩張 SVG。Archify 通過 showcase 9/9 及四種桌面尺寸檢核，Floorplan 已作本機預覽。Graphify 查無對應既有圖，採原碼核對。 |
+| 驗收界線 | 採合成 PAT 與受控 REST 回應。清理以合併差異及 Git 狀態核對為主，沿用最終 feature 提交的離線驗收結果。 |
+
+本機與遠端的 annotated tag `v0.1.104-github-notification-mark-as-read` 物件均為 `a090da07042ced2ff97442c72798cce7a4a4e1c0`，解參照後指向合併提交。本機、遠端與遠端追蹤分支，以及 feature worktree 的目錄和 Git 註冊均已確認移除。移除前停止本機 Floorplan 預覽，並私下封存 115 個檔案，逐檔核對 SHA-256、大小與權限模式。 [實驗索引](README.md#pr-109-github-單筆通知已讀與清理) · [語意 tag](https://github.com/a129924/rivet/tree/v0.1.104-github-notification-mark-as-read)
+
 ## PR #108 GitHub PR 整體 Review 送出離線驗收
 
 [PR #108](https://github.com/a129924/rivet/pull/108) 於 `2026-11-27T05:33:33Z` 合併至 `dev` 並關閉，共帶入 27 個檔案的變更。合併提交為 `4f88e8799dc69c8a86a68a70033dab56044c015e`，最終受測提交為 `ad7f74a28091a37a2db5837407300ad8e11b24f7`。兩者的本題差異以 stable patch ID 核對一致，值為 `d83a838fc95212ff4de115a41b3580fe72486586`。 [API Catalog](https://github.com/a129924/rivet/blob/v0.1.102-github-pull-request-review-submission/docs/github-api/rest-discussion-reviews.md#submit-review) · [執行帳本](https://github.com/a129924/rivet/blob/v0.1.102-github-pull-request-review-submission/plan/github-pull-request-review-submission/github-pull-request-review-submission.step.md)

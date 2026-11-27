@@ -2,6 +2,14 @@
 
 基礎索引日期：2026-11-11；PR #69 收納／合併事實更新：2026-11-13；PR #71 契約、PR #72 本地登出與 PR #73 PAT 儲存合併事實更新：2026-11-16。此索引依已合併交付及其有限證據整理；PR #67／E010 各輪狀態保留原記錄時點，由其獨立工作線維護。各輪前提、歷史結果與授權以原紀錄為準；實驗成功、驗證任務完成、PR 合併與正式採用是不同狀態。 PR #74 runtime 合併與 Git 收尾事實更新：2026-11-17。 PR #76 可行性方案合併與 Git 收尾事實更新：2026-11-17。 PR #75 Login UI 採用、驗收分離與 Git 收尾事實更新：2026-11-18。 PR #77 OAuth 冷啟動還原及 hosted 驗收／Git 收尾事實更新：2026-11-18。
 
+## PR #109 GitHub 單筆通知已讀與清理
+
+[PR #109](https://github.com/a129924/rivet/pull/109) 於 `2026-11-27T06:57:40Z` 合併至 `dev` 並關閉。合併提交 `31b2dc311db10b02e799f210edbea69c19046c54` 帶入的本題差異與受測提交 `abae635a35907bbf449e14d7c0fe95a2be05d5a9` 的 stable patch ID 一致。
+
+`GitHubNotificationReadMarker.markAsRead(threadID:using:)` 由組裝端注入 `HTTPClient`，用 classic PAT 對指定 thread 提交一次無 body 的 PATCH。205 確認已讀，304 回報未修改，送出後無法確認時回報待核對。最終離線回歸通過 340 項測試與 39 個 suites。 [API Catalog](../docs/github-api/rest-notifications-local-state.md#github-notification-threads) · [驗證摘要](VALIDATION-SUMMARY.md#pr-109-github-單筆通知已讀離線驗收)
+
+Annotated tag `v0.1.104-github-notification-mark-as-read` 已推送並讀回，指向合併提交。已確認本機、遠端與遠端追蹤分支，以及 feature worktree 的目錄與 Git 註冊均已移除。移除前停止該 worktree 的 Floorplan 預覽，並私下封存 115 個審閱與驗證檔案，逐檔核對 SHA-256、大小與權限模式。 [語意 tag](https://github.com/a129924/rivet/tree/v0.1.104-github-notification-mark-as-read)
+
 ## PR #108 GitHub PR 整體 Review 送出與清理
 
 [PR #108](https://github.com/a129924/rivet/pull/108) 於 `2026-11-27T05:33:33Z` 合併至 `dev` 並關閉。合併提交 `4f88e8799dc69c8a86a68a70033dab56044c015e` 的本題差異與受測提交 `ad7f74a28091a37a2db5837407300ad8e11b24f7` 的 stable patch ID 一致。
