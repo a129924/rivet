@@ -1,10 +1,12 @@
 # 整體 Review 送出技術規格
 
-`RivetPRReviewGitHub` 提供同 Swift package 的 `package` 送出入口、輸入值與結果，依賴 `GitHubIntegration` 和 `RivetHTTPClient`。呼叫端注入 `GitHubClientScope.rest`。PR Reader 擁有唯讀契約。GitHub 持有遠端審閱紀錄。
+`RivetPRReviewGitHub` 透過 `GitHubPullRequestReviewSubmissionSource` 提供同 Swift package 的 `package` 送出入口、輸入值與結果，依賴 `GitHubIntegration` 和 `RivetHTTPClient`。呼叫端注入 `GitHubClientScope.rest`。PR Reader 擁有唯讀契約。GitHub 持有遠端審閱紀錄。
 
-驗證 owner 與 repo 為既有 endpoint 接受的安全路徑片段、PR 編號為正整數、commit SHA 為完整 40 個 ASCII 十六進位字元。要求 `REQUEST_CHANGES` 與 `COMMENT` 提供非純空白正文。`APPROVE` 的正文選填。保留通過驗證的 SHA 與正文原值。
+`GitHubCreatePullRequestReviewEndpoint` 持有 `.post`，驗證 owner 與 repo 為安全路徑片段、PR 編號為正整數，並使用 `GitHubRESTDestination` 組裝 URL。
 
-以 `GitHubRESTDestination` 建立 `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews`。使用 `.standardREST` 與 `Content-Type: application/json`，JSON 包含 `event`、`commit_id` 與提供時的 `body`。
+Source 驗證 commit SHA 為完整 40 個 ASCII 十六進位字元。要求 `REQUEST_CHANGES` 與 `COMMENT` 提供非純空白正文。`APPROVE` 的正文選填。保留通過驗證的 SHA 與正文原值。
+
+Source 使用 Endpoint 的 method 與 URL 組裝 `POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews`。Source 取得 `.standardREST`，並在本次請求的標頭值設定 `Content-Type: application/json`。JSON 包含 `event`、`commit_id` 與提供時的 `body`。
 
 | 結果 | 條件 |
 | --- | --- |

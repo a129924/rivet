@@ -4,8 +4,8 @@ import RivetHTTPClient
 import RivetPRReviewGitHub
 import Testing
 
-struct GitHubPullRequestReviewSubmissionTests {
-  private typealias Submission = GitHubPullRequestReviewSubmission
+struct PullRequestReviewSubmissionSourceTests {
+  private typealias Submission = GitHubPullRequestReviewSubmissionSource
   private static let commitSHA = "a559F7a69f2fda6d25c6e50298905f777cd831b4"
 
   @Test(arguments: [
@@ -18,6 +18,7 @@ struct GitHubPullRequestReviewSubmissionTests {
     SubmissionCase(action: .comment, body: "繁體中文", event: "COMMENT", state: .commented),
   ])
   func sendsExactReviewAndReturnsReceipt(_ testCase: SubmissionCase) async throws {
+    let standardHeaders = try GitHubHeadersFactory.standard.make(requirements: [.standardREST])
     let rest = ReviewRESTStub(.success(response(200, body: receipt(state: testCase.state))))
     let result = await Submission(rest: rest).submit(
       input(action: testCase.action, body: testCase.body))
@@ -35,9 +36,11 @@ struct GitHubPullRequestReviewSubmissionTests {
     #expect(
       request.url.value.absoluteString
         == "https://api.github.com/repos/Owner/rivet.repo/pulls/42/reviews")
-    var expectedHeaders = try GitHubHeadersFactory.standard.make(requirements: [.standardREST])
+    var expectedHeaders = standardHeaders
     expectedHeaders.contentType = "application/json"
     #expect(request.headers == expectedHeaders)
+    #expect(
+      try GitHubHeadersFactory.standard.make(requirements: [.standardREST]) == standardHeaders)
     var expectedJSON = ["event": testCase.event, "commit_id": Self.commitSHA]
     expectedJSON["body"] = testCase.body
     let body = try #require(request.body)
@@ -175,10 +178,10 @@ struct GitHubPullRequestReviewSubmissionTests {
 }
 
 struct SubmissionCase: Sendable {
-  let action: GitHubPullRequestReviewSubmission.Action
+  let action: GitHubPullRequestReviewSubmissionSource.Action
   let body: String?
   let event: String
-  let state: GitHubPullRequestReviewSubmission.State
+  let state: GitHubPullRequestReviewSubmissionSource.State
 }
 
 private actor ReviewRESTStub: GitHubRestClient {

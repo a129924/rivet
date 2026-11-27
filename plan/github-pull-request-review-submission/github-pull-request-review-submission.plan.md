@@ -8,13 +8,13 @@
 | --- | --- |
 | Goal | 送出指定 PR 和 commit 的整體 Review，回報接受、拒絕或待核對結果。 |
 | Non-Goal | 完整審閱工作流及遠端結果自動核對。 |
-| In-Scope | 套件內 target、REST 請求與結果、受控測試、依賴驗證、API Catalog 和本機檢閱證據。 |
+| In-Scope | 套件內 target、Review Endpoint、送出 Source、REST 請求與結果、受控測試、依賴驗證、API Catalog 和本機檢閱證據。 |
 | Out-Of-Scope | 逐行留言、PENDING、編輯、撤回、合併、產品 UI、PAT 寫入組裝、資料遷移、共用 REST 或 Reader 契約修改、真人遠端驗收。 |
 | ReadOnly | 其餘 tracked 路徑，包含共用 REST client、PR Reader 與主工作樹的兩項 experiments 索引修改。 |
-| Written | `analysis/github-pull-request-review-submission/requirements.md`<br>`analysis/github-pull-request-review-submission/technical-spec.md`<br>`plan/github-pull-request-review-submission/github-pull-request-review-submission.plan.md`<br>`plan/github-pull-request-review-submission/github-pull-request-review-submission.step.md`<br>`Sources/RivetPRReviewGitHub/GitHubPullRequestReviewSubmission.swift`<br>`Tests/RivetPRReviewGitHubTests/GitHubPullRequestReviewSubmissionTests.swift` |
+| Written | `analysis/github-pull-request-review-submission/requirements.md`<br>`analysis/github-pull-request-review-submission/technical-spec.md`<br>`plan/github-pull-request-review-submission/github-pull-request-review-submission.plan.md`<br>`plan/github-pull-request-review-submission/github-pull-request-review-submission.step.md`<br>`Sources/RivetPRReviewGitHub/GitHubCreatePullRequestReviewEndpoint.swift`<br>`Sources/RivetPRReviewGitHub/GitHubPullRequestReviewSubmissionSource.swift`<br>`Tests/RivetPRReviewGitHubTests/CreatePullRequestReviewEndpointTests.swift`<br>`Tests/RivetPRReviewGitHubTests/PullRequestReviewSubmissionSourceTests.swift` |
 | Deleted | 無。 |
 | Modify | `Package.swift`<br>`Tests/GitHubIntegrationTests/StaticIsolationTests.swift`<br>`docs/github-api/rest-discussion-reviews.md` |
-| TestCase | TC01 三種動作與 wire request。TC02 無效輸入與預先取消零呼叫。TC03 收據、拒絕、認證與結果待核對。TC04 401 重送上限。TC05 套件隔離及靜態檢查。 |
+| TestCase | TC01 三種動作與 wire request。TC02 Endpoint 拒絕無效目標，Source 無效輸入與預先取消零呼叫。TC03 收據、拒絕、認證與結果待核對。TC04 401 重送上限。TC05 套件隔離及靜態檢查。 |
 
 執行新 target、`GitHubRestClientTests`、`StaticIsolationTests`、Swift 格式、lint 與 `git diff --check`。檢查每次 adapter 操作呼叫 REST client 零或一次，並保留 adapter 實際取得的 200。依驗證結果更新 API Catalog。
 

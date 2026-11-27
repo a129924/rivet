@@ -9,9 +9,13 @@
 | I01 | completed | Implementer | 交付送出 target、受控測試與 Catalog。 | 套件內 target、受控測試、target graph 與 Catalog 已更新。 |
 | T01 | completed | Tester | 完成受控驗收及靜態檢查。 | 獨立 Tester 完成 TC01–TC05。74 項測試、5 個 suites、格式、SwiftLint 605 檔零違規、diff 檢查均通過。TDD 起始測試的四個案例按預期因未實作而失敗。 |
 | R01 | approved | Reviewer | 獨立核對實作、證據與變更邊界。 | 獨立成果 Reviewer 核准，無必修項目。 |
-| D01 | ready | Implementer | 依授權提交單一 topic commit、推送且讀回 Draft PR。 | 已具條件式交付授權。提交、推送與 Draft PR 的讀回證據另存於本機交付收據。 |
+| D01 | completed | Implementer | 依授權提交單一 topic commit、推送且讀回 Draft PR。 | 初次提交 `656b0e8` 已推送並讀回 Draft PR #108。 |
 
-## 本機檢閱證據
+## PR #108 修正
+
+2026-11-27 依使用者確認拆分 GitHub Review Endpoint 與送出 Source。新增獨立 Endpoint 測試，並重驗 Source 的請求專用 Content-Type、取消邊界與現有 client 的 401 復原上限。Endpoint 測試先因型別尚未建立而編譯失敗。實作後，相關 6 個 suites 共 77 項測試通過，Swift 格式、SwiftLint 607 檔零違規與 diff 檢查通過。
+
+## 初次交付的本機檢閱證據
 
 - Archify showcase 9/9、零錯誤及警告，四尺寸 containment 和明暗主題目視通過。Viewer 採英文。HTML SHA-256 為 `c2b21d342cdcc95ff2ab11d1e8ca44b455a0b403962605355fbd2675fe8410eb`。
 - Floorplan 已 build 並開啟本機預覽，Recent work 標示三張卡。兩份新 Swift 檔皆有說明。沿用舊 map 的其餘描述，工具回報部分既有檔仍缺說明。
@@ -26,4 +30,4 @@
 
 Draft PR 交付後由使用者審閱。真人遠端 Review 送出須另行指定。
 
-最後更新 2026-11-26。 [執行計畫](github-pull-request-review-submission.plan.md)
+最後更新 2026-11-27。 [執行計畫](github-pull-request-review-submission.plan.md)

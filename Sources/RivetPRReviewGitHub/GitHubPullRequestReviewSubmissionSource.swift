@@ -2,7 +2,7 @@ import Foundation
 import GitHubIntegration
 import RivetHTTPClient
 
-package struct GitHubPullRequestReviewSubmission: Sendable {
+package struct GitHubPullRequestReviewSubmissionSource: Sendable {
   package enum Action: String, Sendable {
     case approve = "APPROVE"
     case requestChanges = "REQUEST_CHANGES"
@@ -86,13 +86,14 @@ package struct GitHubPullRequestReviewSubmission: Sendable {
   }
 
   private static func makeRequest(_ input: Request) throws -> HTTPRequest {
-    let url = try GitHubRESTDestination.makeURL(
-      path: "/repos/\(input.owner)/\(input.repository)/pulls/\(input.pullNumber)/reviews")
+    let endpoint = GitHubCreatePullRequestReviewEndpoint(
+      owner: input.owner, repository: input.repository, pullNumber: input.pullNumber)
+    let url = try endpoint.makeURL()
     var headers = try GitHubHeadersFactory.standard.make(requirements: [.standardREST])
     headers.contentType = "application/json"
     let body = try JSONEncoder().encode(
       ReviewPayload(event: input.action.rawValue, commitID: input.commitSHA, body: input.body))
-    return HTTPRequest(url: url, method: .post, headers: headers, body: body)
+    return HTTPRequest(url: url, method: endpoint.method, headers: headers, body: body)
   }
 
   private static func outcome(for response: HTTPResponse, action: Action) -> Outcome {
@@ -110,8 +111,7 @@ package struct GitHubPullRequestReviewSubmission: Sendable {
   }
 
   private static func isValid(_ input: Request) -> Bool {
-    guard isPathComponent(input.owner), isPathComponent(input.repository), input.pullNumber > 0,
-      input.commitSHA.utf8.count == 40,
+    guard input.commitSHA.utf8.count == 40,
       input.commitSHA.utf8.allSatisfy({ byte in
         (48...57).contains(byte) || (65...70).contains(byte) || (97...102).contains(byte)
       })
@@ -120,15 +120,6 @@ package struct GitHubPullRequestReviewSubmission: Sendable {
     return input.action == .approve
       || input.body?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
   }
-
-  private static func isPathComponent(_ value: String) -> Bool {
-    !value.isEmpty && value != "." && value != ".."
-      && value.utf8.allSatisfy { byte in
-        (48...57).contains(byte) || (65...90).contains(byte) || (97...122).contains(byte)
-          || byte == 45 || byte == 46 || byte == 95
-      }
-  }
-
 }
 
 private struct ReviewPayload: Encodable {

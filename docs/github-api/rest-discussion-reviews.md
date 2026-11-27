@@ -54,7 +54,7 @@ Rivet catalog composition rule：issue-level comments 是獨立內容來源。�
 | 用途 | 提交整體 review。 |
 | 重要輸入 | `event`：`APPROVE`、`REQUEST_CHANGES` 或 `COMMENT`；`REQUEST_CHANGES` 與 `COMMENT` 必須帶 `body`。`commit_id` 指向受 review 的 commit SHA；省略時 GitHub 預設使用送出時 PR 的最新 commit。可帶 `comments` 陣列：每筆必帶 `path` 與 `body`。新整合優先使用 line-based `line`／`side` 定位；line-based 多行範圍時，`start_line` 與 `start_side` 均為條件必填。`position` 為 closing-down 的相容定位方式。 |
 | 成功結果 | `200 OK` 與 Pull Request Review resource；主要欄位為 `id`、`state`、`commit_id`（nullable）、`submitted_at`（可能缺席）、`body`、`user`（nullable）。 |
-| Rivet 送出契約 | `RivetPRReviewGitHub` 使用呼叫端提供的完整 SHA。Adapter 收到 200 即保留接受結果，有效的 Review ID 與狀態作為收據。傳輸中斷或回應不明時由呼叫端核對 GitHub 紀錄。既有 REST client 僅在明確 401 後可復原重送一次。 |
+| Rivet 送出契約 | `GitHubCreatePullRequestReviewEndpoint` 組裝指定 PR 的 POST URL。`GitHubPullRequestReviewSubmissionSource` 使用呼叫端提供的完整 SHA，並為本次 JSON 請求設定 Content-Type。Source 收到 200 即保留接受結果，有效的 Review ID 與狀態作為收據。傳輸中斷或回應不明時由呼叫端核對 GitHub 紀錄。既有 REST client 僅在明確 401 後可復原重送一次。 |
 | 範圍 | 套件內入口僅送出整體 Review。產品 UI、逐行留言及草稿屬於後續能力。 |
 | 認證／權限 | Fine-grained PAT、GitHub App user 或 installation token 需 `Pull requests` repository permission（write）。 |
 | 官方來源 | [Create a review for a pull request](https://docs.github.com/en/rest/pulls/reviews#create-a-review-for-a-pull-request)、[Multi-line review comment inputs](https://docs.github.com/en/rest/pulls/comments#create-a-review-comment-for-a-pull-request)、[GitHub REST OpenAPI `pull-request-review` schema](https://github.com/github/rest-api-description/blob/main/descriptions/api.github.com/api.github.com.json)（`user` 與 `commit_id` 為 nullable；`submitted_at` 未列於 `required`） |
